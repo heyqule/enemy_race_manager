@@ -6,7 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 local ERM_UnitHelper = {}
-local Math = require('__stdlib__/stdlib/utils/Math')
+local Math = require('__stdlib__/stdlib/utils/math')
 require('__stdlib__/stdlib/utils/defines/time')
 
 -- Resistance cap, 95% diablo style lol.
@@ -56,11 +56,11 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multip
 end
 
 -- healing
-function ERM_UnitHelper.get_healing(base_heatlh, max_hitpoint_mutiplier, multiplier, level)
+function ERM_UnitHelper.get_healing(base_heatlh, max_hitpoint_multiplier, multiplier, level)
     if level == 1 then
         return base_heatlh / defines.time.minute
     end
-    local heal_amount = Math.max(base_heatlh + (base_heatlh * max_hitpoint_mutiplier / 10) * (multiplier * level / 100), 600)
+    local heal_amount = Math.max(base_heatlh + (base_heatlh * max_hitpoint_multiplier / 10) * (multiplier * level / 100), 600)
     return heal_amount / defines.time.minute
 end
 
