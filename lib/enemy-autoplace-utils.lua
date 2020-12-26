@@ -1,3 +1,8 @@
+---
+--- require('__enemyracemanager__/lib/enemy-autoplace-utils')
+
+
+
 local noise = require("noise")
 local EnemyAutoplaceUtils = require('__base__/prototypes/entity/enemy-autoplace-utils')
 
@@ -49,7 +54,7 @@ end
 local function enemy_spawner_autoplace(distance, force)
   return enemy_autoplace{
     distance_factor = distance,
-    order = "b[enemy]-a[spawner]",
+    order = "b[enemy]-a[erm-spawner]",
     force = force
   }
 end
@@ -57,7 +62,7 @@ end
 local function enemy_worm_autoplace(distance, force)
   return enemy_autoplace{
     distance_factor = distance,
-    order = "b[enemy]-b[worm]",
+    order = "b[enemy]-b[erm-turrets]",
     is_turret = true,
     force = force
   }

@@ -4,6 +4,7 @@
 -- Date: 12/15/2020
 -- Time: 9:59 PM
 -- To change this template use File | Settings | File Templates.
+-- require('__enemyracemanager__/lib/unit_helper')
 --
 local ERM_UnitHelper = {}
 local Math = require('__stdlib__/stdlib/utils/math')

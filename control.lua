@@ -16,7 +16,9 @@ local Game = require('__stdlib__/stdlib/game')
 local Event = require('__stdlib__/stdlib/event/event')
 
 local ErmConfig =  require('__enemyracemanager__/lib/global_config')
-local ErmMapProccessor = require('__enemyracemanager__/lib/map_processor')
+local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
+local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 
 require('__stdlib__/stdlib/utils/defines/time')
 
@@ -26,10 +28,7 @@ remote.add_interface("enemy_race_manager", ErmRemoteApi)
 -- local variables
 local race_settings -- track race settings
 local enemy_surfaces -- track which race are on a surface
-local mod_settings
-
-ERM_DEBUG = true
-
+ERM_DEBUG = false
 
 local onBuildBaseArrived = function(event)
     local group = event.group;
@@ -74,114 +73,55 @@ end
 
 
 local prepare_world = function()
+    -- Forces checks
+
     -- Calculate Biter Level
+    if table_size(race_settings) > 0 then
+        ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+    end
     -- Queue Chunk to process
 end
 
-local print_force_data = function()
-    for i, force in pairs(game.forces) do
-        if force.name == 'player' or force.name == 'neutral' then
-            goto print_force_data_for_force
-        end
-        EventLog.log('---------------------')
-        EventLog.log(force.name)
-        EventLog.log("AI:"..tostring(force.ai_controllable))
-        for i2, force2 in pairs(game.forces) do
-            EventLog.log(force2.name..' is friend: ' .. tostring(force2.get_friend(force2.name)))
-        end
+--Event.register(defines.events.on_entity_spawned, onEntitySpawned)
+--
+--Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
+--
+--Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
+--
+--Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
+--
+--Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
+--
+--Event.register(defines.events.on_unit_added_to_group, onUnitAddToGroup)
+--
+--Event.register(defines.events.on_unit_removed_from_group, onUnitRemovedFromGroup)
 
-        if force.share_chart then
-            EventLog.log("share cart:"..force.share_chart)
-        end
-        if force.evolution_factor then
-            EventLog.log("evolution factor:".. tostring(force.evolution_factor))
-        end
-        if force.evolution_factor_by_pollution then
-            EventLog.log("evolution pollution:".. tostring(force.evolution_factor_by_pollution))
-        end
-        if force.evolution_factor_by_time then
-            EventLog.log("evolution time:".. tostring(force.evolution_factor_by_time))
-        end
-        if force.evolution_factor_by_killing_spawners then
-            EventLog.log("evolution killing:".. tostring(force.evolution_factor_by_killing_spawners))
-        end
-        ::print_force_data_for_force::
-    end
-end
+Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
+    ErmLevelProcessor.calculateLevel(race_settings, game.forces, settings)
+end)
 
-local randomBuilding = function(surface, position)
-    local type = math.random(1,3)
-    name = ({'hatchery', 'hydraden','spawning_pool'})[type]
-    surface.create_entity({name='erm-'..name..'-spawner-1', position=position, force='enemy_erm_zerg'})
-end
-
-local initModSetting = function()
-    return {
-        current_level = 1,
-        current_tier = 1,
-        evolution_type = 1
-    }
-end
-
-Event.register(defines.events.on_entity_spawned, onEntitySpawned)
-
-Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
-
-Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
-
-Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
-
-Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
-
-Event.register(defines.events.on_unit_added_to_group, onUnitAddToGroup)
-
-Event.register(defines.events.on_unit_removed_from_group, onUnitRemovedFromGroup)
-
-Event.on_nth_tick(900, function(event)
-    EventLog.log('On '..event.tick.." Tick")
-    print_force_data()
-
-    if ERM_DEBUG then
-        game.print('Current Level:'..tostring(mod_settings.current_level))
-        game.print('Current Tier:'..tostring(mod_settings.current_tier))
-        game.print('Evolution Type:'..tostring(mod_settings.evolution_type))
-        game.print('Race Settings:'..tostring(#race_settings))
-        game.print('Forces:'..tostring(#game.forces))
-    end
-
-    --
-    --EventLog.log('Evolution Type'..tostring(race_settings['erm_zerg']))
+Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
+    local player = game.players[math.random(1, #game.players)]
+    ErmMapProcessor.process_chunks(player.surface, race_settings)
 end)
 
 Event.register(defines.events.on_chunk_generated,function(event)
-    local surface = event.surface
-    local charted_position =  event.position
-    local charted_area = Area.new(event.area)
+    ErmMapProcessor.queue_chunks(event.surface, event.area)
+end)
 
-    local spawners = Table.filter(Game.get_surface(event.surface).find_entities_filtered({area = charted_area, type = 'unit-spawner', force = 'enemy'}), Game.VALID_FILTER)
-    local turrets = Table.filter(Game.get_surface(event.surface).find_entities_filtered({area = charted_area, type = 'turret', force = 'enemy'}), Game.VALID_FILTER)
-    Table.each(spawners, function(entity)
-        local position = entity.position
-        --entity.destroy();
-        --randomBuilding(surface, position)
-    end)
+Event.register(Event.generate_event_name(ErmConfig.EVENT_TIER_WENT_UP), function(event)
+end)
 
-    Table.each(turrets, function(entity)
-        local position = entity.position
-        --entity.destroy();
-        --randomBuilding(surface, position)
-    end)
+Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), function(event)
+    ErmMapProcessor.rebuildMap(game)
 end)
 
 Event.on_init(function(event)
-    -- Internal Mod Settings
-    global.mod_settings = initModSetting()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = {}
     -- Track what type of enemies on a surface
     global.enemy_surfaces = {}
 
-    mod_settings = global.mod_settings
     race_settings = global.race_settings
     enemy_surfaces = global.enemy_surfaces
 
@@ -189,9 +129,29 @@ Event.on_init(function(event)
 end)
 
 Event.on_load(function(event)
+    enemy_surfaces = global.enemy_surfaces
+    race_settings = global.race_settings
+end)
+
+Event.on_configuration_changed(function(event)
     race_settings = global.race_settings or {}
     enemy_surfaces = global.enemy_surfaces or {}
-    mod_settings = global.mod_settings or initModSetting()
 
     prepare_world()
+end)
+
+commands.add_command("ERM_RegenerateEnemy",
+    {"description.command-regenerate-enemy"},
+    function (event)
+    ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+    game.forces['enemy'].kill_all_units()
+    ErmReplacementProcessor.rebuildMap(game, race_settings)
+
+end)
+
+commands.add_command("ERM_GetRaceSettings",
+        {"description.command-regenerate-enemy"},
+        function (event)
+    ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+    game.print(game.table_to_json(race_settings))
 end)

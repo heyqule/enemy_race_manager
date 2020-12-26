@@ -1,24 +1,28 @@
-
+local noise = require("noise")
 local EventLog = require('__stdlib__/stdlib/misc/logger').new('Event', true)
 local Table = require('__stdlib__/stdlib/utils/table')
 
+local zero_probability_expression = function()
+
+    local probability = noise.var("enemy_base_probability")
+    return
+    {
+        control = 'enemy-base',
+        order = 'b[enemy]-misc',
+        force = "enemy",
+        probability_expression = noise.min(probability, 0),
+        richness_expression = noise.to_noise_expression(1)
+    }
+end
+
 -- Remove Vanilla Bitter
-print('-----')
-print(settings.startup['enemyracemanager-enable-bitters'].value == false)
-print(Table.size(data.raw['unit-spawner']) > 2)
-print(Table.size(data.raw['turret']) > 4)
-print('-----')
-if settings.startup['enemyracemanager-enable-bitters'].value == false and
-        Table.size(data.raw['unit-spawner']) > 2 and
-        Table.size(data.raw['turret']) > 4 then
-
-    data.raw['unit-spawner']['biter-spawner'] = nil
-    data.raw['unit-spawner']['spitter-spawner'] = nil
-
-    data.raw['turret']['behemoth-worm-turret'] = nil
-    data.raw['turret']['big-worm-turret'] = nil
-    data.raw['turret']['medium-worm-turret'] = nil
-    data.raw['turret']['small-worm-turret'] = nil
+if settings.startup['enemyracemanager-enable-bitters'].value == false then
+    data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression()
+    data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['behemoth-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
 end
 
 
