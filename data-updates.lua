@@ -25,4 +25,11 @@ if settings.startup['enemyracemanager-enable-bitters'].value == false then
     data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
 end
 
+Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
+    {
+        type = "ammo-damage",
+        ammo_category = "artillery-shell",
+        modifier = 0.2
+    }
+)
 

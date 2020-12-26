@@ -146,8 +146,13 @@ commands.add_command("ERM_RegenerateEnemy",
     ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
     game.forces['enemy'].kill_all_units()
     ErmReplacementProcessor.rebuildMap(game, race_settings)
-
 end)
+
+commands.add_command("ERM_ResetEnemyLevel",
+        {"description.command-regenerate-enemy"},
+        function (event)
+            ErmMapProcessor.rebuildMap(game)
+        end)
 
 commands.add_command("ERM_GetRaceSettings",
         {"description.command-regenerate-enemy"},

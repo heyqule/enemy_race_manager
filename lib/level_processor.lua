@@ -163,7 +163,7 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
             if highest_tech < evolution_weapon_level[5] then
                 for j, level in pairs(evolution_weapon_level) do
                     if highest_tech == level or highest_tech > level  then
-                        race_settings[race_name].level = 5 + i
+                        race_settings[race_name].level = 5 + j
                         print("set_level ", race_settings[race_name].level)
                         leveled_up = true
                     end

@@ -10,12 +10,18 @@ local ERM_RemoteAPI = {}
 
 -- Create or update race setting
 function ERM_RemoteAPI.register_race(race_setting)
-    global.race_settings[race_setting.race] = race_setting
+    if global and global.race_settings then
+        global.race_settings[race_setting.race] = race_setting
+    end
+    return nil
 end
 
 -- Return race setting
 function ERM_RemoteAPI.get_race(race)
-    return global.race_settings[race]
+    if global and global.race_settings then
+        return global.race_settings[race]
+    end
+    return nil
 end
 
 -- Return race tier
