@@ -16,6 +16,8 @@ This mod will aim to enhanced toughness of enemies, also provide an easy to use 
   * e.g if your physical-damage bonus is leveled up to 15, the level 9 enemy base will level up to 10 and existing level 9 base are replaced with the leveled 10 version.
 - it uses default autoplace spawner algo.
 - it adds new race as new enemy force.  Each race has its own force statistics
+- Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.  
+  * Added this due to structure resistance and health increase
 
 ### Console Commands
 
