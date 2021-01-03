@@ -10,20 +10,23 @@ This mod will aim to enhanced toughness of enemies with minimal overhead, also p
 - The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner).
   * {120, 160, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
   * formular: evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
-  * evolution_base_point
+  * evolution_base_point is used for specific customization, default is 0.
+  * level_multiplier default to 1.
 - Manage new race as new enemy force.  Each race has its own force statistics
-- New forces may have up to 3 tiers of unit-spawners and turrets
+- New races may have up to 3 tiers of unit-spawners and turrets
   * 0 - 0.4 evolution factor use tier 1 spawns
   * 0.4 adds tier 2
   * 0.8 adds tier 3
 - Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.  
   * Added this due to structure resistance and health increase
 - GUI to replace races on a surface
-- Original biter level support
+- Level support for vanilla biter/spitters
 
 ### New race demo
 The infamous zerg
-https://github.com/heyqule/erm_zerg
+https://github.com/heyqule/erm_zerg/releases
+
+Download the zip and move it the mod folder.  This will not be on Factorio Mod Portal due to copyrighted contents.
 
 Youtube: https://www.youtube.com/watch?v=Zguo9pahy8E
 
