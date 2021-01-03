@@ -10,7 +10,7 @@ local ERM_UnitHelper = {}
 local Math = require('__stdlib__/stdlib/utils/math')
 require('__stdlib__/stdlib/utils/defines/time')
 
--- Resistance cap, 95% diablo style lol.
+-- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
 local max_resistance_percentage = 95
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15

@@ -9,14 +9,17 @@
 local String = require('__stdlib__/stdlib/utils/string')
 
 local ForceHelper = {}
--- Remove prefix enemy_
+-- Remove prefix enemy_ if force isn't enemy
 function ForceHelper.extract_race_name_from(force_name)
+    if force_name == 'enemy' then
+        return MOD_NAME
+    end
     return String.gsub(force_name, 'enemy_', '')
 end
 
 -- Checks enemy_erm_ prefix
-function ForceHelper.is_erm_unit(force_name)
-    return String.find(force_name, 'enemy_erm_')
+function ForceHelper.is_erm_unit(entity)
+    return String.find(entity.name, 'erm_')
 end
 
 return ForceHelper

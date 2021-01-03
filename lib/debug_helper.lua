@@ -19,7 +19,7 @@ end
 
 function DebugHelper.print_translate_to_console(mode_name, name, level)
     -- Print translate to console
-    print(mode_name..'-'..name .. '-' .. level .. '='..fixName(name)..' L'..level)
+    print(mode_name..'/'..name .. '/' .. level .. '='..fixName(name)..' L'..level)
 end
 
 return DebugHelper

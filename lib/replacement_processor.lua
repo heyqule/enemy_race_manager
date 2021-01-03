@@ -20,12 +20,7 @@ local ReplacementProcessor = {}
 
 local race_pick
 
-
 local replace_structures = function(surface, entity, race_settings)
-    local force_name = entity.force.name
-    if ErmForceHelper.is_erm_unit(force_name) then
-        return
-    end
     local position = entity.position
 
     local structure_tier = race_settings[race_pick]['current_support_structures_tier']
@@ -39,22 +34,27 @@ local replace_structures = function(surface, entity, race_settings)
         base_name = structure_tier[math.random(1, #structure_tier)]
     end
 
-    local name = race_settings[race_pick].race .. '-' ..base_name.. '-' .. race_settings[race_pick].level
+    local new_force_name = 'enemy'
+    if race_pick ~= MOD_NAME then
+        new_force_name = 'enemy_'..race_pick
+    end
+
+    local name = race_settings[race_pick].race .. '/' ..base_name.. '/' .. race_settings[race_pick].level
     entity.destroy()
-    surface.create_entity({name = name, position = position, force='enemy_'..race_settings[race_pick].race})
+    surface.create_entity({name = name, position = position, force=new_force_name})
 end
 
 local replace_turrets = function(surface, entity, race_settings)
-    local force_name = entity.force.name
-    if ErmForceHelper.is_erm_unit(force_name) then
-        return
-    end
     local position = entity.position
     local turret_tier = race_settings[race_pick]['current_turrets_tier']
     local base_name = turret_tier[math.random(1, #turret_tier)]
-    local name = race_settings[race_pick].race .. '-' ..base_name.. '-' .. race_settings[race_pick].level
+    local name = race_settings[race_pick].race .. '/' ..base_name.. '/' .. race_settings[race_pick].level
+    local new_force_name = 'enemy'
+    if race_pick ~= MOD_NAME then
+        new_force_name = 'enemy_'..race_pick
+    end
     entity.destroy()
-    surface.create_entity({name = name, position = position, force='enemy_'..race_pick})
+    surface.create_entity({name = name, position = position, force=new_force_name})
 end
 
 function ReplacementProcessor.process_chunks(surface, area, race_settings)
@@ -75,13 +75,50 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
     end
 end
 
-function ReplacementProcessor.rebuildMap(game, race_settings)
-    for i,surface in pairs(game.surfaces) do
-        local race_names = Table.keys(race_settings, false, true)
-        race_pick = race_names[math.random(1, table_size(race_names))]
-
+function ReplacementProcessor.rebuildMap(surface, race_settings, target_force_name)
+    if surface then
+        race_pick = target_force_name
+        game.print('Rebuild Map: '..target_force_name..' on '..surface.name)
         for chunk in surface.get_chunks() do
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
+        end
+
+        for name, force in pairs(game.forces) do
+            if String.find(force.name,'enemy') then
+                force.kill_all_units()
+            end
+        end
+    end
+end
+
+function ReplacementProcessor.resetDefault(surface)
+    local spawners = Table.filter(surface.find_entities_filtered({type = 'unit-spawner'}), Game.VALID_FILTER)
+    local spawners_size = Table.size(spawners)
+    local spawner_names = {'spitter-spawner','biter-spawner'}
+    if spawners_size > 0 then
+        Table.each(spawners, function(entity)
+            local position = entity.position
+            local name = spawner_names[math.random(1, 2)]
+            entity.destroy()
+            surface.create_entity({name = name, position = position, force='enemy'})
+        end)
+    end
+
+    local turrets = Table.filter(surface.find_entities_filtered({type = 'turret'}), Game.VALID_FILTER)
+    local turret_size = Table.size(turrets)
+    local turret_names = {'big-worm-turret','behemoth-worm-turret'}
+    if turret_size > 0 then
+        Table.each(turrets, function(entity)
+            local position = entity.position
+            local name = turret_names[math.random(1, 2)]
+            entity.destroy()
+            surface.create_entity({name = name, position = position, force='enemy'})
+        end)
+    end
+
+    for name, force in pairs(game.forces) do
+        if String.find(force.name,'enemy') then
+            force.kill_all_units()
         end
     end
 end

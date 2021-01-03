@@ -20,7 +20,10 @@ local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 
+local ErmGui = require('__enemyracemanager__/scripts/gui')
+
 require('__stdlib__/stdlib/utils/defines/time')
+require('__enemyracemanager__/global')
 
 local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
 remote.add_interface("enemy_race_manager", ErmRemoteApi)
@@ -71,16 +74,81 @@ local onEntitySpawned = function(event)
 
 end
 
+local addRaceSettings = function()
+    if remote.call('enemy_race_manager','get_race', MOD_NAME) then
+        return
+    end
+    local race_settings = {
+        race = MOD_NAME,
+        version = MOD_VERSION,
+        level = 1, -- Race level
+        tier = 1, -- Race tier
+        evolution_point = 0,
+        evolution_base_point = 0,
+        angry_meter = 0, -- Build by killing their force (unit = 1, building = 10)
+        send_attack_threshold = 2000, -- When threshold reach, sends attack to the base
+        send_attack_threshold_deviation = 0.2,
+        next_attack_threshold = 0, -- Used by system to calculate next move
+        units = {
+            {'small-spitter','small-biter','medium-spitter','medium-biter'},
+            {'large-spitter','large-biter'},
+            {'behemoth-spitter','behemoth-biter'},
+        },
+        current_units_tier = {},
+        turrets = {
+            {'small-worm-turret','medium-worm-turret'},
+            {'big-worm-turret'},
+            {'behemoth-worm-turret'},
+        },
+        current_turrets_tier = {},
+        command_centers = {
+            {'spitter-spawner','biter-spawner'},
+            {},
+            {}
+        },
+        current_command_centers_tier = {},
+        support_structures = {
+            {'spitter-spawner','biter-spawner'},
+            {},
+            {},
+        },
+        current_support_structures_tier = {},
+    }
+
+    race_settings.current_units_tier = race_settings.units[1]
+    race_settings.current_turrets_tier = race_settings.turrets[1]
+    race_settings.current_command_centers_tier = race_settings.command_centers[1]
+    race_settings.current_support_structures_tier = race_settings.support_structures[1]
+
+    remote.call('enemy_race_manager','register_race', race_settings)
+end
+
 
 local prepare_world = function()
-    -- Forces checks
-
     -- Calculate Biter Level
     if table_size(race_settings) > 0 then
-        ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+       ErmLevelProcessor.calculateMultipleLevel(race_settings, game.forces, settings)
     end
-    -- Queue Chunk to process
 end
+
+local onGuiClick = function(event)
+    ErmGui.sync_with_enemy(event)
+    ErmGui.replace_enemy(event)
+    ErmGui.reset_default(event)
+    -- Close event must handle the last
+    ErmGui.toggle_main_window(event)
+    ErmGui.toggle_close(event)
+
+    if ErmGui.require_update_all then
+        ErmGui.update_all()
+    end
+end
+
+Event.register(defines.events.on_player_created, function(event)
+    ErmGui.update_overhead_button(event.player_index)
+end)
+
+Event.register(defines.events.on_gui_click, onGuiClick)
 
 --Event.register(defines.events.on_entity_spawned, onEntitySpawned)
 --
@@ -125,6 +193,7 @@ Event.on_init(function(event)
     race_settings = global.race_settings
     enemy_surfaces = global.enemy_surfaces
 
+    addRaceSettings()
     prepare_world()
 end)
 
@@ -138,25 +207,19 @@ Event.on_configuration_changed(function(event)
     enemy_surfaces = global.enemy_surfaces or {}
 
     prepare_world()
+    for _, player in pairs(game.connected_players) do
+        ErmGui.update_overhead_button(player.index)
+    end
 end)
-
-commands.add_command("ERM_RegenerateEnemy",
-    {"description.command-regenerate-enemy"},
-    function (event)
-    ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
-    game.forces['enemy'].kill_all_units()
-    ErmReplacementProcessor.rebuildMap(game, race_settings)
-end)
-
-commands.add_command("ERM_ResetEnemyLevel",
-        {"description.command-regenerate-enemy"},
-        function (event)
-            ErmMapProcessor.rebuildMap(game)
-        end)
 
 commands.add_command("ERM_GetRaceSettings",
         {"description.command-regenerate-enemy"},
-        function (event)
-    ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+        function ()
     game.print(game.table_to_json(race_settings))
+end)
+
+commands.add_command("ERM_LevelUpWithTech",
+        {"description.command-level-up-with-tech"},
+        function ()
+            ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
 end)
