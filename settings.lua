@@ -6,7 +6,7 @@ data:extend{
         name = "enemyracemanager-enable-bitters",
         description = "enemyracemanager-enable-bitters",
         setting_type = "startup",
-        default_value = false,
+        default_value = true,
         order = "enemyracemanager-1"
     },
     {
