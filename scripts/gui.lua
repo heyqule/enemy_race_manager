@@ -51,19 +51,22 @@ function ERM_GUI.show(player)
     item_table.add{type = "label", caption = {'gui.angry_column'}}
     item_table.add{type = "label", caption = {'gui.action_column'}}
 
-    for name, settings in pairs(global.race_settings) do
-        item_table.add{type = "label", caption = settings.race}
-        item_table.add{type = "label", caption = settings.level}
-        item_table.add{type = "label", caption = settings.tier}
-        item_table.add{type = "label", caption = string.format("%.4f", settings.evolution_point)}
+    for name, race_setting in pairs(global.race_settings) do
+        item_table.add{type = "label", caption = race_setting.race}
+        item_table.add{type = "label", caption = race_setting.level}
+        item_table.add{type = "label", caption = race_setting.tier}
+        item_table.add{type = "label", caption = string.format("%.4f", race_setting.evolution_point)}
         item_table.add{type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(name))}
-        item_table.add{type = "label", caption = string.format("%.4f", settings.angry_meter)}
+        item_table.add{type = "label", caption = string.format("%.4f", race_setting.angry_meter)}
         local action_flow = item_table.add{type = "flow", name=name.."_flow", direction='vertical'}
         if admin and name ~= MOD_NAME then
             action_flow.add{type = "button", name=name.."/sync_with_enemy", caption={'gui.sync_with_enemy'}, tooltip={'gui.sync_with_enemy_tooltip'}}
         end
 
-        if admin then
+        if admin and name ~= MOD_NAME then
+            action_flow.add{type = "button", name=name.."/replace_enemy", caption={'gui.replace_enemy'}, tooltip={'gui.replace_enemy_tooltip'}}
+        end
+        if admin and name == MOD_NAME and settings.startup['enemyracemanager-enable-bitters'].value == true then
             action_flow.add{type = "button", name=name.."/replace_enemy", caption={'gui.replace_enemy'}, tooltip={'gui.replace_enemy_tooltip'}}
         end
     end
