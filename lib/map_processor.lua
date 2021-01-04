@@ -42,7 +42,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
         return
     end
 
-    if race_settings[race_name].level == tonumber(nameToken[3]) then
+    if race_settings[race_name].level == tonumber(nameToken[3]) and String.find(entity.name, '/') then
         return
     end
 
