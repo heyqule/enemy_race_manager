@@ -31,7 +31,7 @@ Download the zip and move it the mod folder.  This will not be on Factorio Mod P
 Youtube: https://www.youtube.com/watch?v=Zguo9pahy8E
 
 New race units use more CPU resource than vanilla biters.  
-It's not ideal for resource limited maga base. It's great for defence focused death worlds.
+It's great for defence focused death worlds. It's not ideal for computational resource limited giga bases. 
 
 ### Console Commands
 ERM_GetRaceSettings
