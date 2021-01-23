@@ -141,7 +141,7 @@ function ERM_GUI.replace_enemy(event)
         nameToken = String.split(event.element.name, '/')
         if (game.forces['enemy_'..nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
             local owner = game.players[event.element.player_index]
-            ReplacementProcessor.rebuildMap(owner.surface, global.race_settings, nameToken[1])
+            ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
             ERM_GUI.require_update_all = true;
         end
     end

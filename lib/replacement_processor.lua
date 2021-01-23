@@ -28,7 +28,7 @@ local replace_structures = function(surface, entity, race_settings)
     local pick = math.random();
 
     local base_name = ''
-    if pick < 0.3 then
+    if pick < 0.125 then
         base_name = strucutre_base[math.random(1, #strucutre_base)]
     else
         base_name = structure_tier[math.random(1, #structure_tier)]
@@ -41,7 +41,13 @@ local replace_structures = function(surface, entity, race_settings)
 
     local name = race_settings[race_pick].race .. '/' ..base_name.. '/' .. race_settings[race_pick].level
     entity.destroy()
-    surface.create_entity({name = name, position = position, force=new_force_name})
+    if not surface.can_place_entity({name = name, force = new_force_name, position = position}) then
+        position = surface.find_non_colliding_position(name, position, 20, 2, true)
+    end
+
+    if position then
+        surface.create_entity({name = name, force = new_force_name, position = position})
+    end
 end
 
 local replace_turrets = function(surface, entity, race_settings)
@@ -54,18 +60,16 @@ local replace_turrets = function(surface, entity, race_settings)
         new_force_name = 'enemy_'..race_pick
     end
     entity.destroy()
-    surface.create_entity({name = name, position = position, force=new_force_name})
+    if not surface.can_place_entity({name = name, force = new_force_name, position = position}) then
+        position = surface.find_non_colliding_position(name, position, 25, 2, true)
+    end
+
+    if position then
+        surface.create_entity({name = name, force = new_force_name, position = position})
+    end
 end
 
 function ReplacementProcessor.process_chunks(surface, area, race_settings)
-    local spawners = Table.filter(surface.find_entities_filtered({area = area, type = 'unit-spawner'}), Game.VALID_FILTER)
-    local spawners_size = Table.size(spawners)
-    if spawners_size > 0 then
-        Table.each(spawners, function(entity)
-            replace_structures(surface, entity, race_settings)
-        end)
-    end
-
     local turrets = Table.filter(surface.find_entities_filtered({area = area, type = 'turret'}), Game.VALID_FILTER)
     local turret_size = Table.size(turrets)
     if turret_size > 0 then
@@ -73,9 +77,17 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
             replace_turrets(surface, entity, race_settings)
         end)
     end
+
+    local spawners = Table.filter(surface.find_entities_filtered({area = area, type = 'unit-spawner'}), Game.VALID_FILTER)
+    local spawners_size = Table.size(spawners)
+    if spawners_size > 0 then
+        Table.each(spawners, function(entity)
+            replace_structures(surface, entity, race_settings)
+        end)
+    end
 end
 
-function ReplacementProcessor.rebuildMap(surface, race_settings, target_force_name)
+function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_name)
     if surface then
         race_pick = target_force_name
         game.print('Rebuild Map: '..target_force_name..' on '..surface.name)

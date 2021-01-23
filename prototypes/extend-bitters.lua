@@ -38,10 +38,7 @@ local incremental_cold_resistance = 50
 function makeLevelEnemy(level, type)
     local biter = Table.deepcopy(data.raw['unit'][type])
 
-    if DEBUG_MODE then
-        ERM_DebugHelper.print_translate_to_console(MOD_NAME, biter['name'], level)
-    end
-
+    biter['localised_name'] = { 'entity-name.' .. MOD_NAME..'/'..biter['name'], level }
     biter['name'] = MOD_NAME..'/'..biter['name'].. '/' .. level
     biter['max_health'] = ERM_UnitHelper.get_health(biter['max_health'], biter['max_health'] * max_hitpoint_multiplier, health_multiplier, level)
     biter['resistances'] = {

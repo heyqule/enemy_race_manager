@@ -116,19 +116,23 @@ function MapProcessor.process_chunks(surface, race_settings)
     end
 end
 
-function MapProcessor.cleanQueue()
+function MapProcessor.clean_queue()
     for k, queue in pairs(chunk_queue) do
         chunk_queue[k] = Queue()
     end
 end
 
-function MapProcessor.rebuildMap(game)
-    MapProcessor.cleanQueue()
+function MapProcessor.rebuild_map(game)
+    MapProcessor.clean_queue()
     for i,surface in pairs(game.surfaces) do
         for chunk in surface.get_chunks() do
             MapProcessor.queue_chunks(surface, chunk.area)
         end
     end
+end
+
+function MapProcessor.level_up_unit_built_base(entity, race_settings)
+    level_up_enemy_structures(entity.surface, entity, race_settings)
 end
 
 return MapProcessor

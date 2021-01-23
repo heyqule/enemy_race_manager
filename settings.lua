@@ -1,4 +1,4 @@
-local descript = "mod-setting-description.enemyracemanager-"
+require 'global'
 
 data:extend{
     {
@@ -7,7 +7,7 @@ data:extend{
         description = "enemyracemanager-enable-bitters",
         setting_type = "startup",
         default_value = true,
-        order = "enemyracemanager-1"
+        order = "enemyracemanager-01"
     },
     {
         type = "string-setting",
@@ -16,15 +16,7 @@ data:extend{
         setting_type = "startup",
         default_value = "Normal - Max L10",
         allowed_values = {"Normal - Max L10", "Advanced - Max L20"},
-        order = "enemyracemanager-2"
-    },
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-enable-advance-mapping",
-        description = "enemyracemanager-enable-advance-mapping",
-        setting_type = "startup",
-        default_value = false,
-        order = "enemyracemanager-3"
+        order = "enemyracemanager-02"
     },
     {
         type = "int-setting",
@@ -34,7 +26,27 @@ data:extend{
         default_value = 5,
         minimum_value = 1,
         maximum_value = 15,
-        order = "enemyracemanager-4"
+        order = "enemyracemanager-04"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-max-gathering-groups",
+        description = "enemyracemanager-max-gathering-groups",
+        setting_type = "startup",
+        default_value = 15,
+        minimum_value = 5,
+        maximum_value = 50,
+        order = "enemyracemanager-15"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-max-group-size",
+        description = "enemyracemanager-max-group-size",
+        setting_type = "startup",
+        default_value = 100,
+        minimum_value = 50,
+        maximum_value = 250,
+        order = "enemyracemanager-16"
     },
     {
         type = "int-setting",
@@ -44,7 +56,7 @@ data:extend{
         default_value = 5,
         minimum_value = 3,
         maximum_value = 20,
-        order = "enemyracemanager-5"
+        order = "enemyracemanager-100"
     },
     {
         type = "int-setting",
@@ -54,7 +66,7 @@ data:extend{
         default_value = 10,
         minimum_value = 5,
         maximum_value = 100,
-        order = "enemyracemanager-6"
+        order = "enemyracemanager-101"
     },
     {
         type = "double-setting",
@@ -64,7 +76,42 @@ data:extend{
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-7"
+        order = "enemyracemanager-102"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-enable-2way-group-enemy",
+        description = "enemyracemanager-2way-group-enemy",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-201"
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-2way-group-enemy-orientation",
+        description = "enemyracemanager-2way-group-enemy-orientation",
+        setting_type = "startup",
+        default_value = 'x-axis',
+        order = "enemyracemanager-202",
+        allowed_values = {'x-axis','y-axis'}
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-2way-group-enemy-positive",
+        description = "enemyracemanager-2way-group-enemy-positive",
+        setting_type = "startup",
+        default_value = MOD_NAME,
+        order = "enemyracemanager-203",
+        allowed_values = {'empty', MOD_NAME}
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-2way-group-enemy-negative",
+        description = "enemyracemanager-2way-group-enemy-negative",
+        setting_type = "startup",
+        default_value = MOD_NAME,
+        order = "enemyracemanager-204",
+        allowed_values = {'empty', MOD_NAME}
     },
 }
 

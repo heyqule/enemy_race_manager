@@ -42,10 +42,7 @@ local incremental_cold_resistance = 55
 function makeLevelSpawners(level, type)
     local spawner = Table.deepcopy(data.raw['unit-spawner'][type])
 
-    if DEBUG_MODE then
-        ERM_DebugHelper.print_translate_to_console(MOD_NAME, spawner['name'], level)
-    end
-
+    spawner['localised_name'] = { 'entity-name.' .. spawner['name'], level}
     spawner['name'] = MOD_NAME..'/'..spawner['name'] .. '/' .. level;
     spawner['max_health'] = ERM_UnitHelper.get_health(spawner['max_health'], spawner['max_health'] * max_hitpoint_multiplier, health_multiplier, level)
     spawner['resistances'] = {
@@ -98,9 +95,7 @@ function makeLevelWorm(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
     local worm = Table.deepcopy(data.raw['turret'][type])
 
-    if DEBUG_MODE then
-        ERM_DebugHelper.print_translate_to_console(MOD_NAME, worm['name'], level)
-    end
+    worm['localised_name'] = { 'entity-name.' ..MOD_NAME..'/'.. worm['name'], level }
     worm['name'] = MOD_NAME..'/'.. worm['name'] .. '/' .. level;
     worm['max_health'] = ERM_UnitHelper.get_health(worm['max_health'], worm['max_health'] * max_worm_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
     worm['resistances'] = {

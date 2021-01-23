@@ -13,4 +13,8 @@ function ERM_UnitTint.tint_shadow()
     return {r=0, g=0, b=0, a=0.5}
 end
 
+function ERM_UnitTint.tint_dragoon_ball_light()
+    return {r=135, g=206, b=235, a=1}
+end
+
 return ERM_UnitTint

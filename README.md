@@ -1,5 +1,5 @@
 # Enemy Race Manager
-This mod will aim to enhanced toughness of enemies with minimal overhead, also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) to add new enemy race.
+This mod will aim to enhanced toughness of enemies with minimal overhead, also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy race.
 
 ### Features
 - 2 difficulty levels 
@@ -21,10 +21,18 @@ This mod will aim to enhanced toughness of enemies with minimal overhead, also p
   * Added this due to structure resistance and health increase
 - GUI to replace races on a surface
 - Level support for vanilla biter/spitters
+- Support grouping race spawns.    
+  * race A spawns at positive axis, race B spawns at negative axis
+  * race A spawns at positive axis, nothing spawns at negative axis.
+  * support both x and y axis.
+  
 
 ### New race demo
 The infamous zerg
 https://github.com/heyqule/erm_zerg/releases
+
+The godly protoss
+https://github.com/heyqule/erm_toss/releases
 
 Download the zip and move it the mod folder.  This will not be on Factorio Mod Portal due to copyrighted contents.
 
@@ -50,3 +58,6 @@ ERM_LevelUpWithTech
 * Angry meters
   * send enemy to your base @ night based on how many they have been killed
 * Surface based controls / compatibility with space exploration
+
+### Known Issues
+* Defense turrets for new race attack player in peaceful mode.

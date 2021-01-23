@@ -227,6 +227,12 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
                     force.evolution_factor = 0.8
                 end
             end
+
+            Event.dispatch({
+                name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+            Event.dispatch(
+                    {name=Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                     affected_race = race_settings[race_name] })
         end
 
         ::skip_calculate_level_for_force_by_tech::

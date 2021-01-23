@@ -46,7 +46,7 @@ end
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
-        EventLog.log('on_build_base_built, Entity '..entity.name)
+        ErmMapProcessor.level_up_unit_built_base(entity, race_settings)
     end
 end
 
@@ -129,6 +129,10 @@ local prepare_world = function()
     if table_size(race_settings) > 0 then
        ErmLevelProcessor.calculateMultipleLevel(race_settings, game.forces, settings)
     end
+
+    -- Game map settings
+    game.map_settings.unit_group.max_gathering_unit_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
+    game.map_settings.unit_group.max_unit_group_size = settings.startup["enemyracemanager-max-group-size"].value
 end
 
 local onGuiClick = function(event)
@@ -153,9 +157,9 @@ Event.register(defines.events.on_gui_click, onGuiClick)
 --Event.register(defines.events.on_entity_spawned, onEntitySpawned)
 --
 --Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
---
---Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
---
+
+Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
+
 --Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
 --
 --Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
@@ -181,7 +185,7 @@ Event.register(Event.generate_event_name(ErmConfig.EVENT_TIER_WENT_UP), function
 end)
 
 Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), function(event)
-    ErmMapProcessor.rebuildMap(game)
+    ErmMapProcessor.rebuild_map(game)
 end)
 
 Event.on_init(function(event)

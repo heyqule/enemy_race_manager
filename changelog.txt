@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.3
+Date: 24. 01. 2021
+  Features:
+    - Added support to change max groups and max group size for map settings.
+    - Added race placement grouping, supports 2 races on nauvis
+  Changes:
+    - Improves entity placement in map_processor and replacement_processor
+    - Force set friend handles in force helper.
+    - Default max group changed from 30 to 15
+    - Default max group size changed from 200 to 100
+    - Building on_biter_base_built event should now match race level.
+    - Improve translations
+
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+Date: 03. 01. 2021
+  Changes:
+    - Enable vanilla biter by default
+    - Change description in info.json
+
+---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+Date: 03. 01. 2021
+  Features:
+    - Add GUI to view evolution points, sync evolution point or replace enemy
+    - Add level support for vanilla biters
+  Changes:
+    - Changed unit naming convention from '-' to '/'.
+    - Tuned Evolution level.
+
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 26. 12. 2020
+  Features:
+    - 2 difficulty levels (normal: 10, advanced: 20)
+    - First 5 level is tied to force's evolution factor
+    - The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner)
+    - Manage new race as new enemy force. Each race has its own force statistics
+    - New races may have up to 3 tiers of unit-spawners and turrets
+    - Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
+    - Enemy level processor, handles leveling up enemy
+    - Enemy map processor, handles replacing enemy entity with new level
+    - Enemy replacement processor, handles replacing existing enemy entity with new race

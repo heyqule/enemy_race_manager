@@ -22,4 +22,13 @@ function ForceHelper.is_erm_unit(entity)
     return String.find(entity.name, 'erm_')
 end
 
+function ForceHelper.set_friends(game, force_name)
+    for name, force in pairs(game.forces) do
+        if String.find(force.name,'enemy') then
+            force.set_friend(force_name, true);
+            force.set_friend('enemy', true);
+        end
+    end
+end
+
 return ForceHelper
