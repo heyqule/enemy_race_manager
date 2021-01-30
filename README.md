@@ -1,5 +1,6 @@
 # Enemy Race Manager
-This mod will aim to enhanced toughness of enemies with minimal overhead, also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy race.
+This mod aim to enhanced toughness of enemies with minimal overhead by adding levels to enemies. 
+It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy races. Please refer to the demos below.
 
 ### Features
 - 2 difficulty levels 
