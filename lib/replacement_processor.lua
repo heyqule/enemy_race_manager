@@ -15,6 +15,7 @@ local Game = require('__stdlib__/stdlib/game')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmDebugHelper = require('__enemyracemanager__/lib//debug_helper')
 
 local ReplacementProcessor = {}
 
@@ -42,11 +43,12 @@ local replace_structures = function(surface, entity, race_settings)
     local name = race_settings[race_pick].race .. '/' ..base_name.. '/' .. race_settings[race_pick].level
     entity.destroy()
     if not surface.can_place_entity({name = name, force = new_force_name, position = position}) then
-        position = surface.find_non_colliding_position(name, position, 20, 2, true)
+        position = surface.find_non_colliding_position(name, position, 32, 2, true)
     end
 
     if position then
         surface.create_entity({name = name, force = new_force_name, position = position})
+        ErmDebugHelper.print('Replaced with '..name)
     end
 end
 
@@ -61,11 +63,12 @@ local replace_turrets = function(surface, entity, race_settings)
     end
     entity.destroy()
     if not surface.can_place_entity({name = name, force = new_force_name, position = position}) then
-        position = surface.find_non_colliding_position(name, position, 25, 2, true)
+        position = surface.find_non_colliding_position(name, position, 32, 2, true)
     end
 
     if position then
         surface.create_entity({name = name, force = new_force_name, position = position})
+        ErmDebugHelper.print('Replaced with '..name)
     end
 end
 
@@ -99,6 +102,25 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_n
             if String.find(force.name,'enemy') then
                 force.kill_all_units()
             end
+        end
+    end
+end
+
+function ReplacementProcessor.replace_entity(surface, entity, race_settings, target_force_name)
+    if surface then
+        race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
+        local nameToken = ErmForceHelper.getNameToken(entity.name)
+        ErmDebugHelper.print(race_pick)
+        ErmDebugHelper.print(nameToken[1])
+        if(race_pick == nameToken[1]) then
+            ErmDebugHelper.print('Skipping')
+            return
+        end
+
+        if(entity.type == 'unit-spawner') then
+            replace_structures(surface, entity, race_settings)
+        elseif(entity.type == 'turret') then
+            replace_turrets(surface, entity, race_settings)
         end
     end
 end

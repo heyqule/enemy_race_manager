@@ -23,6 +23,8 @@ function ErmConfig.get_max_level(setting)
     local level = 10;
     if setting.startup['enemyracemanager-max-level'].value == "Advanced - Max L20" then
         level = 20
+    elseif setting.startup['enemyracemanager-max-level'].value == "Casual - Max L5" then
+        level = 5
     end
     return level
 end

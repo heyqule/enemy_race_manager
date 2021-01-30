@@ -1,5 +1,4 @@
 local noise = require("noise")
-local EventLog = require('__stdlib__/stdlib/misc/logger').new('Event', true)
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 local enemy_autoplace = require ("__enemyracemanager__/lib/enemy-autoplace-utils")
@@ -61,26 +60,20 @@ end
 local process_y_axis = function()
     for k,v in pairs(data.raw["unit-spawner"]) do -- spawners
         if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            print('right: '..v.name)
             v.autoplace = y_axis_positive_probability_expression(v.autoplace)
         elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            print('left: '..v.name)
             v.autoplace = y_axis_negative_probability_expression(v.autoplace)
         else
-            print('zero: '..v.name)
             v.autoplace = zero_probability_expression()
         end
     end
 
     for k,v in pairs(data.raw["turret"]) do -- turret
         if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            print('right: '..v.name)
             v.autoplace = y_axis_positive_probability_expression(v.autoplace)
         elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            print('left: '..v.name)
             v.autoplace = y_axis_negative_probability_expression(v.autoplace)
         else
-            print('zero: '..v.name)
             v.autoplace = zero_probability_expression()
         end
     end

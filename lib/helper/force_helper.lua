@@ -31,4 +31,11 @@ function ForceHelper.set_friends(game, force_name)
     end
 end
 
+function ForceHelper.getNameToken(name)
+    if not String.find(name, '/') then
+        return {'erm_vanilla', name, '1'}
+    end
+    return String.split(name, '/')
+end
+
 return ForceHelper

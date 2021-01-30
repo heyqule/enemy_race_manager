@@ -20,15 +20,8 @@ local MapProcessor = {}
 
 local chunk_queue = {}
 
-local getNameToken = function(name)
-    if not String.find(name, '/') then
-        return {'erm_vanilla', name, '1'}
-    end
-    return String.split(name, '/')
-end
-
 local level_up_enemy_structures = function(surface, entity, race_settings)
-    local nameToken = getNameToken(entity.name)
+    local nameToken = ErmForceHelper.getNameToken(entity.name)
     local force_name = entity.force.name
     local position = entity.position
     local race_name = ErmForceHelper.extract_race_name_from(force_name)

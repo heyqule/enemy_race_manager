@@ -26,11 +26,10 @@ end
 
 -- Return race tier
 function ERM_RemoteAPI.get_race_tier(race)
-    if global.race_settings and
-            global.race_settings[race] and
-            global.race_settings[race].current_tier then
+    if global and global.race_settings and
+            global.race_settings[race] and global.race_settings[race].tier then
 
-        return global.race_settings[race].current_tier
+        return global.race_settings[race].tier
     end
     return 1
 end
@@ -39,9 +38,9 @@ end
 function ERM_RemoteAPI.get_race_level(race)
     if global.race_settings and
             global.race_settings[race] and
-            global.race_settings[race].current_level then
+            global.race_settings[race].level then
 
-        return global.race_settings[race].current_level
+        return global.race_settings[race].level
     end
     return 1
 end

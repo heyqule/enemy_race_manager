@@ -10,6 +10,7 @@
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
+local Math = require('__stdlib__/stdlib/utils/math')
 
 local ErmConfig = require('lib/global_config')
 local ErmForceHelper = require('lib/helper/force_helper')
@@ -202,14 +203,14 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
         then
             local leveled_up = false
             if highest_tech >= evolution_weapon_level[5] then
-                race_settings[race_name].level = highest_tech - evolution_weapon_level[5] + 10
+                race_settings[race_name].level = Math.min(highest_tech - evolution_weapon_level[5] + 10, ErmConfig.get_max_level(settings))
                 leveled_up = true
             end
 
             if highest_tech < evolution_weapon_level[5] then
                 for j, level in pairs(evolution_weapon_level) do
                     if highest_tech == level or highest_tech > level  then
-                        race_settings[race_name].level = 5 + j
+                        race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level(settings))
                         print("set_level ", race_settings[race_name].level)
                         leveled_up = true
                     end

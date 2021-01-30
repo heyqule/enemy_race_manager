@@ -9,7 +9,7 @@ This mod will aim to enhanced toughness of enemies with minimal overhead, also p
   * {0.25, 0.4, 0.65, 0.8}
 - The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner).
   * {120, 160, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
-  * formular: evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
+  * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
   * evolution_base_point is used for specific customization, default is 0.
   * level_multiplier default to 1.
 - Manage new race as new enemy force.  Each race has its own force statistics
@@ -24,22 +24,22 @@ This mod will aim to enhanced toughness of enemies with minimal overhead, also p
 - Support grouping race spawns.    
   * race A spawns at positive axis, race B spawns at negative axis
   * race A spawns at positive axis, nothing spawns at negative axis.
-  * support both x and y axis.
+  * can be either divided by both x and y axis.
   
-
+ 
 ### New race demo
-The infamous zerg
+The infamous zerg (1.0 / 2021-01-30)
 https://github.com/heyqule/erm_zerg/releases
 
-The godly protoss
+The godly protoss (1.0 / 2021-01-30)
 https://github.com/heyqule/erm_toss/releases
 
-Download the zip and move it the mod folder.  This will not be on Factorio Mod Portal due to copyrighted contents.
+Download the zip and move it the mod folder.  
 
-Youtube: https://www.youtube.com/watch?v=Zguo9pahy8E
+These mods are made as a educational demo. They will not be on Factorio Mod Portal due to copyrighted contents.  
+I hope someone with art skills come up with a new original race.
 
-New race units use more CPU resource than vanilla biters.  
-It's great for defence focused death worlds. It's not ideal for computational resource limited giga bases. 
+Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU 
 
 ### Console Commands
 ERM_GetRaceSettings

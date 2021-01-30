@@ -22,4 +22,10 @@ function DebugHelper.print_translate_to_console(mode_name, name, level)
     print(mode_name..'/'..name .. '/' .. level .. '='..fixName(name)..' L'..level)
 end
 
+function DebugHelper.print(message)
+    if(DEBUG_MODE) then
+        print(message)
+    end
+end
+
 return DebugHelper

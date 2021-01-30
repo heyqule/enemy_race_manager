@@ -9,7 +9,6 @@
 -- Imports
 local Position = require '__stdlib__/stdlib/area/position'
 local Area = require '__stdlib__/stdlib/area/area'
-local EventLog = require('__stdlib__/stdlib/misc/logger').new('Event')
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local Game = require('__stdlib__/stdlib/game')
@@ -19,6 +18,7 @@ local ErmConfig =  require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
+local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local ErmGui = require('__enemyracemanager__/scripts/gui')
 
@@ -31,43 +31,44 @@ remote.add_interface("enemy_race_manager", ErmRemoteApi)
 -- local variables
 local race_settings -- track race settings
 local enemy_surfaces -- track which race are on a surface
-ERM_DEBUG = false
 
 local onBuildBaseArrived = function(event)
     local group = event.group;
     if not ( group and group.valid) then
         local unit = event.unit;
-        EventLog.log('on_build_base_arrived, Group '..unit.name)
+        ErmDebugHelper.print('on_build_base_arrived, Group '..unit.name)
     else
-        EventLog.log('on_build_base_arrived, Unit '..group.name)
+        ErmDebugHelper.print('on_build_base_arrived, Unit '..group.name)
     end
 end
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
-        ErmMapProcessor.level_up_unit_built_base(entity, race_settings)
+        ErmDebugHelper.print('Base Built:'..entity.force.name)
+        ErmDebugHelper.print(entity.name)
+        ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
     end
 end
 
 local onUnitGroupCreated = function(event)
     local group = event.group
-    EventLog.log('on_unit_group_created, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_group_created, Group '..group.group_number)
 end
 
 local onUnitAddToGroup = function(event)
     local group = event.group
-    EventLog.log('on_unit_added_to_group, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_added_to_group, Group '..group.group_number)
 end
 
 local onUnitFinishGathering = function(event)
     local group = event.group
-    EventLog.log('on_unit_group_finished_gathering, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_group_finished_gathering, Group '..group.group_number)
 end
 
 local onUnitRemovedFromGroup = function(event)
     local group = event.group
-    EventLog.log('on_unit_removed_from_group, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_removed_from_group, Group '..group.group_number)
 end
 
 local onEntitySpawned = function(event)

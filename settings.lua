@@ -15,7 +15,7 @@ data:extend{
         description = "enemyracemanager-max-level",
         setting_type = "startup",
         default_value = "Normal - Max L10",
-        allowed_values = {"Normal - Max L10", "Advanced - Max L20"},
+        allowed_values = {"Casual - Max L5","Normal - Max L10", "Advanced - Max L20"},
         order = "enemyracemanager-02"
     },
     {
