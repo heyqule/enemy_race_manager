@@ -1,6 +1,7 @@
 # Enemy Race Manager
 This mod aim to enhanced toughness of enemies with minimal overhead by adding levels to enemies. 
 It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy races. Please refer to the demos below.
+**I hope someone with art skills can come up with some new original races.**
 
 ### Features
 - 3 difficulty levels 
@@ -39,8 +40,7 @@ https://github.com/heyqule/erm_toss/releases
 
 Download the zip and move it the mod folder. Please visit the following link for folder details.  https://wiki.factorio.com/index.php?title=Application_directory
 
-These mods are made as a educational demo. They will not be on Factorio Mod Portal due to copyrighted contents.  
-**I hope someone with art skills can come up with some new original races.**
+These mods are made as a educational demo. They will not be on Factorio Mod Portal due to copyrighted contents.
 
 Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU 
 
