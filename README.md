@@ -35,7 +35,7 @@ https://github.com/heyqule/erm_zerg/releases
 The godly protoss (1.0 / 2021-01-30)
 https://github.com/heyqule/erm_toss/releases
 
-Download the zip and move it the mod folder.  
+Download the zip and move it the mod folder. Please visit the following link for folder details.  https://wiki.factorio.com/index.php?title=Application_directory
 
 These mods are made as a educational demo. They will not be on Factorio Mod Portal due to copyrighted contents.  
 I hope someone with art skills come up with a new original race.
