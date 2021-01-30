@@ -36,7 +36,7 @@ The infamous zerg (1.0 / 2021-01-30)
 https://github.com/heyqule/erm_zerg/releases
 
 The godly protoss (1.0 / 2021-01-30)
-https://github.com/heyqule/erm_toss/releases
+https://github.com/heyqule/erm_protoss/releases
 
 Download the zip and move it the mod folder. Please visit the following link for folder details.  https://wiki.factorio.com/index.php?title=Application_directory
 
