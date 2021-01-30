@@ -3,7 +3,8 @@ This mod aim to enhanced toughness of enemies with minimal overhead by adding le
 It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy races. Please refer to the demos below.
 
 ### Features
-- 2 difficulty levels 
+- 3 difficulty levels 
+  * Casual, max at level 5
   * Normal, max at level 10 (default, targets weapon lvl 15) 
   * Advance, max at level 20 (targets weapon lvl 25)
 - First 5 level is tied to force's evolution factor
