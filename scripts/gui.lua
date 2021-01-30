@@ -51,6 +51,8 @@ function ERM_GUI.show(player)
     item_table.add{type = "label", caption = {'gui.angry_column'}}
     item_table.add{type = "label", caption = {'gui.action_column'}}
 
+    LevelManager.calculateEvolutionPoints(global.race_settings, game.forces, settings)
+
     for name, race_setting in pairs(global.race_settings) do
         item_table.add{type = "label", caption = race_setting.race}
         item_table.add{type = "label", caption = race_setting.level}

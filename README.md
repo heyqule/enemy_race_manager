@@ -24,8 +24,9 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 - Level support for vanilla biter/spitters
 - Support grouping race spawns.    
   * race A spawns at positive axis, race B spawns at negative axis
-  * race A spawns at positive axis, nothing spawns at negative axis.
+  * race A spawns at positive axis, nothing spawns at negative axis.  
   * can be either divided by both x and y axis.
+  * however, races can expand into each other's territory.
   
  
 ### New race demo
@@ -38,7 +39,7 @@ https://github.com/heyqule/erm_toss/releases
 Download the zip and move it the mod folder. Please visit the following link for folder details.  https://wiki.factorio.com/index.php?title=Application_directory
 
 These mods are made as a educational demo. They will not be on Factorio Mod Portal due to copyrighted contents.  
-I hope someone with art skills come up with a new original race.
+**I hope someone with art skills can come up with some new original races.**
 
 Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU 
 

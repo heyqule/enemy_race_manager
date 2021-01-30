@@ -39,10 +39,21 @@ local level_up_tier = function(current_tier, race_settings, race_name)
         race_settings[race_name]['current_support_structures_tier'] = Table.array_combine(race_settings[race_name]['current_support_structures_tier'], race_settings[race_name]['support_structures'][race_settings[race_name].tier])
 end
 
+function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
+    for i, force in pairs(forces) do
+        if String.find(force.name,'enemy') then
+            local force_name = force.name
+            local race_name = ErmForceHelper.extract_race_name_from(force_name)
+            -- Handle Score Level
+            local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
+            race_settings[race_name].evolution_point = score
+        end
+    end
+end
+
 function LevelManager.calculateLevel(race_settings, forces, settings)
     for i, force in pairs(forces) do
-        if force.name == 'player' or
-                force.name == 'neutral' then
+        if not String.find(force.name,'enemy') then
             goto skip_calculate_level_for_force
         end
 
@@ -51,6 +62,10 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
 
         if race_settings and race_settings[race_name] then
             local current_level = race_settings[race_name].level
+
+            -- Handle Score Level
+            local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
+            race_settings[race_name].evolution_point = score
 
             if current_level == ErmConfig.get_max_level(settings) then
                 goto skip_calculate_level_for_force
@@ -64,10 +79,6 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
                         {name=Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
                          affected_race = race_settings[race_name] })
             end
-
-            -- Handle Score Level
-            local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
-            race_settings[race_name].evolution_point = score
 
             -- Handle Evolution Level
             if current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level] then

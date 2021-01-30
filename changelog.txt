@@ -1,20 +1,22 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.3.0
+Version: 0.3
 Date: 29. 01. 2021
   Features:
     - Added support to change max groups and max group size for map settings.
     - Added race placement grouping, supports 2 races on nauvis
+
   Changes:
     - Improves entity placement in map_processor and replacement_processor
     - Force set friend handles in force helper.
-    - Default max group changed from 30 to 15
-    - Default max group size changed from 200 to 100
+    - Default max group changed from 30 to 15. (performance improvement)
+    - Default max group size changed from 200 to 100. (performance improvement)
     - Building on_biter_base_built event should now match race level.
     - Improve translations
 
   Fixes:
     - Replace with buildings from correct race when the enemy base expands.  Autoplace spawned building from other races.
     - Fix remote call fetching incorrect unit tier / level
+    - Fix evolution point calculation for gui
 
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
