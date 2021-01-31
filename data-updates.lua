@@ -93,10 +93,10 @@ if settings.startup['enemyracemanager-enable-bitters'].value == false then
     disable_normal_biters()
 end
 
-if settings.startup['enemyracemanager-enable-bitters'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'x-axis' then
+if settings.startup['enemyracemanager-enable-2way-group-enemy'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'x-axis' then
     disable_normal_biters()
     process_x_axis()
-elseif settings.startup['enemyracemanager-enable-bitters'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'y-axis' then
+elseif settings.startup['enemyracemanager-enable-2way-group-enemy'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'y-axis' then
     disable_normal_biters()
     process_y_axis()
 end
