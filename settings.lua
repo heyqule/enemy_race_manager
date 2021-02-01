@@ -19,6 +19,15 @@ data:extend{
         order = "enemyracemanager-02"
     },
     {
+        type = "string-setting",
+        name = "enemyracemanager-max-attack-range",
+        description = "enemyracemanager-max-attack-range",
+        setting_type = "startup",
+        default_value = "Normal - 16",
+        allowed_values = {"Normal - 16", "Advanced - 20"},
+        order = "enemyracemanager-03"
+    },
+    {
         type = "int-setting",
         name = "enemyracemanager-enemy-corpse-time",
         description = "enemyracemanager-enemy-corpse-time",

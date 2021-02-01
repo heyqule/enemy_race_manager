@@ -20,12 +20,12 @@ local LevelManager = {}
 -- unit tier control
 local tier_map = {0.4, 0.8}
 
--- control level 2-5
-local evolution_level_map = {0.25, 0.4, 0.65, 0.8}
-local max_evolution_factor_level = 5
+-- control level 2, 3
+local evolution_level_map = {0.4, 0.8}
+local max_evolution_factor_level = 3
 
--- control level 6 - 20
-local evolution_score = {120, 160, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
+-- control level 4 - 20
+local evolution_score = {20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
 
 -- weapon level check at level 6 - 10
 local evolution_weapon_level = {7, 9, 11, 13, 15}
@@ -235,8 +235,8 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
                     end
                 end
 
-                if force.evolution_factor < 0.8 then
-                    force.evolution_factor = 0.8
+                if force.evolution_factor < 0.95 then
+                    force.evolution_factor = 0.95
                 end
             end
 

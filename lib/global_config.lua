@@ -19,14 +19,22 @@ ErmConfig.LEVEL_PROCESS_INTERVAL = 5 * defines.time.minute
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 ErmConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
-function ErmConfig.get_max_level(setting)
+function ErmConfig.get_max_level(settings)
     local level = 10;
-    if setting.startup['enemyracemanager-max-level'].value == "Advanced - Max L20" then
+    if settings.startup['enemyracemanager-max-level'].value == "Advanced - Max L20" then
         level = 20
-    elseif setting.startup['enemyracemanager-max-level'].value == "Casual - Max L5" then
+    elseif settings.startup['enemyracemanager-max-level'].value == "Casual - Max L5" then
         level = 5
     end
     return level
+end
+
+function ErmConfig.get_max_attack_range(settings)
+    local attack_range = 16
+    if settings.startup['enemyracemanager-max-attack-range'].value == "Advanced - 20" then
+        attack_range = 20
+    end
+    return attack_range
 end
 
 return ErmConfig

@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.2
+Date: 31. 01. 2021
+
+  Features:
+    - Add an option to select max unit attack range for units that uses maximum range. Default is 16. Advanced is 20.
+
+  Changes:
+    - Early game leveling should be a lot slower now.
+    - Change level 2 and 3's evolution factor value. {0.4, 0.8}
+    - Change level 4 and 5 base on hidden evolution value.
+    - New hidden evolution level values are {40, 80, 120, 160, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
+
+---------------------------------------------------------------------------------------------------
 Version: 0.3.1
 Date: 30. 01. 2021
 
