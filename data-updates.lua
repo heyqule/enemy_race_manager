@@ -101,6 +101,7 @@ elseif settings.startup['enemyracemanager-enable-2way-group-enemy'].value == tru
     process_y_axis()
 end
 
+-- Add artillery-shell damage bonus to stronger explosive
 Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
     {
         type = "ammo-damage",
@@ -108,3 +109,26 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         modifier = 0.2
     }
 )
+
+-- Change resistance values on vanilla armors
+local add_resistance = function(percentage_value, fixed_value)
+    return  {
+        { type = "acid", percent = percentage_value, decrease = fixed_value },
+        { type = "poison", percent = percentage_value, decrease = fixed_value },
+        { type = "physical", percent = percentage_value, decrease = fixed_value },
+        { type = "fire", percent = percentage_value, decrease = fixed_value },
+        { type = "explosion", percent = percentage_value, decrease = fixed_value * 3},
+        { type = "laser", percent = percentage_value, decrease = fixed_value },
+        { type = "electric", percent = percentage_value, decrease = fixed_value },
+        { type = "cold", percent = percentage_value, decrease = fixed_value }
+    }
+end
+
+data.raw['armor']['light-armor']['resistances'] = add_resistance(25,5)
+data.raw['armor']['heavy-armor']['resistances'] = add_resistance(30,10)
+data.raw['armor']['modular-armor']['resistances'] = add_resistance(40,15)
+data.raw['armor']['power-armor']['resistances'] = add_resistance(55,20)
+data.raw['armor']['power-armor-mk2']['resistances'] = add_resistance(75,25)
+
+-- Buff gun turret HP
+data.raw['ammo-turret']['gun-turret']['max_health'] = 800
