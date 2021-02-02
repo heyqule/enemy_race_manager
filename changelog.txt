@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.3.2
+Version: 0.3.3
 Date: 02. 02. 2021
 
   Changes:
@@ -20,17 +20,17 @@ Date: 31. 01. 2021
     - Change Armor resistances to resists all damage types.
     - Buff gun turret HP from 400 to 800.
 
-
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.1
 Date: 30. 01. 2021
 
-  Fixes:
+  Bugfixes:
     - Fix "Enable 2 Ways Race Placement" trigger.
 
 ---------------------------------------------------------------------------------------------------
 Version: 0.3
 Date: 29. 01. 2021
+
   Features:
     - Added support to change max groups and max group size for map settings.
     - Added race placement grouping, supports 2 races on nauvis
@@ -43,7 +43,7 @@ Date: 29. 01. 2021
     - Building on_biter_base_built event should now match race level.
     - Improve translations
 
-  Fixes:
+  Bugfixes:
     - Replace with buildings from correct race when the enemy base expands.  Autoplace spawned building from other races.
     - Fix remote call fetching incorrect unit tier / level
     - Fix evolution point calculation for gui
@@ -51,6 +51,7 @@ Date: 29. 01. 2021
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
 Date: 03. 01. 2021
+
   Changes:
     - Enable vanilla biter by default
     - Change description in info.json
@@ -58,9 +59,11 @@ Date: 03. 01. 2021
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 03. 01. 2021
+
   Features:
     - Add GUI to view evolution points, sync evolution point or replace enemy
     - Add level support for vanilla biters
+
   Changes:
     - Changed unit naming convention from '-' to '/'.
     - Tuned Evolution level.
@@ -68,6 +71,7 @@ Date: 03. 01. 2021
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
 Date: 26. 12. 2020
+
   Features:
     - 2 difficulty levels (normal: 10, advanced: 20)
     - First 5 level is tied to force's evolution factor
