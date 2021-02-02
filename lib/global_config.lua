@@ -30,7 +30,7 @@ function ErmConfig.get_max_level(settings)
 end
 
 function ErmConfig.get_max_attack_range(settings)
-    local attack_range = 16
+    local attack_range = 14
     if settings.startup['enemyracemanager-max-attack-range'].value == "Advanced - 20" then
         attack_range = 20
     end

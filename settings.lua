@@ -23,8 +23,8 @@ data:extend{
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
-        default_value = "Normal - 16",
-        allowed_values = {"Normal - 16", "Advanced - 20"},
+        default_value = "Normal - 14",
+        allowed_values = {"Normal - 14", "Advanced - 20"},
         order = "enemyracemanager-03"
     },
     {

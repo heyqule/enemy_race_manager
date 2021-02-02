@@ -1,5 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.2
+Date: 02. 02. 2021
+
+  Changes:
+    - Change max unit attack range for default to 14.  So that gun turrets can hit them with 2 layers of walls.
+
+---------------------------------------------------------------------------------------------------
+Version: 0.3.2
 Date: 31. 01. 2021
 
   Features:
@@ -10,7 +17,7 @@ Date: 31. 01. 2021
     - Change level 2 and 3's evolution factor value. {0.4, 0.8}
     - Change level 4 and 5 base on hidden evolution value.
     - New hidden evolution level values are {40, 80, 120, 160, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
-    - Change Armor resistances to resist all damage types.
+    - Change Armor resistances to resists all damage types.
     - Buff gun turret HP from 400 to 800.
 
 

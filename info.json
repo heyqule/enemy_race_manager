@@ -1,11 +1,11 @@
 
 {
   "name": "enemyracemanager",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "date": "2021-01-30",
   "title": "Enemy Race Manager",
   "author": "heyqule",
-  "description": "Add support to have multiple races of enemies and add leveling to enemy. Enemy becomes tougher as they level based on your pollution and killing factors. This mod only enhance vanilla biters. Please visit the mod page to download the new demo race.",
+  "description": "Add support to have multiple races of enemies and add leveling to enemy. Enemy becomes tougher as they level based on your pollution and killing factors. This mod only enhance vanilla biters. Please visit the mod page to download the new demo races.",
   "factorio_version": "1.1",
   "dependencies": ["base >= 1.1.0", "stdlib >= 1.4.6", "!Rampant", "!hardcorio"]
 }
