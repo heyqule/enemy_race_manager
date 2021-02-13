@@ -12,18 +12,21 @@ Please upgrade all P and Z demo race to the newest version (1.3.0) to fix a bug 
 
 ### New race demo
 The infamous zerg (1.3.0 / 2021-02-13) (It includes developer documentation, please take a look Dev-readme.md)
-Changelog: https://github.com/heyqule/erm_zerg/releases/tag/1.3.0
-Download: https://github.com/heyqule/erm_zerg/releases/download/1.3.0/erm_zerg_1.3.0.zip
+* Release Page: https://github.com/heyqule/erm_zerg/releases/tag/1.3.0
+* Download: https://github.com/heyqule/erm_zerg/releases/download/1.3.0/erm_zerg_1.3.0.zip
+* Change Log: https://github.com/heyqule/erm_zerg/blob/main/changelog.txt
 
 The godly protoss (1.3.0 / 2021-02-13)
-Changelog: https://github.com/heyqule/erm_toss/releases/tag/1.3.0
-Download: https://github.com/heyqule/erm_toss/releases/download/1.3.0/erm_toss_1.3.0.zip
+* Release Page: https://github.com/heyqule/erm_toss/releases/tag/1.3.0
+* Download: https://github.com/heyqule/erm_toss/releases/download/1.3.0/erm_toss_1.3.0.zip
+* Change Log: https://github.com/heyqule/erm_toss/blob/main/changelog.txt
 
 Since P and Z has ganged up to wreck your base. Your engineer have innovated some new tech to counter them.
 
 The terran, player support units (1.0.0 / 2021-02-13)
-Changelog: https://github.com/heyqule/erm_terran/releases/tag/1.0.0
-Download: https://github.com/heyqule/erm_terran/releases/download/1.0.0/erm_terran_1.0.0.zip
+* Release Page: https://github.com/heyqule/erm_terran/releases/tag/1.0.0
+* Download: https://github.com/heyqule/erm_terran/releases/download/1.0.0/erm_terran_1.0.0.zip
+* Change Log: https://github.com/heyqule/erm_terran/blob/main/changelog.txt
 
 Download the zip and move it the mod folder. Please visit the following link for folder details.  https://wiki.factorio.com/index.php?title=Application_directory
 
