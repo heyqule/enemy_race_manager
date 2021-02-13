@@ -56,14 +56,14 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multip
     return base_speed + ( incremental_speed * (level  * multiplier / 100))
 end
 
--- healing
-function ERM_UnitHelper.get_healing(base_heatlh, max_hitpoint_multiplier, multiplier, level)
-    if level == 1 then
-        return base_heatlh / defines.time.minute
-    end
-    local heal_amount = Math.max(base_heatlh + (base_heatlh * max_hitpoint_multiplier / 10) * (multiplier * level / 100), 600)
-    return heal_amount / defines.time.minute
+-- unit healing (full heal in 120s)
+function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, multiplier, level)
+    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (2 * defines.time.minute)
 end
 
+-- building healing (full heal in 600s)
+function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, multiplier, level)
+    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (5 * defines.time.minute)
+end
 
 return ERM_UnitHelper

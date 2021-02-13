@@ -48,7 +48,6 @@ local replace_structures = function(surface, entity, race_settings)
 
     if position then
         surface.create_entity({name = name, force = new_force_name, position = position})
-        ErmDebugHelper.print('Replaced with '..name)
     end
 end
 
@@ -68,7 +67,6 @@ local replace_turrets = function(surface, entity, race_settings)
 
     if position then
         surface.create_entity({name = name, force = new_force_name, position = position})
-        ErmDebugHelper.print('Replaced with '..name)
     end
 end
 
@@ -110,10 +108,8 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
     if surface then
         race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
         local nameToken = ErmForceHelper.getNameToken(entity.name)
-        ErmDebugHelper.print(race_pick)
-        ErmDebugHelper.print(nameToken[1])
+
         if(race_pick == nameToken[1]) then
-            ErmDebugHelper.print('Skipping')
             return
         end
 

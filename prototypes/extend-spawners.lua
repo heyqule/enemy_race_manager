@@ -112,7 +112,7 @@ function makeLevelWorm(level, type, health_cut_ratio)
     return worm
 end
 
-local level = ErmConfig.get_max_level(settings)
+local level = ErmConfig.MAX_LEVELS
 
 for i=1,level do
     data:extend({makeLevelSpawners(i, 'biter-spawner')})

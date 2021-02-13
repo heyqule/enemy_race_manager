@@ -19,6 +19,8 @@ ErmConfig.LEVEL_PROCESS_INTERVAL = 5 * defines.time.minute
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 ErmConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
+ErmConfig.MAX_LEVELS = 20
+
 function ErmConfig.get_max_level(settings)
     local level = 10;
     if settings.startup['enemyracemanager-max-level'].value == "Advanced - Max L20" then

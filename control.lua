@@ -45,8 +45,6 @@ end
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
-        ErmDebugHelper.print('Base Built:'..entity.force.name)
-        ErmDebugHelper.print(entity.name)
         ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
     end
 end

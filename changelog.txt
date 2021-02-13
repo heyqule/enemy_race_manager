@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.0
+Date: 02. 14. 2021
+
+  Features:
+    - Added new mod setting to toggle enhanced vanilla defenses, enabled by default
+    - Buff car health (750), resistance and damage (1.5x).
+    - Buff tank resistances and damage (2x).
+    - Buff stone wall health (500) and resistances.
+    - Buff spidertron resistance.
+    - Buff impact resistance for all vehicles to 90/50.
+    - Buff bot health from 100 to 200, resistances to 75%
+
+  Changes:
+    - Gun turret HP buff now controls with enhance vanilla defenses setting.
+    - Armors resistances buff now controls with enhance vanilla defenses setting.
+    - Explosive rockets AOE can now hit air
+    - Units are fully heal in 2 minutes.
+    - Buildings are fully heal in 5 minutes.
+
+  Bugfixes:
+    - Fix existing enemies are wiped when the level difficulty setting changed from higher to lower for an existing save.
+    - Z and P are required to update 1.3.0 for above bugfix to work.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.3.3
 Date: 02. 02. 2021
 

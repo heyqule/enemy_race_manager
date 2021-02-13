@@ -115,6 +115,13 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
         local force_name = force.name
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
+        if race_settings and race_settings[race_name] and  race_settings[race_name].level > ErmConfig.get_max_level(settings) then
+            race_settings[race_name].level = ErmConfig.get_max_level(settings)
+            game.print('Max level reduced: '..race_settings[race_name].race..' = L'..race_settings[race_name].level)
+            Event.dispatch({
+                name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+        end
+
         if race_settings and race_settings[race_name] then
             local current_level = race_settings[race_name].level
 

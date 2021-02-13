@@ -122,6 +122,14 @@ data:extend{
         order = "enemyracemanager-204",
         allowed_values = {'empty', MOD_NAME}
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-enhance-defense",
+        description = "enemyracemanager-enhance-defense",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-300"
+    },
 }
 
 

@@ -26,12 +26,12 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     local position = entity.position
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-    -- Don't update vanilla enemy if enhenced vanilla biters has disabled
-    if entity.force.name == 'enemy' and settings.startup['enemyracemanager-enable-bitters'].value == false then
+    if not race_settings[race_name] then
         return
     end
 
-    if not race_settings[race_name] then
+    -- Don't update vanilla enemy if enhenced vanilla biters has disabled
+    if entity.force.name == 'enemy' and settings.startup['enemyracemanager-enable-bitters'].value == false then
         return
     end
 

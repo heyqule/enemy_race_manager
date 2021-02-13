@@ -56,7 +56,7 @@ function makeLevelEnemy(level, type)
 end
 
 
-local level = ErmConfig.get_max_level(settings)
+local level = ErmConfig.MAX_LEVELS
 
 for i=1,level do
     data:extend({makeLevelEnemy(i, 'big-biter')})
