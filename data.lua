@@ -1,9 +1,7 @@
 require "prototypes.extend-types"
+require "prototypes.extend-bitters"
+require "prototypes.extend-spawners"
 
-if settings.startup['enemyracemanager-enable-bitters'].value == true then
-    require "prototypes.extend-bitters"
-    require "prototypes.extend-spawners"
-end
 
 data:extend({
     { type = "recipe-category", name = 'erm_controlable_units' },

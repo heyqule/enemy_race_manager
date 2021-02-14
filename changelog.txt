@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.4.0
-Date: 02. 14. 2021
+Date: 02. 13. 2021
 
   Features:
     - Added new mod setting to toggle enhanced vanilla defenses, enabled by default
@@ -20,6 +20,7 @@ Date: 02. 14. 2021
 
   Bugfixes:
     - Fix existing enemies are wiped when the level difficulty setting changed from higher to lower for an existing save.
+    - Fix a crash after disable vanilla biter and they level up on existing map.
     - Z and P are required to update 1.3.0 for above bugfix to work.
 
 ---------------------------------------------------------------------------------------------------

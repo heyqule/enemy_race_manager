@@ -1,6 +1,8 @@
 local noise = require("noise")
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
+require('__enemyracemanager__/global')
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
@@ -79,6 +81,10 @@ local process_y_axis = function()
     end
 end
 
+local disable_level_spawner = function(type, name, level)
+    data.raw[type][MOD_NAME..'/'.. name .. '/' .. level]['autoplace'] = zero_probability_expression()
+end
+
 local disable_normal_biters = function()
     data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression()
     data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression()
@@ -86,6 +92,17 @@ local disable_normal_biters = function()
     data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression()
     data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression()
     data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
+
+    local level = ErmConfig.MAX_LEVELS
+
+    for i=1,level do
+        disable_level_spawner('unit-spawner','biter-spawner', i)
+        disable_level_spawner('unit-spawner','spitter-spawner', i)
+        disable_level_spawner('turret','behemoth-worm-turret', i)
+        disable_level_spawner('turret','big-worm-turret', i)
+        disable_level_spawner('turret','medium-worm-turret', i)
+        disable_level_spawner('turret','small-worm-turret', i)
+    end
 end
 
 -- END Enemy Base Autoplace functions --
