@@ -83,8 +83,10 @@ Support grouping race spawns.
 ![Special Spawn Layout](https://mods-data.factorio.com/assets/fe75ade7bf1ee69b37d6a4201e766239cde7bd15.png "Special Spawn Layout")
 
 ### Mod Compatibility
+
 #####Resource Spawner Overhaul 
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
+
 #####Armoured Biters
 - Most snappers and spawner support leveling, except Leviathan Snapper. 
 - They joined default enemy force, erm_vanilla.  
@@ -92,8 +94,10 @@ Support grouping race spawns.
 - Buffed resistances and healing.
 - up to 80 elemental and 90 physical resistance for most snappers.
 - up to 80 elemental and 95 physical resistance for Leviathan snapper.
+
 #####Explosive Biters
 - Coming Soon
+
 #####Cold Biters
 - Coming Soon
 
