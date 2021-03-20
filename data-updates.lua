@@ -2,10 +2,14 @@ local noise = require("noise")
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 require('__enemyracemanager__/global')
+
+require('prototypes/compatibility/data-updates.lua')
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
+    ErmDebugHelper.print('Using 0')
     local probability = noise.var("enemy_base_probability")
     return
     {
@@ -18,66 +22,80 @@ local zero_probability_expression = function()
 end
 
 local y_axis_positive_probability_expression = function(autoplace)
+    ErmDebugHelper.print('Using Y+')
     autoplace.probability_expression = noise.less_or_equal(noise.var("y"), 0) * autoplace.probability_expression
     return autoplace
 end
 
 local y_axis_negative_probability_expression = function(autoplace)
+    ErmDebugHelper.print('Using Y-')
     autoplace.probability_expression = noise.less_or_equal(0, noise.var("y")) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_positive_probability_expression = function(autoplace)
+    ErmDebugHelper.print('Using X+')
     autoplace.probability_expression = noise.less_or_equal(noise.var("x"), 0) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_negative_probability_expression = function(autoplace)
+    ErmDebugHelper.print('Using X-')
     autoplace.probability_expression = noise.less_or_equal(0, noise.var("x")) * autoplace.probability_expression
     return autoplace
 end
 
+local process_x_axis_unit = function(v)
+    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value)
+    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value)
+
+    if onPositive and onNegative and v.autoplace then
+        ErmDebugHelper.print('Do nothing')
+    elseif onPositive and v.autoplace then
+        v.autoplace = x_axis_positive_probability_expression(v.autoplace)
+    elseif onNegative and v.autoplace then
+        v.autoplace = x_axis_negative_probability_expression(v.autoplace)
+    else
+        v.autoplace = zero_probability_expression()
+    end
+end
+
 local process_x_axis = function()
     for k,v in pairs(data.raw["unit-spawner"]) do -- spawners
-        if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = x_axis_positive_probability_expression(v.autoplace)
-        elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = x_axis_negative_probability_expression(v.autoplace)
-        else
-            v.autoplace = zero_probability_expression()
-        end
+        ErmDebugHelper.print('Processing:'..v.name)
+        process_x_axis_unit(v)
     end
 
     for k,v in pairs(data.raw["turret"]) do -- turret
-        if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = x_axis_positive_probability_expression(v.autoplace)
-        elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = x_axis_negative_probability_expression(v.autoplace)
-        else
-            v.autoplace = zero_probability_expression()
-        end
+        ErmDebugHelper.print('Processing:'..v.name)
+        process_x_axis_unit(v)
+    end
+end
+
+local process_y_axis_unit = function(v)
+    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value)
+    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value)
+
+    if onPositive and onNegative and v.autoplace then
+        ErmDebugHelper.print('Do nothing')
+    elseif onPositive and v.autoplace then
+        v.autoplace = y_axis_positive_probability_expression(v.autoplace)
+    elseif onNegative and v.autoplace then
+        v.autoplace = y_axis_negative_probability_expression(v.autoplace)
+    else
+        v.autoplace = zero_probability_expression()
     end
 end
 
 local process_y_axis = function()
     for k,v in pairs(data.raw["unit-spawner"]) do -- spawners
-        if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = y_axis_positive_probability_expression(v.autoplace)
-        elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = y_axis_negative_probability_expression(v.autoplace)
-        else
-            v.autoplace = zero_probability_expression()
-        end
+        ErmDebugHelper.print('Processing:'..v.name)
+        process_y_axis_unit(v)
     end
 
     for k,v in pairs(data.raw["turret"]) do -- turret
-        if String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = y_axis_positive_probability_expression(v.autoplace)
-        elseif String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value) and v.autoplace and v.autoplace.probability_expression then
-            v.autoplace = y_axis_negative_probability_expression(v.autoplace)
-        else
-            v.autoplace = zero_probability_expression()
-        end
+        ErmDebugHelper.print('Processing:'..v.name)
+        process_y_axis_unit(v)
     end
 end
 
@@ -85,14 +103,7 @@ local disable_level_spawner = function(type, name, level)
     data.raw[type][MOD_NAME..'/'.. name .. '/' .. level]['autoplace'] = zero_probability_expression()
 end
 
-local disable_normal_biters = function()
-    data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression()
-    data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['behemoth-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
-
+local disable_level_spawners = function()
     local level = ErmConfig.MAX_LEVELS
 
     for i=1,level do
@@ -105,12 +116,23 @@ local disable_normal_biters = function()
     end
 end
 
+local disable_normal_biters = function()
+    ErmDebugHelper.print('Disabling Vanilla Spawners...')
+    data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression()
+    data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['behemoth-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
+end
+
 -- END Enemy Base Autoplace functions --
 
 
 -- Remove Vanilla Bitter
 if settings.startup['enemyracemanager-enable-bitters'].value == false then
     disable_normal_biters()
+    disable_level_spawners()
 end
 
 -- 2 Ways Race handler

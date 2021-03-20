@@ -1,6 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.0
+Date: 03. 20. 2021
+
+  Features:
+    - Compatible with Armoured Biters mod
+    - Most armoured snappers and snapper spawner supports leveling.  This excludes Leviathan Snapper
+    - Max health stacks with Armoured Biter settings.
+    - Override Armoured Biters settings to align with this mod's resistances and health regen standard.
+    - Most snappers have 80 elemental and 90 physical resistance.
+    - Leviathan snappers have 80 elemental and 95 physical resistance.
+
+  Changes:
+    - Buffed vanilla worm and health
+    - Buffed vanilla biter physical resistance
+    - Tweaked resistance function. Max resistance @ level 12, instead of level 10.
+
+  Bugfixes:
+    - Fix vanilla biters not showing up when using "2 Ways Race Placement"
+    - Fix enemy only show in positive axis when using same race for both positive and negative axis with "2 Ways Race Placement"
+
+---------------------------------------------------------------------------------------------------
 Version: 0.4.0
-Date: 02. 13. 2021
+Date: 02. 14. 2021
 
   Features:
     - Added new mod setting to toggle enhanced vanilla defenses, enabled by default

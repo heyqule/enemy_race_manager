@@ -19,6 +19,11 @@ ErmConfig.LEVEL_PROCESS_INTERVAL = 5 * defines.time.minute
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 ErmConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
+-- How to use event erm_race_setting_updated
+-- Check race exists
+-- update settings
+ErmConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
+
 ErmConfig.MAX_LEVELS = 20
 
 function ErmConfig.get_max_level(settings)

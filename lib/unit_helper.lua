@@ -20,7 +20,7 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, 
     if level == 1 then
         return base_health
     end
-    return base_health + ( incremental_health * (level * multiplier / 100))
+    return Math.floor(base_health  + ( incremental_health * (level * multiplier / 100) ))
 end
 
 -- Percentage Based Resistance
@@ -29,7 +29,7 @@ function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, 
     if level == 1 then
         return base_resistance
     end
-    return Math.min(base_resistance + ( incremental_resistance * (level * multiplier * 2 / 100)), base_resistance + incremental_resistance, max_resistance_percentage)
+    return Math.min(Math.floor(base_resistance + ( incremental_resistance * (level * multiplier * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
 -- Attack Damage
@@ -37,7 +37,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
     if level == 1 then
         return base_dmg
     end
-    return base_dmg + ( incremental_dmg * (level  * multiplier / 100))
+    return Math.floor(base_dmg + ( incremental_dmg * (level  * multiplier / 100)))
 end
 
 -- Max speed 15 tick per attack, 4 attack  / second
@@ -61,7 +61,7 @@ function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, multip
     return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (2 * defines.time.minute)
 end
 
--- building healing (full heal in 600s)
+-- building healing (full heal in 300s)
 function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, multiplier, level)
     return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (5 * defines.time.minute)
 end

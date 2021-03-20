@@ -16,33 +16,34 @@ require('__enemyracemanager__/global')
 
 
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
 local base_acid_resistance = 10
-local incremental_acid_resistance = 65
+local incremental_acid_resistance = 70
 -- Handles physical resistance
-local base_physical_resistance = 0
-local incremental_physical_resistance = 80
+local base_physical_resistance = 20
+local incremental_physical_resistance = 70
 -- Handles fire and explosive resistance
 local base_fire_resistance = 10
-local incremental_fire_resistance = 65
+local incremental_fire_resistance = 70
 -- Handles laser and electric resistance
 local base_electric_resistance = 0
-local incremental_electric_resistance = 75
+local incremental_electric_resistance = 80
 -- Handles cold resistance
 local base_cold_resistance = 10
-local incremental_cold_resistance = 65
+local incremental_cold_resistance = 70
+
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
     local biter = Table.deepcopy(data.raw['unit'][type])
-    local original_health = biter['max_health']
+    local original_hitpoint = biter['max_health']
 
     biter['localised_name'] = { 'entity-name.' .. MOD_NAME..'/'..biter['name'], level }
     biter['name'] = MOD_NAME..'/'..biter['name'].. '/' .. level
-    biter['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
+    biter['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
     biter['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level)},
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
@@ -53,7 +54,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level)},
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level)}
     }
-    biter['healing_per_tick'] = ERM_UnitHelper.get_healing(original_health, max_hitpoint_multiplier, health_multiplier, level)
+    biter['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level)
 
     return biter
 end
@@ -62,20 +63,28 @@ end
 local level = ErmConfig.MAX_LEVELS
 
 for i=1,level do
-    -- 15 - 158
-    data:extend({makeLevelEnemy(i, 'small-biter' )})
-    -- 10 - 105
-    data:extend({makeLevelEnemy(i, 'small-spitter')})
-    -- 75 - 538
-    data:extend({makeLevelEnemy(i, 'medium-biter',1.5)})
-    -- 50 - 358
-    data:extend({makeLevelEnemy(i, 'medium-spitter',1.5)})
-    -- 375 - 2063
-    data:extend({makeLevelEnemy(i, 'big-biter', 2)})
-    -- 200 - 1100
-    data:extend({makeLevelEnemy(i, 'big-spitter', 2)})
-    -- 3000 - 7500
-    data:extend({makeLevelEnemy(i, 'behemoth-biter', 8)})
-    -- 1500 - 3750
-    data:extend({makeLevelEnemy(i, 'behemoth-spitter', 8)})
+    -- 50 -- 275
+    data:extend({makeLevelEnemy(i, 'small-armoured-biter' )})
+    -- 200 -- 767
+    data:extend({makeLevelEnemy(i, 'medium-armoured-biter', 1.5)})
+    -- 800 - 2400 (org: 800)
+    data:extend({makeLevelEnemy(i, 'big-armoured-biter', 2)})
+    -- 6000 - 9000 (org: 6000)
+    data:extend({makeLevelEnemy(i, 'behemoth-armoured-biter', 8)})
+end
+
+-- Buff Leviathan resist to 90, 95 to physical and add healing
+if data.raw['unit']['leviathan-armoured-biter'] then
+    local leviathan_biter = data.raw['unit']['leviathan-armoured-biter'];
+    leviathan_biter['resistances'] = {
+        { type = "acid", percent = 80},
+        { type = "poison", percent = 80},
+        { type = "physical", percent = 95},
+        { type = "fire", percent = 80},
+        { type = "explosion", percent = 80},
+        { type = "laser", percent = 80},
+        { type = "electric", percent = 80},
+        { type = "cold", percent = 80}
+    }
+    leviathan_biter['healing_per_tick'] = ERM_UnitHelper.get_building_healing(leviathan_biter['max_health'], 0, 0, 0)
 end

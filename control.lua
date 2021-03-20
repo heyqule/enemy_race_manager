@@ -25,6 +25,8 @@ local ErmGui = require('__enemyracemanager__/scripts/gui')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
+require('prototypes/compatibility/controls')
+
 local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
 remote.add_interface("enemy_race_manager", ErmRemoteApi)
 
@@ -132,6 +134,11 @@ local prepare_world = function()
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
     game.map_settings.unit_group.max_unit_group_size = settings.startup["enemyracemanager-max-group-size"].value
+
+    -- Mod Compatibility Upgrade
+    Event.dispatch({
+        name=Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = 'erm_vanilla' })
+
 end
 
 local onGuiClick = function(event)

@@ -229,7 +229,6 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
                 for j, level in pairs(evolution_weapon_level) do
                     if highest_tech == level or highest_tech > level  then
                         race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level(settings))
-                        print("set_level ", race_settings[race_name].level)
                         leveled_up = true
                     end
                 end
