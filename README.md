@@ -88,7 +88,7 @@ Support grouping race spawns.
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 
 ##### Armoured Biters
-- Most snappers and spawner support leveling, except Leviathan Snapper. 
+- All snappers and spawner support leveling.
 - They joined default enemy force, erm_vanilla.  
 - The health setting stacks with this mod's multiplier.
 - Buffed resistances and healing.
