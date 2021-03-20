@@ -84,10 +84,10 @@ Support grouping race spawns.
 
 ### Mod Compatibility
 
-#####Resource Spawner Overhaul 
+##### Resource Spawner Overhaul 
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 
-#####Armoured Biters
+##### Armoured Biters
 - Most snappers and spawner support leveling, except Leviathan Snapper. 
 - They joined default enemy force, erm_vanilla.  
 - The health setting stacks with this mod's multiplier.
@@ -95,10 +95,10 @@ Support grouping race spawns.
 - up to 80 elemental and 90 physical resistance for most snappers.
 - up to 80 elemental and 95 physical resistance for Leviathan snapper.
 
-#####Explosive Biters
+##### Explosive Biters
 - Coming Soon
 
-#####Cold Biters
+##### Cold Biters
 - Coming Soon
 
 
