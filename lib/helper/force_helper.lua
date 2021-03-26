@@ -24,7 +24,7 @@ end
 
 function ForceHelper.set_friends(game, force_name)
     for name, force in pairs(game.forces) do
-        if String.find(force.name,'enemy') then
+        if String.find(force.name, 'enemy') then
             force.set_friend(force_name, true);
             force.set_friend('enemy', true);
         end
@@ -33,7 +33,7 @@ end
 
 function ForceHelper.getNameToken(name)
     if not String.find(name, '/') then
-        return {'erm_vanilla', name, '1'}
+        return { 'erm_vanilla', name, '1' }
     end
     return String.split(name, '/')
 end

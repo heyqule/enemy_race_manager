@@ -2,7 +2,6 @@ require "prototypes.extend-types"
 require "prototypes.extend-bitters"
 require "prototypes.extend-spawners"
 
-
 data:extend({
     { type = "recipe-category", name = 'erm_controlable_units' },
     {

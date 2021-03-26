@@ -14,7 +14,6 @@ local String = require('__stdlib__/stdlib/utils/string')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -40,42 +39,41 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = Table.deepcopy(data.raw['unit'][type])
     local original_health = biter['max_health']
 
-    biter['localised_name'] = { 'entity-name.' .. MOD_NAME..'/'..biter['name'], level }
-    biter['name'] = MOD_NAME..'/'..biter['name'].. '/' .. level
+    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }
+    biter['name'] = MOD_NAME .. '/' .. biter['name'] .. '/' .. level
     biter['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
     biter['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level)},
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, resistance_mutiplier, level)},
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level)},
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level)},
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level)},
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level)},
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level)}
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, resistance_mutiplier, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
     biter['healing_per_tick'] = ERM_UnitHelper.get_healing(original_health, max_hitpoint_multiplier, health_multiplier, level)
 
     return biter
 end
 
-
 local level = ErmConfig.MAX_LEVELS
 
-for i=1,level do
+for i = 1, level do
     -- 15 - 158
-    data:extend({makeLevelEnemy(i, 'small-biter' )})
+    data:extend({ makeLevelEnemy(i, 'small-biter') })
     -- 10 - 105
-    data:extend({makeLevelEnemy(i, 'small-spitter')})
+    data:extend({ makeLevelEnemy(i, 'small-spitter') })
     -- 75 - 538
-    data:extend({makeLevelEnemy(i, 'medium-biter',1.5)})
+    data:extend({ makeLevelEnemy(i, 'medium-biter', 1.5) })
     -- 50 - 358
-    data:extend({makeLevelEnemy(i, 'medium-spitter',1.5)})
-    -- 375 - 2063
-    data:extend({makeLevelEnemy(i, 'big-biter', 2)})
-    -- 200 - 1100
-    data:extend({makeLevelEnemy(i, 'big-spitter', 2)})
-    -- 3000 - 7500
-    data:extend({makeLevelEnemy(i, 'behemoth-biter', 8)})
-    -- 1500 - 3750
-    data:extend({makeLevelEnemy(i, 'behemoth-spitter', 8)})
+    data:extend({ makeLevelEnemy(i, 'medium-spitter', 1.5) })
+    -- 375 - 2250
+    data:extend({ makeLevelEnemy(i, 'big-biter', 2) })
+    -- 200 - 1200
+    data:extend({ makeLevelEnemy(i, 'big-spitter', 2) })
+    -- 3000 - 6750
+    data:extend({ makeLevelEnemy(i, 'behemoth-biter', 8) })
+    -- 1500 - 3375
+    data:extend({ makeLevelEnemy(i, 'behemoth-spitter', 8) })
 end

@@ -8,3 +8,15 @@ if data.raw['unit']['behemoth-armoured-biter'] then
     require "ArmouredBiters/biter"
     require "ArmouredBiters/spawner"
 end
+
+if data.raw['unit']['behemoth-cold-biter'] then
+    require "Cold_Biters/biter"
+    require "Cold_Biters/spawner"
+    require "Cold_Biters/worm"
+end
+
+if data.raw['unit']['behemoth-explosive-biter'] then
+    require "Explosive_Biters/biter"
+    require "Explosive_Biters/spawner"
+    require "Explosive_Biters/worm"
+end

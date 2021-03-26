@@ -1,11 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.0
+Date: 04. 23. 2021
+
+  Features:
+    - Add support for Cold Biter and Explosive Biter
+    - All biters support leveling.
+    - Override their resistances
+    - They don't regenerate health to balance their overpower attacks
+    - [Cold Biter]
+    - Cold always 95, physical 75, fire/explosion -100, laser/acid -50 - 50
+    - [Explosive Biter]
+    - Fire/explosion always 95, physical 75, cold -100, laser/acid -50 - 50
+
+  Bugfixes:
+    - Fix a crash when visit other planet / surfaces in Space Exploration
+
+---------------------------------------------------------------------------------------------------
 Version: 0.5.0
 Date: 03. 20. 2021
 
   Features:
     - Compatible with Armoured Biters mod
-    - Most armoured snappers and snapper spawner supports leveling.  This excludes Leviathan Snapper
-    - Max health stacks with Armoured Biter settings.
+    - All armoured snappers and snapper spawner supports leveling.
+    - Max health stacks with Armoured Biter settings. Health @ Level 10 is very close to original health.
     - Override Armoured Biters settings to align with this mod's resistances and health regen standard.
     - Most snappers have 80 elemental and 90 physical resistance.
     - Leviathan snappers have 80 elemental and 95 physical resistance.

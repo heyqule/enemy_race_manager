@@ -6,24 +6,23 @@
 ---
 local DebugHelper = {}
 
-
-local titleCase = function ( first, rest )
-    return first:upper()..rest:lower()
+local titleCase = function(first, rest)
+    return first:upper() .. rest:lower()
 end
 
-local fixName = function (name)
-    fixed_name =  string.gsub(name, "(%a)([%w_']*)", titleCase)
+local fixName = function(name)
+    fixed_name = string.gsub(name, "(%a)([%w_']*)", titleCase)
     fixed_name = string.gsub(fixed_name, "_", " ")
     return fixed_name
 end
 
 function DebugHelper.print_translate_to_console(mode_name, name, level)
     -- Print translate to console
-    print(mode_name..'/'..name .. '/' .. level .. '='..fixName(name)..' L'..level)
+    print(mode_name .. '/' .. name .. '/' .. level .. '=' .. fixName(name) .. ' L' .. level)
 end
 
 function DebugHelper.print(message)
-    if(DEBUG_MODE) then
+    if (DEBUG_MODE) then
         print(message)
     end
 end

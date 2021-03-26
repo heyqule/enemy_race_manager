@@ -1,6 +1,6 @@
 require 'global'
 
-data:extend{
+data:extend {
     {
         type = "bool-setting",
         name = "enemyracemanager-enable-bitters",
@@ -15,7 +15,7 @@ data:extend{
         description = "enemyracemanager-max-level",
         setting_type = "startup",
         default_value = "Normal - Max L10",
-        allowed_values = {"Casual - Max L5","Normal - Max L10", "Advanced - Max L20"},
+        allowed_values = { "Casual - Max L5", "Normal - Max L10", "Advanced - Max L20" },
         order = "enemyracemanager-02"
     },
     {
@@ -24,7 +24,7 @@ data:extend{
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
         default_value = "Normal - 14",
-        allowed_values = {"Normal - 14", "Advanced - 20"},
+        allowed_values = { "Normal - 14", "Advanced - 20" },
         order = "enemyracemanager-03"
     },
     {
@@ -102,7 +102,7 @@ data:extend{
         setting_type = "startup",
         default_value = 'x-axis',
         order = "enemyracemanager-202",
-        allowed_values = {'x-axis','y-axis'}
+        allowed_values = { 'x-axis', 'y-axis' }
     },
     {
         type = "string-setting",
@@ -111,7 +111,7 @@ data:extend{
         setting_type = "startup",
         default_value = MOD_NAME,
         order = "enemyracemanager-203",
-        allowed_values = {'empty', MOD_NAME}
+        allowed_values = { 'empty', MOD_NAME }
     },
     {
         type = "string-setting",
@@ -120,7 +120,7 @@ data:extend{
         setting_type = "startup",
         default_value = MOD_NAME,
         order = "enemyracemanager-204",
-        allowed_values = {'empty', MOD_NAME}
+        allowed_values = { 'empty', MOD_NAME }
     },
     {
         type = "bool-setting",

@@ -87,20 +87,45 @@ Support grouping race spawns.
 ##### Resource Spawner Overhaul 
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 
+##### Space Exploration
+- New planet should work with base game enemy generation at the moment.
+- Coming soon features
+    - Randomly select a race when a new surface is created
+    - Allow change race on each surface from UI
+
+##### Krastorio2   
+- New races do not support creep generation unless author patches the creep gen code.
+    - https://mods.factorio.com/mod/Krastorio2/discussion/605d800cf3bb48c41a98cd6b 
+
 ##### Armoured Biters
 - All snappers and spawner support leveling.
 - They joined default enemy force, erm_vanilla.  
 - The health setting stacks with this mod's multiplier.
+- near original HP @ level 10 and 2x HP @ level 20  
+- Bier damage is not affected leveling.
 - Buffed resistances and healing.
 - up to 80 elemental and 90 physical resistance for most snappers.
 - up to 80 elemental and 95 physical resistance for Leviathan snapper.
 
-##### Explosive Biters
-- Coming Soon
-
-##### Cold Biters
-- Coming Soon
-
+##### Explosive Biters & Cold Biters
+- All biters, worms and spawners support leveling.
+- They joined default enemy force, erm_vanilla.
+- The health setting stacks with this mod's multiplier. 
+- near original HP @ level 10 and 2x HP @ level 20
+- Biters do not heal, spawner and worm do
+- [Cold Biters resistance] 
+    - Always resist cold 95
+    - acid/poison 0-50
+    - laser/electric -50-25
+    - physical: 0-75 
+    - fire/explosion -100 - -50
+- [Explosive Biters resistance] 
+    - Always resist fire/explosion 95
+    - acid/poison 0-50
+    - laser/electric -50-25
+    - physical: 0-75
+    - cold -100 - -50
+- Explosive biters are OP, RIP to your defence.  
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
@@ -123,8 +148,6 @@ Advanced Mapping
 
 Angry meters
   * send enemy to your base @ night based on how many they have been killed
-
-Surface based controls / compatibility with space exploration
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.

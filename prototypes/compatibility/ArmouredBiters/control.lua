@@ -1,5 +1,5 @@
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig =  require('__enemyracemanager__/lib/global_config')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -35,7 +35,7 @@ end
 --- Inject race settings into existing race
 ---
 Event.register(Event.generate_event_name(ErmConfig.RACE_SETTING_UPDATE), function(event)
-    if(event.affected_race == MOD_NAME) then
+    if (event.affected_race == MOD_NAME) then
         modify_race_setting()
     end
 end)

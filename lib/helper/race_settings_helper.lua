@@ -3,7 +3,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local RaceSettingHelper = {}
 
 local find_unit_from_current_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_'..unit_type..'_tier'
+    local key = 'current_' .. unit_type .. '_tier'
     for index, value in pairs(race_settings[key]) do
         if value == unit_name then
             return index
@@ -13,15 +13,15 @@ local find_unit_from_current_table = function(race_settings, unit_type, unit_nam
 end
 
 local add_to_current_entity_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_'..unit_type..'_tier'
+    local key = 'current_' .. unit_type .. '_tier'
     local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
     if target_index == nil then
-        race_settings[key][#race_settings[key]+1] = unit_name
+        race_settings[key][#race_settings[key] + 1] = unit_name
     end
 end
 
 local remove_from_current_entity_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_'..unit_type..'_tier'
+    local key = 'current_' .. unit_type .. '_tier'
     local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
     if target_index then
         table.remove(race_settings[key], target_index)
@@ -37,7 +37,7 @@ local add_to_entity_table = function(race_settings, unit_type, unit_tier, unit_n
     end
 
     if target_index == nil then
-        race_settings[unit_type][unit_tier][#race_settings[unit_type][unit_tier]+1] = unit_name
+        race_settings[unit_type][unit_tier][#race_settings[unit_type][unit_tier] + 1] = unit_name
 
         if race_settings['tier'] >= unit_tier then
             add_to_current_entity_table(race_settings, unit_type, unit_name)

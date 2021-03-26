@@ -14,7 +14,7 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local Game = require('__stdlib__/stdlib/game')
 local Event = require('__stdlib__/stdlib/event/event')
 
-local ErmConfig =  require('__enemyracemanager__/lib/global_config')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
@@ -36,11 +36,11 @@ local enemy_surfaces -- track which race are on a surface
 
 local onBuildBaseArrived = function(event)
     local group = event.group;
-    if not ( group and group.valid) then
+    if not (group and group.valid) then
         local unit = event.unit;
-        ErmDebugHelper.print('on_build_base_arrived, Group '..unit.name)
+        ErmDebugHelper.print('on_build_base_arrived, Group ' .. unit.name)
     else
-        ErmDebugHelper.print('on_build_base_arrived, Unit '..group.name)
+        ErmDebugHelper.print('on_build_base_arrived, Unit ' .. group.name)
     end
 end
 
@@ -53,22 +53,22 @@ end
 
 local onUnitGroupCreated = function(event)
     local group = event.group
-    ErmDebugHelper.print('on_unit_group_created, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_group_created, Group ' .. group.group_number)
 end
 
 local onUnitAddToGroup = function(event)
     local group = event.group
-    ErmDebugHelper.print('on_unit_added_to_group, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_added_to_group, Group ' .. group.group_number)
 end
 
 local onUnitFinishGathering = function(event)
     local group = event.group
-    ErmDebugHelper.print('on_unit_group_finished_gathering, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_group_finished_gathering, Group ' .. group.group_number)
 end
 
 local onUnitRemovedFromGroup = function(event)
     local group = event.group
-    ErmDebugHelper.print('on_unit_removed_from_group, Group '..group.group_number)
+    ErmDebugHelper.print('on_unit_removed_from_group, Group ' .. group.group_number)
 end
 
 local onEntitySpawned = function(event)
@@ -76,7 +76,7 @@ local onEntitySpawned = function(event)
 end
 
 local addRaceSettings = function()
-    if remote.call('enemy_race_manager','get_race', MOD_NAME) then
+    if remote.call('enemy_race_manager', 'get_race', MOD_NAME) then
         return
     end
     local race_settings = {
@@ -86,30 +86,30 @@ local addRaceSettings = function()
         tier = 1, -- Race tier
         evolution_point = 0,
         evolution_base_point = 0,
-        angry_meter = 0, -- Build by killing their force (unit = 1, building = 10)
+        angry_meter = 0, -- Build by killing their force (Spawner = 20, turrets = 10)
         send_attack_threshold = 2000, -- When threshold reach, sends attack to the base
         send_attack_threshold_deviation = 0.2,
         next_attack_threshold = 0, -- Used by system to calculate next move
         units = {
-            {'small-spitter','small-biter','medium-spitter','medium-biter'},
-            {'large-spitter','large-biter'},
-            {'behemoth-spitter','behemoth-biter'},
+            { 'small-spitter', 'small-biter', 'medium-spitter', 'medium-biter' },
+            { 'large-spitter', 'large-biter' },
+            { 'behemoth-spitter', 'behemoth-biter' },
         },
         current_units_tier = {},
         turrets = {
-            {'small-worm-turret','medium-worm-turret'},
-            {'big-worm-turret'},
-            {'behemoth-worm-turret'},
+            { 'small-worm-turret', 'medium-worm-turret' },
+            { 'big-worm-turret' },
+            { 'behemoth-worm-turret' },
         },
         current_turrets_tier = {},
         command_centers = {
-            {'spitter-spawner','biter-spawner'},
+            { 'spitter-spawner', 'biter-spawner' },
             {},
             {}
         },
         current_command_centers_tier = {},
         support_structures = {
-            {'spitter-spawner','biter-spawner'},
+            { 'spitter-spawner', 'biter-spawner' },
             {},
             {},
         },
@@ -121,14 +121,13 @@ local addRaceSettings = function()
     race_settings.current_command_centers_tier = race_settings.command_centers[1]
     race_settings.current_support_structures_tier = race_settings.support_structures[1]
 
-    remote.call('enemy_race_manager','register_race', race_settings)
+    remote.call('enemy_race_manager', 'register_race', race_settings)
 end
-
 
 local prepare_world = function()
     -- Calculate Biter Level
     if table_size(race_settings) > 0 then
-       ErmLevelProcessor.calculateMultipleLevel(race_settings, game.forces, settings)
+        ErmLevelProcessor.calculateMultipleLevel(race_settings, game.forces, settings)
     end
 
     -- Game map settings
@@ -137,7 +136,7 @@ local prepare_world = function()
 
     -- Mod Compatibility Upgrade
     Event.dispatch({
-        name=Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = 'erm_vanilla' })
+        name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = 'erm_vanilla' })
 
 end
 
@@ -183,7 +182,7 @@ Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
     ErmMapProcessor.process_chunks(player.surface, race_settings)
 end)
 
-Event.register(defines.events.on_chunk_generated,function(event)
+Event.register(defines.events.on_chunk_generated, function(event)
     ErmMapProcessor.queue_chunks(event.surface, event.area)
 end)
 
@@ -223,13 +222,13 @@ Event.on_configuration_changed(function(event)
 end)
 
 commands.add_command("ERM_GetRaceSettings",
-        {"description.command-regenerate-enemy"},
-        function ()
-    game.print(game.table_to_json(race_settings))
-end)
+        { "description.command-regenerate-enemy" },
+        function()
+            game.print(game.table_to_json(race_settings))
+        end)
 
 commands.add_command("ERM_LevelUpWithTech",
-        {"description.command-level-up-with-tech"},
-        function ()
+        { "description.command-level-up-with-tech" },
+        function()
             ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
-end)
+        end)

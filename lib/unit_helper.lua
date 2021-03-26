@@ -20,7 +20,7 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, 
     if level == 1 then
         return base_health
     end
-    return Math.floor(base_health  + ( incremental_health * (level * multiplier / 100) ))
+    return Math.floor(base_health + (incremental_health * (level * multiplier / 100)))
 end
 
 -- Percentage Based Resistance
@@ -29,7 +29,7 @@ function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, 
     if level == 1 then
         return base_resistance
     end
-    return Math.min(Math.floor(base_resistance + ( incremental_resistance * (level * multiplier * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
+    return Math.min(Math.floor(base_resistance + (incremental_resistance * (level * multiplier * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
 -- Attack Damage
@@ -37,7 +37,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
     if level == 1 then
         return base_dmg
     end
-    return Math.floor(base_dmg + ( incremental_dmg * (level  * multiplier / 100)))
+    return Math.floor(base_dmg + (incremental_dmg * (level * multiplier / 100)))
 end
 
 -- Max speed 15 tick per attack, 4 attack  / second
@@ -45,7 +45,7 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, multipli
     if level == 1 then
         return base_speed
     end
-    return Math.max(base_speed - ( incremental_speed * (level * multiplier / 100)), max_attack_speed)
+    return Math.max(base_speed - (incremental_speed * (level * multiplier / 100)), max_attack_speed)
 end
 
 -- Movement Speed
@@ -53,7 +53,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multip
     if level == 1 then
         return base_speed
     end
-    return base_speed + ( incremental_speed * (level  * multiplier / 100))
+    return base_speed + (incremental_speed * (level * multiplier / 100))
 end
 
 -- unit healing (full heal in 120s)

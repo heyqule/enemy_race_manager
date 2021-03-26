@@ -19,27 +19,18 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
-local base_acid_resistance = 25
-local incremental_acid_resistance = 55
+local base_acid_resistance = 0
+local incremental_acid_resistance = 50
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 80
+local incremental_physical_resistance = 75
 -- Handles fire and explosive resistance
-local base_fire_resistance = 10
-local incremental_fire_resistance = 70
+local base_fire_resistance = -100
+local incremental_fire_resistance = 0
 -- Handles laser and electric resistance
-local base_electric_resistance = 0
-local incremental_electric_resistance = 80
--- Handles cold resistance
-local base_cold_resistance = 25
-local incremental_cold_resistance = 55
+local base_electric_resistance = -50
+local incremental_electric_resistance = 100
 
-local setting_utils = require("__ArmouredBiters__/setting-utils")
-local s_r = setting_utils.getPositivePercentageOf("ab-small-armoured-biter-spawn-probability")
-local m_r = setting_utils.getPositivePercentageOf("ab-medium-armoured-biter-spawn-probability")
-local b_r = setting_utils.getPositivePercentageOf("ab-big-armoured-biter-spawn-probability")
-local bb_r = setting_utils.getPositivePercentageOf("ab-behemoth-armoured-biter-spawn-probability")
-local l_r = setting_utils.getPositivePercentageOf("ab-leviathan-armoured-biter-spawn-probability")
 
 function makeLevelSpawners(level, type)
     local spawner = Table.deepcopy(data.raw['unit-spawner'][type])
@@ -57,19 +48,27 @@ function makeLevelSpawners(level, type)
         { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level) },
         { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
+        { type = "cold", percent = 95 }
     }
     spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level)
 
-    local result_units = {
-        { MOD_NAME .. '/small-armoured-biter/' .. level, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } },
-        { MOD_NAME .. '/medium-armoured-biter/' .. level, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.8, 0 } } },
-        { MOD_NAME .. '/big-armoured-biter/' .. level, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } },
-        { MOD_NAME .. '/behemoth-armoured-biter/' .. level, { { 0.9, 0.0 }, { 1.0, 0.35 * bb_r } } }
-    }
-    if l_r > 0 then
-        table.insert(result_units, { MOD_NAME .. '/leviathan-armoured-biter/' .. level, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } })
-    end
+    local result_units = (function()
+        local res = {}
+        res[1] = {MOD_NAME .. "/small-cold-biter/" .. level, {{0.0, 0.3}, {0.6, 0.0}}}
+        res[3] = {MOD_NAME .. "/small-cold-spitter/" .. level, {{0.25, 0.0}, {0.5, 0.3}, {0.7, 0.0}}}
+        res[2] = {MOD_NAME .. "/medium-cold-biter/" .. level, {{0.2, 0.0}, {0.6, 0.3}, {0.7, 0.0}}}
+        res[4] = {MOD_NAME .. "/medium-cold-spitter/" .. level, {{0.4, 0.0}, {0.7, 0.3}, {0.9, 0.0}}}
+        res[5] = {MOD_NAME .. "/big-cold-biter/" .. level, {{0.5, 0.0}, {1.0, 0.4}}}
+        res[6] = {MOD_NAME .. "/big-cold-spitter/" .. level, {{0.5, 0.0}, {1.0, 0.4}}}
+        res[7] = {MOD_NAME .. "/behemoth-cold-biter/" .. level, {{0.9, 0.0}, {1.0, 0.3}}}
+        res[8] = {MOD_NAME .. "/behemoth-cold-spitter/" .. level, {{0.9, 0.0}, {1.0, 0.3}}}
+        res[9] = {MOD_NAME .. "/leviathan-cold-biter/" .. level, {{0.965, 0.0}, {1.0, 0.03}}}
+        res[10]= {MOD_NAME .. "/leviathan-cold-spitter/" .. level, {{0.965, 0.0}, {1.0, 0.03}}}
+        if not settings.startup["cb-disable-mother"].value then
+            res[11]= {MOD_NAME .. "/mother-cold-spitter/" .. level, {{0.98, 0.0}, {1.0, 0.02}}}
+        end
+        return res
+    end)()
 
     spawner['result_units'] = result_units
 
@@ -79,20 +78,5 @@ end
 local level = ErmConfig.MAX_LEVELS
 
 for i = 1, level do
-    if settings.startup["ab-enable-nest"].value then
-        data:extend({ makeLevelSpawners(i, 'armoured-biter-spawner') })
-    else
-        local biterSpawner = data.raw["unit-spawner"][MOD_NAME .. '/biter-spawner/' .. i]
-        if biterSpawner then
-            local unitSet = biterSpawner["result_units"]
-            unitSet[#unitSet + 1] = { MOD_NAME .. "/small-armoured-biter/" .. i, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "/medium-armoured-biter/" .. i, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.7, 0.0 } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "/big-armoured-biter/" .. i, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "/behemoth-armoured-biter/" .. i, { { 0.9, 0.0 }, { 1.0, 0.35 * bb_r } } }
-
-            if l_r > 0 then
-                unitSet[#unitSet + 1] = { MOD_NAME .. '/leviathan-armoured-biter/' .. level, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } }
-            end
-        end
-    end
+    data:extend({ makeLevelSpawners(i, 'cb-cold-spawner') })
 end

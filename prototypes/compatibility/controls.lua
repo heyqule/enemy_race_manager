@@ -5,3 +5,5 @@
 ---
 
 require('ArmouredBiters/control')
+require('Cold_Biters/control')
+require('Explosive_Biters/control')

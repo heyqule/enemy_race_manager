@@ -18,30 +18,30 @@ local ErmForceHelper = require('lib/helper/force_helper')
 local LevelManager = {}
 
 -- unit tier control
-local tier_map = {0.4, 0.8}
+local tier_map = { 0.4, 0.8 }
 
 -- control level 2, 3
-local evolution_level_map = {0.4, 0.8}
+local evolution_level_map = { 0.4, 0.8 }
 local max_evolution_factor_level = 3
 
 -- control level 4 - 20
-local evolution_score = {20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
+local evolution_score = { 20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500 }
 
 -- weapon level check at level 6 - 10
-local evolution_weapon_level = {7, 9, 11, 13, 15}
+local evolution_weapon_level = { 7, 9, 11, 13, 15 }
 
 local level_up_tier = function(current_tier, race_settings, race_name)
-        race_settings[race_name].tier = current_tier + 1
+    race_settings[race_name].tier = current_tier + 1
 
-        race_settings[race_name]['current_units_tier'] = Table.array_combine(race_settings[race_name]['current_units_tier'], race_settings[race_name]['units'][race_settings[race_name].tier])
-        race_settings[race_name]['current_turrets_tier'] = Table.array_combine(race_settings[race_name]['current_turrets_tier'], race_settings[race_name]['turrets'][race_settings[race_name].tier])
-        race_settings[race_name]['current_command_centers_tier'] = Table.array_combine(race_settings[race_name]['current_command_centers_tier'], race_settings[race_name]['command_centers'][race_settings[race_name].tier])
-        race_settings[race_name]['current_support_structures_tier'] = Table.array_combine(race_settings[race_name]['current_support_structures_tier'], race_settings[race_name]['support_structures'][race_settings[race_name].tier])
+    race_settings[race_name]['current_units_tier'] = Table.array_combine(race_settings[race_name]['current_units_tier'], race_settings[race_name]['units'][race_settings[race_name].tier])
+    race_settings[race_name]['current_turrets_tier'] = Table.array_combine(race_settings[race_name]['current_turrets_tier'], race_settings[race_name]['turrets'][race_settings[race_name].tier])
+    race_settings[race_name]['current_command_centers_tier'] = Table.array_combine(race_settings[race_name]['current_command_centers_tier'], race_settings[race_name]['command_centers'][race_settings[race_name].tier])
+    race_settings[race_name]['current_support_structures_tier'] = Table.array_combine(race_settings[race_name]['current_support_structures_tier'], race_settings[race_name]['support_structures'][race_settings[race_name].tier])
 end
 
 function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
     for i, force in pairs(forces) do
-        if String.find(force.name,'enemy') then
+        if String.find(force.name, 'enemy') then
             local force_name = force.name
             local race_name = ErmForceHelper.extract_race_name_from(force_name)
             -- Handle Score Level
@@ -53,7 +53,7 @@ end
 
 function LevelManager.calculateLevel(race_settings, forces, settings)
     for i, force in pairs(forces) do
-        if not String.find(force.name,'enemy') then
+        if not String.find(force.name, 'enemy') then
             goto skip_calculate_level_for_force
         end
 
@@ -76,32 +76,32 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
             if current_tier < ErmConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
                 level_up_tier(current_tier, race_settings, race_name)
                 Event.dispatch(
-                        {name=Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                         affected_race = race_settings[race_name] })
+                        { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                          affected_race = race_settings[race_name] })
             end
 
             -- Handle Evolution Level
             if current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level] then
                 race_settings[race_name].level = current_level + 1
                 Event.dispatch({
-                    name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
+                    name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
                     affected_race = race_settings[race_name] })
-                game.print(race_settings[race_name].race..' = L'..race_settings[race_name].level)
+                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
                 goto skip_calculate_level_for_force
             end
 
             if current_level >= max_evolution_factor_level and
                     current_level < ErmConfig.get_max_level(settings) and
-                    score >= evolution_score[(current_level - max_evolution_factor_level)+1] then
+                    score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
                 race_settings[race_name].level = current_level + 1
                 Event.dispatch({
-                    name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-                game.print(race_settings[race_name].race..' = L'..race_settings[race_name].level)
+                    name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
                 goto skip_calculate_level_for_force
             end
         end
 
-        ::skip_calculate_level_for_force::
+        :: skip_calculate_level_for_force ::
     end
 end
 
@@ -115,11 +115,11 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
         local force_name = force.name
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-        if race_settings and race_settings[race_name] and  race_settings[race_name].level > ErmConfig.get_max_level(settings) then
+        if race_settings and race_settings[race_name] and race_settings[race_name].level > ErmConfig.get_max_level(settings) then
             race_settings[race_name].level = ErmConfig.get_max_level(settings)
-            game.print('Max level reduced: '..race_settings[race_name].race..' = L'..race_settings[race_name].level)
+            game.print('Max level reduced: ' .. race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
             Event.dispatch({
-                name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
         end
 
         if race_settings and race_settings[race_name] then
@@ -147,20 +147,20 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
 
                 if current_level >= max_evolution_factor_level and
                         current_level < ErmConfig.get_max_level(settings) and
-                        score >= evolution_score[(current_level - max_evolution_factor_level)+1] then
+                        score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
                     race_settings[race_name].level = current_level + 1
                 end
                 current_level = race_settings[race_name].level
             end
 
-            game.print(race_settings[race_name].race..' = L'..race_settings[race_name].level)
+            game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
             Event.dispatch({
-                name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
             Event.dispatch(
-                    {name=Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                     affected_race = race_settings[race_name] })
+                    { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                      affected_race = race_settings[race_name] })
         end
-        ::skip_calculate_multiple_level_for_force::
+        :: skip_calculate_multiple_level_for_force ::
     end
 end
 
@@ -217,7 +217,7 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
         current_level = race_settings[race_name].level
 
         if current_level < ErmConfig.get_max_level(settings) and
-            highest_tech > 0
+                highest_tech > 0
         then
             local leveled_up = false
             if highest_tech >= evolution_weapon_level[5] then
@@ -227,7 +227,7 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
 
             if highest_tech < evolution_weapon_level[5] then
                 for j, level in pairs(evolution_weapon_level) do
-                    if highest_tech == level or highest_tech > level  then
+                    if highest_tech == level or highest_tech > level then
                         race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level(settings))
                         leveled_up = true
                     end
@@ -247,13 +247,13 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
             end
 
             Event.dispatch({
-                name=Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
             Event.dispatch(
-                    {name=Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                     affected_race = race_settings[race_name] })
+                    { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                      affected_race = race_settings[race_name] })
         end
 
-        ::skip_calculate_level_for_force_by_tech::
+        :: skip_calculate_level_for_force_by_tech ::
     end
 end
 
@@ -269,7 +269,7 @@ end
 function LevelManager.getEvolutionFactor(race)
     local new_force_name = 'enemy'
     if race ~= MOD_NAME then
-        new_force_name = 'enemy_'..race
+        new_force_name = 'enemy_' .. race
     end
 
     if game.forces[new_force_name] then

@@ -19,20 +19,17 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
-local base_acid_resistance = 10
-local incremental_acid_resistance = 70
+local base_acid_resistance = 0
+local incremental_acid_resistance = 50
 -- Handles physical resistance
-local base_physical_resistance = 20
+local base_physical_resistance = 0
 local incremental_physical_resistance = 75
--- Handles fire and explosive resistance
-local base_fire_resistance = 10
-local incremental_fire_resistance = 70
 -- Handles laser and electric resistance
-local base_electric_resistance = 0
-local incremental_electric_resistance = 80
--- Handles cold resistance
-local base_cold_resistance = 10
-local incremental_cold_resistance = 70
+local base_electric_resistance = -50
+local incremental_electric_resistance = 75
+-- Handles Cold resistance
+local base_cold_resistance = -100
+local incremental_cold_resistance = 50
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
@@ -46,13 +43,12 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
         { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, resistance_mutiplier, level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, resistance_mutiplier, level) },
+        { type = "fire", percent = 95 },
+        { type = "explosion", percent = 95 },
         { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
-    biter['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level) / 2
 
     return biter
 end
@@ -60,14 +56,29 @@ end
 local level = ErmConfig.MAX_LEVELS
 
 for i = 1, level do
-    -- 1, 50 - 10, 175 - 20, 275 (org: 50)
-    data:extend({ makeLevelEnemy(i, 'small-armoured-biter') })
-    -- 1, 100 - 10, 350 - 20, 600 (org: 200)
-    data:extend({ makeLevelEnemy(i, 'medium-armoured-biter', 2) })
-    -- 1, 400 - 10, 1400 - 20, 2400 (org: 800)
-    data:extend({ makeLevelEnemy(i, 'big-armoured-biter', 2) })
-    -- 1, 2000 - 10, 7000 - 20, 12000 (org: 6000)
-    data:extend({ makeLevelEnemy(i, 'behemoth-armoured-biter', 3) })
-    -- 1, 4500 - 10, 15750 - 20, 27000 (org: 18000)
-    data:extend({ makeLevelEnemy(i, 'leviathan-armoured-biter', 4) })
+    -- (org: 15)
+    data:extend({ makeLevelEnemy(i, 'small-explosive-biter') })
+    -- (org: 10)
+    data:extend({ makeLevelEnemy(i, 'small-explosive-spitter') })
+    -- (org: 75)
+    data:extend({ makeLevelEnemy(i, 'medium-explosive-biter') })
+    -- (org: 50)
+    data:extend({ makeLevelEnemy(i, 'medium-explosive-spitter') })
+    -- (org: 375)
+    data:extend({ makeLevelEnemy(i, 'big-explosive-biter') })
+    -- (org: 200)
+    data:extend({ makeLevelEnemy(i, 'big-explosive-spitter') })
+    -- 1, 3000 - 10, 10500  - 20, 18000 (org: 3000)
+    data:extend({ makeLevelEnemy(i, 'behemoth-explosive-biter') })
+    -- 1, 1500 - 10, 5250 - 20, 9000 (org: 1500)
+    data:extend({ makeLevelEnemy(i, 'behemoth-explosive-spitter') })
+    -- 1, 20000 - 10, 70000 - 20, 120000 (org: 80000)
+    data:extend({ makeLevelEnemy(i, 'explosive-leviathan-biter', 5) })
+    -- 1, 12500 - 10, 43750 - 20, 75000 (org: 50000)
+    data:extend({ makeLevelEnemy(i, 'leviathan-explosive-spitter', 5) })
+
+    if not settings.startup["eb-disable-mother"].value then
+        -- 1, 33333 - 10, 116666 - 20, 200000 (org: 100000)
+        data:extend({ makeLevelEnemy(i, 'mother-explosive-spitter',3) })
+    end
 end

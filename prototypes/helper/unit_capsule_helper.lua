@@ -8,7 +8,7 @@ local ERM_UnitCapsuleHelper = {}
 
 function ERM_UnitCapsuleHelper.add_capsule(unit_name, cooldown, stack_size)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_'..unit_name
+    local name = 'erm_' .. unit_name
     data:extend({
         {
             type = "capsule",
@@ -37,11 +37,11 @@ function ERM_UnitCapsuleHelper.add_capsule(unit_name, cooldown, stack_size)
                 type = "throw"
             },
             icons = {
-                {icon = base_entity.icon, icon_size = base_entity.icon_size}
+                { icon = base_entity.icon, icon_size = base_entity.icon_size }
             },
-            order = "u[unit-capsule]-"..name,
+            order = "u[unit-capsule]-" .. name,
             stack_size = stack_size,
-            localised_name = {"erm.unit-capsule", {"entity-name."..name}}
+            localised_name = { "erm.unit-capsule", { "entity-name." .. name } }
         },
         {
             type = "projectile",
@@ -86,7 +86,7 @@ end
 
 function ERM_UnitCapsuleHelper.add_recipe(unit_name, craft_time, ingredients)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_'..unit_name
+    local name = 'erm_' .. unit_name
     data:extend({
         {
             type = "recipe",
@@ -104,7 +104,7 @@ end
 
 function ERM_UnitCapsuleHelper.add_technology(unit_name, prerequisites, tech_unit)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_'..unit_name
+    local name = 'erm_' .. unit_name
     data:extend({
         {
             type = "technology",
@@ -116,12 +116,12 @@ function ERM_UnitCapsuleHelper.add_technology(unit_name, prerequisites, tech_uni
                 },
             },
             icons = {
-                {icon = base_entity.icon, icon_size = base_entity.icon_size}
+                { icon = base_entity.icon, icon_size = base_entity.icon_size }
             },
             order = "e-g",
             prerequisites = prerequisites,
             unit = tech_unit,
-            localised_name = {"erm.unit-capsule", {"entity-name."..unit_name}}
+            localised_name = { "erm.unit-capsule", { "entity-name." .. unit_name } }
         }
     })
 end
