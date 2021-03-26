@@ -11,6 +11,8 @@
     "stdlib >= 1.4.6",
     "!Rampant",
     "!hardcorio",
-    "?ArmouredBiters"
+    "?ArmouredBiters",
+    "?Explosive_biters",
+    "?Cold_biters"
   ]
 }
