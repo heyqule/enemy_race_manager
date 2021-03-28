@@ -1,6 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.1
+Date: 03. 27. 2021
+
+  Bugfixes:
+    - Fixed a crash when Krastorio2 loads before this mod.  Improved ignore_collision_for_area_damage in data-updates.lua
+    - Fixed a crash when enemy forces are leveling up in Space Exploration.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.6.0
-Date: 04. 23. 2021
+Date: 03. 26. 2021
 
   Features:
     - Add support for Cold Biter and Explosive Biter

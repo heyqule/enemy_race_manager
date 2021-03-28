@@ -107,8 +107,7 @@ end
 
 function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
     for i, force in pairs(forces) do
-        if force.name == 'player' or
-                force.name == 'neutral' then
+        if not String.find(force.name, 'enemy') then
             goto skip_calculate_multiple_level_for_force
         end
 
@@ -178,6 +177,7 @@ function LevelManager.get_tier_for_race(race_settings, race_name)
     return nil
 end
 
+-- Deprecated, to be replace with a function to set level directly set_level(race, level)
 function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
     local techs = {
         'physical-projectile-damage-7',
@@ -191,7 +191,6 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
         for i, force in pairs(forces) do
             if not String.find(force.name, 'enemy') and force.research_enabled then
                 for j, tech_title in pairs(techs) do
-
                     local tech = force.technologies[tech_title]
 
                     if tech and highest_tech < tech.level then
@@ -207,8 +206,7 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
     end
     --Set level
     for i, force in pairs(forces) do
-        if force.name == 'player' or
-                force.name == 'neutral' then
+        if not String.find(force.name, 'enemy') then
             goto skip_calculate_level_for_force_by_tech
         end
 

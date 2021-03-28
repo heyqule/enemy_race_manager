@@ -239,8 +239,17 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         }
 )
 
--- Change rocket/cannon AOE explosives to hit all units
+-- Change rocket/cannon area explosives to hit all units
+local ignore_collision_for_area_damage = function(target_effects)
+    for i, effect in pairs(target_effects) do
+        log(effect['type'])
+        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+            effect['action']['ignore_collision_condition'] = true
+        end
+    end
+end
 --data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'][2]['action']['ignore_collision_condition'] = true
 --data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'][2]['action']['ignore_collision_condition'] = true
-data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'][6]['action']['ignore_collision_condition'] = true
+ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
+
 
