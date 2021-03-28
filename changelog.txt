@@ -3,8 +3,8 @@ Version: 0.6.1
 Date: 03. 27. 2021
 
   Bugfixes:
-    - Fixed a crash when Krastorio2 loads before this mod.  Improved ignore_collision_for_area_damage in data-updates.lua
-    - Fixed a crash when enemy forces are leveling up in Space Exploration.
+    - Fixed a crash when Krastorio2 loads before this mod.  Improved it with ignore_collision_for_area_damage in data-updates.lua
+    - Fixed a crash in command ERM_LevelUpWithTech.  Marked as deprecated for next release.
 
 ---------------------------------------------------------------------------------------------------
 Version: 0.6.0
