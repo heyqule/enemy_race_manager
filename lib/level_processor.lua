@@ -67,7 +67,7 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
             local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
             race_settings[race_name].evolution_point = score
 
-            if current_level == ErmConfig.get_max_level(settings) then
+            if current_level == ErmConfig.get_max_level() then
                 goto skip_calculate_level_for_force
             end
 
@@ -91,7 +91,7 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
             end
 
             if current_level >= max_evolution_factor_level and
-                    current_level < ErmConfig.get_max_level(settings) and
+                    current_level < ErmConfig.get_max_level() and
                     score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
                 race_settings[race_name].level = current_level + 1
                 Event.dispatch({
@@ -114,8 +114,8 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
         local force_name = force.name
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-        if race_settings and race_settings[race_name] and race_settings[race_name].level > ErmConfig.get_max_level(settings) then
-            race_settings[race_name].level = ErmConfig.get_max_level(settings)
+        if race_settings and race_settings[race_name] and race_settings[race_name].level > ErmConfig.get_max_level() then
+            race_settings[race_name].level = ErmConfig.get_max_level()
             game.print('Max level reduced: ' .. race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
             Event.dispatch({
                 name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
@@ -124,8 +124,8 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
         if race_settings and race_settings[race_name] then
             local current_level = race_settings[race_name].level
 
-            for i = current_level, ErmConfig.get_max_level(settings) do
-                if current_level == ErmConfig.get_max_level(settings) then
+            for i = current_level, ErmConfig.get_max_level() do
+                if current_level == ErmConfig.get_max_level() then
                     goto skip_calculate_multiple_level_for_force
                 end
 
@@ -145,7 +145,7 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
                 end
 
                 if current_level >= max_evolution_factor_level and
-                        current_level < ErmConfig.get_max_level(settings) and
+                        current_level < ErmConfig.get_max_level() and
                         score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
                     race_settings[race_name].level = current_level + 1
                 end
@@ -191,6 +191,7 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
         for i, force in pairs(forces) do
             if not String.find(force.name, 'enemy') and force.research_enabled then
                 for j, tech_title in pairs(techs) do
+
                     local tech = force.technologies[tech_title]
 
                     if tech and highest_tech < tech.level then
@@ -214,19 +215,19 @@ function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
 
         current_level = race_settings[race_name].level
 
-        if current_level < ErmConfig.get_max_level(settings) and
+        if current_level < ErmConfig.get_max_level() and
                 highest_tech > 0
         then
             local leveled_up = false
             if highest_tech >= evolution_weapon_level[5] then
-                race_settings[race_name].level = Math.min(highest_tech - evolution_weapon_level[5] + 10, ErmConfig.get_max_level(settings))
+                race_settings[race_name].level = Math.min(highest_tech - evolution_weapon_level[5] + 10, ErmConfig.get_max_level())
                 leveled_up = true
             end
 
             if highest_tech < evolution_weapon_level[5] then
                 for j, level in pairs(evolution_weapon_level) do
                     if highest_tech == level or highest_tech > level then
-                        race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level(settings))
+                        race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level())
                         leveled_up = true
                     end
                 end

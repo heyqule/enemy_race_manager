@@ -74,13 +74,15 @@ GUI replace races on a surface
 
 Level support for vanilla biter/spitters
 
-Support grouping race spawns.    
+Support 2 races split spawn
   * race A spawns at positive axis, race B spawns at negative axis
   * race A spawns at positive axis, nothing spawns at negative axis.  
   * can be divided by either x or y axis.
   * races can expand into each other's territory.
 
 ![Special Spawn Layout](https://mods-data.factorio.com/assets/fe75ade7bf1ee69b37d6a4201e766239cde7bd15.png "Special Spawn Layout")
+
+Support one race per surface spawn
 
 ### Mod Compatibility
 
@@ -89,9 +91,8 @@ Support grouping race spawns.
 
 ##### Space Exploration
 - New planet should work with base game enemy generation at the moment.
-- Coming soon features
-    - Randomly select a race when a new surface is created
-    - Allow change race on each surface from UI
+- Randomly selects a race when a new planet/surface is created
+- Change race for each surface from UI
 
 ##### Krastorio2   
 - New races do not support creep generation unless author patches the creep gen code.

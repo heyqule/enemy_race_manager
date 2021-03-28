@@ -33,7 +33,7 @@ end
 
 function ForceHelper.getNameToken(name)
     if not String.find(name, '/') then
-        return { 'erm_vanilla', name, '1' }
+        return { MOD_NAME, name, '1' }
     end
     return String.split(name, '/')
 end

@@ -5,6 +5,8 @@
 -- Time: 5:36 PM
 -- To change this template use File | Settings | File Templates.
 --
+
+--- Usage: remote.call('enemy_race_manager', 'get_race', MOD_NAME)
 local Table = require('__stdlib__/stdlib/utils/table')
 local ERM_RemoteAPI = {}
 

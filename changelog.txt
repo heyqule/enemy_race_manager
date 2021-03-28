@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.7.0
+Date: 04. 02. 2021
+
+  Features:
+    - Support one force per surface.
+    - How this works:
+    - 1) When a new surface is discovered, a race is assigned to the surface randomly
+    - 2) Spawners or worms are generated when new chunk is mapped. The mod checks their force.
+    - 3) If it's not same as the assigned force, the mod replace the entity with random spawner/worm from assigned race.
+    - End "How this works"
+    - UI now has a surface tab to view races for each surface.
+
+  Changes:
+    - Corpse stay 15 minutes by default, instead of 5 minutes. Its setting range is now 1 - 60.
+    - Add info icon to settings and setting description update
+    - 2 races split is now an option in "Enemy Mapping Method", instead of checkbox.  Please select "2 races split" before continue your save.
+    - Buffed base game rails resistance.
+
+  Bugfixes:
+    - Fix a crash by removing force and race_settings when an ERM race mod has disabled.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.6.1
 Date: 03. 27. 2021
 

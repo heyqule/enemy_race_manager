@@ -14,25 +14,30 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local Game = require('__stdlib__/stdlib/game')
 local Event = require('__stdlib__/stdlib/event/event')
 
+require('__stdlib__/stdlib/utils/defines/time')
+require('__enemyracemanager__/global')
+
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
-local ErmGui = require('__enemyracemanager__/scripts/gui')
-
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
 
 require('prototypes/compatibility/controls')
 
 local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
 remote.add_interface("enemy_race_manager", ErmRemoteApi)
 
+local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
+remote.add_interface("enemy_race_manager_debug", ErmDebugRemoteApi)
+
 -- local variables
 local race_settings -- track race settings
-local enemy_surfaces -- track which race are on a surface
+local enemy_surfaces -- track which race is on a surface/planet
 
 local onBuildBaseArrived = function(event)
     local group = event.group;
@@ -69,10 +74,6 @@ end
 local onUnitRemovedFromGroup = function(event)
     local group = event.group
     ErmDebugHelper.print('on_unit_removed_from_group, Group ' .. group.group_number)
-end
-
-local onEntitySpawned = function(event)
-
 end
 
 local addRaceSettings = function()
@@ -138,27 +139,31 @@ local prepare_world = function()
     Event.dispatch({
         name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = 'erm_vanilla' })
 
+    -- Race Cleanup
+    ErmRaceSettingsHelper.clean_up_race()
+    ErmSurfaceProcessor.rebuild_race(race_settings)
 end
 
 local onGuiClick = function(event)
-    ErmGui.sync_with_enemy(event)
-    ErmGui.replace_enemy(event)
-    ErmGui.reset_default(event)
+    ErmMainWindow.sync_with_enemy(event)
+    ErmMainWindow.replace_enemy(event)
+    ErmMainWindow.reset_default(event)
     -- Close event must handle the last
-    ErmGui.toggle_main_window(event)
-    ErmGui.toggle_close(event)
+    ErmMainWindow.toggle_main_window(event)
+    ErmMainWindow.toggle_close(event)
 
-    if ErmGui.require_update_all then
-        ErmGui.update_all()
+    if ErmMainWindow.require_update_all then
+        ErmMainWindow.update_all()
     end
 end
 
 Event.register(defines.events.on_player_created, function(event)
-    ErmGui.update_overhead_button(event.player_index)
+    ErmMainWindow.update_overhead_button(event.player_index)
 end)
 
 Event.register(defines.events.on_gui_click, onGuiClick)
 
+--- Unit processing events
 --Event.register(defines.events.on_entity_spawned, onEntitySpawned)
 --
 --Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
@@ -173,10 +178,12 @@ Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 --
 --Event.register(defines.events.on_unit_removed_from_group, onUnitRemovedFromGroup)
 
+--- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
     ErmLevelProcessor.calculateLevel(race_settings, game.forces, settings)
 end)
 
+--- Map Processing Events
 Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
     local player = game.players[math.random(1, #game.players)]
     ErmMapProcessor.process_chunks(player.surface, race_settings)
@@ -186,6 +193,7 @@ Event.register(defines.events.on_chunk_generated, function(event)
     ErmMapProcessor.queue_chunks(event.surface, event.area)
 end)
 
+--- ERM Events
 Event.register(Event.generate_event_name(ErmConfig.EVENT_TIER_WENT_UP), function(event)
 end)
 
@@ -193,6 +201,15 @@ Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), functio
     ErmMapProcessor.rebuild_map(game)
 end)
 
+--- Surface Management
+Event.register(defines.events.on_surface_created, function(event)
+    ErmSurfaceProcessor.assign_race(event.surface_index)
+end)
+Event.register(defines.events.on_surface_deleted, function(event)
+    ErmSurfaceProcessor.remove_race(event.surface_index)
+end)
+
+--- Init events
 Event.on_init(function(event)
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = {}
@@ -217,10 +234,11 @@ Event.on_configuration_changed(function(event)
 
     prepare_world()
     for _, player in pairs(game.connected_players) do
-        ErmGui.update_overhead_button(player.index)
+        ErmMainWindow.update_overhead_button(player.index)
     end
 end)
 
+-- Commands
 commands.add_command("ERM_GetRaceSettings",
         { "description.command-regenerate-enemy" },
         function()

@@ -1,6 +1,8 @@
 require 'global'
+require('setting-constants')
 
 data:extend {
+    --- Startup Tab
     {
         type = "bool-setting",
         name = "enemyracemanager-enable-bitters",
@@ -14,8 +16,8 @@ data:extend {
         name = "enemyracemanager-max-level",
         description = "enemyracemanager-max-level",
         setting_type = "startup",
-        default_value = "Normal - Max L10",
-        allowed_values = { "Casual - Max L5", "Normal - Max L10", "Advanced - Max L20" },
+        default_value = MAX_LEVEL_10,
+        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_20 },
         order = "enemyracemanager-02"
     },
     {
@@ -23,8 +25,8 @@ data:extend {
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
-        default_value = "Normal - 14",
-        allowed_values = { "Normal - 14", "Advanced - 20" },
+        default_value = ATTACK_RANGE_14,
+        allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20 },
         order = "enemyracemanager-03"
     },
     {
@@ -32,9 +34,9 @@ data:extend {
         name = "enemyracemanager-enemy-corpse-time",
         description = "enemyracemanager-enemy-corpse-time",
         setting_type = "startup",
-        default_value = 5,
+        default_value = 15,
         minimum_value = 1,
-        maximum_value = 15,
+        maximum_value = 60,
         order = "enemyracemanager-04"
     },
     {
@@ -88,11 +90,12 @@ data:extend {
         order = "enemyracemanager-102"
     },
     {
-        type = "bool-setting",
-        name = "enemyracemanager-enable-2way-group-enemy",
-        description = "enemyracemanager-2way-group-enemy",
+        type = "string-setting",
+        name = "enemyracemanager-mapping-method",
+        description = "enemyracemanager-mapping-method",
         setting_type = "startup",
-        default_value = false,
+        default_value = MAP_GEN_DEFAULT,
+        allowed_values = { MAP_GEN_DEFAULT, MAP_GEN_2_RACES_SPLIT, MAP_GEN_1_RACE_PER_SURFACE },
         order = "enemyracemanager-201"
     },
     {
@@ -100,9 +103,9 @@ data:extend {
         name = "enemyracemanager-2way-group-enemy-orientation",
         description = "enemyracemanager-2way-group-enemy-orientation",
         setting_type = "startup",
-        default_value = 'x-axis',
+        default_value = X_AXIS,
         order = "enemyracemanager-202",
-        allowed_values = { 'x-axis', 'y-axis' }
+        allowed_values = { X_AXIS, Y_AXIS }
     },
     {
         type = "string-setting",
@@ -111,7 +114,7 @@ data:extend {
         setting_type = "startup",
         default_value = MOD_NAME,
         order = "enemyracemanager-203",
-        allowed_values = { 'empty', MOD_NAME }
+        allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {
         type = "string-setting",
@@ -120,7 +123,7 @@ data:extend {
         setting_type = "startup",
         default_value = MOD_NAME,
         order = "enemyracemanager-204",
-        allowed_values = { 'empty', MOD_NAME }
+        allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {
         type = "bool-setting",
@@ -129,7 +132,7 @@ data:extend {
         setting_type = "startup",
         default_value = true,
         order = "enemyracemanager-300"
-    },
+    }
 }
 
 

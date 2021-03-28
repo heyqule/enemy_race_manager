@@ -15,6 +15,7 @@ local Game = require('__stdlib__/stdlib/game')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib//debug_helper')
 
 local ReplacementProcessor = {}
@@ -24,16 +25,7 @@ local race_pick
 local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
 
-    local structure_tier = race_settings[race_pick]['current_support_structures_tier']
-    local strucutre_base = race_settings[race_pick]['current_command_centers_tier']
-    local pick = math.random();
-
-    local base_name = ''
-    if pick < 0.125 then
-        base_name = strucutre_base[math.random(1, #strucutre_base)]
-    else
-        base_name = structure_tier[math.random(1, #structure_tier)]
-    end
+    local base_name = ErmRaceSettingHelper.pick_a_spawner(race_pick)
 
     local new_force_name = 'enemy'
     if race_pick ~= MOD_NAME then
@@ -53,8 +45,9 @@ end
 
 local replace_turrets = function(surface, entity, race_settings)
     local position = entity.position
-    local turret_tier = race_settings[race_pick]['current_turrets_tier']
-    local base_name = turret_tier[math.random(1, #turret_tier)]
+
+    local base_name = ErmRaceSettingHelper.pick_a_turret(race_pick)
+
     local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
     local new_force_name = 'enemy'
     if race_pick ~= MOD_NAME then

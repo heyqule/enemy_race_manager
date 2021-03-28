@@ -15,14 +15,35 @@ local Game = require('__stdlib__/stdlib/game')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+
+require('__enemyracemanager__/setting-constants')
 
 local MapProcessor = {}
 
 local chunk_queue = {}
 
+local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
+    if settings.startup['enemyracemanager-mapping-method'].value == MAP_GEN_1_RACE_PER_SURFACE then
+        if global.enemy_surfaces[surface.index] and nameToken[1] ~= global.enemy_surfaces[surface.index] then
+            nameToken[1] = global.enemy_surfaces[surface.index]
+            if entity.type == 'turret' then
+                nameToken[2] = ErmRaceSettingHelper.pick_a_turret(global.enemy_surfaces[surface.index])
+            else
+                nameToken[2] = ErmRaceSettingHelper.pick_a_spawner(global.enemy_surfaces[surface.index])
+            end
+        end
+    end
+
+    return nameToken
+end
+
 local level_up_enemy_structures = function(surface, entity, race_settings)
     local nameToken = ErmForceHelper.getNameToken(entity.name)
+
+    nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
+
     local force_name = entity.force.name
     local position = entity.position
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
@@ -31,39 +52,48 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
         return
     end
 
-    -- Don't update vanilla enemy if enhenced vanilla biters has disabled
-    if entity.force.name == 'enemy' and settings.startup['enemyracemanager-enable-bitters'].value == false then
+    if race_name == nameToken[1] and race_settings[nameToken[1]].level == tonumber(nameToken[3]) then
         return
     end
 
-    if race_settings[race_name].level == tonumber(nameToken[3]) and String.find(entity.name, '/') then
-        return
+    local name = nameToken[1] .. '/' .. nameToken[2] .. '/' .. race_settings[nameToken[1]].level
+
+    local new_force_name = entity.force.name
+    if nameToken[1] ~= race_name then
+        if nameToken[1] == MOD_NAME then
+            new_force_name = 'enemy'
+        else
+            new_force_name = 'enemy_' .. nameToken[1]
+        end
     end
 
-    local name = nameToken[1] .. '/' .. nameToken[2] .. '/' .. race_settings[race_name].level
     entity.destroy()
-    surface.create_entity({ name = name, force = force_name, position = position })
+    if not surface.can_place_entity({ name = name, force = new_force_name, position = position }) then
+        position = surface.find_non_colliding_position(name, position, 32, 2, true)
+    end
+
+    if position then
+        surface.create_entity({ name = name, force = new_force_name, position = position })
+    end
 end
 
 local process_enemy_level = function(surface, area, race_settings)
     local spawners = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner' }), Game.VALID_FILTER)
-    local spawners_size = Table.size(spawners)
-    if spawners_size > 0 then
+    if Table.size(spawners) > 0 then
         Table.each(spawners, function(entity)
             level_up_enemy_structures(surface, entity, race_settings)
         end)
     end
 
     local turrets = Table.filter(surface.find_entities_filtered({ area = area, type = 'turret' }), Game.VALID_FILTER)
-    local turret_size = Table.size(turrets)
-    if turret_size > 0 then
+    if Table.size(turrets) > 0 then
         Table.each(turrets, function(entity)
             level_up_enemy_structures(surface, entity, race_settings)
         end)
     end
 
     local units = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit' }), Game.VALID_FILTER)
-    if turret_size > 0 then
+    if Table.size(units) > 0 then
         Table.each(units, function(entity)
             entity.destroy()
         end)
@@ -123,6 +153,12 @@ function MapProcessor.rebuild_map(game)
         for chunk in surface.get_chunks() do
             MapProcessor.queue_chunks(surface, chunk.area)
         end
+    end
+end
+
+function MapProcessor.rebuild_surface(surface)
+    for chunk in surface.get_chunks() do
+        MapProcessor.queue_chunks(surface, chunk.area)
     end
 end
 
