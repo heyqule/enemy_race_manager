@@ -6,9 +6,6 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local modify_race_setting = function()
     local race_settings = remote.call('enemy_race_manager', 'get_race', MOD_NAME)
 
-    ErmDebugHelper.print('Before')
-    ErmDebugHelper.print(game.table_to_json(remote.call('enemy_race_manager', 'get_race', MOD_NAME)))
-
     if game.active_mods['Explosive_biters'] then
         ErmDebugHelper.print('Explosive_biters is active')
 
@@ -35,9 +32,6 @@ local modify_race_setting = function()
         RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-explosive-biter')
         RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-explosive-spitter')
     end
-
-    ErmDebugHelper.print('After')
-    ErmDebugHelper.print(game.table_to_json(remote.call('enemy_race_manager', 'get_race', MOD_NAME)))
 end
 
 ---

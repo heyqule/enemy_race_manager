@@ -25,4 +25,20 @@ function ERM_UnitTint.tint_blue_flame_burner()
     return { r = 110, g = 210, b = 255, a = 1 }
 end
 
+function ERM_UnitTint.tint_cold()
+    return { r = 153, g = 250, b = 220, a = 0.33 }
+end
+
+function ERM_UnitTint.tint_acid()
+    return { r = 143, g = 254, b = 9, a = 0.33 }
+end
+
+function ERM_UnitTint.tint_cold_explosion()
+    return { r = 153, g = 250, b = 220, a = 1 }
+end
+
+function ERM_UnitTint.tint_acid_explosion()
+    return { r = 143, g = 254, b = 9, a = 1 }
+end
+
 return ERM_UnitTint

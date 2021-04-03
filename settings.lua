@@ -132,7 +132,37 @@ data:extend {
         setting_type = "startup",
         default_value = true,
         order = "enemyracemanager-300"
-    }
+    },
+
+    --- Map Settings Tab ---
+    {
+        type = "string-setting",
+        name = "enemyracemanager-build-style",
+        description = "enemyracemanager-build-style",
+        setting_type = "runtime-global",
+        default_value = BUILDING_DEFAULT,
+        allowed_values = { BUILDING_DEFAULT, BUILDING_EXPAND_ON_CMD, BUILDING_A_TOWN, BUILDING_EXPAND_ON_ARRIVAL },
+        order = "enemyracemanager-100"
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-build-formation",
+        description = "enemyracemanager-build-formation",
+        setting_type = "runtime-global",
+        default_value = BUILDING_FORMATION_1_2_4,
+        allowed_values = {
+            BUILDING_FORMATION_1_2_4,
+            BUILDING_FORMATION_1_4_5,
+            BUILDING_FORMATION_1_6_8,
+            BUILDING_FORMATION_1_8_12,
+            BUILDING_FORMATION_1_4_10,
+            BUILDING_FORMATION_1_2_16,
+            BUILDING_FORMATION_1_3_8,
+            BUILDING_FORMATION_1_9_0,
+            BUILDING_FORMATION_RANDOM
+        },
+        order = "enemyracemanager-101"
+    },
 }
 
 

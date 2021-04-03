@@ -121,8 +121,6 @@ function MapProcessor.queue_chunks(surface, area)
 end
 
 function MapProcessor.process_chunks(surface, race_settings)
-    local process_count = ErmConfig.MAP_PROCESS_CHUNK_BATCH
-
     if table_size(chunk_queue) == 0 then
         return
     end
@@ -132,7 +130,7 @@ function MapProcessor.process_chunks(surface, race_settings)
     end
 
     if chunk_queue[surface.name] then
-        for i = 1, process_count do
+        for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
             area = chunk_queue[surface.name]()
             if area then
                 process_enemy_level(surface, area, race_settings)

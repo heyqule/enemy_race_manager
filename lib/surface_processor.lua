@@ -19,28 +19,22 @@ function SurfaceProcessor.assign_race(surface_index)
 
     local races = ErmConfig.get_enemy_races()
     global.enemy_surfaces[surface_index] = races[math.random(1, max_num)]
-    ErmDebugHelper.print("[SurfaceProcessor] Assigned to: "..global.enemy_surfaces[surface_index])
 end
 
 function SurfaceProcessor.remove_race(surface_index)
-    ErmDebugHelper.print('[SurfaceProcessor] Removing...')
     if global.enemy_surfaces[surface_index] ~= nil then
-        ErmDebugHelper.print('[SurfaceProcessor] Removed...')
         Table.remove(global.enemy_surfaces, surface_index)
     end
 end
 
 function SurfaceProcessor.rebuild_race()
     for surface_index, race in pairs(global.enemy_surfaces) do
-        ErmDebugHelper.print("[SurfaceProcessor] Checking for removal "..tostring(game.surfaces[surface_index].name))
-        ErmDebugHelper.print("[SurfaceProcessor] Active? "..race..'/'..tostring(game.active_mods[race]))
         if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) then
             SurfaceProcessor.remove_race(surface_index)
         end
     end
 
     for surface_index, surface in pairs(game.surfaces) do
-        ErmDebugHelper.print("[SurfaceProcessor] Checking for assignment "..surface.name)
         if global.enemy_surfaces[surface.index] == nil then
             SurfaceProcessor.assign_race(surface.index)
         end

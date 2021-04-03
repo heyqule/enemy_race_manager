@@ -99,6 +99,14 @@ function ErmConfig.negative_axis_race()
     return settings.startup['enemyracemanager-2way-group-enemy-negative'].value
 end
 
+function ErmConfig.build_style()
+    return settings.global['enemyracemanager-build-style'].value
+end
+
+function ErmConfig.build_formation()
+    return settings.global['enemyracemanager-build-formation'].value
+end
+
 function ErmConfig.get_enemy_races()
     if #ErmConfig.enemy_races == 1 and ErmConfig.enemy_races_loaded == false then
         for name, version in pairs(game.active_mods) do

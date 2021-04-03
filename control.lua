@@ -24,6 +24,7 @@ local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_pr
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
 
@@ -40,19 +41,19 @@ local race_settings -- track race settings
 local enemy_surfaces -- track which race is on a surface/planet
 
 local onBuildBaseArrived = function(event)
-    local group = event.group;
-    if not (group and group.valid) then
-        local unit = event.unit;
-        ErmDebugHelper.print('on_build_base_arrived, Group ' .. unit.name)
-    else
-        ErmDebugHelper.print('on_build_base_arrived, Unit ' .. group.name)
+    local group = event.group
+
+    if not group then
+        return
     end
+
 end
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
-        ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
+        local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
+        ErmBaseBuildProcessor.exec(replaced_entity)
     end
 end
 
@@ -68,7 +69,28 @@ end
 
 local onUnitFinishGathering = function(event)
     local group = event.group
-    ErmDebugHelper.print('on_unit_group_finished_gathering, Group ' .. group.group_number)
+    local max_settler = game.map_settings.enemy_expansion.settler_group_max_size
+    if group.command and group.command.type == defines.command.build_base and table_size(group.members) > max_settler then
+        local rng = math.random()
+        if rng < 0.75 then
+            local build_group = group.surface.create_unit_group {
+                position = group.position,
+                force= group.force
+            }
+            for i, unit in pairs(group.members) do
+                if i <= max_settler then
+                    build_group.add_member(unit)
+                end
+            end
+            build_group.set_command {
+                type = defines.command.build_base,
+                destination = group.command.destination
+            }
+            build_group.start_moving()
+        end
+
+        group.set_autonomous()
+    end
 end
 
 local onUnitRemovedFromGroup = function(event)
@@ -132,12 +154,14 @@ local prepare_world = function()
     end
 
     -- Game map settings
+    game.map_settings.unit_group.min_group_gathering_time = settings.startup["enemyracemanager-max-group-size"].value * 3 * defines.time.second -- 5mins/100units
+    game.map_settings.unit_group.max_group_gathering_time = settings.startup["enemyracemanager-max-group-size"].value * 9 * defines.time.second -- 15mins/100units
     game.map_settings.unit_group.max_gathering_unit_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
     game.map_settings.unit_group.max_unit_group_size = settings.startup["enemyracemanager-max-group-size"].value
 
-    -- Mod Compatibility Upgrade
+    -- Mod Compatibility Upgrade for race settings
     Event.dispatch({
-        name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = 'erm_vanilla' })
+        name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
 
     -- Race Cleanup
     ErmRaceSettingsHelper.clean_up_race()
@@ -164,15 +188,13 @@ end)
 Event.register(defines.events.on_gui_click, onGuiClick)
 
 --- Unit processing events
---Event.register(defines.events.on_entity_spawned, onEntitySpawned)
---
 --Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
 
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 
 --Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
 --
---Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
+Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 --
 --Event.register(defines.events.on_unit_added_to_group, onUnitAddToGroup)
 --

@@ -247,17 +247,16 @@ end
 -- Mandatory vanilla game changes --
 -- Add artillery-shell damage bonus to stronger explosive
 Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
-        {
-            type = "ammo-damage",
-            ammo_category = "artillery-shell",
-            modifier = 0.2
-        }
+    {
+        type = "ammo-damage",
+        ammo_category = "artillery-shell",
+        modifier = 0.25
+    }
 )
 
 -- Change rocket/cannon area explosives to hit all units
 local ignore_collision_for_area_damage = function(target_effects)
     for i, effect in pairs(target_effects) do
-        log(effect['type'])
         if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
             effect['action']['ignore_collision_condition'] = true
         end
@@ -267,4 +266,7 @@ end
 --data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'][2]['action']['ignore_collision_condition'] = true
 ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
 
-
+if DEBUG_MODE then
+    data.raw["radar"]["radar"]['max_distance_of_sector_revealed'] = 25
+    data.raw["radar"]["radar"]['max_distance_of_nearby_sector_revealed'] = 25
+end

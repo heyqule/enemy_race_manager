@@ -15,7 +15,6 @@ function ERM_RemoteAPI.register_race(race_setting)
     if global and global.race_settings then
         global.race_settings[race_setting.race] = race_setting
     end
-    return nil
 end
 
 -- Return race setting
@@ -45,6 +44,16 @@ function ERM_RemoteAPI.get_race_level(race)
         return global.race_settings[race].level
     end
     return 1
+end
+
+--- Proper way to update race_setting in enemy mods ---
+--- 1. local race_settings =  remote.call('enemy_race_manager', 'get_race', MOD_NAME)
+--- 2. make change to race_settings
+--- 3. remote.call('enemy_race_manager', 'update_race_setting', race_settings)
+function ERM_RemoteAPI.update_race_setting(race_setting)
+    if global and global.race_settings and global.race_settings[race_setting.race] then
+        global.race_settings[race_setting.race] = race_setting
+    end
 end
 
 return ERM_RemoteAPI
