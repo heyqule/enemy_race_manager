@@ -15,7 +15,7 @@ The infamous zerg (1.4.0 / 2021-04-03) (It includes developer documentation, ple
 * Download: https://github.com/heyqule/erm_zerg/releases/download/1.4.0/erm_zerg_1.4.0.zip
 * Change Log: https://github.com/heyqule/erm_zerg/blob/main/changelog.txt
 
-![Zerg](https://mods-data.factorio.com/assets/29e5f87b5fa05edefc8ac6d4a9d9ebc9aaa4addc.png "Zerg")
+![Zerg](https://mods-data.factorio.com/assets/515e5390e5d7d8ad2135fb9e6604a995566204ee.png "Zerg")
 
 The godly protoss (1.4.0 / 2021-04-03)
 
@@ -23,7 +23,7 @@ The godly protoss (1.4.0 / 2021-04-03)
 * Download: https://github.com/heyqule/erm_toss/releases/download/1.4.0/erm_toss_1.4.0.zip
 * Change Log: https://github.com/heyqule/erm_toss/blob/main/changelog.txt
 
-![Protoss](https://mods-data.factorio.com/assets/45b1471ea6121089d4163aa08157dd5292b9873f.png "Protoss")
+![Protoss](https://mods-data.factorio.com/assets/656569de2ac0658bd1907a5a8c71f4553a952d6b.png "Protoss")
 
 Since P and Z has ganged up to wreck your base. Your engineer have innovated some new tech to counter them.
 
@@ -34,7 +34,7 @@ The terran, player support units (1.1.0 / 2021-04-03)
 * Change Log: https://github.com/heyqule/erm_terran/blob/main/changelog.txt
 * This demo requires https://mods.factorio.com/mod/Unit_Control
 
-![Terran](https://mods-data.factorio.com/assets/697dc6bfcebe21989475ff15f83abbfddb7d98c0.png "Terran")
+![Terran](https://mods-data.factorio.com/assets/15b0714cb3f3a01e371c9db36e12b3393f3429a2.png "Terran")
 
 Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU
 
@@ -78,10 +78,12 @@ New races may have up to 3 tiers of unit-spawners and turrets.  This applies to 
 Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 * Added this due to structure resistance and health increase
 
-###### GUI to view each race and its stats.
+###### GUI to view each race's stats.
 - replace races on a surface
 
 ###### Custom enemy base autoplace
+This defines how enemy bases are generated when a new chunk is charted.
+
 Default
 - using base game autoplace. All races are mixed.
 
@@ -91,15 +93,17 @@ Default
 * can be horizontally or vertically divided.
 * races can expand into each other's territory.
 
-![Special Spawn Layout](https://mods-data.factorio.com/assets/fe75ade7bf1ee69b37d6a4201e766239cde7bd15.png "Special Spawn Layout")
+![2 races split](https://mods-data.factorio.com/assets/af3ac9babab42006392d6aaaebfe9b824943661f.png "2 races split")
 
-One race per surface
+One race per surface/planet
 * randomly assign a race for each surface / planet.
 * It's for Space Exploration.
 * The race of a planet can be changed using replace function from UI.
 
+![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
+
 ###### Custom enemy base expansion
-In base game, each building group build one building at a time.  This feature changes that they build several building at one time with specified formation.
+This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 * Default
   * build one at a time
 * Command Center
@@ -115,6 +119,8 @@ You can change the build formation option. For example:
 * and more
 
 Partial formation is build based on cc > support > turret priority.
+
+![1-4-5 Formation](https://mods-data.factorio.com/assets/42b016483f30cb37d009e59b417a82e1c4a362b9.png "1-4-5 Formation")
 
 ### Mod Compatibility
 
