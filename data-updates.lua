@@ -4,6 +4,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 require('__enemyracemanager__/global')
+require('__enemyracemanager__/setting-constants')
 
 require('prototypes/compatibility/data-updates.lua')
 
@@ -46,8 +47,8 @@ local x_axis_negative_probability_expression = function(autoplace)
 end
 
 local process_x_axis_unit = function(v)
-    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value)
-    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value)
+    local onPositive = String.find(v.name, ErmConfig.positive_axis_race())
+    local onNegative = String.find(v.name, ErmConfig.negative_axis_race())
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -140,10 +141,10 @@ if settings.startup['enemyracemanager-enable-bitters'].value == false then
 end
 
 -- 2 Ways Race handler
-if settings.startup['enemyracemanager-enable-2way-group-enemy'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'x-axis' then
+if ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
     disable_normal_biters()
     process_x_axis()
-elseif settings.startup['enemyracemanager-enable-2way-group-enemy'].value == true and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == 'y-axis' then
+elseif ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
     disable_normal_biters()
     process_y_axis()
 end
@@ -176,6 +177,17 @@ local vehicle_change_resistance = function(percentage_value, fixed_value)
     }
 end
 
+local rails_change_resistance = function()
+    return {
+        { type = "acid", percent = 80},
+        { type = "poison", percent = 100},
+        { type = "physical", percent = 50},
+        { type = "fire", percent = 100},
+        { type = "explosion", percent = 50},
+        { type = "cold", percent = 100}
+    }
+end
+
 -- Enhance Vanilla Defenses
 if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
@@ -195,7 +207,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 20)
     data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 5)
 
-    -- Buff vehicle machine-gun
+    -- Buff vehicle gun
     data.raw['gun']['vehicle-machine-gun']['attack_parameters']['damage_modifier'] = 1.5
     data.raw['gun']['tank-machine-gun']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['tank-flamethrower']['attack_parameters']['damage_modifier'] = 2
@@ -207,17 +219,20 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['fluid-wagon']['fluid-wagon']['resistances'] = vehicle_change_resistance(75, 15)
     data.raw['artillery-wagon']['artillery-wagon']['resistances'] = vehicle_change_resistance(75, 15)
 
+    data.raw['straight-rail']['straight-rail']['resistances'] = rails_change_resistance()
+    data.raw['curved-rail']['curved-rail']['resistances'] = rails_change_resistance()
+
     -- Buff Wall
     data.raw['wall']['stone-wall']['max_health'] = 500
     data.raw['wall']['stone-wall']['resistances'] = {
-        { type = "acid", percent = 30, decrease = 0 },
+        { type = "acid", percent = 50, decrease = 0 },
         { type = "poison", percent = 100, decrease = 0 },
-        { type = "physical", percent = 30, decrease = 0 },
+        { type = "physical", percent = 50, decrease = 0 },
         { type = "fire", percent = 100, decrease = 0 },
         { type = "explosion", percent = 60, decrease = 10 },
         { type = "impact", percent = 60, decrease = 45 },
         { type = "laser", percent = 30, decrease = 0 },
-        { type = "electric", percent = 30, decrease = 0 },
+        { type = "electric", percent = 100, decrease = 0 },
         { type = "cold", percent = 100, decrease = 0 }
     }
 
@@ -232,17 +247,16 @@ end
 -- Mandatory vanilla game changes --
 -- Add artillery-shell damage bonus to stronger explosive
 Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
-        {
-            type = "ammo-damage",
-            ammo_category = "artillery-shell",
-            modifier = 0.2
-        }
+    {
+        type = "ammo-damage",
+        ammo_category = "artillery-shell",
+        modifier = 0.25
+    }
 )
 
 -- Change rocket/cannon area explosives to hit all units
 local ignore_collision_for_area_damage = function(target_effects)
     for i, effect in pairs(target_effects) do
-        log(effect['type'])
         if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
             effect['action']['ignore_collision_condition'] = true
         end
@@ -252,4 +266,7 @@ end
 --data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'][2]['action']['ignore_collision_condition'] = true
 ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
 
-
+if DEBUG_MODE then
+    data.raw["radar"]["radar"]['max_distance_of_sector_revealed'] = 25
+    data.raw["radar"]["radar"]['max_distance_of_nearby_sector_revealed'] = 25
+end

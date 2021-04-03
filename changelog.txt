@@ -1,4 +1,43 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.7.0
+Date: 04. 02. 2021
+
+  Major Features:
+    - ----- Support one force per surface/planet. -----
+    - ######## How this works:
+    - 1) When a new surface is discovered, a race is assigned to the surface randomly
+    - 2) Spawners or worms are generated when new chunk is mapped. The mod checks their force.
+    - 3) If it's not same as the assigned force, the mod replace the entity with random spawner/worm from assigned race.
+    - ########
+    - UI shows the surface you are on and which race(s) are on that surface.
+    - When you are using "one force per surface", replacing a race changes the race of the surface you are on.
+    - ------ Expansion Build Style ----
+    - The enemy builds one building each time in base game. Enemy base expansion is a very slow process.  This feature changes that.
+    - There are 4 build styles.
+    - 1. "Default", The enemy builds one building each time a build request triggers using base game logic. It's very slow expansion.
+    - 2. "Command Center Expand", If the enemy build group builds a command center, it expands  build formation setting. Otherwise, it builds single building. This occasionally expand 7 extra builds.
+    - 3. "Build A Town", The enemy build group builds based on the formation setting
+    - 4. "Fully Expand", When the group builds, all units in the group builds using build formation setting. This always expands based on the size of the build group. The default map setting is 20.
+    - When the unit group doesn't have enough units to build a full formation, command center always builds first, next is support building and then turrets.
+    - Build style and build formation options can be change during runtime.
+
+  Features:
+    - --- Major Performance Improvement ---
+    - Large base builder group will have 75% chance to break down to a smaller settle size group. Large base builder groups seems have significantly performance penalty.
+    - The extra units become attack group.  If it did not break down, the large base builder group would also become attack group
+
+  Changes:
+    - Corpse stay 15 minutes by default, instead of 5 minutes. Its setting range is now 1 - 60.
+    - Add info icon to settings and setting description update
+    - 2 races split is now an option in "Enemy Mapping Method", instead of checkbox.  Please select "2 races split" before continue your save.
+    - Buffed base game rails resistance.
+    - Remove Rampant from dependency blocker.  It seems work with default settings.  However, its changes only apply to "enemy" force. I did not test with its new biters. Enabling them may have unexpected results.
+    - A lot of changes and performance tweaks made for terrain (1.1.0),protoss (1.4.0) and zerg (1.4.0) race mod. Please update those too!
+
+  Bugfixes:
+    - Fix a crash by removing force and race_settings when an ERM race mod has disabled.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.6.1
 Date: 03. 27. 2021
 
@@ -16,9 +55,9 @@ Date: 03. 26. 2021
     - Override their resistances
     - They don't regenerate health to balance their overpower attacks
     - [Cold Biter]
-    - Cold always 95, physical 75, fire/explosion -100, laser/acid -50 - 50
+    - Cold always 95, physical 75, fire/explosion -100 - -50, laser/acid -50 - 50
     - [Explosive Biter]
-    - Fire/explosion always 95, physical 75, cold -100, laser/acid -50 - 50
+    - Fire/explosion always 95, physical 75, cold -100 - -50, laser/acid -50 - 50
 
   Bugfixes:
     - Fix a crash when visit other planet / surfaces in Space Exploration

@@ -6,9 +6,6 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local modify_race_setting = function()
     local race_settings = remote.call('enemy_race_manager', 'get_race', MOD_NAME)
 
-    ErmDebugHelper.print('Before')
-    ErmDebugHelper.print(game.table_to_json(remote.call('enemy_race_manager', 'get_race', MOD_NAME)))
-
     if game.active_mods['Cold_biters'] then
         ErmDebugHelper.print('Cold_biters is active')
 
@@ -35,9 +32,6 @@ local modify_race_setting = function()
         RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-cold-biter')
         RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-cold-spitter')
     end
-
-    ErmDebugHelper.print('After')
-    ErmDebugHelper.print(game.table_to_json(remote.call('enemy_race_manager', 'get_race', MOD_NAME)))
 end
 
 ---

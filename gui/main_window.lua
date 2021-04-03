@@ -4,42 +4,54 @@
 --- DateTime: 1/2/2021 4:48 PM
 ---
 local mod_gui = require('mod-gui')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local LevelManager = require('__enemyracemanager__/lib/level_processor')
 local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local String = require('__stdlib__/stdlib/utils/string')
 
-local ERM_GUI = {
+local ERM_MainWindow = {
     require_update_all = false
 }
 
 local window_width = 660
 local window_height = 400
 
-function ERM_GUI.show(player)
+function ERM_MainWindow.show(player)
     local mod_ui = mod_gui.get_frame_flow(player)
-    local erm_gui = mod_ui.add { type = 'frame', name = 'races_manager', direction = 'vertical' }
+    local ERM_MainWindow = mod_ui.add { type = 'frame', name = 'races_manager', direction = 'vertical' }
     local admin = player.admin
-    erm_gui.style.maximal_width = window_width
-    erm_gui.style.minimal_width = window_width
-    erm_gui.style.maximal_height = window_height * 2
-    erm_gui.style.minimal_height = window_height
+    ERM_MainWindow.style.maximal_width = window_width
+    ERM_MainWindow.style.minimal_width = window_width
+    ERM_MainWindow.style.maximal_height = window_height * 2
+    ERM_MainWindow.style.minimal_height = window_height
     -- Race Manager Title
-    local title_flow = erm_gui.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
+    local title_flow = ERM_MainWindow.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
     title_flow.style.minimal_width = window_width
     title_flow.style.maximal_width = window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
     title.style.minimal_width = window_width * 0.9
 
-    local close_button = erm_gui.title_flow.add { type = "sprite-button", name = 'erm_close_button', sprite = "utility/close_white", style = 'tip_notice_close_button' }
+    local close_button = ERM_MainWindow.title_flow.add { type = "sprite-button", name = 'erm_close_button', sprite = "utility/close_white", style = 'tip_notice_close_button' }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local scroll = erm_gui.add { type = "scroll-pane", style = "scroll_pane_in_shallow_frame" }
+    local scroll = ERM_MainWindow.add { type = "scroll-pane", style = "scroll_pane_in_shallow_frame" }
     scroll.style.margin = 5
-    erm_gui.style.minimal_height = window_height / 1.25
+    ERM_MainWindow.style.minimal_height = window_height / 1.25
+
+    scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet',  player.surface.name } , style = 'caption_label' }
+    if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.index] then
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race',  global.enemy_surfaces[player.surface.index] } }
+    elseif GlobalConfig.mapgen_is_2_races_split() then
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race()} }
+    else
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_mixed_races'} }
+    end
+
     local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
@@ -73,99 +85,99 @@ function ERM_GUI.show(player)
         end
     end
 
-    local bottom_flow = erm_gui.add { type = "flow", direction = 'horizontal' }
+    local bottom_flow = ERM_MainWindow.add { type = "flow", direction = 'horizontal' }
     bottom_flow.add { type = "button", name = "emr_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
 end
 
-function ERM_GUI.hide(player)
+function ERM_MainWindow.hide(player)
     local mod_ui = mod_gui.get_frame_flow(player)
     mod_ui.races_manager.destroy()
 end
 
-function ERM_GUI.update(player)
-    if ERM_GUI.is_showing(player) then
-        ERM_GUI.hide(player)
-        ERM_GUI.show(player)
+function ERM_MainWindow.update(player)
+    if ERM_MainWindow.is_showing(player) then
+        ERM_MainWindow.hide(player)
+        ERM_MainWindow.show(player)
     end
 end
 
-function ERM_GUI.update_all()
+function ERM_MainWindow.update_all()
     for k, player in pairs(game.players) do
-        ERM_GUI.update(player)
+        ERM_MainWindow.update(player)
     end
 end
 
-function ERM_GUI.is_hidden(player)
+function ERM_MainWindow.is_hidden(player)
     local mod_ui = mod_gui.get_frame_flow(player)
     return mod_ui.races_manager == nil
 end
 
-function ERM_GUI.is_showing(player)
-    return not ERM_GUI.is_hidden(player)
+function ERM_MainWindow.is_showing(player)
+    return not ERM_MainWindow.is_hidden(player)
 end
 
-function ERM_GUI.toggle_main_window(event)
+function ERM_MainWindow.toggle_main_window(event)
     if event.element.name == "erm_toggle" then
         local owner = game.players[event.element.player_index]
         local button_flow = mod_gui.get_button_flow(owner)
 
-        if ERM_GUI.is_hidden(owner) then
+        if ERM_MainWindow.is_hidden(owner) then
             button_flow.erm_toggle.tooltip = { 'gui.hide-enemy-stats' }
-            ERM_GUI.show(owner)
+            ERM_MainWindow.show(owner)
         else
             button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
-            ERM_GUI.hide(owner)
+            ERM_MainWindow.hide(owner)
         end
     end
 end
 
-function ERM_GUI.toggle_close(event)
+function ERM_MainWindow.toggle_close(event)
     if event.element.name == "erm_close_button" then
         local owner = game.players[event.element.player_index]
         local button_flow = mod_gui.get_button_flow(owner)
         button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
-        ERM_GUI.hide(owner)
+        ERM_MainWindow.hide(owner)
     end
 end
 
-function ERM_GUI.sync_with_enemy(event)
+function ERM_MainWindow.sync_with_enemy(event)
     if String.find(event.element.name, "/sync_with_enemy") then
         nameToken = String.split(event.element.name, '/')
         if game.forces['enemy_' .. nameToken[1]] and global.race_settings[nameToken[1]] then
             LevelManager.copyEvolutionFromEnemy(global.race_settings, game.forces['enemy_' .. nameToken[1]], game.forces['enemy'])
-            ERM_GUI.require_update_all = true;
+            ERM_MainWindow.require_update_all = true;
         end
     end
 end
 
-function ERM_GUI.replace_enemy(event)
+function ERM_MainWindow.replace_enemy(event)
     if String.find(event.element.name, "/replace_enemy") then
         nameToken = String.split(event.element.name, '/')
         if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
             local owner = game.players[event.element.player_index]
+            SurfaceProcessor.assign_race(owner.surface.index)
+            ERM_MainWindow.require_update_all = true;
             ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
-            ERM_GUI.require_update_all = true;
         end
     end
 end
 
-function ERM_GUI.reset_default(event)
+function ERM_MainWindow.reset_default(event)
     if event.element.name == "emr_reset_default_bitter" then
         for _, surface in pairs(game.surfaces) do
             ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
-            ERM_GUI.require_update_all = true;
+            ERM_MainWindow.require_update_all = true;
         end
     end
 end
 
-function ERM_GUI.update_overhead_button(player_index)
+function ERM_MainWindow.update_overhead_button(player_index)
     local player = game.players[player_index]
     local button_flow = mod_gui.get_button_flow(player)
 
     if button_flow and not button_flow['erm_toggle'] then
-
         button_flow.add { type = "sprite-button", name = "erm_toggle", tooltip = { 'gui.show-enemy-stats' }, sprite = 'utility/force_editor_icon' }
     end
 end
 
-return ERM_GUI
+return ERM_MainWindow

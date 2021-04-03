@@ -15,6 +15,7 @@ local Game = require('__stdlib__/stdlib/game')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib//debug_helper')
 
 local ReplacementProcessor = {}
@@ -24,16 +25,7 @@ local race_pick
 local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
 
-    local structure_tier = race_settings[race_pick]['current_support_structures_tier']
-    local strucutre_base = race_settings[race_pick]['current_command_centers_tier']
-    local pick = math.random();
-
-    local base_name = ''
-    if pick < 0.125 then
-        base_name = strucutre_base[math.random(1, #strucutre_base)]
-    else
-        base_name = structure_tier[math.random(1, #structure_tier)]
-    end
+    local base_name = ErmRaceSettingHelper.pick_a_spawner(race_pick)
 
     local new_force_name = 'enemy'
     if race_pick ~= MOD_NAME then
@@ -47,14 +39,15 @@ local replace_structures = function(surface, entity, race_settings)
     end
 
     if position then
-        surface.create_entity({ name = name, force = new_force_name, position = position })
+        return surface.create_entity({ name = name, force = new_force_name, position = position })
     end
 end
 
 local replace_turrets = function(surface, entity, race_settings)
     local position = entity.position
-    local turret_tier = race_settings[race_pick]['current_turrets_tier']
-    local base_name = turret_tier[math.random(1, #turret_tier)]
+
+    local base_name = ErmRaceSettingHelper.pick_a_turret(race_pick)
+
     local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
     local new_force_name = 'enemy'
     if race_pick ~= MOD_NAME then
@@ -66,7 +59,7 @@ local replace_turrets = function(surface, entity, race_settings)
     end
 
     if position then
-        surface.create_entity({ name = name, force = new_force_name, position = position })
+        return surface.create_entity({ name = name, force = new_force_name, position = position })
     end
 end
 
@@ -105,20 +98,24 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_n
 end
 
 function ReplacementProcessor.replace_entity(surface, entity, race_settings, target_force_name)
+    local returned_entity = entity
+
     if surface then
         race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
         local nameToken = ErmForceHelper.getNameToken(entity.name)
 
-        if (race_pick == nameToken[1]) then
+        if (race_pick == nameToken[1] and nameToken[3] == race_settings[race_pick].level) then
             return
         end
 
         if (entity.type == 'unit-spawner') then
-            replace_structures(surface, entity, race_settings)
+            returned_entity = replace_structures(surface, entity, race_settings)
         elseif (entity.type == 'turret') then
-            replace_turrets(surface, entity, race_settings)
+            returned_entity = replace_turrets(surface, entity, race_settings)
         end
     end
+
+    return returned_entity
 end
 
 function ReplacementProcessor.resetDefault(surface)
