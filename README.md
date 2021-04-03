@@ -93,7 +93,7 @@ Default
 * can be horizontally or vertically divided.
 * races can expand into each other's territory.
 
-![2 races split](https://mods-data.factorio.com/assets/af3ac9babab42006392d6aaaebfe9b824943661f.png "2 races split")
+![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
 One race per surface/planet
 * randomly assign a race for each surface / planet.
