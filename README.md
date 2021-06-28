@@ -4,6 +4,17 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 **I hope someone with art skills can come up with some new original races.**
 
+### 1.0.0 Release
+This release focused on minor bug fix and code refactor.  I also added a command to override level.     
+```
+/ERM_levelup race_name,level  (/ERM_levelup erm_vanilla,8)
+```
+This lets you fight harder enemy without changing the level multiplier midgame.  You can also change back to the evolution point calculated level if the override level is too hard to handle.
+
+- The enemy is at level 3 based on evolution points, you can change it to higher level and then set it back to 3. 
+- You can not set the level to 2 because the progressed level is at 3.
+
+
 ### New race demo
 These mods are made as educational demos. They are not on Factorio Mod Portal due to copyrighted contents.
 

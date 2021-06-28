@@ -25,6 +25,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local ErmCommandProcessor = require('__enemyracemanager__/lib/command_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
 
@@ -40,31 +41,12 @@ remote.add_interface("enemy_race_manager_debug", ErmDebugRemoteApi)
 local race_settings -- track race settings
 local enemy_surfaces -- track which race is on a surface/planet
 
-local onBuildBaseArrived = function(event)
-    local group = event.group
-
-    if not group then
-        return
-    end
-
-end
-
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
         local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
         ErmBaseBuildProcessor.exec(replaced_entity)
     end
-end
-
-local onUnitGroupCreated = function(event)
-    local group = event.group
-    ErmDebugHelper.print('on_unit_group_created, Group ' .. group.group_number)
-end
-
-local onUnitAddToGroup = function(event)
-    local group = event.group
-    ErmDebugHelper.print('on_unit_added_to_group, Group ' .. group.group_number)
 end
 
 local onUnitFinishGathering = function(event)
@@ -93,10 +75,6 @@ local onUnitFinishGathering = function(event)
     end
 end
 
-local onUnitRemovedFromGroup = function(event)
-    local group = event.group
-    ErmDebugHelper.print('on_unit_removed_from_group, Group ' .. group.group_number)
-end
 
 local addRaceSettings = function()
     if remote.call('enemy_race_manager', 'get_race', MOD_NAME) then
@@ -150,7 +128,7 @@ end
 local prepare_world = function()
     -- Calculate Biter Level
     if table_size(race_settings) > 0 then
-        ErmLevelProcessor.calculateMultipleLevel(race_settings, game.forces, settings)
+        ErmLevelProcessor.calculateMultipleLevels(race_settings, game.forces, settings)
     end
 
     -- Game map settings
@@ -188,21 +166,14 @@ end)
 Event.register(defines.events.on_gui_click, onGuiClick)
 
 --- Unit processing events
---Event.register(defines.events.on_build_base_arrived, onBuildBaseArrived)
-
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 
---Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
---
 Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
---
---Event.register(defines.events.on_unit_added_to_group, onUnitAddToGroup)
---
---Event.register(defines.events.on_unit_removed_from_group, onUnitRemovedFromGroup)
+
 
 --- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
-    ErmLevelProcessor.calculateLevel(race_settings, game.forces, settings)
+    ErmLevelProcessor.calculateLevels(race_settings, game.forces, settings)
 end)
 
 --- Map Processing Events
@@ -267,8 +238,8 @@ commands.add_command("ERM_GetRaceSettings",
             game.print(game.table_to_json(race_settings))
         end)
 
-commands.add_command("ERM_LevelUpWithTech",
-        { "description.command-level-up-with-tech" },
-        function()
-            ErmLevelProcessor.level_up_from_tech(race_settings, game.forces, false)
+commands.add_command("ERM_levelup",
+        { "description.command-level-up-race" },
+        function(command)
+            ErmCommandProcessor.levelup(command)
         end)

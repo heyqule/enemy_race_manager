@@ -10,7 +10,6 @@
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
-local Queue = require('__stdlib__/stdlib/misc/queue')
 local Game = require('__stdlib__/stdlib/game')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
@@ -26,11 +25,7 @@ local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
 
     local base_name = ErmRaceSettingHelper.pick_a_spawner(race_pick)
-
-    local new_force_name = 'enemy'
-    if race_pick ~= MOD_NAME then
-        new_force_name = 'enemy_' .. race_pick
-    end
+    local new_force_name = ErmForceHelper.get_force_name_from(race_pick)
 
     local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
     entity.destroy()
@@ -49,10 +44,8 @@ local replace_turrets = function(surface, entity, race_settings)
     local base_name = ErmRaceSettingHelper.pick_a_turret(race_pick)
 
     local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
-    local new_force_name = 'enemy'
-    if race_pick ~= MOD_NAME then
-        new_force_name = 'enemy_' .. race_pick
-    end
+    local new_force_name = ErmForceHelper.get_force_name_from(race_pick)
+
     entity.destroy()
     if not surface.can_place_entity({ name = name, force = new_force_name, position = position }) then
         position = surface.find_non_colliding_position(name, position, 32, 2, true)

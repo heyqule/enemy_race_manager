@@ -17,6 +17,13 @@ function ForceHelper.extract_race_name_from(force_name)
     return String.gsub(force_name, 'enemy_', '')
 end
 
+function ForceHelper.get_force_name_from(race_name)
+    if race_name == MOD_NAME then
+        return 'enemy'
+    end
+    return 'enemy_'..race_name
+end
+
 -- Checks enemy_erm_ prefix
 function ForceHelper.is_erm_unit(entity)
     return String.find(entity.name, 'erm_')

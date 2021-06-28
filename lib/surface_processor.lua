@@ -28,6 +28,10 @@ function SurfaceProcessor.remove_race(surface_index)
 end
 
 function SurfaceProcessor.rebuild_race()
+    if global.enemy_surfaces == nil then
+        return
+    end
+
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) then
             SurfaceProcessor.remove_race(surface_index)

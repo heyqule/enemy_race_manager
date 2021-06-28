@@ -60,11 +60,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 
     local new_force_name = entity.force.name
     if nameToken[1] ~= race_name then
-        if nameToken[1] == MOD_NAME then
-            new_force_name = 'enemy'
-        else
-            new_force_name = 'enemy_' .. nameToken[1]
-        end
+        new_force_name = ErmForceHelper.get_force_name_from(nameToken[1])
     end
 
     entity.destroy()

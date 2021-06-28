@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 06. 30. 2021
+
+  Features:
+    - --- Added a command to override race level ---
+    - Usage: /ERM_levelup erm_vanilla,5
+    - Overriding level must be equal or higher than the level calculated by evolution points.
+
+
+  Changes:
+    - Removed level up by tech command
+    - Refactored code in lib.
+
+---------------------------------------------------------------------------------------------------
 Version: 0.7.0
 Date: 04. 02. 2021
 

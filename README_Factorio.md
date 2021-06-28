@@ -4,22 +4,15 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 **I hope someone with art skills can come up with some new original races.**
 
-### 0.7.0 Release / 1.4.0 release for races ###
-This should be the final major release before 1.0.  It has various new features and performance improvement.
-- **2 races split enable option is now an option in "Enemy Mapping Method", instead of checkbox.  Please select "2 races split" before continue your save if you are using this option.**
-- Added one race per surface support.
-  - Each Space Exploration planet will have a random race.
-  - UI shows the race that resides on the surface.
-- Added an optional stylized base builder.
-  - Enemy base can build must quicker in a configurable formation, instead of 1 building per build command.
-- Tuned base builder groups to improve overall enemy units performance.
+### 1.0.0 Release
+This release focused on minor bug fix and code refactor.  I also added a command to override level.
+```
+/ERM_levelup race_name,level  (/ERM_levelup erm_vanilla,8)
+```
+This lets you fight harder enemy without changing the level multiplier midgame.  You can also change back to the evolution point calculated level if the override level is too hard to handle.
 
-###### Race Mods 1.4.0 / 1.1.0  
-- Fix unit spawns function on Drone/Probe wasting cpu cycles.
-- Change various unit spawn requirements.
-- Add one or 2 weakness resistances to each race. The weakness resistance is 85, instead of 90.
-- Toss weak to acid.  Zerg weak to cold and electric.
-- Terran added acid/cold damage dealer. Existing units have various buffs.
+- The enemy is at level 3 based on evolution points, you can change it to higher level and then set it back to 3.
+- You can not set the level to 2 because the progressed level is at 3.
 
 
 ### New race demo
@@ -179,6 +172,8 @@ For more compatibility details, please visit https://github.com/heyqule/enemy_ra
  * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
 ### Roadmap after 1.0
+A new enemy race using player's assets
+
 Angry meters
 
   * send enemy to your base @ night based on how many they have been killed

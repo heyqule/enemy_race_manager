@@ -25,10 +25,7 @@ local evolution_level_map = { 0.4, 0.8 }
 local max_evolution_factor_level = 3
 
 -- control level 4 - 20
-local evolution_score = { 20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500 }
-
--- weapon level check at level 6 - 10
-local evolution_weapon_level = { 7, 9, 11, 13, 15 }
+local evolution_points = { 20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500 }
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1
@@ -39,19 +36,65 @@ local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name]['current_support_structures_tier'] = Table.array_combine(race_settings[race_name]['current_support_structures_tier'], race_settings[race_name]['support_structures'][race_settings[race_name].tier])
 end
 
+local handle_unit_tier = function(race_settings, force, race_name, dispatch)
+    local current_tier = race_settings[race_name].tier
+    if current_tier < ErmConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
+        level_up_tier(current_tier, race_settings, race_name)
+        if dispatch then
+            Event.dispatch(
+                    { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                      affected_race = race_settings[race_name] })
+        end
+    end
+end
+
+local can_level_up_by_evolution_factor = function(current_level, force)
+    return current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level]
+end
+
+local can_level_up_by_evolution_points = function(current_level, race_settings, race_name)
+    return current_level >= max_evolution_factor_level and
+            current_level < ErmConfig.get_max_level() and
+            race_settings[race_name].evolution_point >= evolution_points[(current_level - max_evolution_factor_level) + 1]
+end
+
+local handle_unit_level = function(race_settings, force, race_name, dispatch)
+    local current_level = race_settings[race_name].level
+    -- Handle Evolution Level
+    if can_level_up_by_evolution_factor(current_level, force) or can_level_up_by_evolution_points(current_level, race_settings, race_name) then
+        race_settings[race_name].level = current_level + 1
+        if dispatch then
+            game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+            Event.dispatch({
+                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
+                affected_race = race_settings[race_name] })
+        end
+    end
+end
+
+local calculate_evolution_points = function(race_settings, settings, force, race_name)
+    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
+    return race_settings[race_name].evolution_point
+end
+
+local has_valid_race_settings = function(race_settings, race_name)
+    return race_settings and race_settings[race_name]
+end
+
+
 function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
     for i, force in pairs(forces) do
         if String.find(force.name, 'enemy') then
             local force_name = force.name
             local race_name = ErmForceHelper.extract_race_name_from(force_name)
             -- Handle Score Level
-            local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
-            race_settings[race_name].evolution_point = score
+            calculate_evolution_points(race_settings, settings, force, race_name)
         end
     end
 end
 
-function LevelManager.calculateLevel(race_settings, forces, settings)
+
+function LevelManager.calculateLevels(race_settings, forces, settings)
     for i, force in pairs(forces) do
         if not String.find(force.name, 'enemy') then
             goto skip_calculate_level_for_force
@@ -60,52 +103,27 @@ function LevelManager.calculateLevel(race_settings, forces, settings)
         local force_name = force.name
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-        if race_settings and race_settings[race_name] then
-            local current_level = race_settings[race_name].level
-
-            -- Handle Score Level
-            local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
-            race_settings[race_name].evolution_point = score
+        if has_valid_race_settings(race_settings, race_name) then
+            local current_race_setting = race_settings[race_name]
+            local current_level = current_race_setting.level
 
             if current_level == ErmConfig.get_max_level() then
                 goto skip_calculate_level_for_force
             end
+            -- Handle Score Level
+            calculate_evolution_points(race_settings, settings, force, race_name)
 
-            local current_tier = race_settings[race_name].tier
-            -- Handle Tier
-            if current_tier < ErmConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
-                level_up_tier(current_tier, race_settings, race_name)
-                Event.dispatch(
-                        { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                          affected_race = race_settings[race_name] })
-            end
+            handle_unit_tier(race_settings, force, race_name, true)
 
-            -- Handle Evolution Level
-            if current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level] then
-                race_settings[race_name].level = current_level + 1
-                Event.dispatch({
-                    name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
-                    affected_race = race_settings[race_name] })
-                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-                goto skip_calculate_level_for_force
-            end
-
-            if current_level >= max_evolution_factor_level and
-                    current_level < ErmConfig.get_max_level() and
-                    score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
-                race_settings[race_name].level = current_level + 1
-                Event.dispatch({
-                    name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-                goto skip_calculate_level_for_force
-            end
+            handle_unit_level(race_settings, force, race_name, true)
         end
 
         :: skip_calculate_level_for_force ::
     end
 end
 
-function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
+
+function LevelManager.calculateMultipleLevels(race_settings, forces, settings)
     for i, force in pairs(forces) do
         if not String.find(force.name, 'enemy') then
             goto skip_calculate_multiple_level_for_force
@@ -114,14 +132,14 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
         local force_name = force.name
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-        if race_settings and race_settings[race_name] and race_settings[race_name].level > ErmConfig.get_max_level() then
+        if has_valid_race_settings(race_settings, race_name) and race_settings[race_name].level > ErmConfig.get_max_level() then
             race_settings[race_name].level = ErmConfig.get_max_level()
             game.print('Max level reduced: ' .. race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
             Event.dispatch({
                 name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
         end
 
-        if race_settings and race_settings[race_name] then
+        if has_valid_race_settings(race_settings, race_name) then
             local current_level = race_settings[race_name].level
 
             for i = current_level, ErmConfig.get_max_level() do
@@ -129,26 +147,12 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
                     goto skip_calculate_multiple_level_for_force
                 end
 
-                local current_tier = race_settings[race_name].tier
-                -- Handle Tier
-                if current_tier < ErmConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
-                    level_up_tier(current_tier, race_settings, race_name)
-                end
+                calculate_evolution_points(race_settings, settings, force, race_name)
 
-                -- Handle Score Level
-                local score = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
-                race_settings[race_name].evolution_point = score
+                handle_unit_tier(race_settings, force, race_name, false)
 
-                -- Handle Evolution Level
-                if current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level] then
-                    race_settings[race_name].level = current_level + 1
-                end
+                handle_unit_level(race_settings, force, race_name, false)
 
-                if current_level >= max_evolution_factor_level and
-                        current_level < ErmConfig.get_max_level() and
-                        score >= evolution_score[(current_level - max_evolution_factor_level) + 1] then
-                    race_settings[race_name].level = current_level + 1
-                end
                 current_level = race_settings[race_name].level
             end
 
@@ -164,118 +168,74 @@ function LevelManager.calculateMultipleLevel(race_settings, forces, settings)
 end
 
 function LevelManager.get_level_for_race(race_settings, race_name)
-    if race_settings and race_settings[race_name] then
+    if has_valid_race_settings(race_settings, race_name) then
         return race_settings[race_name].level
     end
     return nil
 end
 
 function LevelManager.get_tier_for_race(race_settings, race_name)
-    if race_settings and race_settings[race_name] then
+    if has_valid_race_settings(race_settings, race_name) then
         return race_settings[race_name].tier
     end
     return nil
 end
 
--- Deprecated, to be replace with a function to set level directly set_level(race, level)
-function LevelManager.level_up_from_tech(race_settings, forces, current_tech)
-    local techs = {
-        'physical-projectile-damage-7',
-        'energy-weapons-damage-7',
-        'refined-flammables-7',
-        'stronger-explosives-7',
-    }
-    local highest_tech = 0
-    -- Loop non-enemy forces
-    if not current_tech then
-        for i, force in pairs(forces) do
-            if not String.find(force.name, 'enemy') and force.research_enabled then
-                for j, tech_title in pairs(techs) do
-
-                    local tech = force.technologies[tech_title]
-
-                    if tech and highest_tech < tech.level then
-                        highest_tech = tech.level
-                    end
-                end
-            end
+function LevelManager.get_calculated_current_level(race_settings, force, race_name)
+    for key, value in pairs(evolution_level_map) do
+        if force.evolution_factor < value then
+            return key
         end
     end
 
-    if highest_tech == 0 then
-        return
-    end
-    --Set level
-    for i, force in pairs(forces) do
-        if not String.find(force.name, 'enemy') then
-            goto skip_calculate_level_for_force_by_tech
+    for key, value in pairs(evolution_points) do
+        if race_settings[race_name].evolution_point < value then
+            return key + max_evolution_factor_level - 1
         end
-
-        local race_name = ErmForceHelper.extract_race_name_from(force.name)
-
-        current_level = race_settings[race_name].level
-
-        if current_level < ErmConfig.get_max_level() and
-                highest_tech > 0
-        then
-            local leveled_up = false
-            if highest_tech >= evolution_weapon_level[5] then
-                race_settings[race_name].level = Math.min(highest_tech - evolution_weapon_level[5] + 10, ErmConfig.get_max_level())
-                leveled_up = true
-            end
-
-            if highest_tech < evolution_weapon_level[5] then
-                for j, level in pairs(evolution_weapon_level) do
-                    if highest_tech == level or highest_tech > level then
-                        race_settings[race_name].level = Math.min(5 + j, ErmConfig.get_max_level())
-                        leveled_up = true
-                    end
-                end
-            end
-
-            if leveled_up then
-                for i = 1, 2 do
-                    if race_settings[race_name].tier < ErmConfig.MAX_TIER then
-                        level_up_tier(race_settings[race_name].tier, race_settings, race_name)
-                    end
-                end
-
-                if force.evolution_factor < 0.95 then
-                    force.evolution_factor = 0.95
-                end
-            end
-
-            Event.dispatch({
-                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-            Event.dispatch(
-                    { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                      affected_race = race_settings[race_name] })
-        end
-
-        :: skip_calculate_level_for_force_by_tech ::
     end
+
+    return ErmConfig.get_max_level()
+end
+
+function LevelManager.canLevelByCommand(race_settings, force, race_name, target_level)
+    local calculated_level = LevelManager.get_calculated_current_level(race_settings, force, race_name)
+
+    if target_level < calculated_level then
+        return false
+    end
+
+    return true
+end
+
+function LevelManager.levelByCommand(race_settings, race_name, target_level)
+    race_settings[race_name].level = target_level
+    game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+    Event.dispatch({
+        name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
+        affected_race = race_settings[race_name] })
 end
 
 function LevelManager.copyEvolutionFromEnemy(race_settings, target_force, enemy_force)
     local race_name = ErmForceHelper.extract_race_name_from(target_force.name)
-    if race_settings and race_settings[race_name] then
+    if has_valid_race_settings(race_settings, race_name) then
         race_settings[race_name].evolution_base_point = (enemy_force.evolution_factor_by_pollution + enemy_force.evolution_factor_by_time + enemy_force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
         target_force.evolution_factor = enemy_force.evolution_factor
-        LevelManager.calculateMultipleLevel(race_settings, game.forces, settings)
+        LevelManager.calculateMultipleLevels(race_settings, game.forces, settings)
     end
 end
 
-function LevelManager.getEvolutionFactor(race)
-    local new_force_name = 'enemy'
-    if race ~= MOD_NAME then
-        new_force_name = 'enemy_' .. race
-    end
+function LevelManager.getEvolutionFactor(race_name)
+    local new_force_name = ErmForceHelper.get_force_name_from(race_name)
 
     if game.forces[new_force_name] then
         return game.forces[new_force_name].evolution_factor
     end
 
     return 'n/a'
+end
+
+function LevelManager.getMaxLevelByEvolutionFactor()
+    return max_evolution_factor_level
 end
 
 return LevelManager
