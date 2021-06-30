@@ -10,7 +10,7 @@ require('__stdlib__/stdlib/utils/defines/color')
 local ERM_UnitTint = {}
 
 function ERM_UnitTint.tint_shadow()
-    return { r = 0, g = 0, b = 0, a = 0.5 }
+    return { r = 0, g = 0, b = 0, a = 192 }
 end
 
 function ERM_UnitTint.tint_dragoon_ball_light()
@@ -18,27 +18,31 @@ function ERM_UnitTint.tint_dragoon_ball_light()
 end
 
 function ERM_UnitTint.tint_plane_burner()
-    return { r = 255, g = 179, b = 39, a = 1 }
+    return { r = 255, g = 179, b = 39, a = 255 }
 end
 
 function ERM_UnitTint.tint_blue_flame_burner()
-    return { r = 110, g = 210, b = 255, a = 1 }
+    return { r = 110, g = 210, b = 255, a = 255 }
 end
 
 function ERM_UnitTint.tint_cold()
-    return { r = 153, g = 250, b = 220, a = 0.33 }
+    return { r = 153, g = 250, b = 220, a = 85 }
 end
 
 function ERM_UnitTint.tint_acid()
-    return { r = 143, g = 254, b = 9, a = 0.33 }
+    return { r = 143, g = 254, b = 9, a = 85 }
 end
 
 function ERM_UnitTint.tint_cold_explosion()
-    return { r = 153, g = 250, b = 220, a = 1 }
+    return { r = 153, g = 250, b = 220, a = 255 }
 end
 
 function ERM_UnitTint.tint_acid_explosion()
-    return { r = 143, g = 254, b = 9, a = 1 }
+    return { r = 143, g = 254, b = 9, a = 255 }
+end
+
+function ERM_UnitTint.tint_red()
+    return { r = 255, g = 0, b = 0, a = 255 }
 end
 
 return ERM_UnitTint
