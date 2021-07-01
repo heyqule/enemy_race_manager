@@ -133,6 +133,14 @@ data:extend {
         default_value = true,
         order = "enemyracemanager-300"
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-ground-weapon-hit-air",
+        description = "enemyracemanager-ground-weapon-hit-air",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-500"
+    },
 
     --- Map Settings Tab ---
     {

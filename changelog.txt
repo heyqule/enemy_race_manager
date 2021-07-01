@@ -1,10 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
-Date: 07. 25. 2021
+Date: 07. 01. 2021
 
-  Features:
-    - Added support functions for a new race: ERM_RedArmy
-
+  Changes:
+    - Explosion from explosive projectiles can now hit air by default.  This includes explosive cannon shells and artillery shells.
+    - Air units use "layer-33" as air-unit collision layer.  This requires race mod updates.
+    - Add an option to toggle whether ground weapon can hit air units. This includes shotgun pellets, tank-shells, grenades, poison capsule and slowdown capsule. Disable by default.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
