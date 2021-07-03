@@ -4,6 +4,7 @@
 --- DateTime: 7/1/2021 1:23 PM
 ---
 local Table = require('__stdlib__/stdlib/utils/table')
+local WeaponHelper = require('prototypes.helper.weapon')
 
 -- Mandatory vanilla game changes --
 -- Add artillery-shell damage bonus to stronger explosive
@@ -15,44 +16,27 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         }
 )
 
--- Change rocket/cannon area explosives to hit all units
-local ignore_collision_for_area_damage = function(target_effects)
-    for i, effect in pairs(target_effects) do
-        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
-            effect['action']['ignore_collision_condition'] = true
-        end
-    end
-end
-
-local add_air_layer_to_weapons = function(projectile)
-    if projectile['hit_collision_mask'] == nil then
-        projectile['hit_collision_mask'] = { 'train-layer', 'player-layer', 'layer-33'}
-    else
-        projectile['hit_collision_mask'] = table.insert(projectile['hit_collision_mask'], 'layer-33')
-    end
-end
-
 -- Allow rocket explosion to hit air
-ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
 
 -- Allow cannon explosion to hit air, projectile does not hit air
-ignore_collision_for_area_damage(data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'])
-ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
 
 -- Allow artillery projectile explosion to hit air
-ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
 
 if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true then
-    add_air_layer_to_weapons(data.raw['projectile']['shotgun-pellet'])
-    add_air_layer_to_weapons(data.raw['projectile']['piercing-shotgun-pellet'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['shotgun-pellet'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['piercing-shotgun-pellet'])
 
-    add_air_layer_to_weapons(data.raw['projectile']['explosive-cannon-projectile'])
-    add_air_layer_to_weapons(data.raw['projectile']['explosive-uranium-cannon-projectile'])
-    add_air_layer_to_weapons(data.raw['projectile']['cannon-projectile'])
-    add_air_layer_to_weapons(data.raw['projectile']['uranium-cannon-projectile'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-cannon-projectile'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-uranium-cannon-projectile'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['cannon-projectile'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['uranium-cannon-projectile'])
 
-    add_air_layer_to_weapons(data.raw['projectile']['grenade'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['grenade'])
 
-    ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
-    add_air_layer_to_weapons(data.raw['projectile']['slowdown-capsule'])
+    WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
+    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 end

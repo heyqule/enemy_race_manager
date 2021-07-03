@@ -7,7 +7,7 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 ### 1.1.0 Release
 This release focus on weapon enhancements.
 - Cannon and Artillery exposion now hit air unit
-- Ground weapon may hit air. "Allow ground weapon to hit air units" option is disabled by default. This includes cannon projectile, shotgun pellet, poison capsule and slow capsule.
+- Ground weapon may hit air. "Allow ground weapon to hit air units" option is disabled by default. Group weapon includes cannon projectile, shotgun pellet, poison capsule and slow capsule.
 
 ### New race demo
 These mods are made as educational demos.
@@ -76,22 +76,17 @@ Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 This defines how enemy bases are generated when a new chunk is charted.
 
 Default
-
 * using base game autoplace. All races are mixed.
 
 2 races split
-
 * race A spawns at positive axis, race B spawns at negative axis
 * race A spawns at positive axis, nothing spawns at negative axis.
 * can be horizontally or vertically divided.
-* races can expand into each other's territory.
 
 ![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
 One race per surface/planet
-
-* randomly assign a race for each surface / planet.
-* It's for Space Exploration.
+* randomly assign a race for each surface / planet. Designed for Space Exploration.
 * The race of a planet can be changed using replace function from UI.
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
@@ -100,13 +95,13 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-  * build one at a time
+    * build one at a time
 * Command Center
-  * When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+    * When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town
-  * Always use build formation option to build the base.
+    * Always use build formation option to build the base.
 * Full Expansion
-  * When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+    * When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
@@ -127,6 +122,7 @@ Partial formation is build based on cc > support > turret priority.
 - Supports one race per planet!
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
+- Tesla gun does not work against air units due to the way it filter entities. 
 
 #### Krastorio2
 - New races do not support creep generation unless author patches the creep generation code.

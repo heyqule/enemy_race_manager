@@ -1,6 +1,4 @@
-require "prototypes.extend-types"
-require "prototypes.extend-bitters"
-require "prototypes.extend-spawners"
+require "prototypes.extend-collision"
 
 data:extend({
     { type = "recipe-category", name = 'erm_controlable_units' },
@@ -11,3 +9,7 @@ data:extend({
         order = "z-erm_controlable_units"
     },
 })
+
+require "prototypes.extend-types"
+require "prototypes.extend-bitters"
+require "prototypes.extend-spawners"

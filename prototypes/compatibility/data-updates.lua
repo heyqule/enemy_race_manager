@@ -4,19 +4,23 @@
 --- DateTime: 3/16/2021 9:33 PM
 ---
 
-if data.raw['unit']['behemoth-armoured-biter'] then
+if mods['ArmouredBiters'] then
     require "ArmouredBiters/biter"
     require "ArmouredBiters/spawner"
 end
 
-if data.raw['unit']['behemoth-cold-biter'] then
+if mods['Cold_biters'] then
     require "Cold_Biters/biter"
     require "Cold_Biters/spawner"
     require "Cold_Biters/worm"
 end
 
-if data.raw['unit']['behemoth-explosive-biter'] then
+if mods['Explosive_biters'] then
     require "Explosive_Biters/biter"
     require "Explosive_Biters/spawner"
     require "Explosive_Biters/worm"
+end
+
+if mods['IndustrialRevolution'] then
+    require "IndustrialRevolution/projectile"
 end
