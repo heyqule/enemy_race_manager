@@ -8,6 +8,9 @@ if mods['space-exploration'] or mods['alien-biomes'] then
     -- Handle space exploration / alien-biomes collision layer
     local collision_mask_util_extended = require("__alien-biomes__/collision-mask-util-extended/data/collision-mask-util-extended")
     collision_mask_util_extended.get_make_named_collision_mask('flying-layer')
+elseif mods['combat-mechanics-overhaul'] then
+    local collision_mask_util_extended = require("__combat-mechanics-overhaul__/collision-mask-util-extended/data/collision-mask-util-extended")
+    collision_mask_util_extended.get_make_named_collision_mask('flying-layer')
 else
     -- Handle vanilla collision layer
     local collision_mask_util = require("__core__/lualib/collision-mask-util")

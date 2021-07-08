@@ -7,6 +7,7 @@
 ---
 
 local String = require('__stdlib__/stdlib/utils/string')
+local Table = require('__stdlib__/stdlib/utils/table')
 
 local ForceHelper = {}
 -- Remove prefix enemy_ if force isn't enemy
@@ -43,6 +44,22 @@ function ForceHelper.getNameToken(name)
         return { MOD_NAME, name, '1' }
     end
     return String.split(name, '/')
+end
+
+
+local enemies = {}
+
+function ForceHelper.getAllEnemyForces()
+
+    if Table.size(enemies) == 0 then
+        for name, force in pairs(game.forces) do
+            if String.find(force.name, 'enemy') then
+                Table.insert(enemies, force.name)
+            end
+        end
+    end
+
+    return enemies
 end
 
 return ForceHelper

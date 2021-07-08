@@ -106,13 +106,30 @@ function MapProcessor.queue_chunks(surface, area)
     end
 
     local spawners_size = Table.size(
-            Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner' }), Game.VALID_FILTER)
+        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
+        Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner'}), Game.VALID_FILTER)
     )
-    local turret_size = Table.size(
-            Table.filter(surface.find_entities_filtered({ area = area, type = 'turret' }), Game.VALID_FILTER)
-    )
-    if spawners_size > 0 or turret_size > 0 then
+    if spawners_size > 0 then
         chunk_queue[surface.name](area)
+        return
+    end
+
+    local turret_size = Table.size(
+        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'turret', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
+        Table.filter(surface.find_entities_filtered({ area = area, type = 'turret'}), Game.VALID_FILTER)
+    )
+    if turret_size > 0 then
+        chunk_queue[surface.name](area)
+        return
+    end
+
+    local unit_size = Table.size(
+        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'unit', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
+        Table.filter(surface.find_entities_filtered({ area = area, type = 'unit'}), Game.VALID_FILTER)
+    )
+    if unit_size > 0 then
+        chunk_queue[surface.name](area)
+        return
     end
 end
 

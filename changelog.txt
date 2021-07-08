@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 07. 16. 2021
+
+  Major Features:
+    - Added support functions for ERM_RedArmy 0.1.0 beta release.
+
+  Features:
+    - You can adjust the split position for 2 way split. e.g you can adjust the split at -10000 on the y-axis.
+    - Add a button to kill all enemy units with 32 radius to kill immortal units
+
+  Changes:
+    - Added 64 tiles no one's land for 2 way split. This will only apply to newly generated chunk or new map
+
+  Bugfixes:
+    - Attempt to fix run away high level units during the map processing. Some players are seeing immortal (high level) units.
+    - Fix a compatibility crash with combat-mechanics-overhaul
+
+  Scripts:
+    - Added animation rig to change animation prototypes.
+    - Added weapon rig to change weapon / ammo prototypes.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 07. 03. 2021
 
@@ -6,7 +29,7 @@ Date: 07. 03. 2021
     - Air unit now use "flying-layer", instead of hardcoded layer-33.  This enhance collision layer compatibility with Space Exploration
     - ** ERM Race mods also need to update
 
-  Bugfix:
+  Bugfixes:
     - Fix projectile collision issue for air units with Industrial Revolution 2 mod
 
 

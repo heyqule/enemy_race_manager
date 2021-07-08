@@ -14,7 +14,7 @@ These mods are made as educational demos.
 
 Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU
 
-Tips on defense: A LOT OF construction robots and repair kits. Mix all turrets. Uranium bullets are OP.
+Tips on defense: A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
 
 New Enemy Races:
 [>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)

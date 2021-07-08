@@ -4,12 +4,15 @@
 --- DateTime: 1/2/2021 4:48 PM
 ---
 local mod_gui = require('mod-gui')
+local String = require('__stdlib__/stdlib/utils/string')
+
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local LevelManager = require('__enemyracemanager__/lib/level_processor')
 local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
-local String = require('__stdlib__/stdlib/utils/string')
+
 
 local ERM_MainWindow = {
     require_update_all = false
@@ -87,6 +90,9 @@ function ERM_MainWindow.show(player)
 
     local bottom_flow = ERM_MainWindow.add { type = "flow", direction = 'horizontal' }
     bottom_flow.add { type = "button", name = "emr_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
+    local button_flow_gap = bottom_flow.add { type = "flow", direction = 'horizontal'}
+    button_flow_gap.style.width = 350
+    bottom_flow.add { type = "button", name = "emr_nuke_biters", caption = { 'gui.nuke_biters' }, tooltip = { 'gui.nuke_biters_tooltip' }, style = 'red_button'}
 end
 
 function ERM_MainWindow.hide(player)
@@ -167,6 +173,18 @@ function ERM_MainWindow.reset_default(event)
         for _, surface in pairs(game.surfaces) do
             ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
             ERM_MainWindow.require_update_all = true;
+        end
+    end
+end
+
+function ERM_MainWindow.nuke_biters(event)
+    if event.element.name == "emr_nuke_biters" then
+        local owner = game.players[event.element.player_index]
+        local surface = owner.surface
+        local pp = owner.position
+        local units = surface.find_entities_filtered({force=ForceHelper.getAllEnemyForces(), radius=32, position=pp, type='unit'})
+        for key, entity in pairs(units) do
+            entity.destroy()
         end
     end
 end

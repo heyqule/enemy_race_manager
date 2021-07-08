@@ -108,12 +108,22 @@ data:extend {
         allowed_values = { X_AXIS, Y_AXIS }
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-2way-group-split-point",
+        description = "enemyracemanager-2way-group-split-point",
+        setting_type = "startup",
+        default_value = 0,
+        minimum_value = -900000,
+        maximum_value = 900000,
+        order = "enemyracemanager-203",
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-2way-group-enemy-positive",
         description = "enemyracemanager-2way-group-enemy-positive",
         setting_type = "startup",
         default_value = MOD_NAME,
-        order = "enemyracemanager-203",
+        order = "enemyracemanager-204",
         allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {
@@ -122,7 +132,7 @@ data:extend {
         description = "enemyracemanager-2way-group-enemy-negative",
         setting_type = "startup",
         default_value = MOD_NAME,
-        order = "enemyracemanager-204",
+        order = "enemyracemanager-205",
         allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {

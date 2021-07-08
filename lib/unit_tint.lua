@@ -25,6 +25,10 @@ function ERM_UnitTint.tint_blue_flame_burner()
     return { r = 110, g = 210, b = 255, a = 255 }
 end
 
+function ERM_UnitTint.tint_archon_light()
+    return { r = 0, g = 100, b = 255, a = 255 }
+end
+
 function ERM_UnitTint.tint_cold()
     return { r = 153, g = 250, b = 220, a = 85 }
 end
@@ -43,6 +47,23 @@ end
 
 function ERM_UnitTint.tint_red()
     return { r = 255, g = 0, b = 0, a = 255 }
+end
+
+function ERM_UnitTint.tint_red_madder()
+    return { r = 165, g = 0, b = 33, a = 255 }
+end
+
+function ERM_UnitTint.tint_red_crimson()
+    return { r = 220, g = 20, b = 60, a = 255 }
+end
+
+function ERM_UnitTint.mask_tint(layer, color)
+    layer['tint'] = color
+    layer['apply_runtime_tint'] = false
+    if layer['hr_version'] then
+        layer['hr_version']['tint'] = color
+        layer['hr_version']['apply_runtime_tint'] = false
+    end
 end
 
 return ERM_UnitTint

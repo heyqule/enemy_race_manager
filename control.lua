@@ -150,6 +150,7 @@ local onGuiClick = function(event)
     ErmMainWindow.sync_with_enemy(event)
     ErmMainWindow.replace_enemy(event)
     ErmMainWindow.reset_default(event)
+    ErmMainWindow.nuke_biters(event)
     -- Close event must handle the last
     ErmMainWindow.toggle_main_window(event)
     ErmMainWindow.toggle_close(event)

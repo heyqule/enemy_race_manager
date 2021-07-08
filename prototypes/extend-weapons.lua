@@ -23,6 +23,9 @@ WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'])
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
 
+WeaponHelper.change_piercing_damage(data.raw['projectile']['uranium-cannon-projectile'],9999)
+WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'],9999)
+
 -- Allow artillery projectile explosion to hit air
 WeaponHelper.ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
 

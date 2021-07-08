@@ -24,4 +24,8 @@ function ERM_WeaponDataHelper.add_air_layer_to_projectile(projectile)
     end
 end
 
+function ERM_WeaponDataHelper.change_piercing_damage(projectile, value)
+    projectile['piercing_damage'] = value
+end
+
 return ERM_WeaponDataHelper

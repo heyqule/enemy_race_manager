@@ -10,6 +10,10 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
 
+local SPLIT_POINT = settings.startup['enemyracemanager-2way-group-split-point'].value
+-- Add 2 chunks gap between races
+local SPLIT_GAP = 32
+
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
     ErmDebugHelper.print('Using 0')
@@ -26,25 +30,25 @@ end
 
 local y_axis_positive_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using Y+')
-    autoplace.probability_expression = noise.less_or_equal(noise.var("y"), 0) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
     return autoplace
 end
 
 local y_axis_negative_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using Y-')
-    autoplace.probability_expression = noise.less_or_equal(0, noise.var("y")) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_positive_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using X+')
-    autoplace.probability_expression = noise.less_or_equal(noise.var("x"), 0) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_negative_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using X-')
-    autoplace.probability_expression = noise.less_or_equal(0, noise.var("x")) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) * autoplace.probability_expression
     return autoplace
 end
 

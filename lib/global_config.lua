@@ -14,7 +14,7 @@ local ErmConfig = {}
 
 ErmConfig.MAX_TIER = 3
 
-ErmConfig.MAP_PROCESS_CHUNK_BATCH = 20
+ErmConfig.MAP_PROCESS_CHUNK_BATCH = 12
 -- Processing Event Interval
 ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
 ErmConfig.LEVEL_PROCESS_INTERVAL = 5 * defines.time.minute

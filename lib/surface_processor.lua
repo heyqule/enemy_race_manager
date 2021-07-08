@@ -17,6 +17,10 @@ function SurfaceProcessor.assign_race(surface_index)
         return
     end
 
+    if global.enemy_surfaces == nil then
+        global.enemy_surfaces = {}
+    end
+
     local races = ErmConfig.get_enemy_races()
     global.enemy_surfaces[surface_index] = races[math.random(1, max_num)]
 end
