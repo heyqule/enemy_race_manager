@@ -3,31 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 7/3/2021 10:21 PM
 ---
-
+local util = require("util")
 local ERM_WeaponRig = {}
 
-function ERM_WeaponRig.get_custom_bullet(change_damage, damage_type)
-    if damage_type == nil then
-        damage_type = 'physical'
-    end
-    local ammo_type = table.deepcopy(data.raw['ammo']['piercing-rounds-magazine']['ammo_type'])
-    ammo_type['action']['action_delivery']['target_effects'][2] = {
-        type = "damage",
-        damage = { amount = change_damage, type = damage_type}
-    }
-    return ammo_type
+function ERM_WeaponRig.get_bullet()
+    return util.table.deepcopy(data.raw['ammo']['firearm-magazine']['ammo_type'])
 end
 
-function ERM_WeaponRig.get_custom_shotgun_bullet(change_damage, damage_type)
-    if damage_type == nil then
-        damage_type = 'physical'
-    end
-    local ammo_type = table.deepcopy(data.raw['ammo']['piercing-shotgun-shell']['ammo_type'])
-    ammo_type['action']['action_delivery']['target_effects'][2] = {
-        type = "damage",
-        damage = { amount = change_damage, type = damage_type}
-    }
-    return ammo_type
+function ERM_WeaponRig.get_shotgun_bullet()
+    return util.table.deepcopy(data.raw['ammo']['shotgun-shell']['ammo_type'])
 end
 
 function ERM_WeaponRig.remove_damage_from_cannon_projectile(data, name)

@@ -179,8 +179,7 @@ end)
 
 --- Map Processing Events
 Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
-    local player = game.players[math.random(1, #game.players)]
-    ErmMapProcessor.process_chunks(player.surface, race_settings)
+    ErmMapProcessor.process_chunks(game.surfaces, race_settings)
 end)
 
 Event.register(defines.events.on_chunk_generated, function(event)

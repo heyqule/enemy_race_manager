@@ -13,6 +13,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
+require('util')
 
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
@@ -33,7 +34,7 @@ local incremental_electric_resistance = 100
 
 
 function makeLevelSpawners(level, type)
-    local spawner = Table.deepcopy(data.raw['unit-spawner'][type])
+    local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
 
     local original_hitpoint = spawner['max_health']
 

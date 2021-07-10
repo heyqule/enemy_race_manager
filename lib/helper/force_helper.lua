@@ -10,12 +10,21 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Table = require('__stdlib__/stdlib/utils/table')
 
 local ForceHelper = {}
+
+local nameCache = {}
+
+local forceCache = {}
 -- Remove prefix enemy_ if force isn't enemy
 function ForceHelper.extract_race_name_from(force_name)
     if force_name == 'enemy' then
         return MOD_NAME
     end
-    return String.gsub(force_name, 'enemy_', '')
+
+    if forceCache[force_name] == nil then
+        forceCache[force_name] = String.gsub(force_name, 'enemy_', '')
+    end 
+
+    return forceCache[force_name]
 end
 
 function ForceHelper.get_force_name_from(race_name)
@@ -40,17 +49,21 @@ function ForceHelper.set_friends(game, force_name)
 end
 
 function ForceHelper.getNameToken(name)
-    if not String.find(name, '/') then
-        return { MOD_NAME, name, '1' }
+    if nameCache[name] == nil then
+        if not String.find(name, '/') then
+            nameCache[name] = { MOD_NAME, name, '1' }
+        else    
+            nameCache[name] = String.split(name, '/')
+        end
     end
-    return String.split(name, '/')
+
+    return nameCache[name]
 end
 
 
 local enemies = {}
 
 function ForceHelper.getAllEnemyForces()
-
     if Table.size(enemies) == 0 then
         for name, force in pairs(game.forces) do
             if String.find(force.name, 'enemy') then

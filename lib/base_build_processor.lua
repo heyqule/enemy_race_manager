@@ -11,25 +11,37 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-
 local BaseBuildProcessor = {}
+
+local building_switch = {
+    ['cc'] = function(race_name)
+        return ErmRaceSettingsHelper.pick_a_command_center(race_name)
+    end,
+    ['support'] = function(race_name)
+        return ErmRaceSettingsHelper.pick_a_support_building(race_name)
+    end,
+    ['turret'] = function(race_name)
+        return ErmRaceSettingsHelper.pick_a_turret(race_name)
+    end
+}
+
+local expansion_switch = {
+    [BUILDING_EXPAND_ON_CMD] = function(entity)
+        BaseBuildProcessor.process_on_cmd(entity)
+    end,
+    [BUILDING_A_TOWN] = function(entity)
+        BaseBuildProcessor.process_on_formation(entity)
+    end,
+    [BUILDING_EXPAND_ON_ARRIVAL] = function(entity)
+        BaseBuildProcessor.process_on_arrival(entity)
+    end
+}
 
 function BaseBuildProcessor.exec(entity)
     if ErmForceHelper.is_erm_unit(entity) == false then
         return
     end
-    local switch = {
-        [BUILDING_EXPAND_ON_CMD] = function(entity)
-            BaseBuildProcessor.process_on_cmd(entity)
-        end,
-        [BUILDING_A_TOWN] = function(entity)
-            BaseBuildProcessor.process_on_formation(entity)
-        end,
-        [BUILDING_EXPAND_ON_ARRIVAL] = function(entity)
-            BaseBuildProcessor.process_on_arrival(entity)
-        end
-    }
-    local func = switch[ErmConfig.build_style()]
+    local func = expansion_switch[ErmConfig.build_style()]
     if func then
         func(entity)
     end
@@ -127,18 +139,7 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
 end
 
 function BaseBuildProcessor.getBuildingName(race_name, type)
-    local switch = {
-        ['cc'] = function(race_name)
-            return ErmRaceSettingsHelper.pick_a_command_center(race_name)
-        end,
-        ['support'] = function(race_name)
-            return ErmRaceSettingsHelper.pick_a_support_building(race_name)
-        end,
-        ['turret'] = function(race_name)
-            return ErmRaceSettingsHelper.pick_a_turret(race_name)
-        end
-    }
-    local func = switch[type]
+    local func = building_switch[type]
 
     return race_name .. '/' .. func(race_name) .. '/' .. ErmRaceSettingsHelper.get_current_level(race_name)
 end

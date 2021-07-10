@@ -10,6 +10,7 @@ local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
+require('util')
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
@@ -32,7 +33,7 @@ local base_electric_resistance = -50
 local incremental_electric_resistance = 100
 
 function makeLevelTurrets(level, type, health_cut_ratio)
-    local turret = Table.deepcopy(data.raw['turret'][type])
+    local turret = util.table.deepcopy(data.raw['turret'][type])
 
     local original_hitpoint = turret['max_health']
 

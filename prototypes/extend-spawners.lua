@@ -10,6 +10,7 @@ local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
+require('util')
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
@@ -40,7 +41,7 @@ local incremental_cold_resistance = 55
 -- Add new spawners
 function makeLevelSpawners(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
-    local spawner = Table.deepcopy(data.raw['unit-spawner'][type])
+    local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
     local original_hitpoint = spawner['max_health']
 
     spawner['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. spawner['name'], level }
@@ -95,7 +96,7 @@ end
 
 function makeLevelWorm(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
-    local worm = Table.deepcopy(data.raw['turret'][type])
+    local worm = util.table.deepcopy(data.raw['turret'][type])
     local original_hitpoint = worm['max_health']
 
     worm['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. worm['name'], level }

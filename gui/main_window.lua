@@ -12,8 +12,6 @@ local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_proce
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
-
-
 local ERM_MainWindow = {
     require_update_all = false
 }
@@ -88,11 +86,13 @@ function ERM_MainWindow.show(player)
         end
     end
 
-    local bottom_flow = ERM_MainWindow.add { type = "flow", direction = 'horizontal' }
-    bottom_flow.add { type = "button", name = "emr_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
-    local button_flow_gap = bottom_flow.add { type = "flow", direction = 'horizontal'}
-    button_flow_gap.style.width = 350
-    bottom_flow.add { type = "button", name = "emr_nuke_biters", caption = { 'gui.nuke_biters' }, tooltip = { 'gui.nuke_biters_tooltip' }, style = 'red_button'}
+    if admin then
+        local bottom_flow = ERM_MainWindow.add { type = "flow", direction = 'horizontal' }
+        bottom_flow.add { type = "button", name = "emr_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
+        local button_flow_gap = bottom_flow.add { type = "flow", direction = 'horizontal'}
+        button_flow_gap.style.width = 350
+        bottom_flow.add { type = "button", name = "emr_nuke_biters", caption = { 'gui.nuke_biters' }, tooltip = { 'gui.nuke_biters_tooltip' }, style = 'red_button'}
+    end
 end
 
 function ERM_MainWindow.hide(player)

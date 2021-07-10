@@ -14,10 +14,10 @@ local ErmConfig = {}
 
 ErmConfig.MAX_TIER = 3
 
-ErmConfig.MAP_PROCESS_CHUNK_BATCH = 12
+ErmConfig.MAP_PROCESS_CHUNK_BATCH = 20
 -- Processing Event Interval
 ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
-ErmConfig.LEVEL_PROCESS_INTERVAL = 5 * defines.time.minute
+ErmConfig.LEVEL_PROCESS_INTERVAL = 15 * defines.time.minute
 
 -- EVENTS
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
@@ -38,6 +38,8 @@ ErmConfig.enemy_races_loaded = false
 ErmConfig.installed_races = {MOD_NAME}
 ErmConfig.installed_races_loaded = false
 
+ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
+
 local is_enemy_race = function(name)
     local helper_mods = {
         erm_terran=true,
@@ -49,22 +51,41 @@ local is_enemy_race = function(name)
     return false
 end
 
-function ErmConfig.get_max_level()
-    local level = 10;
-    if settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_20 then
-        level = 20
-    elseif settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_5 then
-        level = 5
-    end
-    return level
+local is_cache_expired = function(last_tick, length) 
+    return (game.tick + length) > last_tick
 end
 
-function ErmConfig.get_max_attack_range()
-    local attack_range = 14
-    if settings.startup['enemyracemanager-max-attack-range'].value == ATTACK_RANGE_20 then
-        attack_range = 20
+local current_level_setting
+function ErmConfig.get_max_level()
+    if current_level_setting == nil then
+        current_level_setting = 10;
+        if settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_20 then
+            current_level_setting = 20
+        elseif settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_5 then
+            current_level_setting = 5
+        end
     end
-    return attack_range
+
+    return current_level_setting
+end
+
+local current_range
+function ErmConfig.get_max_attack_range()
+    if current_range == nil then
+        current_range = 14
+        if settings.startup['enemyracemanager-max-attack-range'].value == ATTACK_RANGE_20 then
+            current_range = 20
+        end
+    end        
+    return current_range
+end
+
+local mapping_method
+function ErmConfig.get_mapping_method()
+    if mapping_method == nil then
+        mapping_method = settings.startup['enemyracemanager-mapping-method'].value
+    end
+    return mapping_method  
 end
 
 function ErmConfig.mapgen_is_mixed()
@@ -99,12 +120,25 @@ function ErmConfig.negative_axis_race()
     return settings.startup['enemyracemanager-2way-group-enemy-negative'].value
 end
 
+local build_style_setting
+local build_style_last_tick
+
 function ErmConfig.build_style()
-    return settings.global['enemyracemanager-build-style'].value
+    if build_style_setting == nil or is_cache_expired(build_style_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+        build_style_setting = settings.global['enemyracemanager-build-style'].value
+        build_style_last_tick = game.tick
+    end        
+    return build_style_setting
 end
 
+local build_formation_setting
+local build_formation_last_tick
 function ErmConfig.build_formation()
-    return settings.global['enemyracemanager-build-formation'].value
+    if build_formation_setting == nil or is_cache_expired(build_formation_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+        build_formation_setting = settings.global['enemyracemanager-build-formation'].value
+        build_formation_last_tick = game.tick
+    end        
+    return build_formation_setting
 end
 
 function ErmConfig.get_enemy_races()

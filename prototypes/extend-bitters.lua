@@ -10,6 +10,8 @@ local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
+require('util')
+
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
@@ -36,7 +38,7 @@ local incremental_cold_resistance = 65
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
-    local biter = Table.deepcopy(data.raw['unit'][type])
+    local biter = util.table.deepcopy(data.raw['unit'][type])
     local original_health = biter['max_health']
 
     biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }

@@ -25,7 +25,7 @@ local MapProcessor = {}
 local chunk_queue = {}
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
-    if settings.startup['enemyracemanager-mapping-method'].value == MAP_GEN_1_RACE_PER_SURFACE then
+    if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         if global.enemy_surfaces[surface.index] and nameToken[1] ~= global.enemy_surfaces[surface.index] then
             nameToken[1] = global.enemy_surfaces[surface.index]
             if entity.type == 'turret' then
@@ -37,6 +37,20 @@ local process_one_race_per_surface_mapping = function(surface, entity, nameToken
     end
 
     return nameToken
+end
+
+local surfaces_cache = {}
+
+local get_surface_by_name = function(surfaces, name) 
+    if surfaces_cache[name] == nil then
+        for k, surface in pairs(surfaces) do
+            if surface.name == name then
+                surfaces_cache[name] = surface
+                break
+            end                
+        end
+    end
+    return surfaces_cache[name]
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
@@ -74,26 +88,19 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 end
 
 local process_enemy_level = function(surface, area, race_settings)
-    local spawners = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner' }), Game.VALID_FILTER)
-    if Table.size(spawners) > 0 then
-        Table.each(spawners, function(entity)
-            level_up_enemy_structures(surface, entity, race_settings)
-        end)
+    local building = surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret'}, force = ErmForceHelper.getAllEnemyForces()})
+    if Table.size(building) > 0 then
+        for k, entity in pairs(building) do
+            level_up_enemy_structures(surface, entity, race_settings)            
+        end            
     end
 
-    local turrets = Table.filter(surface.find_entities_filtered({ area = area, type = 'turret' }), Game.VALID_FILTER)
-    if Table.size(turrets) > 0 then
-        Table.each(turrets, function(entity)
-            level_up_enemy_structures(surface, entity, race_settings)
-        end)
-    end
-
-    local units = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit' }), Game.VALID_FILTER)
+    local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.getAllEnemyForces()})
     if Table.size(units) > 0 then
-        Table.each(units, function(entity)
-            entity.destroy()
-        end)
-    end
+        for k, entity in pairs(units) do
+            entity.destroy()          
+        end            
+    end 
 end
 
 function MapProcessor.queue_chunks(surface, area)
@@ -101,61 +108,48 @@ function MapProcessor.queue_chunks(surface, area)
         return
     end
 
-    if not chunk_queue[surface.name] then
+    if chunk_queue[surface.name] == nil then
         chunk_queue[surface.name] = Queue()
-    end
+    end        
 
-    local spawners_size = Table.size(
-        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
-        Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner'}), Game.VALID_FILTER)
-    )
-    if spawners_size > 0 then
-        chunk_queue[surface.name](area)
-        return
-    end
-
-    local turret_size = Table.size(
-        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'turret', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
-        Table.filter(surface.find_entities_filtered({ area = area, type = 'turret'}), Game.VALID_FILTER)
-    )
-    if turret_size > 0 then
-        chunk_queue[surface.name](area)
-        return
-    end
-
-    local unit_size = Table.size(
-        -- Table.filter(surface.find_entities_filtered({ area = area, type = 'unit', force = ErmForceHelper.getAllEnemyForces() }), Game.VALID_FILTER)
-        Table.filter(surface.find_entities_filtered({ area = area, type = 'unit'}), Game.VALID_FILTER)
-    )
+    local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.getAllEnemyForces(), limit = 1}))
     if unit_size > 0 then
         chunk_queue[surface.name](area)
-        return
     end
 end
 
-function MapProcessor.process_chunks(surface, race_settings)
-    if table_size(chunk_queue) == 0 then
-        return
-    end
+function MapProcessor.process_chunks(surfaces, race_settings)
+    local count = 1;
 
-    if chunk_queue[surface.name] and Queue.is_empty(chunk_queue[surface.name]) then
-        return
-    end
-
-    if chunk_queue[surface.name] then
-        for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
-            area = chunk_queue[surface.name]()
-            if area then
-                process_enemy_level(surface, area, race_settings)
-            end
+    for k, queue in pairs(chunk_queue) do
+        if queue == nil then
+            goto process_chunks_continue
         end
-    end
+
+        if Queue.is_empty(queue) then
+            chunk_queue[k] = nil
+            goto process_chunks_continue
+        end            
+    
+        for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
+            area = queue()
+            if area == nil then
+                break
+            end
+            process_enemy_level(get_surface_by_name(surfaces, k), area, race_settings)
+            count = count + 1
+        end
+
+        if count > ErmConfig.MAP_PROCESS_CHUNK_BATCH then
+            break
+        end            
+        
+        ::process_chunks_continue::
+    end    
 end
 
 function MapProcessor.clean_queue()
-    for k, queue in pairs(chunk_queue) do
-        chunk_queue[k] = Queue()
-    end
+    chunk_queue = {}
 end
 
 function MapProcessor.rebuild_map(game)
