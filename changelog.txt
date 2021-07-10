@@ -17,6 +17,7 @@ Date: 2021-07-10
   Bugfixes:
     - Attempt to fix run away high level units during the map processing. Some players are seeing immortal (high level) units.
     - Fix a compatibility crash with combat-mechanics-overhaul
+    - Fix an issue which surface processor use random race when using replace race button.
 
   Scripts:
     - Added animation rig to change animation prototypes.
