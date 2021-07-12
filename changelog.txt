@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.1
+Date: 2021-07-11
+
+  Bugfixes:
+    - Fix a crash when unit_group was not found during the execution of build style: Command Center Expansion.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.0
 Date: 2021-07-10
 

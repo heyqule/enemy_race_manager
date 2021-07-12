@@ -52,7 +52,9 @@ function BaseBuildProcessor.process_on_cmd(entity)
     local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
     if ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
-        BaseBuildProcessor.build_formation(entity, unit_group, true)
+        if unit_group then
+            BaseBuildProcessor.build_formation(entity, unit_group, true)
+        end
     end
 end
 
