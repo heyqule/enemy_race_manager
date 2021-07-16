@@ -6,12 +6,20 @@
 local util = require("util")
 local ERM_WeaponRig = {}
 
-function ERM_WeaponRig.get_bullet()
-    return util.table.deepcopy(data.raw['ammo']['firearm-magazine']['ammo_type'])
+function ERM_WeaponRig.get_bullet(category)
+    local ammo_type =  util.table.deepcopy(data.raw['ammo']['firearm-magazine']['ammo_type'])
+    if category then
+        ammo_type['category'] = category
+    end
+    return ammo_type
 end
 
-function ERM_WeaponRig.get_shotgun_bullet()
-    return util.table.deepcopy(data.raw['ammo']['shotgun-shell']['ammo_type'])
+function ERM_WeaponRig.get_shotgun_bullet(category)
+    local ammo_type =  util.table.deepcopy(data.raw['ammo']['shotgun-shell']['ammo_type'])
+    if category then
+        ammo_type['category'] = category
+    end
+    return ammo_type
 end
 
 function ERM_WeaponRig.remove_damage_from_cannon_projectile(data, name)
