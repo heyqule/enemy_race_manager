@@ -98,8 +98,7 @@ local process_enemy_level = function(surface, area, race_settings)
     local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.getAllEnemyForces()})
     if Table.size(units) > 0 then
         for k, entity in pairs(units) do
-            local nameToken = ErmForceHelper.getNameToken(entity.name)
-            if  tonumber(nameToken[3]) > tonumber( race_settings[nameToken[1]].level) then
+            if entity.unit_group == nil then
                 entity.destroy()
             end
         end
