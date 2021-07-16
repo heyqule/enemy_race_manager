@@ -80,16 +80,6 @@ data:extend {
         order = "enemyracemanager-101"
     },
     {
-        type = "double-setting",
-        name = "enemyracemanager-score-multipliers",
-        description = "enemyracemanager-score-multipliers",
-        setting_type = "startup",
-        default_value = 1,
-        minimum_value = 1,
-        maximum_value = 10,
-        order = "enemyracemanager-102"
-    },
-    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",
@@ -180,6 +170,16 @@ data:extend {
             BUILDING_FORMATION_RANDOM
         },
         order = "enemyracemanager-101"
+    },
+    {
+        type = "double-setting",
+        name = "enemyracemanager-score-multipliers",
+        description = "enemyracemanager-score-multipliers",
+        setting_type = "runtime-global",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 10,
+        order = "enemyracemanager-102"
     },
 }
 

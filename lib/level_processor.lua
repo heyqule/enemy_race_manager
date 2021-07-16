@@ -73,7 +73,7 @@ local handle_unit_level = function(race_settings, force, race_name, dispatch)
 end
 
 local calculate_evolution_points = function(race_settings, settings, force, race_name)
-    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
+    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.global['enemyracemanager-score-multipliers'].value
     return race_settings[race_name].evolution_point
 end
 
@@ -218,7 +218,7 @@ end
 function LevelManager.copyEvolutionFromEnemy(race_settings, target_force, enemy_force)
     local race_name = ErmForceHelper.extract_race_name_from(target_force.name)
     if has_valid_race_settings(race_settings, race_name) then
-        race_settings[race_name].evolution_base_point = (enemy_force.evolution_factor_by_pollution + enemy_force.evolution_factor_by_time + enemy_force.evolution_factor_by_killing_spawners) * settings.startup['enemyracemanager-score-multipliers'].value
+        race_settings[race_name].evolution_base_point = calculate_evolution_points(race_settings, settings, target_force, race_name)
         target_force.evolution_factor = enemy_force.evolution_factor
         LevelManager.calculateMultipleLevels(race_settings, game.forces, settings)
     end

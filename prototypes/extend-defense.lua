@@ -81,15 +81,15 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     -- Buff Wall
     data.raw['wall']['stone-wall']['max_health'] = 500
     data.raw['wall']['stone-wall']['resistances'] = {
-        { type = "acid", percent = 50, decrease = 0 },
+        { type = "acid", percent = 66, decrease = 0 },
         { type = "poison", percent = 100, decrease = 0 },
-        { type = "physical", percent = 50, decrease = 0 },
+        { type = "physical", percent = 66, decrease = 0 },
         { type = "fire", percent = 100, decrease = 0 },
-        { type = "explosion", percent = 60, decrease = 10 },
-        { type = "impact", percent = 60, decrease = 45 },
-        { type = "laser", percent = 30, decrease = 0 },
-        { type = "electric", percent = 100, decrease = 0 },
-        { type = "cold", percent = 100, decrease = 0 }
+        { type = "explosion", percent = 66, decrease = 10 },
+        { type = "impact", percent = 66, decrease = 45 },
+        { type = "laser", percent = 66, decrease = 0 },
+        { type = "electric", percent = 66, decrease = 0 },
+        { type = "cold", percent = 66, decrease = 0 }
     }
 
     -- Buff Robots
