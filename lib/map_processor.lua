@@ -94,6 +94,16 @@ local process_enemy_level = function(surface, area, race_settings)
             level_up_enemy_structures(surface, entity, race_settings)            
         end            
     end
+
+    local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.getAllEnemyForces()})
+    if Table.size(units) > 0 then
+        for k, entity in pairs(units) do
+            local nameToken = ErmForceHelper.getNameToken(entity.name)
+            if  tonumber(nameToken[3]) > tonumber( race_settings[nameToken[1]].level) then
+                entity.destroy()
+            end
+        end
+    end
 end
 
 function MapProcessor.queue_chunks(surface, area)
