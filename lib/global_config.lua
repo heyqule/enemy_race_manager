@@ -19,10 +19,12 @@ ErmConfig.MAP_PROCESS_CHUNK_BATCH = 20
 ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
 
 if DEBUG_MODE then
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 1 * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 15 * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
 end
+
+ErmConfig.CRON = defines.time.minute
 
 
 -- EVENTS
@@ -169,6 +171,16 @@ function ErmConfig.get_installed_races()
         ErmConfig.installed_races_loaded = true;
     end
     return ErmConfig.installed_races
+end
+
+
+local get_cron_randomizer = function()
+    return math.random(1, 600)
+end
+
+-- Spread cron job across the 10 seconds, instead of same tick.
+function ErmConfig.get_cron_tick()
+    return ErmConfig.CRON + get_cron_randomizer()
 end
 
 return ErmConfig

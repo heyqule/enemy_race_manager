@@ -61,7 +61,7 @@ function ERM_MainWindow.show(player)
     item_table.add { type = "label", caption = { 'gui.tier_column' } }
     item_table.add { type = "label", caption = { 'gui.evolution_column' } }
     item_table.add { type = "label", caption = { 'gui.evolution_factor_column' } }
-    item_table.add { type = "label", caption = { 'gui.angry_column' } }
+    item_table.add { type = "label", caption = { 'gui.attack_column' } }
     item_table.add { type = "label", caption = { 'gui.action_column' } }
 
     LevelManager.calculateEvolutionPoints(global.race_settings, game.forces, settings)
@@ -72,7 +72,7 @@ function ERM_MainWindow.show(player)
         item_table.add { type = "label", caption = race_setting.tier }
         item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
         item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(name)) }
-        item_table.add { type = "label", caption = string.format("%.4f", race_setting.angry_meter) }
+        item_table.add { type = "label", caption = string.format("%.4f", race_setting.attack_meter) }
         local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
         if admin and name ~= MOD_NAME then
             action_flow.add { type = "button", name = name .. "/sync_with_enemy", caption = { 'gui.sync_with_enemy' }, tooltip = { 'gui.sync_with_enemy_tooltip' } }

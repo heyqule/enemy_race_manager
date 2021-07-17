@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.4.0
+Version: 1.5.0
 Date: 2021-07-23
+
+  Major Features:
+    - Attack Meters, enemy will send out an army to attack critical
 
   Changes:
     - Change weapon rig bullet and shotgun-shell function to accept custom ammo-category

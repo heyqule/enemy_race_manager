@@ -179,7 +179,45 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-102"
+        order = "enemyracemanager-200"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-attack-meter-threshold",
+        description = "enemyracemanager-attack-meter-threshold",
+        setting_type = "runtime-global",
+        default_value = 2000,
+        minimum_value = 1000,
+        maximum_value = 10000,
+        order = "enemyracemanager-300"
+    },
+    {
+        type = "double-setting",
+        name = "enemyracemanager-attack-meter-threshold-deviation",
+        description = "enemyracemanager-attack-meter-threshold-deviation",
+        setting_type = "runtime-global",
+        default_value = 0.2,
+        minimum_value = 0.1,
+        maximum_value = 0.8,
+        order = "enemyracemanager-301"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-enable-fly-attack-group",
+        description = "enemyracemanager-enable-fly-attack-group",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-400"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-enable-fly-attack-group",
+        description = "enemyracemanager-attack-meter-threshold",
+        setting_type = "runtime-global",
+        default_value = 25,
+        minimum_value = 10,
+        maximum_value = 100,
+        order = "enemyracemanager-401"
     },
 }
 

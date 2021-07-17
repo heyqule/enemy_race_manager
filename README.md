@@ -154,7 +154,7 @@ ERM_RedArmy
 - machine gun, cannon tank
 - laser and rocket plane
 
-Angry meters
+Attack meters
 
 * send enemy to your base @ night based on how many they have been killed
 
