@@ -43,7 +43,3 @@ if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true then
     WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
     WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 end
-
-if settings.startup['enemyracemanager-disable-same-race-explosive-damage'].value == true then
-
-end
