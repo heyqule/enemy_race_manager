@@ -72,11 +72,8 @@ function ERM_MainWindow.show(player)
         item_table.add { type = "label", caption = race_setting.tier }
         item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
         item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(name)) }
-        item_table.add { type = "label", caption = string.format("%.4f", race_setting.attack_meter) }
+        item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
         local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
-        if admin and name ~= MOD_NAME then
-            action_flow.add { type = "button", name = name .. "/sync_with_enemy", caption = { 'gui.sync_with_enemy' }, tooltip = { 'gui.sync_with_enemy_tooltip' } }
-        end
 
         if admin and name ~= MOD_NAME then
             action_flow.add { type = "button", name = name .. "/replace_enemy", caption = { 'gui.replace_enemy' }, tooltip = { 'gui.replace_enemy_tooltip' } }
@@ -146,18 +143,8 @@ function ERM_MainWindow.toggle_close(event)
     end
 end
 
-function ERM_MainWindow.sync_with_enemy(event)
-    if String.find(event.element.name, "/sync_with_enemy") then
-        nameToken = String.split(event.element.name, '/')
-        if game.forces['enemy_' .. nameToken[1]] and global.race_settings[nameToken[1]] then
-            LevelManager.copyEvolutionFromEnemy(global.race_settings, game.forces['enemy_' .. nameToken[1]], game.forces['enemy'])
-            ERM_MainWindow.require_update_all = true;
-        end
-    end
-end
-
 function ERM_MainWindow.replace_enemy(event)
-    if String.find(event.element.name, "/replace_enemy") then
+    if String.find(event.element.name, "/replace_enemy", 1, true) then
         nameToken = String.split(event.element.name, '/')
         if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
             local owner = game.players[event.element.player_index]
@@ -182,7 +169,7 @@ function ERM_MainWindow.nuke_biters(event)
         local owner = game.players[event.element.player_index]
         local surface = owner.surface
         local pp = owner.position
-        local units = surface.find_entities_filtered({force=ForceHelper.getAllEnemyForces(), radius=32, position=pp, type='unit'})
+        local units = surface.find_entities_filtered({force=ForceHelper.get_all_enemy_forces(), radius=32, position=pp, type='unit'})
         for key, entity in pairs(units) do
             entity.destroy()
         end

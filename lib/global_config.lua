@@ -20,12 +20,20 @@ ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
 
 if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
+
+    ErmConfig.TEN_MINUTES_CRON = defines.time.minute + 1
+    ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
+    ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
+    ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = 30 * defines.time.minute
+
+    -- +1 to spread the job across all ticks
+    ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.minute + 1
+    ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
+    ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
+    ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
-
-ErmConfig.CRON = defines.time.minute
-
 
 -- EVENTS
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
@@ -47,6 +55,7 @@ ErmConfig.installed_races = {MOD_NAME}
 ErmConfig.installed_races_loaded = false
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
+ErmConfig.CONFIG_CACHE_SIZE = 256
 
 local is_enemy_race = function(name)
     local helper_mods = {
@@ -59,7 +68,7 @@ local is_enemy_race = function(name)
     return false
 end
 
-local is_cache_expired = function(last_tick, length) 
+function ErmConfig.is_cache_expired(last_tick, length)
     return (game.tick + length) > last_tick
 end
 
@@ -130,9 +139,8 @@ end
 
 local build_style_setting
 local build_style_last_tick
-
 function ErmConfig.build_style()
-    if build_style_setting == nil or is_cache_expired(build_style_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+    if build_style_setting == nil or ErmConfig.is_cache_expired(build_style_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
         build_style_setting = settings.global['enemyracemanager-build-style'].value
         build_style_last_tick = game.tick
     end        
@@ -142,17 +150,38 @@ end
 local build_formation_setting
 local build_formation_last_tick
 function ErmConfig.build_formation()
-    if build_formation_setting == nil or is_cache_expired(build_formation_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+    if build_formation_setting == nil or ErmConfig.is_cache_expired(build_formation_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
         build_formation_setting = settings.global['enemyracemanager-build-formation'].value
         build_formation_last_tick = game.tick
     end        
     return build_formation_setting
 end
 
+function ErmConfig.attack_meter_enabled()
+    return settings.global['enemyracemanager-attack-meter-enable'].value
+end
+
+function ErmConfig.attack_meter_threshold()
+    return settings.global['enemyracemanager-attack-meter-threshold'].value
+end
+
+function ErmConfig.attack_meter_deviation()
+    return settings.global['enemyracemanager-attack-meter-threshold-deviation'].value
+end
+
+function ErmConfig.flying_group_enabled()
+    return settings.global['enemyracemanager-flying-group-enable'].value
+end
+
+function ErmConfig.flying_group_chance()
+    return settings.global['enemyracemanager-flying-group-chance'].value
+end
+
+
 function ErmConfig.get_enemy_races()
     if #ErmConfig.enemy_races == 1 and ErmConfig.enemy_races_loaded == false then
         for name, version in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX) and is_enemy_race(name) then
+            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
                 Table.insert(ErmConfig.enemy_races, name)
             end
         end
@@ -163,8 +192,8 @@ end
 
 function ErmConfig.get_installed_races()
     if #ErmConfig.installed_races == 1 and ErmConfig.installed_races_loaded == false then
-        for name, version in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX) then
+        for name, _ in pairs(game.active_mods) do
+            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) then
                 Table.insert(ErmConfig.installed_races, name)
             end
         end
@@ -175,12 +204,12 @@ end
 
 
 local get_cron_randomizer = function()
-    return math.random(1, 600)
+    return math.random(1, 60)
 end
 
--- Spread cron job across the 10 seconds, instead of same tick.
-function ErmConfig.get_cron_tick()
-    return ErmConfig.CRON + get_cron_randomizer()
+-- Spread cron job across the 1 seconds, instead of same tick.
+function ErmConfig.get_spread_cron_tick(cron)
+    return cron + get_cron_randomizer()
 end
 
 return ErmConfig

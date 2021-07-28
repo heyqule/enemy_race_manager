@@ -21,16 +21,16 @@ local modify_race_setting = function()
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-explosive-spitter')
     else
         ErmDebugHelper.print('Explosive_biters is inactive')
-        RaceSettingHelper.remove_structure_to_tier(race_settings, 1, 'explosive-biter-spawner')
+        RaceSettingHelper.remove_structure_from_tier(race_settings, 1, 'explosive-biter-spawner')
 
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'small-explosive-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'small-explosive-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'medium-explosive-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'medium-explosive-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 2, 'big-explosive-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 2, 'big-explosive-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-explosive-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-explosive-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-explosive-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-explosive-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'medium-explosive-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'medium-explosive-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 2, 'big-explosive-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 2, 'big-explosive-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 3, 'behemoth-explosive-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 3, 'behemoth-explosive-spitter')
     end
 end
 

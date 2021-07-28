@@ -36,21 +36,21 @@ end
 
 -- Checks enemy_erm_ prefix
 function ForceHelper.is_erm_unit(entity)
-    return String.find(entity.name, 'erm_')
+    return String.find(entity.name, 'erm_', 1, true)
 end
 
 function ForceHelper.set_friends(game, force_name)
     for name, force in pairs(game.forces) do
-        if String.find(force.name, 'enemy') then
+        if String.find(force.name, 'enemy', 1, true) then
             force.set_friend(force_name, true);
             force.set_friend('enemy', true);
         end
     end
 end
 
-function ForceHelper.getNameToken(name)
+function ForceHelper.get_name_token(name)
     if nameCache[name] == nil then
-        if not String.find(name, '/') then
+        if not String.find(name, '/', 1, true) then
             nameCache[name] = { MOD_NAME, name, '1' }
         else    
             nameCache[name] = String.split(name, '/')
@@ -62,11 +62,11 @@ end
 
 
 local enemies = {}
-
-function ForceHelper.getAllEnemyForces()
+function ForceHelper.get_all_enemy_forces()
     if Table.size(enemies) == 0 then
+        enemies = {}
         for name, force in pairs(game.forces) do
-            if String.find(force.name, 'enemy') then
+            if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
                 Table.insert(enemies, force.name)
             end
         end

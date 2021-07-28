@@ -7,6 +7,6 @@
 -- FOR VANILLA ENEMIES
 MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
-MOD_VERSION = 100 -- Mod Data version
+MOD_VERSION = 101 -- Mod Data version
 
-DEBUG_MODE = true
+DEBUG_MODE = false

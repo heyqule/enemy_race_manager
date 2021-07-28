@@ -21,16 +21,16 @@ local modify_race_setting = function()
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-cold-spitter')
     else
         ErmDebugHelper.print('Cold_biters is inactive')
-        RaceSettingHelper.remove_structure_to_tier(race_settings, 1, 'cb-cold-spawner')
+        RaceSettingHelper.remove_structure_from_tier(race_settings, 1, 'cb-cold-spawner')
 
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'small-cold-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'small-cold-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'medium-cold-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'medium-cold-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 2, 'big-cold-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 2, 'big-cold-spitter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-cold-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-cold-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-cold-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-cold-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'medium-cold-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'medium-cold-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 2, 'big-cold-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 2, 'big-cold-spitter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 3, 'behemoth-cold-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 3, 'behemoth-cold-spitter')
     end
 end
 

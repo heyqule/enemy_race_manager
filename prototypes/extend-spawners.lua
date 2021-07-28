@@ -59,7 +59,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     }
     spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level)
 
-    if String.find(type, 'spitter') then
+    if String.find(type, 'spitter', 1, true) then
         spawner['result_units'] = (function()
             local res = {}
             res[1] = { MOD_NAME .. '/small-spitter/' .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }

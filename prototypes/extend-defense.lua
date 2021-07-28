@@ -98,3 +98,4 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['logistic-robot']['logistic-robot']['max_health'] = 200
     data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
 end
+

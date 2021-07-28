@@ -11,6 +11,8 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+
 local BaseBuildProcessor = {}
 
 local building_switch = {
@@ -48,7 +50,7 @@ function BaseBuildProcessor.exec(entity)
 end
 
 function BaseBuildProcessor.process_on_cmd(entity)
-    local nameToken = ErmForceHelper.getNameToken(entity.name)
+    local nameToken = ErmForceHelper.get_name_token(entity.name)
     local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
     if ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
@@ -135,15 +137,26 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
             return
         end
 
-        BaseBuildProcessor.build(unit.surface, name, force_name, unit.position)
-        unit.destroy()
+        ErmCron.add_1_sec_queue(function(arg)
+            local unit = arg[1]
+            local name = arg[2]
+            local force_name = arg[3]
+            if unit and unit.valid then
+                BaseBuildProcessor.build(unit.surface, name, force_name, unit.position)
+                unit.destroy()
+            end
+        end,
+                unit,
+                name,
+                force_name
+        )
     end
 end
 
 function BaseBuildProcessor.getBuildingName(race_name, type)
     local func = building_switch[type]
 
-    return race_name .. '/' .. func(race_name) .. '/' .. ErmRaceSettingsHelper.get_current_level(race_name)
+    return race_name .. '/' .. func(race_name) .. '/' .. ErmRaceSettingsHelper.get_level(race_name)
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position)

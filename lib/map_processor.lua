@@ -54,7 +54,7 @@ local get_surface_by_name = function(surfaces, name)
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
-    local nameToken = ErmForceHelper.getNameToken(entity.name)
+    local nameToken = ErmForceHelper.get_name_token(entity.name)
 
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
 
@@ -88,14 +88,14 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 end
 
 local process_enemy_level = function(surface, area, race_settings)
-    local building = surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret'}, force = ErmForceHelper.getAllEnemyForces()})
+    local building = surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret'}, force = ErmForceHelper.get_all_enemy_forces()})
     if Table.size(building) > 0 then
         for k, entity in pairs(building) do
             level_up_enemy_structures(surface, entity, race_settings)            
         end            
     end
 
-    local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.getAllEnemyForces()})
+    local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.get_all_enemy_forces()})
     if Table.size(units) > 0 then
         for k, entity in pairs(units) do
             if entity.unit_group == nil then
@@ -114,7 +114,7 @@ function MapProcessor.queue_chunks(surface, area)
         chunk_queue[surface.name] = Queue()
     end        
 
-    local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.getAllEnemyForces(), limit = 1}))
+    local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.get_all_enemy_forces(), limit = 1}))
     if unit_size > 0 then
         chunk_queue[surface.name](area)
     end

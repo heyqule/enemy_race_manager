@@ -18,7 +18,7 @@ function CommandProcessor.levelup(command)
         return
     end
 
-    if(command.parameter == nil or not String.find(command.parameter, ','))  then
+    if(command.parameter == nil or not String.find(command.parameter, ',', 1, true))  then
         game.print({'description.command-error-invalid-parameters'})
         return
     end

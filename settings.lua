@@ -181,44 +181,81 @@ data:extend {
         maximum_value = 10,
         order = "enemyracemanager-200"
     },
+
+    --- Attack Meters ---
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-attack-meter-enable",
+        description = "enemyracemanager-attack-meter-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-300"
+    },
     {
         type = "int-setting",
         name = "enemyracemanager-attack-meter-threshold",
         description = "enemyracemanager-attack-meter-threshold",
         setting_type = "runtime-global",
-        default_value = 2000,
+        default_value = 3000,
         minimum_value = 1000,
-        maximum_value = 10000,
-        order = "enemyracemanager-300"
+        maximum_value = 6000,
+        order = "enemyracemanager-301"
     },
     {
         type = "double-setting",
         name = "enemyracemanager-attack-meter-threshold-deviation",
         description = "enemyracemanager-attack-meter-threshold-deviation",
         setting_type = "runtime-global",
-        default_value = 0.2,
-        minimum_value = 0.1,
-        maximum_value = 0.8,
-        order = "enemyracemanager-301"
+        default_value = 10,
+        minimum_value = 5,
+        maximum_value = 50,
+        order = "enemyracemanager-302"
     },
     {
         type = "bool-setting",
-        name = "enemyracemanager-enable-fly-attack-group",
-        description = "enemyracemanager-enable-fly-attack-group",
-        setting_type = "startup",
+        name = "enemyracemanager-flying-group-enable",
+        description = "enemyracemanager-flying-group-enable",
+        setting_type = "runtime-global",
         default_value = false,
         order = "enemyracemanager-400"
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-enable-fly-attack-group",
-        description = "enemyracemanager-attack-meter-threshold",
+        name = "enemyracemanager-flying-group-chance",
+        description = "enemyracemanager-flying-group-chance",
         setting_type = "runtime-global",
         default_value = 25,
         minimum_value = 10,
         maximum_value = 100,
         order = "enemyracemanager-401"
     },
+    --{
+    --    type = "bool-setting",
+    --    name = "enemyracemanager-flying-group-hunter-enable",
+    --    description = "enemyracemanager-flying-group-hunter-enable",
+    --    setting_type = "runtime-global",
+    --    default_value = false,
+    --    order = "enemyracemanager-410"
+    --},
+    --{
+    --    type = "int-setting",
+    --    name = "enemyracemanager-flying-group-hunter-chance",
+    --    description = "enemyracemanager-flying-group-hunter-chance",
+    --    setting_type = "runtime-global",
+    --    default_value = 50,
+    --    minimum_value = 10,
+    --    maximum_value = 100,
+    --    order = "enemyracemanager-411"
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-flying-group-hunter-mode",
+    --    description = "enemyracemanager-flying-group-hunter-mode",
+    --    setting_type = "runtime-global",
+    --    default_value = HUNTER_NORMAL,
+    --    allowed_values = { HUNTER_NORMAL, HUNTER_HARDCORE, HUNTER_EXTREME},
+    --    order = "enemyracemanager-412"
+    --},
 }
 
 

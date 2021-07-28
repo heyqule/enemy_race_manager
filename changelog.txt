@@ -1,18 +1,32 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.0
-Date: 2021-07-23
+Date: 2021-07-30
 
   Major Features:
-    - Attack Meters, enemy will send out an army to attack critical
+    - Beta Features: Attack Meters, default ON and Flying Groups, default OFF
+    - [Attack Meters] enemy will send out an army to attack when a killed threshold is reached.
+    - [Attack Meters] tallies kill points every minutes.
+    - [Attack Meters] The attack group may form every 10 minutes.
+    - [Flying Groups] enemy may send out dedicate flying attackers to your base.
+
+  Features:
+    - Cron Processor, to divide large tasks into smaller tasks. e.g custom base builder and attack group handler
 
   Changes:
     - Change weapon rig bullet and shotgun-shell function to accept custom ammo-category
+    - Double unit group gathering time.
+    - Refactor custom attack handling.
+    - Removed "sync with enemy" button from GUI.  Use /ERM_levelup command to change level instead.
+
+  Bugfixes:
+    - Fixed race tier was not changed when using level up by command.
+    - Fixed a crash caused by forces cache.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.2
 Date: 2021-07-16
 
-  Change:
+  Changes:
     - (Beta) Destroy all units which are not in unit_group. This should preserve building groups.
 
 ---------------------------------------------------------------------------------------------------

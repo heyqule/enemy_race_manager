@@ -17,11 +17,11 @@ local modify_race_setting = function()
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-armoured-biter')
     else
         ErmDebugHelper.print('ArmouredBiters is inactive')
-        RaceSettingHelper.remove_structure_to_tier(race_settings, 1, 'armoured-biter-spawner')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'small-armoured-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 1, 'medium-armoured-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 2, 'big-armoured-biter')
-        RaceSettingHelper.remove_unit_to_tier(race_settings, 3, 'behemoth-armoured-biter')
+        RaceSettingHelper.remove_structure_from_tier(race_settings, 1, 'armoured-biter-spawner')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-armoured-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'medium-armoured-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 2, 'big-armoured-biter')
+        RaceSettingHelper.remove_unit_from_tier(race_settings, 3, 'behemoth-armoured-biter')
     end
 end
 

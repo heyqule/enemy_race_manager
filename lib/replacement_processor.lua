@@ -82,8 +82,8 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_n
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
         end
 
-        for name, force in pairs(game.forces) do
-            if String.find(force.name, 'enemy') then
+        for _, force in pairs(game.forces) do
+            if String.find(force.name, 'enemy', 1, true) then
                 force.kill_all_units()
             end
         end
@@ -95,7 +95,7 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
 
     if surface then
         race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
-        local nameToken = ErmForceHelper.getNameToken(entity.name)
+        local nameToken = ErmForceHelper.get_name_token(entity.name)
 
         if (race_pick == nameToken[1] and nameToken[3] == race_settings[race_pick].level) then
             return
@@ -136,8 +136,8 @@ function ReplacementProcessor.resetDefault(surface)
         end)
     end
 
-    for name, force in pairs(game.forces) do
-        if String.find(force.name, 'enemy') then
+    for _, force in pairs(game.forces) do
+        if String.find(force.name, 'enemy', 1, true) then
             force.kill_all_units()
         end
     end

@@ -11,6 +11,115 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+
+local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+
 local AttackMeterProcessor = {}
+
+AttackMeterProcessor.SPAWNER_POINTS = 50;
+AttackMeterProcessor.TURRET_POINTS = 10;
+AttackMeterProcessor.UNIT_POINTS = 1;
+
+local calculatePoints = function(race_name, points, statistic,
+                                 entity_names, level, interval, multiplier)
+    for _, name in pairs(entity_names) do
+        local count = statistic.get_flow_count {
+            name = race_name..'/'..name..'/'..level,
+            input = false,
+            precision_index = interval
+        }
+        points = points + count * multiplier
+    end
+
+    return points
+end
+
+local calculateNextThreshold = function(race_name)
+    local threshold = ErmConfig.attack_meter_threshold()
+    local derivative = ErmConfig.attack_meter_deviation()
+    ErmRaceSettingsHelper.set_next_attack_threshold(
+        race_name, 
+        threshold + threshold * (math.random(derivative * -1, derivative) / 100)
+    )
+end    
+
+function AttackMeterProcessor.add_point_calculation_to_cron()
+    if ErmConfig.attack_meter_enabled() == false then
+        return
+    end
+
+    local force_names = ErmForceHelper.get_all_enemy_forces()
+
+    for _, name in pairs(force_names) do
+        ErmCron.add_1_sec_queue(
+            function(arg)
+                AttackMeterProcessor.calculate_points(arg[1])
+            end,
+            name
+        )
+    end
+end
+
+function AttackMeterProcessor.add_form_group_cron()
+    if ErmConfig.attack_meter_enabled() == false then
+        return
+    end
+
+    local force_names = ErmForceHelper.get_all_enemy_forces()
+
+    for _, force_name in pairs(force_names) do
+        local force = game.forces[force_name]
+        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        ErmCron.add_10_sec_queue(
+                function(arg)
+                    AttackMeterProcessor.form_group(arg[1], arg[2])
+                end,
+                race_name,
+                force
+        )
+    end
+end
+
+local statistic_cache = {}
+function AttackMeterProcessor.calculate_points(force_name)
+    local interval = defines.flow_precision_index.one_minute
+
+    local force = game.forces[force_name]
+    local race_name = ErmForceHelper.extract_race_name_from(force_name)
+    if statistic_cache[race_name] == nil then
+        statistic_cache[race_name] = force.kill_count_statistics
+    end
+    local points = 0
+
+    local level = ErmRaceSettingsHelper.get_level(race_name)
+
+    local units = ErmRaceSettingsHelper.get_current_unit_tier(race_name)
+    points = calculatePoints(race_name, points, statistic_cache[race_name], units, level, interval, AttackMeterProcessor.UNIT_POINTS)
+
+    local buildings = ErmRaceSettingsHelper.get_current_building_tier(race_name)
+    points = calculatePoints(race_name, points, statistic_cache[race_name], buildings, level, interval, AttackMeterProcessor.SPAWNER_POINTS)
+
+    local turrets = ErmRaceSettingsHelper.get_current_turret_tier(race_name)
+    points = calculatePoints(race_name, points, statistic_cache[race_name], turrets, level, interval, AttackMeterProcessor.TURRET_POINTS)
+
+    ErmRaceSettingsHelper.add_to_attack_meter(race_name, points)
+end
+
+function AttackMeterProcessor.form_group(race_name, force)
+    local next_attack_threshold =  ErmRaceSettingsHelper.get_next_attack_threshold(race_name)
+    if next_attack_threshold == 0 then
+        calculateNextThreshold(race_name)
+        return
+    end
+    
+    local current_attack_value = ErmRaceSettingsHelper.get_attack_meter(race_name)
+    if current_attack_value > next_attack_threshold then
+        ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)
+        ErmRaceSettingsHelper.add_to_attack_meter(race_name, next_attack_threshold * -1)
+        calculateNextThreshold(race_name)
+    end
+end    
+
 
 return AttackMeterProcessor

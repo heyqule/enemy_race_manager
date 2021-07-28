@@ -83,8 +83,8 @@ end
 
 
 function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
-    for i, force in pairs(forces) do
-        if String.find(force.name, 'enemy') then
+    for _, force in pairs(forces) do
+        if String.find(force.name, 'enemy', 1, true) then
             local force_name = force.name
             local race_name = ErmForceHelper.extract_race_name_from(force_name)
             -- Handle Score Level
@@ -95,8 +95,8 @@ end
 
 
 function LevelManager.calculateLevels(race_settings, forces, settings)
-    for i, force in pairs(forces) do
-        if not String.find(force.name, 'enemy') then
+    for _, force in pairs(forces) do
+        if not String.find(force.name, 'enemy', 1, true) then
             goto skip_calculate_level_for_force
         end
 
@@ -124,8 +124,8 @@ end
 
 
 function LevelManager.calculateMultipleLevels(race_settings, forces, settings)
-    for i, force in pairs(forces) do
-        if not String.find(force.name, 'enemy') then
+    for _, force in pairs(forces) do
+        if not String.find(force.name, 'enemy', 1, true) then
             goto skip_calculate_multiple_level_for_force
         end
 
@@ -209,10 +209,20 @@ end
 
 function LevelManager.levelByCommand(race_settings, race_name, target_level)
     race_settings[race_name].level = target_level
+
+    if race_settings[race_name].tier < ErmConfig.MAX_TIER and race_settings[race_name].tier < target_level then
+        local target_tier = Math.min(3, target_level)
+        repeat
+            level_up_tier(race_settings[race_name].tier, race_settings, race_name)
+        until race_settings[race_name].tier >= target_tier
+    end
+
     game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
     Event.dispatch({
-        name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP),
-        affected_race = race_settings[race_name] })
+        name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+    Event.dispatch(
+            { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+              affected_race = race_settings[race_name] })
 end
 
 function LevelManager.copyEvolutionFromEnemy(race_settings, target_force, enemy_force)

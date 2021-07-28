@@ -53,8 +53,8 @@ local x_axis_negative_probability_expression = function(autoplace)
 end
 
 local process_x_axis_unit = function(v)
-    local onPositive = String.find(v.name, ErmConfig.positive_axis_race())
-    local onNegative = String.find(v.name, ErmConfig.negative_axis_race())
+    local onPositive = String.find(v.name, ErmConfig.positive_axis_race(), 1, true)
+    local onNegative = String.find(v.name, ErmConfig.negative_axis_race(), 1, true)
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -82,8 +82,8 @@ local process_x_axis = function()
 end
 
 local process_y_axis_unit = function(v)
-    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value)
-    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value)
+    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value, 1, true)
+    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value, 1, true)
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
