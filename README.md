@@ -4,10 +4,13 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 **I hope someone with art skills can come up with some new original races.**
 
-### 1.1.0 Release
-This release focus on weapon enhancements.
-- Cannon and Artillery exposion now hit air unit
-- Ground weapon may hit air. "Allow ground weapon to hit air units" option is disabled by default. Group weapon includes cannon projectile, shotgun pellet, poison capsule and slow capsule.
+Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
+
+### 1.5.0 release
+- [Beta] Attack meter.  When the meter reach a threshold, a large attack group will spawn.  The meter tracks all kills. This is ON by default.
+- [Beta] Flying attacker group, if you enable that option. This is OFF by default
+- Removed "sync with enemy" button from GUI.  Use /ERM_levelup command to change level instead.
+- A few fixes for crashes.
 
 ### New race demo
 These mods are made as educational demos.
@@ -18,14 +21,17 @@ Tips on defense: A LOT OF construction robots and repair kits. Automate repair n
 
 New Enemy Races:
 [>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)
-![Zerg](https://mods-data.factorio.com/assets/515e5390e5d7d8ad2135fb9e6604a995566204ee.png "Zerg")
+![Zerg](https://mods-data.factorio.com/assets/d5713783b19c4ba3ca97ab578182e61c72ec11a0.png "Zerg")
 
 [>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
-![Protoss](https://mods-data.factorio.com/assets/656569de2ac0658bd1907a5a8c71f4553a952d6b.png "Protoss")
+![Protoss](https://mods-data.factorio.com/assets/01f1d66653ee245f5abe8d5bacf6d359bb6e9c97.png "Protoss")
+
+[>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
+![RedArmy](https://mods-data.factorio.com/assets/d46b286c763a8b9fdbab23eb8bea2dee905a701f.png "RedArmy")
 
 Defense Units:
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
-![Terran](https://mods-data.factorio.com/assets/15b0714cb3f3a01e371c9db36e12b3393f3429a2.png "Terran")
+![Terran](https://mods-data.factorio.com/assets/8edb5f447c0a754f1071256c950107fcae32bfa0.png "Terran")
 
 ### Features
 #### 3 difficulty levels
@@ -76,17 +82,22 @@ Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 This defines how enemy bases are generated when a new chunk is charted.
 
 Default
+
 * using base game autoplace. All races are mixed.
 
 2 races split
+
 * race A spawns at positive axis, race B spawns at negative axis
 * race A spawns at positive axis, nothing spawns at negative axis.
 * can be horizontally or vertically divided.
+* races can expand into each other's territory.
 
 ![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
 One race per surface/planet
-* randomly assign a race for each surface / planet. Designed for Space Exploration.
+
+* randomly assign a race for each surface / planet.
+* It's for Space Exploration.
 * The race of a planet can be changed using replace function from UI.
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
@@ -95,13 +106,13 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-    * build one at a time
+  - build one at a time
 * Command Center
-    * When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+  - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town
-    * Always use build formation option to build the base.
+  - Always use build formation option to build the base.
 * Full Expansion
-    * When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+  - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
@@ -122,7 +133,6 @@ Partial formation is build based on cc > support > turret priority.
 - Supports one race per planet!
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
-- Tesla gun does not work against air units due to the way it filter entities. 
 
 #### Krastorio2
 - New races do not support creep generation unless author patches the creep generation code.
@@ -148,17 +158,15 @@ For more compatibility details, please visit https://github.com/heyqule/enemy_ra
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
 ### Roadmap after 1.0
-ERM_RedArmy
-- engineers with various weapons
-- machine gun car
-- machine gun, cannon tank
-- laser and rocket plane
+ERM_RedArmy - Heavy firepower on single target - Done (Beta)
 
-Attack meters
+ERM_SuicideSquad - E-x-p-l-o-s-i-v-e-s
 
-* send enemy to your base @ night based on how many they have been killed
+Attack meters (BETA)
 
-Flying units attack squads
+* send enemy to your base based on how many they have been killed
+
+Flying units attack squads (BETA)
 
 * nuff said
 
