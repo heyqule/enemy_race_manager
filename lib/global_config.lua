@@ -20,6 +20,7 @@ ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
 
 if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
+    ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
 
     ErmConfig.TEN_MINUTES_CRON = defines.time.minute + 1
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
@@ -27,6 +28,7 @@ if DEBUG_MODE then
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 30 * defines.time.minute
+    ErmConfig.ATTACK_GROUP_GATHERING_CRON = 5 * defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
     ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.minute + 1

@@ -157,7 +157,7 @@ data:extend {
         name = "enemyracemanager-build-formation",
         description = "enemyracemanager-build-formation",
         setting_type = "runtime-global",
-        default_value = BUILDING_FORMATION_1_2_4,
+        default_value = BUILDING_FORMATION_1_4_5,
         allowed_values = {
             BUILDING_FORMATION_1_2_4,
             BUILDING_FORMATION_1_4_5,
@@ -208,7 +208,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 10,
         minimum_value = 5,
-        maximum_value = 50,
+        maximum_value = 25,
         order = "enemyracemanager-302"
     },
     {

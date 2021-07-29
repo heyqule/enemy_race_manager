@@ -57,7 +57,7 @@ local onUnitFinishGathering = function(event)
     local group = event.group
     
     if max_settler == nil then
-        max_settler = game.map_settings.enemy_expansion.settler_group_max_size
+        max_settler = math.min(50, game.map_settings.enemy_expansion.settler_group_max_size)
     end
 
     if group.command and group.command.type == defines.command.build_base and table_size(group.members) > max_settler then
@@ -238,7 +238,7 @@ Event.on_nth_tick(ErmConfig.ONE_MINUTE_CRON, function(event)
     ErmAttackMeterProcessor.add_point_calculation_to_cron()
 end)
 
-Event.on_nth_tick(ErmConfig.TEN_MINUTES_CRON, function(event)
+Event.on_nth_tick(ErmConfig.ATTACK_GROUP_GATHERING_CRON, function(event)
     ErmAttackMeterProcessor.add_form_group_cron()
 end)
 
