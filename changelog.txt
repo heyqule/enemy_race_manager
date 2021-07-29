@@ -11,6 +11,7 @@ Date: 2021-07-28
     - [Attack Meters] Each unit in attack group consumes 20 points.
     - [Flying Groups] enemy may send out dedicate flying attackers to your base.
     - [Flying Groups] Each unit in flying attack group consumes 75 points. Team size is around 40 units in default threshold.
+    - This only supports planet nauvis at the moment.  Not yet compatible in other planet for SE.
 
   Features:
     - Cron Processor, to divide large tasks into smaller tasks. e.g custom base builder and custom attack group builder
