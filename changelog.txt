@@ -24,6 +24,7 @@ Date: 2021-07-28
   Bugfixes:
     - Fixed race tier was not changed when using level up by command.
     - Fixed a crash caused by forces cache.
+    - Fixed a crash by marking 'bobenemies' to be incompatible.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.2
