@@ -60,7 +60,7 @@ function Debug_RemoteAPI.exec_attack_group(race_name)
 end
 
 function Debug_RemoteAPI.generate_attack_group(race_name)
-    ErmAttackGroupProcessor.generate_mixed_group(
+    ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
             200
@@ -68,13 +68,12 @@ function Debug_RemoteAPI.generate_attack_group(race_name)
 end
 
 function Debug_RemoteAPI.generate_flying_group(race_name)
-    ErmAttackGroupProcessor.generate_flying_group(
+    ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
-            40
+            40,
+            ErmAttackGroupProcessor.GROUP_TYPE_FLYING
     )
 end
-
-
 
 return Debug_RemoteAPI

@@ -266,7 +266,7 @@ local init_globals = function()
         global.race_settings = {}
     end
     -- Track what type of enemies on a surface
-    if global.race_settings == nil then
+    if global.enemy_surfaces == nil then
         global.enemy_surfaces = {}
     end
     -- Track all unit group created by ERM

@@ -6,8 +6,12 @@
 -- To change this template use File | Settings | File Templates.
 --
 
---- Usage: remote.call('enemy_race_manager', 'get_race', MOD_NAME)
-local Table = require('__stdlib__/stdlib/utils/table')
+--- Usage: remote.call('enemy_race_manager', 'get_race', Params...)
+
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+
 local ERM_RemoteAPI = {}
 
 -- Create or update race setting
@@ -53,6 +57,28 @@ end
 function ERM_RemoteAPI.update_race_setting(race_setting)
     if global and global.race_settings and global.race_settings[race_setting.race] then
         global.race_settings[race_setting.race] = race_setting
+    end
+end
+
+--- Generate a mixed attack group
+function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
+    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force = game.forces[force_name]
+    units_number = tonumber(units_number)
+
+    if force and units_number > 0 then
+        ErmAttackGroupProcessor.generate_group(race_name, force, units_number)
+    end
+end
+
+--- Generate a flying attack group
+function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
+    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force = game.forces[force_name]
+    units_number = tonumber(units_number)
+
+    if force and units_number > 0 then
+        ErmAttackGroupProcessor.generate_group(race_name, force, units_number, ErmAttackGroupProcessor.GROUP_TYPE_FLYING)
     end
 end
 
