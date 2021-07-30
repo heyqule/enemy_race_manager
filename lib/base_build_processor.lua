@@ -5,6 +5,7 @@
 ---
 
 local String = require('__stdlib__/stdlib/utils/string')
+local Event = require('__stdlib__/stdlib/event/event')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -155,7 +156,11 @@ function BaseBuildProcessor.build(surface, name, force_name, position)
     end
 
     if position then
-        return surface.create_entity({ name = name, force = force_name, position = position })
+        local built_entity = surface.create_entity({ name = name, force = force_name, position = position })
+
+        Event.dispatch({
+            name = Event.get_event_name(ErmConfig.BASE_BUILT_EVENT),
+            entity = built_entity })
     end
 end
 

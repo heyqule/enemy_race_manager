@@ -4,15 +4,20 @@
 --- DateTime: 7/30/2021 12:18 AM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
+
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmK2CreepHelper = require('__enemyracemanager__/lib/helper/k2_creep_helper')
 
 if script.active_mods['Krastorio2'] then
     Event.register(defines.events.on_chunk_generated, function(event)
-        log('generting chunk')
         ErmK2CreepHelper.onChunkGenerated(event)
     end)
 
     Event.register(defines.events.on_biter_base_built, function(event)
-        ErmK2CreepHelper.onBiterBuilt(event)
+        ErmK2CreepHelper.onSpawnerBuilt(event)
+    end)
+
+    Event.register(ErmConfig.BASE_BUILT_EVENT, function(event)
+        ErmK2CreepHelper.onSpawnerBuilt(event)
     end)
 end

@@ -23,8 +23,12 @@ function K2CreepHelper.onChunkGenerated(event)
     end
 end
 
-function K2CreepHelper.onBiterBuilt(event)
-    K2CreepHelper.generate_creep(event.entity.surface, event.entity.position)
+function K2CreepHelper.onSpawnerBuilt(event)
+    local entity = event.entity
+
+    if entity.type == "unit-spawner" then
+        K2CreepHelper.generate_creep(event.entity.surface, event.entity.position)
+    end
 end
 
 return K2CreepHelper
