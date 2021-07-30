@@ -17,7 +17,7 @@ if script.active_mods['Krastorio2'] then
         ErmK2CreepHelper.onSpawnerBuilt(event)
     end)
 
-    Event.register(ErmConfig.BASE_BUILT_EVENT, function(event)
+    Event.register(Event.generate_event_name(ErmConfig.BASE_BUILT_EVENT), function(event)
         ErmK2CreepHelper.onSpawnerBuilt(event)
     end)
 end
