@@ -87,10 +87,11 @@ Default
 
 2 races split
 
-* race A spawns at positive axis, race B spawns at negative axis
-* race A spawns at positive axis, nothing spawns at negative axis.
-* can be horizontally or vertically divided.
-* races can expand into each other's territory.
+- race A spawns at positive axis, race B spawns at negative axis
+- race A spawns at positive axis, nothing spawns at negative axis.
+- can be divided by (X-axis) East/West or (Y-axis) North/South.
+- Example:When you choose Y-axis, Zerg (Race A) will spawn North, Protoss (Race B) will spawn South.
+- races can expand into each other's territory.
 
 ![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
