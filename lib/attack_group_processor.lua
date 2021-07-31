@@ -142,12 +142,20 @@ local pick_gathering_location = function(surface, force, race_name)
         name = ccs_names,
         limit = 100
     })
-
-    if cc_entities == nil then
-        return nil
+    local total_cc = #cc_entities;
+    if total_cc == 0 then
+        cc_entities = surface.find_entities_filtered
+        ({
+            force = force,
+            type = 'unit-spawner',
+            limit = 20
+        })
+        total_cc = #cc_entities
+        if total_cc == 0 then
+            return nil
+        end
     end
 
-    local total_cc = #cc_entities;
     local target_cc = cc_entities[math.random(1, total_cc)]
     return surface.find_non_colliding_position(target_cc.name, target_cc.position, AttackGroupProcessor.GROUP_AREA, 1)
 end
