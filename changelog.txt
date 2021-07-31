@@ -2,7 +2,7 @@
 Version: 1.5.2
 Date: 2021-07-30
 
-  BugFixes:
+  Bugfixes:
     - Fix a crash on custom attack group spawn when command center does not exists. It now picks other unit spawners if that's the case.
 
 ---------------------------------------------------------------------------------------------------
