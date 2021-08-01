@@ -94,7 +94,11 @@ function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
 end
 
 
-function LevelManager.calculateLevels(race_settings, forces, settings)
+function LevelManager.calculateLevels()
+    local race_settings = global.race_settings
+    local forces =  game.forces
+    local settings = settings
+
     for _, force in pairs(forces) do
         if not String.find(force.name, 'enemy', 1, true) then
             goto skip_calculate_level_for_force
@@ -123,7 +127,11 @@ function LevelManager.calculateLevels(race_settings, forces, settings)
 end
 
 
-function LevelManager.calculateMultipleLevels(race_settings, forces, settings)
+function LevelManager.calculateMultipleLevels()
+    local race_settings = global.race_settings
+    local forces =  game.forces
+    local settings = settings
+
     for _, force in pairs(forces) do
         if not String.find(force.name, 'enemy', 1, true) then
             goto skip_calculate_multiple_level_for_force
@@ -230,7 +238,7 @@ function LevelManager.copyEvolutionFromEnemy(race_settings, target_force, enemy_
     if has_valid_race_settings(race_settings, race_name) then
         race_settings[race_name].evolution_base_point = calculate_evolution_points(race_settings, settings, target_force, race_name)
         target_force.evolution_factor = enemy_force.evolution_factor
-        LevelManager.calculateMultipleLevels(race_settings, game.forces, settings)
+        LevelManager.calculateMultipleLevels()
     end
 end
 

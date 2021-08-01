@@ -52,12 +52,6 @@ AttackGroupProcessor.EXTREME_HUNTER_TARGET_TYPES = {
     'accumulator',
 }
 
----
---- Track unit group, each race should only have 1 active group.
---- Units in a group seems considered active units and they have performance penalty.
----
-local group_tracker = {}
-
 local mixed_chance = 100
 
 --- Pick surface with player entity.
@@ -65,29 +59,46 @@ local pick_surface = function()
     return game.surfaces[1]
 end
 
+---
+--- Track unit group, each race should only have 1 active group.
+--- Units in a group seems considered active units and they have performance penalty.
+---
+local get_group_tracker = function(race_name)
+    return global.group_tracker[race_name] or nil
+end
+
+local set_group_tracker = function(race_name, value)
+    if global.group_tracker == nil then
+        global.group_tracker = {}
+    end
+    global.group_tracker[race_name] = value
+end
+
 local pick_an_unit = function(race_name)
-    local current_tier = group_tracker[race_name].current_tier
+    local group_tracker = get_group_tracker(race_name)
+    local current_tier = group_tracker.current_tier
     local unit_name = nil
-    if group_tracker[race_name].group_type == AttackGroupProcessor.GROUP_TYPE_MIXED then
+    if group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_MIXED then
         unit_name = ErmRaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier)
-    elseif group_tracker[race_name].group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
+    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
         unit_name = ErmRaceSettingsHelper.pick_an_flying_unit_from_tier(race_name, current_tier)
     else
         unit_name = ErmRaceSettingsHelper.pick_an_unit(race_name)
     end
 
-    group_tracker[race_name].current_tier_unit = group_tracker[race_name].current_tier_unit + 1
+    group_tracker.current_tier_unit = group_tracker.current_tier_unit + 1
 
-    if group_tracker[race_name].current_tier_unit == group_tracker[race_name].tiers[current_tier] then
-        group_tracker[race_name].current_tier_unit = 0
-        group_tracker[race_name].current_tier = math.min(current_tier + 1, ErmConfig.MAX_TIER)
+    if group_tracker.current_tier_unit == group_tracker.tiers[current_tier] then
+        group_tracker.current_tier_unit = 0
+        group_tracker.current_tier = math.min(current_tier + 1, ErmConfig.MAX_TIER)
     end
 
     return unit_name
 end
 
 local add_to_group = function(surface, group, force, race_name, unit_batch)
-    if group.valid == false or group_tracker[race_name] == nil then
+    local group_tracker = get_group_tracker(race_name)
+    if group.valid == false or group_tracker == nil then
         return
     end
 
@@ -103,12 +114,12 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             force = force
         })
         group.add_member(entity)
-        group_tracker[race_name].current_size = group_tracker[race_name].current_size + 1
+        group_tracker.current_size = group_tracker.current_size + 1
         i = i + 1
     until i == unit_batch
 
 
-    if group_tracker[race_name].current_size >= group_tracker[race_name].size then
+    if group_tracker.current_size >= group_tracker.size then
         local enemy = group.surface.find_nearest_enemy {
             position = group.position,
             force = group.force,
@@ -125,7 +136,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         else
             group.set_autonomous()
         end
-        group_tracker[race_name] = nil
+        set_group_tracker(race_name, nil)
     end
 end
 
@@ -140,7 +151,7 @@ local pick_gathering_location = function(surface, force, race_name)
     ({
         force = force,
         name = ccs_names,
-        limit = 100
+        limit = 50
     })
     local total_cc = #cc_entities;
     if total_cc == 0 then
@@ -188,7 +199,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers_units[index] = math.floor((units_number * tier)+0.5)
     end
 
-    group_tracker[race_name] = {
+    set_group_tracker(race_name, {
         group = unit_group,
         group_number = unit_group.group_number,
         size = units_number,
@@ -197,7 +208,8 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = tiers_units,
         current_tier = 1,
         current_tier_unit = 0,
-    }
+    })
+
     repeat
         local unit_batch = AttackGroupProcessor.UNIT_PER_BATCH
         if i == last_queue then

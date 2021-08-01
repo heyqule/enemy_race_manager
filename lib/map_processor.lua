@@ -22,16 +22,15 @@ require('__enemyracemanager__/setting-constants')
 
 local MapProcessor = {}
 
-local chunk_queue = {}
-
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
     if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
-        if global.enemy_surfaces[surface.index] and nameToken[1] ~= global.enemy_surfaces[surface.index] then
-            nameToken[1] = global.enemy_surfaces[surface.index]
+        local enemy_surface = global.enemy_surfaces[surface.index]
+        if enemy_surface and nameToken[1] ~= enemy_surface then
+            nameToken[1] = enemy_surface
             if entity.type == 'turret' then
-                nameToken[2] = ErmRaceSettingHelper.pick_a_turret(global.enemy_surfaces[surface.index])
+                nameToken[2] = ErmRaceSettingHelper.pick_a_turret(enemy_surface)
             else
-                nameToken[2] = ErmRaceSettingHelper.pick_a_spawner(global.enemy_surfaces[surface.index])
+                nameToken[2] = ErmRaceSettingHelper.pick_a_spawner(enemy_surface)
             end
         end
     end
@@ -39,18 +38,19 @@ local process_one_race_per_surface_mapping = function(surface, entity, nameToken
     return nameToken
 end
 
-local surfaces_cache = {}
 
-local get_surface_by_name = function(surfaces, name) 
-    if surfaces_cache[name] == nil then
+local get_surface_by_name = function(surfaces, name)
+    local surface_cache = global.mapproc_surfaces_cache[name]
+    if surface_cache == nil or surface_cache.valid == false then
         for k, surface in pairs(surfaces) do
             if surface.name == name then
-                surfaces_cache[name] = surface
+                surface_cache = surface
+                global.mapproc_surfaces_cache[name] = surface_cache
                 break
             end                
         end
     end
-    return surfaces_cache[name]
+    return surface_cache
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
@@ -105,31 +105,41 @@ local process_enemy_level = function(surface, area, race_settings)
     end
 end
 
+function MapProcessor.init_globals()
+    if global.mapproc_surfaces_cache == nil then
+        global.mapproc_surfaces_cache = {}
+    end
+
+    if global.mapproc_chunk_queue == nil then
+        global.mapproc_chunk_queue = {}
+    end
+end
+
 function MapProcessor.queue_chunks(surface, area)
     if not area then
         return
     end
 
-    if chunk_queue[surface.name] == nil then
-        chunk_queue[surface.name] = Queue()
+    if global.mapproc_chunk_queue[surface.name] == nil then
+        global.mapproc_chunk_queue[surface.name] = Queue()
     end        
 
     local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.get_all_enemy_forces(), limit = 1}))
     if unit_size > 0 then
-        chunk_queue[surface.name](area)
+        global.mapproc_chunk_queue[surface.name](area)
     end
 end
 
 function MapProcessor.process_chunks(surfaces, race_settings)
     local count = 1;
 
-    for k, queue in pairs(chunk_queue) do
+    for k, queue in pairs(global.mapproc_chunk_queue) do
         if queue == nil then
             goto process_chunks_continue
         end
 
         if Queue.is_empty(queue) then
-            chunk_queue[k] = nil
+            global.mapproc_chunk_queue[k] = nil
             goto process_chunks_continue
         end            
     
@@ -138,7 +148,11 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             if area == nil then
                 break
             end
-            process_enemy_level(get_surface_by_name(surfaces, k), area, race_settings)
+            process_enemy_level(
+                get_surface_by_name(surfaces, k), 
+                area, 
+                race_settings
+            )
             count = count + 1
         end
 
@@ -151,7 +165,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
 end
 
 function MapProcessor.clean_queue()
-    chunk_queue = {}
+    global.mapproc_chunk_queue = {}
 end
 
 function MapProcessor.rebuild_map(game)

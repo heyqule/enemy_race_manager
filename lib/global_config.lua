@@ -59,6 +59,18 @@ ErmConfig.installed_races_loaded = false
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
 
+local refreshable_settings = {
+    startup = {
+        'enemyracemanager-max-attack-range',
+        'enemyracemanager-max-level',
+        'enemyracemanager-mapping-method'
+    },
+    global = {
+        'enemyracemanager-build-style',
+        'enemyracemanager-build-formation',
+    }
+}
+
 local is_enemy_race = function(name)
     local helper_mods = {
         erm_terran=true,
@@ -70,45 +82,102 @@ local is_enemy_race = function(name)
     return false
 end
 
+local convert_max_level =  function(setting_value)
+    local current_level_setting = 10;
+
+    if setting_value == MAX_LEVEL_20 then
+        current_level_setting = 20
+    elseif setting_value == MAX_LEVEL_5 then
+        current_level_setting = 5
+    end
+
+    return current_level_setting
+end
+
+local convert_max_range =  function(setting_value)
+    local current_range = 14
+    if setting_value == ATTACK_RANGE_20 then
+        current_range = 20
+    end
+    return current_range
+end
+
 function ErmConfig.is_cache_expired(last_tick, length)
     return (game.tick + length) > last_tick
 end
 
-local current_level_setting
+function ErmConfig.refresh_config()
+    for _, setting_name in pairs(refreshable_settings.startup) do
+        if setting_name == 'enemyracemanager-max-level' then
+            global.settings[setting_name] = convert_max_level(settings.startup[setting_name].value)
+        elseif setting_name == 'enemyracemanager-max-attack-range' then
+            global.settings[setting_name] = convert_max_range(settings.startup[setting_name].value)
+        else
+            global.settings[setting_name] = settings.startup[setting_name].value
+        end
+    end
+
+    for _, setting_name in pairs(refreshable_settings.global) do
+        global.settings[setting_name] = settings.global[setting_name].value
+    end
+end
+
 function ErmConfig.get_max_level()
+    local current_level_setting
+    if global then
+        current_level_setting = global.settings['enemyracemanager-max-level']
+    end
+
     if current_level_setting == nil then
-        current_level_setting = 10;
-        if settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_20 then
-            current_level_setting = 20
-        elseif settings.startup['enemyracemanager-max-level'].value == MAX_LEVEL_5 then
-            current_level_setting = 5
+        current_level_setting = convert_max_level(settings.startup['enemyracemanager-max-level'].value)
+
+        if global then
+            global.settings['enemyracemanager-max-level'] = current_level_setting
         end
     end
 
     return current_level_setting
 end
 
-local current_range
 function ErmConfig.get_max_attack_range()
+    local current_range
+    if global then
+        current_range = global.settings['enemyracemanager-max-attack-range']
+    end
+
     if current_range == nil then
+        local setting_value = settings.startup['enemyracemanager-max-attack-range'].value
         current_range = 14
-        if settings.startup['enemyracemanager-max-attack-range'].value == ATTACK_RANGE_20 then
+        if setting_value == ATTACK_RANGE_20 then
             current_range = 20
+        end
+
+        if global then
+            global.settings['enemyracemanager-max-attack-range'] = current_range
         end
     end        
     return current_range
 end
 
-local mapping_method
+
 function ErmConfig.get_mapping_method()
+    local mapping_method
+    if global then
+        mapping_method = global.settings['enemyracemanager-mapping-method']
+    end
+
     if mapping_method == nil then
         mapping_method = settings.startup['enemyracemanager-mapping-method'].value
+
+        if global then
+            global.settings['enemyracemanager-max-attack-range'] = mapping_method
+        end
     end
     return mapping_method  
 end
 
 function ErmConfig.mapgen_is_mixed()
-    if settings.startup['enemyracemanager-mapping-method'].value == MAP_GEN_DEFAULT then
+    if ErmConfig.get_mapping_method() == MAP_GEN_DEFAULT then
         return true
     end
 
@@ -116,7 +185,7 @@ function ErmConfig.mapgen_is_mixed()
 end
 
 function ErmConfig.mapgen_is_2_races_split()
-    if settings.startup['enemyracemanager-mapping-method'].value == MAP_GEN_2_RACES_SPLIT then
+    if ErmConfig.get_mapping_method() == MAP_GEN_2_RACES_SPLIT then
         return true
     end
 
@@ -124,7 +193,7 @@ function ErmConfig.mapgen_is_2_races_split()
 end
 
 function ErmConfig.mapgen_is_one_race_per_surface()
-    if settings.startup['enemyracemanager-mapping-method'].value == MAP_GEN_1_RACE_PER_SURFACE then
+    if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         return true
     end
 
@@ -139,23 +208,22 @@ function ErmConfig.negative_axis_race()
     return settings.startup['enemyracemanager-2way-group-enemy-negative'].value
 end
 
-local build_style_setting
-local build_style_last_tick
 function ErmConfig.build_style()
-    if build_style_setting == nil or ErmConfig.is_cache_expired(build_style_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+    local build_style_setting = global.settings['enemyracemanager-build-style']
+    if build_style_setting == nil then
         build_style_setting = settings.global['enemyracemanager-build-style'].value
-        build_style_last_tick = game.tick
-    end        
+        global.settings['enemyracemanager-build-style'] = build_style_setting
+    end
     return build_style_setting
 end
 
-local build_formation_setting
-local build_formation_last_tick
+
 function ErmConfig.build_formation()
-    if build_formation_setting == nil or ErmConfig.is_cache_expired(build_formation_last_tick, ErmConfig.CONFIG_CACHE_LENGTH) then
+    local build_formation_setting = global.settings['enemyracemanager-build-formation']
+    if build_formation_setting == nil then
         build_formation_setting = settings.global['enemyracemanager-build-formation'].value
-        build_formation_last_tick = game.tick
-    end        
+        global.settings['enemyracemanager-build-formation'] = build_formation_setting
+    end
     return build_formation_setting
 end
 
@@ -202,16 +270,6 @@ function ErmConfig.get_installed_races()
         ErmConfig.installed_races_loaded = true;
     end
     return ErmConfig.installed_races
-end
-
-
-local get_cron_randomizer = function()
-    return math.random(1, 60)
-end
-
--- Spread cron job across the 1 seconds, instead of same tick.
-function ErmConfig.get_spread_cron_tick(cron)
-    return cron + get_cron_randomizer()
 end
 
 return ErmConfig

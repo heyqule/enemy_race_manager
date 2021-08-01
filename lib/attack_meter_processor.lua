@@ -21,6 +21,13 @@ AttackMeterProcessor.SPAWNER_POINTS = 50;
 AttackMeterProcessor.TURRET_POINTS = 10;
 AttackMeterProcessor.UNIT_POINTS = 1;
 
+local get_statistic_cache = function(race_name, force)
+    if global.kill_count_statistics_cache[race_name] == nil then
+        global.kill_count_statistics_cache[race_name] = force.kill_count_statistics
+    end
+    return global.kill_count_statistics_cache[race_name]
+end
+
 local calculatePoints = function(race_name, points, statistic,
                                  entity_names, level, interval, multiplier)
     for _, name in pairs(entity_names) do
@@ -42,7 +49,13 @@ local calculateNextThreshold = function(race_name)
         race_name, 
         threshold + threshold * (math.random(derivative * -1, derivative) / 100)
     )
-end    
+end
+
+function AttackMeterProcessor.init_globals()
+    if global.kill_count_statistics_cache == nil then
+        global.kill_count_statistics_cache = {}
+    end
+end
 
 function AttackMeterProcessor.add_point_calculation_to_cron()
     if ErmConfig.attack_meter_enabled() == false then
@@ -81,27 +94,28 @@ function AttackMeterProcessor.add_form_group_cron()
     end
 end
 
-local statistic_cache = {}
 function AttackMeterProcessor.calculate_points(force_name)
     local interval = defines.flow_precision_index.one_minute
 
     local force = game.forces[force_name]
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
-    if statistic_cache[race_name] == nil then
-        statistic_cache[race_name] = force.kill_count_statistics
+    local statistic_cache = get_statistic_cache(race_name, force)
+    if statistic_cache == nil then
+        return
     end
+
     local points = 0
 
     local level = ErmRaceSettingsHelper.get_level(race_name)
 
     local units = ErmRaceSettingsHelper.get_current_unit_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache[race_name], units, level, interval, AttackMeterProcessor.UNIT_POINTS)
+    points = calculatePoints(race_name, points, statistic_cache, units, level, interval, AttackMeterProcessor.UNIT_POINTS)
 
     local buildings = ErmRaceSettingsHelper.get_current_building_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache[race_name], buildings, level, interval, AttackMeterProcessor.SPAWNER_POINTS)
+    points = calculatePoints(race_name, points, statistic_cache, buildings, level, interval, AttackMeterProcessor.SPAWNER_POINTS)
 
     local turrets = ErmRaceSettingsHelper.get_current_turret_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache[race_name], turrets, level, interval, AttackMeterProcessor.TURRET_POINTS)
+    points = calculatePoints(race_name, points, statistic_cache, turrets, level, interval, AttackMeterProcessor.TURRET_POINTS)
 
     ErmRaceSettingsHelper.add_to_attack_meter(race_name, points)
 end

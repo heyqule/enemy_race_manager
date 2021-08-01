@@ -11,15 +11,17 @@ local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 
 local SurfaceProcessor = {}
 
+function SurfaceProcessor.init_globals()
+    if global.enemy_surfaces == nil then
+        global.enemy_surfaces = {}
+    end
+end
+
 function SurfaceProcessor.assign_race(surface_index, race_name)
     local races = ErmConfig.get_enemy_races()
     local max_num = Table.size(races)
     if max_num == 0 then
         return
-    end
-
-    if global.enemy_surfaces == nil then
-        global.enemy_surfaces = {}
     end
 
     local race = nil
@@ -54,7 +56,7 @@ function SurfaceProcessor.rebuild_race()
         end
     end
 
-    for surface_index, surface in pairs(game.surfaces) do
+    for _, surface in pairs(game.surfaces) do
         if global.enemy_surfaces[surface.index] == nil then
             SurfaceProcessor.assign_race(surface.index)
         end

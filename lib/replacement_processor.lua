@@ -19,11 +19,9 @@ local ErmDebugHelper = require('__enemyracemanager__/lib//debug_helper')
 
 local ReplacementProcessor = {}
 
-local race_pick
-
 local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
-
+    local race_pick = global.replacement_race_pick
     local base_name = ErmRaceSettingHelper.pick_a_spawner(race_pick)
     local new_force_name = ErmForceHelper.get_force_name_from(race_pick)
 
@@ -40,9 +38,8 @@ end
 
 local replace_turrets = function(surface, entity, race_settings)
     local position = entity.position
-
+    local race_pick = global.replacement_race_pick
     local base_name = ErmRaceSettingHelper.pick_a_turret(race_pick)
-
     local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
     local new_force_name = ErmForceHelper.get_force_name_from(race_pick)
 
@@ -76,7 +73,8 @@ end
 
 function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_name)
     if surface then
-        race_pick = target_force_name
+        local race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
+        global.replacement_race_pick = race_pick
         game.print('Rebuild Map: ' .. target_force_name .. ' on ' .. surface.name)
         for chunk in surface.get_chunks() do
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
@@ -94,7 +92,8 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
     local returned_entity = entity
 
     if surface then
-        race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
+        local race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
+        global.replacement_race_pick = race_pick
         local nameToken = ErmForceHelper.get_name_token(entity.name)
 
         if (race_pick == nameToken[1] and nameToken[3] == race_settings[race_pick].level) then

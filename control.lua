@@ -40,24 +40,22 @@ remote.add_interface("enemy_race_manager", ErmRemoteApi)
 local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
 remote.add_interface("enemy_race_manager_debug", ErmDebugRemoteApi)
 
--- local variables
-local race_settings -- track race settings
-local enemy_surfaces -- track which race is on a surface/planet
-
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity.valid then
-        local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, race_settings, entity.force.name)
+        local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
         ErmBaseBuildProcessor.exec(replaced_entity)
     end
 end
 
-local max_settler
+
 local onUnitFinishGathering = function(event)
     local group = event.group
+    local max_settler = global.settings.enemy_expansion_max_settler
     
     if max_settler == nil then
         max_settler = math.min(50, game.map_settings.enemy_expansion.settler_group_max_size)
+        global.settings.enemy_expansion_max_settler = max_settler
     end
 
     if group.command and group.command.type == defines.command.build_base and table_size(group.members) > max_settler then
@@ -155,8 +153,8 @@ end
 
 local prepare_world = function()
     -- Calculate Biter Level
-    if table_size(race_settings) > 0 then
-        ErmLevelProcessor.calculateMultipleLevels(race_settings, game.forces, settings)
+    if table_size(global.race_settings) > 0 then
+        ErmLevelProcessor.calculateMultipleLevels()
     end
 
     -- Game map settings
@@ -173,7 +171,7 @@ local prepare_world = function()
 
     -- Race Cleanup
     ErmRaceSettingsHelper.clean_up_race()
-    ErmSurfaceProcessor.rebuild_race(race_settings)
+    ErmSurfaceProcessor.rebuild_race(global.race_settings)
 end
 
 local onGuiClick = function(event)
@@ -192,6 +190,7 @@ end
 Event.register(defines.events.on_player_created, function(event)
     ErmMainWindow.update_overhead_button(event.player_index)
 end)
+--- GUIs
 
 Event.register(defines.events.on_gui_click, onGuiClick)
 
@@ -205,12 +204,12 @@ Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 
 --- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
-    ErmLevelProcessor.calculateLevels(race_settings, game.forces, settings)
+    ErmLevelProcessor.calculateLevels()
 end)
 
 --- Map Processing Events
 Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
-    ErmMapProcessor.process_chunks(game.surfaces, race_settings)
+    ErmMapProcessor.process_chunks(game.surfaces, global.race_settings)
 end)
 
 Event.register(defines.events.on_chunk_generated, function(event)
@@ -265,40 +264,49 @@ local init_globals = function()
     if global.race_settings == nil then
         global.race_settings = {}
     end
-    -- Track what type of enemies on a surface
-    if global.enemy_surfaces == nil then
-        global.enemy_surfaces = {}
-    end
+
     -- Track all unit group created by ERM
     if global.erm_unit_groups == nil then
         global.erm_unit_groups = {}
     end
+
+    -- Move all cache to this to resolve desync issues.
+    -- https://wiki.factorio.com/Desynchronization
+    -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
+    if global.settings == nil then
+        global.settings = {}
+    end
+
+    ErmSurfaceProcessor.init_globals()
+    ErmAttackMeterProcessor.init_globals()
+    ErmMapProcessor.init_globals()
+    ErmCron.init_globals()
 end
 --- Init events
 Event.on_init(function(event)
     init_globals()
-
-    race_settings = global.race_settings
-    enemy_surfaces = global.enemy_surfaces
-
+    ErmConfig.refresh_config()
     addRaceSettings()
     prepare_world()
 end)
 
 Event.on_load(function(event)
-    enemy_surfaces = global.enemy_surfaces
-    race_settings = global.race_settings
 end)
 
 Event.on_configuration_changed(function(event)
     init_globals()
-
-    race_settings = global.race_settings or {}
-    enemy_surfaces = global.enemy_surfaces or {}
-
+    ErmConfig.refresh_config()
     prepare_world()
     for _, player in pairs(game.connected_players) do
         ErmMainWindow.update_overhead_button(player.index)
+    end
+end)
+
+Event.register(defines.events.on_runtime_mod_setting_changed,function(event)
+    if event.setting_type == 'runtime-global' and
+            string.find(event.setting, 'enemyracemanager', 1, true)
+    then
+        global.settings[event.setting] = settings.global[event.setting].value
     end
 end)
 
@@ -326,7 +334,7 @@ end)
 commands.add_command("ERM_GetRaceSettings",
         { "description.command-regenerate-enemy" },
         function()
-            game.print(game.table_to_json(race_settings))
+            game.print(game.table_to_json(global.race_settings))
         end)
 
 commands.add_command("ERM_levelup",
