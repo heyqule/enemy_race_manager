@@ -11,6 +11,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - [Beta] Flying attacker group, if you enable that option. This is OFF by default
 - Removed "sync with enemy" button from GUI.  Use /ERM_levelup command to change level instead.
 - A few fixes for crashes.
+- 1.5.4 fixes desync issue for multiplayer. 
 
 ### New race demo
 These mods are made as educational demos.
