@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.3
+Date: 2021-08-02
+
+  Changes:
+    - Surface processor now based on surface name, instead of index.
+    - Removed onUnitFinishGathering event. It may not needed.
+
+  Bugfixes:
+    - Attempt to fix Multiplayer Desync
+
+---------------------------------------------------------------------------------------------------
 Version: 1.5.2
 Date: 2021-07-30
 

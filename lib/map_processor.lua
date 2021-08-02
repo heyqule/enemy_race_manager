@@ -24,7 +24,7 @@ local MapProcessor = {}
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
     if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
-        local enemy_surface = global.enemy_surfaces[surface.index]
+        local enemy_surface = global.enemy_surfaces[surface.name]
         if enemy_surface and nameToken[1] ~= enemy_surface then
             nameToken[1] = enemy_surface
             if entity.type == 'turret' then
@@ -144,10 +144,17 @@ function MapProcessor.process_chunks(surfaces, race_settings)
         end            
     
         for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
-            area = queue()
+            local area = queue()
             if area == nil then
                 break
             end
+
+            local surface = get_surface_by_name(surfaces, k)
+            if surface == nil or surface.valid == false then
+                global.mapproc_chunk_queue[k] = nil
+                break
+            end
+
             process_enemy_level(
                 get_surface_by_name(surfaces, k), 
                 area, 

@@ -21,14 +21,23 @@ function CustomAttackHelper.valid(event, race_name)
             String.find(event.source_entity.name, race_name, 1, true) ~= nil
 end
 
-local current_tiers = {}
-local current_tier_tick = 0
+function CustomAttackHelper.init_globals()
+    if global.custom_attack_current_tiers == nil then
+        global.custom_attack_current_tiers = {}
+        global.custom_attack_current_tiers_tick = 0
+    end
+end
+
 function CustomAttackHelper.get_unit(unit_names, race_name)
+    CustomAttackHelper.init_globals()
+
+    local current_tiers = global.custom_attack_current_tiers
     if current_tiers[race_name] == nil and
-        ErmConfig.is_cache_expired(current_tier_tick, ErmConfig.CONFIG_CACHE_LENGTH)
+        ErmConfig.is_cache_expired(global.custom_attack_current_tiers_tick, ErmConfig.CONFIG_CACHE_LENGTH)
     then
         current_tiers[race_name] = remote.call('enemy_race_manager', 'get_race_tier', race_name)
-        current_tier_tick = game.tick
+        global.custom_attack_current_tiers = current_tiers
+        global.custom_attack_current_tiers_tick = game.tick
     end
     return unit_names[current_tiers[race_name]][Math.random(#unit_names[current_tiers[race_name]])]
 end

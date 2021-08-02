@@ -11,20 +11,31 @@ local Table = require('__stdlib__/stdlib/utils/table')
 
 local ForceHelper = {}
 
-local nameCache = {}
+function ForceHelper.init_globals()
+    if global.force_entity_name_cache == nil then
+        global.force_entity_name_cache = {}
+    end
 
-local forceCache = {}
+    if global.force_race_name_cache == nil then
+        global.force_race_name_cache = {}
+    end
+
+    if global.enemy_force_cache == nil then
+        global.enemy_force_cache = {}
+    end
+end
+
 -- Remove prefix enemy_ if force isn't enemy
 function ForceHelper.extract_race_name_from(force_name)
     if force_name == 'enemy' then
         return MOD_NAME
     end
 
-    if forceCache[force_name] == nil then
-        forceCache[force_name] = String.gsub(force_name, 'enemy_', '')
+    if global.force_race_name_cache[force_name] == nil then
+        global.force_race_name_cache[force_name] = String.gsub(force_name, 'enemy_', '')
     end 
 
-    return forceCache[force_name]
+    return global.force_race_name_cache[force_name]
 end
 
 function ForceHelper.get_force_name_from(race_name)
@@ -49,30 +60,29 @@ function ForceHelper.set_friends(game, force_name)
 end
 
 function ForceHelper.get_name_token(name)
-    if nameCache[name] == nil then
+    if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
-            nameCache[name] = { MOD_NAME, name, '1' }
-        else    
-            nameCache[name] = String.split(name, '/')
+            global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
+        else
+            global.force_entity_name_cache[name] = String.split(name, '/')
         end
     end
 
-    return nameCache[name]
+    return global.force_entity_name_cache[name]
 end
 
 
-local enemies = {}
 function ForceHelper.get_all_enemy_forces()
-    if Table.size(enemies) == 0 then
-        enemies = {}
-        for name, force in pairs(game.forces) do
-            if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
-                Table.insert(enemies, force.name)
-            end
+    return global.enemy_force_cache
+end
+
+function ForceHelper.refresh_all_enemy_forces()
+    global.enemy_force_cache = {}
+    for _, force in pairs(game.forces) do
+        if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
+            Table.insert(global.enemy_force_cache, force.name)
         end
     end
-
-    return enemies
 end
 
 return ForceHelper

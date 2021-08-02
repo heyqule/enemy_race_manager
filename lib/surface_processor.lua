@@ -17,7 +17,7 @@ function SurfaceProcessor.init_globals()
     end
 end
 
-function SurfaceProcessor.assign_race(surface_index, race_name)
+function SurfaceProcessor.assign_race(surface, race_name)
     local races = ErmConfig.get_enemy_races()
     local max_num = Table.size(races)
     if max_num == 0 then
@@ -36,12 +36,12 @@ function SurfaceProcessor.assign_race(surface_index, race_name)
         race = races[math.random(1, max_num)]
     end
 
-    global.enemy_surfaces[surface_index] = race
+    global.enemy_surfaces[surface.name] = race
 end
 
-function SurfaceProcessor.remove_race(surface_index)
-    if global.enemy_surfaces[surface_index] ~= nil then
-        Table.remove(global.enemy_surfaces, surface_index)
+function SurfaceProcessor.remove_race(surface)
+    if global.enemy_surfaces[surface.name] ~= nil then
+        global.enemy_surfaces[surface.name] = nil
     end
 end
 
@@ -52,15 +52,23 @@ function SurfaceProcessor.rebuild_race()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) then
-            SurfaceProcessor.remove_race(surface_index)
+            SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
     end
 
     for _, surface in pairs(game.surfaces) do
-        if global.enemy_surfaces[surface.index] == nil then
-            SurfaceProcessor.assign_race(surface.index)
+        if global.enemy_surfaces[surface.name] == nil then
+            SurfaceProcessor.assign_race(game.surfaces[surface.index])
         end
     end
+end
+
+function SurfaceProcessor.numeric_to_name_conversion()
+    local tmpSurfaces = {}
+    for surface_index, race in pairs(global.enemy_surfaces) do
+        tmpSurfaces[game.surfaces[surface_index].name] = race
+    end
+    global.enemy_surfaces = tmpSurfaces
 end
 
 return SurfaceProcessor

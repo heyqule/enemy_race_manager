@@ -49,6 +49,11 @@ function Debug_RemoteAPI.print_enemy_races()
     log(game.table_to_json(GlobalConfig.get_enemy_races()))
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'print_global')
+function Debug_RemoteAPI.print_global()
+    game.write_file('enemyracemanager/erm-global.json',game.table_to_json(global))
+end
+
 --- Usage: remote.call('enemy_race_manager_debug', 'print_calculate_attack_points')
 function Debug_RemoteAPI.print_calculate_attack_points()
     local table = {}

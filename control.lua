@@ -22,6 +22,7 @@ local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
@@ -152,11 +153,6 @@ local addRaceSettings = function()
 end
 
 local prepare_world = function()
-    -- Calculate Biter Level
-    if table_size(global.race_settings) > 0 then
-        ErmLevelProcessor.calculateMultipleLevels()
-    end
-
     -- Game map settings
     local max_group_size = settings.startup["enemyracemanager-max-group-size"].value
     local max_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
@@ -171,7 +167,19 @@ local prepare_world = function()
 
     -- Race Cleanup
     ErmRaceSettingsHelper.clean_up_race()
+    ErmSurfaceProcessor.numeric_to_name_conversion()
     ErmSurfaceProcessor.rebuild_race(global.race_settings)
+
+    -- Calculate Biter Level
+    if table_size(global.race_settings) > 0 then
+        ErmCron.add_1_sec_queue(function(arg)
+            ErmLevelProcessor.calculateMultipleLevels()
+        end, true)
+    end
+
+    ErmCron.add_1_sec_queue(function(arg)
+        ErmForceHelper.refresh_all_enemy_forces()
+    end, true)
 end
 
 local onGuiClick = function(event)
@@ -197,7 +205,7 @@ Event.register(defines.events.on_gui_click, onGuiClick)
 --- Unit processing events
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 
-Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
+--- Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 
 Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 
@@ -226,10 +234,10 @@ end)
 
 --- Surface Management
 Event.register(defines.events.on_surface_created, function(event)
-    ErmSurfaceProcessor.assign_race(event.surface_index)
+    ErmSurfaceProcessor.assign_race(game.surfaces[event.surface_index])
 end)
-Event.register(defines.events.on_surface_deleted, function(event)
-    ErmSurfaceProcessor.remove_race(event.surface_index)
+Event.register(defines.events.on_pre_surface_deleted, function(event)
+    ErmSurfaceProcessor.remove_race(game.surfaces[event.surface_index])
 end)
 
 --- Attack Meter Management
@@ -280,7 +288,7 @@ local init_globals = function()
     ErmSurfaceProcessor.init_globals()
     ErmAttackMeterProcessor.init_globals()
     ErmMapProcessor.init_globals()
-    ErmCron.init_globals()
+    ErmForceHelper.init_globals()
 end
 --- Init events
 Event.on_init(function(event)
