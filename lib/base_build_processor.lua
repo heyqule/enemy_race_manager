@@ -137,18 +137,11 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
             return
         end
 
-        ErmCron.add_1_sec_queue(function(arg)
-            local unit = arg[1]
-            local name = arg[2]
-            local force_name = arg[3]
-            if unit and unit.valid then
-                BaseBuildProcessor.build(unit.surface, name, force_name, unit.position)
-                unit.destroy()
-            end
-        end,
-                unit,
-                name,
-                force_name
+        ErmCron.add_1_sec_queue(
+            'BaseBuildProcessor.build',
+            unit,
+            name,
+            force_name
         )
     end
 end
@@ -166,6 +159,16 @@ function BaseBuildProcessor.build(surface, name, force_name, position)
 
     if position then
         return surface.create_entity({ name = name, force = force_name, position = position })
+    end
+end
+
+function BaseBuildProcessor.build_cron(args)
+    local unit = args[1]
+    local name = args[2]
+    local force_name = args[3]
+    if unit and unit.valid then
+        BaseBuildProcessor.build(unit.surface, name, force_name, unit.position)
+        unit.destroy()
     end
 end
 

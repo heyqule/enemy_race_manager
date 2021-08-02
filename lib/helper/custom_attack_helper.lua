@@ -22,10 +22,8 @@ function CustomAttackHelper.valid(event, race_name)
 end
 
 function CustomAttackHelper.init_globals()
-    if global.custom_attack_current_tiers == nil then
-        global.custom_attack_current_tiers = {}
-        global.custom_attack_current_tiers_tick = 0
-    end
+    global.custom_attack_current_tiers = global.custom_attack_current_tiers or {}
+    global.custom_attack_current_tiers_tick = global.custom_attack_current_tiers_tick or 0
 end
 
 function CustomAttackHelper.get_unit(unit_names, race_name)
@@ -44,7 +42,7 @@ end
 
 function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local surface = game.surfaces[event.surface_index]
-    local nameToken = ForceHelper.get_name_token(event.source_entity.name)
+    local nameToken = remote.call('enemy_race_manager','get_name_token',event.source_entity.name)
     local level = nameToken[3]
     local position = event.source_position
     position.x = position.x + 2

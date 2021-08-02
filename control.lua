@@ -29,6 +29,7 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmCommandProcessor = require('__enemyracemanager__/lib/command_processor')
 
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
@@ -40,6 +41,27 @@ remote.add_interface("enemy_race_manager", ErmRemoteApi)
 
 local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
 remote.add_interface("enemy_race_manager_debug", ErmDebugRemoteApi)
+
+cron_switch = {
+    ['AttackGroupProcessor.add_to_group'] = function(args)
+        ErmAttackGroupProcessor.add_to_group_cron(args)
+    end,
+    ['BaseBuildProcessor.build'] = function(args)
+        ErmBaseBuildProcessor.build_cron(args)
+    end,
+    ['LevelProcessor.calculateMultipleLevels'] = function(args)
+        ErmLevelProcessor.calculateMultipleLevels()
+    end,
+    ['ForceHelper.refresh_all_enemy_forces'] = function(args)
+        ErmForceHelper.refresh_all_enemy_forces()
+    end,
+    ['AttackMeterProcessor.calculate_points'] = function(arg)
+        ErmAttackMeterProcessor.calculate_points(arg[1])
+    end,
+    ['AttackMeterProcessor.form_group'] = function(arg)
+        ErmAttackMeterProcessor.form_group(arg[1], arg[2])
+    end
+}
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
@@ -172,14 +194,10 @@ local prepare_world = function()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmCron.add_1_sec_queue(function(arg)
-            ErmLevelProcessor.calculateMultipleLevels()
-        end, true)
+        ErmCron.add_1_sec_queue('LevelProcessor.calculateMultipleLevels', true)
     end
 
-    ErmCron.add_1_sec_queue(function(arg)
-        ErmForceHelper.refresh_all_enemy_forces()
-    end, true)
+    ErmCron.add_1_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
 end
 
 local onGuiClick = function(event)
@@ -269,26 +287,21 @@ end)
 
 local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
-    if global.race_settings == nil then
-        global.race_settings = {}
-    end
+    global.race_settings = global.race_settings or {}
 
     -- Track all unit group created by ERM
-    if global.erm_unit_groups == nil then
-        global.erm_unit_groups = {}
-    end
+    global.erm_unit_groups = global.erm_unit_groups or {}
 
     -- Move all cache to this to resolve desync issues.
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
-    if global.settings == nil then
-        global.settings = {}
-    end
+    global.settings = global.settings or {}
 
     ErmSurfaceProcessor.init_globals()
     ErmAttackMeterProcessor.init_globals()
     ErmMapProcessor.init_globals()
     ErmForceHelper.init_globals()
+    ErmCron.init_globals()
 end
 --- Init events
 Event.on_init(function(event)
@@ -299,6 +312,8 @@ Event.on_init(function(event)
 end)
 
 Event.on_load(function(event)
+    ErmMapProcessor.rebuildQueue()
+    ErmCron.rebuildQueue()
 end)
 
 Event.on_configuration_changed(function(event)

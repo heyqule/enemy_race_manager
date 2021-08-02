@@ -19,48 +19,61 @@ local process_cron = function(cron_list)
         return
     end
     local job = cron_list()
-    job[1](job[2])
+    if cron_switch[job[1]] then
+        cron_switch[job[1]](job[2])
+    else
+        log('Invalid Call: '..job[1])
+    end
 end
 
-local ten_minutes_cron = Queue()
-local one_minute_cron = Queue()
-local ten_seconds_cron = Queue()
-local one_second_cron = Queue()
+function CronProcessor.init_globals()
+    global.ten_minutes_cron = global.ten_minutes_cron or Queue()
+    global.one_minute_cron = global.one_minute_cron or Queue()
+    global.ten_seconds_cron = global.ten_seconds_cron or Queue()
+    global.one_second_cron = global.one_second_cron or Queue()
+end
+
+function CronProcessor.rebuildQueue()
+    Queue.load(global.ten_minutes_cron)
+    Queue.load(global.one_minute_cron)
+    Queue.load(global.ten_seconds_cron)
+    Queue.load(global.one_second_cron)
+end
 
 function CronProcessor.add_10_min_queue(request, ...)
     local arg = {...}
-    ten_minutes_cron({request, arg})
+    global.ten_minutes_cron({request, arg})
 end
 
 function CronProcessor.add_1_min_queue(request, ...)
     local arg = {...}
-    one_minute_cron({request, arg})
+    global.one_minute_cron({request, arg})
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
     local arg = {...}
-    ten_seconds_cron({request, arg})
+    global.ten_seconds_cron({request, arg})
 end
 
 function CronProcessor.add_1_sec_queue(request, ...)
     local arg = {...}
-    one_second_cron({request, arg})
+    global.one_second_cron({request, arg})
 end
 
 function CronProcessor.process_10_min_queue()
-    process_cron(ten_minutes_cron)
+    process_cron(global.ten_minutes_cron)
 end
 
 function CronProcessor.process_1_min_queue()
-    process_cron(one_minute_cron)
+    process_cron(global.one_minute_cron)
 end
 
 function CronProcessor.process_10_sec_queue()
-    process_cron(ten_seconds_cron)
+    process_cron(global.ten_seconds_cron)
 end
 
 function CronProcessor.process_1_sec_queue()
-    process_cron(one_second_cron)
+    process_cron(global.one_second_cron)
 end
 
 return CronProcessor

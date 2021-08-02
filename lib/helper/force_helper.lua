@@ -12,17 +12,9 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local ForceHelper = {}
 
 function ForceHelper.init_globals()
-    if global.force_entity_name_cache == nil then
-        global.force_entity_name_cache = {}
-    end
-
-    if global.force_race_name_cache == nil then
-        global.force_race_name_cache = {}
-    end
-
-    if global.enemy_force_cache == nil then
-        global.enemy_force_cache = {}
-    end
+    global.force_entity_name_cache = global.force_entity_name_cache or {}
+    global.force_race_name_cache = global.force_race_name_cache or {}
+    global.enemy_force_cache = global.enemy_force_cache or {}
 end
 
 -- Remove prefix enemy_ if force isn't enemy

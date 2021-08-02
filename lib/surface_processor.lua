@@ -12,9 +12,7 @@ local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local SurfaceProcessor = {}
 
 function SurfaceProcessor.init_globals()
-    if global.enemy_surfaces == nil then
-        global.enemy_surfaces = {}
-    end
+    global.enemy_surfaces = global.enemy_surfaces or {}
 end
 
 function SurfaceProcessor.assign_race(surface, race_name)

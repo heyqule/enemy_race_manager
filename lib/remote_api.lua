@@ -64,6 +64,10 @@ function ERM_RemoteAPI.update_race_setting(race_setting)
     end
 end
 
+function ERM_RemoteAPI.get_name_token(name)
+    return ErmForceHelper.get_name_token(name)
+end
+
 --- Generate a mixed attack group
 --- Usage: remote.call('enemy_race_manager', 'generate_attack_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_attack_group(race_name, units_number)

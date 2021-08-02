@@ -216,17 +216,19 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
             unit_batch = last_queue_unit
         end
         ErmCron.add_1_sec_queue(
-                function(arg)
-                    add_to_group(arg[1], arg[2],arg[3],arg[4],arg[5])
-                end,
-                surface,
-                unit_group,
-                force,
-                race_name,
-                unit_batch
+            'AttackGroupProcessor.add_to_group',
+            surface,
+            unit_group,
+            force,
+            race_name,
+            unit_batch
         )
         i = i + 1
     until i == queue_length
+end
+
+function AttackGroupProcessor.add_to_group_cron(arg)
+    add_to_group(arg[1], arg[2], arg[3], arg[4], arg[5])
 end
 
 function AttackGroupProcessor.exec(race_name, force, attack_points)

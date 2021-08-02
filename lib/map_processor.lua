@@ -47,7 +47,7 @@ local get_surface_by_name = function(surfaces, name)
                 surface_cache = surface
                 global.mapproc_surfaces_cache[name] = surface_cache
                 break
-            end                
+            end
         end
     end
     return surface_cache
@@ -91,8 +91,8 @@ local process_enemy_level = function(surface, area, race_settings)
     local building = surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret'}, force = ErmForceHelper.get_all_enemy_forces()})
     if Table.size(building) > 0 then
         for k, entity in pairs(building) do
-            level_up_enemy_structures(surface, entity, race_settings)            
-        end            
+            level_up_enemy_structures(surface, entity, race_settings)
+        end
     end
 
     local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.get_all_enemy_forces()})
@@ -106,13 +106,8 @@ local process_enemy_level = function(surface, area, race_settings)
 end
 
 function MapProcessor.init_globals()
-    if global.mapproc_surfaces_cache == nil then
-        global.mapproc_surfaces_cache = {}
-    end
-
-    if global.mapproc_chunk_queue == nil then
-        global.mapproc_chunk_queue = {}
-    end
+    global.mapproc_surfaces_cache = global.mapproc_surfaces_cache or {}
+    global.mapproc_chunk_queue = global.mapproc_chunk_queue or {} -- Need on_load metafix
 end
 
 function MapProcessor.queue_chunks(surface, area)
@@ -122,7 +117,7 @@ function MapProcessor.queue_chunks(surface, area)
 
     if global.mapproc_chunk_queue[surface.name] == nil then
         global.mapproc_chunk_queue[surface.name] = Queue()
-    end        
+    end
 
     local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.get_all_enemy_forces(), limit = 1}))
     if unit_size > 0 then
@@ -141,8 +136,8 @@ function MapProcessor.process_chunks(surfaces, race_settings)
         if Queue.is_empty(queue) then
             global.mapproc_chunk_queue[k] = nil
             goto process_chunks_continue
-        end            
-    
+        end
+
         for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
             local area = queue()
             if area == nil then
@@ -156,8 +151,8 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             end
 
             process_enemy_level(
-                get_surface_by_name(surfaces, k), 
-                area, 
+                surface,
+                area,
                 race_settings
             )
             count = count + 1
@@ -165,14 +160,24 @@ function MapProcessor.process_chunks(surfaces, race_settings)
 
         if count > ErmConfig.MAP_PROCESS_CHUNK_BATCH then
             break
-        end            
-        
+        end
+
         ::process_chunks_continue::
-    end    
+    end
 end
 
 function MapProcessor.clean_queue()
     global.mapproc_chunk_queue = {}
+end
+
+function MapProcessor.rebuildQueue()
+    if global.mapproc_chunk_queue ~= nil then
+        for _, queue in pairs(global.mapproc_chunk_queue) do
+            if queue == nil and type(queue) == table and table_size(queue) > 0 then
+                Queue.load(global.mapproc_chunk_queue[_])
+            end
+        end
+    end
 end
 
 function MapProcessor.rebuild_map(game)

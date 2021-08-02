@@ -52,9 +52,7 @@ local calculateNextThreshold = function(race_name)
 end
 
 function AttackMeterProcessor.init_globals()
-    if global.kill_count_statistics_cache == nil then
-        global.kill_count_statistics_cache = {}
-    end
+    global.kill_count_statistics_cache = global.kill_count_statistics_cache or {}
 end
 
 function AttackMeterProcessor.add_point_calculation_to_cron()
@@ -65,12 +63,7 @@ function AttackMeterProcessor.add_point_calculation_to_cron()
     local force_names = ErmForceHelper.get_all_enemy_forces()
 
     for _, name in pairs(force_names) do
-        ErmCron.add_1_sec_queue(
-            function(arg)
-                AttackMeterProcessor.calculate_points(arg[1])
-            end,
-            name
-        )
+        ErmCron.add_1_sec_queue('AttackMeterProcessor.calculate_points', name)
     end
 end
 
@@ -84,13 +77,7 @@ function AttackMeterProcessor.add_form_group_cron()
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
-        ErmCron.add_10_sec_queue(
-                function(arg)
-                    AttackMeterProcessor.form_group(arg[1], arg[2])
-                end,
-                race_name,
-                force
-        )
+        ErmCron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
     end
 end
 
