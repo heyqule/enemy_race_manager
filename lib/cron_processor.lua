@@ -33,7 +33,7 @@ function CronProcessor.init_globals()
     global.one_second_cron = global.one_second_cron or Queue()
 end
 
-function CronProcessor.rebuildQueue()
+function CronProcessor.rebuild_queue()
     Queue.load(global.ten_minutes_cron)
     Queue.load(global.one_minute_cron)
     Queue.load(global.ten_seconds_cron)

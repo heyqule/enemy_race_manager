@@ -312,8 +312,8 @@ Event.on_init(function(event)
 end)
 
 Event.on_load(function(event)
-    ErmMapProcessor.rebuildQueue()
-    ErmCron.rebuildQueue()
+    ErmMapProcessor.rebuild_queue()
+    ErmCron.rebuild_queue()
 end)
 
 Event.on_configuration_changed(function(event)

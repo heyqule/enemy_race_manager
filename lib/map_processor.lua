@@ -170,12 +170,10 @@ function MapProcessor.clean_queue()
     global.mapproc_chunk_queue = {}
 end
 
-function MapProcessor.rebuildQueue()
+function MapProcessor.rebuild_queue()
     if global.mapproc_chunk_queue ~= nil then
         for _, queue in pairs(global.mapproc_chunk_queue) do
-            if queue == nil and type(queue) == table and table_size(queue) > 0 then
-                Queue.load(global.mapproc_chunk_queue[_])
-            end
+            Queue.load(global.mapproc_chunk_queue[_])
         end
     end
 end
