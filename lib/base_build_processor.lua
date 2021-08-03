@@ -64,7 +64,6 @@ function BaseBuildProcessor.process_on_formation(entity)
     local unit_group = BaseBuildProcessor.determine_build_group(entity)
     if unit_group then
         BaseBuildProcessor.build_formation(entity, unit_group)
-        entity.destroy()
     end
 end
 
@@ -77,24 +76,20 @@ function BaseBuildProcessor.process_on_arrival(entity)
             end
         end
     end
-    entity.destroy()
 end
 
 
 function BaseBuildProcessor.determine_build_group(entity)
     local near_by_units = entity.surface.find_entities_filtered {
-        force =  entity.force,
+        force = entity.force,
         position = entity.position,
-        radius = 64,
+        radius = 32,
         type = 'unit',
-        limit = 32
     }
     for _, unit in pairs(near_by_units) do
         if unit.unit_group and
            unit.unit_group.command and
-           unit.unit_group.command.type == defines.command.build_base and
-           unit.unit_group.state == defines.group_state.moving and
-           entity.force == unit.force
+           unit.unit_group.command.type == defines.command.build_base
         then
             return unit.unit_group
         end
@@ -139,10 +134,12 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
 
         ErmCron.add_1_sec_queue(
             'BaseBuildProcessor.build',
-            unit,
+            unit.surface,
+            unit.position,
             name,
             force_name
         )
+        unit.destroy()
     end
 end
 
@@ -162,14 +159,12 @@ function BaseBuildProcessor.build(surface, name, force_name, position)
     end
 end
 
-function BaseBuildProcessor.build_cron(args)
-    local unit = args[1]
-    local name = args[2]
-    local force_name = args[3]
-    if unit and unit.valid then
-        BaseBuildProcessor.build(unit.surface, name, force_name, unit.position)
-        unit.destroy()
-    end
+function BaseBuildProcessor.build_cron(args)    
+    local surface = args[1]
+    local position = args[2]
+    local name = args[3]
+    local force_name = args[4]
+    BaseBuildProcessor.build(surface, name, force_name, position)
 end
 
 return BaseBuildProcessor

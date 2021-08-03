@@ -55,11 +55,11 @@ cron_switch = {
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ErmForceHelper.refresh_all_enemy_forces()
     end,
-    ['AttackMeterProcessor.calculate_points'] = function(arg)
-        ErmAttackMeterProcessor.calculate_points(arg[1])
+    ['AttackMeterProcessor.calculate_points'] = function(args)
+        ErmAttackMeterProcessor.calculate_points(args[1])
     end,
-    ['AttackMeterProcessor.form_group'] = function(arg)
-        ErmAttackMeterProcessor.form_group(arg[1], arg[2])
+    ['AttackMeterProcessor.form_group'] = function(args)
+        ErmAttackMeterProcessor.form_group(args[1], args[2])
     end
 }
 
@@ -223,7 +223,7 @@ Event.register(defines.events.on_gui_click, onGuiClick)
 --- Unit processing events
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 
---- Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
+Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 
 Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 

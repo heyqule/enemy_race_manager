@@ -11,8 +11,19 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Math = require('__stdlib__/stdlib/utils/math')
 local util = require("util")
 
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
+
+local get_name_token = function(name)
+    if global.force_entity_name_cache[name] == nil then
+        if not String.find(name, '/', 1, true) then
+            global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
+        else
+            global.force_entity_name_cache[name] = String.split(name, '/')
+        end
+    end
+
+    return global.force_entity_name_cache[name]
+end
 
 local CustomAttackHelper = {}
 
@@ -24,6 +35,7 @@ end
 function CustomAttackHelper.init_globals()
     global.custom_attack_current_tiers = global.custom_attack_current_tiers or {}
     global.custom_attack_current_tiers_tick = global.custom_attack_current_tiers_tick or 0
+    global.force_entity_name_cache = global.force_entity_name_cache or {}
 end
 
 function CustomAttackHelper.get_unit(unit_names, race_name)
@@ -42,7 +54,7 @@ end
 
 function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local surface = game.surfaces[event.surface_index]
-    local nameToken = remote.call('enemy_race_manager','get_name_token',event.source_entity.name)
+    local nameToken = get_name_token(event.source_entity.name)
     local level = nameToken[3]
     local position = event.source_position
     position.x = position.x + 2

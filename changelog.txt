@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.5
+Date: 2021-08-03
+
+  Changes:
+    - Re-added onUnitFinishGathering event.  Some build groups used max group size, instead of max build group size
+    - Optimize custom attack helper
+
+  Bugfixes:
+    - Fix an issue which "Full Expansion" does not work under new cron.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.5.4
 Date: 2021-08-02
 
