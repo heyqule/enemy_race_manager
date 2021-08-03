@@ -14,6 +14,10 @@ local util = require("util")
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 local get_name_token = function(name)
+    if global.force_entity_name_cache == nil then
+        global.force_entity_name_cache = {}
+    end
+
     if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
             global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
@@ -32,14 +36,11 @@ function CustomAttackHelper.valid(event, race_name)
             String.find(event.source_entity.name, race_name, 1, true) ~= nil
 end
 
-function CustomAttackHelper.init_globals()
-    global.custom_attack_current_tiers = global.custom_attack_current_tiers or {}
-    global.custom_attack_current_tiers_tick = global.custom_attack_current_tiers_tick or 0
-    global.force_entity_name_cache = global.force_entity_name_cache or {}
-end
-
 function CustomAttackHelper.get_unit(unit_names, race_name)
-    CustomAttackHelper.init_globals()
+    if global.custom_attack_current_tiers == nil then
+        global.custom_attack_current_tiers = {}
+        global.custom_attack_current_tiers_tick =  0
+    end
 
     local current_tiers = global.custom_attack_current_tiers
     if current_tiers[race_name] == nil and
