@@ -4,7 +4,8 @@ MAP_GEN_1_RACE_PER_SURFACE = '1 Race / Surface'
 
 MAX_LEVEL_5 = "Casual - Max L5"
 MAX_LEVEL_10 = "Normal - Max L10"
-MAX_LEVEL_20 = "Advanced - Max L20"
+MAX_LEVEL_15 = "Advanced - Max L15"
+MAX_LEVEL_20 = "Hardcore - Max L20"
 
 ATTACK_RANGE_14 = "Normal - 14"
 ATTACK_RANGE_20 = "Advanced - 20"

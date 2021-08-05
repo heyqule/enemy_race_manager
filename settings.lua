@@ -17,7 +17,7 @@ data:extend {
         description = "enemyracemanager-max-level",
         setting_type = "startup",
         default_value = MAX_LEVEL_10,
-        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_20 },
+        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
         order = "enemyracemanager-02"
     },
     {

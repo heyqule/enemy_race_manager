@@ -87,6 +87,8 @@ local convert_max_level =  function(setting_value)
 
     if setting_value == MAX_LEVEL_20 then
         current_level_setting = 20
+    elseif setting_value == MAX_LEVEL_15 then
+        current_level_setting = 15
     elseif setting_value == MAX_LEVEL_5 then
         current_level_setting = 5
     end
