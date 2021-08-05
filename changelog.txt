@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.6
+Date: 2021-08-08
+
+  Changes:
+    - Add new color to unit_tint for terran unit coloring in map mode.
+
+  Bugfixes:
+    - Fix a crash when replacing enemy biters which are belong to other force that is not named "enemy".  Those units now replace with "enemy" force.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.5.5
 Date: 2021-08-03
 

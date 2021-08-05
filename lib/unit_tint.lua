@@ -57,6 +57,10 @@ function ERM_UnitTint.tint_red_crimson()
     return { r = 220, g = 20, b = 60, a = 255 }
 end
 
+function ERM_UnitTint.tint_army_color()
+    return { r = 69, g = 225, b = 27, a = 255 }
+end
+
 function ERM_UnitTint.mask_tint(layer, color)
     layer['tint'] = color
     layer['apply_runtime_tint'] = false
