@@ -46,7 +46,7 @@ data:extend {
         setting_type = "startup",
         default_value = 15,
         minimum_value = 5,
-        maximum_value = 50,
+        maximum_value = 60,
         order = "enemyracemanager-15"
     },
     {
@@ -56,7 +56,7 @@ data:extend {
         setting_type = "startup",
         default_value = 100,
         minimum_value = 50,
-        maximum_value = 250,
+        maximum_value = 600,
         order = "enemyracemanager-16"
     },
     {
@@ -198,7 +198,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 3000,
         minimum_value = 1000,
-        maximum_value = 6000,
+        maximum_value = 30000,
         order = "enemyracemanager-301"
     },
     {
