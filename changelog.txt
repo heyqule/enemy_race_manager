@@ -7,15 +7,15 @@ Date: 2021-08-12
     - When the game resets, attack meter also reset.
     - When reset evolution factor is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
     - When reset research is checked, everything reset.
-    - Add option to accelerate level up by killing unit and turrets.
-    - The point is based on 0.1% of spawner destroy factor for each killed units and 2% of spawner destroy factor for each killed turrets
+    - Add "level up accelerator" option to accelerate level up by killing unit and turrets. It default to ON.
+    - The point is based on 1% of spawner destroy factor for each killed units and 10% of spawner destroy factor for each killed turrets
+    - level 10+ should play with "level up accelerator" enabled.
 
   Changes:
     - New experience curve for Level 4 - 20.
     - Evolution points: 12, 25, 45, 70, 115, 175, 250, 350, 450, 600, 750, 900, 1200, 1600, 2200, 3000, 4000
     - New XP curve takes less evolution points to reach level 10 and takes more evolution points to reach higher levels.
     - Added level 15 to max level option.
-    - level 10+ should play with "level up accelerator" enabled.
 
 
 ---------------------------------------------------------------------------------------------------
