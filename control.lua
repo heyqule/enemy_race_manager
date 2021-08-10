@@ -34,6 +34,9 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
 
+-- Compatibility Events
+local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
+
 require('prototypes/compatibility/controls')
 
 local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
@@ -194,7 +197,7 @@ local prepare_world = function()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmCron.add_1_sec_queue('LevelProcessor.calculateMultipleLevels', true)
+        ErmLevelProcessor.calculateMultipleLevels()
     end
 
     ErmCron.add_1_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
@@ -285,6 +288,15 @@ Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
     ErmCron.process_1_sec_queue()
 end)
 
+--- Hook Up Conditional Events
+local conditional_events = function()
+    if remote.interfaces["newgameplus"] then
+        Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
+            ErmCompat_NewGamePlus.exec(event)
+        end)
+    end
+end
+
 local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = global.race_settings or {}
@@ -309,11 +321,13 @@ Event.on_init(function(event)
     ErmConfig.refresh_config()
     addRaceSettings()
     prepare_world()
+    conditional_events()
 end)
 
 Event.on_load(function(event)
     ErmMapProcessor.rebuild_queue()
     ErmCron.rebuild_queue()
+    conditional_events()
 end)
 
 Event.on_configuration_changed(function(event)

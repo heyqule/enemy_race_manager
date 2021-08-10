@@ -171,17 +171,25 @@ data:extend {
         },
         order = "enemyracemanager-101"
     },
+    --- Evolution Point and level up ---
     {
-        type = "double-setting",
-        name = "enemyracemanager-score-multipliers",
-        description = "enemyracemanager-score-multipliers",
+        type = "bool-setting",
+        name = "enemyracemanager-evolution-point-accelerator",
+        description = "enemyracemanager-evolution-point-accelerator",
         setting_type = "runtime-global",
-        default_value = 1,
-        minimum_value = 1,
-        maximum_value = 10,
+        default_value = true,
         order = "enemyracemanager-200"
     },
-
+    {
+        type = "double-setting",
+        name = "enemyracemanager-evolution-point-multipliers",
+        description = "enemyracemanager-evolution-point-multipliers",
+        setting_type = "runtime-global",
+        default_value = 1,
+        minimum_value = 0.1,
+        maximum_value = 10,
+        order = "enemyracemanager-201"
+    },
     --- Attack Meters ---
     {
         type = "bool-setting",

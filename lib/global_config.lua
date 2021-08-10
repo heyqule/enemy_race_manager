@@ -68,6 +68,13 @@ local refreshable_settings = {
     global = {
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
+        'enemyracemanager-evolution-point-accelerator',
+        'enemyracemanager-evolution-point-multipliers',
+        'enemyracemanager-attack-meter-enable',
+        'enemyracemanager-attack-meter-threshold',
+        'enemyracemanager-attack-meter-threshold-deviation',
+        'enemyracemanager-flying-group-enable',
+        'enemyracemanager-flying-group-chance'
     }
 }
 
@@ -102,6 +109,15 @@ local convert_max_range =  function(setting_value)
         current_range = 20
     end
     return current_range
+end
+
+local get_global_setting_value = function(setting_name)
+    local setting_value = global.settings[setting_name]
+    if setting_value == nil then
+        setting_value = settings.global[setting_name].value
+        global.settings[setting_name] = setting_value
+    end
+    return setting_value
 end
 
 function ErmConfig.is_cache_expired(last_tick, length)
@@ -211,42 +227,32 @@ function ErmConfig.negative_axis_race()
 end
 
 function ErmConfig.build_style()
-    local build_style_setting = global.settings['enemyracemanager-build-style']
-    if build_style_setting == nil then
-        build_style_setting = settings.global['enemyracemanager-build-style'].value
-        global.settings['enemyracemanager-build-style'] = build_style_setting
-    end
-    return build_style_setting
+    return get_global_setting_value('enemyracemanager-build-style')
 end
 
 
 function ErmConfig.build_formation()
-    local build_formation_setting = global.settings['enemyracemanager-build-formation']
-    if build_formation_setting == nil then
-        build_formation_setting = settings.global['enemyracemanager-build-formation'].value
-        global.settings['enemyracemanager-build-formation'] = build_formation_setting
-    end
-    return build_formation_setting
+    return get_global_setting_value('enemyracemanager-build-formation')
 end
 
 function ErmConfig.attack_meter_enabled()
-    return settings.global['enemyracemanager-attack-meter-enable'].value
+    return get_global_setting_value('enemyracemanager-attack-meter-enable')
 end
 
 function ErmConfig.attack_meter_threshold()
-    return settings.global['enemyracemanager-attack-meter-threshold'].value
+    return get_global_setting_value('enemyracemanager-attack-meter-threshold')
 end
 
 function ErmConfig.attack_meter_deviation()
-    return settings.global['enemyracemanager-attack-meter-threshold-deviation'].value
+    return get_global_setting_value('enemyracemanager-attack-meter-threshold-deviation')
 end
 
 function ErmConfig.flying_group_enabled()
-    return settings.global['enemyracemanager-flying-group-enable'].value
+    return get_global_setting_value('enemyracemanager-flying-group-enable')
 end
 
 function ErmConfig.flying_group_chance()
-    return settings.global['enemyracemanager-flying-group-chance'].value
+    return get_global_setting_value('enemyracemanager-flying-group-chance')
 end
 
 

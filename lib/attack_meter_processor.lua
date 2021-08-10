@@ -28,15 +28,16 @@ local get_statistic_cache = function(race_name, force)
     return global.kill_count_statistics_cache[race_name]
 end
 
-local calculatePoints = function(race_name, points, statistic,
-                                 entity_names, level, interval, multiplier)
+local calculatePoints = function(race_name, statistic,
+                                 entity_names, level, interval)
+    local points = 0
     for _, name in pairs(entity_names) do
         local count = statistic.get_flow_count {
             name = race_name..'/'..name..'/'..level,
             input = false,
             precision_index = interval
         }
-        points = points + count * multiplier
+        points = points + count
     end
 
     return points
@@ -91,20 +92,30 @@ function AttackMeterProcessor.calculate_points(force_name)
         return
     end
 
-    local points = 0
-
     local level = ErmRaceSettingsHelper.get_level(race_name)
 
     local units = ErmRaceSettingsHelper.get_current_unit_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache, units, level, interval, AttackMeterProcessor.UNIT_POINTS)
+    local unit_points = calculatePoints(race_name, statistic_cache, units, level, interval)
 
     local buildings = ErmRaceSettingsHelper.get_current_building_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache, buildings, level, interval, AttackMeterProcessor.SPAWNER_POINTS)
+    local building_points = calculatePoints(race_name, statistic_cache, buildings, level, interval)
 
     local turrets = ErmRaceSettingsHelper.get_current_turret_tier(race_name)
-    points = calculatePoints(race_name, points, statistic_cache, turrets, level, interval, AttackMeterProcessor.TURRET_POINTS)
+    local turret_points = calculatePoints(race_name, statistic_cache, turrets, level, interval)
 
-    ErmRaceSettingsHelper.add_to_attack_meter(race_name, points)
+    local attack_meter_points = unit_points * AttackMeterProcessor.UNIT_POINTS +
+                                building_points * AttackMeterProcessor.SPAWNER_POINTS +
+                                turret_points * AttackMeterProcessor.TURRET_POINTS
+
+    ErmRaceSettingsHelper.add_to_attack_meter(race_name, attack_meter_points)
+
+    if global.settings['enemyracemanager-evolution-point-accelerator'] then
+        local spawner_destroy_factor = game.map_settings.enemy_evolution.destroy_factor
+        local unit_evolution_points = unit_points * 0.01 * spawner_destroy_factor
+        local turret_evolution_points = turret_points * 0.1 * spawner_destroy_factor
+        global.race_settings[race_name].evolution_base_point =
+            global.race_settings[race_name].evolution_base_point + unit_evolution_points + turret_evolution_points
+    end
 end
 
 function AttackMeterProcessor.form_group(race_name, force)
