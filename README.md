@@ -51,7 +51,7 @@ First 3 level is tied to force's evolution factor
 
 The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner).
 
-* {20, 60, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 900, 1100, 1350, 1750, 2500}
+* { 12, 25, 45, 70, 115, 175, 250, 350, 450, 600, 750, 900, 1200, 1600, 2200, 3000, 4000 }
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
 * evolution_base_point is used for specific customization, default is 0.
 * level_multiplier default to 1.
