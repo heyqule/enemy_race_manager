@@ -5,9 +5,9 @@ Date: 2021-08-12
   Features:
     - Compatibility for New Game Plus.
     - When the game resets, attack meter also reset.
-    - When reset evolution factor is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
-    - When reset research is checked, everything reset.
-    - Add "level up accelerator" option to accelerate level up by killing unit and turrets. It default to ON.
+    - When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
+    - When "reset research" is checked, everything reset.
+    - Add "level up accelerator" option to accelerate level up by killing unit and turrets. It defaults to ON.
     - The point is based on 1% of spawner destroy factor for each killed units and 10% of spawner destroy factor for each killed turrets
     - level 10+ should play with "level up accelerator" enabled.
 

@@ -6,12 +6,10 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.5.0 release
-- [Beta] Attack meter.  When the meter reach a threshold, a large attack group will spawn.  The meter tracks all kills. This is ON by default.
-- [Beta] Flying attacker group, if you enable that option. This is OFF by default
-- Removed "sync with enemy" button from GUI.  Use /ERM_levelup command to change level instead.
-- A few fixes for crashes.
-- 1.5.4 fixes desync issue for multiplayer. 
+### 1.6.0 release
+- Compatibility for New Game Plus
+
+
 
 ### New race demo
 These mods are made as educational demos.
@@ -126,6 +124,19 @@ Partial formation is build based on cc > support > turret priority.
 
 ![1-4-5 Formation](https://mods-data.factorio.com/assets/42b016483f30cb37d009e59b417a82e1c4a362b9.png "1-4-5 Formation")
 
+### Attack meters / Custom Attack Squad (Beta Feature)
+- Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
+- Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
+- These attack groups are independent from pollution.
+- The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
+- Each unit in attack group consumes 20 points.
+- This only supports planet nauvis at the moment.  Not yet compatible in other planets for SE.
+- More features and specialized attack groups are coming in later release.
+
+##### Flying attack groups (OFF by default during beta)
+- When "Flying Groups" is enabled, enemy may send out dedicate flying attackers to your base.
+- Each unit in this group consumes 75 points. Team size is around 40 units with default attack meter threshold.
+
 ### Mod Compatibility
 
 #### Resource Spawner Overhaul
@@ -150,6 +161,11 @@ Partial formation is build based on cc > support > turret priority.
 - The health setting stacks with this mod's multiplier.
 - Biters do not heal, spawner and worm do.
 
+#### New Game Plus
+- When the game resets, attack meter also reset.
+- When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
+- When "reset research" is checked, everything reset.
+
 For more compatibility details, please visit https://github.com/heyqule/enemy_race_manager/blob/main/README.md#mod-compatibility
 
 ### Commands
@@ -163,14 +179,6 @@ For more compatibility details, please visit https://github.com/heyqule/enemy_ra
 ERM_RedArmy - Heavy firepower on single target - Done (Beta)
 
 ERM_SuicideSquad - E-x-p-l-o-s-i-v-e-s
-
-Attack meters (BETA)
-
-* send enemy to your base based on how many they have been killed
-
-Flying units attack squads (BETA)
-
-* nuff said
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
