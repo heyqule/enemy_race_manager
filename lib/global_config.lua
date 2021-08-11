@@ -16,7 +16,7 @@ ErmConfig.MAX_TIER = 3
 
 ErmConfig.MAP_PROCESS_CHUNK_BATCH = 20
 -- Processing Event Interval
-ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 30
+ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
 
 if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
