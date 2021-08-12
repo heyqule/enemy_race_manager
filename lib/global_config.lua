@@ -27,7 +27,7 @@ if DEBUG_MODE then
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 30 * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = 5 * defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
