@@ -40,8 +40,9 @@ Defense Units:
 ### Features
 #### 3 difficulty levels
 * Casual, max at level 5
-* Normal, max at level 10 (default, targets weapon lvl 15)
-* Advance, max at level 20 (targets weapon lvl 25)
+* Normal, max at level 10 (default, targets weapon lvl 12)
+* Advance, max at level 15 (targets weapon lvl 18)
+* Hardcore, max at level 20 (targets weapon lvl 20)
 
 The difficulty levels are tested against piercing bullet for gun turret.  Uranium bullets melt everything.
 
