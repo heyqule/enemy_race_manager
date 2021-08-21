@@ -24,7 +24,7 @@ end
 
 function ERM_WeaponRig.remove_damage_from_cannon_projectile(data, name)
     data['name'] = name
-    data['piercing_damage'] = nil
+    data['piercing_damage'] = 9999
     table.remove(data['action']['action_delivery']['target_effects'], 2)
     table.remove(data['action']['action_delivery']['target_effects'], 1)
     return data
@@ -32,7 +32,7 @@ end
 
 function ERM_WeaponRig.remove_damage_from_explosive_cannon_projectile(data, name)
     data['name'] = name
-    data['piercing_damage'] = nil
+    data['piercing_damage'] = 9999
     table.remove(data['action']['action_delivery']['target_effects'], 1)
     table.remove(data['final_action']['action_delivery']['target_effects'], 2)
     return data

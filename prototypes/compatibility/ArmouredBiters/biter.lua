@@ -53,7 +53,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, resistance_mutiplier, level) },
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
-    biter['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level) / 2
+    biter['healing_per_tick'] = 0
 
     return biter
 end

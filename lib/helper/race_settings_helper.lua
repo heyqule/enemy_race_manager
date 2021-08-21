@@ -173,6 +173,20 @@ function RaceSettingHelper.pick_an_flying_unit_from_tier(target_race, tier)
     return unit_name
 end
 
+function RaceSettingHelper.has_dropship_unit(target_race)
+    if global.race_settings[target_race]['dropship'] == nil then
+        return false
+    end
+
+    return true
+end
+
+function RaceSettingHelper.pick_an_dropship_unit(target_race)
+    return global.race_settings[target_race]['dropship']
+end
+
+
+
 function RaceSettingHelper.is_command_center(target_race, name)
     local command_centers = global.race_settings[target_race]['current_command_centers_tier']
     for _, val in pairs(command_centers) do

@@ -12,6 +12,7 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 
 local Debug_RemoteAPI = {}
 
@@ -71,7 +72,7 @@ function Debug_RemoteAPI.exec_attack_group(race_name)
     ErmAttackGroupProcessor.exec(
         race_name,
         game.forces[ErmForceHelper.get_force_name_from(race_name)],
-        2000
+        3000
     )
 end
 
@@ -92,6 +93,31 @@ function Debug_RemoteAPI.generate_flying_group(race_name)
             40,
             ErmAttackGroupProcessor.GROUP_TYPE_FLYING
     )
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_dropship_group', 'erm_zerg')
+function Debug_RemoteAPI.generate_dropship_group(race_name)
+    ErmAttackGroupProcessor.generate_group(
+            race_name,
+            game.forces[ErmForceHelper.get_force_name_from(race_name)],
+            20,
+            ErmAttackGroupProcessor.GROUP_TYPE_DROPSHIP
+    )
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'add_points_to_attack_meter', 500000)
+function Debug_RemoteAPI.add_points_to_attack_meter(value)
+    for name, _ in pairs(global.race_settings) do
+        global.race_settings[name]['attack_meter'] = value
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'level_up_all')
+function Debug_RemoteAPI.level_up_all()
+    for race_name, _ in pairs(global.race_settings) do
+        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, GlobalConfig.get_max_level())
+        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 1
+    end
 end
 
 return Debug_RemoteAPI

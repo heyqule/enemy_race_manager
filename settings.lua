@@ -139,9 +139,27 @@ data:extend {
         description = "enemyracemanager-ground-weapon-hit-air",
         setting_type = "startup",
         default_value = false,
-        order = "enemyracemanager-500"
+        order = "enemyracemanager-400"
     },
 
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-ground-weapon-hit-air",
+        description = "enemyracemanager-ground-weapon-hit-air",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-401"
+    },
+
+    {
+        type = "int-setting",
+        name = "enemyracemanager-attack-meter-group-interval",
+        description = "enemyracemanager-attack-meter-group-interval",
+        setting_type = "startup",
+        default_value = 5,
+        order = "enemyracemanager-500",
+        allowed_values = { 1, 2, 5, 10 }
+    },
     --- Map Settings Tab ---
     {
         type = "string-setting",
@@ -221,21 +239,47 @@ data:extend {
     },
     {
         type = "bool-setting",
-        name = "enemyracemanager-flying-group-enable",
-        description = "enemyracemanager-flying-group-enable",
+        name = "enemyracemanager-flying-squad-enable",
+        description = "enemyracemanager-flying-squad-enable",
         setting_type = "runtime-global",
-        default_value = false,
+        default_value = true,
         order = "enemyracemanager-400"
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-flying-group-chance",
-        description = "enemyracemanager-flying-group-chance",
+        name = "enemyracemanager-flying-squad-chance",
+        description = "enemyracemanager-flying-squad-chance",
         setting_type = "runtime-global",
         default_value = 25,
         minimum_value = 10,
         maximum_value = 100,
         order = "enemyracemanager-401"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-dropship-squad-enable",
+        description = "enemyracemanager-dropship-squad-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-402"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-dropship-squad-chance",
+        description = "enemyracemanager-dropship-squad-chance",
+        setting_type = "runtime-global",
+        default_value = 33,
+        minimum_value = 10,
+        maximum_value = 100,
+        order = "enemyracemanager-403"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-precision-strike-warning",
+        description = "enemyracemanager-precision-strike-warning",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-404"
     },
     --{
     --    type = "bool-setting",

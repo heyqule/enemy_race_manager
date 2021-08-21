@@ -6,14 +6,9 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.6.0 release
-- Compatibility for New Game Plus
-  - When the game resets, attack meter also reset.
-  - When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
-  - When "reset research" is checked, everything reset.
-- Add "level up accelerator" option to accelerate level up by killing unit and turrets. It defaults to ON.
-- New experience curve for Level 4 - 20. 
-- Evolution points: 12, 25, 45, 70, 115, 175, 250, 350, 450, 600, 750, 900, 1200, 1600, 2200, 3000, 4000
+### 1.7.0 release
+- Remove unit's health regen, increase enemy's health by 1.25x
+
 
 
 ### New race demo
@@ -41,10 +36,10 @@ Defense Units:
 #### 3 difficulty levels
 * Casual, max at level 5
 * Normal, max at level 10 (default, targets weapon lvl 12)
-* Advance, max at level 15 (targets weapon lvl 18)
-* Hardcore, max at level 20 (targets weapon lvl 25)
+* Advance, max at level 15 (targets weapon lvl 17)
+* Hardcore, max at level 20 (targets weapon lvl 22)
 
-The difficulty levels are tested against piercing bullet for gun turret.  Uranium bullets melt everything.
+The difficulty levels are tested with uranium bullets in gun turret, mixed with laser and flamethrower.
 
 #### Adjustable max attack range for extra long range attack units
 * Normal, 14, default
@@ -138,7 +133,7 @@ Partial formation is build based on cc > support > turret priority.
 - More features and specialized attack groups are coming in later release.
 
 ##### Flying attack groups (OFF by default during beta)
-- When "Flying Groups" is enabled, enemy may send out dedicate flying attackers to your base.
+- When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
 - Each unit in this group consumes 75 points. Team size is around 40 units with default attack meter threshold.
 
 ### Mod Compatibility

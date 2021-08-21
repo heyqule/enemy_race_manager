@@ -33,26 +33,26 @@ AttackGroupProcessor.GROUP_TIERS = {
     {0.4, 0.35, 0.25}
 }
 
-AttackGroupProcessor.NORMAL_HUNTER_TARGET_TYPES = {
+AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES = {
     'mining-drill',
     'rocket-silo',
     'artillery-turret',
 }
 
-AttackGroupProcessor.HARDCORE_HUNTER_TARGET_TYPES = {
+AttackGroupProcessor.HARDCORE_PRECISION_TARGET_TYPES = {
     'lab',
     'furnace',
     'roboport'
 }
 
-AttackGroupProcessor.EXTREME_HUNTER_TARGET_TYPES = {
+AttackGroupProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'assembling-machine',
     'generator',
     'solar-panel',
     'accumulator',
 }
 
-local mixed_chance = 100
+local DEFAULT_CHANCE = 100
 
 --- Pick surface with player entity.
 local pick_surface = function()
@@ -64,6 +64,10 @@ end
 --- Units in a group seems considered active units and they have performance penalty.
 ---
 local get_group_tracker = function(race_name)
+    if global.group_tracker == nil then
+        return nil
+    end
+
     return global.group_tracker[race_name] or nil
 end
 
@@ -74,6 +78,14 @@ local set_group_tracker = function(race_name, value)
     global.group_tracker[race_name] = value
 end
 
+local get_unit_level = function(race_name)
+    local level = ErmRaceSettingsHelper.get_level(race_name) - 1
+    if level == 0 then
+        level = 1
+    end
+    return level
+end
+
 local pick_an_unit = function(race_name)
     local group_tracker = get_group_tracker(race_name)
     local current_tier = group_tracker.current_tier
@@ -82,6 +94,8 @@ local pick_an_unit = function(race_name)
         unit_name = ErmRaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier)
     elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
         unit_name = ErmRaceSettingsHelper.pick_an_flying_unit_from_tier(race_name, current_tier)
+    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
+        unit_name = ErmRaceSettingsHelper.pick_an_dropship_unit(race_name)
     else
         unit_name = ErmRaceSettingsHelper.pick_an_unit(race_name)
     end
@@ -120,18 +134,46 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
 
     if group_tracker.current_size >= group_tracker.size then
-        local enemy = group.surface.find_nearest_enemy {
-            position = group.position,
-            force = group.force,
-            max_distance = 3200
-        }
+        local enemy = nil
+        if group_tracker.target_types then
+            local type = group_tracker.target_types[math.random(1,#group_tracker.target_types)]
+            local enemies = group.surface.find_entities_filtered {
+                type = type,
+                position = group.position,
+                radius = 3200,
+                limit = 10
+            }
+            if #enemies > 0 then
+                enemy = enemies[math.random(1, #enemies)]
+            end
+        end
+
+        if enemy == nil then
+            enemy = group.surface.find_nearest_enemy {
+                position = group.position,
+                force = group.force,
+                max_distance = 3200
+            }
+        end
 
         if enemy then
-            group.set_command({
+            local command = {
                 type = defines.command.attack_area,
                 destination = enemy.position,
-                radius = math.random(8, 16)
-            })
+                radius = 16
+            }
+
+            if group_tracker.target_types then
+                command['distraction'] = defines.distraction.none
+                if ErmConfig.precision_strike_warning() then
+                    group.surface.print({
+                        'description.message-incoming-precision-attack',
+                        race_name,
+                        '[gps='..enemy.position.x..','..enemy.position.y..','..group.surface.name..']'
+                    }, {r=1,g=0,b=0})
+                end
+            end
+            group.set_command(command)
             global.erm_unit_groups[group.group_number] = group
         else
             group.set_autonomous()
@@ -185,12 +227,15 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
     local i = 0
 
     local tiers = nil
+    local target_types = nil
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        local level = ErmRaceSettingsHelper.get_level(race_name) - 1
-        if level == 0 then
-            level = 1
+        tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level(race_name), ErmConfig.MAX_TIER) ]
+        if math.random(1, 100) > 50 then
+            target_types = AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES
         end
-        tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(level, ErmConfig.MAX_TIER) ]
+    elseif group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
+        tiers = AttackGroupProcessor.GROUP_TIERS[1]
+        target_types = AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES
     else
         tiers = AttackGroupProcessor.GROUP_TIERS[ ErmRaceSettingsHelper.get_tier(race_name) ]
     end
@@ -208,6 +253,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = tiers_units,
         current_tier = 1,
         current_tier_unit = 0,
+        target_types = target_types
     })
 
     repeat
@@ -232,22 +278,39 @@ function AttackGroupProcessor.add_to_group_cron(arg)
 end
 
 function AttackGroupProcessor.exec(race_name, force, attack_points)
-    local flying_group_chance = 0
-    local flying_enabled = ErmConfig.flying_group_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    if flying_enabled then
-        flying_group_chance = ErmConfig.flying_group_chance()
+    local group_tracker = get_group_tracker(race_name)
+    if group_tracker then
+        return false
     end
 
-    local total_chance = mixed_chance + flying_group_chance
-    local pick_number = math.random(1, total_chance)
+    local flying_squad_chance = 0
+    local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
+    if flying_enabled then
+        flying_squad_chance = ErmConfig.flying_squad_chance()
+    end
+
+    local pick_number = math.random(1, DEFAULT_CHANCE + flying_squad_chance)
     local status = false
     --- Flying Squad starts at level 2.  Max tier at level 4
     if flying_enabled and ErmRaceSettingsHelper.get_level(race_name) > 1 and
-            pick_number > mixed_chance and pick_number <= mixed_chance + flying_group_chance then
-        local units_number = math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS)
-        status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
+            pick_number > DEFAULT_CHANCE then
 
-        --- @TODO Add Dropship Squad :)
+
+        local dropship_group_chance = 0
+        local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
+        if dropship_enabled then
+            dropship_group_chance = ErmConfig.dropship_chance()
+        end
+
+        local dropship_pick_number = math.random(1, DEFAULT_CHANCE + dropship_group_chance)
+
+        if flying_enabled and dropship_pick_number > DEFAULT_CHANCE then
+            local units_number = math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS)
+            status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
+        else
+            local units_number = math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS)
+            status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        end
 
     else
         local units_number = math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS)

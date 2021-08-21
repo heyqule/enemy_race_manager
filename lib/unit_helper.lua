@@ -20,8 +20,17 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, 
     if level == 1 then
         return base_health
     end
+    return Math.floor(base_health + (incremental_health * 1.25 * (level * multiplier / 100)))
+end
+
+-- Unit Health
+function ERM_UnitHelper.get_building_health(base_health, incremental_health, multiplier, level)
+    if level == 1 then
+        return base_health
+    end
     return Math.floor(base_health + (incremental_health * (level * multiplier / 100)))
 end
+
 
 -- Percentage Based Resistance
 -- base_resistance + incremental_resistance is the maximum resistance
@@ -58,7 +67,8 @@ end
 
 -- unit healing (full heal in 120s)
 function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, multiplier, level)
-    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (2 * defines.time.minute)
+    return 0
+    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (2 * defines.time.minute)
 end
 
 -- building healing (full heal in 300s)

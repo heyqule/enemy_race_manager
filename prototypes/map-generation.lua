@@ -11,8 +11,8 @@ require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
 
 local SPLIT_POINT = settings.startup['enemyracemanager-2way-group-split-point'].value
--- Add 2 chunks gap between races
-local SPLIT_GAP = 32
+-- Add 4 chunks gap between races
+local SPLIT_GAP = 64
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
@@ -97,13 +97,13 @@ local process_y_axis_unit = function(v)
 end
 
 local process_y_axis = function()
-    for k, v in pairs(data.raw["unit-spawner"]) do
+    for _, v in pairs(data.raw["unit-spawner"]) do
         -- spawners
         ErmDebugHelper.print('Processing:' .. v.name)
         process_y_axis_unit(v)
     end
 
-    for k, v in pairs(data.raw["turret"]) do
+    for _, v in pairs(data.raw["turret"]) do
         -- turret
         ErmDebugHelper.print('Processing:' .. v.name)
         process_y_axis_unit(v)

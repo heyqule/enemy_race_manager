@@ -243,6 +243,7 @@ end)
 
 Event.register(defines.events.on_chunk_generated, function(event)
     ErmMapProcessor.queue_chunks(event.surface, event.area)
+    --log(game.table_to_json(event.position))
 end)
 
 --- ERM Events
@@ -378,4 +379,10 @@ commands.add_command("ERM_levelup",
         { "description.command-level-up-race" },
         function(command)
             ErmCommandProcessor.levelup(command)
+        end)
+
+commands.add_command("ERM_FFA",
+        { "description.command-ffa" },
+        function(command)
+            ErmCommandProcessor.freeforall(command)
         end)

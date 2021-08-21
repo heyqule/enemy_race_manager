@@ -8,7 +8,7 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local Compat_NewGamePlus = {}
 
 function Compat_NewGamePlus.exec(event)
-    for name, race_settings in pairs(global.race_settings) do
+    for _, race_settings in pairs(global.race_settings) do
         if event.tech_reset == true then
             race_settings.level = 1
             race_settings.tier = 1

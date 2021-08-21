@@ -39,7 +39,7 @@ function makeLevelTurrets(level, type, health_cut_ratio)
 
     turret['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. turret['name'], level }
     turret['name'] = MOD_NAME .. '/' .. turret['name'] .. '/' .. level;
-    turret['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier, health_multiplier, level)
+    turret['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier, health_multiplier, level)
     turret['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },

@@ -28,7 +28,7 @@ if DEBUG_MODE then
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
-    ErmConfig.ATTACK_GROUP_GATHERING_CRON = 5 * defines.time.minute + 1
+    ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
     ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.minute + 1
@@ -73,8 +73,11 @@ local refreshable_settings = {
         'enemyracemanager-attack-meter-enable',
         'enemyracemanager-attack-meter-threshold',
         'enemyracemanager-attack-meter-threshold-deviation',
-        'enemyracemanager-flying-group-enable',
-        'enemyracemanager-flying-group-chance'
+        'enemyracemanager-flying-squad-enable',
+        'enemyracemanager-flying-squad-chance',
+        'enemyracemanager-dropship-squad-enable',
+        'enemyracemanager-dropship-squad-chance',
+        'enemyracemanager-precision-strike-warning'
     }
 }
 
@@ -247,12 +250,24 @@ function ErmConfig.attack_meter_deviation()
     return get_global_setting_value('enemyracemanager-attack-meter-threshold-deviation')
 end
 
-function ErmConfig.flying_group_enabled()
-    return get_global_setting_value('enemyracemanager-flying-group-enable')
+function ErmConfig.flying_squad_enabled()
+    return get_global_setting_value('enemyracemanager-flying-squad-enable')
 end
 
-function ErmConfig.flying_group_chance()
-    return get_global_setting_value('enemyracemanager-flying-group-chance')
+function ErmConfig.flying_squad_chance()
+    return get_global_setting_value('enemyracemanager-flying-squad-chance')
+end
+
+function ErmConfig.dropship_enabled()
+    return get_global_setting_value('enemyracemanager-dropship-squad-enable')
+end
+
+function ErmConfig.dropship_chance()
+    return get_global_setting_value('enemyracemanager-dropship-squad-chance')
+end
+
+function ErmConfig.precision_strike_warning()
+    return get_global_setting_value('enemyracemanager-precision-strike-warning')
 end
 
 
