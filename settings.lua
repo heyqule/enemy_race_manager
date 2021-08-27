@@ -233,8 +233,7 @@ data:extend {
         description = "enemyracemanager-attack-meter-threshold-deviation",
         setting_type = "runtime-global",
         default_value = 10,
-        minimum_value = 5,
-        maximum_value = 25,
+        allowed_values = { 5, 10, 15, 20, 25 },
         order = "enemyracemanager-302"
     },
     {
@@ -251,8 +250,7 @@ data:extend {
         description = "enemyracemanager-flying-squad-chance",
         setting_type = "runtime-global",
         default_value = 25,
-        minimum_value = 10,
-        maximum_value = 100,
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
         order = "enemyracemanager-401"
     },
     {
@@ -268,10 +266,26 @@ data:extend {
         name = "enemyracemanager-dropship-squad-chance",
         description = "enemyracemanager-dropship-squad-chance",
         setting_type = "runtime-global",
-        default_value = 33,
-        minimum_value = 10,
-        maximum_value = 100,
+        default_value = 25,
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
         order = "enemyracemanager-403"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-precision-strike-flying-unit-enable",
+        description = "enemyracemanager-precision-strike-flying-unit-enable",
+        setting_type = "runtime-global",
+        default_value = false,
+        order = "enemyracemanager-404"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-precision-strike-flying-unit-chance",
+        description = "enemyracemanager-precision-strike-flying-unit-chance",
+        setting_type = "runtime-global",
+        default_value = 25,
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
+        order = "enemyracemanager-405"
     },
     {
         type = "bool-setting",
@@ -279,7 +293,7 @@ data:extend {
         description = "enemyracemanager-precision-strike-warning",
         setting_type = "runtime-global",
         default_value = true,
-        order = "enemyracemanager-404"
+        order = "enemyracemanager-406"
     },
     --{
     --    type = "bool-setting",

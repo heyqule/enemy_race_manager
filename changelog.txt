@@ -3,25 +3,25 @@ Version: 1.7.0
 Date: 2021-09-03
 
   Features:
-    - ---- FREE FOR ALL MODE [Alpha feature] ----
+    - ---- FREE FOR ALL MODE [Experimental feature] ----
     - /ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other.
     - This feature may have performance implication.
     - This command limits to max enemy level 5 and 10.
     - High level units are excluded because unit spawns quicker than they die and cause performance issue.
     - Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
-    - Player building health and enemy damage will need to re-balance for this mode in a future release
+    - ** Player building health and enemy damage will need to re-balance for this mode in a future release **
     - ---- END FREE FOR ALL MODE ----
     - ---- Dropship Squad ----
     - Can be enable in setting and set its chance to spawn.
-    - Flying unit group must be enabled for this to work.
-    - Each unit cost 150 attack meter points.  3000 points spawns 20 units.
+    - Flying units squad must be enabled as prerequisite.
+    - Each unit cost 150 attack meter points.  Default 3000 points spawns 20 units.
     - ---- END Dropship Squad ----
     - ---- Squad Subtype: Precision Strike ----
-    - The squad with this feature go straight to inner base targets, bypass your defense.
+    - The squads with this subtype go straight to inner base targets, bypass your defense.
     - Targets the area within 16 radius of any rocket-silo, artillery or mining-drill.
-    - Dropship squad is always a precision strike squad
-    - Flying squad has 50% to be a precision strike squad
-    - Strike location will be warn on the map, with option to turn it off.
+    - Dropship squad is always a precision strike squad.
+    - Flying units squad can be configure to have this feature.  Default to OFF.
+    - Strike location will be warn on the map. This option can be turn off.  Default to ON.
     - ---- END Squad Subtype: Precision Strike Squad ----
 
   Changes:
@@ -30,6 +30,7 @@ Date: 2021-09-03
     - Disabled health regen for all units. Turrets and spawners are not units and not affected.
     - Add 1.25x to max health for units to balance the health regen when race level > 1.
     - construction & logistic robots immune fire when player defence enhance option is on.
+    - change how spawn chance are calculated for flying units squad
 
 
 ---------------------------------------------------------------------------------------------------

@@ -52,8 +52,6 @@ AttackGroupProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'accumulator',
 }
 
-local DEFAULT_CHANCE = 100
-
 --- Pick surface with player entity.
 local pick_surface = function()
     return game.surfaces[1]
@@ -84,6 +82,13 @@ local get_unit_level = function(race_name)
         level = 1
     end
     return level
+end
+
+local get_spawn_chance = function(chance_value)
+    local chance = math.random(1, 100)
+    local spawn_as = chance > (100 - chance_value)
+    log('Spawn Chance: '..tostring(chance) .. ' > '.. tostring((100 - chance_value)).. ' = '.. tostring(chance > (100 - chance_value)))
+    return spawn_as
 end
 
 local pick_an_unit = function(race_name)
@@ -137,9 +142,11 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         local enemy = nil
         if group_tracker.target_types then
             local type = group_tracker.target_types[math.random(1,#group_tracker.target_types)]
+            --- hmmmm... 4-5ms for this call.
             local enemies = group.surface.find_entities_filtered {
                 type = type,
                 position = group.position,
+                force = 'player',
                 radius = 3200,
                 limit = 10
             }
@@ -230,7 +237,12 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
     local target_types = nil
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
         tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level(race_name), ErmConfig.MAX_TIER) ]
-        if math.random(1, 100) > 50 then
+
+        local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
+        log('Spawn as flying unit precision')
+        local spawn_as_flying_unit_precision = get_spawn_chance(ErmConfig.flying_squad_precision_chance())
+
+        if flying_unit_precision_enabled and spawn_as_flying_unit_precision then
             target_types = AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES
         end
     elseif group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
@@ -283,35 +295,25 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
         return false
     end
 
-    local flying_squad_chance = 0
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    if flying_enabled then
-        flying_squad_chance = ErmConfig.flying_squad_chance()
-    end
-
-    local pick_number = math.random(1, DEFAULT_CHANCE + flying_squad_chance)
+    log('Spawn as flying squad')
+    local spawn_as_flying_squad = get_spawn_chance(ErmConfig.flying_squad_chance())
     local status = false
     --- Flying Squad starts at level 2.  Max tier at level 4
     if flying_enabled and ErmRaceSettingsHelper.get_level(race_name) > 1 and
-            pick_number > DEFAULT_CHANCE then
+            spawn_as_flying_squad then
 
-
-        local dropship_group_chance = 0
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
-        if dropship_enabled then
-            dropship_group_chance = ErmConfig.dropship_chance()
-        end
+        log('Spawn as dropship')
+        local spawn_as_flying_squad = get_spawn_chance(ErmConfig.dropship_chance())
 
-        local dropship_pick_number = math.random(1, DEFAULT_CHANCE + dropship_group_chance)
-
-        if flying_enabled and dropship_pick_number > DEFAULT_CHANCE then
+        if dropship_enabled and spawn_as_flying_squad then
             local units_number = math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS)
             status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
         else
             local units_number = math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS)
             status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
         end
-
     else
         local units_number = math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS)
         status = AttackGroupProcessor.generate_group(race_name, force, units_number)

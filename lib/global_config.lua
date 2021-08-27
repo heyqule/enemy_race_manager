@@ -77,6 +77,8 @@ local refreshable_settings = {
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
         'enemyracemanager-dropship-squad-chance',
+        'enemyracemanager-precision-strike-flying-unit-enable',
+        'enemyracemanager-precision-strike-flying-unit-chance',
         'enemyracemanager-precision-strike-warning'
     }
 }
@@ -266,9 +268,19 @@ function ErmConfig.dropship_chance()
     return get_global_setting_value('enemyracemanager-dropship-squad-chance')
 end
 
+function ErmConfig.flying_squad_precision_enabled()
+    return get_global_setting_value('enemyracemanager-precision-strike-flying-unit-enable')
+end
+
+function ErmConfig.flying_squad_precision_chance()
+    return get_global_setting_value('enemyracemanager-precision-strike-flying-unit-chance')
+end
+
 function ErmConfig.precision_strike_warning()
     return get_global_setting_value('enemyracemanager-precision-strike-warning')
 end
+
+
 
 
 function ErmConfig.get_enemy_races()
