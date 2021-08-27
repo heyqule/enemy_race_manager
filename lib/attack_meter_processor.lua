@@ -44,7 +44,7 @@ local calculatePoints = function(race_name, statistic,
 end
 
 local calculateNextThreshold = function(race_name)
-    local threshold = ErmConfig.attack_meter_threshold()
+    local threshold = ErmConfig.attack_meter_threshold() * ErmConfig.max_group_size() * ErmAttackGroupProcessor.MIXED_UNIT_POINTS
     local derivative = ErmConfig.attack_meter_deviation()
     ErmRaceSettingsHelper.set_next_attack_threshold(
         race_name, 

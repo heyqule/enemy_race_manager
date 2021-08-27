@@ -63,7 +63,8 @@ local refreshable_settings = {
     startup = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
-        'enemyracemanager-mapping-method'
+        'enemyracemanager-mapping-method',
+        'enemyracemanager-max-group-size'
     },
     global = {
         'enemyracemanager-build-style',
@@ -280,8 +281,9 @@ function ErmConfig.precision_strike_warning()
     return get_global_setting_value('enemyracemanager-precision-strike-warning')
 end
 
-
-
+function ErmConfig.max_group_size()
+    return get_global_setting_value('enemyracemanager-max-group-size')
+end
 
 function ErmConfig.get_enemy_races()
     if #ErmConfig.enemy_races == 1 and ErmConfig.enemy_races_loaded == false then

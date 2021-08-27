@@ -31,6 +31,7 @@ Date: 2021-09-03
     - Add 1.25x to max health for units to balance the health regen when race level > 1.
     - construction & logistic robots immune fire when player defence enhance option is on.
     - change how spawn chance are calculated for flying units squad
+    - change attack meter threshold to use formular based on max group size, instead of fixed value.
 
 
 ---------------------------------------------------------------------------------------------------

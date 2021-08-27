@@ -218,17 +218,17 @@ data:extend {
         order = "enemyracemanager-300"
     },
     {
-        type = "int-setting",
+        type = "double-setting",
         name = "enemyracemanager-attack-meter-threshold",
         description = "enemyracemanager-attack-meter-threshold",
         setting_type = "runtime-global",
-        default_value = 3000,
-        minimum_value = 1000,
-        maximum_value = 30000,
+        default_value = 1.5,
+        minimum_value = 1,
+        maximum_value = 10,
         order = "enemyracemanager-301"
     },
     {
-        type = "double-setting",
+        type = "int-setting",
         name = "enemyracemanager-attack-meter-threshold-deviation",
         description = "enemyracemanager-attack-meter-threshold-deviation",
         setting_type = "runtime-global",
