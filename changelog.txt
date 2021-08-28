@@ -25,13 +25,14 @@ Date: 2021-09-03
     - ---- END Squad Subtype: Precision Strike Squad ----
 
   Changes:
-    - Special Attack Group can now configure to spawn at certain interval (1, 2, default 5, 10) minutes.
+    - Special attack group can now configure to spawn at certain interval (1, 2, default 5, 10) minutes.
     - 2 race split: the no man's land gap increase to 4 chunks to cope for free for all mode
     - Disabled health regen for all units. Turrets and spawners are not units and not affected.
     - Add 1.25x to max health for units to balance the health regen when race level > 1.
     - construction & logistic robots immune fire when player defence enhance option is on.
     - change how spawn chance are calculated for flying units squad
     - change attack meter threshold to use formular based on max group size, instead of fixed value.
+    - Special attack group capped at 600 units.
 
 
 ---------------------------------------------------------------------------------------------------

@@ -127,9 +127,10 @@ function AttackMeterProcessor.form_group(race_name, force)
     
     local current_attack_value = ErmRaceSettingsHelper.get_attack_meter(race_name)
     if current_attack_value > next_attack_threshold then
-        ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)
-        ErmRaceSettingsHelper.add_to_attack_meter(race_name, next_attack_threshold * -1)
-        calculateNextThreshold(race_name)
+        if ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold) then
+            ErmRaceSettingsHelper.add_to_attack_meter(race_name, next_attack_threshold * -1)
+            calculateNextThreshold(race_name)
+        end
     end
 end    
 

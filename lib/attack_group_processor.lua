@@ -20,6 +20,7 @@ AttackGroupProcessor.FLYING_UNIT_POINTS = 75
 AttackGroupProcessor.DROPSHIP_UNIT_POINTS = 150
 
 AttackGroupProcessor.UNIT_PER_BATCH = 5
+AttackGroupProcessor.MAX_GROUP_SIZE = 600
 
 AttackGroupProcessor.GROUP_AREA = 256
 
@@ -87,7 +88,6 @@ end
 local get_spawn_chance = function(chance_value)
     local chance = math.random(1, 100)
     local spawn_as = chance > (100 - chance_value)
-    log('Spawn Chance: '..tostring(chance) .. ' > '.. tostring((100 - chance_value)).. ' = '.. tostring(chance > (100 - chance_value)))
     return spawn_as
 end
 
@@ -239,7 +239,6 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level(race_name), ErmConfig.MAX_TIER) ]
 
         local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
-        log('Spawn as flying unit precision')
         local spawn_as_flying_unit_precision = get_spawn_chance(ErmConfig.flying_squad_precision_chance())
 
         if flying_unit_precision_enabled and spawn_as_flying_unit_precision then
@@ -296,7 +295,6 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    log('Spawn as flying squad')
     local spawn_as_flying_squad = get_spawn_chance(ErmConfig.flying_squad_chance())
     local status = false
     --- Flying Squad starts at level 2.  Max tier at level 4
@@ -304,18 +302,17 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             spawn_as_flying_squad then
 
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
-        log('Spawn as dropship')
         local spawn_as_flying_squad = get_spawn_chance(ErmConfig.dropship_chance())
 
         if dropship_enabled and spawn_as_flying_squad then
-            local units_number = math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS)
+            local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
         else
-            local units_number = math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS)
+            local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
         end
     else
-        local units_number = math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS)
+        local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
         status = AttackGroupProcessor.generate_group(race_name, force, units_number)
     end
 
@@ -327,7 +324,10 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
     local center_location = pick_gathering_location(surface, force, race_name)
     if surface and center_location then
         generate_unit_queue(surface, center_location, force, race_name, units_number, type)
+        return true
     end
+
+    return false
 end
 
 return AttackGroupProcessor
