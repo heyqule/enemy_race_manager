@@ -16,7 +16,7 @@ local ERM_MainWindow = {
     require_update_all = false
 }
 
-local window_width = 660
+local window_width = 680
 local window_height = 400
 
 function ERM_MainWindow.show(player)
