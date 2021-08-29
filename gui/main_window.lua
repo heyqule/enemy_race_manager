@@ -45,8 +45,8 @@ function ERM_MainWindow.show(player)
     ERM_MainWindow.style.minimal_height = window_height / 1.25
 
     scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet',  player.surface.name } , style = 'caption_label' }
-    if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.index] then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race',  global.enemy_surfaces[player.surface.index] } }
+    if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.name] then
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race',  global.enemy_surfaces[player.surface.name] } }
     elseif GlobalConfig.mapgen_is_2_races_split() then
         scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race()} }
     else

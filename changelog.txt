@@ -34,6 +34,9 @@ Date: 2021-09-03
     - change attack meter threshold to use formular based on max group size, instead of fixed value.
     - Special attack group capped at 600 units.
 
+  Bugfixes:
+    - Fix incorrect GUI display regards to enemy map setting.
+
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.0
