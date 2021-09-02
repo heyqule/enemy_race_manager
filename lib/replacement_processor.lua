@@ -71,11 +71,10 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
     end
 end
 
-function ReplacementProcessor.rebuild_map(surface, race_settings, target_force_name)
+function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
     if surface then
-        local race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
         global.replacement_race_pick = race_pick
-        game.print('Rebuild Map: ' .. target_force_name .. ' on ' .. surface.name)
+        game.print('Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name)
         for chunk in surface.get_chunks() do
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
         end

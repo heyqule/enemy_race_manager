@@ -30,12 +30,13 @@ Date: 2021-09-03
     - Disabled health regen for all units. Turrets and spawners are not units and not affected.
     - Add 1.25x to max health for units to balance the health regen when race level > 1.
     - construction & logistic robots immune fire when player defence enhance option is on.
-    - change how spawn chance are calculated for flying units squad
-    - change attack meter threshold to use formular based on max group size, instead of fixed value.
+    - change how spawn chance are calculated for flying units squads
+    - change attack meter threshold to use a formular based on max group size, instead of fixed value.
     - Special attack group capped at 600 units.
 
   Bugfixes:
     - Fix incorrect GUI display regards to enemy map setting.
+    - Fix "replace enemy" which always replace enemy with biters, introduced by last release.
 
 
 ---------------------------------------------------------------------------------------------------
