@@ -74,7 +74,7 @@ end
 function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
     if surface then
         global.replacement_race_pick = race_pick
-        game.print('Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name)
+        local profiler = game.create_profiler()
         for chunk in surface.get_chunks() do
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
         end
@@ -84,6 +84,8 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
                 force.kill_all_units()
             end
         end
+        profiler.stop()
+        game.print({'', 'Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler})
     end
 end
 

@@ -140,9 +140,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
     if group_tracker.current_size >= group_tracker.size then
         local enemy = nil
+        local type = ''
+        --local profiler = game.create_profiler()
         if group_tracker.target_types then
-            local type = group_tracker.target_types[math.random(1,#group_tracker.target_types)]
-            --- hmmmm... 4-5ms for this call.
+            type = group_tracker.target_types[math.random(1,#group_tracker.target_types)]
             local enemies = group.surface.find_entities_filtered {
                 type = type,
                 position = group.position,
@@ -162,6 +163,13 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 max_distance = 3200
             }
         end
+        --profiler.stop()
+        --log('Searching Type: ' .. type)
+        --log('Spawn Location: ' .. group.position.x ..','.. group.position.y)
+        --if enemy then
+        --    log('Enemy Location: ' .. enemy.name .. ' - ' .. enemy.type .. ' @ ' .. enemy.position.x ..','.. enemy.position.y)
+        --end
+        --log({'', 'Attack Path finding...  ', profiler})
 
         if enemy then
             local command = {
@@ -196,6 +204,7 @@ local pick_gathering_location = function(surface, force, race_name)
         table.insert(ccs_names, ErmRaceSettingsHelper.get_race_entity_name(race_name, cc))
     end
     --- @todo make it better, get chunks from different part of the surface, instead of always from top-left
+    --local profiler = game.create_profiler()
     local cc_entities = surface.find_entities_filtered
     ({
         force = force,
@@ -212,9 +221,13 @@ local pick_gathering_location = function(surface, force, race_name)
         })
         total_cc = #cc_entities
         if total_cc == 0 then
+            --profiler.stop()
+            --log({'', 'Gathering Path finding...  ', profiler})
             return nil
         end
     end
+    --profiler.stop()
+    --log({'', 'Gathering Path finding...  ', profiler})
 
     local target_cc = cc_entities[math.random(1, total_cc)]
     return surface.find_non_colliding_position(target_cc.name, target_cc.position, AttackGroupProcessor.GROUP_AREA, 1)
