@@ -10,7 +10,7 @@ Date: 2021-09-03
     - ---- END Dropship Squad ----
     - ---- Squad Subtype: Precision Strike ----
     - The squads with this subtype go straight to inner base targets, bypass your defense.
-    - Targets the area within 16 radius of any rocket-silo, artillery or mining-drill.
+    - Targets the area within 32 radius of any rocket-silo, artillery or mining-drill.
     - Dropship squad is always a precision strike squad.
     - Flying units squad can be configure to have this feature.  Default to OFF.
     - Strike location will be warn on the map. This option can be turn off.  Default to ON.

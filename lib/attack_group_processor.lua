@@ -175,7 +175,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             local command = {
                 type = defines.command.attack_area,
                 destination = enemy.position,
-                radius = 16
+                radius = 32
             }
 
             if group_tracker.target_types then
