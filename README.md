@@ -10,8 +10,8 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 ### 1.7.0 release
 - Removed unit's health regen, increase enemy unit's health by 1.25x.  Turret and spawner are not affected.
 - Added dropship squad, this squad drop unit in your base.
-- Added Precision strike squad, this squad fly straight to its attack target. It ignores attack distractions.
-- [Experimental feature] /ERM_freeforall command.  Enemy will fight each other. Please see feature section for details
+- Added Precision strike squad, this squad fly straight to its attack target. It ignores attack distractions. 
+- [Experimental feature] /ERM_freeforall command.  Enemies will fight each other. Please see feature section for details
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
