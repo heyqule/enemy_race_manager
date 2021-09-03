@@ -1,5 +1,6 @@
 # Enemy Race Manager
-This mod aim to enhanced toughness of enemies with minimal overhead by adding levels to enemies.
+This mod adds support to have multiple races of enemies with distinct looks & abilities. It also adds various enhancements to enemy races.  Such as enemy leveling, enemy base rapid expansion, enemy special attack squads such as flyers squad and dropship squad.
+
 It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy races. Please refer to the demos below.
 
 **I hope someone with art skills can come up with some new original races.**
@@ -7,12 +8,13 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### 1.7.0 release
-- Remove unit's health regen, increase enemy's health by 1.25x
-
-
+- Removed unit's health regen, increase enemy unit's health by 1.25x.  Turret and spawner are not affected.
+- Added dropship squad, this squad drop unit in your base.
+- Added Precision strike squad, this squad fly straight to its attack target. It ignores attack distractions.
+- [Experimental feature] /ERM_freeforall command.  Enemy will fight each other.
 
 ### New race demo
-These mods are made as educational demos.
+These race mods are made as educational demos. You'll have to download them separately.
 
 Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU
 
@@ -34,10 +36,10 @@ Defense Units:
 
 ### Features
 #### 3 difficulty levels
-* Casual, max at level 5
-* Normal, max at level 10 (default, targets weapon lvl 12)
-* Advance, max at level 15 (targets weapon lvl 17)
-* Hardcore, max at level 20 (targets weapon lvl 22)
+* Casual, max at level 5 (weapon lvl 6, pre-infinite research)
+* Normal, max at level 10 (default, weapon lvl 12)
+* Advance, max at level 15 (weapon lvl 17)
+* Hardcore, max at level 20 ( weapon lvl 22)
 
 The difficulty levels are tested with uranium bullets in gun turret, mixed with laser and flamethrower.
 
@@ -105,18 +107,18 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-  - build one at a time
+    - build one at a time
 * Command Center
-  - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+    - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town
-  - Always use build formation option to build the base.
+    - Always use build formation option to build the base.
 * Full Expansion
-  - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+    - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
-* 1 cc, 2 support spawner, 4 turrets
-* 1 cc, 4 support spawner, 5 turrets
+* 1 cc, 2 support spawners, 4 turrets
+* 1 cc, 4 support spawners, 5 turrets
 * and more
 
 Partial formation is build based on cc > support > turret priority.
@@ -128,13 +130,20 @@ Partial formation is build based on cc > support > turret priority.
 - Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
 - These attack groups are independent from pollution.
 - The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
-- Each unit in attack group consumes 20 points.
 - This only supports planet nauvis at the moment.  Not yet compatible in other planets for SE.
 - More features and specialized attack groups are coming in later release.
 
-##### Flying attack groups (OFF by default during beta)
+##### Flying attack groups (ON by default)
 - When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
-- Each unit in this group consumes 75 points. Team size is around 40 units with default attack meter threshold.
+
+##### Dropship groups (ON by default)
+- When "Dropship Squad" is enabled, enemy may send out dedicate dropship to drop units in your base.
+
+##### Precision strike groups (Off by default)
+- When this group goes to its target, the units ignore any attack distraction.
+- Dropship group always based on this group.
+- This feature can be enable for flying attack group.  Default to OFF.
+- Early attack warning on mini map. Default to ON.
 
 ### Mod Compatibility
 
@@ -143,33 +152,23 @@ Partial formation is build based on cc > support > turret priority.
 
 #### Space Exploration
 - Supports one race per planet!
-- Randomly selects a race when a new planet/surface is created
-- Change race for the planet you are on from UI
 
 #### Krastorio2
-- New races do not support creep generation unless author patches the creep generation code.
-  - https://mods.factorio.com/mod/Krastorio2/discussion/605d800cf3bb48c41a98cd6b
+- New races do not support creep generation unless author patches the creep generation code or its remote API.
 
-#### Rampant AI
+#### Rampant AI (limited)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
-- It is NOT compatible with its custom biters at the moment.  Enabling them may crash the game.  I have not tested this.
 
 #### Armoured Biters & Explosive Biters & Cold Biters
-- All biters, worms and spawners support leveling.
-- They join default enemy force, erm_vanilla.
-- The health setting stacks with this mod's multiplier.
-- Biters do not heal, spawner and worm do.
 
 #### New Game Plus
-- When the game resets, attack meter also reset.
-- When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
-- When "reset research" is checked, everything reset.
 
-For more compatibility details, please visit https://github.com/heyqule/enemy_race_manager/blob/main/README.md#mod-compatibility
+For compatibility details, please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md
 
 ### Commands
 - /ERM_GetRaceSettings
 - /ERM_levelup race_name,level  (/ERM_levelup erm_vanilla,8)
+- /ERM_freeforall
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
