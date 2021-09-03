@@ -11,7 +11,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Removed unit's health regen, increase enemy unit's health by 1.25x.  Turret and spawner are not affected.
 - Added dropship squad, this squad drop unit in your base.
 - Added Precision strike squad, this squad fly straight to its attack target. It ignores attack distractions.
-- [Experimental feature] /ERM_freeforall command.  Enemy will fight each other.
+- [Experimental feature] /ERM_freeforall command.  Enemy will fight each other. Please see feature section for details
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -144,6 +144,16 @@ Partial formation is build based on cc > support > turret priority.
 - Dropship group always based on this group.
 - This feature can be enable for flying attack group.  Default to OFF.
 - Early attack warning on mini map. Default to ON.
+
+### Free for all [Experimental]
+/ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
+- This feature will have performance implication.
+- This command limits to max enemy level 5 and 10.
+- High level units are excluded because unit spawns quicker than they die and cause performance issue.
+- Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
+- When toogle off, all units in enemy forces are killed. 
+
+** Player building health and enemy damage will need to re-balance for this mode in a future release **
 
 ### Mod Compatibility
 

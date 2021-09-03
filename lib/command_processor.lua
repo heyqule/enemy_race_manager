@@ -67,7 +67,6 @@ function CommandProcessor.freeforall(command)
         return
     end
 
-
     if ErmConfig.get_max_level() > 10 then
         game.print({'description.command-error-ffa-max-level'})
         return
@@ -91,6 +90,10 @@ function CommandProcessor.freeforall(command)
                 game.forces[enemy_name_source].set_friend(enemy_name_target, global.enemy_are_friends)
                 game.forces[enemy_name_source].set_cease_fire(enemy_name_target, global.enemy_are_friends)
             end
+        end
+
+        if global.enemy_are_friends then
+            game.forces[enemy_name_source].kill_all_units()
         end
     end
 end
