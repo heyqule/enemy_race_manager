@@ -7,7 +7,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local WeaponHelper = require('prototypes.helper.weapon')
 
 
-for i, projectile in pairs(data.raw['projectile']) do
+for _, projectile in pairs(data.raw['projectile']) do
     if String.starts_with(projectile['name'], 'bullet-') then
         WeaponHelper.add_air_layer_to_projectile(projectile)
     end

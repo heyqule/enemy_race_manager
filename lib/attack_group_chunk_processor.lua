@@ -132,6 +132,44 @@ local append_chunk = function(chunk_data, x, y)
     chunk_data.new_node_name = node_name
 end
 
+----- Start Spawnable Chunk Private Functions -----
+-- "attack_group_spawnable_chunk": {
+--    "{surface_name}": {
+--      "northwest": {
+--        "chunks": {},
+--        "head_node_name: '',
+--        "new_node_name: '',
+--      },
+--      "northeast": {
+--        "chunks": {}
+--        "head_node_name: '',
+--        "new_node_name: '',
+--      },
+--      "southeast": {
+--        "chunks": {}
+--        "head_node_name: '',
+--        "new_node_name: '',
+--      },
+--      "southwest": {
+--        "chunks": {}
+--        "head_node_name: '',
+--        "new_node_name: '',
+--      },
+--      "race_cursors": {
+--        "{race_name}": {
+--          "current_direction": 1,
+--          "rotatable_directions": [1,2,3,4],
+--          "current_node_name": {
+--              northwest: '{node_name}'
+--              ...
+--          }
+--        }
+--        ...
+--      }//End RaceCursor
+--    }//End Surface
+--    ....
+--  }
+
 ---
 --- Remove chunk that is no longer have spawner on it.  But it preserve at least 5 blocks to track enemy expansions.
 ---
@@ -175,9 +213,9 @@ local remove_spawnable_chunk = function(surface, direction, position)
     end
     chunk_set.chunks[node_name] = nil
 
-    local node_length = Table.count_keys(chunk_set.chunks)
+    local new_node_length = Table.count_keys(chunk_set.chunks)
 
-    if node_length == 0 then
+    if new_node_length == 0 then
         chunk_set.head_node_name = nil
         chunk_set.new_node_name = nil
     end
@@ -278,6 +316,19 @@ local find_spawn_position = function(surface, race_name)
     return nil
 end
 
+----- End Spawnable Chunk Private Functions -----
+
+----- Start Attackable Chunk Private Functions -----
+-- "attack_group_attackable_chunk": {
+--    "{surface_name}": {
+--        "chunks": {}
+--        "current_node_name": "",
+--        "current_direction": 1,
+--        "head_node_name": "",
+--        "new_node_name": ""
+--    }
+--    ...
+--}
 local init_attackable_chunk = function(surface, forced_init)
     if global.attack_group_attackable_chunk[surface.name] == nil or forced_init then
         global.attack_group_attackable_chunk[surface.name] = get_chunk_node_list()
@@ -315,6 +366,22 @@ local add_attackable_chunk = function(surface, chunk)
 
     return false
 end
+
+local find_attack_position = function(surface)
+    local surface_data = global.attack_group_attackable_chunk[surface.name]
+    if surface_data.current_node_name == nil and surface_data.head_node_name then
+        surface_data.current_node_name = surface_data.head_node_name
+        return surface_data.chunks[surface_data.current_node_name]
+    end
+
+    if surface_data.chunks[surface_data.current_node_name] then
+        surface_data.current_node_name = surface_data.chunks[surface_data.current_node_name].next_node_name
+        return surface_data.chunks[surface_data.current_node_name]
+    end
+
+    return nil
+end
+----- End Attackable Chunk Private Functions -----
 
 
 function AttackGroupChunkProcessor.init_globals()
