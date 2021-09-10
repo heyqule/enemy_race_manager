@@ -150,6 +150,7 @@ function LevelManager.calculateMultipleLevels()
 
         if has_valid_race_settings(race_settings, race_name) then
             local current_level = race_settings[race_name].level
+            local level_up = false
 
             for i = current_level, ErmConfig.get_max_level() do
                 if current_level == ErmConfig.get_max_level() then
@@ -162,15 +163,20 @@ function LevelManager.calculateMultipleLevels()
 
                 handle_unit_level(race_settings, force, race_name, false)
 
+                if current_level ~= race_settings[race_name].level then
+                    level_up = true
+                end
                 current_level = race_settings[race_name].level
             end
 
-            game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-            Event.dispatch({
-                name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-            Event.dispatch(
-                    { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-                      affected_race = race_settings[race_name] })
+            if level_up then
+                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+                Event.dispatch({
+                    name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+                Event.dispatch(
+                        { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
+                          affected_race = race_settings[race_name] })
+            end
         end
         :: skip_calculate_multiple_level_for_force ::
     end

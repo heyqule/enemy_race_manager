@@ -11,6 +11,8 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local AttackGroupProcessor = {}
@@ -34,6 +36,8 @@ AttackGroupProcessor.GROUP_TIERS = {
     {0.4, 0.35, 0.25}
 }
 
+AttackGroupProcessor.PICK_SPAWN_RETRIES = 5
+
 AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES = {
     'mining-drill',
     'rocket-silo',
@@ -43,7 +47,6 @@ AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES = {
 AttackGroupProcessor.HARDCORE_PRECISION_TARGET_TYPES = {
     'lab',
     'furnace',
-    'roboport'
 }
 
 AttackGroupProcessor.EXTREME_PRECISION_TARGET_TYPES = {
@@ -198,38 +201,13 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 end
 
 local pick_gathering_location = function(surface, force, race_name)
-    local ccs = ErmRaceSettingsHelper.get_current_command_centers(race_name)
-    local ccs_names = {}
-    for _, cc in pairs(ccs) do
-        table.insert(ccs_names, ErmRaceSettingsHelper.get_race_entity_name(race_name, cc))
+    local profiler = game.create_profiler()
+    local target_cc = ErmAttackGroupChunkProcessor.pick_spawn_location(surface, force)
+    profiler.stop()
+    log({'', 'Gathering Path finding...  ', profiler})
+    if target_cc == nil then
+        return nil
     end
-    --- @todo make it better, get chunks from different part of the surface, instead of always from top-left
-    --local profiler = game.create_profiler()
-    local cc_entities = surface.find_entities_filtered
-    ({
-        force = force,
-        name = ccs_names,
-        limit = 50
-    })
-    local total_cc = #cc_entities;
-    if total_cc == 0 then
-        cc_entities = surface.find_entities_filtered
-        ({
-            force = force,
-            type = 'unit-spawner',
-            limit = 20
-        })
-        total_cc = #cc_entities
-        if total_cc == 0 then
-            --profiler.stop()
-            --log({'', 'Gathering Path finding...  ', profiler})
-            return nil
-        end
-    end
-    --profiler.stop()
-    --log({'', 'Gathering Path finding...  ', profiler})
-
-    local target_cc = cc_entities[math.random(1, total_cc)]
     return surface.find_non_colliding_position(target_cc.name, target_cc.position, AttackGroupProcessor.GROUP_AREA, 1)
 end
 

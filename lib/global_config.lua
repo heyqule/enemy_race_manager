@@ -291,7 +291,7 @@ end
 
 function ErmConfig.get_enemy_races()
     if #ErmConfig.enemy_races == 1 and ErmConfig.enemy_races_loaded == false then
-        for name, version in pairs(game.active_mods) do
+        for name, _ in pairs(game.active_mods) do
             if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
                 Table.insert(ErmConfig.enemy_races, name)
             end
