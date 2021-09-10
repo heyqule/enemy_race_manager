@@ -166,7 +166,7 @@ data:extend {
         name = "enemyracemanager-build-style",
         description = "enemyracemanager-build-style",
         setting_type = "runtime-global",
-        default_value = BUILDING_DEFAULT,
+        default_value = BUILDING_A_TOWN,
         allowed_values = { BUILDING_DEFAULT, BUILDING_EXPAND_ON_CMD, BUILDING_A_TOWN, BUILDING_EXPAND_ON_ARRIVAL },
         order = "enemyracemanager-100"
     },
