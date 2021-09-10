@@ -165,6 +165,7 @@ Partial formation is build based on cc > support > turret priority.
 
 #### Krastorio2
 - New races do not support creep generation unless author patches the creep generation code or its remote API.
+- turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
 
 #### Rampant AI (limited)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.

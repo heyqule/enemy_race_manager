@@ -12,6 +12,9 @@ local Area = require '__stdlib__/stdlib/area/area'
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local Game = require('__stdlib__/stdlib/game')
+local config = require('__stdlib__/stdlib/config')
+config.skip_script_protections = true
+
 local Event = require('__stdlib__/stdlib/event/event')
 
 require('__stdlib__/stdlib/utils/defines/time')
@@ -30,6 +33,7 @@ local ErmCommandProcessor = require('__enemyracemanager__/lib/command_processor'
 
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
@@ -200,6 +204,8 @@ local prepare_world = function()
         ErmLevelProcessor.calculateMultipleLevels()
     end
 
+    ErmAttackGroupChunkProcessor.init_index()
+
     ErmCron.add_1_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
 end
 
@@ -243,7 +249,7 @@ end)
 
 Event.register(defines.events.on_chunk_generated, function(event)
     ErmMapProcessor.queue_chunks(event.surface, event.area)
-    --log(game.table_to_json(event.position))
+    ErmAttackGroupChunkProcessor.add_spawnable_chunk(event.surface, event.position)
 end)
 
 --- ERM Events
@@ -288,6 +294,18 @@ end)
 Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
     ErmCron.process_1_sec_queue()
 end)
+--- Native Event Handlers
+script.on_event(defines.events.on_built_entity, function(event)
+    if event.created_entity and event.created_entity.valid then
+        ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(event.created_entity)
+    end
+end, ErmAttackGroupChunkProcessor.get_built_entity_event_filter())
+
+script.on_event(defines.events.on_robot_built_entity, function(event)
+    if event.created_entity and event.created_entity.valid then
+        ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(event.created_entity)
+    end
+end, ErmAttackGroupChunkProcessor.get_built_entity_event_filter())
 
 --- Hook Up Conditional Events
 local conditional_events = function()
@@ -315,6 +333,7 @@ local init_globals = function()
     ErmMapProcessor.init_globals()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
+    ErmAttackGroupChunkProcessor.init_globals()
 end
 --- Init events
 Event.on_init(function(event)

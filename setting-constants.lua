@@ -15,7 +15,7 @@ Y_AXIS = 'y-axis'
 
 RACE_EMPTY = 'empty'
 
-BUILDING_DEFAULT = 'Default'
+BUILDING_DEFAULT = 'Base Game Default'
 BUILDING_EXPAND_ON_CMD = 'Command Center Expansion'
 BUILDING_A_TOWN = 'Build A Base'
 BUILDING_EXPAND_ON_ARRIVAL = 'Full Expansion'

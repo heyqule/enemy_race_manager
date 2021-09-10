@@ -5,12 +5,14 @@
 -- Time: 8:49 PM
 -- To change this template use File | Settings | File Templates.
 --
+local util = require('util')
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
+local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 
@@ -52,7 +54,7 @@ end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'print_global')
 function Debug_RemoteAPI.print_global()
-    game.write_file('enemyracemanager/erm-global.json',game.table_to_json(global))
+    game.write_file('enemyracemanager/erm-global.json',game.table_to_json(util.copy(global)))
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'print_calculate_attack_points')
@@ -118,6 +120,11 @@ function Debug_RemoteAPI.level_up_all()
         ErmLevelProcessor.levelByCommand(global.race_settings, race_name, GlobalConfig.get_max_level())
         game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 1
     end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
+function Debug_RemoteAPI.attack_group_chunk_index()
+    ErmAttackGroupChunkProcessor.init_index()
 end
 
 return Debug_RemoteAPI
