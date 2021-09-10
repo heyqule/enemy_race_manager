@@ -1,12 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.8.0
-Date: 2021-09-03
+Date: ???
 
   Features:
-    -
+    - Reworked custom attack group spawning position selection workflow.
+    - Reworked custom attack group attack target selection workflow.
 
   Changes:
-    - Change Build style default setting to "Build a town".
+    - Changed Build style default setting to "Build a town".
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.7.3
