@@ -85,9 +85,25 @@ local get_attack_area = function(position)
     return area
 end
 
-local set_up_rotatable_direction = function()
+local set_up_rotatable_direction = function(race_cursor, race_name, surface)
     if ErmConfig.mapgen_is_2_races_split() then
-
+        if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
+            if ErmConfig.positive_axis_race() == race_name then
+                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_WEST
+            elseif ErmConfig.negative_axis_race() == race_name then
+                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_EAST
+            else
+                race_cursor.rotatable_directions = {}
+            end
+        else
+            if ErmConfig.positive_axis_race() == race_name then
+                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_SOUTH
+            elseif ErmConfig.negative_axis_race() == race_name then
+                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_NORTH
+            else
+                race_cursor.rotatable_directions = {}
+            end
+        end
     end
 end
 
@@ -103,7 +119,7 @@ local init_spawnable_chunk = function(surface, forced_init)
 
         for _, race in pairs(ErmConfig.get_enemy_races()) do
             global.attack_group_spawnable_chunk[surface.name].race_cursors[race] = create_race_cursor_node()
-            set_up_rotatable_direction(global.attack_group_spawnable_chunk[surface.name].race_cursors[race])
+            set_up_rotatable_direction(global.attack_group_spawnable_chunk[surface.name].race_cursors[race], race, surface)
         end
     end
 end
@@ -269,10 +285,14 @@ local find_spawn_position = function(surface, race_name)
     local race_cursor = global.attack_group_spawnable_chunk[surface.name].race_cursors[race_name]
     local total_rotatable_directions = #race_cursor.rotatable_directions
 
+    if total_rotatable_directions == 0 then
+        return nil
+    end
+
     repeat
         --- Swap spawn direction
         local rotatable_direction = race_cursor.current_direction % total_rotatable_directions + 1
-        race_cursor.current_direction = race_cursor.rotatable_directions[rotatable_direction]
+        race_cursor.current_direction = rotatable_direction
         local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
             race_cursor.rotatable_directions[race_cursor.current_direction]
         ]
