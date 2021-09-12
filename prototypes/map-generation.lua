@@ -30,25 +30,25 @@ end
 
 local y_axis_positive_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using Y+')
-    autoplace.probability_expression = noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) * autoplace.probability_expression
     return autoplace
 end
 
 local y_axis_negative_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using Y-')
-    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_positive_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using X+')
-    autoplace.probability_expression = noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) * autoplace.probability_expression
     return autoplace
 end
 
 local x_axis_negative_probability_expression = function(autoplace)
     ErmDebugHelper.print('Using X-')
-    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) * autoplace.probability_expression
+    autoplace.probability_expression = noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
     return autoplace
 end
 
