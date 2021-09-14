@@ -51,6 +51,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
     biter['healing_per_tick'] = 0
+    ERM_UnitHelper.modify_biter_damage(biter, type, level)
 
     return biter
 end

@@ -15,6 +15,10 @@ local max_resistance_percentage = 95
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15
 
+local get_damage_multiplier = function()
+    return settings.startup['enemyracemanager-damage-multipliers'].value
+end
+
 -- Unit Health
 function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, level)
     if level == 1 then
@@ -44,9 +48,9 @@ end
 -- Attack Damage
 function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
     if level == 1 then
-        return base_dmg
+        return base_dmg * get_damage_multiplier()
     end
-    return Math.floor(base_dmg + (incremental_dmg * (level * multiplier / 100)))
+    return (base_dmg + (incremental_dmg * (level * multiplier / 100))) * get_damage_multiplier()
 end
 
 -- Max speed 15 tick per attack, 4 attack  / second
@@ -74,6 +78,22 @@ end
 -- building healing (full heal in 300s)
 function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, multiplier, level)
     return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (5 * defines.time.minute)
+end
+
+function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
+    if biter['attack_parameters']['damage_modifier'] == nil then
+        biter['attack_parameters']['damage_modifier'] = 1
+    end
+
+    if string.find(biter_type,'spitter') then
+        biter['attack_parameters']['damage_modifier'] = 0.25 * biter['attack_parameters']['damage_modifier']
+    end
+
+    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+end
+
+function ERM_UnitHelper.modify_worm_damage(worm, level)
+    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
 end
 
 return ERM_UnitHelper
