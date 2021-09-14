@@ -80,6 +80,16 @@ data:extend {
         order = "enemyracemanager-101"
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-damage-multipliers",
+        description = "enemyracemanager-damage-multipliers",
+        setting_type = "startup",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 10,
+        order = "enemyracemanager-102"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",
@@ -294,34 +304,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = true,
         order = "enemyracemanager-406"
-    },
-    --{
-    --    type = "bool-setting",
-    --    name = "enemyracemanager-flying-group-hunter-enable",
-    --    description = "enemyracemanager-flying-group-hunter-enable",
-    --    setting_type = "runtime-global",
-    --    default_value = false,
-    --    order = "enemyracemanager-410"
-    --},
-    --{
-    --    type = "int-setting",
-    --    name = "enemyracemanager-flying-group-hunter-chance",
-    --    description = "enemyracemanager-flying-group-hunter-chance",
-    --    setting_type = "runtime-global",
-    --    default_value = 50,
-    --    minimum_value = 10,
-    --    maximum_value = 100,
-    --    order = "enemyracemanager-411"
-    --},
-    --{
-    --    type = "string-setting",
-    --    name = "enemyracemanager-flying-group-hunter-mode",
-    --    description = "enemyracemanager-flying-group-hunter-mode",
-    --    setting_type = "runtime-global",
-    --    default_value = HUNTER_NORMAL,
-    --    allowed_values = { HUNTER_NORMAL, HUNTER_HARDCORE, HUNTER_EXTREME},
-    --    order = "enemyracemanager-412"
-    --},
+    }
 }
 
 

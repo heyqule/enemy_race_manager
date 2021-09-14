@@ -19,8 +19,7 @@
 #### Armoured Biters & Explosive Biters & Cold Biters
 - All biters, worms and spawners support leveling.
 - They join default enemy force, erm_vanilla.
-- The health setting stacks with this mod's multiplier.
-- Biters do not heal, spawner and worm do.
+- The biter mods' multiplier stacks with this mod's multiplier. However, I suggest leave them alone and adjust the multiplier in ERM.
 
 #### New Game Plus
 - When the game resets, attack meter also reset.
