@@ -51,7 +51,7 @@ function makeLevelTurrets(level, type, health_cut_ratio)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
     turret['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level)
-
+    ERM_UnitHelper.modify_worm_damage(turret, level)
 
     return turret
 end

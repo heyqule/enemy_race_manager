@@ -5,6 +5,8 @@ Date: ???
   Features:
     - Reworked custom attack group spawning position selection workflow.
     - Reworked custom attack group attack target selection workflow.
+    - Added enemy damage modifier.
+    - Base/Cold/Explosive/Armoured Biters now supports damage leveling. Good luck.
 
   Changes:
     - Changed Build style default setting to "Build a town".
