@@ -50,7 +50,7 @@
 #### When a chunk has generated 
 - If it's at a chunk number x or y that modulus 10
 - If it has a unit spawner
-- Add that position to the chunk list in 1 of 4 area.
+- Add that position to the chunk list in 1 of 4 area. (northeast, northwest, southeast, southwest)
 
 #### When pick_spawn_location is called
 - change current_direction to the next direction. e.g northeast to northwest
@@ -92,4 +92,4 @@
 #### When pick_attack_location is called
 - Pick the next position node from the list.
 - If any prerequisite entity exists in the node, return position
-- If any prerequisite entity not found, remove node from the list
+- If any prerequisite entity not found, remove node from the list and find the nearest enemy as target
