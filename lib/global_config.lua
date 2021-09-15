@@ -126,6 +126,10 @@ local get_global_setting_value = function(setting_name)
     return setting_value
 end
 
+local global_setting_exists = function()
+    return global and global.settings
+end
+
 function ErmConfig.is_cache_expired(last_tick, length)
     return (game.tick + length) > last_tick
 end
@@ -148,14 +152,14 @@ end
 
 function ErmConfig.get_max_level()
     local current_level_setting
-    if global then
+    if global_setting_exists() then
         current_level_setting = global.settings['enemyracemanager-max-level']
     end
 
     if current_level_setting == nil then
         current_level_setting = convert_max_level(settings.startup['enemyracemanager-max-level'].value)
 
-        if global then
+        if global_setting_exists() then
             global.settings['enemyracemanager-max-level'] = current_level_setting
         end
     end
@@ -165,7 +169,7 @@ end
 
 function ErmConfig.get_max_attack_range()
     local current_range
-    if global then
+    if global_setting_exists() then
         current_range = global.settings['enemyracemanager-max-attack-range']
     end
 
@@ -176,7 +180,7 @@ function ErmConfig.get_max_attack_range()
             current_range = 20
         end
 
-        if global then
+        if global_setting_exists() then
             global.settings['enemyracemanager-max-attack-range'] = current_range
         end
     end        
@@ -186,14 +190,14 @@ end
 
 function ErmConfig.get_mapping_method()
     local mapping_method
-    if global then
+    if global_setting_exists() then
         mapping_method = global.settings['enemyracemanager-mapping-method']
     end
 
     if mapping_method == nil then
         mapping_method = settings.startup['enemyracemanager-mapping-method'].value
 
-        if global then
+        if global_setting_exists() then
             global.settings['enemyracemanager-max-attack-range'] = mapping_method
         end
     end
