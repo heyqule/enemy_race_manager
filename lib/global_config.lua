@@ -198,7 +198,7 @@ function ErmConfig.get_mapping_method()
         mapping_method = settings.startup['enemyracemanager-mapping-method'].value
 
         if global_setting_exists() then
-            global.settings['enemyracemanager-max-attack-range'] = mapping_method
+            global.settings['enemyracemanager-mapping-method'] = mapping_method
         end
     end
     return mapping_method  
