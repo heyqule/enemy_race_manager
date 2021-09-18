@@ -12,7 +12,7 @@ Date: ???
     - Changed Build style default setting to "Build a town".
 
   Bugfix:
-    - Fix config cache for enemyracemanager-mapping-method
+    - Fix global erm cache clean up function
     - Fix negative and positive race using opposite coordinates.
 
 ---------------------------------------------------------------------------------------------------
