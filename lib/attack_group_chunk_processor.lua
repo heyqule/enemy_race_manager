@@ -18,7 +18,7 @@ AttackGroupChunkProcessor.CHUNK_SEARCH_AREA = AttackGroupChunkProcessor.CHUNK_SE
 
 AttackGroupChunkProcessor.MINIMUM_SPAWNABLE = 10
 
-AttackGroupChunkProcessor.RETRY = 3
+AttackGroupChunkProcessor.RETRY = 4
 
 AttackGroupChunkProcessor.AREA_NORTH = {1,2}
 AttackGroupChunkProcessor.AREA_SOUTH = {3,4}
@@ -289,30 +289,27 @@ local find_spawn_position = function(surface, race_name)
         return nil
     end
 
-    repeat
-        --- Swap spawn direction
-        local rotatable_direction = race_cursor.current_direction % total_rotatable_directions + 1
-        race_cursor.current_direction = rotatable_direction
-        local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
-            race_cursor.rotatable_directions[race_cursor.current_direction]
-        ]
-        local current_chunk_list = global.attack_group_spawnable_chunk[surface.name][current_direction]
-        local current_race_cursor_name = race_cursor.current_node_name[current_direction]
-        if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
-            --- Pick head node
+    --- Swap spawn direction
+    local rotatable_direction = race_cursor.current_direction % total_rotatable_directions + 1
+    race_cursor.current_direction = rotatable_direction
+    local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
+        race_cursor.rotatable_directions[race_cursor.current_direction]
+    ]
+    local current_chunk_list = global.attack_group_spawnable_chunk[surface.name][current_direction]
+    local current_race_cursor_name = race_cursor.current_node_name[current_direction]
+    if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
+        --- Pick head node
+        race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
+        position_node = current_chunk_list.chunks[current_race_cursor_name]
+    elseif current_race_cursor_name ~= '' and current_chunk_list.head_node_name ~= nil then
+        position_node = current_chunk_list.chunks[current_race_cursor_name]
+        --- Pick Next node until the end, then pick head and start again
+        if position_node and position_node.next_node_name then
+            race_cursor.current_node_name[current_direction] = position_node.next_node_name
+        elseif position_node then
             race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
-            position_node = current_chunk_list.chunks[current_race_cursor_name]
-        elseif current_race_cursor_name ~= '' and current_chunk_list.head_node_name ~= nil then
-            position_node = current_chunk_list.chunks[current_race_cursor_name]
-            --- Pick Next node until the end, then pick head and start again
-            if position_node and position_node.next_node_name then
-                race_cursor.current_node_name[current_direction] = position_node.next_node_name
-            elseif position_node then
-                race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
-            end
         end
-        retry = retry + 1
-    until position_node or retry == AttackGroupChunkProcessor.RETRY
+    end
 
     if position_node then
         position = {x = position_node.x, y = position_node.y}
@@ -385,7 +382,6 @@ local find_attack_position = function(surface)
 end
 ----- End Attackable Chunk Private Functions -----
 
-
 function AttackGroupChunkProcessor.init_globals()
     global.attack_group_spawnable_chunk = global.attack_group_spawnable_chunk or {}
     global.attack_group_attackable_chunk = global.attack_group_attackable_chunk or {}
@@ -453,25 +449,32 @@ end
 function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     local race_name = ErmForceHelper.extract_race_name_from(force.name)
 
-    local position = find_spawn_position(surface, race_name)
+    local i = 0
+    local entities = {}
 
-    if position == nil then
-        return nil
-    end
+    repeat
+        local position = find_spawn_position(surface, race_name)
+        if position then
+            entities = surface.find_entities_filtered
+                ({
+                    area = get_spawn_area(position),
+                    force = force,
+                    type = 'unit-spawner',
+                    limit = 10
+                })
+        end
 
-    local entities = surface.find_entities_filtered
-    ({
-        area = get_spawn_area(position),
-        force = force,
-        type = 'unit-spawner',
-        limit = 10
-    })
+        if position and next(entities) == nil then
+            remove_chunk_without_spawner(surface, position, race_name)
+        end
+        i = i + 1
+    until i == AttackGroupChunkProcessor.RETRY or next(entities) ~= nil
 
     if next(entities) == nil then
-        remove_chunk_without_spawner(surface, position, race_name)
         return nil
     end
-    return entities[math.random(1, #entities)]
+    local entity = entities[math.random(1, #entities)]
+    return entity
 end
 
 function AttackGroupChunkProcessor.pick_attack_location(surface, group)

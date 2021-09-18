@@ -143,13 +143,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
 
     if group_tracker.current_size >= group_tracker.size then
-        local profiler = game.create_profiler()
+        --local profiler = game.create_profiler()
         local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group)
-        profiler.stop()
-        if position then
-            log('Attack Location: '..tostring(position.x)..'/'..tostring(position.y))
-        end
-        log({'', 'Attack Path finding...  ', profiler})
+        --profiler.stop()
+        --log({'', 'Attack Path finding...  ', profiler})
 
         if position then
             local command = {
@@ -178,10 +175,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 end
 
 local pick_gathering_location = function(surface, force, race_name)
-    local profiler = game.create_profiler()
+    --local profiler = game.create_profiler()
     local target_cc = ErmAttackGroupChunkProcessor.pick_spawn_location(surface, force)
-    profiler.stop()
-    log({'', 'Gathering Path finding...  ', profiler})
+    --profiler.stop()
+    --log({'', 'Gathering Path finding...  ', profiler})
     if target_cc == nil then
         return nil
     end

@@ -110,16 +110,15 @@ local onUnitFinishGathering = function(event)
 end
 
 local globalCacheTableCleanup = function(target_table)
-    local group_count = table_size(target_table)
-    if(group_count > ErmConfig.CONFIG_CACHE_SIZE) then
-        local tmp = {}
-        for _, group in pairs(target_table) do
-            if group.valid and #group.members > 0 then
-                tmp[group.group_number] = group
-            end
+    local tmp = {}
+    for _, group in pairs(target_table) do
+        if group.valid and #group.members > 0 then
+            tmp[group.group_number] = group
         end
-        target_table = tmp
     end
+    target_table = tmp
+
+    return target_table
 end
 
 local onAiCompleted = function(event)
@@ -129,7 +128,10 @@ local onAiCompleted = function(event)
             group.set_autonomous()
         end
 
-        globalCacheTableCleanup(global.erm_unit_groups)
+        local group_count = table_size(global.erm_unit_groups)
+        if group_count > ErmConfig.CONFIG_CACHE_SIZE then
+            global.erm_unit_groups = globalCacheTableCleanup(global.erm_unit_groups)
+        end
     end
 end
 
