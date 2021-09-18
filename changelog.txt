@@ -10,6 +10,7 @@ Date: ???
 
   Changes:
     - Changed Build style default setting to "Build a town".
+    - Removed group_gathering_time_change. Use game default instead
 
   Bugfix:
     - Fix global erm cache clean up function

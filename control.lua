@@ -187,8 +187,6 @@ local prepare_world = function()
     -- Game map settings
     local max_group_size = settings.startup["enemyracemanager-max-group-size"].value
     local max_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
-    game.map_settings.unit_group.min_group_gathering_time =  max_group_size * 6 * defines.time.second -- 10 mins/100units
-    game.map_settings.unit_group.max_group_gathering_time = max_group_size * 9 * defines.time.second -- 15 mins/100units
     game.map_settings.unit_group.max_gathering_unit_groups = max_groups
     game.map_settings.unit_group.max_unit_group_size = max_group_size
 
