@@ -7,11 +7,10 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.7.0 release
-- Removed unit's health regen, increase enemy unit's health by 1.25x.  Turret and spawner are not affected.
-- Added dropship squad, this squad drop unit in your base.
-- Added Precision strike squad, this squad fly straight to its attack target. It ignores attack distractions. 
-- [Experimental feature] /ERM_freeforall command.  Enemies will fight each other. Please see feature section for details
+### 1.8.0 release
+- Improve custom attack group spawn and attack targeting logic
+- Added enemy damage modifier. You can modify damage multiplier without increase other properties.
+- Expansion Build style now defaults setting to "build a town"
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
