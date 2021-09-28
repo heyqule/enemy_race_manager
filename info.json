@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -11,6 +11,9 @@
     "stdlib >= 1.4.6",
     "!hardcorio",
     "!bobenemies",
+    "!Nova-Natural_Evolution_Enemies",
+    "!Natural_Evolution_Enemies_Redux",
+    "!Natural_Evolution_Enemies",
     "?ArmouredBiters",
     "?Explosive_biters",
     "?Cold_biters"
