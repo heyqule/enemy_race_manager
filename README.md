@@ -139,7 +139,7 @@ Partial formation is build based on cc > support > turret priority.
 ##### Dropship groups (ON by default)
 - When "Dropship Squad" is enabled, enemy may send out dedicate dropship to drop units in your base.
 
-##### Precision strike groups (Off by default)
+##### Precision strike groups (ON by default)
 - When this group goes to its target, the units ignore any attack distraction.
 - Dropship group always based on this group.
 - This feature can be enable for flying attack group.  Default to OFF.
