@@ -260,7 +260,7 @@ data:extend {
         description = "enemyracemanager-flying-squad-chance",
         setting_type = "runtime-global",
         default_value = 25,
-        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
         order = "enemyracemanager-401"
     },
     {
@@ -277,7 +277,7 @@ data:extend {
         description = "enemyracemanager-dropship-squad-chance",
         setting_type = "runtime-global",
         default_value = 25,
-        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
         order = "enemyracemanager-403"
     },
     {
@@ -285,7 +285,7 @@ data:extend {
         name = "enemyracemanager-precision-strike-flying-unit-enable",
         description = "enemyracemanager-precision-strike-flying-unit-enable",
         setting_type = "runtime-global",
-        default_value = false,
+        default_value = true,
         order = "enemyracemanager-404"
     },
     {
@@ -294,7 +294,7 @@ data:extend {
         description = "enemyracemanager-precision-strike-flying-unit-chance",
         setting_type = "runtime-global",
         default_value = 25,
-        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80 },
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
         order = "enemyracemanager-405"
     },
     {

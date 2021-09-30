@@ -2,7 +2,11 @@
 Version: 1.8.1
 Date: 2021-09-30
 
-  Bugfix:
+  Changes:
+    - "[Precision Strike] Enable for flying squad" is now default to ON
+    - Added 90% option to Attack groups spawn chances.
+
+  Bugfixes:
     - Added all variants of "Natural_Evolution_Enemies" to incompatible list.
 
 ---------------------------------------------------------------------------------------------------
@@ -19,7 +23,7 @@ Date: 2021-09-30
     - Changed Build style default setting to "Build a town".
     - Removed group_gathering_time_change. Use game default instead
 
-  Bugfix:
+  Bugfixes:
     - Fix global erm cache clean up function
     - Fix negative and positive race using opposite coordinates.
 

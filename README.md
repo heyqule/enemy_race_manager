@@ -11,6 +11,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Improve custom attack group spawn and attack targeting logic
 - Added enemy damage modifier. You can modify damage multiplier without increase other properties.
 - Expansion Build style now defaults setting to "build a town"
+- "[Precision Strike] Enable for flying squad" is now default to ON
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
