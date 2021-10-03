@@ -141,6 +141,7 @@ Partial formation is build based on cc > support > turret priority.
 
 ##### Precision strike groups (ON by default)
 - When this group goes to its target, the units ignore any attack distraction.
+- They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost! 
 - Dropship group always based on this group.
 - This feature can be enable for flying attack group.  Default to ON.
 - Early attack warning on mini map. Default to ON.
