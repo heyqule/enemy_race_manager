@@ -22,8 +22,8 @@ if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
 
-    ErmConfig.TEN_MINUTES_CRON = defines.time.minute + 1
-    ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
+    ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.second + 1
+    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else

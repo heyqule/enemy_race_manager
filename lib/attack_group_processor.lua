@@ -12,6 +12,7 @@ local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_sett
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -39,27 +40,13 @@ AttackGroupProcessor.GROUP_TIERS = {
 
 AttackGroupProcessor.PICK_SPAWN_RETRIES = 5
 
-AttackGroupProcessor.NORMAL_PRECISION_TARGET_TYPES = {
-    'mining-drill',
-    'rocket-silo',
-    'artillery-turret',
-}
-
-AttackGroupProcessor.HARDCORE_PRECISION_TARGET_TYPES = {
-    'lab',
-    'furnace',
-}
-
-AttackGroupProcessor.EXTREME_PRECISION_TARGET_TYPES = {
-    'assembling-machine',
-    'generator',
-    'solar-panel',
-    'accumulator',
-}
-
 --- Pick surface with player entity.
-local pick_surface = function()
-    return game.surfaces[1]
+local pick_surface = function(race_name)
+    if ErmConfig.mapgen_is_one_race_per_surface() then
+        return ErmAttackGroupSurfaceProcessor.exec(race_name)
+    else
+        return game.surfaces[1]
+    end
 end
 
 ---
@@ -175,6 +162,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 end
 
 local pick_gathering_location = function(surface, force, race_name)
+    if surface == nil or not surface.valid then
+        return nil
+    end
+
     --local profiler = game.create_profiler()
     local target_cc = ErmAttackGroupChunkProcessor.pick_spawn_location(surface, force)
     --profiler.stop()
@@ -285,7 +276,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
 end    
 
 function AttackGroupProcessor.generate_group(race_name, force, units_number, type)
-    local surface = pick_surface()
+    local surface = pick_surface(race_name)
     local center_location = pick_gathering_location(surface, force, race_name)
     if surface and center_location then
         generate_unit_queue(surface, center_location, force, race_name, units_number, type)

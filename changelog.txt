@@ -2,8 +2,12 @@
 Version: 1.9.0
 Date: ???
 
+  Features:
+    - Custom attack group can now spawn in Space Exploration planets!
+    - Custom attack group is now out of beta.
+
   Changes:
-    - Added default value to setting tooltips
+    - Added default values to setting tooltips
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.8.1

@@ -7,7 +7,6 @@ local Table = require('__stdlib__/stdlib/utils/table')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 local AttackGroupChunkProcessor = {}
 
@@ -280,7 +279,6 @@ end
 local find_spawn_position = function(surface, race_name)
     local position = nil
     local position_node = nil
-    local retry = 0
 
     local race_cursor = global.attack_group_spawnable_chunk[surface.name].race_cursors[race_name]
     local total_rotatable_directions = #race_cursor.rotatable_directions
@@ -300,7 +298,7 @@ local find_spawn_position = function(surface, race_name)
     if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
         --- Pick head node
         race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
-        position_node = current_chunk_list.chunks[current_race_cursor_name]
+        position_node = current_chunk_list.chunks[current_chunk_list.head_node_name]
     elseif current_race_cursor_name ~= '' and current_chunk_list.head_node_name ~= nil then
         position_node = current_chunk_list.chunks[current_race_cursor_name]
         --- Pick Next node until the end, then pick head and start again
@@ -380,40 +378,65 @@ local find_attack_position = function(surface)
 
     return nil
 end
------ End Attackable Chunk Private Functions -----
 
-function AttackGroupChunkProcessor.init_globals()
-    global.attack_group_spawnable_chunk = global.attack_group_spawnable_chunk or {}
-    global.attack_group_attackable_chunk = global.attack_group_attackable_chunk or {}
-    global.attack_group_chunk_max_retry = 0
-end
-
-function AttackGroupChunkProcessor.init_index()
-    game.print('[ERM] Re-indexing Attack Group Chunks...')
-    local surface = game.surfaces[1]
+local reindex_surface = function(surface)
     init_spawnable_chunk(surface, true)
     init_attackable_chunk(surface, true)
-    local profiler = game.create_profiler()
-    local i = 0
-    local j = 0
+    local spawn_chunk = 0
+    local attack_chunk = 0
 
     for chunk in surface.get_chunks() do
         if is_cachable_spawn_position(chunk) then
             if add_spawnable_chunk(surface, chunk) then
-                i = i + 1
+                spawn_chunk = spawn_chunk + 1
             end
         end
 
         if is_cachable_attack_position(surface, chunk.area) then
             if add_attackable_chunk(surface, chunk) then
-                j = j + 1
+                attack_chunk = attack_chunk + 1
             end
         end
     end
 
+    if spawn_chunk == 0 then
+        global.attack_group_spawnable_chunk[surface.name] = nil
+        spawn_chunk = 0
+    end
+
+    if attack_chunk == 0 then
+        global.attack_group_attackable_chunk[surface.name] = nil
+        attack_chunk = 0
+    end
+
+    return spawn_chunk, attack_chunk
+end
+----- End Attackable Chunk Private Functions -----
+
+function AttackGroupChunkProcessor.init_globals()
+    global.attack_group_spawnable_chunk = global.attack_group_spawnable_chunk or {}
+    global.attack_group_attackable_chunk = global.attack_group_attackable_chunk or {}
+end
+
+function AttackGroupChunkProcessor.init_index()
+    game.print('[ERM] Re-indexing Attack Group Chunks...')
+    local profiler = game.create_profiler()
+    local spawn_chunk = 0
+    local attack_chunk = 0
+    local total_surfaces = 0
+    for _, surface in pairs(game.surfaces) do
+       if surface.valid then
+           current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
+           spawn_chunk = spawn_chunk + current_spawn_chunk
+           attack_chunk = attack_chunk + current_attack_chunk
+           total_surfaces = total_surfaces + 1
+       end
+    end
+
     profiler.stop()
-    game.print('[ERM] Total Cached Spawnable Chunks: '..tostring(i))
-    game.print('[ERM] Total Cached Attackable Chunks: '..tostring(j))
+    game.print('[ERM] Total Processed Surfaces: '..tostring(total_surfaces))
+    game.print('[ERM] Total Cached Spawnable Chunks: '..tostring(spawn_chunk))
+    game.print('[ERM] Total Cached Attackable Chunks: '..tostring(attack_chunk))
     game.print({'', '[ERM] Attack Group Chunk Re-indexed: ', profiler})
 end
 
@@ -469,7 +492,6 @@ function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
         end
         i = i + 1
     until i == AttackGroupChunkProcessor.RETRY or next(entities) ~= nil
-
     if next(entities) == nil then
         return nil
     end
@@ -517,6 +539,23 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, group)
     end
 
     return nil
+end
+
+AttackGroupChunkProcessor.can_attack = function(surface)
+    if global.attack_group_spawnable_chunk[surface.name] ~= nil and global.attack_group_attackable_chunk[surface.name] ~= nil then
+        return true
+    end
+    return false
+end
+
+AttackGroupChunkProcessor.remove_surface = function(surface_name)
+    if global.attack_group_spawnable_chunk[surface_name] ~= nil then
+        global.attack_group_spawnable_chunk[surface_name] = nil
+    end
+
+    if global.attack_group_attackable_chunk[surface_name] ~= nil then
+        global.attack_group_attackable_chunk[surface_name] = nil
+    end
 end
 
 return AttackGroupChunkProcessor

@@ -34,6 +34,7 @@ local ErmCommandProcessor = require('__enemyracemanager__/lib/command_processor'
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
@@ -67,6 +68,9 @@ cron_switch = {
     end,
     ['AttackMeterProcessor.form_group'] = function(args)
         ErmAttackMeterProcessor.form_group(args[1], args[2])
+    end,
+    ['AttackGroupSurfaceProcessor.exec'] = function(args)
+        ErmAttackGroupSurfaceProcessor.exec(args[1])
     end
 }
 
@@ -263,9 +267,11 @@ end)
 --- Surface Management
 Event.register(defines.events.on_surface_created, function(event)
     ErmSurfaceProcessor.assign_race(game.surfaces[event.surface_index])
+
 end)
 Event.register(defines.events.on_pre_surface_deleted, function(event)
     ErmSurfaceProcessor.remove_race(game.surfaces[event.surface_index])
+    ErmAttackGroupChunkProcessor.remove_surface(game.surfaces[event.surface_index].name)
 end)
 
 --- Attack Meter Management
@@ -334,6 +340,7 @@ local init_globals = function()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
     ErmAttackGroupChunkProcessor.init_globals()
+    ErmAttackGroupSurfaceProcessor.init_globals()
 end
 --- Init events
 Event.on_init(function(event)

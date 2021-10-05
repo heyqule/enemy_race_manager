@@ -125,12 +125,12 @@ Partial formation is build based on cc > support > turret priority.
 
 ![1-4-5 Formation](https://mods-data.factorio.com/assets/42b016483f30cb37d009e59b417a82e1c4a362b9.png "1-4-5 Formation")
 
-### Attack meters / Custom Attack Squad (Beta Feature)
+### Attack meters / Custom Attack Squad
 - Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
 - Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
-- These attack groups are independent from pollution.
+- These attack groups are independent of pollution.
 - The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
-- This only supports planet nauvis at the moment.  Not yet compatible in other planets for SE.
+- When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets. 
 - More features and specialized attack groups are coming in later release.
 
 ##### Flying attack groups (ON by default)
