@@ -55,7 +55,7 @@ AttackGroupSurfaceProcessor.exec = function(race_name, retry_cron)
         end
     end
 
-    if surface == nil and start_position ~= 0 then
+    if surface == nil then
         -- set all planet data to nil to restart from head
         surface_data.current_planet_pointer = nil
         surface_data.current_planet_name = nil
