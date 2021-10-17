@@ -275,8 +275,8 @@ Event.register(defines.events.on_pre_surface_deleted, function(event)
 end)
 
 --- Attack Meter Management
-Event.on_nth_tick(ErmConfig.ONE_MINUTE_CRON, function(event)
-    ErmAttackMeterProcessor.add_point_calculation_to_cron()
+Event.on_nth_tick(ErmConfig.ATTACK_POINT_CALCULATION, function(event)
+    ErmAttackMeterProcessor.exec()
 end)
 
 Event.on_nth_tick(ErmConfig.ATTACK_GROUP_GATHERING_CRON, function(event)

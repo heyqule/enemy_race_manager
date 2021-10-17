@@ -11,6 +11,7 @@ Date: ???
 
   Bugfixes:
     - Fixed a bug in attack group chunk processor's find_spawn_location()
+    - Fixed an attack meter points calculation inaccuracy issue.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.8.1

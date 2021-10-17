@@ -56,7 +56,7 @@ function AttackMeterProcessor.init_globals()
     global.kill_count_statistics_cache = global.kill_count_statistics_cache or {}
 end
 
-function AttackMeterProcessor.add_point_calculation_to_cron()
+function AttackMeterProcessor.exec()
     if ErmConfig.attack_meter_enabled() == false then
         return
     end
@@ -64,7 +64,7 @@ function AttackMeterProcessor.add_point_calculation_to_cron()
     local force_names = ErmForceHelper.get_all_enemy_forces()
 
     for _, name in pairs(force_names) do
-        ErmCron.add_1_sec_queue('AttackMeterProcessor.calculate_points', name)
+        AttackMeterProcessor.calculate_points(name)
     end
 end
 

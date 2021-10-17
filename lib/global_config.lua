@@ -21,14 +21,16 @@ ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
 if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
+    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.second + 1
-    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
+    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.minute + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
+    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
     ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.minute + 1
