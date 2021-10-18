@@ -66,7 +66,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multip
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * (level * multiplier / 100))
+    return base_speed + (incremental_speed * (level * multiplier / 100)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
 end
 
 -- unit healing (full heal in 120s)

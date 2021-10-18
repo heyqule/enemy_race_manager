@@ -90,6 +90,17 @@ data:extend {
         order = "enemyracemanager-102"
     },
     {
+        type = "double-setting",
+        name = "enemyracemanager-running-speed-multipliers",
+        description = "enemyracemanager-running-speed-multipliers",
+        setting_type = "startup",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 3,
+        allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3},
+        order = "enemyracemanager-103"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",

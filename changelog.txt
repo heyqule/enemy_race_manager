@@ -5,6 +5,7 @@ Date: ???
   Features:
     - Custom attack group can now spawn in Space Exploration planets!
     - Custom attack group is now out of beta.
+    - Enemy running/flying speed can now adjustable in startup setting.
 
   Changes:
     - Added default values to setting tooltips
