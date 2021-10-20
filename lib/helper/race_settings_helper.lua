@@ -262,4 +262,20 @@ function RaceSettingHelper.get_race_entity_name(target_race, name)
     return target_race .. '/' .. name .. '/' .. RaceSettingHelper.get_level(target_race)
 end
 
+function RaceSettingHelper.add_killed_units_count(target_race, count)
+    if global.race_settings[target_race].unit_killed_count == nil then
+        global.race_settings[target_race].unit_killed_count = 0
+    end
+    global.race_settings[target_race].unit_killed_count = global.race_settings[target_race].unit_killed_count + count
+end
+
+function RaceSettingHelper.add_killed_structure_count(target_race, count)
+    if global.race_settings[target_race].structure_killed_count == nil then
+        global.race_settings[target_race].structure_killed_count = 0
+    end
+    global.race_settings[target_race].structure_killed_count = global.race_settings[target_race].structure_killed_count + count
+end
+
+
+
 return RaceSettingHelper

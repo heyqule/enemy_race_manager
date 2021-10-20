@@ -196,7 +196,8 @@ function LevelManager.get_tier_for_race(race_settings, race_name)
     return nil
 end
 
-function LevelManager.get_calculated_current_level(race_settings, force, race_name)
+function LevelManager.get_calculated_current_level(race_setting)
+    local force = game.forces[ErmForceHelper.get_force_name_from(race_setting.race)]
     for key, value in pairs(evolution_level_map) do
         if force.evolution_factor < value then
             return key
@@ -204,7 +205,7 @@ function LevelManager.get_calculated_current_level(race_settings, force, race_na
     end
 
     for key, value in pairs(evolution_points) do
-        if race_settings[race_name].evolution_point < value then
+        if race_setting.evolution_point < value then
             return key + max_evolution_factor_level - 1
         end
     end
@@ -213,7 +214,7 @@ function LevelManager.get_calculated_current_level(race_settings, force, race_na
 end
 
 function LevelManager.canLevelByCommand(race_settings, force, race_name, target_level)
-    local calculated_level = LevelManager.get_calculated_current_level(race_settings, force, race_name)
+    local calculated_level = LevelManager.get_calculated_current_level(race_settings[race_name], force)
 
     if target_level < calculated_level then
         return false
@@ -238,15 +239,6 @@ function LevelManager.levelByCommand(race_settings, race_name, target_level)
     Event.dispatch(
             { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
               affected_race = race_settings[race_name] })
-end
-
-function LevelManager.copyEvolutionFromEnemy(race_settings, target_force, enemy_force)
-    local race_name = ErmForceHelper.extract_race_name_from(target_force.name)
-    if has_valid_race_settings(race_settings, race_name) then
-        race_settings[race_name].evolution_base_point = calculate_evolution_points(race_settings, settings, target_force, race_name)
-        target_force.evolution_factor = enemy_force.evolution_factor
-        LevelManager.calculateMultipleLevels()
-    end
 end
 
 function LevelManager.getEvolutionFactor(race_name)

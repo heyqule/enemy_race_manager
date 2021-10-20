@@ -6,8 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-
-
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
@@ -64,10 +62,6 @@ function ERM_RemoteAPI.update_race_setting(race_setting)
     end
 end
 
-function ERM_RemoteAPI.get_name_token(name)
-    return ErmForceHelper.get_name_token(name)
-end
-
 --- Generate a mixed attack group
 --- Usage: remote.call('enemy_race_manager', 'generate_attack_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
@@ -91,5 +85,19 @@ function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
         ErmAttackGroupProcessor.generate_group(race_name, force, units_number, ErmAttackGroupProcessor.GROUP_TYPE_FLYING)
     end
 end
+
+--- Generate a dropship attack group
+--- Usage: remote.call('enemy_race_manager', 'generate_dropship_group', 'erm_zerg', 100)
+function ERM_RemoteAPI.generate_dropship_group(race_name, units_number)
+    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force = game.forces[force_name]
+    units_number = tonumber(units_number)
+
+    if force and units_number > 0 then
+        ErmAttackGroupProcessor.generate_group(race_name, force, units_number, ErmAttackGroupProcessor.GROUP_TYPE_DROPSHIP)
+    end
+end
+
+
 
 return ERM_RemoteAPI

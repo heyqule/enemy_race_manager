@@ -107,6 +107,8 @@ function AttackMeterProcessor.calculate_points(force_name)
                                 building_points * AttackMeterProcessor.SPAWNER_POINTS +
                                 turret_points * AttackMeterProcessor.TURRET_POINTS
 
+    ErmRaceSettingsHelper.add_killed_units_count(race_name, unit_points)
+    ErmRaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
     ErmRaceSettingsHelper.add_to_attack_meter(race_name, attack_meter_points)
 
     if global.settings['enemyracemanager-evolution-point-accelerator'] then

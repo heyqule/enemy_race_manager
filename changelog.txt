@@ -6,9 +6,13 @@ Date: ???
     - Custom attack group can now spawn in Space Exploration planets!
     - Custom attack group is now out of beta.
     - Enemy running/flying speed can now adjustable in startup setting.
+    - Added a detailed window to show race's additional information and adjustment
+    - Added total units and structures kill count to detailed window
+    - Enemy level can be override in detail UI window.
 
   Changes:
     - Added default values to setting tooltips
+    - Add remote function to generate dropship attack group
 
   Bugfixes:
     - Fixed a bug in attack group chunk processor's find_spawn_location()

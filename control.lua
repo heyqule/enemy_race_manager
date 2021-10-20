@@ -7,11 +7,7 @@
 --
 
 -- Imports
-local Position = require '__stdlib__/stdlib/area/position'
-local Area = require '__stdlib__/stdlib/area/area'
-
-local Table = require('__stdlib__/stdlib/utils/table')
-local Game = require('__stdlib__/stdlib/game')
+local String = require('__stdlib__/stdlib/utils/string')
 local config = require('__stdlib__/stdlib/config')
 config.skip_script_protections = true
 
@@ -37,7 +33,7 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
-local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
+local ErmGui = require('__enemyracemanager__/gui/main')
 
 -- Compatibility Events
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
@@ -213,25 +209,67 @@ local prepare_world = function()
     ErmCron.add_1_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
 end
 
+--- GUIs
 local onGuiClick = function(event)
-    ErmMainWindow.replace_enemy(event)
-    ErmMainWindow.reset_default(event)
-    ErmMainWindow.nuke_biters(event)
-    -- Close event must handle the last
-    ErmMainWindow.toggle_main_window(event)
-    ErmMainWindow.toggle_close(event)
+    ErmGui.main_window.open_detail_window(event)
 
-    if ErmMainWindow.require_update_all then
-        ErmMainWindow.update_all()
+    ErmGui.detail_window.replace_enemy(event)
+    ErmGui.detail_window.confirm(event)
+
+    ErmGui.main_window.reset_default(event)
+    -- Close event must handle the last
+    ErmGui.main_window.toggle_main_window(event)
+    ErmGui.main_window.toggle_close(event)
+    ErmGui.detail_window.toggle_close(event)
+
+    if ErmGui.main_window.require_update_all then
+        ErmGui.main_window.update_all()
     end
 end
 
-Event.register(defines.events.on_player_created, function(event)
-    ErmMainWindow.update_overhead_button(event.player_index)
-end)
---- GUIs
-
 Event.register(defines.events.on_gui_click, onGuiClick)
+
+Event.register(defines.events.on_player_created, function(event)
+    ErmGui.main_window.update_overhead_button(event.player_index)
+end)
+
+local gui_close_switch = {
+    [ErmGui.main_window.root_name] = function(owner)
+        ErmGui.main_window.hide(owner)
+    end,
+    [ErmGui.detail_window.root_name] = function(owner)
+        ErmGui.detail_window.hide(owner)
+    end
+}
+
+local onGuiClose = function(event)
+    local owner = game.players[event.player_index]
+    if owner and event.element and event.element.valid then
+        local name = event.element.name
+        if gui_close_switch[name] then
+            gui_close_switch[name](owner)
+        end
+    end
+end
+
+Event.register(defines.events.on_gui_closed, onGuiClose)
+
+local gui_value_change_switch = {
+    [ErmGui.detail_window.levelup_silder_name] = function(event)
+        ErmGui.detail_window.update_slider_text(event)
+    end,
+}
+
+local onGuiValueChange = function(event)
+    if event.element and event.element.valid then
+        local nameToken = String.split(event.element.name, '/')
+        if gui_value_change_switch[nameToken[2]] then
+            gui_value_change_switch[nameToken[2]](event)
+        end
+    end
+end
+
+Event.register(defines.events.on_gui_value_changed, onGuiValueChange)
 
 --- Unit processing events
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
