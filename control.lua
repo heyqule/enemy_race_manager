@@ -400,7 +400,7 @@ Event.on_configuration_changed(function(event)
     ErmConfig.refresh_config()
     prepare_world()
     for _, player in pairs(game.connected_players) do
-        ErmMainWindow.update_overhead_button(player.index)
+        ErmGui.main_window.update_overhead_button(player.index)
     end
 end)
 

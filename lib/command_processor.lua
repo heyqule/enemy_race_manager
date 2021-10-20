@@ -21,6 +21,7 @@ local is_not_from_admin = function(command)
     return false
 end
 
+--- @deprecated to be remove in 1.10, replaced by GUI
 function CommandProcessor.levelup(command)
     if is_not_from_admin(command) then
         return
