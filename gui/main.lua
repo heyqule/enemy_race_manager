@@ -106,6 +106,7 @@ function ERM_DetailWindow.show(player, race_setting)
         right_flow.style.width = ERM_DetailWindow.window_width / 2
 
         local setting_flow = right_flow.add { type = "flow", name = "setting_flow", direction = 'vertical' }
+        setting_flow.add { type = "label", name="setting_description", caption={"gui.setting_description"}}
         local level_slider_flow = setting_flow.add {type = "flow", name = "level_slider_flow", direction = 'horizontal'}
         level_slider_flow.add { type = "label",
                                 caption = { 'gui.level_up_silder'},
@@ -127,9 +128,10 @@ function ERM_DetailWindow.show(player, race_setting)
         setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="confirm_button"}
 
         local center_gap = right_flow.add {type="empty-widget"}
-        center_gap.style.height = 32
+        center_gap.style.height = 16
 
         local action_flow = right_flow.add { type = "flow", name = "action_flow", direction = 'vertical' }
+        action_flow.add { type = "label", name="action_description", caption={"gui.action_description"}}
         local pass_new_race = race_setting.race ~= MOD_NAME
         local pass_biter_race = race_setting.race == MOD_NAME and settings.startup['enemyracemanager-enable-bitters'].value == true
         if pass_new_race or pass_biter_race then
