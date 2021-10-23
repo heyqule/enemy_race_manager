@@ -25,7 +25,7 @@ local evolution_level_map = { 0.4, 0.8 }
 local max_evolution_factor_level = 3
 
 -- control level 4 - 20
-local evolution_points = { 12, 25, 45, 70, 115, 175, 250, 350, 450, 600, 750, 900, 1200, 1600, 2200, 3000, 4000 }
+local evolution_points = { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1

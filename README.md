@@ -7,11 +7,11 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.8.0 release
-- Improve custom attack group spawn and attack targeting logic
-- Added enemy damage modifier. You can modify damage multiplier without increase other properties.
-- Expansion Build style now defaults setting to "build a town"
-- "[Precision Strike] Enable for flying squad" is now default to ON
+### 1.9.0 release
+- Attack meters / Custom Attack Squad can now spawn in Space Exploration planets and it's out of beta
+- Enemy running/flying speed can now adjustable in startup setting
+- GUI improvements, added enemy level override.
+- Significantly lower level up evolution points for level 4+
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -54,9 +54,9 @@ First 3 level is tied to force's evolution factor
 
 The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner).
 
-* { 12, 25, 45, 70, 115, 175, 250, 350, 450, 600, 750, 900, 1200, 1600, 2200, 3000, 4000 }
+* { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
-* evolution_base_point is used for specific customization, default is 0.
+* evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
 * level_multiplier default to 1.
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters.
@@ -179,7 +179,6 @@ For compatibility details, please visit https://github.com/heyqule/enemy_race_ma
 
 ### Commands
 - /ERM_GetRaceSettings
-- /ERM_levelup race_name,level  (/ERM_levelup erm_vanilla,8)
 - /ERM_freeforall
 
 ### Known Issues
