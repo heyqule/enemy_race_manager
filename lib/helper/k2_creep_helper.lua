@@ -26,7 +26,8 @@ end
 function K2CreepHelper.onSpawnerBuilt(event)
     local entity = event.entity
 
-    if entity.type == "unit-spawner" then
+    if entity and entity.valid and entity.type == "unit-spawner" then
+        log(entity.type..'/'..entity.name)
         K2CreepHelper.generate_creep(event.entity.surface, event.entity.position)
     end
 end

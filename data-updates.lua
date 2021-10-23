@@ -13,8 +13,3 @@ require('prototypes/map-generation.lua')
 require('prototypes/extend-defense.lua')
 
 require('prototypes/extend-weapons.lua')
-
-if DEBUG_MODE then
-    data.raw["radar"]["radar"]['max_distance_of_sector_revealed'] = 15
-    data.raw["radar"]["radar"]['max_distance_of_nearby_sector_revealed'] = 15
-end
