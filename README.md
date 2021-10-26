@@ -21,17 +21,19 @@ Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU
 Tips on defense: A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
 
 New Enemy Races:
+
 [>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)
-![Zerg](https://mods-data.factorio.com/assets/d5713783b19c4ba3ca97ab578182e61c72ec11a0.png "Zerg")
 
 [>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
-![Protoss](https://mods-data.factorio.com/assets/01f1d66653ee245f5abe8d5bacf6d359bb6e9c97.png "Protoss")
 
 [>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
-![RedArmy](https://mods-data.factorio.com/assets/d46b286c763a8b9fdbab23eb8bea2dee905a701f.png "RedArmy")
 
-Defense Units:
+Player Controllable Units:
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
+
+![Zerg](https://mods-data.factorio.com/assets/d5713783b19c4ba3ca97ab578182e61c72ec11a0.png "Zerg")
+![Protoss](https://mods-data.factorio.com/assets/01f1d66653ee245f5abe8d5bacf6d359bb6e9c97.png "Protoss")
+![RedArmy](https://mods-data.factorio.com/assets/d46b286c763a8b9fdbab23eb8bea2dee905a701f.png "RedArmy")
 ![Terran](https://mods-data.factorio.com/assets/8edb5f447c0a754f1071256c950107fcae32bfa0.png "Terran")
 
 ### Features
@@ -107,13 +109,13 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-    - build one at a time
+  - build one at a time
 * Command Center
-    - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+  - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town
-    - Always use build formation option to build the base.
+  - Always use build formation option to build the base.
 * Full Expansion
-    - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+  - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
@@ -130,7 +132,7 @@ Partial formation is build based on cc > support > turret priority.
 - Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
 - These attack groups are independent of pollution.
 - The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
-- When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets. 
+- When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
 - More features and specialized attack groups are coming in later release.
 
 ##### Flying attack groups (ON by default)
@@ -141,7 +143,7 @@ Partial formation is build based on cc > support > turret priority.
 
 ##### Precision strike groups (ON by default)
 - When this group goes to its target, the units ignore any attack distraction.
-- They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost! 
+- They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost!
 - Dropship group always based on this group.
 - This feature can be enable for flying attack group.  Default to ON.
 - Early attack warning on mini map. Default to ON.
@@ -152,7 +154,7 @@ Partial formation is build based on cc > support > turret priority.
 - This command limits to max enemy level 5 and 10.
 - High level units are excluded because unit spawns quicker than they die and cause performance issue.
 - Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
-- When toogle off, all units in enemy forces are killed. 
+- When toogle off, all units in enemy forces are killed.
 
 ** Player building health and enemy damage will need to re-balance for this mode in a future release **
 

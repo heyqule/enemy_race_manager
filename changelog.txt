@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.9.2
+Date: 2021-10-24
+
+  Bugfixes:
+    - Fixed an issue which custom attack group only spawn at first SE attackable planet.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.9.1
 Date: 2021-10-23
 
@@ -20,7 +27,7 @@ Date: 2021-10-23
   Changes:
     - Added default values to setting tooltips
     - Add remote function to generate dropship attack group
-    - Significantly lower level up evolution points to { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
+    - Significantly lower `level up evolution points to { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
 
   Bugfixes:
     - Fixed a bug in attack group chunk processor's find_spawn_location()
