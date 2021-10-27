@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.9.2
-Date: 2021-10-24
+Date: 2021-10-27
 
   Bugfixes:
     - Fixed an issue which custom attack group only spawn at first SE attackable planet.
