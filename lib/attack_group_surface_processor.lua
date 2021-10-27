@@ -31,6 +31,7 @@ end
 
 AttackGroupSurfaceProcessor.exec = function(race_name, retry_cron)
     init_race(race_name)
+    local start_position = 0
     local surface_data = global.attack_group_surface_data[race_name]
     local surface = nil
     if surface_data.current_planet_pointer ~= nil and
@@ -39,12 +40,19 @@ AttackGroupSurfaceProcessor.exec = function(race_name, retry_cron)
         if  surface_data.current_cycle < AttackGroupSurfaceProcessor.CYCLE_THRESHOLD then
             surface_data.current_cycle = surface_data.current_cycle + 1
             return surface_data.current_planet_pointer
+        else
+            for index, _ in pairs(global.attack_group_spawnable_chunk) do
+                if index == surface_data.current_planet_name then
+                    start_position = game.surfaces[index].index
+                    break 
+                end
+            end
         end
     end
 
     for index, _ in pairs(global.attack_group_spawnable_chunk) do
         surface = game.surfaces[index]
-        if surface and
+        if surface and surface.index > start_position and
             global.enemy_surfaces[surface.name] == race_name and
             ErmAttackGroupChunkProcessor.can_attack(surface)
         then
@@ -55,7 +63,7 @@ AttackGroupSurfaceProcessor.exec = function(race_name, retry_cron)
         end
     end
 
-    if surface == nil then
+    if start_position ~= 0 then
         -- set all planet data to nil to restart from head
         surface_data.current_planet_pointer = nil
         surface_data.current_planet_name = nil
