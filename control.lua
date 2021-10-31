@@ -35,6 +35,8 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmGui = require('__enemyracemanager__/gui/main')
 
+local CustomAttacks = require('__enemyracemanager__/prototypes/base-units/custom_attacks')
+
 -- Compatibility Events
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
 
@@ -150,9 +152,9 @@ local addRaceSettings = function()
         attack_meter = 0, -- Build by killing their force (Spawner = 50, turrets = 10, unit = 1)
         next_attack_threshold = 0, -- Used by system to calculate next move
         units = {
-            { 'small-spitter', 'small-biter', 'medium-spitter', 'medium-biter' },
-            { 'big-spitter', 'big-biter' },
-            { 'behemoth-spitter', 'behemoth-biter' },
+            { 'small-spitter', 'small-biter', 'medium-spitter', 'medium-biter', 'defender' },
+            { 'big-spitter', 'big-biter', 'distractor', 'logistic-robot' },
+            { 'behemoth-spitter', 'behemoth-biter', 'destroyer', 'construction-robot' },
         },
         current_units_tier = {},
         turrets = {
@@ -163,13 +165,13 @@ local addRaceSettings = function()
         current_turrets_tier = {},
         command_centers = {
             { 'spitter-spawner', 'biter-spawner' },
-            {},
+            { 'roboport' },
             {}
         },
         current_command_centers_tier = {},
         support_structures = {
             { 'spitter-spawner', 'biter-spawner' },
-            {},
+            { 'roboport' },
             {},
         },
         current_support_structures_tier = {}
@@ -426,9 +428,33 @@ Event.register(Event.generate_event_name(ErmConfig.RACE_SETTING_UPDATE), functio
                 ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 2, 'large-biter')
                 ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 2, 'large-spitter')
             end
+
+            if race_setting.version < 102 then
+                ErmRaceSettingsHelper.add_structure_to_tier(race_setting, 2, 'roboport')
+                ErmRaceSettingsHelper.add_command_center_from_tier(race_setting, 2, 'roboport')
+                ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 1, 'defender')
+                ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 2, 'distractor')
+                ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 2, 'logistic-robot')
+                ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 3, 'destroyer')
+                ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 3, 'construction-robot')
+            end
             race_setting.version = MOD_VERSION
         end
         remote.call('enemy_race_manager', 'update_race_setting', race_setting)
+    end
+end)
+
+Event.register(defines.events.on_script_trigger_effect, function(event)
+    if not event.source_entity or
+            String.find(event.source_entity.name, MOD_NAME, 1, true) == nil
+    then
+        return
+    end
+
+    if event.effect_id == CONSTRUCTION_ATTACK then
+        CustomAttacks.process_constructor(event)
+    elseif event.effect_id == LOGISTIC_ATTACK then
+        CustomAttacks.process_logistic(event)
     end
 end)
 

@@ -120,6 +120,7 @@ local disable_level_spawners = function()
     for i = 1, level do
         disable_level_spawner('unit-spawner', 'biter-spawner', i)
         disable_level_spawner('unit-spawner', 'spitter-spawner', i)
+        disable_level_spawner('unit-spawner', 'roboport', i)
         disable_level_spawner('turret', 'behemoth-worm-turret', i)
         disable_level_spawner('turret', 'big-worm-turret', i)
         disable_level_spawner('turret', 'medium-worm-turret', i)
@@ -140,17 +141,15 @@ end
 -- END Enemy Base Autoplace functions --
 
 
+disable_normal_biters()
 -- Remove Vanilla Bitter
 if settings.startup['enemyracemanager-enable-bitters'].value == false then
-    disable_normal_biters()
     disable_level_spawners()
 end
 
 -- 2 Ways Race handler
 if ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
-    disable_normal_biters()
     process_x_axis()
 elseif ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
-    disable_normal_biters()
     process_y_axis()
 end

@@ -56,6 +56,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     }
     biter['healing_per_tick'] = 0
     ERM_UnitHelper.modify_biter_damage(biter, type, level)
+    biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
 
     return biter
 end
