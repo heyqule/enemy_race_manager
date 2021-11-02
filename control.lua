@@ -152,13 +152,13 @@ local addRaceSettings = function()
         attack_meter = 0, -- Build by killing their force (Spawner = 50, turrets = 10, unit = 1)
         next_attack_threshold = 0, -- Used by system to calculate next move
         units = {
-            { 'small-spitter', 'small-biter', 'medium-spitter', 'medium-biter', 'defender' },
+            { 'medium-spitter', 'medium-biter', 'defender' },
             { 'big-spitter', 'big-biter', 'distractor', 'logistic-robot' },
             { 'behemoth-spitter', 'behemoth-biter', 'destroyer', 'construction-robot' },
         },
         current_units_tier = {},
         turrets = {
-            { 'small-worm-turret', 'medium-worm-turret' },
+            { 'medium-worm-turret' },
             { 'big-worm-turret' },
             { 'behemoth-worm-turret' },
         },
@@ -325,8 +325,8 @@ end)
 
 
 --- CRON Events
-Event.on_nth_tick(ErmConfig.TEN_MINUTES_CRON, function(event)
-    ErmCron.process_10_min_queue()
+Event.on_nth_tick(ErmConfig.THIRTY_SECONDS_CRON, function(event)
+    ErmCron.process_30_sec_queue()
 end)
 
 Event.on_nth_tick(ErmConfig.ONE_MINUTE_CRON, function(event)
@@ -437,6 +437,9 @@ Event.register(Event.generate_event_name(ErmConfig.RACE_SETTING_UPDATE), functio
                 ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 2, 'logistic-robot')
                 ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 3, 'destroyer')
                 ErmRaceSettingsHelper.add_unit_to_tier(race_setting, 3, 'construction-robot')
+                ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 1, 'small-biter')
+                ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 1, 'small-spitter')
+                ErmRaceSettingsHelper.remove_turret_from_tier(race_setting, 1, 'small-worm-turret')
             end
             race_setting.version = MOD_VERSION
         end

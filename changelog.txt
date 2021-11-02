@@ -3,14 +3,25 @@ Version: 1.10.0
 Date:
 
   Features:
-     - Added combat robots, construction robot, logistic robot as flyer units.
+     - ---- Vanilla enemy enhancement ----
+     - Added combat robots, construction robot, logistic robot as flyer units for enemy race.
      - construction robot handles building proxy spawners.
      - logistic robot handles the dropship role.
      - Vanilla race now support all features of ERM mod.
-     - Added 4 races split in map generation setting. You can up to have 4 races in nauvis.
+     - ---- End Vanilla enemy enhancement ----
+     - ---- time base custom attack group ----
+     - Add time base custom attack group. Default: ON
+     - Points will add to attack meter every minute. Starting at level 2.
+     - ---- End time base custom attack group ----
+     - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
 
   Changes:
      - Biters now support movement speed multiplier.
+     - Cap attack meter at 999999.
+     - Remove small-biter/splitter and small-worm-turret from spawning in custom attack group.
+
+  Bugfixes:
+     - Fix a crash when custom attack group attempt to generate and there isn't an attack-able chunk.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.9.2

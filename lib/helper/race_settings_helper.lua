@@ -92,11 +92,11 @@ function RaceSettingHelper.remove_unit_from_tier(race_settings, tier, structure)
     remove_from_entity_table(race_settings, 'units', tier, structure)
 end
 
-function RaceSettingHelper.add_turrets_to_tier(race_settings, tier, structure)
+function RaceSettingHelper.add_turret_to_tier(race_settings, tier, structure)
     add_to_entity_table(race_settings, 'turrets', tier, structure)
 end
 
-function RaceSettingHelper.remove_turrets_from_tier(race_settings, tier, structure)
+function RaceSettingHelper.remove_turret_from_tier(race_settings, tier, structure)
     remove_from_entity_table(race_settings, 'turrets', tier, structure)
 end
 
@@ -231,7 +231,7 @@ function RaceSettingHelper.get_attack_meter(target_race)
 end
 
 function RaceSettingHelper.add_to_attack_meter(target_race, value)
-    global.race_settings[target_race].attack_meter = global.race_settings[target_race].attack_meter + value
+    global.race_settings[target_race].attack_meter = math.min(global.race_settings[target_race].attack_meter + value, 999999)
 end
 
 function RaceSettingHelper.get_next_attack_threshold(target_race)

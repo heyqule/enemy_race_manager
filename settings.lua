@@ -371,7 +371,24 @@ data:extend {
         setting_type = "runtime-global",
         default_value = true,
         order = "enemyracemanager-406"
-    }
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-time-based-enable",
+        description = "enemyracemanager-time-based-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-420"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-time-based-points",
+        description = "enemyracemanager-time-based-points",
+        setting_type = "runtime-global",
+        default_value = 5,
+        allowed_values = {3, 5, 10, 20, 25, 33, 50},
+        order = "enemyracemanager-421"
+    },
 }
 
 

@@ -23,8 +23,8 @@ if DEBUG_MODE then
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
-    ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.second + 1
-    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.minute + 1
+    ErmConfig.ONE_MINUTE_CRON = 10 * defines.time.second + 1
+    ErmConfig.THIRTY_SECONDS_CRON = 5 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
@@ -33,8 +33,8 @@ else
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
-    ErmConfig.TEN_MINUTES_CRON = 10 * defines.time.minute + 1
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
+    ErmConfig.THIRTY_SECONDS_CRON = 30 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
@@ -82,7 +82,9 @@ local refreshable_settings = {
         'enemyracemanager-dropship-squad-chance',
         'enemyracemanager-precision-strike-flying-unit-enable',
         'enemyracemanager-precision-strike-flying-unit-chance',
-        'enemyracemanager-precision-strike-warning'
+        'enemyracemanager-precision-strike-warning',
+        'enemyracemanager-time-based-enable',
+        'enemyracemanager-time-based-points'
     }
 }
 
@@ -297,6 +299,14 @@ end
 
 function ErmConfig.max_group_size()
     return get_global_setting_value('enemyracemanager-max-group-size')
+end
+
+function ErmConfig.time_base_attack_enabled()
+    return get_global_setting_value('enemyracemanager-time-based-enable')
+end
+
+function ErmConfig.time_base_attack_points()
+    return get_global_setting_value('enemyracemanager-time-based-points')
 end
 
 function ErmConfig.get_enemy_races()

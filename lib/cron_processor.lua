@@ -27,27 +27,27 @@ local process_cron = function(cron_list)
 end
 
 function CronProcessor.init_globals()
-    global.ten_minutes_cron = global.ten_minutes_cron or Queue()
     global.one_minute_cron = global.one_minute_cron or Queue()
+    global.thirty_seconds_cron = global.thirty_seconds_cron or Queue()
     global.ten_seconds_cron = global.ten_seconds_cron or Queue()
     global.one_second_cron = global.one_second_cron or Queue()
 end
 
 function CronProcessor.rebuild_queue()
-    Queue.load(global.ten_minutes_cron)
     Queue.load(global.one_minute_cron)
+    Queue.load(global.thirty_seconds_cron)
     Queue.load(global.ten_seconds_cron)
     Queue.load(global.one_second_cron)
-end
-
-function CronProcessor.add_10_min_queue(request, ...)
-    local arg = {...}
-    global.ten_minutes_cron({request, arg})
 end
 
 function CronProcessor.add_1_min_queue(request, ...)
     local arg = {...}
     global.one_minute_cron({request, arg})
+end
+
+function CronProcessor.add_30_sec_queue(request, ...)
+    local arg = {...}
+    global.thirty_seconds_cron({request, arg})
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
@@ -60,12 +60,12 @@ function CronProcessor.add_1_sec_queue(request, ...)
     global.one_second_cron({request, arg})
 end
 
-function CronProcessor.process_10_min_queue()
-    process_cron(global.ten_minutes_cron)
-end
-
 function CronProcessor.process_1_min_queue()
     process_cron(global.one_minute_cron)
+end
+
+function CronProcessor.process_30_sec_queue()
+    process_cron(global.thirty_seconds_cron)
 end
 
 function CronProcessor.process_10_sec_queue()

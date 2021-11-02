@@ -110,7 +110,7 @@ end
 --- Usage: remote.call('enemy_race_manager_debug', 'add_points_to_attack_meter', 500000)
 function Debug_RemoteAPI.add_points_to_attack_meter(value)
     for name, _ in pairs(global.race_settings) do
-        global.race_settings[name]['attack_meter'] = value
+        ErmRaceSettingsHelper.add_to_attack_meter(name, value)
     end
 end
 
