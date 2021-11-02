@@ -14,6 +14,9 @@ local SPLIT_POINT = settings.startup['enemyracemanager-2way-group-split-point'].
 -- Add 4 chunks gap between races
 local SPLIT_GAP = 64
 
+local FOUR_WAY_X_SPLIT_POINT = settings.startup['enemyracemanager-4way-x-axis'].value
+local FOUR_WAY_Y_SPLIT_POINT = settings.startup['enemyracemanager-4way-y-axis'].value
+
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
     ErmDebugHelper.print('Using 0')
@@ -118,23 +121,23 @@ local process_4_ways_unit = function(v)
 
     if topleft and v.autoplace then
         v.autoplace.probability_expression =
-            noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) *
-            noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
             v.autoplace.probability_expression
     elseif topright and v.autoplace then
         v.autoplace.probability_expression =
-            noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) *
-            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+            noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomright and v.autoplace then
         v.autoplace.probability_expression =
-            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
-            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+            noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+            noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomleft and v.autoplace then
         v.autoplace.probability_expression =
-            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
-            noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+            noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
             v.autoplace.probability_expression
     else
         v.autoplace = zero_probability_expression()
