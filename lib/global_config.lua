@@ -222,6 +222,14 @@ function ErmConfig.mapgen_is_2_races_split()
     return false
 end
 
+function ErmConfig.mapgen_is_4_races_split()
+    if ErmConfig.get_mapping_method() == MAP_GEN_4_RACES_SPLIT then
+        return true
+    end
+
+    return false
+end
+
 function ErmConfig.mapgen_is_one_race_per_surface()
     if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         return true

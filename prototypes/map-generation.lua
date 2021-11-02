@@ -110,6 +110,51 @@ local process_y_axis = function()
     end
 end
 
+local process_4_ways_unit = function(v)
+    local topleft = String.find(v.name, settings.startup['enemyracemanager-4way-top-left'].value, 1, true)
+    local topright = String.find(v.name, settings.startup['enemyracemanager-4way-top-right'].value, 1, true)
+    local bottomright = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-right'].value, 1, true)
+    local bottomleft = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-left'].value, 1, true)
+
+    if topleft and v.autoplace then
+        v.autoplace.probability_expression =
+            noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) *
+            v.autoplace.probability_expression
+    elseif topright and v.autoplace then
+        v.autoplace.probability_expression =
+            noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) *
+            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+            v.autoplace.probability_expression
+    elseif bottomright and v.autoplace then
+        v.autoplace.probability_expression =
+            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+            v.autoplace.probability_expression
+    elseif bottomleft and v.autoplace then
+        v.autoplace.probability_expression =
+            noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+            noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) *
+            v.autoplace.probability_expression
+    else
+        v.autoplace = zero_probability_expression()
+    end
+end
+
+local process_4_ways = function()
+    for _, v in pairs(data.raw["unit-spawner"]) do
+        -- spawners
+        ErmDebugHelper.print('Processing:' .. v.name)
+        process_4_ways_unit(v)
+    end
+
+    for _, v in pairs(data.raw["turret"]) do
+        -- turret
+        ErmDebugHelper.print('Processing:' .. v.name)
+        process_4_ways_unit(v)
+    end
+end
+
 local disable_level_spawner = function(type, name, level)
     data.raw[type][MOD_NAME .. '/' .. name .. '/' .. level]['autoplace'] = zero_probability_expression()
 end
@@ -152,4 +197,8 @@ if ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2w
     process_x_axis()
 elseif ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
     process_y_axis()
+end
+
+if ErmConfig.mapgen_is_4_races_split() then
+    process_4_ways()
 end
