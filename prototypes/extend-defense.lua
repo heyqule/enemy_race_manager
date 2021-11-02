@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:23 PM
 ---
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 -- Change resistance values on vanilla armors
 local armor_change_resistance = function(percentage_value, fixed_value)
     return {
@@ -92,11 +93,17 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         { type = "cold", percent = 66, decrease = 0 }
     }
 
-    -- Buff Robots, immune fire
-    data.raw['construction-robot']['construction-robot']['max_health'] = 200
+    -- Buff Robots, immune fire, bump all other to 75
+    if (ErmConfig.get_max_level() == 15) then
+        data.raw['construction-robot']['construction-robot']['max_health'] = 150
+        data.raw['logistic-robot']['logistic-robot']['max_health'] =  150
+    elseif (ErmConfig.get_max_level() == 20) then
+        data.raw['construction-robot']['construction-robot']['max_health'] = 200
+        data.raw['logistic-robot']['logistic-robot']['max_health'] = 200
+    end
+
     data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
     data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
-    data.raw['logistic-robot']['logistic-robot']['max_health'] = 200
     data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
     data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
 end

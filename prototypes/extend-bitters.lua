@@ -22,19 +22,19 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
 local base_acid_resistance = 10
-local incremental_acid_resistance = 65
+local incremental_acid_resistance = 75
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 80
+local incremental_physical_resistance = 90
 -- Handles fire and explosive resistance
 local base_fire_resistance = 10
-local incremental_fire_resistance = 65
+local incremental_fire_resistance = 75
 -- Handles laser and electric resistance
 local base_electric_resistance = 0
-local incremental_electric_resistance = 75
+local incremental_electric_resistance = 85
 -- Handles cold resistance
 local base_cold_resistance = 10
-local incremental_cold_resistance = 65
+local incremental_cold_resistance = 75
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
@@ -69,9 +69,9 @@ for i = 1, level do
     -- 10 - 105
     data:extend({ makeLevelEnemy(i, 'small-spitter') })
     -- 75 - 538
-    data:extend({ makeLevelEnemy(i, 'medium-biter', 1.5) })
+    data:extend({ makeLevelEnemy(i, 'medium-biter' ) })
     -- 50 - 358
-    data:extend({ makeLevelEnemy(i, 'medium-spitter', 1.5) })
+    data:extend({ makeLevelEnemy(i, 'medium-spitter') })
     -- 375 - 2250
     data:extend({ makeLevelEnemy(i, 'big-biter', 2) })
     -- 200 - 1200

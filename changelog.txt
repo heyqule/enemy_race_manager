@@ -7,6 +7,7 @@ Date:
      - Added combat robots, construction robot, logistic robot as flyer units for enemy race.
      - construction robot handles building proxy spawners.
      - logistic robot handles the dropship role.
+     - bump unit resistance to be same as other races.
      - Vanilla race now support all features of ERM mod.
      - ---- End Vanilla enemy enhancement ----
      - ---- time base custom attack group ----
@@ -19,6 +20,7 @@ Date:
      - Biters now support movement speed multiplier.
      - Cap attack meter at 999999.
      - Remove small-biter/splitter and small-worm-turret from spawning in custom attack group.
+     - Construction/Logistic Bot only get HP buff on max level 15 & 20.
 
   Bugfixes:
      - Fix a crash when custom attack group attempt to generate and there isn't an attack-able chunk.
