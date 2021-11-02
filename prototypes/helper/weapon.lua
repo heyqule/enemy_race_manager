@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 10:41 PM
 ---
-local ERMDataHelper = require('__enemyracemanager__/lib/helper/data_helper')
+local ERMDataHelper = require('__enemyracemanager__/lib/rig/data_helper')
 local ERM_WeaponDataHelper = {}
 
 -- Change rocket/cannon area explosives to hit all units
