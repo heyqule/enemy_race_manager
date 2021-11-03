@@ -115,7 +115,7 @@ function AttackMeterProcessor.calculate_points(force_name)
         attack_meter_points = attack_meter_points +  extra_points
     end
 
-    ErmRaceSettingsHelper.add_to_attack_meter(race_name, attack_meter_points)
+    ErmRaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
 
     if global.settings['enemyracemanager-evolution-point-accelerator'] then
         local spawner_destroy_factor = game.map_settings.enemy_evolution.destroy_factor

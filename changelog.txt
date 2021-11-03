@@ -7,7 +7,7 @@ Date:
      - Added combat robots, construction robot, logistic robot as flyer units for enemy race.
      - construction robot handles building proxy spawners.
      - logistic robot handles the dropship role.
-     - bump unit resistance to be same as other races.
+     - bump unit resistance to be similar to other races.
      - Vanilla race now support all features of ERM mod.
      - ---- End Vanilla enemy enhancement ----
      - ---- time base custom attack group ----
@@ -20,7 +20,7 @@ Date:
      - Biters now support movement speed multiplier.
      - Cap attack meter at 999999.
      - Remove small-biter/splitter and small-worm-turret from spawning in custom attack group.
-     - Construction/Logistic Bot only get HP buff on max level 15 & 20.
+     - Construction/Logistic bots only get HP buff on max level 15 (150) & 20 (200).
 
   Bugfixes:
      - Fix a crash when custom attack group attempt to generate and there isn't an attack-able chunk.
@@ -49,12 +49,12 @@ Date: 2021-10-23
     - Enemy running/flying speed can now adjustable in startup setting.
     - Added a detailed window to show race's additional information and adjustment
     - Added total units and structures kill count to detailed window
-    - Enemy level can be override in detail UI window.
+    - Enemy level can be overide in detail UI window.
 
   Changes:
     - Added default values to setting tooltips
     - Add remote function to generate dropship attack group
-    - Significantly lower `level up evolution points to { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
+    - Significantly lower level up evolution points to { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
 
   Bugfixes:
     - Fixed a bug in attack group chunk processor's find_spawn_location()

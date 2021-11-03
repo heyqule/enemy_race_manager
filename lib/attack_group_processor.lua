@@ -76,7 +76,7 @@ local get_unit_level = function(race_name)
     return level
 end
 
-local get_spawn_chance = function(chance_value)
+local can_spawn = function(chance_value)
     local chance = math.random(1, 100)
     local spawn_as = chance > (100 - chance_value)
     return spawn_as
@@ -195,7 +195,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level(race_name), ErmConfig.MAX_TIER) ]
 
         local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
-        local spawn_as_flying_unit_precision = get_spawn_chance(ErmConfig.flying_squad_precision_chance())
+        local spawn_as_flying_unit_precision = can_spawn(ErmConfig.flying_squad_precision_chance())
 
         if flying_unit_precision_enabled and spawn_as_flying_unit_precision then
             is_precision_attack = true
@@ -251,14 +251,14 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = get_spawn_chance(ErmConfig.flying_squad_chance())
+    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance())
     local status = false
     --- Flying Squad starts at level 2.  Max tier at level 4
     if flying_enabled and ErmRaceSettingsHelper.get_level(race_name) > 1 and
             spawn_as_flying_squad then
 
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
-        local spawn_as_flying_squad = get_spawn_chance(ErmConfig.dropship_chance())
+        local spawn_as_flying_squad = can_spawn(ErmConfig.dropship_chance())
 
         if dropship_enabled and spawn_as_flying_squad then
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)

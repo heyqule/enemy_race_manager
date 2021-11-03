@@ -6,7 +6,7 @@
 
 local PlayerUnitHelper = {}
 
-local RATIO = 0.75
+local RATIO = 0.5
 
 function PlayerUnitHelper.get_health_multiplier()
     return 10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 10) * RATIO)
