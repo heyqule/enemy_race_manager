@@ -57,6 +57,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- Buff gun turret HP
     data.raw['ammo-turret']['gun-turret']['max_health'] = 800
+    data.raw['electric-turret']['laser-turret']['max_health'] = 1200
 
     -- Buff vehicles
     data.raw['car']['car']['max_health'] = 750
@@ -95,11 +96,11 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- Buff Robots, immune fire, bump all other to 75
     if (ErmConfig.get_max_level() == 15) then
-        data.raw['construction-robot']['construction-robot']['max_health'] = 150
-        data.raw['logistic-robot']['logistic-robot']['max_health'] =  150
+        data.raw['construction-robot']['construction-robot']['max_health'] = 175
+        data.raw['logistic-robot']['logistic-robot']['max_health'] =  175
     elseif (ErmConfig.get_max_level() == 20) then
-        data.raw['construction-robot']['construction-robot']['max_health'] = 200
-        data.raw['logistic-robot']['logistic-robot']['max_health'] = 200
+        data.raw['construction-robot']['construction-robot']['max_health'] = 250
+        data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
     end
 
     data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
