@@ -15,14 +15,14 @@
 #### Armoured Biters & Explosive Biters & Cold Biters
 - All biters, worms and spawners support leveling.
 - They join default enemy force, erm_vanilla.
-- The biter mods' multiplier stacks with this mod's multiplier. However, I suggest leave them alone and adjust the multiplier in ERM.
+- The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
 
 #### Rampant AI (limited)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
-- Rampant enemies override default spawners.  They don't support many features from ERM.
+- Rampant enemies override default spawners. Enabling them may have odd behavior. They also don't support many features from ERM.
 
-#### Other biter mods, like bobs enemy or natural evolution enemies.
-- Not supported.  ERM overrides biter spawners table.
+#### Other biter mods with tiers and level, like bobs enemy or natural evolution enemies.
+- Not supported.  ERM override the biter spawners table.
 
 #### New Game Plus
 - When the game resets, attack meter also reset.
