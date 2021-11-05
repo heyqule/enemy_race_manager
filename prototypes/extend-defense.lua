@@ -47,7 +47,6 @@ end
 
 -- Enhance Vanilla Defenses
 if settings.startup['enemyracemanager-enhance-defense'].value == true then
-
     -- Buff Armor
     data.raw['armor']['light-armor']['resistances'] = armor_change_resistance(25, 5)
     data.raw['armor']['heavy-armor']['resistances'] = armor_change_resistance(30, 10)
@@ -109,3 +108,11 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
 end
 
+--- @TODO For FREE FOR ALL MODE change
+--for type_name, types in pairs(data.raw) do
+--    if type_name ~= ('unit' or 'unit-spawner' or 'turret') then
+--        for _, entity in pairs(types) do
+--
+--        end
+--    end
+--end

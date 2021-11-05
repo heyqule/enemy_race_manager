@@ -39,7 +39,7 @@ end
 
 -- Checks enemy_erm_ prefix
 function ForceHelper.is_erm_unit(entity)
-    return String.find(entity.name, 'erm_', 1, true)
+    return String.find(entity.name, 'erm_', 1, true) ~= nil
 end
 
 function ForceHelper.set_friends(game, force_name)

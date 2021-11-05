@@ -21,9 +21,13 @@ Date:
      - Cap attack meter at 999999.
      - Remove small-biter/splitter and small-worm-turret from spawning in custom attack group.
      - Construction/Logistic bots only get HP buff on max level 15 (150) & 20 (200).
+     - Removed /ERM_levelup command
+     - Change AttackGroupProcessor to generate a group in 20 seconds regardless of the group size, instead of 5 units/s
+     - replace land-mine stunt effect with 75% slowdown
 
   Bugfixes:
      - Fix a crash when custom attack group attempt to generate and there isn't an attack-able chunk.
+     - Fix a crash when unsupported enemies try to level up.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.9.2

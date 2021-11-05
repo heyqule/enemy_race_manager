@@ -468,12 +468,6 @@ commands.add_command("ERM_GetRaceSettings",
             game.print(game.table_to_json(global.race_settings))
         end)
 
-commands.add_command("ERM_levelup",
-        { "description.command-level-up-race" },
-        function(command)
-            ErmCommandProcessor.levelup(command)
-        end)
-
 commands.add_command("ERM_FFA",
         { "description.command-ffa" },
         function(command)

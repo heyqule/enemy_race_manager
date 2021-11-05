@@ -21,48 +21,6 @@ local is_not_from_admin = function(command)
     return false
 end
 
---- @deprecated to be remove in 1.10, replaced by GUI
-function CommandProcessor.levelup(command)
-    if is_not_from_admin(command) then
-        return
-    end
-
-
-    if(command.parameter == nil or not String.find(command.parameter, ',', 1, true))  then
-        game.print({'description.command-error-invalid-parameters'})
-        return
-    end
-
-    local params = String.split(command.parameter, ',')
-
-    if(params[1] == nil or params[2] == nil)  then
-        game.print({'description.command-error-invalid-parameters'})
-        return
-    end
-
-    local race_name = params[1]
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
-    local level = tonumber(params[2])
-
-    if race_name == nil or global.race_settings[race_name] == nil or game.forces[force_name] == nil then
-        game.print({'description.command-error-invalid-race-name', race_name})
-        return
-    end
-
-    if level == nil or level > ErmConfig.get_max_level() or level < 1 then
-        game.print({'description.command-error-invalid-level', tostring(level)})
-        return
-    end
-
-    ErmLevelProcessor.calculateEvolutionPoints(global.race_settings, game.forces, settings)
-
-    if ErmLevelProcessor.canLevelByCommand(global.race_settings, game.forces[force_name], race_name, level) then
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, level)
-    else
-        game.print({'description.command-error-level-too-low'})
-    end
-end
-
 function CommandProcessor.freeforall(command)
     if is_not_from_admin(command) then
         return

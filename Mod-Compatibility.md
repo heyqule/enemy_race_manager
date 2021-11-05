@@ -12,14 +12,17 @@
 - turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
 - More realistic weapons option must have "Auto-aim for MRW" enabled to hit air units.
 
-#### Rampant AI (limited)
-- It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
-- It is NOT compatible with its custom biters at the moment.  Enabling them may crash the game.  I have not tested this.
-
 #### Armoured Biters & Explosive Biters & Cold Biters
 - All biters, worms and spawners support leveling.
 - They join default enemy force, erm_vanilla.
 - The biter mods' multiplier stacks with this mod's multiplier. However, I suggest leave them alone and adjust the multiplier in ERM.
+
+#### Rampant AI (limited)
+- It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
+- Rampant enemies override default spawners.  They don't support many features from ERM.
+
+#### Other biter mods, like bobs enemy or natural evolution enemies.
+- Not supported.  ERM overrides biter spawners table.
 
 #### New Game Plus
 - When the game resets, attack meter also reset.

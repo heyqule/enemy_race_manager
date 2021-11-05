@@ -43,3 +43,8 @@ if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true then
     WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
     WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 end
+
+--- Replace Stunt with slow sticker for land-mine
+local land_mine_sticker = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]['action']['action_delivery']['target_effects'][2]
+land_mine_sticker['sticker'] = '5-050-slowdown-sticker'
+land_mine_sticker['show_in_tooltip'] = true

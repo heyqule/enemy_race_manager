@@ -54,6 +54,10 @@ local get_surface_by_name = function(surfaces, name)
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
+    if ErmForceHelper.is_erm_unit(entity) == false then
+        return
+    end
+
     local nameToken = ErmForceHelper.get_name_token(entity.name)
 
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)

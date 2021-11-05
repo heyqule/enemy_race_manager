@@ -22,7 +22,7 @@ AttackGroupProcessor.MIXED_UNIT_POINTS = 20
 AttackGroupProcessor.FLYING_UNIT_POINTS = 75
 AttackGroupProcessor.DROPSHIP_UNIT_POINTS = 150
 
-AttackGroupProcessor.UNIT_PER_BATCH = 5
+AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(settings.startup['enemyracemanager-max-group-size'].value / 20)
 AttackGroupProcessor.MAX_GROUP_SIZE = 600
 
 AttackGroupProcessor.GROUP_AREA = 256
