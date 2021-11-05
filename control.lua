@@ -84,7 +84,7 @@ end
 local onUnitFinishGathering = function(event)
     local group = event.group
     local max_settler = global.settings.enemy_expansion_max_settler
-    
+
     if max_settler == nil then
         max_settler = math.min(50, game.map_settings.enemy_expansion.settler_group_max_size)
         global.settings.enemy_expansion_max_settler = max_settler
@@ -473,3 +473,6 @@ commands.add_command("ERM_FFA",
         function(command)
             ErmCommandProcessor.freeforall(command)
         end)
+
+-- Compatibility Events
+require('__enemyracemanager__/lib/compatibility_events/k2')

@@ -24,3 +24,8 @@ end
 if mods['IndustrialRevolution'] then
     require "IndustrialRevolution/projectile"
 end
+
+if mods['Krastorio2'] then
+    require "K2/projectile"
+    require "K2/resistance"
+end

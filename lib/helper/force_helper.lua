@@ -51,12 +51,16 @@ function ForceHelper.set_friends(game, force_name)
     end
 end
 
+function ForceHelper.split_name(name)
+    return String.split(name, '/')
+end
+
 function ForceHelper.get_name_token(name)
     if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
             global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
         else
-            global.force_entity_name_cache[name] = String.split(name, '/')
+            global.force_entity_name_cache[name] = ForceHelper.split_name(name)
         end
     end
 
