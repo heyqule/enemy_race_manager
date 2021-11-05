@@ -9,11 +9,16 @@ Date: ???
     - logistic robot handles the dropship role.
     - bump unit resistance to be similar to other races.
     - Vanilla race now support all features of ERM mod.
-    - ---- End Vanilla enemy enhancement ----
+    - ---- / Vanilla enemy enhancement ----
     - ---- time base custom attack group ----
     - Add time base custom attack group. Default: ON
     - Points will add to attack meter every minute. Starting at level 2.
-    - ---- End time base custom attack group ----
+    - ---- / time base custom attack group ----
+    - ---- Krastorio 2 Compatibility update (required 1.2+) ----
+    - Creep generation support for new races
+    - Custom bullet can now hit air.
+    - ---- / Krastorio 2 Compatibility update ----
+
     - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
 
   Changes:

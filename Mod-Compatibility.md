@@ -6,11 +6,11 @@
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
 
-#### Krastorio2
-- New races do not support creep generation unless author patches the creep generation code or its remote API.
-    - https://mods.factorio.com/mod/Krastorio2/discussion/605d800cf3bb48c41a98cd6b
-- turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
-- More realistic weapons option must have "Auto-aim for MRW" enabled to hit air units.
+#### Krastorio2 (1.2+)
+- New races supports creep generation
+- Custom bullets can hit air
+
+#### 
 
 #### Armoured Biters & Explosive Biters & Cold Biters
 - All biters, worms and spawners support leveling.
