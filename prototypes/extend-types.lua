@@ -1,4 +1,5 @@
--- Damage Types
+local Sprites = require('__stdlib__/stdlib/data/modules/sprites')
+--- Damage Types
 data:extend(
         {
             {
@@ -14,7 +15,7 @@ data:extend(
                 name = "self"
             }
         })
--- Target Trigger Type
+--- Target Trigger Type
 data:extend(
         {
             {
@@ -22,7 +23,7 @@ data:extend(
                 name = "flying"
             }
         })
--- Item Subgroup
+--- Item Subgroup
 data:extend(
         {
             {
@@ -47,5 +48,35 @@ data:extend(
 -- Recipe Category
 data:extend({
     { type = "recipe-category", name = 'erm_controlable_units' },
-
 })
+
+--- Ammo Category
+data:extend({
+    {
+        type = "ammo-category",
+        name = "erm-biter-damage"
+    },
+})
+
+--- Mod wide slow stickers
+data:extend({
+    {
+        type = "sticker",
+        name = "5-075-slowdown-sticker",
+        flags = {},
+        animation = Sprites.empty_pictures(),
+        duration_in_ticks = 5 * 60,
+        target_movement_modifier = 0.75,
+        vehicle_speed_modifier = 0.75,
+    },
+    {
+        type = "sticker",
+        name = "5-050-slowdown-sticker",
+        flags = {},
+        animation = Sprites.empty_pictures(),
+        duration_in_ticks = 5 * 60,
+        target_movement_modifier = 0.50,
+        vehicle_speed_modifier = 0.50,
+    }
+})
+

@@ -122,6 +122,17 @@ function Debug_RemoteAPI.level_up_all()
     end
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'reset_level')
+function Debug_RemoteAPI.reset_level()
+    for race_name, _ in pairs(global.race_settings) do
+        global.race_settings[race_name].evolution_base_point = 0
+        global.race_settings[race_name].evolution_point = 0
+        global.race_settings[race_name].tier = 1
+        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, 1)
+        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 0
+    end
+end
+
 --- Usage: remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
 function Debug_RemoteAPI.attack_group_chunk_index()
     ErmAttackGroupChunkProcessor.init_index()

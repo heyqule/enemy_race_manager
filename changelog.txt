@@ -18,8 +18,9 @@ Date: ???
     - Creep generation support for new races
     - Custom bullet can now hit air.
     - ---- / Krastorio 2 Compatibility update ----
-
     - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
+    - level 2 and level 3 are no longer based on evolution factor
+    - Adjust level up evolution points to {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 
   Changes:
     - Biters now support movement speed multiplier.

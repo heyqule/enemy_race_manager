@@ -20,12 +20,8 @@ local LevelManager = {}
 -- unit tier control
 local tier_map = { 0.4, 0.8 }
 
--- control level 2, 3
-local evolution_level_map = { 0.4, 0.8 }
-local max_evolution_factor_level = 3
-
--- control level 4 - 20
-local evolution_points = { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
+-- Evolution point for leveling
+local evolution_points = {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1
@@ -48,20 +44,15 @@ local handle_unit_tier = function(race_settings, force, race_name, dispatch)
     end
 end
 
-local can_level_up_by_evolution_factor = function(current_level, force)
-    return current_level < max_evolution_factor_level and force.evolution_factor >= evolution_level_map[current_level]
-end
-
 local can_level_up_by_evolution_points = function(current_level, race_settings, race_name)
-    return current_level >= max_evolution_factor_level and
-            current_level < ErmConfig.get_max_level() and
-            race_settings[race_name].evolution_point >= evolution_points[(current_level - max_evolution_factor_level) + 1]
+    return current_level < ErmConfig.get_max_level() and
+            race_settings[race_name].evolution_point >= evolution_points[current_level]
 end
 
 local handle_unit_level = function(race_settings, force, race_name, dispatch)
     local current_level = race_settings[race_name].level
     -- Handle Evolution Level
-    if can_level_up_by_evolution_factor(current_level, force) or can_level_up_by_evolution_points(current_level, race_settings, race_name) then
+    if can_level_up_by_evolution_points(current_level, race_settings, race_name) then
         race_settings[race_name].level = current_level + 1
         if dispatch then
             game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
@@ -197,16 +188,9 @@ function LevelManager.get_tier_for_race(race_settings, race_name)
 end
 
 function LevelManager.get_calculated_current_level(race_setting)
-    local force = game.forces[ErmForceHelper.get_force_name_from(race_setting.race)]
-    for key, value in pairs(evolution_level_map) do
-        if force.evolution_factor < value then
-            return key
-        end
-    end
-
     for key, value in pairs(evolution_points) do
         if race_setting.evolution_point < value then
-            return key + max_evolution_factor_level - 1
+            return key
         end
     end
 
@@ -249,10 +233,6 @@ function LevelManager.getEvolutionFactor(race_name)
     end
 
     return 'n/a'
-end
-
-function LevelManager.getMaxLevelByEvolutionFactor()
-    return max_evolution_factor_level
 end
 
 return LevelManager

@@ -27,8 +27,6 @@ local aoe_projectiles = {
     {'anti-material-rifle-ammo-', 4},
 }
 
----WeaponHelper.ignore_collision_for_area_damage(data.raw.projectile['anti-material-rifle-1']['action']['action_delivery']['target_effects'])
-
 for _, projectile in pairs(aoe_projectiles) do
     for i = 1, projectile[2], 1 do
         if data.raw.projectile[projectile[1]..tostring(i)] then
