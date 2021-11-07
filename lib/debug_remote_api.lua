@@ -114,11 +114,17 @@ function Debug_RemoteAPI.add_points_to_attack_meter(value)
     end
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'level_up_all')
-function Debug_RemoteAPI.level_up_all()
+--- Usage: remote.call('enemy_race_manager_debug', 'level_up', 20)
+function Debug_RemoteAPI.level_up(level)
     for race_name, _ in pairs(global.race_settings) do
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, GlobalConfig.get_max_level())
-        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 1
+        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'level_up_tier', 0.5)
+function Debug_RemoteAPI.level_up_tier(value)
+    for race_name, _ in pairs(global.race_settings) do
+        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor =math.min(value, 1)
     end
 end
 

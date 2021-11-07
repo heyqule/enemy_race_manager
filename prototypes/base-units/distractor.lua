@@ -17,7 +17,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 2
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
@@ -154,6 +154,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['type'] = 'unit'
     robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
     robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot["subgroup"] = "erm-flying-enemies"
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
     robot['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
@@ -186,7 +187,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box
     robot['selection_box'] = selection_box
-    robot['flag'] = { "placeable-player", "placeable-enemy" }
+    robot['flag'] = { "placeable-player", "placeable-enemy", "not-flammable" }
 
     return robot
 end

@@ -155,9 +155,7 @@ function ERM_DetailWindow.confirm(event)
         local nameToken = String.split(event.element.name, '/')
         if nameToken[2] == ERM_DetailWindow.confirm_name then
             local slider_name = nameToken[1]..'/'..ERM_DetailWindow.levelup_silder_name
-            log(event.element.parent['level_slider_flow'][slider_name])
             local level = tonumber(event.element.parent['level_slider_flow'][slider_name].slider_value)
-            log(level .. '//' .. global.race_settings[nameToken[1]].level)
             if level ~= global.race_settings[nameToken[1]].level then
                 LevelManager.levelByCommand(global.race_settings, nameToken[1], level)
                 ERM_MainWindow.require_update_all = true

@@ -28,15 +28,21 @@ data:extend(
         {
             {
                 type = "item-subgroup",
-                name = "flying-enemies",
+                name = "erm-flying-enemies",
                 group = "enemies",
-                order = "erm-flying-enemies"
+                order = "erm-erm-flying-enemies"
             },
             {
                 type = "item-subgroup",
-                name = "dropship-enemies",
+                name = "erm-dropship-enemies",
                 group = "enemies",
                 order = "erm-dropship-enemies"
+            },
+            {
+                type = "item-subgroup",
+                name = "erm-builder-enemies",
+                group = "enemies",
+                order = "erm-builder-enemies"
             },
             {
                 type = "item-subgroup",

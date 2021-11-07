@@ -210,19 +210,9 @@ end
 function LevelManager.levelByCommand(race_settings, race_name, target_level)
     race_settings[race_name].level = target_level
 
-    if race_settings[race_name].tier < ErmConfig.MAX_TIER and race_settings[race_name].tier < target_level then
-        local target_tier = Math.min(3, target_level)
-        repeat
-            level_up_tier(race_settings[race_name].tier, race_settings, race_name)
-        until race_settings[race_name].tier >= target_tier
-    end
-
     game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
     Event.dispatch({
         name = Event.get_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-    Event.dispatch(
-            { name = Event.get_event_name(ErmConfig.EVENT_TIER_WENT_UP),
-              affected_race = race_settings[race_name] })
 end
 
 function LevelManager.getEvolutionFactor(race_name)

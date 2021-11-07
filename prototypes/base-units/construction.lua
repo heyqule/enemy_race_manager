@@ -76,6 +76,7 @@ robot_animations["construction-robot"] =
         frame_count = 1,
         shift = util.by_pixel(0, -4.5),
         direction_count = 16,
+        tint = {r=1,g=0.8,b=0.6,a=1},
         y = 36,
         hr_version =
         {
@@ -87,6 +88,7 @@ robot_animations["construction-robot"] =
             frame_count = 1,
             shift = util.by_pixel(0, -4.5),
             direction_count = 16,
+            tint = {r=1,g=0.8,b=0.6,a=1},
             y = 76,
             scale = 0.5
         }
@@ -128,6 +130,7 @@ function makeConstructionRobot(level)
     robot['type'] = 'unit'
     robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
     robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot["subgroup"] = "erm-builder-enemies"
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier, health_multiplier, level)
     robot['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
@@ -185,7 +188,7 @@ function makeConstructionRobot(level)
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box
     robot['selection_box'] = selection_box
-    robot['flag'] = { "placeable-player", "placeable-enemy" }
+    robot['flag'] = { "placeable-player", "placeable-enemy", "not-flammable" }
 
     return robot
 end

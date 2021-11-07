@@ -68,16 +68,16 @@ for i = 1, level do
     data:extend({ makeLevelEnemy(i, 'small-biter') })
     -- 10 - 105
     data:extend({ makeLevelEnemy(i, 'small-spitter') })
-    -- 75 - 538
-    data:extend({ makeLevelEnemy(i, 'medium-biter' ) })
-    -- 50 - 358
-    data:extend({ makeLevelEnemy(i, 'medium-spitter') })
-    -- 375 - 2250
-    data:extend({ makeLevelEnemy(i, 'big-biter', 2) })
-    -- 200 - 1200
-    data:extend({ makeLevelEnemy(i, 'big-spitter', 2) })
-    -- 3000 - 6750
+    -- 75 - 1900
+    data:extend({ makeLevelEnemy(i, 'medium-biter', 0.33 ) })
+    -- 50 - 1300
+    data:extend({ makeLevelEnemy(i, 'medium-spitter', 0.33) })
+    -- 375 - 5000
+    data:extend({ makeLevelEnemy(i, 'big-biter') })
+    -- 200 - 2700
+    data:extend({ makeLevelEnemy(i, 'big-spitter') })
+    -- 3000 - 7700
     data:extend({ makeLevelEnemy(i, 'behemoth-biter', 8) })
-    -- 1500 - 3375
+    -- 1500 - 3800
     data:extend({ makeLevelEnemy(i, 'behemoth-spitter', 8) })
 end

@@ -19,8 +19,9 @@ local controlable_subgroups = {
 -- max resist 10 - 90
 local enemies_subgroups = {
     ['enemies'] = true,
-    ['flying-enemies'] = true,
-    ['dropship-enemies'] = true,
+    ['erm-flying-enemies'] = true,
+    ['erm-dropship-enemies'] = true,
+    ['erm-builder-enemies'] = true,
 }
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
