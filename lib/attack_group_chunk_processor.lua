@@ -360,6 +360,10 @@ end
 
 local find_attack_position = function(surface)
     local surface_data = global.attack_group_attackable_chunk[surface.name]
+    if surface_data == nil then
+        return nil
+    end
+
     if surface_data.current_node_name == nil and surface_data.head_node_name then
         surface_data.current_node_name = surface_data.head_node_name
 
