@@ -17,7 +17,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 2
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.75
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
@@ -37,8 +37,8 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
 local damage_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local laser_modifier = 1
-local incremental_laser_modifier = 3
+local laser_modifier = 2
+local incremental_laser_modifier = 4
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
