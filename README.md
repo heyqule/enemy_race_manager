@@ -42,13 +42,16 @@ Player Controllable Units:
 ![Terran](https://mods-data.factorio.com/assets/8edb5f447c0a754f1071256c950107fcae32bfa0.png "Terran")
 
 ### Features
-#### 3 difficulty levels
-* Casual, max at level 5 (weapon lvl 6, pre-infinite research)
-* Normal, max at level 10 (default, weapon lvl 12)
-* Advance, max at level 15 (weapon lvl 17)
-* Hardcore, max at level 20 ( weapon lvl 20)
+#### New enemies can be added as new forces
 
-The difficulty levels are tested with uranium bullets in gun turret, mixed with laser and flamethrower.
+Manage new race as new enemy force.  Each race has its own force statistics
+
+
+#### 4 difficulty levels
+* Casual, max at level 5 (weapon lvl 6, pre-infinite research)
+* Normal, max at level 10 (default, weapon lvl 11)
+* Advance, max at level 15 (weapon lvl 16)
+* Hardcore, max at level 20 (weapon lvl 20)
 
 #### Adjustable max attack range for extra long range attack units
 * Normal, 14, default
@@ -70,10 +73,6 @@ New races may have up to 3 tiers of unit-spawners and turrets.  This applies to 
 * 0 - 0.4 evolution factor use tier 1 spawns
 * 0.4 adds tier 2
 * 0.8 adds tier 3
-
-#### New enemies can be added as new forces
-
-Manage new race as new enemy force.  Each race has its own force statistics
 
 #### Artillery-Shell damage buff
 Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
