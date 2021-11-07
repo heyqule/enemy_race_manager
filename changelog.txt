@@ -32,8 +32,15 @@ Date: ???
     - replace land-mine stunt effect with 50% movement speed.
 
   Bugfixes:
-    - Fix a crash when custom attack group attempt to generate and there isn't an attack-able chunk.
     - Fix a crash when unsupported enemies try to level up.
+
+
+---------------------------------------------------------------------------------------------------
+Version: 1.9.3
+Date: 2021-11-07
+
+  Bugfixes:
+    - Fixed a crash in attack_group_chunk_processor when attackable_chunk index is nil for a surface
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.9.2
