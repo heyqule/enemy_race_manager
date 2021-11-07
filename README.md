@@ -7,11 +7,16 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.9.0 release
-- Attack meters / Custom Attack Squad can now spawn in Space Exploration planets and it's out of beta
-- Enemy running/flying speed can now adjustable in startup setting
-- GUI improvements, added enemy level override.
-- Significantly lower level up evolution points for level 4+
+### 1.10.0 release
+- Corrupted robots has joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
+- 4 WAYS RACE SPLIT. 
+- Time based attack squads after enemy level to 2. Default to ON
+  - It adds points to attack meter every minute.     
+  - The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
+  - Default setting (3%) take about 30 mins if you are playing defensively.
+- Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
+- Another adjustment to evolution points for leveling curve.  Early levels will arrive quicker.
+  - New evolution point: {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -41,7 +46,7 @@ Player Controllable Units:
 * Casual, max at level 5 (weapon lvl 6, pre-infinite research)
 * Normal, max at level 10 (default, weapon lvl 12)
 * Advance, max at level 15 (weapon lvl 17)
-* Hardcore, max at level 20 ( weapon lvl 22)
+* Hardcore, max at level 20 ( weapon lvl 20)
 
 The difficulty levels are tested with uranium bullets in gun turret, mixed with laser and flamethrower.
 
@@ -50,22 +55,14 @@ The difficulty levels are tested with uranium bullets in gun turret, mixed with 
 * Advanced, 20, outside of gun turret range.
 
 #### Enemy Unit Leveling
-First 3 level is tied to force's evolution factor
+The evolution points is tied to force's hidden evolution factors (time, pollution and kill spawner).
 
-* {0.4, 0.8}
-
-The next 15 level is tied to force's hidden evolution factors (time, pollution and kill spawner).
-
-* { 10, 20, 35, 50, 65, 80, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250 }
+* {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
 * evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
 * level_multiplier default to 1.
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters.
-
-#### New enemies can be added as new forces
-
-Manage new race as new enemy force.  Each race has its own force statistics
 
 #### Tiered unit spawns
 New races may have up to 3 tiers of unit-spawners and turrets.  This applies to enemy base expansion.
@@ -74,6 +71,10 @@ New races may have up to 3 tiers of unit-spawners and turrets.  This applies to 
 * 0.4 adds tier 2
 * 0.8 adds tier 3
 
+#### New enemies can be added as new forces
+
+Manage new race as new enemy force.  Each race has its own force statistics
+
 #### Artillery-Shell damage buff
 Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 
@@ -81,6 +82,7 @@ Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 
 #### GUI to view each race's stats.
 * replace races on a surface
+* adjust enemy level mid-game.
 
 #### Custom enemy base autoplace
 This defines how enemy bases are generated when a new chunk is charted.
@@ -97,6 +99,10 @@ Default
 
 ![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
+4 races split
+
+- One race in each area of top left, top right, bottom left and bottom right.
+
 One race per surface/planet
 
 * randomly assign a race for each surface / planet.
@@ -109,10 +115,10 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-  - build one at a time
+  - build one building at a time
 * Command Center
   - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
-* Build A Town
+* Build A Town (default)
   - Always use build formation option to build the base.
 * Full Expansion
   - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
@@ -120,7 +126,7 @@ This defines how enemy expand into new area.  In base game, each building group 
 You can change the build formation option. For example:
 
 * 1 cc, 2 support spawners, 4 turrets
-* 1 cc, 4 support spawners, 5 turrets
+* 1 cc, 4 support spawners, 5 turrets (default)
 * and more
 
 Partial formation is build based on cc > support > turret priority.
@@ -147,6 +153,12 @@ Partial formation is build based on cc > support > turret priority.
 - Dropship group always based on this group.
 - This feature can be enable for flying attack group.  Default to ON.
 - Early attack warning on mini map. Default to ON.
+
+##### Time based attack wave (ON be default)
+- Time based attack wave after enemy level to 2. Default to ON
+  - It adds points to attack meter every minute.
+  - The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
+  - Default setting, 3%, takes about 30 mins if you are playing defensively.
 
 ### Free for all [Experimental]
 /ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
@@ -187,9 +199,9 @@ For compatibility details, please visit https://github.com/heyqule/enemy_race_ma
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
 ### Roadmap after 1.0
-ERM_RedArmy - Heavy firepower on single target - Done (Beta)
+ERM_RedArmy - Heavy firepower on single target - Done
 
-ERM_SuicideSquad - E-x-p-l-o-s-i-v-e-s
+ERM_MarsPeople - Mars people from metal slugs series (WIP)
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
