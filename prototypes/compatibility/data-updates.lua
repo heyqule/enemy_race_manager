@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 3/16/2021 9:33 PM
 ---
+local version = require('__stdlib__/stdlib/vendor/version')
 
 if mods['ArmouredBiters'] then
     require "ArmouredBiters/biter"
@@ -25,7 +26,7 @@ if mods['IndustrialRevolution'] then
     require "IndustrialRevolution/projectile"
 end
 
-if mods['Krastorio2'] then
+if mods['Krastorio2'] and version(mods['Krastorio2']) >= version("1.2.0") then
     require "K2/projectile"
     require "K2/resistance"
 end

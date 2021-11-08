@@ -15,7 +15,7 @@ Date: ???
     - Add time base custom attack group. Default: ON
     - Points will add to attack meter every minute. Starting at level 2.
     - ---- / time base custom attack group ----
-    - ---- Krastorio 2 Compatibility update (required 1.2+) ----
+    - ---- Krastorio 2 Compatibility update (requires 1.2+) ----
     - Creep generation support for new races
     - Custom bullet can now hit air.
     - ---- / Krastorio 2 Compatibility update ----

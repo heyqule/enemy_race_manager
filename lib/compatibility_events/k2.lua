@@ -7,8 +7,9 @@ local Event = require('__stdlib__/stdlib/event/event')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmK2CreepHelper = require('__enemyracemanager__/lib/helper/k2_creep_helper')
+local version = require('__stdlib__/stdlib/vendor/version')
 
-if script.active_mods['Krastorio2'] then
+if script.active_mods['Krastorio2'] and version(script.active_mods['Krastorio2']) >= version("1.2.0") then
     Event.register(defines.events.on_chunk_generated, function(event)
         ErmK2CreepHelper.onChunkGenerated(event)
     end)

@@ -4,7 +4,7 @@
 --- DateTime: 10/23/2021 1:26 PM
 
 local ErmForceHelper = require('lib.helper.force_helper')
-local ErmUnitHelper = require('lib.unit_helper')
+local ErmUnitHelper = require('lib.rig.unit_helper')
 
 local damage_types = {
     {'kr-explosion', 10, 85},
