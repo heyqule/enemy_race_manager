@@ -53,7 +53,7 @@ local incremental_movement_speed = 0.125
 
 -- Misc Settings
 local vision_distance = 30
-local pollution_to_join_attack = 50
+local pollution_to_join_attack = 200
 local distraction_cooldown = 20
 
 local collision_box = {{-0.5, -0.5}, {0.5, 0.5}}

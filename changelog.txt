@@ -5,6 +5,7 @@ Date: ???
   Features:
     - ---- Vanilla enemy enhancement ----
     - Added combat robots, construction robot, logistic robot as flyer units for enemy race.
+    - combat robots are high damage single target unit.
     - construction robot handles building proxy spawners.
     - logistic robot handles the dropship role.
     - bump units' HP and resistances to be similar to other races.
@@ -33,6 +34,7 @@ Date: ???
 
   Bugfixes:
     - Fix a crash when unsupported enemies try to level up.
+    - Fix a crash in attack_group_chunk_processor when spawnable_chunk index is nil for a surface
 
 
 ---------------------------------------------------------------------------------------------------

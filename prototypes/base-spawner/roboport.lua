@@ -62,6 +62,8 @@ local spawn_table = function(level)
     res[3] = { MOD_NAME .. '/destroyer/' .. level,  { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
     res[4] = { MOD_NAME .. '/logistic-robot/' .. level,  { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
     res[5] = { MOD_NAME .. '/construction-robot/' .. level,  { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
+    res[6] = { MOD_NAME .. '/small-biter/' .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[7] = { MOD_NAME .. '/medium-biter/' .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
 
     return res
 end

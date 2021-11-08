@@ -37,13 +37,13 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
 local damage_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local laser_modifier = 2.5
-local incremental_laser_modifier = 5
+local laser_modifier = 6
+local incremental_laser_modifier = 3
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
 local base_attack_speed = 60
-local incremental_attack_speed = 40
+local incremental_attack_speed = 30
 
 local attack_range = 12
 
@@ -52,8 +52,8 @@ local base_movement_speed = 0.15
 local incremental_movement_speed = 0.125
 
 -- Misc Settings
-local vision_distance = 30
-local pollution_to_join_attack = 50
+local vision_distance = 35
+local pollution_to_join_attack = 150
 local distraction_cooldown = 20
 
 local collision_box = {{-0.5, -0.5}, {0.5, 0.5}}

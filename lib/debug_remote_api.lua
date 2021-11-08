@@ -121,8 +121,8 @@ function Debug_RemoteAPI.level_up(level)
     end
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'level_up_tier', 0.5)
-function Debug_RemoteAPI.level_up_tier(value)
+--- Usage: remote.call('enemy_race_manager_debug', 'set_evolution_factor', 0.5)
+function Debug_RemoteAPI.set_evolution_factor(value)
     for race_name, _ in pairs(global.race_settings) do
         game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor =math.min(value, 1)
     end

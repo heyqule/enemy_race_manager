@@ -279,8 +279,12 @@ end
 local find_spawn_position = function(surface, race_name)
     local position = nil
     local position_node = nil
+    local surface_data = global.attack_group_spawnable_chunk[surface.name]
+    if surface_data == nil then
+        return nil
+    end
 
-    local race_cursor = global.attack_group_spawnable_chunk[surface.name].race_cursors[race_name]
+    local race_cursor = surface_data.race_cursors[race_name]
     local total_rotatable_directions = #race_cursor.rotatable_directions
 
     if total_rotatable_directions == 0 then
@@ -293,7 +297,7 @@ local find_spawn_position = function(surface, race_name)
     local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
         race_cursor.rotatable_directions[race_cursor.current_direction]
     ]
-    local current_chunk_list = global.attack_group_spawnable_chunk[surface.name][current_direction]
+    local current_chunk_list = surface_data[current_direction]
     local current_race_cursor_name = race_cursor.current_node_name[current_direction]
     if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
         --- Pick head node
