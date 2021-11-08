@@ -17,7 +17,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
 local health_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.75
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.5
 
 local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
 -- Handles acid and poison resistance
@@ -38,7 +38,7 @@ local incremental_cold_resistance = 75
 
 local damage_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
 local physical_modifier = 2
-local incremental_physical_modifier = 4
+local incremental_physical_modifier = 5
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
@@ -48,8 +48,8 @@ local incremental_attack_speed = 40
 local attack_range = 12
 
 local movement_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local base_movement_speed = 0.1
-local incremental_movement_speed = 0.1
+local base_movement_speed = 0.2
+local incremental_movement_speed = 0.15
 
 -- Misc Settings
 local vision_distance = 30
@@ -105,7 +105,7 @@ robot_animations.defender =
                 animation_speed = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, -4.75),
-                tint = {r=1,g=0.8,b=0.6,a=1},
+                tint = {r=0.5,g=0,b=1,a=1},
                 y = 16,
                 hr_version =
                 {
@@ -118,7 +118,7 @@ robot_animations.defender =
                     animation_speed = 1,
                     direction_count = 16,
                     shift = util.by_pixel(0, -4.75),
-                    tint = {r=1,g=0.8,b=0.6,a=1},
+                    tint = {r=0.5,g=0,b=1,a=1},
                     y = 21,
                     scale = 0.5
                 }

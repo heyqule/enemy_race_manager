@@ -48,8 +48,8 @@ local incremental_attack_speed = 240
 local attack_range = 12
 
 local movement_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local base_movement_speed = 0.1
-local incremental_movement_speed = 0.1
+local base_movement_speed = 0.15
+local incremental_movement_speed = 0.125
 
 -- Misc Settings
 local vision_distance = 30
@@ -76,7 +76,7 @@ robot_animations["construction-robot"] =
         frame_count = 1,
         shift = util.by_pixel(0, -4.5),
         direction_count = 16,
-        tint = {r=1,g=0.8,b=0.6,a=1},
+        tint = {r=0.5,g=0,b=1,a=1},
         y = 36,
         hr_version =
         {
@@ -88,7 +88,7 @@ robot_animations["construction-robot"] =
             frame_count = 1,
             shift = util.by_pixel(0, -4.5),
             direction_count = 16,
-            tint = {r=1,g=0.8,b=0.6,a=1},
+            tint = {r=0.5,g=0,b=1,a=1},
             y = 76,
             scale = 0.5
         }

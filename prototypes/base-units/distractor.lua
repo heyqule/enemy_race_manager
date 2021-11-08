@@ -37,8 +37,8 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
 local damage_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local laser_modifier = 2
-local incremental_laser_modifier = 4
+local laser_modifier = 2.5
+local incremental_laser_modifier = 5
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
@@ -48,8 +48,8 @@ local incremental_attack_speed = 40
 local attack_range = 12
 
 local movement_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local base_movement_speed = 0.1
-local incremental_movement_speed = 0.1
+local base_movement_speed = 0.15
+local incremental_movement_speed = 0.125
 
 -- Misc Settings
 local vision_distance = 30
@@ -101,7 +101,7 @@ robot_animations.distractor =
                 direction_count = 16,
                 shift = util.by_pixel(0, -6.25),
                 y = 21,
-                tint = {r=1,g=0.8,b=0.6,a=1},
+                tint = {r=0.5,g=0,b=1,a=1},
                 hr_version =
                 {
                     filename = "__base__/graphics/entity/distractor-robot/hr-distractor-robot-mask.png",
@@ -112,7 +112,7 @@ robot_animations.distractor =
                     frame_count = 1,
                     direction_count = 16,
                     shift = util.by_pixel(0, -6.25),
-                    tint = {r=1,g=0.8,b=0.6,a=1},
+                    tint = {r=0.5,g=0,b=1,a=1},
                     y = 37,
                     scale = 0.5
                 }

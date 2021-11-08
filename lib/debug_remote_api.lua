@@ -83,7 +83,7 @@ function Debug_RemoteAPI.generate_attack_group(race_name)
     ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
-            200
+            150
     )
 end
 

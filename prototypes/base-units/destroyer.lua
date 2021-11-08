@@ -37,8 +37,8 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
 local damage_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local electric_modifier = 2
-local incremental_electric_modifier = 7.5
+local electric_modifier = 3
+local incremental_electric_modifier = 6
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
@@ -48,8 +48,8 @@ local incremental_attack_speed = 40
 local attack_range = 12
 
 local movement_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local base_movement_speed = 0.1
-local incremental_movement_speed = 0.1
+local base_movement_speed = 0.2
+local incremental_movement_speed = 0.15
 
 -- Misc Settings
 local vision_distance = 30
@@ -76,7 +76,6 @@ robot_animations.destroyer =
                 frame_count = 1,
                 direction_count = 32,
                 shift = util.by_pixel(2.5, -1.25),
-                tint = {r=1,g=0.8,b=0.6,a=1},
                 hr_version =
                 {
                     filename = "__base__/graphics/entity/destroyer-robot/hr-destroyer-robot.png",
@@ -87,7 +86,6 @@ robot_animations.destroyer =
                     frame_count = 1,
                     direction_count = 32,
                     shift = util.by_pixel(2.5, -1.25),
-                    tint = {r=1,g=0.8,b=0.6,a=1},
                     scale = 0.5
                 }
             },
@@ -100,7 +98,7 @@ robot_animations.destroyer =
                 frame_count = 1,
                 direction_count = 32,
                 shift = util.by_pixel(2.5, -7),
-                apply_runtime_tint = true,
+                tint = {r=0.5,g=0,b=1,a=1},
                 hr_version =
                 {
                     filename = "__base__/graphics/entity/destroyer-robot/hr-destroyer-robot-mask.png",
@@ -111,7 +109,7 @@ robot_animations.destroyer =
                     frame_count = 1,
                     direction_count = 32,
                     shift = util.by_pixel(2.5, -7),
-                    apply_runtime_tint = true,
+                    tint = {r=0.5,g=0,b=1,a=1},
                     scale = 0.5
                 }
             }
