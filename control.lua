@@ -174,7 +174,13 @@ local addRaceSettings = function()
             { 'roboport' },
             {},
         },
-        current_support_structures_tier = {}
+        current_support_structures_tier = {},
+        flying_units = {
+            {'defender'},
+            {'distractor', 'logistic-robot'},
+            {'destroyer', 'construction-robot'},
+        },
+        dropship = 'logistic-robot'
     }
 
     race_settings.current_units_tier = race_settings.units[1]
@@ -440,6 +446,12 @@ Event.register(Event.generate_event_name(ErmConfig.RACE_SETTING_UPDATE), functio
                 ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 1, 'small-biter')
                 ErmRaceSettingsHelper.remove_unit_from_tier(race_setting, 1, 'small-spitter')
                 ErmRaceSettingsHelper.remove_turret_from_tier(race_setting, 1, 'small-worm-turret')
+                race_setting.flying_units = {
+                    {'defender'},
+                    {'distractor', 'logistic-robot'},
+                    {'destroyer', 'construction-robot'},
+                }
+                race_setting.dropship = 'logistic-robot'
             end
             race_setting.version = MOD_VERSION
         end

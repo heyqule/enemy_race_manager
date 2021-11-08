@@ -185,7 +185,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box
     robot['selection_box'] = selection_box
-    robot['flag'] = { "placeable-player", "placeable-enemy", "not-flammable" }
+    robot['flags'] = { "placeable-player", "placeable-enemy", "not-flammable" }
 
     return robot
 end
