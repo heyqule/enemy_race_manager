@@ -11,7 +11,6 @@ local modify_race_setting = function()
         if settings.startup["ab-enable-nest"].value then
             RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'armoured-biter-spawner')
         end
-        RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'small-armoured-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-armoured-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 2, 'big-armoured-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-armoured-biter')

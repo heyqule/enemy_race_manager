@@ -11,8 +11,6 @@ local modify_race_setting = function()
 
         RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'cb-cold-spawner')
 
-        RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'small-cold-biter')
-        RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'small-cold-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-cold-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-cold-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 2, 'big-cold-biter')

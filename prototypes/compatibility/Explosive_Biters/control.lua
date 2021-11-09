@@ -11,8 +11,6 @@ local modify_race_setting = function()
 
         RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'explosive-biter-spawner')
 
-        RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'small-explosive-biter')
-        RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'small-explosive-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-explosive-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-explosive-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 2, 'big-explosive-biter')
