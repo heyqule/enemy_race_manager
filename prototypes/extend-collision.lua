@@ -3,6 +3,8 @@
 --- Created by heyqule.
 --- DateTime: 7/3/2021 12:16 PM
 ---
+--- Flying layer is based off Space Exporation / Alien Biomes' flying layer for better compatibility
+---
 
 if mods['space-exploration'] or mods['alien-biomes'] then
     -- Handle space exploration / alien-biomes collision layer
