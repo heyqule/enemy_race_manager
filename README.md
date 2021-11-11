@@ -8,14 +8,14 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### 1.10.0 release
-- Corrupted robots has joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
+- Corrupted robots have joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
 - 4 WAYS RACE SPLIT. 
 - Time based attack squads after enemy level to 2. Default to ON
   - It adds points to attack meter every minute.     
   - The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
-  - Default setting (3%) take about 30 mins if you are playing defensively.
+  - Default setting (3%) takes about 30 mins if you are playing defensively.
 - Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
-- Another adjustment to evolution points for leveling curve.  Early levels will arrive quicker.
+- Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
   - New evolution point: {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 
 ### New race demo
