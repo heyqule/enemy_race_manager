@@ -24,6 +24,7 @@ AttackGroupChunkProcessor.AREA_SOUTH = {3,4}
 
 AttackGroupChunkProcessor.AREA_WEST = {1,4}
 AttackGroupChunkProcessor.AREA_EAST = {2,3}
+AttackGroupChunkProcessor.AREA_ALL = {1, 2, 3, 4}
 
 AttackGroupChunkProcessor.DIRECTION_CURSOR = {'northwest', 'northeast', 'southeast', 'southwest'}
 
@@ -48,7 +49,7 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
 local create_race_cursor_node = function()
     return {
         current_direction = 1, -- corresponding to DIRECTION_CURSOR
-        rotatable_directions = {1, 2, 3, 4},
+        rotatable_directions = AttackGroupChunkProcessor.AREA_ALL,
         current_node_name = {
             northwest = nil,
             northeast = nil,
@@ -86,21 +87,34 @@ end
 
 local set_up_rotatable_direction = function(race_cursor, race_name, surface)
     if ErmConfig.mapgen_is_2_races_split() then
-        if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
+        race_cursor.rotatable_directions = {}
+        if ErmConfig.positive_axis_race() == ErmConfig.negative_axis_race() and ErmConfig.positive_axis_race() == race_name then
+            race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_ALL
+        elseif settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
             if ErmConfig.positive_axis_race() == race_name then
-                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_WEST
+                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_WEST)
             elseif ErmConfig.negative_axis_race() == race_name then
-                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_EAST
-            else
-                race_cursor.rotatable_directions = {}
+                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_EAST)
             end
         else
             if ErmConfig.positive_axis_race() == race_name then
-                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_SOUTH
+                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_SOUTH)
             elseif ErmConfig.negative_axis_race() == race_name then
-                race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_NORTH
-            else
-                race_cursor.rotatable_directions = {}
+                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_NORTH)
+            end
+        end
+    elseif ErmConfig.mapgen_is_4_races_split() then
+        race_cursor.rotatable_directions = {}
+        local directions = {
+            ErmConfig.top_left_race(),
+            ErmConfig.top_right_race(),
+            ErmConfig.bottom_right_race(),
+            ErmConfig.bottom_left_race()
+        }
+
+        for key, race in pairs(directions) do
+            if race_name == race then
+                table.insert(race_cursor.rotatable_directions, key)
             end
         end
     end

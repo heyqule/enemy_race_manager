@@ -250,6 +250,22 @@ function ErmConfig.negative_axis_race()
     return settings.startup['enemyracemanager-2way-group-enemy-negative'].value
 end
 
+function ErmConfig.top_left_race()
+    return settings.startup['enemyracemanager-4way-top-left'].value
+end
+
+function ErmConfig.top_right_race()
+    return settings.startup['enemyracemanager-4way-top-right'].value
+end
+
+function ErmConfig.bottom_left_race()
+    return settings.startup['enemyracemanager-4way-bottom-left'].value
+end
+
+function ErmConfig.bottom_right_race()
+    return settings.startup['enemyracemanager-4way-bottom-right'].value
+end
+
 function ErmConfig.build_style()
     return get_global_setting_value('enemyracemanager-build-style')
 end
