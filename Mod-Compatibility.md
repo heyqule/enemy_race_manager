@@ -10,8 +10,6 @@
 - New races supports creep generation
 - Custom bullets can hit air
 
-#### 
-
 #### Armoured Biters & Explosive Biters & Cold Biters
 - All biters, worms and spawners support leveling.
 - They join default enemy force, erm_vanilla.

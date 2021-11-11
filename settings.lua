@@ -233,9 +233,9 @@ data:extend {
         name = "enemyracemanager-attack-meter-group-interval",
         description = "enemyracemanager-attack-meter-group-interval",
         setting_type = "startup",
-        default_value = 5,
+        default_value = 3,
         order = "enemyracemanager-500",
-        allowed_values = { 1, 2, 5, 10 }
+        allowed_values = { 1, 2, 3, 4, 5, 10 }
     },
     --- Map Settings Tab ---
     {
