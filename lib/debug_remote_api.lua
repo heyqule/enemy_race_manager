@@ -15,6 +15,7 @@ local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_sett
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local Debug_RemoteAPI = {}
 
@@ -142,6 +143,11 @@ end
 --- Usage: remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
 function Debug_RemoteAPI.attack_group_chunk_index()
     ErmAttackGroupChunkProcessor.init_index()
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'wander_clean_up')
+function Debug_RemoteAPI.wander_clean_up()
+    ErmSurfaceProcessor.wander_unit_clean_up()
 end
 
 return Debug_RemoteAPI

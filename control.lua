@@ -213,8 +213,30 @@ local prepare_world = function()
     end
 
     ErmAttackGroupChunkProcessor.init_index()
+    ErmSurfaceProcessor.wander_unit_clean_up()
 
     ErmCron.add_1_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
+end
+
+local init_globals = function()
+    -- ID by mod name, each mod should have it own statistic out side of what force tracks.
+    global.race_settings = global.race_settings or {}
+
+    -- Track all unit group created by ERM
+    global.erm_unit_groups = global.erm_unit_groups or {}
+
+    -- Move all cache to this to resolve desync issues.
+    -- https://wiki.factorio.com/Desynchronization
+    -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
+    global.settings = global.settings or {}
+
+    ErmSurfaceProcessor.init_globals()
+    ErmAttackMeterProcessor.init_globals()
+    ErmMapProcessor.init_globals()
+    ErmForceHelper.init_globals()
+    ErmCron.init_globals()
+    ErmAttackGroupChunkProcessor.init_globals()
+    ErmAttackGroupSurfaceProcessor.init_globals()
 end
 
 --- GUIs
@@ -368,26 +390,6 @@ local conditional_events = function()
     end
 end
 
-local init_globals = function()
-    -- ID by mod name, each mod should have it own statistic out side of what force tracks.
-    global.race_settings = global.race_settings or {}
-
-    -- Track all unit group created by ERM
-    global.erm_unit_groups = global.erm_unit_groups or {}
-
-    -- Move all cache to this to resolve desync issues.
-    -- https://wiki.factorio.com/Desynchronization
-    -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
-    global.settings = global.settings or {}
-
-    ErmSurfaceProcessor.init_globals()
-    ErmAttackMeterProcessor.init_globals()
-    ErmMapProcessor.init_globals()
-    ErmForceHelper.init_globals()
-    ErmCron.init_globals()
-    ErmAttackGroupChunkProcessor.init_globals()
-    ErmAttackGroupSurfaceProcessor.init_globals()
-end
 --- Init events
 Event.on_init(function(event)
     init_globals()

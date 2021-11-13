@@ -7,7 +7,7 @@
 local Table = require('__stdlib__/stdlib/utils/table')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local SurfaceProcessor = {}
 
@@ -67,6 +67,29 @@ function SurfaceProcessor.numeric_to_name_conversion()
         tmpSurfaces[game.surfaces[surface_index].name] = race
     end
     global.enemy_surfaces = tmpSurfaces
+end
+
+function SurfaceProcessor.wander_unit_clean_up()
+    local profiler = game.create_profiler()
+    local unit_count = 0
+    for _, surface in pairs(game.surfaces) do
+        if surface.valid then
+            local units = surface.find_entities_filtered({
+                type = "unit",
+                force = ErmForceHelper.get_all_enemy_forces(),
+            })
+            for _, unit in pairs(units) do
+                if unit.valid and unit.unit_number and unit.spawner == nil and unit.command and unit.command.type == defines.command.wander then
+                    unit_count = unit_count + 1
+                    local race_name = ErmForceHelper.extract_race_name_from(unit.force.name)
+                    global.race_settings[race_name].attack_meter = global.race_settings[race_name].attack_meter + 1
+                    unit.destroy()
+                end
+            end
+        end
+    end
+    profiler.stop()
+    game.print({'', 'Clean up orphan wandering units. Refunded units to attack meter. Removed:'..unit_count..' ', profiler})
 end
 
 return SurfaceProcessor

@@ -33,6 +33,7 @@ Date: ???
     - Change AttackGroupProcessor to generate a group in 20 seconds regardless of the group size, instead of 5 units/s
     - replace land-mine stunt effect with 50% movement speed.
     - Added 3 and 4 to "Attack group forming interval"  option list.  Default changed from 5 mins to 3 mins
+    - Added orphan wandering unit cleaner when save loads.
 
   Bugfixes:
     - Fix a crash when unsupported enemies try to level up.
