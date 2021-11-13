@@ -5,7 +5,7 @@ Date: ???
   Features:
     - ---- Vanilla enemy enhancement ----
     - Added combat robots, construction robot, logistic robot as flyer units for enemy race.
-    - combat robots are high damage single target unit.
+    - combat robots are high damage single target units.  Start to spawn after 0.4 evolution factor.
     - construction robot handles building proxy spawners.
     - logistic robot handles the dropship role.
     - bump units' HP and resistances to be similar to other races.
