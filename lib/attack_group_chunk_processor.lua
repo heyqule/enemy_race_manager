@@ -85,6 +85,12 @@ local get_attack_area = function(position)
     return area
 end
 
+local insert_rotatable_directions = function(race_cursor, directions) 
+    for key, direction in pairs(directions) do
+        table.insert(race_cursor.rotatable_directions, direction)
+    end        
+end
+
 local set_up_rotatable_direction = function(race_cursor, race_name, surface)
     if ErmConfig.mapgen_is_2_races_split() then
         race_cursor.rotatable_directions = {}
@@ -92,17 +98,17 @@ local set_up_rotatable_direction = function(race_cursor, race_name, surface)
             race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_ALL
         elseif settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
             if ErmConfig.positive_axis_race() == race_name then
-                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_WEST)
+                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_WEST)
             elseif ErmConfig.negative_axis_race() == race_name then
-                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_EAST)
+                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_EAST)
             end
         else
             if ErmConfig.positive_axis_race() == race_name then
-                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_SOUTH)
+                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_SOUTH)
             elseif ErmConfig.negative_axis_race() == race_name then
-                table.insert(race_cursor.rotatable_directions, AttackGroupChunkProcessor.AREA_NORTH)
+                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_NORTH)
             end
-        end
+        end   
     elseif ErmConfig.mapgen_is_4_races_split() then
         race_cursor.rotatable_directions = {}
         local directions = {
@@ -311,6 +317,7 @@ local find_spawn_position = function(surface, race_name)
     local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
         race_cursor.rotatable_directions[race_cursor.current_direction]
     ]
+
     local current_chunk_list = surface_data[current_direction]
     local current_race_cursor_name = race_cursor.current_node_name[current_direction]
     if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
@@ -548,16 +555,6 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, group)
 
     if position_node then
         return {x = position_node.x, y = position_node.y}
-    else
-        local enemy = group.surface.find_nearest_enemy {
-            position = group.position,
-            force = group.force,
-            max_distance = 3200
-        }
-
-        if enemy then
-            return enemy.position
-        end
     end
 
     return nil
