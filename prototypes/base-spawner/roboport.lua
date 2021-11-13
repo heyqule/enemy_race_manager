@@ -116,8 +116,6 @@ function make_roboport(level)
             healing_per_tick = ERM_UnitHelper.get_building_healing(hitpoint, max_hitpoint_multiplier, health_multiplier, level),
             pollution_absorption_absolute = pollution_absorption_absolute,
             pollution_absorption_proportional = 0.01,
-            corpse = "lab-remnants",
-            dying_explosion = "lab-explosion",
             max_count_of_owned_units = max_count_of_owned_units,
             max_friends_around_to_spawn = max_friends_around_to_spawn,
             animations = {
