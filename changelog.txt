@@ -28,7 +28,7 @@ Date: ???
     - @IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to craft.
     - ---- / Leveling Changes ----
     - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
-    - Added orphan wandering unit cleaner when the save loads.  Orphan units are bad for performance.
+    - Added orphan wandering unit cleaner when the save loads.  Orphan units are bad for performance. This can be triggered from GUI.
 
   Changes:
     - Biters now support movement speed multiplier.
