@@ -21,13 +21,23 @@ data:extend {
         order = "enemyracemanager-02"
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-level-curve-multiplier",
+        description = "enemyracemanager-level-curve-multiplier",
+        setting_type = "startup",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 10,
+        order = "enemyracemanager-03"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
         default_value = ATTACK_RANGE_14,
         allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20 },
-        order = "enemyracemanager-03"
+        order = "enemyracemanager-04"
     },
     {
         type = "int-setting",
@@ -37,7 +47,7 @@ data:extend {
         default_value = 15,
         minimum_value = 1,
         maximum_value = 60,
-        order = "enemyracemanager-04"
+        order = "enemyracemanager-05"
     },
     {
         type = "int-setting",
@@ -47,7 +57,7 @@ data:extend {
         default_value = 15,
         minimum_value = 5,
         maximum_value = 60,
-        order = "enemyracemanager-15"
+        order = "enemyracemanager-20"
     },
     {
         type = "int-setting",
@@ -57,7 +67,7 @@ data:extend {
         default_value = 100,
         minimum_value = 50,
         maximum_value = 600,
-        order = "enemyracemanager-16"
+        order = "enemyracemanager-21"
     },
     {
         type = "int-setting",

@@ -68,7 +68,8 @@ local refreshable_settings = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
-        'enemyracemanager-max-group-size'
+        'enemyracemanager-max-group-size',
+        'enemyracemanager-level-curve-multiplier',
     },
     global = {
         'enemyracemanager-build-style',
@@ -171,6 +172,10 @@ function ErmConfig.get_max_level()
     end
 
     return current_level_setting
+end
+
+function ErmConfig.get_level_curve_multiplier()
+    return get_global_setting_value('enemyracemanager-level-curve-multiplier')
 end
 
 function ErmConfig.get_max_attack_range()

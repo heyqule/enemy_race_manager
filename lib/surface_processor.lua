@@ -72,6 +72,7 @@ end
 function SurfaceProcessor.wander_unit_clean_up()
     local profiler = game.create_profiler()
     local unit_count = 0
+    local checked_count = 0
     for _, surface in pairs(game.surfaces) do
         if surface.valid then
             local units = surface.find_entities_filtered({
@@ -79,6 +80,7 @@ function SurfaceProcessor.wander_unit_clean_up()
                 force = ErmForceHelper.get_all_enemy_forces(),
             })
             for _, unit in pairs(units) do
+                checked_count = checked_count + 1
                 if unit.valid and unit.unit_number and unit.spawner == nil and unit.command and unit.command.type == defines.command.wander then
                     unit_count = unit_count + 1
                     local race_name = ErmForceHelper.extract_race_name_from(unit.force.name)
@@ -89,7 +91,8 @@ function SurfaceProcessor.wander_unit_clean_up()
         end
     end
     profiler.stop()
-    game.print({'', 'Clean up orphan wandering units. Refunded units to attack meter. Removed:'..unit_count..' ', profiler})
+    game.print({'', 'Clean up orphan wandering units. Refunded units to attack meter.', profiler})
+    game.print({'', 'Checked: '..checked_count..' / Removed:'..unit_count..' '})
 end
 
 return SurfaceProcessor

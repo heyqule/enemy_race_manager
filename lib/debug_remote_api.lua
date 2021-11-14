@@ -150,4 +150,9 @@ function Debug_RemoteAPI.wander_clean_up()
     ErmSurfaceProcessor.wander_unit_clean_up()
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'check_race_level_curve')
+function Debug_RemoteAPI.check_race_level_curve()
+    ErmLevelProcessor.print_level_curve_table()
+end
+
 return Debug_RemoteAPI

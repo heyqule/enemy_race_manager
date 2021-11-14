@@ -20,9 +20,14 @@ Date: ???
     - Creep generation support for new races
     - Custom bullets can now hit air.
     - ---- / Krastorio 2 Compatibility update ----
-    - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
+    - ---- Leveling changes ----
     - level 2 and level 3 are no longer based on evolution factor
     - Adjust level up evolution points to {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+    - Added Setting: Level Curve Multiplier (1x - 10x). This setting multiplies the evolution points required to level.  Enemy may level up too quick for some big mods.
+    - Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrade take more advanced recipe and longer to craft.
+    - ---- / Leveling Changes ----
+    - Added 4 races split in map generation setting. You can up to have 4 races on nauvis.
+    - Added orphan wandering unit cleaner when the save loads.  Orphan units are bad for performance.
 
   Changes:
     - Biters now support movement speed multiplier.
@@ -33,11 +38,10 @@ Date: ???
     - Change AttackGroupProcessor to generate a group in 20 seconds regardless of the group size, instead of 5 units/s
     - replace land-mine stunt effect with 50% movement speed.
     - Added 3 and 4 to "Attack group forming interval"  option list.  Default changed from 5 mins to 3 mins
-    - Added orphan wandering unit cleaner when save loads.
 
   Bugfixes:
-    - Fix a crash when unsupported enemies try to level up.
-    - Fix a crash in attack_group_chunk_processor when spawnable_chunk index is nil for a surface
+    - Fixed a crash when unsupported enemies try to level up.
+    - Fixed a crash in attack_group_chunk_processor when spawnable_chunk index is nil for a surface
 
 
 ---------------------------------------------------------------------------------------------------

@@ -17,6 +17,8 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
 - Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
   - New evolution point: {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+  - Add "level requirement multipler".  This multiplier increase the evolution points required for enemy to level.
+  - Space Exploration player may want to set "level requirement multipler" to 3 - 5 to have a fair fight, as weapon level 5+ require space and deep space science and take a lot longer to research.
 - Race mods changes:
   - Lower overall pollution_to_attack values
   - Support 4 races split
