@@ -70,11 +70,13 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
 
     if position then
         local entity = surface.create_entity({ name = final_unit_name, position = position, force = event.source_entity.force })
-        entity.set_command({
-            type = defines.command.attack_area,
-            destination = {x = position.x, y = position.y},
-            radius = CHUNK_SIZE
-        })
+        if entity.type == 'unit' then
+            entity.set_command({
+                type = defines.command.attack_area,
+                destination = {x = position.x, y = position.y},
+                radius = CHUNK_SIZE
+            })
+        end
     end
 end
 
