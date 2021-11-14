@@ -10,7 +10,7 @@
 - New races supports creep generation
 - Custom bullets can hit air
 
-#### IndustrialRevolution
+#### Industrial Revolution
 - Custom bullets can hit air
 
 #### Armoured Biters & Explosive Biters & Cold Biters
@@ -23,7 +23,7 @@
 - Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Other biter mods with tiers and level, like bobs enemy or natural evolution enemies.
-- Not supported.  ERM override the biter spawners table.
+- Not supported.  ERM override the biter spawners table.  They likely have unintended behaviours.
 
 #### New Game Plus
 - When the game resets, attack meter also reset.
