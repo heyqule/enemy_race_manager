@@ -123,13 +123,13 @@ One race per surface/planet
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
 * Default
-  - build one building at a time
+    - build one building at a time
 * Command Center
-  - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+    - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town (default)
-  - Always use build formation option to build the base.
+    - Always use build formation option to build the base.
 * Full Expansion
-  - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+    - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
@@ -164,9 +164,9 @@ Partial formation is build based on cc > support > turret priority.
 
 ##### Time based attack wave (ON be default)
 - Time based attack wave after enemy level to 2. Default to ON
-  - It adds points to attack meter every minute.
-  - The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
-  - Default setting, 3%, takes about 30 mins if you are playing defensively.
+    - It adds points to attack meter every minute.
+    - The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
+    - Default setting, 3%, takes about 30 mins if you are playing defensively.
 
 ### Free for all [Experimental]
 /ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
