@@ -152,6 +152,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, health_multiplier, level)
     robot["subgroup"] = "erm-flying-enemies"
+    robot['has_belt_immunity'] = true
     robot['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, resistance_mutiplier, level) },

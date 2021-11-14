@@ -13,6 +13,8 @@ local util = require("util")
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
+local CHUNK_SIZE = 32
+
 local get_name_token = function(name)
     if global.force_entity_name_cache == nil then
         global.force_entity_name_cache = {}
@@ -67,7 +69,12 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     end
 
     if position then
-        surface.create_entity({ name = final_unit_name, position = position, force = event.source_entity.force })
+        local entity = surface.create_entity({ name = final_unit_name, position = position, force = event.source_entity.force })
+        entity.set_command({
+            type = defines.command.attack_area,
+            destination = {x = position.x, y = position.y},
+            radius = CHUNK_SIZE
+        })
     end
 end
 

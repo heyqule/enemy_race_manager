@@ -275,7 +275,11 @@ function ERM_MainWindow.show(player)
 
     if admin then
         local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
-        bottom_flow.add { type = "button", name = "emr_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
+        bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
+        local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
+        button_pusher.style.width = ERM_MainWindow.window_width - 320
+        button_pusher.style.height = 24
+        bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
     end
 end
 
@@ -348,11 +352,19 @@ end
 
 function ERM_MainWindow.reset_default(event)
     if element_valid(event) then
-        if event.element.name == "emr_reset_default_bitter" then
+        if event.element.name == "erm_reset_default_bitter" then
             for _, surface in pairs(game.surfaces) do
                 ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
                 ERM_MainWindow.require_update_all = true;
             end
+        end
+    end
+end
+
+function ERM_MainWindow.kill_idle_units(event)
+    if element_valid(event) then
+        if event.element.name == "erm_clean_idle_biter" then
+            SurfaceProcessor.wander_unit_clean_up()
         end
     end
 end

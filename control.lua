@@ -247,6 +247,7 @@ local onGuiClick = function(event)
     ErmGui.detail_window.confirm(event)
 
     ErmGui.main_window.reset_default(event)
+    ErmGui.main_window.kill_idle_units(event)
     -- Close event must handle the last
     ErmGui.main_window.toggle_main_window(event)
     ErmGui.main_window.toggle_close(event)

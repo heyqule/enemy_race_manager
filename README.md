@@ -18,7 +18,8 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
   - New evolution point: {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
   - Add "level requirement multipler".  This multiplier increase the evolution points required for enemy to level.
-  - Space Exploration player may want to set "level requirement multipler" to 3 - 5 to have a fair fight, as weapon level 5+ require space and deep space science and take a lot longer to research.
+  - **@IMPORTANT: You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
+  - **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to craft.**
 - Race mods changes:
   - Lower overall pollution_to_attack values
   - Support 4 races split
@@ -191,12 +192,13 @@ Partial formation is build based on cc > support > turret priority.
 
 #### Rampant AI (limited)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
+- Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Armoured Biters & Explosive Biters & Cold Biters
 
 #### New Game Plus
 
-For compatibility details, please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md
+Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility details.
 
 ### Commands
 - /ERM_GetRaceSettings

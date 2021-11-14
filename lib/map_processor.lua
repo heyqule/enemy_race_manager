@@ -22,6 +22,15 @@ require('__enemyracemanager__/setting-constants')
 
 local MapProcessor = {}
 
+local vanilla_structures = {
+    ['biter-spawner'] = true,
+    ['spitter-spawner'] = true,
+    ['small-worm-turret'] = true,
+    ['medium-worm-turret'] = true,
+    ['big-worm-turret'] = true,
+    ['behemoth-worm-turret'] = true,
+}
+
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
     if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         local enemy_surface = global.enemy_surfaces[surface.name]
@@ -54,9 +63,9 @@ local get_surface_by_name = function(surfaces, name)
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
-    if ErmForceHelper.is_erm_unit(entity) == false then
-        return
-    end
+     if ErmForceHelper.is_erm_unit(entity) == false and vanilla_structures[entity.name] == nil then
+         return
+     end
 
     local nameToken = ErmForceHelper.get_name_token(entity.name)
 
