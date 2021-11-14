@@ -18,7 +18,7 @@ Date: ???
     - ---- / Time base custom attack group ----
     - ---- Krastorio 2 Compatibility update (requires 1.2+) ----
     - Creep generation support for new races
-    - Custom bullets can now hit air.
+    - Custom bullets can now hit air, regardless of settings.
     - ---- / Krastorio 2 Compatibility update ----
     - ---- Leveling changes ----
     - level 2 and level 3 are no longer based on evolution factor

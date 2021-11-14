@@ -11,10 +11,6 @@ local projectiles = {
     {'rifle-ammo-', 4},
 }
 
-local aoe_projectiles = {
-    {'anti-material-rifle-ammo-', 4},
-}
-
 for _, projectile in pairs(projectiles) do
     for i = 1, projectile[2], 1 do
         if data.raw.projectile[projectile[1]..tostring(i)] then
