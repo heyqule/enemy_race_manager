@@ -8,24 +8,24 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### 1.10.0 release
-- Corrupted robots have joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
-- 4 WAYS RACE SPLIT. 
-- Time based attack squads after enemy level to 2. Default to ON
-  - It adds points to attack meter every minute.     
-  - The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
-  - Default setting (3%) takes about 30 mins if you are playing defensively.
-- Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
-- Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
-  - New evolution point: {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-  - Add "level requirement multipler".  This multiplier increase the evolution points required for enemy to level.
-  - **@IMPORTANT: You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
-  - **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to craft.**
-- Race mods changes:
-  - Lower overall pollution_to_attack values
-  - Support 4 races split
-  - Various standarization changes.
-  - flyer units are now "not-flammable"
-  - ERM_Terran - MK1 units are cheaper to build. A lot of other changes.
+* Corrupted robots have joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
+* 4 WAYS RACE SPLIT.
+* Time based attack squads after enemy level to 2. Default to ON
+    * It adds points to attack meter every minute.     
+    * The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
+    * Default setting (3%) takes about 30 mins if you are playing defensively.
+* Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
+* Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
+    * New evolution point: {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+    * Add "level requirement multipler".  This multiplier increase the evolution points required for enemy to level.
+    * **@IMPORTANT: You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
+    * **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to craft.**
+* Race mods changes:
+    * Lower overall pollution_to_attack values
+    * Support 4 races split
+    * Various standarization changes.
+    * flyer units are now "not-flammable"
+    * ERM_Terran - MK1 units are cheaper to build. A lot of other changes.
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -69,7 +69,7 @@ Manage new race as new enemy force.  Each race has its own force statistics
 #### Enemy Unit Leveling
 The evolution points is tied to force's hidden evolution factors (time, pollution and kill spawner).
 
-* {0.25, 0.7, 1.5, 3, 8, 15, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+* {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
 * evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
 * level_multiplier default to 1.
@@ -96,20 +96,20 @@ Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 This defines how enemy bases are generated when a new chunk is charted.
 
 Default
-- using base game autoplace. All races are mixed together.
+* using base game autoplace. All races are mixed together.
 
 2 races split
 
-- race A spawns at positive axis, race B spawns at negative axis
-- can be divided by (X-axis) East/West or (Y-axis) North/South.
-- Example:When you choose Y-axis, Zerg (Race A) will spawn North, Protoss (Race B) will spawn South.
+* race A spawns at positive axis, race B spawns at negative axis
+* can be divided by (X-axis) East/West or (Y-axis) North/South.
+* Example:When you choose Y-axis, Zerg (Race A) will spawn North, Protoss (Race B) will spawn South.
 
 
 ![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
 
 4 races split
 
-- One race in each area of top left, top right, bottom left and bottom right.
+* One race in each area of top left, top right, bottom left and bottom right.
 
 One race per surface/planet
 
@@ -142,57 +142,57 @@ Partial formation is build based on cc > support > turret priority.
 ![1-4-5 Formation](https://mods-data.factorio.com/assets/42b016483f30cb37d009e59b417a82e1c4a362b9.png "1-4-5 Formation")
 
 ### Attack meters / Custom Attack Squad
-- Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
-- Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
-- These attack groups are independent of pollution.
-- The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
-- When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
-- More features and specialized attack groups are coming in later release.
+* Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
+* Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
+* These attack groups are independent of pollution.
+* The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
+* When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
+* More features and specialized attack groups are coming in later release.
 
 ##### Flying attack groups (ON by default)
-- When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
+* When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
 
 ##### Dropship groups (ON by default)
-- When "Dropship Squad" is enabled, enemy may send out dedicate dropship to drop units in your base.
+* When "Dropship Squad" is enabled, enemy may send out dedicate dropship to drop units in your base.
 
 ##### Precision strike groups (ON by default)
-- When this group goes to its target, the units ignore any attack distraction.
-- They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost!
-- Dropship group always based on this group.
-- This feature can be enabled for flying attack group.  Default to ON.
-- Early attack warning on mini map. Default to ON.
+* When this group goes to its target, the units ignore any attack distraction.
+* They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost!
+* Dropship group always based on this group.
+* This feature can be enabled for flying attack group.  Default to ON.
+* Early attack warning on mini map. Default to ON.
 
 ##### Time based attack wave (ON be default)
-- Time based attack wave after enemy level to 2. Default to ON
-    - It adds points to attack meter every minute.
-    - The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
-    - Default setting, 3%, takes about 30 mins if you are playing defensively.
+* Time based attack wave after enemy level to 2. Default to ON
+    * It adds points to attack meter every minute.
+    * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
+    * Default setting, 3%, takes about 30 mins if you are playing defensively.
 
 ### Free for all [Experimental]
 /ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
-- This feature will have performance implication.
-- This command limits to max enemy level 5 and 10.
-- High level units are excluded because unit spawns quicker than they die and cause performance issue.
-- Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
-- When toogle off, all units in enemy forces are killed.
+* This feature will have performance implication.
+* This command limits to max enemy level 5 and 10.
+* High level units are excluded because unit spawns quicker than they die and cause performance issue.
+* Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
+* When toogle off, all units in enemy forces are killed.
 
 ** Player building health and enemy damage will need to re-balance for this mode in a future release **
 
 ### Mod Compatibility
 
 #### Resource Spawner Overhaul
-- You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
+* You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 
 #### Space Exploration
-- Supports one race per planet!
+* Supports one race per planet!
 
 #### Krastorio2
-- New races do not support creep generation unless author patches the creep generation code or its remote API.
-- turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
+* New races do not support creep generation unless author patches the creep generation code or its remote API.
+* turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
 
 #### Rampant AI (limited)
-- It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
-- Rampant enemies override ERM enemies!  DO NOT enable them.
+* It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
+* Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Armoured Biters & Explosive Biters & Cold Biters
 
@@ -201,8 +201,8 @@ Partial formation is build based on cc > support > turret priority.
 Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility details.
 
 ### Commands
-- /ERM_GetRaceSettings
-- /ERM_freeforall
+* /ERM_GetRaceSettings
+* /ERM_freeforall
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.

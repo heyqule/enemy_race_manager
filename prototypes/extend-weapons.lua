@@ -44,7 +44,16 @@ if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true then
     WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 end
 
---- Replace Stunt with slow sticker for land-mine
-local land_mine_sticker = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]['action']['action_delivery']['target_effects'][2]
-land_mine_sticker['sticker'] = '5-050-slowdown-sticker'
-land_mine_sticker['show_in_tooltip'] = true
+--- Replace stunt sticker with slow sticker for land-mine, only modify vanilla build.
+local source_effects = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]
+if
+    source_effects ~= nil and
+    source_effects['action']['action_delivery'] ~= nil and
+    source_effects['action']['action_delivery']['target_effects'][2] ~= nil
+then
+    local land_mine_sticker = source_effects['action']['action_delivery']['target_effects'][2]
+    if land_mine_sticker.type == 'create-sticker' then
+        land_mine_sticker.sticker = '5-050-slowdown-sticker'
+        land_mine_sticker.show_in_tooltip = true
+    end
+end
