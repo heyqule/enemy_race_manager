@@ -9,7 +9,7 @@ data:extend {
         description = "enemyracemanager-enable-bitters",
         setting_type = "startup",
         default_value = true,
-        order = "enemyracemanager-01"
+        order = "enemyracemanager-100"
     },
     {
         type = "string-setting",
@@ -18,7 +18,7 @@ data:extend {
         setting_type = "startup",
         default_value = MAX_LEVEL_10,
         allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-        order = "enemyracemanager-02"
+        order = "enemyracemanager-101"
     },
     {
         type = "int-setting",
@@ -28,7 +28,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-03"
+        order = "enemyracemanager-102"
     },
     {
         type = "string-setting",
@@ -37,7 +37,7 @@ data:extend {
         setting_type = "startup",
         default_value = ATTACK_RANGE_14,
         allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20 },
-        order = "enemyracemanager-04"
+        order = "enemyracemanager-103"
     },
     {
         type = "int-setting",
@@ -47,7 +47,7 @@ data:extend {
         default_value = 15,
         minimum_value = 1,
         maximum_value = 60,
-        order = "enemyracemanager-05"
+        order = "enemyracemanager-104"
     },
     {
         type = "int-setting",
@@ -57,7 +57,7 @@ data:extend {
         default_value = 15,
         minimum_value = 5,
         maximum_value = 60,
-        order = "enemyracemanager-20"
+        order = "enemyracemanager-110"
     },
     {
         type = "int-setting",
@@ -67,7 +67,7 @@ data:extend {
         default_value = 100,
         minimum_value = 50,
         maximum_value = 600,
-        order = "enemyracemanager-21"
+        order = "enemyracemanager-111"
     },
     {
         type = "int-setting",
@@ -77,7 +77,7 @@ data:extend {
         default_value = 5,
         minimum_value = 3,
         maximum_value = 20,
-        order = "enemyracemanager-100"
+        order = "enemyracemanager-112"
     },
     {
         type = "int-setting",
@@ -87,7 +87,7 @@ data:extend {
         default_value = 10,
         minimum_value = 5,
         maximum_value = 100,
-        order = "enemyracemanager-101"
+        order = "enemyracemanager-113"
     },
     {
         type = "int-setting",
@@ -97,7 +97,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-102"
+        order = "enemyracemanager-114"
     },
     {
         type = "double-setting",
@@ -108,7 +108,7 @@ data:extend {
         minimum_value = 1,
         maximum_value = 3,
         allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3},
-        order = "enemyracemanager-103"
+        order = "enemyracemanager-115"
     },
     {
         type = "string-setting",
