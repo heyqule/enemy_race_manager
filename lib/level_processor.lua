@@ -21,7 +21,7 @@ local LevelManager = {}
 local tier_map = { 0.4, 0.8 }
 
 -- Evolution point for leveling
-local evolution_points = {1, 2, 3, 5, 10, 16, 24, 36, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+local evolution_points = {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1

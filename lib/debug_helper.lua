@@ -11,7 +11,7 @@ local titleCase = function(first, rest)
 end
 
 local fixName = function(name)
-    fixed_name = string.gsub(name, "(%a)([%w_']*)", titleCase)
+    local fixed_name = string.gsub(name, "(%a)([%w_']*)", titleCase)
     fixed_name = string.gsub(fixed_name, "_", " ")
     return fixed_name
 end
