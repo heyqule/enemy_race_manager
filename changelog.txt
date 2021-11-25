@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.10.3
+Date: 2021-11-24
+
+  Changes:
+    - Time based custom attack group starts at level 3, instead of level 2.  Gives more time to prepare for roboports.
+    - Changed [Time Based Attack] Add points by % default from 3% to 2% per minute.
+
+  Bugfixes:
+    - Fixed a crash on data load when "enable vanilla biter" is off.
+    - added biter_factions to incompatible.  It created enemy forces which are not compatible with this mod's logic processors.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.10.2
 Date: 2021-11-21
 
