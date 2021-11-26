@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -14,6 +14,7 @@
     "!Nova-Natural_Evolution_Enemies",
     "!Natural_Evolution_Enemies_Redux",
     "!Natural_Evolution_Enemies",
+    "!biter_factions",
     "?Krastorio2",
     "?IndustrialRevolution",
     "?ArmouredBiters",

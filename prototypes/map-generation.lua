@@ -159,7 +159,10 @@ local process_4_ways = function()
 end
 
 local disable_level_spawner = function(type, name, level)
-    data.raw[type][MOD_NAME .. '/' .. name .. '/' .. level]['autoplace'] = zero_probability_expression()
+    local spawner = data.raw[type][MOD_NAME .. '/' .. name .. '/' .. level]
+    if spawner then
+        spawner['autoplace'] = zero_probability_expression()
+    end
 end
 
 local disable_level_spawners = function()
