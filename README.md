@@ -10,16 +10,16 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 ### 1.10.0 release
 * Corrupted robots have joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
 * 4 WAYS RACE SPLIT.
-* Time based attack squads after enemy level to 2. Default to ON
+* Time based attack squads after enemy level to 3. Default to ON
     * It adds points to attack meter every minute.     
     * The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
-    * Default setting (3%) takes about 30 mins if you are playing defensively.
+    * Default setting (2%) takes about 50 mins if you are playing defensively.
 * Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
 * Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
     * New evolution point: {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-    * Add "level requirement multipler".  This multiplier increase the evolution points required for enemy to level.
+    * Add "level requirement multiplier".  This multiplier increase the evolution points required for enemy to level.
     * **@IMPORTANT: You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
-    * **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to craft.**
+    * **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to upgrade.**
 * Race mods changes:
     * Lower overall pollution_to_attack values
     * Support 4 races split
@@ -72,7 +72,11 @@ The evolution points is tied to force's hidden evolution factors (time, pollutio
 * {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
 * evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
-* level_multiplier default to 1.
+* level_multiplier default to 1. 
+
+Level Curve Multiplier
+* You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
+* Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipes and takes longer to upgrade.**
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters.
 
@@ -104,12 +108,12 @@ Default
 * can be divided by (X-axis) East/West or (Y-axis) North/South.
 * Example:When you choose Y-axis, Zerg (Race A) will spawn North, Protoss (Race B) will spawn South.
 
-
-![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
-
 4 races split
 
 * One race in each area of top left, top right, bottom left and bottom right.
+
+![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
+
 
 One race per surface/planet
 
@@ -147,7 +151,7 @@ Partial formation is build based on cc > support > turret priority.
 * These attack groups are independent of pollution.
 * The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
 * When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
-* More features and specialized attack groups are coming in later release.
+* More features and specialized attack groups are coming in later releases.
 
 ##### Flying attack groups (ON by default)
 * When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
@@ -163,10 +167,10 @@ Partial formation is build based on cc > support > turret priority.
 * Early attack warning on mini map. Default to ON.
 
 ##### Time based attack wave (ON be default)
-* Time based attack wave after enemy level to 2. Default to ON
+* Time based attack wave after enemy level to 3. Default to ON
     * It adds points to attack meter every minute.
     * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
-    * Default setting, 3%, takes about 30 mins if you are playing defensively.
+    * Default setting, 2%, takes about 50 mins if you are playing defensively.
 
 ### Free for all [Experimental]
 /ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
