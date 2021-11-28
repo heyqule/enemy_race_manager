@@ -104,9 +104,8 @@ local onUnitFinishGathering = function(event)
             type = defines.command.build_base,
             destination = group.command.destination
         }
-        build_group.start_moving()
         global.erm_unit_groups[build_group.group_number] = build_group
-
+        build_group.start_moving()
         group.set_autonomous()
     end
 end
