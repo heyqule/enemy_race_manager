@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.10.5
-Date: 2021-11-29
+Date: 2021-11-30
 
   Changes:
     - Added "bob-pierce" and "plasma" resistance support for enemy units, max 90% (Bob Warfare resistance support)
