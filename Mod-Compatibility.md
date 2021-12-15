@@ -6,9 +6,9 @@
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
 
-#### Krastorio2 (1.2+)
-- New races supports creep generation
-- Custom bullets can hit air
+#### Krastorio2 (Requires 1.2+, in beta atm)
+* New races support creep generation
+* Custom bullets can hit air
 
 #### Industrial Revolution
 - Custom bullets can hit air

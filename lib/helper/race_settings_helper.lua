@@ -115,15 +115,15 @@ function RaceSettingHelper.clean_up_race()
 end
 
 function RaceSettingHelper.pick_a_spawner(target_race)
-    local structure_tier = global.race_settings[target_race]['current_support_structures_tier']
-    local strucutre_base = global.race_settings[target_race]['current_command_centers_tier']
+    local support_structures = global.race_settings[target_race]['current_support_structures_tier']
+    local base_structures = global.race_settings[target_race]['current_command_centers_tier']
     local pick = math.random();
 
     local base_name = ''
     if pick < 0.125 then
-        base_name = strucutre_base[math.random(1, #strucutre_base)]
+        base_name = base_structures[math.random(1, #strucutre_base)]
     else
-        base_name = structure_tier[math.random(1, #structure_tier)]
+        base_name = support_structures[math.random(1, #structure_tier)]
     end
 
     return base_name

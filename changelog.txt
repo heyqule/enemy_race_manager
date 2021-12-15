@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.11.0
+Date: ???
+
+  Changes:
+    - Resistance update applies to all walls and gates. 50% resistance to all
+
+---------------------------------------------------------------------------------------------------
 Version: 1.10.7
-Date: 2021-12-15
+Date: 2021-12-17
 
   Bugfixes:
     - Fix a crash when enemy couldn't build a new base in base build processor.

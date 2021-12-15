@@ -190,9 +190,9 @@ Partial formation is build based on cc > support > turret priority.
 #### Space Exploration
 * Supports one race per planet!
 
-#### Krastorio2
-* New races do not support creep generation unless author patches the creep generation code or its remote API.
-* turn on "Peaceful mode" in Krastorio2 setting to bypass the biomass requirements.
+#### Krastorio2 (Requires 1.2+, in beta atm)
+* New races support creep generation
+* Custom bullets can hit air
 
 #### Rampant AI (limited)
 * It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.

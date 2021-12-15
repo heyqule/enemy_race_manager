@@ -125,7 +125,14 @@ end
 --- Usage: remote.call('enemy_race_manager_debug', 'set_evolution_factor', 0.5)
 function Debug_RemoteAPI.set_evolution_factor(value)
     for race_name, _ in pairs(global.race_settings) do
-        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor =math.min(value, 1)
+        game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = math.min(value, 1)
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'set_tier', 1)
+function Debug_RemoteAPI.set_tier(value)
+    for race_name, _ in pairs(global.race_settings) do
+        global.race_settings[race_name].tier = math.min(value, 3)
     end
 end
 

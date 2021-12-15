@@ -79,19 +79,38 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['straight-rail']['straight-rail']['resistances'] = rails_change_resistance()
     data.raw['curved-rail']['curved-rail']['resistances'] = rails_change_resistance()
 
-    -- Buff Wall
+    -- Buff Walls & Gates
     data.raw['wall']['stone-wall']['max_health'] = 500
-    data.raw['wall']['stone-wall']['resistances'] = {
-        { type = "acid", percent = 66, decrease = 0 },
-        { type = "poison", percent = 100, decrease = 0 },
-        { type = "physical", percent = 66, decrease = 0 },
-        { type = "fire", percent = 100, decrease = 0 },
-        { type = "explosion", percent = 66, decrease = 10 },
-        { type = "impact", percent = 66, decrease = 45 },
-        { type = "laser", percent = 66, decrease = 0 },
-        { type = "electric", percent = 66, decrease = 0 },
-        { type = "cold", percent = 66, decrease = 0 }
-    }
+    local walls = data.raw['wall']
+    for _, entity in pairs(walls) do
+        entity['resistances'] = {
+            { type = "acid", percent = 50, decrease = 0 },
+            { type = "poison", percent = 100, decrease = 0 },
+            { type = "physical", percent = 50, decrease = 0 },
+            { type = "fire", percent = 100, decrease = 0 },
+            { type = "explosion", percent = 50, decrease = 10 },
+            { type = "impact", percent = 50, decrease = 45 },
+            { type = "laser", percent = 50, decrease = 0 },
+            { type = "electric", percent = 50, decrease = 0 },
+            { type = "cold", percent = 50, decrease = 0 }
+        }
+    end
+
+    local gate = data.raw['gate']
+    for _, entity in pairs(gate) do
+        entity['resistances'] = {
+            { type = "acid", percent = 50, decrease = 0 },
+            { type = "poison", percent = 100, decrease = 0 },
+            { type = "physical", percent = 50, decrease = 0 },
+            { type = "fire", percent = 100, decrease = 0 },
+            { type = "explosion", percent = 50, decrease = 10 },
+            { type = "impact", percent = 50, decrease = 45 },
+            { type = "laser", percent = 50, decrease = 0 },
+            { type = "electric", percent = 50, decrease = 0 },
+            { type = "cold", percent = 50, decrease = 0 }
+        }
+    end
+
 
     -- Buff Robots, immune fire, bump all other to 75
     if (ErmConfig.get_max_level() == 15) then
@@ -106,6 +125,8 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
     data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
     data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
+
+    require('prototypes/extend-reinforced-items')
 end
 
 --- @TODO For FREE FOR ALL MODE change
