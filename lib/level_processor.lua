@@ -188,13 +188,18 @@ function LevelManager.get_tier_for_race(race_settings, race_name)
 end
 
 function LevelManager.get_calculated_current_level(race_setting)
+    local max_level = ErmConfig.get_max_level()
     for key, value in pairs(evolution_points) do
-        if race_setting.evolution_point < value then
+        if (key == max_level) then
+            break
+        end
+
+        if key < max_level and race_setting.evolution_point < value then
             return key
         end
     end
 
-    return ErmConfig.get_max_level()
+    return max_level
 end
 
 function LevelManager.canLevelByCommand(race_settings, force, race_name, target_level)

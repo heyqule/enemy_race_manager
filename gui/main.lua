@@ -13,7 +13,7 @@ local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 --- GuiSharedFunctions
 local element_valid = function(event)
-   return event.element and event.element.valid
+    return event.element and event.element.valid
 end
 
 --- Detail Windows
@@ -107,25 +107,42 @@ function ERM_DetailWindow.show(player, race_setting)
 
         local setting_flow = right_flow.add { type = "flow", name = "setting_flow", direction = 'vertical' }
         setting_flow.add { type = "label", name="setting_description", caption={"gui.setting_description"}}
-        local level_slider_flow = setting_flow.add {type = "flow", name = "level_slider_flow", direction = 'horizontal'}
-        level_slider_flow.add { type = "label",
-                                caption = { 'gui.level_up_silder'},
-                                tooltip = { 'gui.level_up_silder_tooltip' }
-        }
-        local level_slider = level_slider_flow.add { type = "slider",
-                                                     name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_silder_name,
-                                                     tooltip = { 'gui.level_up_silder_tooltip' },
-                                                     minimum_value = LevelManager.get_calculated_current_level(race_setting),
-                                                     maximum_value = GlobalConfig.get_max_level(),
-                                                     style = 'notched_slider'
-        }
-        level_slider.slider_value = race_setting.level
-        level_slider.style.vertical_align = "bottom"
-        level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_value_name, caption = race_setting.level }
 
-        local gap = setting_flow.add {type="empty-widget"}
-        gap.style.height = 4
-        setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="confirm_button"}
+        local add_confirm_button = false
+
+        local level_slider_flow = setting_flow.add {type = "flow", name = "level_slider_flow", direction = 'horizontal'}
+        local current_level = LevelManager.get_calculated_current_level(race_setting)
+        local max_level = GlobalConfig.get_max_level()
+
+        if current_level < max_level then
+            level_slider_flow.add { type = "label",
+                                    caption = { 'gui.level_up_silder'},
+                                    tooltip = { 'gui.level_up_silder_tooltip' }
+            }
+            local level_slider = level_slider_flow.add { type = "slider",
+                                                         name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_silder_name,
+                                                         tooltip = { 'gui.level_up_silder_tooltip' },
+                                                         minimum_value = current_level,
+                                                         maximum_value = max_level,
+                                                         style = 'notched_slider'
+            }
+            level_slider.slider_value = race_setting.level
+            level_slider.style.vertical_align = "bottom"
+            level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_value_name, caption = race_setting.level }
+            add_confirm_button = true
+        else
+            level_slider_flow.add { type = "label",
+                                    caption = { 'gui.level_up_silder'},
+                                    tooltip = { 'gui.level_up_silder_tooltip' }
+            }
+            level_slider_flow.add{ type = "label", name="level_slider_not_settable_description", caption={"gui.not_settable_description"}}
+        end
+
+        if add_confirm_button then
+            local gap = setting_flow.add {type="empty-widget"}
+            gap.style.height = 4
+            setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="confirm_button"}
+        end
 
         local center_gap = right_flow.add {type="empty-widget"}
         center_gap.style.height = 16
