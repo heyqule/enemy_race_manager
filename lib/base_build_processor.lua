@@ -41,12 +41,11 @@ local expansion_switch = {
 }
 
 function BaseBuildProcessor.exec(entity)
-    if ErmForceHelper.is_erm_unit(entity) == false then
-        return
-    end
-    local func = expansion_switch[ErmConfig.build_style()]
-    if func then
-        func(entity)
+    if entity and entity.valid and ErmForceHelper.is_erm_unit(entity) then
+        local func = expansion_switch[ErmConfig.build_style()]
+        if func then
+            func(entity)
+        end
     end
 end
 
