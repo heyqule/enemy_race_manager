@@ -74,9 +74,11 @@ cron_switch = {
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
-    if entity.valid then
+    if entity and entity.valid then
         local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
-        ErmBaseBuildProcessor.exec(replaced_entity)
+        if replaced_entity and replaced_entity.valid then
+            ErmBaseBuildProcessor.exec(replaced_entity)
+        end
     end
 end
 
