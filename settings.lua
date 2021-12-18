@@ -55,8 +55,8 @@ data:extend {
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "startup",
         default_value = 15,
-        minimum_value = 5,
-        maximum_value = 60,
+        minimum_value = 2,
+        maximum_value = 50,
         order = "enemyracemanager-110"
     },
     {
@@ -66,7 +66,7 @@ data:extend {
         setting_type = "startup",
         default_value = 100,
         minimum_value = 50,
-        maximum_value = 600,
+        maximum_value = 1000,
         order = "enemyracemanager-111"
     },
     {

@@ -4,6 +4,8 @@ Date: ???
 
   Changes:
     - Resistance update applies to all walls and gates. 50% resistance to all
+    - Max gathering groups change from 5 - 60 to 2 - 50
+    - Max Auto gathering group size change from 50 - 600 to 50 - 1000
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.10.7
