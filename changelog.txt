@@ -1,11 +1,23 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.11.0
-Date: ???
+Date: 2012-12-26
+
+  Features:
+    - New map presets: ERM Roach World and ERM Roach Death World.
+    - min enemy expansion = 2 mins and max enemy expansion = 10 mins. Base presets are 4 mins and 60 mins respectively.
 
   Changes:
     - Resistance update applies to all walls and gates. 50% resistance to all
-    - Max gathering groups change from 5 - 60 to 2 - 50
+    - Max gathering groups change from 5 - 60 to 1 - 50
     - Max Auto gathering group size change from 50 - 600 to 50 - 1000
+    - Max attack group size can be set to 1000.
+    - This can be reach by raising "[Attack Meter] Threshold Multiplier" and "Max Auto gathering group size". (e.g 10 Threshold Multiplier and 100 max group size)
+    - Debug remote attack group calls now accept size
+    - Added a debug scenario to test the races on different maps.
+    - Code file license changed from MIT to GNU LGPLv3
+
+  Bugfixes:
+    - Fix an issue where WEST and EAST attack group processing position get swapped.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.10.7

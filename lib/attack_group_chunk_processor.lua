@@ -98,9 +98,9 @@ local set_up_rotatable_direction = function(race_cursor, race_name, surface)
             race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_ALL
         elseif settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
             if ErmConfig.positive_axis_race() == race_name then
-                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_WEST)
-            elseif ErmConfig.negative_axis_race() == race_name then
                 insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_EAST)
+            elseif ErmConfig.negative_axis_race() == race_name then
+                insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_WEST)
             end
         else
             if ErmConfig.positive_axis_race() == race_name then
@@ -336,6 +336,8 @@ local find_spawn_position = function(surface, race_name)
 
     if position_node then
         position = {x = position_node.x, y = position_node.y}
+        log(race_name)
+        log(serpent.block(position))
         return position
     end
 

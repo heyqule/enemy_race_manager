@@ -80,30 +80,33 @@ function Debug_RemoteAPI.exec_attack_group(race_name)
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'generate_attack_group', 'erm_zerg')
-function Debug_RemoteAPI.generate_attack_group(race_name)
+function Debug_RemoteAPI.generate_attack_group(race_name, size)
+    size = size or 150
     ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
-            150
+            size
     )
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'generate_flying_group', 'erm_zerg')
-function Debug_RemoteAPI.generate_flying_group(race_name)
+function Debug_RemoteAPI.generate_flying_group(race_name, size)
+    size = size or 40
     ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
-            40,
+            size,
             ErmAttackGroupProcessor.GROUP_TYPE_FLYING
     )
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'generate_dropship_group', 'erm_zerg')
-function Debug_RemoteAPI.generate_dropship_group(race_name)
+function Debug_RemoteAPI.generate_dropship_group(race_name, size)
+    size = size or 20
     ErmAttackGroupProcessor.generate_group(
             race_name,
             game.forces[ErmForceHelper.get_force_name_from(race_name)],
-            20,
+            size,
             ErmAttackGroupProcessor.GROUP_TYPE_DROPSHIP
     )
 end

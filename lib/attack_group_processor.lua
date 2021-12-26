@@ -22,8 +22,8 @@ AttackGroupProcessor.MIXED_UNIT_POINTS = 20
 AttackGroupProcessor.FLYING_UNIT_POINTS = 75
 AttackGroupProcessor.DROPSHIP_UNIT_POINTS = 150
 
-AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(settings.startup['enemyracemanager-max-group-size'].value / 20)
-AttackGroupProcessor.MAX_GROUP_SIZE = 600
+AttackGroupProcessor.UNIT_PER_BATCH = 5
+AttackGroupProcessor.MAX_GROUP_SIZE = 2000
 
 AttackGroupProcessor.GROUP_AREA = 256
 AttackGroupProcessor.CHUNK_CENTER_POINT = 16
@@ -245,6 +245,7 @@ function AttackGroupProcessor.add_to_group_cron(arg)
 end
 
 function AttackGroupProcessor.exec(race_name, force, attack_points)
+    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / 20)
     local group_tracker = get_group_tracker(race_name)
     if group_tracker then
         return false

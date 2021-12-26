@@ -61,6 +61,14 @@ function ERM_UnitTint.tint_army_color()
     return { r = 69, g = 225, b = 27, a = 255 }
 end
 
+function ERM_UnitTint.tint_green()
+    return { r = 0, g = 255, b = 0, a = 255 }
+end
+
+function ERM_UnitTint.tint_purple()
+    return { r = 128, g = 0, b = 128, a = 255 }
+end
+
 function ERM_UnitTint.mask_tint(layer, color)
     layer['tint'] = color
     layer['apply_runtime_tint'] = false

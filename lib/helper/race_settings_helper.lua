@@ -121,9 +121,9 @@ function RaceSettingHelper.pick_a_spawner(target_race)
 
     local base_name = ''
     if pick < 0.125 then
-        base_name = base_structures[math.random(1, #strucutre_base)]
+        base_name = base_structures[math.random(1, #base_structures)]
     else
-        base_name = support_structures[math.random(1, #structure_tier)]
+        base_name = support_structures[math.random(1, #support_structures)]
     end
 
     return base_name

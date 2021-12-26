@@ -55,7 +55,7 @@ data:extend {
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "startup",
         default_value = 15,
-        minimum_value = 2,
+        minimum_value = 1,
         maximum_value = 50,
         order = "enemyracemanager-110"
     },
@@ -311,7 +311,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 1.5,
         minimum_value = 1,
-        maximum_value = 5,
+        maximum_value = 10,
         order = "enemyracemanager-301"
     },
     {
@@ -322,6 +322,16 @@ data:extend {
         default_value = 10,
         allowed_values = { 5, 10, 15, 20, 25 },
         order = "enemyracemanager-302"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-attack-meter-collector-multiplier",
+        description = "enemyracemanager-attack-meter-collector-multiplier",
+        setting_type = "runtime-global",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 10,
+        order = "enemyracemanager-303"
     },
     {
         type = "bool-setting",

@@ -79,6 +79,7 @@ local refreshable_settings = {
         'enemyracemanager-attack-meter-enable',
         'enemyracemanager-attack-meter-threshold',
         'enemyracemanager-attack-meter-threshold-deviation',
+        'enemyracemanager-attack-meter-collector-multiplier',
         'enemyracemanager-flying-squad-enable',
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
@@ -198,6 +199,10 @@ function ErmConfig.get_max_attack_range()
     return current_range
 end
 
+function ErmConfig.get_max_projectile_range()
+    return ErmConfig.get_max_attack_range() * 2
+end
+
 
 function ErmConfig.get_mapping_method()
     local mapping_method
@@ -290,6 +295,10 @@ end
 
 function ErmConfig.attack_meter_deviation()
     return get_global_setting_value('enemyracemanager-attack-meter-threshold-deviation')
+end
+
+function ErmConfig.attack_meter_collector_multiplier()
+    return get_global_setting_value('enemyracemanager-attack-meter-collector-multiplier')
 end
 
 function ErmConfig.flying_squad_enabled()

@@ -110,6 +110,8 @@ function AttackMeterProcessor.calculate_points(force_name)
     ErmRaceSettingsHelper.add_killed_units_count(race_name, unit_points)
     ErmRaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
 
+    attack_meter_points = attack_meter_points * ErmConfig.attack_meter_collector_multiplier()
+
     if ErmConfig.time_base_attack_enabled() and level > 2 then
         local extra_points = ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * (ErmConfig.time_base_attack_points() / 100)
         attack_meter_points = attack_meter_points +  extra_points

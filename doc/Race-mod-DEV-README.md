@@ -144,9 +144,9 @@ Long Range: 12
 Max Range: ERM_Config.get_max_attack_range()
 
 min_attack_distance:
-- (unit_range - 2) if unit_range > 4 and < 8
-- (unit_range - 3) if unit_range >= 8 and < 12
-- (unit_range - 4) if unit_range >= 12
+- (unit_range - 2) if short range
+- (unit_range - 3) if medium Range
+- (unit_range - 4) if long range to max range
 
 ##### pollution_to_join_attack Guideline:
 Tier 1: 5 - 50

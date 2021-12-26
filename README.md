@@ -7,25 +7,8 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### 1.10.0 release
-* Corrupted robots have joined base game biter to fill the flying/proxy builder/dropship units roll.  "Enemy/Erm_vanilla" race now supports all features in ERM.
-* 4 WAYS RACE SPLIT.
-* Time based attack squads after enemy level to 3. Default to ON
-    * It adds points to attack meter every minute.     
-    * The points to add can be adjusted 1% to 20% of next attack threshold. (1.5hr to 5mins)
-    * Default setting (2%) takes about 50 mins if you are playing defensively.
-* Enemy level 2 and 3 no longer depend on evolution factor.  Now only unit tiers depend on evolution factor.
-* Another adjustment to leveling curve.  Early levels will arrive a lot quicker.
-    * New evolution point: {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-    * Add "level requirement multiplier".  This multiplier increase the evolution points required for enemy to level.
-    * **@IMPORTANT: You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
-    * **@IMPORTANT: Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipe and longer to upgrade.**
-* Race mods changes:
-    * Lower overall pollution_to_attack values
-    * Support 4 races split
-    * Various standarization changes.
-    * flyer units are now "not-flammable"
-    * ERM_Terran - MK1 units are cheaper to build. A lot of other changes.
+### 1.11.0 release
+
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
