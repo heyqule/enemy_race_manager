@@ -204,7 +204,7 @@ Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compati
 ### Roadmap after 1.0
 ERM_RedArmy - Heavy firepower on single target - Done
 
-ERM_MarsPeople - Mars people from metal slugs series (WIP)
+ERM_MarsPeople - Mars people from metal slugs series - Beta
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
