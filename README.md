@@ -8,12 +8,17 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### 1.11.0 release
+  - New map presets: ERM Roach World and ERM Roach Death World.
+  - Max auto gathering group size change from 50 - 600 to 50 - 1000
+  - Max attack group size can be set to 1000.
 
+### Race mode Updates
+  - Mars People beta
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
 
-Youtube: https://www.youtube.com/watch?v=pcrFmtvNYTU
+Youtube: (WIP)
 
 Tips on defense: A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
 
@@ -24,6 +29,8 @@ New Enemy Races:
 [>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
 
 [>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
+
+[>>>>Mars People<<<<](https://mods.factorio.com/mod/erm_marspeople)
 
 Player Controllable Units:
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)

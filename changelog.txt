@@ -9,7 +9,7 @@ Date: 2012-12-26
   Changes:
     - Resistance update applies to all walls and gates. 50% resistance to all
     - Max gathering groups change from 5 - 60 to 1 - 50
-    - Max Auto gathering group size change from 50 - 600 to 50 - 1000
+    - Max auto gathering group size change from 50 - 600 to 50 - 1000
     - Max attack group size can be set to 1000.
     - This can be reach by raising "[Attack Meter] Threshold Multiplier" and "Max Auto gathering group size". (e.g 10 Threshold Multiplier and 100 max group size)
     - Debug remote attack group calls now accept size
