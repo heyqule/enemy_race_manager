@@ -336,8 +336,6 @@ local find_spawn_position = function(surface, race_name)
 
     if position_node then
         position = {x = position_node.x, y = position_node.y}
-        log(race_name)
-        log(serpent.block(position))
         return position
     end
 
