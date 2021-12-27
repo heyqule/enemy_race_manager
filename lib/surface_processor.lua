@@ -9,6 +9,23 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
+local can_assign = function(surface_name)
+    if string.find(surface_name, "Factory floor") or
+        string.find(surface_name, " Orbit") or
+        string.find(surface_name, "clonespace") or
+        string.find(surface_name, "BPL_TheLabplayer") or
+        string.find(surface_name, "starmap-") or
+        (surface_name == "aai-signals") or
+        string.find(surface_name, "NiceFill") or
+        string.find(surface_name, "Asteroid Belt") or
+        string.find(surface_name, "Vault ")
+    then
+        return false
+    end
+
+    return true
+end
+
 local SurfaceProcessor = {}
 
 function SurfaceProcessor.init_globals()
@@ -19,6 +36,10 @@ function SurfaceProcessor.assign_race(surface, race_name)
     local races = ErmConfig.get_enemy_races()
     local max_num = Table.size(races)
     if max_num == 0 then
+        return
+    end
+
+    if not can_assign(surface.name) then
         return
     end
 
@@ -49,7 +70,7 @@ function SurfaceProcessor.rebuild_race()
     end
 
     for surface_index, race in pairs(global.enemy_surfaces) do
-        if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) then
+        if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) or not can_assign(game.surfaces[surface_index].name) then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
     end
