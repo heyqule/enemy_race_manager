@@ -63,6 +63,8 @@ ErmConfig.installed_races_loaded = false
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
 
+ErmConfig.FFA_MULTIPLIER = 8
+
 local refreshable_settings = {
     startup = {
         'enemyracemanager-max-attack-range',

@@ -153,7 +153,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 end
             end
             group.set_command(command)
-            global.erm_unit_groups[group.group_number] = group
+            global.erm_unit_groups[group.group_number] = {
+                group =  group,
+                start_position = group.position
+            }
         else
             group.set_autonomous()
         end
@@ -259,9 +262,9 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             spawn_as_flying_squad then
 
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
-        local spawn_as_flying_squad = can_spawn(ErmConfig.dropship_chance())
+        local spawn_as_dropship_squad = can_spawn(ErmConfig.dropship_chance())
 
-        if dropship_enabled and spawn_as_flying_squad then
+        if dropship_enabled and spawn_as_dropship_squad then
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
         else

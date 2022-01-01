@@ -17,7 +17,7 @@ AttackGroupChunkProcessor.CHUNK_SEARCH_AREA = AttackGroupChunkProcessor.CHUNK_SE
 
 AttackGroupChunkProcessor.MINIMUM_SPAWNABLE = 10
 
-AttackGroupChunkProcessor.RETRY = 4
+AttackGroupChunkProcessor.RETRY = 12
 
 AttackGroupChunkProcessor.AREA_NORTH = {1,2}
 AttackGroupChunkProcessor.AREA_SOUTH = {3,4}

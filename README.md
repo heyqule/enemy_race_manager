@@ -7,6 +7,8 @@ It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/L
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
+ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
+
 ### 1.11.0 release
   - New map presets: ERM Roach World and ERM Roach Death World.
   - Max auto gathering group size change from 50 - 600 to 50 - 1000
@@ -196,7 +198,6 @@ Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compati
 
 ### Commands
 * /ERM_GetRaceSettings
-* /ERM_freeforall
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.

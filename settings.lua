@@ -237,7 +237,6 @@ data:extend {
         default_value = false,
         order = "enemyracemanager-401"
     },
-
     {
         type = "int-setting",
         name = "enemyracemanager-attack-meter-group-interval",
@@ -246,6 +245,14 @@ data:extend {
         default_value = 3,
         order = "enemyracemanager-500",
         allowed_values = { 1, 2, 3, 4, 5, 10 }
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-free-for-all",
+        description = "enemyracemanager-free-for-all",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-501",
     },
     --- Map Settings Tab ---
     {

@@ -114,9 +114,10 @@ end
 
 local globalCacheTableCleanup = function(target_table)
     local tmp = {}
-    for _, group in pairs(target_table) do
+    for _, group_data in pairs(target_table) do
+        local group = group_data.group
         if group.valid and #group.members > 0 then
-            tmp[group.group_number] = group
+            tmp[group.group_number] = group_data
         end
     end
     target_table = tmp
@@ -126,9 +127,22 @@ end
 
 local onAiCompleted = function(event)
     if global.erm_unit_groups[event.unit_number] then
-        local group = global.erm_unit_groups[event.unit_number]
-        if group.valid then
-            group.set_autonomous()
+        local group = global.erm_unit_groups[event.unit_number].group
+        local start_position = global.erm_unit_groups[event.unit_number].start_position
+        if group.valid and
+          group.is_script_driven and
+          group.command == nil and
+          (start_position.x == group.position.x and start_position.y == group.position.y)
+        then
+            local members = group.members
+            local refundPoints = 0
+            for _, member in pairs(members) do
+                member.destroy()
+                refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+            end
+
+            ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
+            group.destroy()
         end
 
         local group_count = table_size(global.erm_unit_groups)
@@ -482,12 +496,6 @@ commands.add_command("ERM_GetRaceSettings",
         { "description.command-regenerate-enemy" },
         function()
             game.print(game.table_to_json(global.race_settings))
-        end)
-
-commands.add_command("ERM_FFA",
-        { "description.command-ffa" },
-        function(command)
-            ErmCommandProcessor.freeforall(command)
         end)
 
 -- Compatibility Events

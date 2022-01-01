@@ -129,11 +129,18 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     require('prototypes/extend-reinforced-items')
 end
 
---- @TODO For FREE FOR ALL MODE change
---for type_name, types in pairs(data.raw) do
---    if type_name ~= ('unit' or 'unit-spawner' or 'turret') then
---        for _, entity in pairs(types) do
---
---        end
---    end
---end
+if settings.startup['enemyracemanager-free-for-all'].value then
+    for _, types in pairs(data.raw) do
+        for _, entity in pairs(types) do
+            if type(entity) == 'table' and entity.max_health and (entity.subgroup == nil or string.find(entity.subgroup, 'enemies') == nil) then
+                entity.max_health = entity.max_health * ErmConfig.FFA_MULTIPLIER * 1.25
+
+                if  entity.repair_speed_modifier then
+                    entity.repair_speed_modifier = entity.repair_speed_modifier * ErmConfig.FFA_MULTIPLIER
+                else
+                    entity.repair_speed_modifier = 1 * ErmConfig.FFA_MULTIPLIER
+                end
+            end
+        end
+    end
+end
