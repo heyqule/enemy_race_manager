@@ -106,18 +106,23 @@ local onUnitFinishGathering = function(event)
             type = defines.command.build_base,
             destination = group.command.destination
         }
-        global.erm_unit_groups[build_group.group_number] = build_group
+        global.erm_unit_groups[build_group.group_number] = {
+            group = build_group,
+            start_position = group.position
+        }
         build_group.start_moving()
         group.set_autonomous()
     end
 end
 
-local globalCacheTableCleanup = function(target_table)
+local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
     for _, group_data in pairs(target_table) do
-        local group = group_data.group
-        if group.valid and #group.members > 0 then
-            tmp[group.group_number] = group_data
+        if group_data.group and group_data.group.valid then
+            local group = group_data.group
+            if #group.members > 0 then
+                tmp[group.group_number] = group_data
+            end
         end
     end
     target_table = tmp
@@ -126,7 +131,7 @@ local globalCacheTableCleanup = function(target_table)
 end
 
 local onAiCompleted = function(event)
-    if global.erm_unit_groups[event.unit_number] then
+    if global.erm_unit_groups[event.unit_number] and global.erm_unit_groups[event.unit_number].group and global.erm_unit_groups[event.unit_number].group.valid then
         local group = global.erm_unit_groups[event.unit_number].group
         local start_position = global.erm_unit_groups[event.unit_number].start_position
         if group.valid and
@@ -147,7 +152,7 @@ local onAiCompleted = function(event)
 
         local group_count = table_size(global.erm_unit_groups)
         if group_count > ErmConfig.CONFIG_CACHE_SIZE then
-            global.erm_unit_groups = globalCacheTableCleanup(global.erm_unit_groups)
+            global.erm_unit_groups = ermGroupCacheTableCleanup(global.erm_unit_groups)
         end
     end
 end
@@ -301,8 +306,11 @@ end
 Event.register(defines.events.on_gui_closed, onGuiClose)
 
 local gui_value_change_switch = {
-    [ErmGui.detail_window.levelup_silder_name] = function(event)
-        ErmGui.detail_window.update_slider_text(event)
+    [ErmGui.detail_window.levelup_slider_name] = function(event)
+        ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.levelup_slider_name, ErmGui.detail_window.levelup_value_name)
+    end,
+    [ErmGui.detail_window.evolution_factor_slider_name] = function(event)
+        ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.evolution_factor_slider_name, ErmGui.detail_window.evolution_factor_value_name)
     end,
 }
 

@@ -62,6 +62,11 @@ ErmConfig.installed_races_loaded = false
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
+if DEBUG_MODE then
+    ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
+    ErmConfig.CONFIG_CACHE_SIZE = 8
+end
+
 
 ErmConfig.FFA_MULTIPLIER = 8
 

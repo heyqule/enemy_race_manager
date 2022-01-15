@@ -51,6 +51,7 @@ function makeLevelSpawners(level, type)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, resistance_mutiplier, level) }
     }
     spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, health_multiplier, level)
+    spawner['spawning_cooldown'] = {600, 300}
 
     local result_units = (function()
         local res = {}

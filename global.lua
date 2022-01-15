@@ -9,7 +9,7 @@ MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 MOD_VERSION = 102 -- Mod Data version
 
-DEBUG_MODE = true
+DEBUG_MODE = false
 
 CONSTRUCTION_ATTACK = 'construction_bot_attack'
 LOGISTIC_ATTACK = 'logistic_bot_attack'

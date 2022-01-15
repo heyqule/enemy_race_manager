@@ -133,6 +133,7 @@ function Debug_RemoteAPI.set_evolution_factor(value)
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'set_tier', 1)
+--- TODO update race spawn tables
 function Debug_RemoteAPI.set_tier(value)
     for race_name, _ in pairs(global.race_settings) do
         global.race_settings[race_name].tier = math.min(value, 3)

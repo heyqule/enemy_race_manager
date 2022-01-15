@@ -29,20 +29,17 @@ WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'],
 -- Allow artillery projectile explosion to hit air
 WeaponHelper.ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
 
-if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true then
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['shotgun-pellet'])
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['piercing-shotgun-pellet'])
+-- Allow shotgun and cannon to hit air
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['shotgun-pellet'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['piercing-shotgun-pellet'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-cannon-projectile'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-uranium-cannon-projectile'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['cannon-projectile'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['uranium-cannon-projectile'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['grenade'])
+WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-cannon-projectile'])
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-uranium-cannon-projectile'])
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['cannon-projectile'])
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['uranium-cannon-projectile'])
-
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['grenade'])
-
-    WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
-    WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
-end
 
 --- Replace stunt sticker with slow sticker for land-mine, only modify vanilla build.
 local source_effects = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]

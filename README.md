@@ -9,13 +9,19 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
 
-### 1.11.0 release
-  - New map presets: ERM Roach World and ERM Roach Death World.
-  - Max auto gathering group size change from 50 - 600 to 50 - 1000
-  - Max attack group size can be set to 1000.
+### 1.12.0 feature highlight
+  - FREE FOR ALL Mode
+    - When FFA mode is enabled:
+    - Player entity health multiplied by 8x
+    - Enemy damage also multiplied by 8x.
+    - The multiplier is to balance the time enemy units take to kill each other.
+  - When attack group can't find attack path, it will automatically destroy and refund some attack points. (performance tweak)
+  - All default weapons can now hit air. Removed Allow ground weapons to hit air units setting
+  - Added a slider to adjust evolution factor in enemy detail GUI.
 
 ### Race mode Updates
-  - Mars People beta
+  - Adjusted unit spawner to balance free for all mode
+  - Protoss and Marspeople have slower spawn rate.
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.

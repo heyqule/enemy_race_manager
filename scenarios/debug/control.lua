@@ -23,8 +23,12 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(10)
 
-    if player.character then player.character.destroy() end
-    local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
-    player.set_controller{type = defines.controllers.character, character = character}
-    player.teleport({0, 0})
+    surface.freeze_daytime = true
+    surface.daytime = 1
+
+    -- Comment out the following to start with godmode
+    --if player.character then player.character.destroy() end
+    --local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
+    --player.set_controller{type = defines.controllers.character, character = character}
+    --player.teleport({0, 0})
 end)

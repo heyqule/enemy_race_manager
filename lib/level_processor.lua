@@ -103,13 +103,14 @@ function LevelManager.calculateLevels()
             local current_race_setting = race_settings[race_name]
             local current_level = current_race_setting.level
 
-            if current_level == ErmConfig.get_max_level() then
-                goto skip_calculate_level_for_force
-            end
             -- Handle Score Level
             calculate_evolution_points(race_settings, settings, force, race_name)
 
             handle_unit_tier(race_settings, force, race_name, true)
+
+            if current_level == ErmConfig.get_max_level() then
+                goto skip_calculate_level_for_force
+            end
 
             handle_unit_level(race_settings, force, race_name, true)
         end
@@ -144,13 +145,14 @@ function LevelManager.calculateMultipleLevels()
             local level_up = false
 
             for i = current_level, ErmConfig.get_max_level() do
-                if current_level == ErmConfig.get_max_level() then
-                    goto skip_calculate_multiple_level_for_force
-                end
 
                 calculate_evolution_points(race_settings, settings, force, race_name)
 
                 handle_unit_tier(race_settings, force, race_name, false)
+
+                if current_level == ErmConfig.get_max_level() then
+                    goto skip_calculate_multiple_level_for_force
+                end
 
                 handle_unit_level(race_settings, force, race_name, false)
 
