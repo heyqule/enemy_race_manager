@@ -22,6 +22,10 @@ function SurfaceProcessor.assign_race(surface, race_name)
         return
     end
 
+    if not ErmForceHelper.can_assign(surface.name) then
+        return
+    end
+
     local race = nil
     if race_name then
         for k, v in pairs(races) do
@@ -49,7 +53,10 @@ function SurfaceProcessor.rebuild_race()
     end
 
     for surface_index, race in pairs(global.enemy_surfaces) do
-        if game.surfaces[surface_index] == nil or (race ~= MOD_NAME and game.active_mods[race] == nil) then
+        if game.surfaces[surface_index] == nil or
+                (race ~= MOD_NAME and game.active_mods[race] == nil) or
+                not ErmForceHelper.can_assign(game.surfaces[surface_index].name)
+        then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
     end

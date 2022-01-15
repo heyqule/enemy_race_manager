@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.12.0
+Date: 2022-01-15
+
+  Features:
+    - Native support for Free for All.  You can enable in startup setting. (BETA)
+    - When FFA mode is enabled:
+    - Player entity health multiplied by 8x
+    - Enemy damage also multiplied by 8x.
+    - The multiplier is to balance the time enemy units take to kill each other.
+
+  Changes:
+    - Certain surfaces will no longer assign races. E.g aai-signals, starmap from SE. (Inspired from Rampant 2.0)
+    - When attack group can't find attack path, it will automatically destroy and refund some attack points.
+    - Raise pick spawn / attack group location retries from 4 to 12.
+    - All default weapon can now hit air. Removed Allow ground weapons to hit air units setting
+    - Biters now have resistance similar to other races. Max 90 for elemental and 95 for physical
+    - Biter spawners now use same spawn cooldown as zerg, {600, 300} ticks.
+    - Added a slider to adjust evolution factor in enemy detail GUI.
+
+  Bugfixes:
+    - Fixed a crash in ermGroupCacheTableCleanup function
+
+---------------------------------------------------------------------------------------------------
 Version: 1.11.0
 Date: 2012-12-26
 

@@ -92,7 +92,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 
     entity.destroy()
     if not surface.can_place_entity({ name = name, force = new_force_name, position = position }) then
-        position = surface.find_non_colliding_position(name, position, 32, 4, true)
+        position = surface.find_non_colliding_position(name, position, 32, 8, true)
     end
 
     if position then

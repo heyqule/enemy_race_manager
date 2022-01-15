@@ -57,11 +57,14 @@ function ScenarioHelper.set_tech_level(force, level)
 end
 
 function ScenarioHelper.set_enemy_params()
-    remote.call('enemy_race_manager_debug','set_evolution_factor', 0.9)
+    remote.call('enemy_race_manager_debug','set_evolution_factor', 1.0)
     remote.call('enemy_race_manager_debug','level_up', 20)
-    remote.call('enemy_race_manager_debug','add_points_to_attack_meter', 1000000)
     remote.call('enemy_race_manager_debug', 'set_tier', 3)
     remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
+end
+
+function ScenarioHelper.set_attack_points()
+    remote.call('enemy_race_manager_debug','add_points_to_attack_meter', 1000000)
 end
 
 function ScenarioHelper.set_enemy_expansion(min, max)

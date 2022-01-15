@@ -106,17 +106,23 @@ local onUnitFinishGathering = function(event)
             type = defines.command.build_base,
             destination = group.command.destination
         }
-        global.erm_unit_groups[build_group.group_number] = build_group
+        global.erm_unit_groups[build_group.group_number] = {
+            group = build_group,
+            start_position = group.position
+        }
         build_group.start_moving()
         group.set_autonomous()
     end
 end
 
-local globalCacheTableCleanup = function(target_table)
+local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
-    for _, group in pairs(target_table) do
-        if group.valid and #group.members > 0 then
-            tmp[group.group_number] = group
+    for _, group_data in pairs(target_table) do
+        if group_data.group and group_data.group.valid then
+            local group = group_data.group
+            if #group.members > 0 then
+                tmp[group.group_number] = group_data
+            end
         end
     end
     target_table = tmp
@@ -125,15 +131,28 @@ local globalCacheTableCleanup = function(target_table)
 end
 
 local onAiCompleted = function(event)
-    if global.erm_unit_groups[event.unit_number] then
-        local group = global.erm_unit_groups[event.unit_number]
-        if group.valid then
-            group.set_autonomous()
+    if global.erm_unit_groups[event.unit_number] and global.erm_unit_groups[event.unit_number].group and global.erm_unit_groups[event.unit_number].group.valid then
+        local group = global.erm_unit_groups[event.unit_number].group
+        local start_position = global.erm_unit_groups[event.unit_number].start_position
+        if group.valid and
+          group.is_script_driven and
+          group.command == nil and
+          (start_position.x == group.position.x and start_position.y == group.position.y)
+        then
+            local members = group.members
+            local refundPoints = 0
+            for _, member in pairs(members) do
+                member.destroy()
+                refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+            end
+
+            ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
+            group.destroy()
         end
 
         local group_count = table_size(global.erm_unit_groups)
         if group_count > ErmConfig.CONFIG_CACHE_SIZE then
-            global.erm_unit_groups = globalCacheTableCleanup(global.erm_unit_groups)
+            global.erm_unit_groups = ermGroupCacheTableCleanup(global.erm_unit_groups)
         end
     end
 end
@@ -287,8 +306,11 @@ end
 Event.register(defines.events.on_gui_closed, onGuiClose)
 
 local gui_value_change_switch = {
-    [ErmGui.detail_window.levelup_silder_name] = function(event)
-        ErmGui.detail_window.update_slider_text(event)
+    [ErmGui.detail_window.levelup_slider_name] = function(event)
+        ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.levelup_slider_name, ErmGui.detail_window.levelup_value_name)
+    end,
+    [ErmGui.detail_window.evolution_factor_slider_name] = function(event)
+        ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.evolution_factor_slider_name, ErmGui.detail_window.evolution_factor_value_name)
     end,
 }
 
@@ -482,12 +504,6 @@ commands.add_command("ERM_GetRaceSettings",
         { "description.command-regenerate-enemy" },
         function()
             game.print(game.table_to_json(global.race_settings))
-        end)
-
-commands.add_command("ERM_FFA",
-        { "description.command-ffa" },
-        function(command)
-            ErmCommandProcessor.freeforall(command)
         end)
 
 -- Compatibility Events

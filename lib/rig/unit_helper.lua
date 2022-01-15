@@ -9,6 +9,7 @@
 local ERM_UnitHelper = {}
 local Math = require('__stdlib__/stdlib/utils/math')
 require('__stdlib__/stdlib/utils/defines/time')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
 local max_resistance_percentage = 95
@@ -47,10 +48,17 @@ end
 
 -- Attack Damage
 function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
+    local damage = 0
     if level == 1 then
-        return base_dmg * get_damage_multiplier()
+        damage = base_dmg * get_damage_multiplier()
+    else
+        damage = (base_dmg + (incremental_dmg * (level * multiplier / 100))) * get_damage_multiplier()
     end
-    return (base_dmg + (incremental_dmg * (level * multiplier / 100))) * get_damage_multiplier()
+    
+    if settings.startup['enemyracemanager-free-for-all'].value then
+        damage = damage * ErmConfig.FFA_MULTIPLIER
+    end
+    return damage
 end
 
 -- Max speed 15 tick per attack, 4 attack  / second
@@ -90,10 +98,18 @@ function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
     end
 
     biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+
+    if settings.startup['enemyracemanager-free-for-all'].value then
+        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
+    end
 end
 
 function ERM_UnitHelper.modify_worm_damage(worm, level)
     worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+
+    if settings.startup['enemyracemanager-free-for-all'].value then
+        worm['attack_parameters']['damage_modifier'] = worm['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
+    end
 end
 
 return ERM_UnitHelper

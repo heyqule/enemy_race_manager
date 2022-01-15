@@ -42,11 +42,13 @@ function ForceHelper.is_erm_unit(entity)
     return String.find(entity.name, 'erm_', 1, true) ~= nil
 end
 
-function ForceHelper.set_friends(game, force_name)
+function ForceHelper.set_friends(game, force_name, is_friend)
     for name, force in pairs(game.forces) do
         if String.find(force.name, 'enemy', 1, true) then
-            force.set_friend(force_name, true);
-            force.set_friend('enemy', true);
+            force.set_friend(force_name, is_friend);
+            force.set_friend('enemy', is_friend);
+            force.set_cease_fire(force_name, is_friend);
+            force.set_cease_fire('enemy', is_friend);
         end
     end
 end
@@ -79,6 +81,24 @@ function ForceHelper.refresh_all_enemy_forces()
             Table.insert(global.enemy_force_cache, force.name)
         end
     end
+end
+
+-- Whether a surface can assign enemy
+function ForceHelper.can_assign(surface_name)
+    if string.find(surface_name, "Factory floor") or
+            string.find(surface_name, " Orbit") or
+            string.find(surface_name, "clonespace") or
+            string.find(surface_name, "BPL_TheLabplayer") or
+            string.find(surface_name, "starmap-") or
+            (surface_name == "aai-signals") or
+            string.find(surface_name, "NiceFill") or
+            string.find(surface_name, "Asteroid Belt") or
+            string.find(surface_name, "Vault ")
+    then
+        return false
+    end
+
+    return true
 end
 
 return ForceHelper
