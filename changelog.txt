@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.1
+Date: 2022-01-22
+
+  Changes:
+    - set_autonomous() when the ERM group finish its command.
+
+  Bugfixes:
+    - Fixed a crash in ermGroupCacheTableCleanup function again. XD
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.12.0
 Date: 2022-01-15
 

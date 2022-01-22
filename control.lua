@@ -118,7 +118,9 @@ end
 local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
     for _, group_data in pairs(target_table) do
-        if group_data.group and group_data.group.valid then
+        if group_data and group_data.valid
+                and group_data.group and group_data.group.valid
+        then
             local group = group_data.group
             if #group.members > 0 then
                 tmp[group.group_number] = group_data
@@ -148,6 +150,10 @@ local onAiCompleted = function(event)
 
             ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
             group.destroy()
+        end
+
+        if group.valid then
+            group.set_autonomous()
         end
 
         local group_count = table_size(global.erm_unit_groups)

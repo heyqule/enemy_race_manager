@@ -9,8 +9,10 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
 
+ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
+
 ### 1.12.0 feature highlight
-  - FREE FOR ALL Mode
+  - FREE FOR ALL Mode (BETA)
     - When FFA mode is enabled:
     - Player entity health multiplied by 8x
     - Enemy damage also multiplied by 8x.
@@ -42,11 +44,6 @@ New Enemy Races:
 
 Player Controllable Units:
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
-
-![Zerg](https://mods-data.factorio.com/assets/d5713783b19c4ba3ca97ab578182e61c72ec11a0.png "Zerg")
-![Protoss](https://mods-data.factorio.com/assets/01f1d66653ee245f5abe8d5bacf6d359bb6e9c97.png "Protoss")
-![RedArmy](https://mods-data.factorio.com/assets/d46b286c763a8b9fdbab23eb8bea2dee905a701f.png "RedArmy")
-![Terran](https://mods-data.factorio.com/assets/8edb5f447c0a754f1071256c950107fcae32bfa0.png "Terran")
 
 ### Features
 #### New enemies can be added as new forces
