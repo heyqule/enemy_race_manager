@@ -67,7 +67,6 @@ if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_SIZE = 8
 end
 
-
 ErmConfig.FFA_MULTIPLIER = 8
 
 local refreshable_settings = {
