@@ -4,6 +4,8 @@ require "prototypes.extend-types"
 require "prototypes.extend-bitters"
 require "prototypes.extend-spawners"
 
+require "prototypes.extend-reinforced-items"
+
 
 require "prototypes.base-units.defender"
 require "prototypes.base-units.destroyer"

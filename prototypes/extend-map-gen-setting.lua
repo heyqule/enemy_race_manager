@@ -14,6 +14,10 @@ map_gen_settings['default']['erm-roach-world'] = {
             min_expansion_cooldown = 2 * 3600,
             max_expansion_cooldown = 10 * 3600
         },
+        difficulty_settings =
+        {
+            research_queue_setting = 'always'
+        }
     }
 }
 
@@ -44,6 +48,10 @@ map_gen_settings['default']['erm-roach-death-world'] = {
         {
             ageing = 0.5,
             enemy_attack_pollution_consumption_modifier = 0.5
+        },
+        difficulty_settings =
+        {
+            research_queue_setting = 'always'
         }
     }
 }

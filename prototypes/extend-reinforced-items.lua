@@ -3,29 +3,211 @@
 --- Created by heyqule.
 --- DateTime: 12/1/2021 2:26 AM
 ---
+require('util')
 
--- Red belt/underground belt
--- 3x health, 50% resistance
--- cost 2 original, 1 steel, 2 concrete > 2 belt
+local change_resistance = function(percentage_value, fixed_value)
+    return {
+        { type = "acid", percent = percentage_value, decrease = fixed_value },
+        { type = "poison", percent = percentage_value, decrease = fixed_value },
+        { type = "physical", percent = percentage_value, decrease = fixed_value },
+        { type = "fire", percent = 99, decrease = fixed_value },
+        { type = "impact", percent = 90, decrease = fixed_value },
+        { type = "explosion", percent = percentage_value, decrease = fixed_value * 3 },
+        { type = "laser", percent = percentage_value, decrease = fixed_value },
+        { type = "electric", percent = percentage_value, decrease = fixed_value },
+        { type = "cold", percent = percentage_value, decrease = fixed_value }
+    }
+end
 
--- Blue belt/underground belt
--- 3x health, 50% resistance
+local change_icon = function(icon)
+    return {
+        {
+            icon = icon,
+            icon_size = 64,
+        },
+        {
+            icon = "__base__/graphics/icons/signal/signal_R.png",
+            icon_size = 64,
+            scale = 0.25,
+            shift = {-9,-9}
+        },
+    }
+end
+
+local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name)
+    recipe_multiplier = recipe_multiplier or 1
+    next_upgrade = next_upgrade or nil
+    technology_name = technology_name or nil
+
+    local entity = util.table.deepcopy(data.raw[type][item_name])
+    entity.name = new_item_name
+    entity.localised_name = { 'entity-name.'..new_item_name}
+    entity.max_health = entity.max_health * hp_multiplier
+    entity.resistances = change_resistance(33, 0)
+    entity.icons = change_icon(entity.icon)
+
+    if next_upgrade then
+        entity.next_upgrade = next_upgrade
+    end
+
+    data:extend({entity})
+
+    local item = util.table.deepcopy(data.raw["item"][item_name])
+    item.name = new_item_name
+    item.place_result = new_item_name
+    item.order = "a["..type.."]-b["..new_item_name.."]"
+    item.icons = change_icon(item.icon)
+    item.subgroup = "erm"
+    data:extend({item})
+
+    local recipe = util.table.deepcopy(data.raw["recipe"][item_name])
+    recipe.name = new_item_name
+    if recipe.normal then
+        local expansive_multiplier = 2
+        recipe.normal.ingredients = {
+            {item_name, recipe_multiplier},
+            {"steel-plate", 1},
+            {"concrete", recipe_multiplier},
+        }
+        recipe.normal.result = new_item_name
+        recipe.normal.result_count = recipe_multiplier
+
+        recipe.expensive.ingredients = {
+                {item_name, recipe_multiplier * expansive_multiplier},
+                {"steel-plate", 2},
+                {"concrete", recipe_multiplier * expansive_multiplier},
+        }
+        recipe.expensive.result = new_item_name
+        recipe.normal.result_count = recipe_multiplier
+    else
+        recipe.ingredients = {
+            {item_name, recipe_multiplier},
+            {"steel-plate", 1},
+            {"concrete", recipe_multiplier},
+        }
+        recipe.result = new_item_name
+        recipe.result_count = recipe_multiplier
+    end
+
+    data:extend({recipe})
+
+    if technology_name then
+        local technology = data.raw["technology"][technology_name]
+        technology.effects[#technology.effects] = {
+            type = "unlock-recipe",
+            recipe = new_item_name
+        }
+    end
+end
+
+data:extend({
+    {
+        type = "item-subgroup",
+        name = "erm",
+        group = "logistics",
+        order = "z"
+    },
+})
+
+-- Red belt
+-- 5x health, 33% resistance
 -- cost 2 original, 1 steel, 2 concrete > 2 belt
+add_entity(
+    "transport-belt",
+    "fast-transport-belt",
+    "erm-reinforced-fast-transport-belt",
+    5,
+    "erm-reinforced-express-transport-belt",
+    2,
+    'logistics-2'
+)
+add_entity(
+    "underground-belt",
+    "fast-underground-belt",
+    "erm-reinforced-fast-underground-belt",
+    5,
+    "erm-reinforced-express-underground-belt",
+    2,
+        'logistics-2'
+)
+
+-- Blue belt
+-- 5x health, 33% resistance
+-- cost 2 original, 1 steel, 2 concrete > 2 belt
+add_entity(
+    "transport-belt",
+    "express-transport-belt",
+    "erm-reinforced-express-transport-belt", 5,
+    nil,
+    2,
+        "logistics-3"
+)
+add_entity(
+        "underground-belt",
+        "express-underground-belt",
+        "erm-reinforced-express-underground-belt",
+        5,
+        nil,
+        2,
+        "logistics-3"
+)
 
 -- fast inserter
--- 3x health, 50% resistance
+-- 8x health, 33% resistance
 -- cost 1 original, 1 steel, 1 concrete > 1 reinforced
+add_entity(
+    "inserter",
+    "fast-inserter",
+    "erm-reinforced-fast-inserter",
+    8,
+    nil,
+    nil,
+    "fast-inserter"
+)
+
 
 -- Pipe / underground pipe
--- 5x health, 50% resistance
+-- 5x health, 33% resistance
 -- cost 2 original, 1 steel, 2 concrete > 2 reinforced
+add_entity(
+        "pipe",
+        "pipe",
+        "erm-reinforced-pipe",
+        6
+)
+add_entity(
+    "pipe-to-ground",
+    "pipe-to-ground",
+    "erm-reinforced-pipe-to-ground",
+    6,
+        nil,
+        2
+)
 
 -- medium electric pole
--- 3x health, 50% resistance
+-- 8x health, 33% resistance
 -- cost 1, 1 steel, 1 concrete > 1 reinforced
+add_entity(
+    "electric-pole",
+    "medium-electric-pole",
+    "erm-reinforced-medium-electric-pole",
+    8,
+    nil,
+    nil,
+    "electric-energy-distribution-1"
+)
 
 -- reinforced request chest
--- 3x health, 50% resistance
+-- 5x health, 33% resistance
 -- cost 1, 1 steel, 1 concrete > 1 reinforced
+add_entity(
+    "logistic-container",
+    "logistic-chest-requester",
+    "erm-reinforced-logistic-chest-requester",
+    5,
+    nil,
+    nil,
+    "logistic-system"
+)
 
 

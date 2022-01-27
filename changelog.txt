@@ -1,5 +1,18 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.21.1
+Version: 1.13.0
+Date: ???
+
+  Features:
+    - Add reinforced items for front-line uses.
+    - Reinforced red belt / blue belt, fast inserters, pipes, pipes to ground, medium pole and requester chests
+    - Resistance 33% to all, 99% to fire
+    - Health are between 5x - 8x of original
+
+  Changes:
+    - research_queue_setting set to "always" for Roach World map Presents
+
+---------------------------------------------------------------------------------------------------
+Version: 1.12.1
 Date: 2022-01-22
 
   Changes:

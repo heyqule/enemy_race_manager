@@ -139,7 +139,8 @@ local onAiCompleted = function(event)
         if group.valid and
           group.is_script_driven and
           group.command == nil and
-          (start_position.x == group.position.x and start_position.y == group.position.y)
+          (start_position.x == group.position.x and start_position.y == group.position.y) and
+          ErmForceHelper.is_enemy_force(group.force)
         then
             local members = group.members
             local refundPoints = 0
@@ -152,7 +153,7 @@ local onAiCompleted = function(event)
             group.destroy()
         end
 
-        if group.valid then
+        if group.valid and group.command == nil then
             group.set_autonomous()
         end
 
