@@ -109,105 +109,107 @@ data:extend({
     },
 })
 
--- Red belt
--- 5x health, 33% resistance
--- cost 2 original, 1 steel, 2 concrete > 2 belt
-add_entity(
-    "transport-belt",
-    "fast-transport-belt",
-    "erm-reinforced-fast-transport-belt",
-    5,
-    "erm-reinforced-express-transport-belt",
-    2,
-    'logistics-2'
-)
-add_entity(
-    "underground-belt",
-    "fast-underground-belt",
-    "erm-reinforced-fast-underground-belt",
-    5,
-    "erm-reinforced-express-underground-belt",
-    2,
-        'logistics-2'
-)
+if settings.startup['enemyracemanager-enhance-defense'].value == true then
+    -- Red belt
+    -- 5x health, 33% resistance
+    -- cost 2 original, 1 steel, 2 concrete > 2 belt
+    add_entity(
+            "transport-belt",
+            "fast-transport-belt",
+            "erm-reinforced-fast-transport-belt",
+            5,
+            "erm-reinforced-express-transport-belt",
+            2,
+            'logistics-2'
+    )
+    add_entity(
+            "underground-belt",
+            "fast-underground-belt",
+            "erm-reinforced-fast-underground-belt",
+            5,
+            "erm-reinforced-express-underground-belt",
+            2,
+            'logistics-2'
+    )
 
--- Blue belt
--- 5x health, 33% resistance
--- cost 2 original, 1 steel, 2 concrete > 2 belt
-add_entity(
-    "transport-belt",
-    "express-transport-belt",
-    "erm-reinforced-express-transport-belt", 5,
-    nil,
-    2,
-        "logistics-3"
-)
-add_entity(
-        "underground-belt",
-        "express-underground-belt",
-        "erm-reinforced-express-underground-belt",
-        5,
-        nil,
-        2,
-        "logistics-3"
-)
+    -- Blue belt
+    -- 5x health, 33% resistance
+    -- cost 2 original, 1 steel, 2 concrete > 2 belt
+    add_entity(
+            "transport-belt",
+            "express-transport-belt",
+            "erm-reinforced-express-transport-belt", 5,
+            nil,
+            2,
+            "logistics-3"
+    )
+    add_entity(
+            "underground-belt",
+            "express-underground-belt",
+            "erm-reinforced-express-underground-belt",
+            5,
+            nil,
+            2,
+            "logistics-3"
+    )
 
--- fast inserter
--- 8x health, 33% resistance
--- cost 1 original, 1 steel, 1 concrete > 1 reinforced
-add_entity(
-    "inserter",
-    "fast-inserter",
-    "erm-reinforced-fast-inserter",
-    8,
-    nil,
-    nil,
-    "fast-inserter"
-)
+    -- fast inserter
+    -- 8x health, 33% resistance
+    -- cost 1 original, 1 steel, 1 concrete > 1 reinforced
+    add_entity(
+            "inserter",
+            "fast-inserter",
+            "erm-reinforced-fast-inserter",
+            8,
+            nil,
+            nil,
+            "fast-inserter"
+    )
 
 
--- Pipe / underground pipe
--- 5x health, 33% resistance
--- cost 2 original, 1 steel, 2 concrete > 2 reinforced
-add_entity(
-        "pipe",
-        "pipe",
-        "erm-reinforced-pipe",
-        6
-)
-add_entity(
-    "pipe-to-ground",
-    "pipe-to-ground",
-    "erm-reinforced-pipe-to-ground",
-    6,
-        nil,
-        2
-)
+    -- Pipe / underground pipe
+    -- 5x health, 33% resistance
+    -- cost 2 original, 1 steel, 2 concrete > 2 reinforced
+    add_entity(
+            "pipe",
+            "pipe",
+            "erm-reinforced-pipe",
+            6
+    )
+    add_entity(
+            "pipe-to-ground",
+            "pipe-to-ground",
+            "erm-reinforced-pipe-to-ground",
+            6,
+            nil,
+            2
+    )
 
--- medium electric pole
--- 8x health, 33% resistance
--- cost 1, 1 steel, 1 concrete > 1 reinforced
-add_entity(
-    "electric-pole",
-    "medium-electric-pole",
-    "erm-reinforced-medium-electric-pole",
-    8,
-    nil,
-    nil,
-    "electric-energy-distribution-1"
-)
+    -- medium electric pole
+    -- 8x health, 33% resistance
+    -- cost 1, 1 steel, 1 concrete > 1 reinforced
+    add_entity(
+            "electric-pole",
+            "medium-electric-pole",
+            "erm-reinforced-medium-electric-pole",
+            8,
+            nil,
+            nil,
+            "electric-energy-distribution-1"
+    )
 
--- reinforced request chest
--- 5x health, 33% resistance
--- cost 1, 1 steel, 1 concrete > 1 reinforced
-add_entity(
-    "logistic-container",
-    "logistic-chest-requester",
-    "erm-reinforced-logistic-chest-requester",
-    5,
-    nil,
-    nil,
-    "logistic-system"
-)
-
+    -- reinforced request chest
+    -- 5x health, 33% resistance
+    -- cost 1, 1 steel, 1 concrete > 1 reinforced
+    add_entity(
+            "logistic-container",
+            "logistic-chest-requester",
+            "erm-reinforced-logistic-chest-requester",
+            5,
+            nil,
+            nil,
+            "logistic-system"
+    )
+    
+end
 
