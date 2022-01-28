@@ -15,8 +15,11 @@ Date: ???
     - Resistance 33% to all, 99% to fire
 
   Changes:
-    - research_queue_setting set to "always" for Roach World map Presents
+    - research_queue_setting set to "always" in Roach World Map Presents
     - Max number of group and max group size are now a map setting, instead of startup setting. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
+    - Free for all multipliers changed from 8 to 10
+    - Buff tank/car health, resistance and damage.
+    - Disable friendly fire on explosive rocket and cannon when enhanced defense enabled.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.12.1

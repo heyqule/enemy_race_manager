@@ -28,4 +28,21 @@ function ERM_WeaponDataHelper.change_piercing_damage(projectile, value)
     projectile['piercing_damage'] = value
 end
 
+function ERM_WeaponDataHelper.remove_friendly_fire(projectile)
+    projectile['force_condition'] = 'not-same'
+    for _, effect in pairs(projectile['action']['action_delivery']['target_effects']) do
+        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+            effect['action']['force'] = 'not-same'
+        end
+    end
+
+    if projectile['final_action'] then
+        for _, effect in pairs(projectile['final_action']['action_delivery']['target_effects']) do
+            if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+                effect['action']['force'] = 'not-same'
+            end
+        end
+    end
+end
+
 return ERM_WeaponDataHelper
