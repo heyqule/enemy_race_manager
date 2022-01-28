@@ -101,8 +101,8 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         }
     end
 
-    local gate = data.raw['gate']
-    for _, entity in pairs(gate) do
+    local gates = data.raw['gate']
+    for _, entity in pairs(gates) do
         entity['resistances'] = {
             { type = "acid", percent = 50, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
@@ -130,8 +130,6 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
     data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
     data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
-
-    require('prototypes/extend-reinforced-items')
 end
 
 if settings.startup['enemyracemanager-free-for-all'].value then
