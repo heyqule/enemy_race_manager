@@ -220,10 +220,8 @@ end
 
 local prepare_world = function()
     -- Game map settings
-    local max_group_size = settings.startup["enemyracemanager-max-group-size"].value
-    local max_groups = settings.startup["enemyracemanager-max-gathering-groups"].value
-    game.map_settings.unit_group.max_gathering_unit_groups = max_groups
-    game.map_settings.unit_group.max_unit_group_size = max_group_size
+    game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
+    game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
 
     -- Mod Compatibility Upgrade for race settings
     Event.dispatch({
@@ -450,6 +448,14 @@ Event.register(defines.events.on_runtime_mod_setting_changed,function(event)
             string.find(event.setting, 'enemyracemanager', 1, true)
     then
         global.settings[event.setting] = settings.global[event.setting].value
+
+        if string.find(event.setting, 'enemyracemanager-max-gathering-groups', 1, true) then
+            game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
+        end
+
+        if string.find(event.setting, "enemyracemanager-max-group-size",1, true) then
+            game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
+        end
     end
 end)
 

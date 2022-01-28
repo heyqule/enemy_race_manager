@@ -74,10 +74,10 @@ local refreshable_settings = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
-        'enemyracemanager-max-group-size',
         'enemyracemanager-level-curve-multiplier',
     },
     global = {
+        'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-accelerator',

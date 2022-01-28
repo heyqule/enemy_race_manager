@@ -12,7 +12,7 @@ local change_resistance = function(percentage_value, fixed_value)
         { type = "physical", percent = percentage_value, decrease = fixed_value },
         { type = "fire", percent = 99, decrease = fixed_value },
         { type = "impact", percent = 90, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value * 3 },
+        { type = "explosion", percent = percentage_value, decrease = fixed_value},
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value }
@@ -57,33 +57,34 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     item.place_result = new_item_name
     item.order = "a["..type.."]-b["..new_item_name.."]"
     item.icons = change_icon(item.icon)
-    item.subgroup = "erm"
+    item.subgroup = "erm-reinforced"
     data:extend({item})
 
     local recipe = util.table.deepcopy(data.raw["recipe"][item_name])
+    local concrete_count = 5 * recipe_multiplier
     recipe.name = new_item_name
     if recipe.normal then
         local expansive_multiplier = 2
         recipe.normal.ingredients = {
             {item_name, recipe_multiplier},
-            {"steel-plate", 1},
-            {"concrete", recipe_multiplier},
+            {"low-density-structure", 1},
+            {"refined-concrete", concrete_count},
         }
         recipe.normal.result = new_item_name
         recipe.normal.result_count = recipe_multiplier
 
         recipe.expensive.ingredients = {
                 {item_name, recipe_multiplier * expansive_multiplier},
-                {"steel-plate", 2},
-                {"concrete", recipe_multiplier * expansive_multiplier},
+                {"low-density-structure", 2},
+                {"refined-concrete", concrete_count * expansive_multiplier},
         }
         recipe.expensive.result = new_item_name
         recipe.normal.result_count = recipe_multiplier
     else
         recipe.ingredients = {
             {item_name, recipe_multiplier},
-            {"steel-plate", 1},
-            {"concrete", recipe_multiplier},
+            {"low-density-structure", 1},
+            {"refined-concrete", concrete_count},
         }
         recipe.result = new_item_name
         recipe.result_count = recipe_multiplier
@@ -93,7 +94,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
 
     if technology_name then
         local technology = data.raw["technology"][technology_name]
-        technology.effects[#technology.effects] = {
+        technology.effects[new_item_name] = {
             type = "unlock-recipe",
             recipe = new_item_name
         }
@@ -103,21 +104,21 @@ end
 data:extend({
     {
         type = "item-subgroup",
-        name = "erm",
-        group = "logistics",
+        name = "erm-reinforced",
+        group = "combat",
         order = "z"
     },
 })
 
 if settings.startup['enemyracemanager-enhance-defense'].value == true then
     -- Red belt
-    -- 5x health, 33% resistance
-    -- cost 2 original, 1 steel, 2 concrete > 2 belt
+    -- 3x health, 33% resistance
+    -- cost 2 original, 1 structure, 2 concrete > 2 belt
     add_entity(
             "transport-belt",
             "fast-transport-belt",
             "erm-reinforced-fast-transport-belt",
-            5,
+            3,
             "erm-reinforced-express-transport-belt",
             2,
             'logistics-2'
@@ -126,19 +127,20 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "underground-belt",
             "fast-underground-belt",
             "erm-reinforced-fast-underground-belt",
-            5,
+            3,
             "erm-reinforced-express-underground-belt",
             2,
             'logistics-2'
     )
 
     -- Blue belt
-    -- 5x health, 33% resistance
-    -- cost 2 original, 1 steel, 2 concrete > 2 belt
+    -- 3x health, 33% resistance
+    -- cost 2 original, 1 structure, 2 concrete > 2 belt
     add_entity(
             "transport-belt",
             "express-transport-belt",
-            "erm-reinforced-express-transport-belt", 5,
+            "erm-reinforced-express-transport-belt",
+            3,
             nil,
             2,
             "logistics-3"
@@ -147,20 +149,20 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "underground-belt",
             "express-underground-belt",
             "erm-reinforced-express-underground-belt",
-            5,
+            3,
             nil,
             2,
             "logistics-3"
     )
 
     -- fast inserter
-    -- 8x health, 33% resistance
-    -- cost 1 original, 1 steel, 1 concrete > 1 reinforced
+    -- 3x health, 33% resistance
+    -- cost 1 original, 1 structure, 1 concrete > 1 reinforced
     add_entity(
             "inserter",
             "fast-inserter",
             "erm-reinforced-fast-inserter",
-            8,
+            3,
             nil,
             nil,
             "fast-inserter"
@@ -169,47 +171,92 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- Pipe / underground pipe
     -- 5x health, 33% resistance
-    -- cost 2 original, 1 steel, 2 concrete > 2 reinforced
+    -- cost 2 original, 1 structure, 2 concrete > 2 reinforced
     add_entity(
             "pipe",
             "pipe",
             "erm-reinforced-pipe",
-            6
+            5
     )
     add_entity(
             "pipe-to-ground",
             "pipe-to-ground",
             "erm-reinforced-pipe-to-ground",
-            6,
+            4,
             nil,
             2
     )
 
     -- medium electric pole
-    -- 8x health, 33% resistance
-    -- cost 1, 1 steel, 1 concrete > 1 reinforced
+    -- 5x health, 33% resistance
+    -- cost 1, 1 structure, 1 concrete > 1 reinforced
     add_entity(
             "electric-pole",
             "medium-electric-pole",
             "erm-reinforced-medium-electric-pole",
-            8,
+            5,
             nil,
             nil,
             "electric-energy-distribution-1"
     )
 
     -- reinforced request chest
-    -- 5x health, 33% resistance
-    -- cost 1, 1 steel, 1 concrete > 1 reinforced
+    -- 2x health, 33% resistance
+    -- cost 1, 1 structure, 1 concrete > 1 reinforced
     add_entity(
             "logistic-container",
             "logistic-chest-requester",
             "erm-reinforced-logistic-chest-requester",
-            5,
+            2,
             nil,
             nil,
             "logistic-system"
     )
-    
+
+    add_entity(
+            "ammo-turret",
+            "gun-turret",
+            "erm-reinforced-gun-turret",
+            1.5,
+            nil,
+            nil,
+            "gun-turret"
+    )
+
+
+    add_entity(
+        "electric-turret",
+        "laser-turret",
+        "erm-reinforced-laser-turret",
+        1.5,
+    nil,
+    nil,
+    "laser-turret"
+    )
+
+    add_entity(
+    "fluid-turret",
+    "flamethrower-turret",
+    "erm-reinforced-flamethrower-turret",
+    1.5,
+    nil,
+    nil,
+        "flamethrower"
+    )
+
+    --- Upgrade turret techs
+    for key, tech in pairs(data.raw["technology"]) do
+        if string.find(key, 'physical-projectile-damage',1, true) then
+            local effect = util.table.deepcopy(tech.effects[2])
+            effect.turret_id = 'erm-reinforced-gun-turret'
+            tech.effects['erm-reinforced-gun-turret'] = effect
+        end
+        if string.find(key, 'refined-flammables',1, true) then
+            local effect = util.table.deepcopy(tech.effects[2])
+            effect.turret_id = 'erm-reinforced-flamethrower-turret'
+            tech.effects['erm-reinforced-flamethrower-turret'] = effect
+        end
+    end
+
 end
 

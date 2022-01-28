@@ -3,13 +3,20 @@ Version: 1.13.0
 Date: ???
 
   Features:
-    - Add reinforced items for front-line uses.
-    - Reinforced red belt / blue belt, fast inserters, pipes, pipes to ground, medium pole and requester chests
+    - Added reinforced structures for military.
+    - Reinforced red belt / blue belt (3x health),
+    - Reinforced fast inserters (3x),
+    - Reinforced pipes (5x)
+    - Reinforced medium pole (5x)
+    - Reinforced requester chests (2x)
+    - Reinforced laser turret (1.5x)
+    - Reinforced gun turret (1.5x)
+    - Reinforced flamethrower (1.5x)
     - Resistance 33% to all, 99% to fire
-    - Health are between 5x - 8x of original
 
   Changes:
     - research_queue_setting set to "always" for Roach World map Presents
+    - Max number of group and max group size are now a map setting, instead of startup setting. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.12.1
