@@ -45,6 +45,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     entity.max_health = entity.max_health * hp_multiplier
     entity.resistances = change_resistance(33, 0)
     entity.icons = change_icon(entity.icon)
+    entity.fast_replaceable_group = type
 
     if next_upgrade then
         entity.next_upgrade = next_upgrade
@@ -99,6 +100,14 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
             recipe = new_item_name
         }
     end
+
+    -- Makes turret upgradable
+    if string.find(type, 'turret') then
+        local entity = data.raw[type][item_name]
+        entity.next_upgrade = new_item_name
+        entity.fast_replaceable_group = type
+    end
+
 end
 
 data:extend({
@@ -120,7 +129,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-fast-transport-belt",
             3,
             "erm-reinforced-express-transport-belt",
-            2,
+            4,
             'logistics-2'
     )
     add_entity(
@@ -129,7 +138,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-fast-underground-belt",
             3,
             "erm-reinforced-express-underground-belt",
-            2,
+            4,
             'logistics-2'
     )
 
@@ -142,7 +151,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-express-transport-belt",
             3,
             nil,
-            2,
+            4,
             "logistics-3"
     )
     add_entity(
@@ -151,7 +160,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-express-underground-belt",
             3,
             nil,
-            2,
+            4,
             "logistics-3"
     )
 
@@ -164,7 +173,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-fast-inserter",
             3,
             nil,
-            nil,
+            2,
             "fast-inserter"
     )
 
@@ -176,7 +185,9 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "pipe",
             "pipe",
             "erm-reinforced-pipe",
-            5
+            5,
+            nil,
+            4
     )
     add_entity(
             "pipe-to-ground",
@@ -184,7 +195,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-pipe-to-ground",
             4,
             nil,
-            2
+            4
     )
 
     -- medium electric pole
@@ -196,7 +207,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-medium-electric-pole",
             5,
             nil,
-            nil,
+            2,
             "electric-energy-distribution-1"
     )
 
@@ -209,7 +220,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-logistic-chest-requester",
             2,
             nil,
-            nil,
+            2,
             "logistic-system"
     )
 
@@ -257,6 +268,5 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             tech.effects['erm-reinforced-flamethrower-turret'] = effect
         end
     end
-
 end
 

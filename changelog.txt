@@ -13,6 +13,7 @@ Date: ???
     - Reinforced gun turret (1.5x)
     - Reinforced flamethrower (1.5x)
     - Resistance 33% to all, 99% to fire
+    - New items support upgrade planner
 
   Changes:
     - research_queue_setting set to "always" in Roach World Map Presents
