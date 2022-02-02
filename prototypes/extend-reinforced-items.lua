@@ -5,8 +5,10 @@
 ---
 require('util')
 
-local change_resistance = function(percentage_value, fixed_value)
-    return {
+local change_resistance = function(percentage_value, fixed_value, use_wall_max_resist)
+    use_wall_max_resist = use_wall_max_resist or false
+
+    local resistances = {
         { type = "acid", percent = percentage_value, decrease = fixed_value },
         { type = "poison", percent = percentage_value, decrease = fixed_value },
         { type = "physical", percent = percentage_value, decrease = fixed_value },
@@ -17,6 +19,13 @@ local change_resistance = function(percentage_value, fixed_value)
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value }
     }
+
+    if use_wall_max_resist then
+        resistances[2]["percent"] = 100
+        resistances[4]["percent"] = 100
+    end
+
+    return resistances
 end
 
 local change_icon = function(icon)
@@ -40,11 +49,16 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     technology_name = technology_name or nil
     resistance = resistance or 33
 
+    local resistances = change_resistance(resistance, 0)
+    if type == 'wall' then
+        resistances = change_resistance(resistance, 0, true)
+    end
+
     local entity = util.table.deepcopy(data.raw[type][item_name])
     entity.name = new_item_name
     entity.localised_name = { 'entity-name.'..new_item_name}
     entity.max_health = entity.max_health * hp_multiplier
-    entity.resistances = change_resistance(resistance, 0)
+    entity.resistances = resistances
     entity.icons = change_icon(entity.icon)
     entity.fast_replaceable_group = type
 
@@ -103,7 +117,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     end
 
     -- Makes turret upgradable
-    if string.find(type, 'turret') or string.find(type, 'stone-wall') then
+    if string.find(type, 'turret') or string.find(type, 'wall') then
         local entity = data.raw[type][item_name]
         entity.next_upgrade = new_item_name
         entity.fast_replaceable_group = type

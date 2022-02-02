@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.13.0
-Date: ???
+Date: 2022-02-04
 
   Features:
     - Added reinforced structures for military.
@@ -9,6 +9,7 @@ Date: ???
     - Reinforced pipes (5x)
     - Reinforced medium pole (5x)
     - Reinforced requester chests (2x)
+    - Reinforced stone wall (2x)
     - Reinforced laser turret (1.5x)
     - Reinforced gun turret (1.5x)
     - Reinforced flamethrower (1.5x)
@@ -18,8 +19,8 @@ Date: ???
   Changes:
     - research_queue_setting set to "always" in Roach World Map Presents
     - Max number of group and max group size are now a map setting, instead of startup setting. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
-    - Free for all multipliers changed from 8 to 10
-    - Buff tank/car health, resistance and damage.
+    - Free for all multipliers changed from 8x to 10x, player entity health to 12.5x
+    - Buffed tank & car health, resistance and damage.
     - Disable friendly fire on explosive rocket and cannon when enhanced defense enabled.
 
 ---------------------------------------------------------------------------------------------------
