@@ -34,16 +34,17 @@ local change_icon = function(icon)
     }
 end
 
-local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name)
+local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name, resistance)
     recipe_multiplier = recipe_multiplier or 1
     next_upgrade = next_upgrade or nil
     technology_name = technology_name or nil
+    resistance = resistance or 33
 
     local entity = util.table.deepcopy(data.raw[type][item_name])
     entity.name = new_item_name
     entity.localised_name = { 'entity-name.'..new_item_name}
     entity.max_health = entity.max_health * hp_multiplier
-    entity.resistances = change_resistance(33, 0)
+    entity.resistances = change_resistance(resistance, 0)
     entity.icons = change_icon(entity.icon)
     entity.fast_replaceable_group = type
 
@@ -102,7 +103,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     end
 
     -- Makes turret upgradable
-    if string.find(type, 'turret') then
+    if string.find(type, 'turret') or string.find(type, 'stone-wall') then
         local entity = data.raw[type][item_name]
         entity.next_upgrade = new_item_name
         entity.fast_replaceable_group = type
@@ -222,6 +223,17 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             nil,
             2,
             "logistic-system"
+    )
+
+    add_entity(
+            "wall",
+            "stone-wall",
+            "erm-reinforced-stone-wall",
+            2,
+            nil,
+            4,
+            "stone-wall",
+            50
     )
 
     add_entity(

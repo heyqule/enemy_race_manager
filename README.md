@@ -28,9 +28,14 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
 
-Youtube: (WIP)
+Youtube: [https://youtu.be/phLRReAjxHA?t=180](https://youtu.be/phLRReAjxHA?t=180)
 
-Tips on defense: A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
+Tips on defense: 
+- A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
+- Build multiple layers of turrets in early game.  Repairing can be tedious without automated bot repairs.
+- You may add "Robot World Continued" or "Nanobots: Early Bots" to automate repairs in early game.  
+
+
 
 New Enemy Races:
 
@@ -52,6 +57,9 @@ Manage new race as new enemy force.  Each race has its own force statistics
 
 
 #### 4 difficulty levels
+
+Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
+
 * Casual, max at level 5 (weapon lvl 6, pre-infinite research)
 * Normal, max at level 10 (default, weapon lvl 11)
 * Advance, max at level 15 (weapon lvl 16)
@@ -90,9 +98,12 @@ Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
 #### GUI to view each race's stats.
 * replace races on a surface
 * adjust enemy level mid-game.
+* adjust enemy evolution mid-game.
 
 #### Custom enemy base autoplace
 This defines how enemy bases are generated when a new chunk is charted.
+
+Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 
 Default
 * using base game autoplace. All races are mixed together.
@@ -121,6 +132,8 @@ One race per surface/planet
 #### Custom enemy base expansion
 This defines how enemy expand into new area.  In base game, each building group build one building at a time.  This feature changes that they build several buildings at one time with specified formation.
 
+Youtube: [https://youtu.be/phLRReAjxHA?t=88](https://youtu.be/phLRReAjxHA?t=88)
+
 * Default
     - build one building at a time
 * Command Center
@@ -141,6 +154,9 @@ Partial formation is build based on cc > support > turret priority.
 ![1-4-5 Formation](https://mods-data.factorio.com/assets/42b016483f30cb37d009e59b417a82e1c4a362b9.png "1-4-5 Formation")
 
 ### Attack meters / Custom Attack Squad
+
+Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102)
+
 * Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
 * Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
 * These attack groups are independent of pollution.
@@ -167,15 +183,14 @@ Partial formation is build based on cc > support > turret priority.
     * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
     * Default setting, 2%, takes about 50 mins if you are playing defensively.
 
-### Free for all [Experimental]
-/ERM_FFA command enable Free For All mode.  It can be toggle on and off.  Enemy races will fight each other to death.
-* This feature will have performance implication.
-* This command limits to max enemy level 5 and 10.
-* High level units are excluded because unit spawns quicker than they die and cause performance issue.
-* Not recommend to use FFA on a death world map. They may never stop fighting and kill your performance.
-* When toogle off, all units in enemy forces are killed.
+### Free for all [BETA]
+This can be enabled in startup setting tab.
 
-** Player building health and enemy damage will need to re-balance for this mode in a future release **
+* Player entity health multiplied by 12.5x
+* Enemy damage multiplied by 10x.
+* The multiplier is to balance the time enemy units take to kill each other.
+
+ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
 ### Mod Compatibility
 
