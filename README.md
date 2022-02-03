@@ -11,19 +11,11 @@ ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.y
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
-### 1.12.0 feature highlight
-  - FREE FOR ALL Mode (BETA)
-    - When FFA mode is enabled:
-    - Player entity health multiplied by 8x
-    - Enemy damage also multiplied by 8x.
-    - The multiplier is to balance the time enemy units take to kill each other.
-  - When attack group can't find attack path, it will automatically destroy and refund some attack points. (performance tweak)
-  - All default weapons can now hit air. Removed Allow ground weapons to hit air units setting
-  - Added a slider to adjust evolution factor in enemy detail GUI.
-
-### Race mode Updates
-  - Adjusted unit spawner to balance free for all mode
-  - Protoss and Marspeople have slower spawn rate.
+### 1.13.0 feature highlight
+* Add reinforced items for military with higher HP and resistance.
+* Max number of group and max group size are now a map setting, instead of startup setting. They can be change mid-game. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
+* Free for all multipliers changed from 8x to 10x, player entity health to 12.5x
+* Disable friendly fire on explosive rocket and cannon when enhanced defense enabled.
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
