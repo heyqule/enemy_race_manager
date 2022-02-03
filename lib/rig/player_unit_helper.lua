@@ -9,7 +9,7 @@ local PlayerUnitHelper = {}
 local RATIO = 0.5
 
 function PlayerUnitHelper.get_health_multiplier()
-    return 10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 10) * RATIO)
+    return 10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 10) * (RATIO + 0.3))
 end
 
 function PlayerUnitHelper.get_speed_multiplier()
@@ -17,7 +17,7 @@ function PlayerUnitHelper.get_speed_multiplier()
 end
 
 function PlayerUnitHelper.get_damage_multiplier()
-    return 1 + ((settings.startup['enemyracemanager-damage-multipliers'].value - 1) * RATIO)
+    return 1 + ((settings.startup['enemyracemanager-damage-multipliers'].value - 1) * (RATIO + 0.5))
 end
 
 return PlayerUnitHelper

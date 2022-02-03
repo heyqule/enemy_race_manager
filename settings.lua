@@ -51,26 +51,6 @@ data:extend {
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-max-gathering-groups",
-        description = "enemyracemanager-max-gathering-groups",
-        setting_type = "startup",
-        default_value = 15,
-        minimum_value = 1,
-        maximum_value = 50,
-        order = "enemyracemanager-110"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-max-group-size",
-        description = "enemyracemanager-max-group-size",
-        setting_type = "startup",
-        default_value = 100,
-        minimum_value = 50,
-        maximum_value = 1000,
-        order = "enemyracemanager-111"
-    },
-    {
-        type = "int-setting",
         name = "enemyracemanager-level-multipliers",
         description = "enemyracemanager-level-multipliers",
         setting_type = "startup",
@@ -238,6 +218,26 @@ data:extend {
         order = "enemyracemanager-501",
     },
     --- Map Settings Tab ---
+    {
+        type = "int-setting",
+        name = "enemyracemanager-max-gathering-groups",
+        description = "enemyracemanager-max-gathering-groups",
+        setting_type = "runtime-global",
+        default_value = 15,
+        minimum_value = 1,
+        maximum_value = 50,
+        order = "enemyracemanager-001"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-max-group-size",
+        description = "enemyracemanager-max-group-size",
+        setting_type = "runtime-global",
+        default_value = 100,
+        minimum_value = 50,
+        maximum_value = 1000,
+        order = "enemyracemanager-002"
+    },
     {
         type = "string-setting",
         name = "enemyracemanager-build-style",

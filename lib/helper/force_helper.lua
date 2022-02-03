@@ -42,6 +42,10 @@ function ForceHelper.is_erm_unit(entity)
     return String.find(entity.name, 'erm_', 1, true) ~= nil
 end
 
+function ForceHelper.is_enemy_force(force)
+    return String.find(force.name, 'enemy', 1, true)
+end
+
 function ForceHelper.set_friends(game, force_name, is_friend)
     for name, force in pairs(game.forces) do
         if String.find(force.name, 'enemy', 1, true) then

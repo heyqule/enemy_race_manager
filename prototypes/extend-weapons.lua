@@ -16,12 +16,21 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         }
 )
 
+if settings.startup['enemyracemanager-enhance-defense'].value == true then
+    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-rocket'])
+    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-cannon-projectile'])
+    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-uranium-cannon-projectile'])
+end
+
 -- Allow rocket explosion to hit air
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
 
+
 -- Allow cannon explosion to hit air, projectile does not hit air
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+
 
 WeaponHelper.change_piercing_damage(data.raw['projectile']['uranium-cannon-projectile'],9999)
 WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'],9999)

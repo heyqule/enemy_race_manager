@@ -12,6 +12,8 @@ require('prototypes/map-generation.lua')
 
 require('prototypes/extend-defense.lua')
 
+require("prototypes/extend-reinforced-items")
+
 require('prototypes/extend-weapons.lua')
 
 require "prototypes.extend-map-gen-setting"

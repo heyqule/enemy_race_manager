@@ -67,17 +67,17 @@ if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_SIZE = 8
 end
 
-ErmConfig.FFA_MULTIPLIER = 8
+ErmConfig.FFA_MULTIPLIER = 10
 
 local refreshable_settings = {
     startup = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
-        'enemyracemanager-max-group-size',
         'enemyracemanager-level-curve-multiplier',
     },
     global = {
+        'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-accelerator',

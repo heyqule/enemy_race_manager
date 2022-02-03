@@ -59,16 +59,21 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['electric-turret']['laser-turret']['max_health'] = 1200
 
     -- Buff vehicles
-    data.raw['car']['car']['max_health'] = 750
-    data.raw['car']['car']['resistances'] = vehicle_change_resistance(50, 0)
-    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 20)
-    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 5)
+    data.raw['car']['car']['max_health'] = data.raw['car']['car']['max_health'] * 3
+    data.raw['car']['car']['resistances'] = vehicle_change_resistance(75, 5)
+    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 2
+    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 25)
+    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 15)
 
     -- Buff vehicle gun
-    data.raw['gun']['vehicle-machine-gun']['attack_parameters']['damage_modifier'] = 1.5
+    data.raw['gun']['vehicle-machine-gun']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['tank-machine-gun']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['tank-flamethrower']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['tank-cannon']['attack_parameters']['damage_modifier'] = 2
+    data.raw['gun']['spidertron-rocket-launcher-1']['attack_parameters']['damage_modifier'] = 2
+    data.raw['gun']['spidertron-rocket-launcher-2']['attack_parameters']['damage_modifier'] = 2
+    data.raw['gun']['spidertron-rocket-launcher-3']['attack_parameters']['damage_modifier'] = 2
+    data.raw['gun']['spidertron-rocket-launcher-4']['attack_parameters']['damage_modifier'] = 2
 
     -- Buff train
     data.raw['locomotive']['locomotive']['resistances'] = vehicle_change_resistance(75, 15)
@@ -96,8 +101,8 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         }
     end
 
-    local gate = data.raw['gate']
-    for _, entity in pairs(gate) do
+    local gates = data.raw['gate']
+    for _, entity in pairs(gates) do
         entity['resistances'] = {
             { type = "acid", percent = 50, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
@@ -125,8 +130,6 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
     data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
     data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
-
-    require('prototypes/extend-reinforced-items')
 end
 
 if settings.startup['enemyracemanager-free-for-all'].value then
