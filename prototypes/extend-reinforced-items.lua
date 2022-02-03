@@ -28,19 +28,30 @@ local change_resistance = function(percentage_value, fixed_value, use_wall_max_r
     return resistances
 end
 
-local change_icon = function(icon)
-    return {
-        {
-            icon = icon,
-            icon_size = 64,
-        },
-        {
-            icon = "__base__/graphics/icons/signal/signal_R.png",
-            icon_size = 64,
-            scale = 0.25,
-            shift = {-9,-9}
-        },
+local change_icon = function(item)
+    local reinforced_logo = {
+        icon = "__base__/graphics/icons/signal/signal_R.png",
+        icon_size = 64,
+        scale = 0.25,
+        shift = {-9,-9}
     }
+
+    local icons = nil
+
+    if item['icon'] then
+        icons =  {
+            {
+                icon = item.icon,
+                icon_size = 64,
+            },
+            reinforced_logo
+        }
+    else
+        icons = item.icons
+        table.insert(icons, reinforced_logo)
+    end
+
+    return icons
 end
 
 local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name, resistance)
@@ -59,7 +70,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     entity.localised_name = { 'entity-name.'..new_item_name}
     entity.max_health = entity.max_health * hp_multiplier
     entity.resistances = resistances
-    entity.icons = change_icon(entity.icon)
+    entity.icons = change_icon(entity)
     entity.fast_replaceable_group = type
 
     if next_upgrade then
@@ -72,7 +83,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     item.name = new_item_name
     item.place_result = new_item_name
     item.order = "a["..type.."]-b["..new_item_name.."]"
-    item.icons = change_icon(item.icon)
+    item.icons = change_icon(item)
     item.subgroup = "erm-reinforced"
     data:extend({item})
 
