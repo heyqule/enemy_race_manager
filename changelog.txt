@@ -5,6 +5,7 @@ Date: 2022-02-04
   Bugfixes:
     - Fixed improper minable and icon, which crash with boblogistic.
     - Fixed new pipe-to-ground entity fast replace group, which crash Krastorio 2.
+    - Fixed a crash with Industrial evolution.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.13.2

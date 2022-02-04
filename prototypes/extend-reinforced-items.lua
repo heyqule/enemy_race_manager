@@ -86,6 +86,15 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
 
     data:extend({entity})
 
+    -- Makes turret upgradable
+    if string.find(type, 'turret') or string.find(type, 'wall') then
+        local entity = data.raw[type][item_name]
+        entity.next_upgrade = new_item_name
+        if entity.fast_replaceable_group == nil then
+            entity.fast_replaceable_group = type
+        end
+    end
+
     local item = util.table.deepcopy(data.raw["item"][item_name])
     item.name = new_item_name
     item.place_result = new_item_name
@@ -133,14 +142,6 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
             recipe = new_item_name
         }
     end
-
-    -- Makes turret upgradable
-    if string.find(type, 'turret') or string.find(type, 'wall') then
-        local entity = data.raw[type][item_name]
-        entity.next_upgrade = new_item_name
-        entity.fast_replaceable_group = type
-    end
-
 end
 
 data:extend({

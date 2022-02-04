@@ -12,7 +12,7 @@ for _, projectile in pairs(data.raw['projectile']) do
         WeaponHelper.add_air_layer_to_projectile(projectile)
     end
 
-    if settings.startup['enemyracemanager-ground-weapon-hit-air'].value == true and String.starts_with(projectile['name'],'scrap-') then
+    if String.starts_with(projectile['name'],'scrap-') then
         WeaponHelper.add_air_layer_to_projectile(projectile)
     end
 end
