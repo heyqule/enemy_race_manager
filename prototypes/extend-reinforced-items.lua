@@ -32,6 +32,7 @@ local change_icon = function(item)
     local reinforced_logo = {
         icon = "__base__/graphics/icons/signal/signal_R.png",
         icon_size = 64,
+        icon_mipmaps = 4,
         scale = 0.25,
         shift = {-9,-9}
     }
@@ -42,7 +43,8 @@ local change_icon = function(item)
         icons =  {
             {
                 icon = item.icon,
-                icon_size = 64,
+                icon_size = item.icon_size,
+                icon_mipmaps = item.icon_mipmaps
             },
             reinforced_logo
         }
@@ -53,6 +55,7 @@ local change_icon = function(item)
 
     return icons
 end
+
 
 local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name, resistance)
     recipe_multiplier = recipe_multiplier or 1
@@ -71,7 +74,11 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     entity.max_health = entity.max_health * hp_multiplier
     entity.resistances = resistances
     entity.icons = change_icon(entity)
-    entity.fast_replaceable_group = type
+    entity.minable.result = new_item_name
+
+    if entity.fast_replaceable_group == nil then
+        entity.fast_replaceable_group = type
+    end
 
     if next_upgrade then
         entity.next_upgrade = next_upgrade
@@ -101,9 +108,9 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
         recipe.normal.result_count = recipe_multiplier
 
         recipe.expensive.ingredients = {
-                {item_name, recipe_multiplier * expansive_multiplier},
-                {"low-density-structure", 2},
-                {"refined-concrete", concrete_count * expansive_multiplier},
+            {item_name, recipe_multiplier * expansive_multiplier},
+            {"low-density-structure", 2},
+            {"refined-concrete", concrete_count * expansive_multiplier},
         }
         recipe.expensive.result = new_item_name
         recipe.normal.result_count = recipe_multiplier
@@ -273,23 +280,23 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
 
     add_entity(
-        "electric-turret",
-        "laser-turret",
-        "erm-reinforced-laser-turret",
-        1.5,
-    nil,
-    nil,
-    "laser-turret"
+            "electric-turret",
+            "laser-turret",
+            "erm-reinforced-laser-turret",
+            1.5,
+            nil,
+            nil,
+            "laser-turret"
     )
 
     add_entity(
-    "fluid-turret",
-    "flamethrower-turret",
-    "erm-reinforced-flamethrower-turret",
-    1.5,
-    nil,
-    nil,
-        "flamethrower"
+            "fluid-turret",
+            "flamethrower-turret",
+            "erm-reinforced-flamethrower-turret",
+            1.5,
+            nil,
+            nil,
+            "flamethrower"
     )
 
     --- Upgrade turret techs
@@ -306,4 +313,3 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         end
     end
 end
-
