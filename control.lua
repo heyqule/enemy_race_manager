@@ -227,6 +227,11 @@ local prepare_world = function()
     Event.dispatch({
         name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
 
+    -- Fresh technology effects
+    for _, force in pairs(game.forces) do
+        force.reset_technology_effects()
+    end
+
     -- Race Cleanup
     ErmRaceSettingsHelper.clean_up_race()
     ErmSurfaceProcessor.numeric_to_name_conversion()

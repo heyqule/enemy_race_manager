@@ -15,6 +15,8 @@ function ForceHelper.init_globals()
     global.force_entity_name_cache = global.force_entity_name_cache or {}
     global.force_race_name_cache = global.force_race_name_cache or {}
     global.enemy_force_cache = global.enemy_force_cache or {}
+    global.surface_exclusion_list = global.surface_exclusion_list or {}
+    global.surface_inclusion_list = global.surface_inclusion_list or {}
 end
 
 -- Remove prefix enemy_ if force isn't enemy
@@ -88,21 +90,40 @@ function ForceHelper.refresh_all_enemy_forces()
 end
 
 -- Whether a surface can assign enemy
-function ForceHelper.can_assign(surface_name)
-    if string.find(surface_name, "Factory floor") or
-            string.find(surface_name, " Orbit") or
-            string.find(surface_name, "clonespace") or
-            string.find(surface_name, "BPL_TheLabplayer") or
-            string.find(surface_name, "starmap-") or
-            (surface_name == "aai-signals") or
-            string.find(surface_name, "NiceFill") or
-            string.find(surface_name, "Asteroid Belt") or
-            string.find(surface_name, "Vault ")
-    then
-        return false
-    end
+-- Based off rampant 2.0's surface exclusion
+function ForceHelper.can_have_enemy_on(surface)
+    if surface.valid then
+        local surface_name = surface.name
+        if global.surface_inclusion_list[surface_name] == nil and 
+            (
+                global.surface_exclusion_list[surface_name] == true or
+                string.find(surface_name, "Factory floor") or
+                string.find(surface_name, " Orbit") or
+                string.find(surface_name, "clonespace") or
+                string.find(surface_name, "BPL_TheLabplayer") or
+                string.find(surface_name, "starmap-") or
+                (surface_name == "aai-signals") or
+                string.find(surface_name, "NiceFill") or
+                string.find(surface_name, "Asteroid Belt") or
+                string.find(surface_name, "Vault ") or
+                (surface_name == "RTStasisRealm") or
+                string.find(surface_name, "spaceship")
+            )
+        then        
+            global.surface_exclusion_list[surface_name] = true
+            return false
+        end    
 
-    return true
+        global.surface_inclusion_list[surface_name] = true
+        return true        
+    end        
+
+    return false
+end
+
+function ForceHelper.reset_surface_lists()
+    global.surface_exclusion_list = {}
+    global.surface_inclusion_list = {}
 end
 
 return ForceHelper
