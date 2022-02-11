@@ -16,13 +16,14 @@ function SurfaceProcessor.init_globals()
 end
 
 function SurfaceProcessor.assign_race(surface, race_name)
-    local races = ErmConfig.get_enemy_races()
-    local max_num = Table.size(races)
-    if max_num == 0 then
+
+    if not ErmForceHelper.can_have_enemy_on(surface) then
         return
     end
 
-    if not ErmForceHelper.can_have_enemy_on(surface) then
+    local races = ErmConfig.get_enemy_races()
+    local max_num = Table.size(races)
+    if max_num == 0 then
         return
     end
 
