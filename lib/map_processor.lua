@@ -124,7 +124,7 @@ function MapProcessor.init_globals()
 end
 
 function MapProcessor.queue_chunks(surface, area)
-    if not area then
+    if not ErmForceHelper.can_have_enemy_on(surface) or not area then
         return
     end
 

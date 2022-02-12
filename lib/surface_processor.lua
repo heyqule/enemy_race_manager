@@ -16,13 +16,14 @@ function SurfaceProcessor.init_globals()
 end
 
 function SurfaceProcessor.assign_race(surface, race_name)
-    local races = ErmConfig.get_enemy_races()
-    local max_num = Table.size(races)
-    if max_num == 0 then
+
+    if not ErmForceHelper.can_have_enemy_on(surface) then
         return
     end
 
-    if not ErmForceHelper.can_assign(surface.name) then
+    local races = ErmConfig.get_enemy_races()
+    local max_num = Table.size(races)
+    if max_num == 0 then
         return
     end
 
@@ -52,10 +53,12 @@ function SurfaceProcessor.rebuild_race()
         return
     end
 
+    ErmForceHelper.reset_surface_lists()
+
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
                 (race ~= MOD_NAME and game.active_mods[race] == nil) or
-                not ErmForceHelper.can_assign(game.surfaces[surface_index].name)
+                not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end

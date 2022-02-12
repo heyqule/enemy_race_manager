@@ -1,5 +1,16 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.13.2
+Version: 1.13.4
+Date: 2022-02-11
+
+  Change:
+    - Added "spaceship" and "RTStasisRealm" surface to exclusion list.
+    - map process queue and attack group indexer now ignore surfaces in exclusion list
+
+  Bugfixes:
+    - Fixed an issue where reinforced building recipes don't unlock on existing saves which have the tech researched.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.13.3
 Date: 2022-02-04
 
   Bugfixes:

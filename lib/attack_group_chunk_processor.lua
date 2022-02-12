@@ -94,7 +94,9 @@ end
 local set_up_rotatable_direction = function(race_cursor, race_name, surface)
     if ErmConfig.mapgen_is_2_races_split() then
         race_cursor.rotatable_directions = {}
-        if ErmConfig.positive_axis_race() == ErmConfig.negative_axis_race() and ErmConfig.positive_axis_race() == race_name then
+        if ErmConfig.positive_axis_race() == ErmConfig.negative_axis_race()
+            and ErmConfig.positive_axis_race() == race_name
+        then
             race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_ALL
         elseif settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
             if ErmConfig.positive_axis_race() == race_name then
@@ -143,8 +145,9 @@ local init_spawnable_chunk = function(surface, forced_init)
     end
 end
 
-local is_cachable_spawn_position = function(position)
-    return position.x % AttackGroupChunkProcessor.CHUNK_CENTER_POINT_RADIUS == 0 and
+local is_cachable_spawn_position = function(surface, position)
+    return ErmForceHelper.can_have_enemy_on(surface) and
+            position.x % AttackGroupChunkProcessor.CHUNK_CENTER_POINT_RADIUS == 0 and
             position.y % AttackGroupChunkProcessor.CHUNK_CENTER_POINT_RADIUS == 0
 end
 
@@ -415,7 +418,7 @@ local reindex_surface = function(surface)
     local attack_chunk = 0
 
     for chunk in surface.get_chunks() do
-        if is_cachable_spawn_position(chunk) then
+        if is_cachable_spawn_position(surface, chunk) then
             if add_spawnable_chunk(surface, chunk) then
                 spawn_chunk = spawn_chunk + 1
             end
@@ -454,7 +457,7 @@ function AttackGroupChunkProcessor.init_index()
     local attack_chunk = 0
     local total_surfaces = 0
     for _, surface in pairs(game.surfaces) do
-       if surface.valid then
+       if ErmForceHelper.can_have_enemy_on(surface) then
            current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
            spawn_chunk = spawn_chunk + current_spawn_chunk
            attack_chunk = attack_chunk + current_attack_chunk
@@ -474,17 +477,19 @@ end
 --- https://lua-api.factorio.com/latest/events.html#on_robot_built_entity
 function AttackGroupChunkProcessor.add_attackable_chunk_by_entity(entity)
     local surface = entity.surface
-    local position = entity.position
-    position = {
-        x = math.floor(position.x / AttackGroupChunkProcessor.CHUNK_SIZE),
-        y = math.floor(position.y / AttackGroupChunkProcessor.CHUNK_SIZE)
-    }
-    init_attackable_chunk(surface)
-    add_attackable_chunk(surface, position)
+    if ErmForceHelper.can_have_enemy_on(surface) then
+        local position = entity.position
+        position = {
+            x = math.floor(position.x / AttackGroupChunkProcessor.CHUNK_SIZE),
+            y = math.floor(position.y / AttackGroupChunkProcessor.CHUNK_SIZE)
+        }
+        init_attackable_chunk(surface)
+        add_attackable_chunk(surface, position)
+    end
 end
 
 function AttackGroupChunkProcessor.add_spawnable_chunk(surface, position)
-    if is_cachable_spawn_position(position) then
+    if is_cachable_spawn_position(surface, position) then
         init_spawnable_chunk(surface)
         add_spawnable_chunk(surface, position)
     end
