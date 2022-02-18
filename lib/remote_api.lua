@@ -17,6 +17,7 @@ local ERM_RemoteAPI = {}
 function ERM_RemoteAPI.register_race(race_setting)
     if global and global.race_settings then
         global.race_settings[race_setting.race] = race_setting
+        ErmRaceSettingsHelper.refresh_current_tier(race_setting.race)
     end
 end
 
@@ -59,6 +60,7 @@ end
 function ERM_RemoteAPI.update_race_setting(race_setting)
     if global and global.race_settings and global.race_settings[race_setting.race] then
         global.race_settings[race_setting.race] = race_setting
+        ErmRaceSettingsHelper.refresh_current_tier(race_setting.race)
     end
 end
 

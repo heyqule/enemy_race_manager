@@ -325,6 +325,42 @@ data:extend {
     },
     {
         type = "bool-setting",
+        name = "enemyracemanager-rocket-attack-point-enable",
+        description = "enemyracemanager-rocket-attack-point-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-310"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-rocket-attack-point",
+        description = "enemyracemanager-rocket-attack-point",
+        setting_type = "runtime-global",
+        default_value = 300,
+        minimum_value = 100,
+        maximum_value = 10000,
+        order = "enemyracemanager-311"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-super-weapon-attack-point-enable",
+        description = "enemyracemanager-super-weapon-attack-point-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-312"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-super-weapon-attack-point",
+        description = "enemyracemanager-super-weapon-attack-point",
+        setting_type = "runtime-global",
+        default_value = 600,
+        minimum_value = 100,
+        maximum_value = 10000,
+        order = "enemyracemanager-333"
+    },
+    {
+        type = "bool-setting",
         name = "enemyracemanager-flying-squad-enable",
         description = "enemyracemanager-flying-squad-enable",
         setting_type = "runtime-global",

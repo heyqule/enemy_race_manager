@@ -144,8 +144,8 @@ function makeLogisticRobot(level)
         type = "projectile",
         range = attack_range,
         min_attack_distance = attack_range - 4,
-        cooldown = 60,
-        warmup = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, attack_speed_multiplier, level),
+        warmup = 10,
+        cooldown = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, attack_speed_multiplier, level),
         ammo_type = {
             category = "melee",
             target_type = "direction",

@@ -30,6 +30,8 @@ end
 
 local calculatePoints = function(race_name, statistic,
                                  entity_names, level, interval)
+    log(race_name)
+    log(serpent.block(entity_names))
     local points = 0
     for _, name in pairs(entity_names) do
         local count = statistic.get_flow_count {
@@ -129,6 +131,8 @@ function AttackMeterProcessor.calculate_points(force_name)
 end
 
 function AttackMeterProcessor.form_group(race_name, force)
+    if ErmRaceSettingsHelper.not_exists(race_name) then return end
+
     local next_attack_threshold =  ErmRaceSettingsHelper.get_next_attack_threshold(race_name)
     if next_attack_threshold == 0 then
         calculateNextThreshold(race_name)

@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.14.0
+Date: ???
+
+  Features:
+    - Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON)
+    - Using super weapon will add attack point for a randomly selected race or primary race of the surface. (default: ON)
+
+  Changes:
+    - Improve custom attack handling
+    - Refactor Cron scheduler
+    - Refactor Race data upgrade for easier expansions
+
+  Bugfixes:
+    - Fix cooldown on enemy logistic bot
+
+---------------------------------------------------------------------------------------------------
 Version: 1.13.4
 Date: 2022-02-11
 

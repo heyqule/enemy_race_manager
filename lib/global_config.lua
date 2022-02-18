@@ -26,6 +26,7 @@ if DEBUG_MODE then
     ErmConfig.ONE_MINUTE_CRON = 10 * defines.time.second + 1
     ErmConfig.THIRTY_SECONDS_CRON = 5 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
+    ErmConfig.THREE_SECOND_CRON = defines.time.second / 1 + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
@@ -36,6 +37,7 @@ else
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
     ErmConfig.THIRTY_SECONDS_CRON = 30 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
+    ErmConfig.THREE_SECOND_CRON = 3 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
 
@@ -86,6 +88,10 @@ local refreshable_settings = {
         'enemyracemanager-attack-meter-threshold',
         'enemyracemanager-attack-meter-threshold-deviation',
         'enemyracemanager-attack-meter-collector-multiplier',
+        'enemyracemanager-rocket-attack-point-enable',
+        'enemyracemanager-rocket-attack-point',
+        'enemyracemanager-super-weapon-attack-point-enable',
+        'enemyracemanager-super-weapon-attack-point',
         'enemyracemanager-flying-squad-enable',
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
@@ -345,6 +351,22 @@ end
 
 function ErmConfig.time_base_attack_points()
     return get_global_setting_value('enemyracemanager-time-based-points')
+end
+
+function ErmConfig.rocket_attack_point_enable()
+    return get_global_setting_value('enemyracemanager-rocket-attack-point-enable')
+end
+
+function ErmConfig.rocket_attack_points()
+    return get_global_setting_value('enemyracemanager-rocket-attack-point')
+end
+
+function ErmConfig.super_weapon_attack_points_enable()
+    return get_global_setting_value('enemyracemanager-super-weapon-attack-point-enable')
+end
+
+function ErmConfig.super_weapon_attack_points()
+    return get_global_setting_value('enemyracemanager-super-weapon-attack-point')
 end
 
 function ErmConfig.get_enemy_races()
