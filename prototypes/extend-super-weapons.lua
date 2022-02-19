@@ -18,7 +18,6 @@ local purifier_custom_attack = {
 
 -- base-game Nuclear bomb Projectiles
 if data.raw["projectile"]["atomic-rocket"] then
-    log('modding atomic-rocket')
     local entity = util.table.deepcopy(data.raw["projectile"]["atomic-rocket"])
     table.insert(entity['action']['action_delivery']['target_effects'], super_custom_attack)
     data:extend({entity})

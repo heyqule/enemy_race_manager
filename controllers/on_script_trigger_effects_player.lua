@@ -14,20 +14,16 @@ local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_setti
 local attack_functions = {
     [PLAYER_SUPER_WEAPON_ATTACK] = function(args)
         local races = ErmConfig.get_enemy_races()
-        log(races[math.random(1, ErmConfig.get_enemy_races_total())]..'/'..tostring(ErmConfig.super_weapon_attack_points()))
         ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.super_weapon_attack_points())
     end,
     [PLAYER_PLANET_PURIFIER_ATTACK] = function(args)
         local races = ErmConfig.get_enemy_races()
-        log(races[math.random(1, ErmConfig.get_enemy_races_total())]..'/'..tostring(ErmConfig.super_weapon_attack_points() * 5))
         ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.super_weapon_attack_points() * 5)
     end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
-    log(event.effect_id)
     if ErmConfig.super_weapon_attack_points_enable() and attack_functions[event.effect_id]
     then
-        log("enabled"..event.effect_id)
         attack_functions[event.effect_id](event)
     end
 end)
