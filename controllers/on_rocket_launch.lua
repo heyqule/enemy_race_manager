@@ -10,9 +10,12 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 Event.register(defines.events.on_rocket_launched, function(event)
     if ErmConfig.rocket_attack_point_enable() then
-
+        local races = ErmConfig.get_enemy_races()
+        log(races[math.random(1, ErmConfig.get_enemy_races_total())]..'/'..tostring(ErmConfig.rocket_attack_points()))
+        ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.rocket_attack_points())
     end
 end)

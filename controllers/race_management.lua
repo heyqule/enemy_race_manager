@@ -22,5 +22,7 @@ Event.register(Event.generate_event_name(ErmConfig.EVENT_TIER_WENT_UP), function
 end)
 
 Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), function(event)
-    ErmMapProcessor.rebuild_map(game)
+    if ErmConfig.race_is_active(event.affected_race.race_name) then
+        ErmMapProcessor.rebuild_map(game)
+    end
 end)

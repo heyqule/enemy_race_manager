@@ -30,8 +30,6 @@ end
 
 local calculatePoints = function(race_name, statistic,
                                  entity_names, level, interval)
-    log(race_name)
-    log(serpent.block(entity_names))
     local points = 0
     for _, name in pairs(entity_names) do
         local count = statistic.get_flow_count {
@@ -80,7 +78,9 @@ function AttackMeterProcessor.add_form_group_cron()
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
-        ErmCron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
+        if ErmConfig.race_is_active(race_name) then
+            ErmCron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
+        end
     end
 end
 
@@ -89,6 +89,10 @@ function AttackMeterProcessor.calculate_points(force_name)
 
     local force = game.forces[force_name]
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
+    if not ErmConfig.race_is_active(race_name) then
+        return
+    end
+
     local statistic_cache = get_statistic_cache(race_name, force)
     if statistic_cache == nil then
         return

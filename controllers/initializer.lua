@@ -76,6 +76,8 @@ local addRaceSettings = function()
 end
 
 local prepare_world = function()
+    ErmConfig.initialize_races_data()
+
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
     game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
@@ -121,6 +123,11 @@ local init_globals = function()
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     global.settings = global.settings or {}
 
+    global.installed_races = {}
+    global.active_races = {}
+    global.active_races_names = {}
+    global.active_races_num = 1
+
     ErmSurfaceProcessor.init_globals()
     ErmAttackMeterProcessor.init_globals()
     ErmMapProcessor.init_globals()
@@ -148,24 +155,30 @@ end)
 Event.on_configuration_changed(function(event)
     init_globals()
     ErmConfig.refresh_config()
+    addRaceSettings()
     prepare_world()
     for _, player in pairs(game.connected_players) do
         ErmGui.main_window.update_overhead_button(player.index)
     end
 end)
 
+---Custom setting processors
+local setting_functions = {
+    ['enemyracemanager-max-gathering-groups'] = function(event)
+        game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
+    end,
+    ['enemyracemanager-max-group-size'] = function(event)
+        game.map_settings.unit_group.max_unit_group_size = settings.global[event.setting].value
+    end,
+}
 Event.register(defines.events.on_runtime_mod_setting_changed,function(event)
     if event.setting_type == 'runtime-global' and
             string.find(event.setting, 'enemyracemanager', 1, true)
     then
         global.settings[event.setting] = settings.global[event.setting].value
 
-        if string.find(event.setting, 'enemyracemanager-max-gathering-groups', 1, true) then
-            game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
-        end
-
-        if string.find(event.setting, "enemyracemanager-max-group-size",1, true) then
-            game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
+        if setting_functions[event.setting] then
+            setting_functions[event.setting](event)
         end
     end
 end)

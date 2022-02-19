@@ -10,9 +10,11 @@ Date: ???
     - Improve custom attack handling
     - Refactor Cron scheduler
     - Refactor Race data upgrade for easier expansions
+    - Events will only process active races based on the mapping method setting.
 
   Bugfixes:
     - Fix cooldown on enemy logistic bot
+    - Fix enemy may fight each others when Free For All is off.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.13.4
