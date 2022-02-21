@@ -11,11 +11,10 @@ ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.y
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
-### 1.13.0 feature highlight
-* Add reinforced items for military with higher HP and resistance.
-* Max number of group and max group size are now a map setting, instead of startup setting. They can be change mid-game. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
-* Free for all multipliers changed from 8x to 10x, player entity health to 12.5x
-* Disable friendly fire on explosive rocket and cannon when enhanced defense enabled.
+### 1.14.0 feature highlight
+- Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON, 200 points)
+- Using super weapon (e.g Nukes) will add attack point for a randomly selected race or primary race of the surface. (default: ON, 500 points)
+- Supported super weapon from these mods: space-exploration, AtomicArtillery, M.I.R.V, Ion Cannon SE
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.

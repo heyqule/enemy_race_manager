@@ -3,13 +3,18 @@ Version: 1.14.0
 Date: ???
 
   Features:
-    - Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON)
-    - Using super weapon will add attack point for a randomly selected race or primary race of the surface. (default: ON)
+    - Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON, 200 points)
+    - Using super weapon (e.g Nukes) will add attack point for a randomly selected race or primary race of the surface. (default: ON, 500 points)
+    - Supported super weapon from these mods: space-exploration, AtomicArtillery, M.I.R.V, Ion Cannon SE
+    - Using planet purifier type of super weapon will add 10x the points (M.I.R.V, plague-rocket from SE)
+    - Added elite custom attack groups.
+    - Half group size, group level is current level + 3.
+    - Added accumulated attack points for each race. It's to determine when elite group spawns.
 
   Changes:
     - Improve custom attack handling
-    - Refactor Cron scheduler
-    - Refactor Race data upgrade for easier expansions
+    - Improve Cron Scheduler
+    - Improve race data upgrade for easier expansions
     - Events will only process active races based on the mapping method setting.
 
   Bugfixes:

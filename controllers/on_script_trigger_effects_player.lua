@@ -18,7 +18,7 @@ local attack_functions = {
     end,
     [PLAYER_PLANET_PURIFIER_ATTACK] = function(args)
         local races = ErmConfig.get_enemy_races()
-        ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.super_weapon_attack_points() * 5)
+        ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.super_weapon_attack_points() * 10)
     end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
