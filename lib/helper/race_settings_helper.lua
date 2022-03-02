@@ -292,10 +292,4 @@ function RaceSettingHelper.refresh_current_tier(race_name)
     global.race_settings[race_name] = race_settings
 end
 
-function RaceSettingHelper.not_exists(race_name)
-    return global.race_settings[race_name] == nil
-end
-
-
-
 return RaceSettingHelper

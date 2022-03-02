@@ -135,7 +135,7 @@ function AttackMeterProcessor.calculate_points(force_name)
 end
 
 function AttackMeterProcessor.form_group(race_name, force)
-    if ErmRaceSettingsHelper.not_exists(race_name) then return end
+    if not ErmConfig.race_is_active(race_name) then return end
 
     local next_attack_threshold =  ErmRaceSettingsHelper.get_next_attack_threshold(race_name)
     if next_attack_threshold == 0 then
