@@ -220,6 +220,9 @@ end
 
 function RaceSettingHelper.add_to_attack_meter(target_race, value)
     global.race_settings[target_race].attack_meter = math.min(global.race_settings[target_race].attack_meter + value, 999999)
+    if (value > 0) then
+        global.race_settings[target_race].attack_meter_total = global.race_settings[target_race].attack_meter_total + math.min(value, 999999)
+    end
 end
 
 function RaceSettingHelper.get_next_attack_threshold(target_race)

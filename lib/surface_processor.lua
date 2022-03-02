@@ -107,4 +107,13 @@ function SurfaceProcessor.wander_unit_clean_up()
     game.print({'', 'Checked: '..checked_count..' / Removed:'..unit_count..' '})
 end
 
+function SurfaceProcessor.get_enemy_on(surface_name)
+    if(ErmConfig.mapgen_is_one_race_per_surface()) then
+        return global.enemy_surfaces[surface_name]
+    end
+
+    local races = ErmConfig.get_enemy_races()
+    return races[math.random(1, ErmConfig.get_enemy_races_total())]
+end
+
 return SurfaceProcessor

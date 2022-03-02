@@ -336,7 +336,7 @@ data:extend {
         name = "enemyracemanager-rocket-attack-point",
         description = "enemyracemanager-rocket-attack-point",
         setting_type = "runtime-global",
-        default_value = 300,
+        default_value = 200,
         minimum_value = 100,
         maximum_value = 10000,
         order = "enemyracemanager-311"
@@ -354,10 +354,18 @@ data:extend {
         name = "enemyracemanager-super-weapon-attack-point",
         description = "enemyracemanager-super-weapon-attack-point",
         setting_type = "runtime-global",
-        default_value = 600,
+        default_value = 300,
         minimum_value = 100,
         maximum_value = 10000,
-        order = "enemyracemanager-333"
+        order = "enemyracemanager-313"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-super-weapon-counter-attack-enable",
+        description = "enemyracemanager-super-weapon-counter-attack-enable",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-314"
     },
     {
         type = "bool-setting",

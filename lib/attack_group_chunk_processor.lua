@@ -19,6 +19,8 @@ AttackGroupChunkProcessor.MINIMUM_SPAWNABLE = 10
 
 AttackGroupChunkProcessor.RETRY = 12
 
+AttackGroupChunkProcessor.PROXY_DISTANCE = 480 -- 15 chunks
+
 AttackGroupChunkProcessor.AREA_NORTH = {1,2}
 AttackGroupChunkProcessor.AREA_SOUTH = {3,4}
 

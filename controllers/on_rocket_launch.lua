@@ -11,10 +11,14 @@ require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 Event.register(defines.events.on_rocket_launched, function(event)
     if ErmConfig.rocket_attack_point_enable() then
-        local races = ErmConfig.get_enemy_races()
-        ErmRaceSettingHelper.add_to_attack_meter(races[math.random(1, ErmConfig.get_enemy_races_total())], ErmConfig.rocket_attack_points())
+        local silo = event.rocket_silo
+        if silo.valid then
+            local race_name = ErmSurfaceProcessor.get_enemy_on(silo.surface.name)
+            ErmRaceSettingHelper.add_to_attack_meter(race_name, ErmConfig.rocket_attack_points())
+        end
     end
 end)

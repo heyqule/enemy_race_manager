@@ -168,7 +168,7 @@ local setting_functions = {
         game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
     end,
     ['enemyracemanager-max-group-size'] = function(event)
-        game.map_settings.unit_group.max_unit_group_size = settings.global[event.setting].value
+        game.map_settings.unit_group.max_unit_group_size = global.settings[event.setting]
     end,
 }
 Event.register(defines.events.on_runtime_mod_setting_changed,function(event)

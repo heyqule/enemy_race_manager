@@ -13,6 +13,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
+local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -288,6 +289,59 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
     end
 
     return false
+end
+
+function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
+    local target_unit = surface.find_entities_filtered({
+        type = {"unit-spawner"},
+        force = ErmForceHelper.get_all_enemy_forces(),
+        area = {
+            { position.x - radius, position.y - radius },
+            { position.x + radius, position.y + radius }
+        },
+        limit = 1
+    })
+    local units = {}
+
+    if #target_unit == 0 then
+        return
+    end
+
+    target_unit = target_unit[1]
+    units = surface.find_units({
+        area = {
+            { position.x - radius, position.y - radius },
+            { position.x + radius, position.y + radius }
+        },
+        force = target_unit.force,
+        condition = 'same'
+    })
+
+    if #units >= 50 then
+        local group = surface.create_unit_group({position = target_unit.position, force = target_unit.force})
+        local max_unit = ErmConfig.max_group_size()
+        local i = 0
+        for _, unit in pairs(units) do
+            group.add_member(unit)
+            i = i + 1
+            if max_unit == i then
+                break
+            end
+        end
+
+        local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group)
+
+        if attack_position then
+            local command = {
+                type = defines.command.attack_area,
+                destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
+                radius = AttackGroupProcessor.CHUNK_CENTER_POINT
+            }
+            group.set_command(command)
+        else
+            group.set_autonomous()
+        end
+    end
 end
 
 return AttackGroupProcessor

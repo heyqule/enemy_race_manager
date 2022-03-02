@@ -13,7 +13,11 @@ DEBUG_MODE = true
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'
--- Super weapon: Nuke, ion cannon, mirv, iridium-piledriver.
+-- Super weapon: Nuke, ion cannon, iridium-piledriver.
 PLAYER_SUPER_WEAPON_ATTACK = 'emptk-sw'
--- Planet Purifier: SE's plague rocket
+-- Planet Purifier: SE's plague rocket, mirv
 PLAYER_PLANET_PURIFIER_ATTACK = 'emptk-pp'
+-- Super Weapon: Counter attack
+PLAYER_SUPER_WEAPON_COUNTER_ATTACK = 'empck-sw'
+-- Planet Purifier:: Counter attack
+PLAYER_PLANET_PURIFIER_COUNTER_ATTACK = 'empck-pp'

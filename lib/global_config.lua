@@ -73,6 +73,7 @@ local refreshable_settings = {
         'enemyracemanager-level-curve-multiplier',
     },
     global = {
+        'enemyracemanager-max-gathering-groups',
         'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
@@ -86,6 +87,7 @@ local refreshable_settings = {
         'enemyracemanager-rocket-attack-point',
         'enemyracemanager-super-weapon-attack-point-enable',
         'enemyracemanager-super-weapon-attack-point',
+        'enemyracemanager-super-weapon-counter-attack-enable',
         'enemyracemanager-flying-squad-enable',
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
@@ -361,6 +363,10 @@ end
 
 function ErmConfig.super_weapon_attack_points()
     return get_global_setting_value('enemyracemanager-super-weapon-attack-point')
+end
+
+function ErmConfig.super_weapon_counter_attack_enable()
+    return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
 end
 
 function ErmConfig.initialize_races_data()
