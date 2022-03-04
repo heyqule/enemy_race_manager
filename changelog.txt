@@ -17,7 +17,7 @@ Date: 2022-03-04
     - Improve race data upgrade for easier expansions
     - Events will only process active races based on the mapping method setting.
     - Reinforced turrets HP changed from 1.5x to 2x
-    - Landmines now slow enemy for 30s, up from 5s.  Increase damage by 2x
+    - Landmines now slow enemy for 30s, up from 5s.  Increase damage by 3x
 
   Bugfixes:
     - Fix cooldown on enemy logistic bot
