@@ -11,11 +11,14 @@ ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.y
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
-### 1.13.0 feature highlight
-* Add reinforced items for military with higher HP and resistance.
-* Max number of group and max group size are now a map setting, instead of startup setting. They can be change mid-game. If you are using non-default setting, please load your game and change those 2 settings in "map setting" tab
-* Free for all multipliers changed from 8x to 10x, player entity health to 12.5x
-* Disable friendly fire on explosive rocket and cannon when enhanced defense enabled.
+### 1.14.0 feature highlight
+- Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON, 200 points)
+- Using super weapon (e.g Nukes) will add attack point for a randomly selected race or primary race of the surface. (default: ON, 300 points)
+- Supported super weapon from these mods: space-exploration, AtomicArtillery, M.I.R.V, Ion Cannon SE
+- Using super weapon may cause enemy to send its survived units to your base. (Up to MAX_GROUP_SIZE)
+- New attribute to track accumulated attack points for each race. (To be used for future features.)
+- Landmines now slow enemy for 30s, up from 5s. Increase damage by 3x 
+- Enemy unit spawn timer tweak.  Tier 2 units takes 1.5x longer to spawn, Tier 3 units takes 2x longer.
 
 ### New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -154,6 +157,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * These attack groups are independent of pollution.
 * The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
 * When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
+* Launching rockets and using super weapons may increase attack points.
 * More features and specialized attack groups are coming in later releases.
 
 ##### Flying attack groups (ON by default)
@@ -212,10 +216,15 @@ Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compati
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
-### Roadmap after 1.0
-ERM_RedArmy - Heavy firepower on single target - Done
+### Roadmap
+- Elite Group spawns
+- Boss base encounters
 
-ERM_MarsPeople - Mars people from metal slugs series - Beta
+Details:
+https://github.com/heyqule/enemy_race_manager/projects/1
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
+
+### SPECIAL THANKS
+RU Translation: SeptiSe7ven, Luis_Mitchell

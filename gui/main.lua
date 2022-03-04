@@ -94,7 +94,10 @@ function ERM_DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(race_setting.race)) }
 
     item_table.add { type = "label", caption = { 'gui.attack_column' } }
-    item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
+    item_table.add { type = "label", caption = race_setting.attack_meter .. ' / ' .. race_setting.next_attack_threshold }
+
+    item_table.add { type = "label", caption = { 'gui.total_attack_column' } }
+    item_table.add { type = "label", caption = race_setting.attack_meter_total }
 
     local unit_killed_count = race_setting.unit_killed_count or 0
     item_table.add { type = "label", caption = { 'gui.total_unit_killed' } }

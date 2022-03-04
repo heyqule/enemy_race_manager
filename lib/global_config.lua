@@ -26,6 +26,7 @@ if DEBUG_MODE then
     ErmConfig.ONE_MINUTE_CRON = 10 * defines.time.second + 1
     ErmConfig.THIRTY_SECONDS_CRON = 5 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
+    ErmConfig.THREE_SECOND_CRON = defines.time.second / 1 + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
@@ -36,6 +37,7 @@ else
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
     ErmConfig.THIRTY_SECONDS_CRON = 30 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
+    ErmConfig.THREE_SECOND_CRON = 3 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
 
@@ -54,12 +56,6 @@ ErmConfig.RACE_MODE_PREFIX = 'erm_'
 
 ErmConfig.MAX_LEVELS = 20
 
-ErmConfig.enemy_races = {MOD_NAME}
-ErmConfig.enemy_races_loaded = false
-
-ErmConfig.installed_races = {MOD_NAME}
-ErmConfig.installed_races_loaded = false
-
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
 if DEBUG_MODE then
@@ -77,6 +73,7 @@ local refreshable_settings = {
         'enemyracemanager-level-curve-multiplier',
     },
     global = {
+        'enemyracemanager-max-gathering-groups',
         'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
@@ -86,6 +83,11 @@ local refreshable_settings = {
         'enemyracemanager-attack-meter-threshold',
         'enemyracemanager-attack-meter-threshold-deviation',
         'enemyracemanager-attack-meter-collector-multiplier',
+        'enemyracemanager-rocket-attack-point-enable',
+        'enemyracemanager-rocket-attack-point',
+        'enemyracemanager-super-weapon-attack-point-enable',
+        'enemyracemanager-super-weapon-attack-point',
+        'enemyracemanager-super-weapon-counter-attack-enable',
         'enemyracemanager-flying-squad-enable',
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
@@ -347,28 +349,80 @@ function ErmConfig.time_base_attack_points()
     return get_global_setting_value('enemyracemanager-time-based-points')
 end
 
-function ErmConfig.get_enemy_races()
-    if #ErmConfig.enemy_races == 1 and ErmConfig.enemy_races_loaded == false then
-        for name, _ in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
-                Table.insert(ErmConfig.enemy_races, name)
-            end
-        end
-        ErmConfig.enemy_races_loaded = true;
-    end
-    return ErmConfig.enemy_races
+function ErmConfig.rocket_attack_point_enable()
+    return get_global_setting_value('enemyracemanager-rocket-attack-point-enable')
 end
 
-function ErmConfig.get_installed_races()
-    if #ErmConfig.installed_races == 1 and ErmConfig.installed_races_loaded == false then
+function ErmConfig.rocket_attack_points()
+    return get_global_setting_value('enemyracemanager-rocket-attack-point')
+end
+
+function ErmConfig.super_weapon_attack_points_enable()
+    return get_global_setting_value('enemyracemanager-super-weapon-attack-point-enable')
+end
+
+function ErmConfig.super_weapon_attack_points()
+    return get_global_setting_value('enemyracemanager-super-weapon-attack-point')
+end
+
+function ErmConfig.super_weapon_counter_attack_enable()
+    return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
+end
+
+function ErmConfig.initialize_races_data()
+    global.installed_races = {MOD_NAME}
+    global.active_races = {[MOD_NAME] = true}
+    global.active_races_num = 1
+
+    for name, _ in pairs(game.active_mods) do
+        if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
+            Table.insert(global.installed_races, name)
+        end
+    end
+
+    if ErmConfig.mapgen_is_2_races_split() then
+        global.active_races = {
+            [ErmConfig.positive_axis_race()] = true,
+            [ErmConfig.negative_axis_race()] = true
+        }
+        global.active_races_num = 2
+    elseif ErmConfig.mapgen_is_4_races_split() then
+        global.active_races = {
+            [ErmConfig.top_left_race()] = true,
+            [ErmConfig.top_right_race()] = true,
+            [ErmConfig.bottom_left_race()] = true,
+            [ErmConfig.bottom_right_race()] = true
+        }
+        global.active_races_num = 4
+    else
         for name, _ in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) then
-                Table.insert(ErmConfig.installed_races, name)
+            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
+                global.active_races[name] = true
+                global.active_races_num = global.active_races_num + 1
             end
         end
-        ErmConfig.installed_races_loaded = true;
     end
-    return ErmConfig.installed_races
+
+    for key, _ in pairs(global.active_races) do
+        Table.insert(global.active_races_names, key)
+    end
+end
+
+function ErmConfig.get_enemy_races()
+    return global.active_races_names
+end
+
+function ErmConfig.get_enemy_races_total()
+    return global.active_races_num
+end
+
+function ErmConfig.race_is_active(race_name)
+    return global.active_races[race_name] == true
+end
+
+
+function ErmConfig.get_installed_races()
+    return global.installed_races
 end
 
 return ErmConfig

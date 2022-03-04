@@ -56,9 +56,9 @@ function ScenarioHelper.set_tech_level(force, level)
     end
 end
 
-function ScenarioHelper.set_enemy_params()
+function ScenarioHelper.set_enemy_params(level)
     remote.call('enemy_race_manager_debug','set_evolution_factor', 1.0)
-    remote.call('enemy_race_manager_debug','level_up', 20)
+    remote.call('enemy_race_manager_debug','level_up', level)
     remote.call('enemy_race_manager_debug', 'set_tier', 3)
     remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
 end

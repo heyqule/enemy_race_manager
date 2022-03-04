@@ -273,7 +273,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "ammo-turret",
             "gun-turret",
             "erm-reinforced-gun-turret",
-            1.5,
+            2,
             nil,
             nil,
             "gun-turret"
@@ -284,7 +284,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "electric-turret",
             "laser-turret",
             "erm-reinforced-laser-turret",
-            1.5,
+            2,
             nil,
             nil,
             "laser-turret"
@@ -294,7 +294,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "fluid-turret",
             "flamethrower-turret",
             "erm-reinforced-flamethrower-turret",
-            1.5,
+            2,
             nil,
             nil,
             "flamethrower"

@@ -55,6 +55,8 @@ function ForceHelper.set_friends(game, force_name, is_friend)
             force.set_friend('enemy', is_friend);
             force.set_cease_fire(force_name, is_friend);
             force.set_cease_fire('enemy', is_friend);
+            game.forces[force_name].set_friend(name,is_friend)
+            game.forces[force_name].set_cease_fire(name,is_friend)
         end
     end
 end

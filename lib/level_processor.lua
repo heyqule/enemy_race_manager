@@ -14,6 +14,7 @@ local Math = require('__stdlib__/stdlib/utils/math')
 
 local ErmConfig = require('lib/global_config')
 local ErmForceHelper = require('lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 local LevelManager = {}
 
@@ -25,11 +26,7 @@ local evolution_points = {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 28
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1
-
-    race_settings[race_name]['current_units_tier'] = Table.array_combine(race_settings[race_name]['current_units_tier'], race_settings[race_name]['units'][race_settings[race_name].tier])
-    race_settings[race_name]['current_turrets_tier'] = Table.array_combine(race_settings[race_name]['current_turrets_tier'], race_settings[race_name]['turrets'][race_settings[race_name].tier])
-    race_settings[race_name]['current_command_centers_tier'] = Table.array_combine(race_settings[race_name]['current_command_centers_tier'], race_settings[race_name]['command_centers'][race_settings[race_name].tier])
-    race_settings[race_name]['current_support_structures_tier'] = Table.array_combine(race_settings[race_name]['current_support_structures_tier'], race_settings[race_name]['support_structures'][race_settings[race_name].tier])
+    ErmRaceSettingsHelper.refresh_current_tier(race_name)
 end
 
 local handle_unit_tier = function(race_settings, force, race_name, dispatch)

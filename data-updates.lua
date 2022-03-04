@@ -16,4 +16,6 @@ require("prototypes/extend-reinforced-items")
 
 require('prototypes/extend-weapons.lua')
 
+require('prototypes/extend-super-weapons.lua')
+
 require "prototypes.extend-map-gen-setting"

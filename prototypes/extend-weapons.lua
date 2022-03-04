@@ -57,9 +57,13 @@ if
     source_effects['action']['action_delivery'] ~= nil and
     source_effects['action']['action_delivery']['target_effects'][2] ~= nil
 then
+    local land_mine_damage = source_effects['action']['action_delivery']['target_effects'][1]
+
+    land_mine_damage['damage']['amount'] = land_mine_damage['damage']['amount'] * 3
+
     local land_mine_sticker = source_effects['action']['action_delivery']['target_effects'][2]
     if land_mine_sticker.type == 'create-sticker' then
-        land_mine_sticker.sticker = '5-050-slowdown-sticker'
+        land_mine_sticker.sticker = '30-050-slowdown-sticker'
         land_mine_sticker.show_in_tooltip = true
     end
 end

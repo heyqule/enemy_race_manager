@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "1.13.4",
+  "version": "1.14.0",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -20,6 +20,9 @@
     "?ArmouredBiters",
     "?Explosive_biters",
     "?Cold_biters",
-    "?space-exploration"
+    "?space-exploration",
+    "?Kux-OrbitalIonCannon",
+    "?MIRV",
+    "?AtomicArtillery"
   ]
 }

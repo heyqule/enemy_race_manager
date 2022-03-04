@@ -29,3 +29,11 @@
 - When the game resets, attack meter also reset.
 - When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
 - When "reset research" is checked, everything reset.
+
+####Super Weapon Attack Points / Counter Attack supported mods
+- space exploration: Irdium Driver(Super weapon), Plague Rocket (Purifier type weapon) 
+- AtomicArtillery 
+- M.I.R.V (Purifier type weapon)
+- Ion Cannon SE 
+- Kastorio2: Atomic Bomb, Atomic Artillery Shell, Antimatter Bomb, Antimatter Artillery Shell  
+- Industrial Revolution: Atomic Artillery Shell

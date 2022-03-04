@@ -205,20 +205,8 @@ function RaceSettingHelper.get_current_turret_tier(target_race)
     return global.race_settings[target_race].current_turrets_tier
 end
 
-local building_tier_cache = {}
-local building_tier_cache_expiry = {}
 function RaceSettingHelper.get_current_building_tier(target_race)
-    if building_tier_cache[target_race] == nil or
-        building_tier_cache_expiry[target_race] ~= global.race_settings[target_race].tier
-    then
-        building_tier_cache[target_race] = Table.array_combine(
-            global.race_settings[target_race].current_command_centers_tier,
-            global.race_settings[target_race].current_support_structures_tier
-        )
-        building_tier_cache_expiry[target_race] = global.race_settings[target_race].tier
-    end    
-
-    return building_tier_cache[target_race]
+    return global.race_settings[target_race].current_building_tier
 end
 
 function RaceSettingHelper.get_current_command_centers(target_race)
@@ -232,6 +220,9 @@ end
 
 function RaceSettingHelper.add_to_attack_meter(target_race, value)
     global.race_settings[target_race].attack_meter = math.min(global.race_settings[target_race].attack_meter + value, 999999)
+    if (value > 0) then
+        global.race_settings[target_race].attack_meter_total = global.race_settings[target_race].attack_meter_total + math.min(value, 999999)
+    end
 end
 
 function RaceSettingHelper.get_next_attack_threshold(target_race)
@@ -276,6 +267,29 @@ function RaceSettingHelper.add_killed_structure_count(target_race, count)
     global.race_settings[target_race].structure_killed_count = global.race_settings[target_race].structure_killed_count + count
 end
 
+function RaceSettingHelper.refresh_current_tier(race_name)
+    local race_settings = global.race_settings[race_name]
+    local i = 1
 
+    race_settings.current_units_tier = {}
+    race_settings.current_turrets_tier = {}
+    race_settings.current_command_centers_tier = {}
+    race_settings.current_support_structures_tier = {}
+    race_settings.current_building_tier = {}
+
+    while i <= race_settings.tier do
+        race_settings.current_units_tier = Table.array_combine(race_settings.current_units_tier, race_settings.units[i])
+        race_settings.current_turrets_tier = Table.array_combine(race_settings.current_turrets_tier, race_settings.turrets[i])
+        race_settings.current_command_centers_tier = Table.array_combine(race_settings.current_command_centers_tier, race_settings.command_centers[i])
+        race_settings.current_support_structures_tier = Table.array_combine(race_settings.current_support_structures_tier, race_settings.support_structures[i])
+        i = i + 1
+    end
+
+    race_settings.current_building_tier =  Table.array_combine(
+        race_settings.current_command_centers_tier,
+        race_settings.current_support_structures_tier
+    )
+    global.race_settings[race_name] = race_settings
+end
 
 return RaceSettingHelper
