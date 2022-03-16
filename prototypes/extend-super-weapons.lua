@@ -89,8 +89,6 @@ if mods['space-exploration'] and data.raw["projectile"]["se-plague-rocket"] then
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
 
-    log(serpent.block(entity['action']['action_delivery']['target_effects'][1]['action']['action_delivery']['target_effects']))
-
     --Layer1 10K (30000 @ area 2) (4500 @ 85%)
     entity['action']['action_delivery']['target_effects'][1]['action']['action_delivery']['target_effects'][1]['damage']['amount'] =
         entity['action']['action_delivery']['target_effects'][1]['action']['action_delivery']['target_effects'][1]['damage']['amount'] * 3
@@ -133,7 +131,6 @@ end
 -- K2 antimatter rocket, antimatter-artillery-projectile, atomic-artillery
 if mods['Krastorio2'] then
     local entity = util.table.deepcopy(data.raw["artillery-projectile"]["atomic-artillery"])
-    log(serpent.block(entity))
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({entity})

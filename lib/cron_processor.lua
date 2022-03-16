@@ -40,7 +40,7 @@ function CronProcessor.init_globals()
     global.one_minute_cron = global.one_minute_cron or Queue()
     global.thirty_seconds_cron = global.thirty_seconds_cron or Queue()
     global.ten_seconds_cron = global.ten_seconds_cron or Queue()
-    global.three_seconds_cron = global.three_second_cron or Queue()
+    global.three_seconds_cron = global.three_seconds_cron or Queue()
     global.one_second_cron = global.one_second_cron or Queue()
 end
 
@@ -48,7 +48,7 @@ function CronProcessor.rebuild_queue()
     Queue.load(global.one_minute_cron)
     Queue.load(global.thirty_seconds_cron)
     Queue.load(global.ten_seconds_cron)
-    Queue.load(global.three_second_cron)
+    Queue.load(global.three_seconds_cron)
     Queue.load(global.one_second_cron)
 end
 
