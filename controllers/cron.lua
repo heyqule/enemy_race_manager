@@ -27,6 +27,6 @@ Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
     ErmCron.process_1_sec_queue()
 end)
 
-Event.on_nth_tick(ErmConfig.THREE_SECOND_CRON, function(event)
+Event.on_nth_tick(ErmConfig.THREE_SECONDS_CRON, function(event)
     ErmCron.process_3_sec_queue()
 end)
