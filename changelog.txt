@@ -1,9 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.14.2
+Date: 2022-04-01
+
+  Bugfixes:
+    - Fixed an issue where race level up did not trigger map processor to update buildings.
+    - Fixed a missing translation in setting.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.14.1
 Date: 2022-03-16
 
   Bugfixes:
-    - Fix a crash caused by cron scheduler
+    - Fixed a crash caused by cron scheduler
     - Removed some debug log()
 
 ---------------------------------------------------------------------------------------------------
