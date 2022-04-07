@@ -100,6 +100,17 @@ local refreshable_settings = {
     }
 }
 
+---
+--- Only assign empty as erm_vanilla in control phase
+---
+local get_selected_race_value = function(value)
+    if(value == 'empty' and global) then
+        return 'erm_vanilla'
+    end
+
+    return value
+end
+
 local is_enemy_race = function(name)
     local helper_mods = {
         erm_terran=true,
@@ -261,27 +272,27 @@ function ErmConfig.mapgen_is_one_race_per_surface()
 end
 
 function ErmConfig.positive_axis_race()
-    return settings.startup['enemyracemanager-2way-group-enemy-positive'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-2way-group-enemy-positive'].value)
 end
 
 function ErmConfig.negative_axis_race()
-    return settings.startup['enemyracemanager-2way-group-enemy-negative'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-2way-group-enemy-negative'].value)
 end
 
 function ErmConfig.top_left_race()
-    return settings.startup['enemyracemanager-4way-top-left'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-4way-top-left'].value)
 end
 
 function ErmConfig.top_right_race()
-    return settings.startup['enemyracemanager-4way-top-right'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-4way-top-right'].value)
 end
 
 function ErmConfig.bottom_left_race()
-    return settings.startup['enemyracemanager-4way-bottom-left'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-4way-bottom-left'].value)
 end
 
 function ErmConfig.bottom_right_race()
-    return settings.startup['enemyracemanager-4way-bottom-right'].value
+    return get_selected_race_value(settings.startup['enemyracemanager-4way-bottom-right'].value)
 end
 
 function ErmConfig.build_style()
@@ -372,7 +383,6 @@ end
 function ErmConfig.initialize_races_data()
     global.installed_races = {MOD_NAME}
     global.active_races = {[MOD_NAME] = true}
-    global.active_races_num = 1
 
     for name, _ in pairs(game.active_mods) do
         if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
@@ -385,7 +395,6 @@ function ErmConfig.initialize_races_data()
             [ErmConfig.positive_axis_race()] = true,
             [ErmConfig.negative_axis_race()] = true
         }
-        global.active_races_num = 2
     elseif ErmConfig.mapgen_is_4_races_split() then
         global.active_races = {
             [ErmConfig.top_left_race()] = true,
@@ -393,15 +402,15 @@ function ErmConfig.initialize_races_data()
             [ErmConfig.bottom_left_race()] = true,
             [ErmConfig.bottom_right_race()] = true
         }
-        global.active_races_num = 4
     else
         for name, _ in pairs(game.active_mods) do
             if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
                 global.active_races[name] = true
-                global.active_races_num = global.active_races_num + 1
             end
         end
     end
+
+    global.active_races_num = Table.size(global.active_races)
 
     for key, _ in pairs(global.active_races) do
         Table.insert(global.active_races_names, key)

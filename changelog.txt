@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.14.3
+Date: 2022-04-07
+
+  Bugfixes:
+    - Fixed a crash when processing super weapon attack point with 2 race split and same races for both axes.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.14.2
 Date: 2022-04-01
 
