@@ -23,10 +23,10 @@ if DEBUG_MODE then
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
-    ErmConfig.ONE_MINUTE_CRON = 10 * defines.time.second + 1
-    ErmConfig.THIRTY_SECONDS_CRON = 5 * defines.time.second + 1
+    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
+    ErmConfig.THIRTY_SECONDS_CRON = 3 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
-    ErmConfig.THREE_SECONDS_CRON = defines.time.second / 1 + 1
+    ErmConfig.THREE_SECONDS_CRON = defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
@@ -55,6 +55,7 @@ ErmConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
 ErmConfig.RACE_MODE_PREFIX = 'erm_'
 
 ErmConfig.MAX_LEVELS = 20
+ErmConfig.MAX_ELITE_LEVELS = 5
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
@@ -92,6 +93,10 @@ local refreshable_settings = {
         'enemyracemanager-flying-squad-chance',
         'enemyracemanager-dropship-squad-enable',
         'enemyracemanager-dropship-squad-chance',
+        'enemyracemanager-featured-squad-chance',
+        'enemyracemanager-elite-squad-enable',
+        'enemyracemanager-elite-squad-attack-points',
+        'enemyracemanager-elite-squad-level',
         'enemyracemanager-precision-strike-flying-unit-enable',
         'enemyracemanager-precision-strike-flying-unit-chance',
         'enemyracemanager-precision-strike-warning',
@@ -334,6 +339,22 @@ end
 
 function ErmConfig.dropship_chance()
     return get_global_setting_value('enemyracemanager-dropship-squad-chance')
+end
+
+function ErmConfig.featured_squad_chance()
+    return get_global_setting_value('enemyracemanager-featured-squad-chance')
+end
+
+function ErmConfig.elite_squad_enable()
+    return get_global_setting_value('enemyracemanager-elite-squad-enable')
+end
+
+function ErmConfig.elite_squad_attack_points()
+    return get_global_setting_value('enemyracemanager-elite-squad-attack-points')
+end
+
+function ErmConfig.elite_squad_level()
+    return get_global_setting_value('enemyracemanager-elite-squad-level')
 end
 
 function ErmConfig.flying_squad_precision_enabled()

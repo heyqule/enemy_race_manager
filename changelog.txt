@@ -1,4 +1,35 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.15.0
+Date: ???
+
+  Features:
+    ---- Featured squad ----
+    - this spawns a signature squad from each race.
+    - e.g a team of zergling and ultralisk.  Please refer to race mods changelog for details
+    - Default spawn chance is 25%
+    ---- Elite squad ----
+    - this spawn higher level squads.  Default elite level is your current level + 2 (adjustable, 1 - 5).
+    - Units are about 20-30% tougher when they are at level 25 comparing to level 20.
+    - this squad utilizes featured squads.
+    - they spawn based on the accumulated attack points. (default 50000 points, adjustable)
+    - Max elite unit levels are up to level 25.
+    - ON by default, starts when race tier == 3. (0.8 evolution factor)
+    ---------------------
+    - These new squads start to spawn when they reach level 3.
+    - Add Remote API support to spawn featured group and elite group
+
+  Changes:
+    - Re-added "nuke biter" button to kill bugged very high level units in early game.
+    - Change min_expansion_cooldown to 4mins instead of 2min for ERM Roach World presets.
+    - Adjusted unit health algo. levels 2 - 4 health have significantly lowered to balance health raise between levels. Level 5 - 19 have approx +/- 5% changes. Level 20 stays the same.
+    - Refactor custom attack handling (dropships and proxy builder)
+    --- Biter Race Changes ---
+    - logistic bot will no longer spawn from regular flying attack squad.
+    - logistic bot unit drop timer changed from 15-10s to 45-30s
+    - added {'behemoth-spitter', 'behemoth-biter'} to featured group
+    - added {'distractor','destroyer'} to flying featured group
+
+---------------------------------------------------------------------------------------------------
 Version: 1.14.3
 Date: 2022-04-07
 

@@ -56,9 +56,9 @@ function makeLevelTurrets(level, type, health_cut_ratio)
     return turret
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     data:extend({ makeLevelTurrets(i, 'small-explosive-worm-turret') })
     data:extend({ makeLevelTurrets(i, 'medium-explosive-worm-turret') })
     data:extend({ makeLevelTurrets(i, 'big-explosive-worm-turret') })

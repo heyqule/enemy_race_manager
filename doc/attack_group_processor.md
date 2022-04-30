@@ -15,7 +15,7 @@ Once a surface is found, it calls pick_gathering_location to pick a unit spawnin
 
 If both surface and spawn_location are found, it calls generate_unit_queue() to generate the attack group.
 
-generate_unit_queue() build a queue to generate 5 units every second.  
+generate_unit_queue() build a queue to generate X units every second.  
 
 Once the group has built, it will assign the proper attack strategy.
 

@@ -79,7 +79,7 @@ function Debug_RemoteAPI.exec_attack_group(race_name)
     )
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'generate_attack_group', 'erm_zerg')
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_attack_group', 'erm_zerg', 150)
 function Debug_RemoteAPI.generate_attack_group(race_name, size)
     size = size or 150
     ErmAttackGroupProcessor.generate_group(
@@ -89,7 +89,7 @@ function Debug_RemoteAPI.generate_attack_group(race_name, size)
     )
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'generate_flying_group', 'erm_zerg')
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_flying_group', 'erm_zerg', 40)
 function Debug_RemoteAPI.generate_flying_group(race_name, size)
     size = size or 40
     ErmAttackGroupProcessor.generate_group(
@@ -100,7 +100,7 @@ function Debug_RemoteAPI.generate_flying_group(race_name, size)
     )
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'generate_dropship_group', 'erm_zerg')
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_dropship_group', 'erm_zerg', 20)
 function Debug_RemoteAPI.generate_dropship_group(race_name, size)
     size = size or 20
     ErmAttackGroupProcessor.generate_group(
@@ -111,11 +111,84 @@ function Debug_RemoteAPI.generate_dropship_group(race_name, size)
     )
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_featured_group', 'erm_zerg', 100, 1)
+function Debug_RemoteAPI.generate_featured_group(race_name, size, squad_id)
+    if ErmRaceSettingsHelper.has_featured_squad(race_name) then
+        size = size or 100
+        squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+        ErmAttackGroupProcessor.generate_group(
+                race_name,
+                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                size,
+                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED,
+                squad_id
+        )
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_featured_flying_group', 'erm_zerg', 50, 1)
+function Debug_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
+    if ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
+        size = size or 50
+        squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+        ErmAttackGroupProcessor.generate_group(
+                race_name,
+                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                size,
+                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                squad_id
+        )
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_elite_featured_group', 'erm_zerg', 100, 1)
+function Debug_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
+    if ErmRaceSettingsHelper.has_featured_squad(race_name) then
+        size = size or 100
+        squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+        ErmAttackGroupProcessor.generate_group(
+                race_name,
+                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                size,
+                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED,
+                squad_id,
+                true
+        )
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'generate_elite_featured_flying_group', 'erm_zerg', 50, 1)
+function Debug_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squad_id)
+    if ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
+        size = size or 50
+        squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+        ErmAttackGroupProcessor.generate_group(
+                race_name,
+                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                size,
+                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                squad_id,
+                true
+        )
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'exec_elite_group', 'erm_zerg')
+function Debug_RemoteAPI.exec_elite_group(race_name, attack_points)
+    attack_points = attack_points or 3000
+    ErmAttackGroupProcessor.exec_elite_group(race_name, game.forces[ErmForceHelper.get_force_name_from(race_name)], attack_points)
+end
+
 --- Usage: remote.call('enemy_race_manager_debug', 'add_points_to_attack_meter', 500000)
 function Debug_RemoteAPI.add_points_to_attack_meter(value)
     for name, _ in pairs(global.race_settings) do
         ErmRaceSettingsHelper.add_to_attack_meter(name, value)
     end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'set_accumulated_attack_meter', 'erm_zerg', 500000)
+function Debug_RemoteAPI.set_accumulated_attack_meter(name, value)
+    ErmRaceSettingsHelper.set_accumulated_attack_meter(name, value)
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'level_up', 20)

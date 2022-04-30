@@ -78,9 +78,9 @@ function makeLevelSpawners(level, type)
     return spawner
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     if settings.startup["ab-enable-nest"].value then
         data:extend({ makeLevelSpawners(i, 'armoured-biter-spawner') })
     else

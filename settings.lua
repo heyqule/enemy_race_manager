@@ -402,12 +402,49 @@ data:extend {
         order = "enemyracemanager-403"
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-featured-squad-chance",
+        description = "enemyracemanager-featured-squad-chance",
+        setting_type = "runtime-global",
+        default_value = 25,
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
+        order = "enemyracemanager-405"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-elite-squad-enable",
+        description = "enemyracemanager-elite-squad-enable",
+        setting_type = "runtime-global",
+        default_value = false,
+        order = "enemyracemanager-407"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-elite-squad-attack-points",
+        description = "enemyracemanager-elite-squad-attack-points",
+        setting_type = "runtime-global",
+        default_value = 60000,
+        minimum_value = 10000,
+        maximum_value = 100000,
+        order = "enemyracemanager-408"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-elite-squad-level",
+        description = "enemyracemanager-elite-squad-level",
+        setting_type = "runtime-global",
+        default_value = 2,
+        minimum_value = 1,
+        maximum_value = 5,
+        order = "enemyracemanager-409"
+    },
+    {
         type = "bool-setting",
         name = "enemyracemanager-precision-strike-flying-unit-enable",
         description = "enemyracemanager-precision-strike-flying-unit-enable",
         setting_type = "runtime-global",
         default_value = true,
-        order = "enemyracemanager-404"
+        order = "enemyracemanager-440"
     },
     {
         type = "int-setting",
@@ -416,7 +453,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 25,
         allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
-        order = "enemyracemanager-405"
+        order = "enemyracemanager-441"
     },
     {
         type = "bool-setting",
@@ -424,7 +461,7 @@ data:extend {
         description = "enemyracemanager-precision-strike-warning",
         setting_type = "runtime-global",
         default_value = true,
-        order = "enemyracemanager-406"
+        order = "enemyracemanager-442"
     },
     {
         type = "bool-setting",
@@ -432,7 +469,7 @@ data:extend {
         description = "enemyracemanager-time-based-enable",
         setting_type = "runtime-global",
         default_value = true,
-        order = "enemyracemanager-420"
+        order = "enemyracemanager-450"
     },
     {
         type = "int-setting",
@@ -441,7 +478,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 2,
         allowed_values = {1, 2, 3, 5, 8, 10, 15, 20},
-        order = "enemyracemanager-421"
+        order = "enemyracemanager-451"
     },
 }
 
