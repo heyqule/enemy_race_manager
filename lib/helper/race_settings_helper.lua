@@ -243,7 +243,6 @@ end
 
 function RaceSettingHelper.set_accumulated_attack_meter(target_race, value)
     global.race_settings[target_race].attack_meter_total = value
-    log(global.race_settings[target_race].attack_meter_total)
 end
 
 function RaceSettingHelper.get_last_accumulated_attack_meter(target_race)
@@ -391,5 +390,14 @@ function RaceSettingHelper.has_featured_squad(target_race)
 
     return true
 end
+
+function RaceSettingHelper.get_total_featured_squads(target_race)
+    return global.race_settings[target_race]['featured_groups_total'] or 0
+end
+
+function RaceSettingHelper.get_total_featured_flying_squads(target_race)
+    return global.race_settings[target_race]['featured_flying_groups_total'] or 0
+end
+
 
 return RaceSettingHelper

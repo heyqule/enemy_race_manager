@@ -215,7 +215,7 @@ function ERM_DetailWindow.confirm(event)
 
     local owner = game.players[event.element.player_index]
     ERM_DetailWindow.hide(owner)
-    ERM_DetailWindow.update_all()
+    ERM_MainWindow.update_all()
 end
 
 function ERM_DetailWindow.replace_enemy(event)
@@ -224,7 +224,7 @@ function ERM_DetailWindow.replace_enemy(event)
         local owner = game.players[event.element.player_index]
         SurfaceProcessor.assign_race(owner.surface, nameToken[1])
         ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
-        ERM_DetailWindow.update_all()
+        ERM_MainWindow.update_all()
     end
 end
 
@@ -396,7 +396,7 @@ end
 function ERM_MainWindow.reset_default(event)
     for _, surface in pairs(game.surfaces) do
         ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
-        ERM_DetailWindow.update_all()
+        ERM_MainWindow.update_all()
     end
 end
 

@@ -12,7 +12,7 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         {
             type = "ammo-damage",
             ammo_category = "artillery-shell",
-            modifier = 0.25
+            modifier = 0.33
         }
 )
 

@@ -267,12 +267,9 @@ function AttackGroupProcessor.add_to_group_cron(arg)
 end
 
 function AttackGroupProcessor.exec(race_name, force, attack_points)
-    local group_tracker = get_group_tracker(race_name)
-    if group_tracker then
+    if get_group_tracker(race_name) then
         return false
     end
-
-    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
     local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance()) and ErmRaceSettingsHelper.get_level(race_name) > 1
@@ -312,6 +309,12 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
 end    
 
 function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack)
+    if get_group_tracker(race_name) then
+        return false
+    end
+
+    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
+
     local surface = pick_surface(race_name)
     local center_location = pick_gathering_location(surface, force, race_name)
     if surface and center_location then
@@ -377,8 +380,7 @@ end
 
 -- Spawn Elite Group
 function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
-    local group_tracker = get_group_tracker(race_name)
-    if group_tracker then
+    if get_group_tracker(race_name) then
         return false
     end
 
@@ -386,8 +388,6 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
         not ErmRaceSettingsHelper.has_featured_squad(race_name) then
         return false
     end
-
-    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
     local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance())

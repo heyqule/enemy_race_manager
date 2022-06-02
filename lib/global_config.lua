@@ -223,8 +223,9 @@ function ErmConfig.get_max_attack_range()
     return current_range
 end
 
-function ErmConfig.get_max_projectile_range()
-    return ErmConfig.get_max_attack_range() * 2
+function ErmConfig.get_max_projectile_range(multipler)
+    multipler = multipler or 1
+    return 64 * multipler
 end
 
 

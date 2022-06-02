@@ -58,11 +58,16 @@ end
 function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local surface = game.surfaces[event.surface_index]
     local nameToken = get_name_token(event.source_entity.name)
-    local level = nameToken[3]
+    local level = tonumber(nameToken[3])
+
+    if level > ErmConfig.MAX_LEVELS then
+        level = ErmConfig.MAX_LEVELS
+    end
+
     local position = event.source_position
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. level
+    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 8, true)

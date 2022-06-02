@@ -415,7 +415,7 @@ data:extend {
         name = "enemyracemanager-elite-squad-enable",
         description = "enemyracemanager-elite-squad-enable",
         setting_type = "runtime-global",
-        default_value = false,
+        default_value = true,
         order = "enemyracemanager-407"
     },
     {

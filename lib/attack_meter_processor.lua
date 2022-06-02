@@ -149,7 +149,7 @@ function AttackMeterProcessor.form_group(race_name, force)
         local group_created = false
         local elite_attack_point_threshold = ErmConfig.elite_squad_attack_points()
         local accumulated_attack_meter = ErmRaceSettingsHelper.get_accumulated_attack_meter(race_name)
-        local last_accumulated_attack_meter = ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name)
+        local last_accumulated_attack_meter = ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
         if ErmConfig.elite_squad_enable() and ErmRaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
             group_created = ErmAttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
             if group_created then

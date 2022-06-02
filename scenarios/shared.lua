@@ -42,24 +42,45 @@ function ScenarioHelper.spawn_concrete(surface)
 end
 
 function ScenarioHelper.set_tech_level(force, level)
-    level = level - 8
+
     for _, tech in pairs(force.technologies) do
         tech.researched=false
         force.set_saved_technology_progress(tech, 0)
     end
-    force.research_all_technologies()
+    force.enable_all_technologies()
+    force.enable_all_recipes()
 
-    if level > 0 then
+    if level >= 8 then
+        level = level - 8
+        force.research_all_technologies()
         for i=1,level do
             force.research_all_technologies()
+        end
+    else
+        local techs = {
+            'physical-projectile-damage-',
+            'stronger-explosives-',
+            'refined-flammables-',
+            'energy-weapons-damage-',
+            'worker-robots-speed-',
+            'laser-shooting-speed-',
+            'weapon-shooting-speed-',
+        }
+        for i=1, level do
+            for _, techname in pairs(techs) do
+                local tech = force.technologies[techname..tostring(i)]
+                if tech then
+                    tech.researched = true
+                end
+            end
         end
     end
 end
 
-function ScenarioHelper.set_enemy_params(level)
-    remote.call('enemy_race_manager_debug','set_evolution_factor', 1.0)
+function ScenarioHelper.set_enemy_params(level, tier, factor)
+    remote.call('enemy_race_manager_debug','set_evolution_factor', factor)
     remote.call('enemy_race_manager_debug','level_up', level)
-    remote.call('enemy_race_manager_debug', 'set_tier', 3)
+    remote.call('enemy_race_manager_debug', 'set_tier', tier)
     remote.call('enemy_race_manager_debug', 'attack_group_chunk_index')
 end
 

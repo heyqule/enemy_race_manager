@@ -9,9 +9,9 @@ local armor_change_resistance = function(percentage_value, fixed_value)
     return {
         { type = "acid", percent = percentage_value, decrease = fixed_value },
         { type = "poison", percent = percentage_value, decrease = fixed_value },
-        { type = "physical", percent = percentage_value, decrease = fixed_value },
+        { type = "physical", percent = percentage_value, decrease = fixed_value},
         { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value * 3 },
+        { type = "explosion", percent = percentage_value, decrease = fixed_value},
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value }
@@ -24,7 +24,7 @@ local vehicle_change_resistance = function(percentage_value, fixed_value)
         { type = "poison", percent = percentage_value, decrease = fixed_value },
         { type = "physical", percent = percentage_value, decrease = fixed_value },
         { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value * 5 },
+        { type = "explosion", percent = percentage_value, decrease = fixed_value},
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value },
@@ -59,15 +59,17 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     data.raw['electric-turret']['laser-turret']['max_health'] = 1200
 
     -- Buff vehicles
-    data.raw['car']['car']['max_health'] = data.raw['car']['car']['max_health'] * 3
-    data.raw['car']['car']['resistances'] = vehicle_change_resistance(75, 5)
-    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 2
-    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 25)
-    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 15)
+    data.raw['car']['car']['max_health'] = data.raw['car']['car']['max_health'] * 5
+    data.raw['car']['car']['resistances'] = vehicle_change_resistance(50, 0)
+    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 2.5
+    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 10)
+    data.raw['spider-vehicle']['spidertron']['max_health'] = data.raw['spider-vehicle']['spidertron']['max_health'] * 2
+    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 5)
+
 
     -- Buff vehicle gun
     data.raw['gun']['vehicle-machine-gun']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['tank-machine-gun']['attack_parameters']['damage_modifier'] = 2
+    data.raw['gun']['tank-machine-gun']['attack_parameters']['damage_modifier'] = 3
     data.raw['gun']['tank-flamethrower']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['tank-cannon']['attack_parameters']['damage_modifier'] = 2
     data.raw['gun']['spidertron-rocket-launcher-1']['attack_parameters']['damage_modifier'] = 2

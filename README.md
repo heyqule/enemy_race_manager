@@ -1,36 +1,28 @@
 # Enemy Race Manager
-This mod adds support to have multiple races of enemies with distinct looks & abilities. It also adds various enhancements to enemy races.  Such as enemy leveling, enemy base rapid expansion, enemy attack waves such as flyers squad and dropship squad.
-
-It also provide an easy to use [LuaRemote](https://lua-api.factorio.com/latest/LuaRemote.html) interface to add new enemy races. Please refer to the demos below.
-
-**I hope someone with art skills can come up with some new original races.**
+This mod adds support to have multiple races of enemies with distinct looks & abilities. It also adds various enhancements to enemy races.  Such as enemy leveling, enemy base rapid expansion, custom enemy attack groups such as flyers squad and dropship squad.
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
+### Featured Videos:
 ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
-
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
+ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 
-### 1.14.0 feature highlight
-- Launching rocket will add attack point for a randomly selected race or primary race of the surface. (default: ON, 200 points)
-- Using super weapon (e.g Nukes) will add attack point for a randomly selected race or primary race of the surface. (default: ON, 300 points)
-- Supported super weapon from these mods: space-exploration, AtomicArtillery, M.I.R.V, Ion Cannon SE
-- Using super weapon may cause enemy to send its survived units to your base. (Up to MAX_GROUP_SIZE)
-- New attribute to track accumulated attack points for each race. (To be used for future features.)
-- Landmines now slow enemy for 30s, up from 5s. Increase damage by 3x 
-- Enemy unit spawn timer tweak.  Tier 2 units takes 1.5x longer to spawn, Tier 3 units takes 2x longer.
+### 1.15.0 feature highlight
+- Featured and Elite Featured Groups
+  - [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
+- Increased research bonus on artillery from 25% to 33%
+- Increased vehicles health
+- Re-added "nuke biter" button to kill bugged very high level units in early game.
+- Adjusted unit health algo. levels 2 - 4 health have lowered to balance health raise between levels. Level 5 - 19 have approx +/- 5% changes. Level 20 stays the same.
+- Remote API enhancement and [API doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+- Buffed vehicles and artillery shell.
+- 
 
-### New race demo
+### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
 
 Youtube: [https://youtu.be/phLRReAjxHA?t=180](https://youtu.be/phLRReAjxHA?t=180)
-
-Tips on defense: 
-- A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
-- Build multiple layers of turrets in early game.  Repairing can be tedious without automated bot repairs.
-- You may add "Robot World Continued" or "Nanobots: Early Bots" to automate repairs in early game.  
-
-
 
 New Enemy Races:
 
@@ -44,6 +36,11 @@ New Enemy Races:
 
 Player Controllable Units:
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
+
+Tips on defense:
+- A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
+- Build multiple layers of turrets in early game.  Repairing can be tedious without automated bot repairs.
+- You may add "Robot World Continued" or "Nanobots: Early Bots" to automate repairs in early game.
 
 ### Features
 #### New enemies can be added as new forces
@@ -70,18 +67,14 @@ The evolution points is tied to force's hidden evolution factors (time, pollutio
 * {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
 * evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
-* level_multiplier default to 1. 
-
-Level Curve Multiplier
-* You should consider changing "Level Curve Multiplier" to higher value if you are using expensive recipes or any big mod that makes weapon tech harder to research like Space Exploration.**
-* Space Exploration players may want to use 3 - 5 as level curve multiplier, since weapon tech upgrades require more advanced recipes and takes longer to upgrade.**
+* level_multiplier default to 1.
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters.
 
 #### Tiered unit spawns
-New races may have up to 3 tiers of unit-spawners and turrets.  This applies to enemy base expansion.
+New races may have up to 3 tiers of unit-spawners and turrets. 
 
-* 0 - 0.4 evolution factor use tier 1 spawns
+* 0 - 0.4 evolution factor uses tier 1 units & spawns
 * 0.4 adds tier 2
 * 0.8 adds tier 3
 
@@ -177,9 +170,16 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * Time based attack wave after enemy level to 3. Default to ON
     * It adds points to attack meter every minute.
     * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
-    * Default setting, 2%, takes about 50 mins if you are playing defensively.
+    * Default setting is 2%, takes about 50 mins if you are playing peacefully.
 
-### Free for all [BETA]
+##### Featured Groups and Elite Featured Groups
+* Featured group are group with predefined unit types. Watch the following video for examples. 
+* [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
+* Elite Featured Groups have the enemy level of current level + N
+  * N can be up to 5 level higher. (default: 2)
+  * Elite group spawn whenever accumulated attack point reach a threshold interval (default: 60000)
+
+### Free for all 
 This can be enabled in startup setting tab.
 
 * Player entity health multiplied by 12.5x
@@ -213,14 +213,13 @@ Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compati
 ### Commands
 * /ERM_GetRaceSettings
 
+### Remote API Support
+* [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
 ### Roadmap
-- Elite Group spawns
-- Boss base encounters
-
-Details:
 https://github.com/heyqule/enemy_race_manager/projects/1
 
 ### Uninstall

@@ -18,5 +18,5 @@ PLAYER_SUPER_WEAPON_ATTACK = 'emptk-sw'
 PLAYER_PLANET_PURIFIER_ATTACK = 'emptk-pp'
 -- Super Weapon: Counter attack
 PLAYER_SUPER_WEAPON_COUNTER_ATTACK = 'empck-sw'
--- Planet Purifier:: Counter attack
+-- Planet Purifier: Counter attack
 PLAYER_PLANET_PURIFIER_COUNTER_ATTACK = 'empck-pp'
