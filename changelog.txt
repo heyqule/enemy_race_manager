@@ -37,7 +37,7 @@ Date: 2022-06-06
     - Increased tank health from 4000 to 5000
     - Increased car health from 1350 to 2250
     - Slightly lowered car, tank, spidertron overall damage resistances.
-    - Reduced explosion damage reduction on vehicles (tank, spidertron, car), as explosion friendly fire has been removed.  The explosive damage reduction made vehicles nearly invincible when fighting low level units.
+    - Reduced explosion damage reduction on vehicles (tank, spidertron, car), as explosion friendly fire has been removed.
     --- Biter Race Changes ---
     - logistic bot will no longer spawn from regular flying attack squad.
     - logistic bot unit drop timer changed from 15-10s to 45-30s

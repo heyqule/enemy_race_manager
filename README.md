@@ -3,21 +3,21 @@ This mod adds support to have multiple races of enemies with distinct looks & ab
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
-### Featured Videos:
-ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
-ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
-ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
+### Feature Videos:
+- ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
+- ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
+- ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 
 ### 1.15.0 feature highlight
 - Featured and Elite Featured Groups
   - [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
-- Increased research bonus on artillery from 25% to 33%
-- Increased vehicles health
+  - Elite group units can be adjusted up to level 25.
+- Increased explosive research bonus on artillery from 25% damage to 33% damage
+- Increased vehicles health, lowered resistances.
 - Re-added "nuke biter" button to kill bugged very high level units in early game.
 - Adjusted unit health algo. levels 2 - 4 health have lowered to balance health raise between levels. Level 5 - 19 have approx +/- 5% changes. Level 20 stays the same.
 - Remote API enhancement and [API doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
-- Buffed vehicles and artillery shell.
-- 
+
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -47,7 +47,6 @@ Tips on defense:
 
 Manage new race as new enemy force.  Each race has its own force statistics
 
-
 #### 4 difficulty levels
 
 Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
@@ -62,7 +61,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 * Advanced, 20, outside of gun turret range.
 
 #### Enemy Unit Leveling
-The evolution points is tied to force's hidden evolution factors (time, pollution and kill spawner).
+The evolution points is tied to force's hidden evolution factors (time, pollution and enemy kills).
 
 * {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
@@ -113,7 +112,7 @@ One race per surface/planet
 
 * randomly assign a race for each surface / planet.
 * It's for Space Exploration.
-* The race of a planet can be changed using replace function from UI.
+* The race of a planet can be changed using replace race button from UI.
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
 
@@ -146,12 +145,17 @@ Partial formation is build based on cc > support > turret priority.
 Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102)
 
 * Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
-* Enemy will send out an army to attack when a killed threshold is reached.  The check happens every 5mins.
+* Enemy will send out an army to attack when a killed threshold is reached.  The check happens every few minutes.
 * These attack groups are independent of pollution.
-* The default threshold is around 3000 points(~150 units) per attack group. The threshold is configurable.
-* When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets.
+* The default threshold is around 3000 points(~150 units) per attack group. 
+  * The threshold is configurable.
+  * The threshold randomly reset after each attack.
+* When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets with player structure.
 * Launching rockets and using super weapons may increase attack points.
-* More features and specialized attack groups are coming in later releases.
+* There are multiple types of attack groups.
+
+##### General attack groups 
+* This group includes all available units.
 
 ##### Flying attack groups (ON by default)
 * When "Flying Squad" is enabled, enemy may send out dedicate flying attackers to your base.
@@ -167,17 +171,17 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * Early attack warning on mini map. Default to ON.
 
 ##### Time based attack wave (ON be default)
-* Time based attack wave after enemy level to 3. Default to ON
+* Time based attack wave starts after enemy level reach 3. Default to ON
     * It adds points to attack meter every minute.
-    * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5mins respectively to reach next wave.
-    * Default setting is 2%, takes about 50 mins if you are playing peacefully.
+    * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5 minutes respectively to reach next wave.
+    * Default setting is 2%, takes about 50 minutes if you are playing peacefully.
 
 ##### Featured Groups and Elite Featured Groups
-* Featured group are group with predefined unit types. Watch the following video for examples. 
+* Featured group are groups with predefined unit types. Please watch the following video for examples. 
 * [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
-* Elite Featured Groups have the enemy level of current level + N
-  * N can be up to 5 level higher. (default: 2)
-  * Elite group spawn whenever accumulated attack point reach a threshold interval (default: 60000)
+* Elite featured groups have the enemy level of current level + N
+  * Default is 2 level higher than current level. It can be set up to 5 level higher.
+  * They spawn based on accumulated attack points.  Default is every 60000 points.
 
 ### Free for all 
 This can be enabled in startup setting tab.
@@ -188,6 +192,19 @@ This can be enabled in startup setting tab.
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
+### Commands
+* /ERM_GetRaceSettings - show detailed race settings
+
+### Remote API Support
+* [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+
+### Known Issues
+* Defense turrets from new force attack player in peaceful mode.
+  * If you know how to fix it, please message me.
+* High level units rarely escape the async level processing matrix.
+  * Some players treat them as early bosses. :)
+  * If you can't defeat them, please use the nuke biter button in ERM UI to kill it.
+
 ### Mod Compatibility
 
 #### Resource Spawner Overhaul
@@ -196,9 +213,8 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 #### Space Exploration
 * Supports one race per planet!
 
-#### Krastorio2 (Requires 1.2+, in beta atm)
+#### Krastorio2 (Requires 1.2+)
 * New races support creep generation
-* Custom bullets can hit air
 
 #### Rampant AI (limited)
 * It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
@@ -206,18 +222,10 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 
 #### Armoured Biters & Explosive Biters & Cold Biters
 
-#### New Game Plus
+#### New Game Plus and more
 
 Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility details.
 
-### Commands
-* /ERM_GetRaceSettings
-
-### Remote API Support
-* [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
-
-### Known Issues
-* Defense turrets from new force attack player in peaceful mode. If you know how to fix it, please message me.
 
 ### Roadmap
 https://github.com/heyqule/enemy_race_manager/projects/1
