@@ -22,25 +22,61 @@ function ERM_WeaponRig.get_shotgun_bullet(category)
     return ammo_type
 end
 
-function ERM_WeaponRig.remove_damage_from_cannon_projectile(data, name)
+function ERM_WeaponRig.standardize_cannon_projectile(data, name)
     data['name'] = name
     data['piercing_damage'] = 9999
-    table.remove(data['action']['action_delivery']['target_effects'], 2)
-    table.remove(data['action']['action_delivery']['target_effects'], 1)
+    data['action']['action_delivery']['target_effects'][1] = {
+        type = "damage",
+        damage = {amount = 6.5, type = "physical"}
+    }
+    data['action']['action_delivery']['target_effects'][2] = {
+        type = "damage",
+        damage = {amount = 3.5, type = "explosion"}
+    }
     return data
 end
 
-function ERM_WeaponRig.remove_damage_from_explosive_cannon_projectile(data, name)
+function ERM_WeaponRig.standardize_explosive_cannon_projectile(data, name)
     data['name'] = name
     data['piercing_damage'] = 9999
-    table.remove(data['action']['action_delivery']['target_effects'], 1)
-    table.remove(data['final_action']['action_delivery']['target_effects'], 2)
+    data['action']['action_delivery']['target_effects'][1] = {
+        type = "damage",
+        damage = {amount = 3.5, type = "explosion"}
+    }
+    data['final_action']['action_delivery']['target_effects'][2] = {
+        type = "nested-result",
+        action =
+        {
+            type = "area",
+            force = "not-same",
+            radius = 3,
+            action_delivery =
+            {
+                type = "instant",
+                target_effects =
+                {
+                    {
+                        type = "damage",
+                        damage = {amount = 6.5, type = "explosion"}
+                    },
+                    {
+                        type = "create-entity",
+                        entity_name = "explosion"
+                    }
+                }
+            }
+        }
+    }
+
     return data
 end
 
-function ERM_WeaponRig.remove_damage_from_rocket(data, name)
+function ERM_WeaponRig.standardize_rocket_damage(data, name)
     data['name'] = name
-    table.remove(data['action']['action_delivery']['target_effects'], 2)
+    data['action']['action_delivery']['target_effects'][2] = {
+        type = "damage",
+        damage = {amount = 10, type = "explosion"}
+    }
     return data
 end
 

@@ -31,6 +31,11 @@ local get_name_token = function(name)
     return global.force_entity_name_cache[name]
 end
 
+local FEATURE_RACE_NAME = 1
+local FEATURE_RACE_SPAWN_DATA = 2
+local FEATURE_RACE_SPAWN_CACHE = 4
+local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+
 local CustomAttackHelper = {}
 
 function CustomAttackHelper.valid(event, race_name)
@@ -38,31 +43,31 @@ function CustomAttackHelper.valid(event, race_name)
             String.find(event.source_entity.name, race_name, 1, true) ~= nil
 end
 
-function CustomAttackHelper.get_unit(unit_names, race_name)
-    if global.custom_attack_current_tiers == nil then
-        global.custom_attack_current_tiers = {}
-        global.custom_attack_current_tiers_tick =  0
+function CustomAttackHelper.get_unit(race_name, unit_type)
+    local race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+
+    if race_settings == nil or race_settings[unit_type] == nil then
+        return
     end
 
-    local current_tiers = global.custom_attack_current_tiers
-    if current_tiers[race_name] == nil and
-        ErmConfig.is_cache_expired(global.custom_attack_current_tiers_tick, ErmConfig.CONFIG_CACHE_LENGTH)
-    then
-        current_tiers[race_name] = remote.call('enemy_race_manager', 'get_race_tier', race_name)
-        global.custom_attack_current_tiers = current_tiers
-        global.custom_attack_current_tiers_tick = game.tick
-    end
-    return unit_names[current_tiers[race_name]][Math.random(#unit_names[current_tiers[race_name]])]
+    local unit_data = race_settings[unit_type][race_settings.tier]
+
+    return unit_data[FEATURE_RACE_NAME][unit_data[FEATURE_RACE_SPAWN_CACHE][Math.random(unit_data[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local surface = game.surfaces[event.surface_index]
     local nameToken = get_name_token(event.source_entity.name)
-    local level = nameToken[3]
+    local level = tonumber(nameToken[3])
+
+    if level > ErmConfig.MAX_LEVELS then
+        level = ErmConfig.MAX_LEVELS
+    end
+
     local position = event.source_position
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. level
+    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 8, true)

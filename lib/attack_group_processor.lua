@@ -32,6 +32,8 @@ AttackGroupProcessor.CHUNK_CENTER_POINT = 16
 AttackGroupProcessor.GROUP_TYPE_MIXED = 1
 AttackGroupProcessor.GROUP_TYPE_FLYING = 2
 AttackGroupProcessor.GROUP_TYPE_DROPSHIP = 3
+AttackGroupProcessor.GROUP_TYPE_FEATURED = 4
+AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING = 5
 
 AttackGroupProcessor.GROUP_TIERS = {
     {1},
@@ -69,7 +71,7 @@ local set_group_tracker = function(race_name, value)
     global.group_tracker[race_name] = value
 end
 
-local get_unit_level = function(race_name)
+local get_unit_level_for_tier = function(race_name)
     local level = ErmRaceSettingsHelper.get_level(race_name) - 1
     if level == 0 then
         level = 1
@@ -78,30 +80,38 @@ local get_unit_level = function(race_name)
 end
 
 local can_spawn = function(chance_value)
-    local chance = math.random(1, 100)
-    local spawn_as = chance > (100 - chance_value)
-    return spawn_as
+    return  math.random(1, 100) > (100 - chance_value)
 end
 
 local pick_an_unit = function(race_name)
     local group_tracker = get_group_tracker(race_name)
     local current_tier = group_tracker.current_tier
     local unit_name = nil
+    local is_featured_group = false
+
     if group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_MIXED then
         unit_name = ErmRaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier)
     elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        unit_name = ErmRaceSettingsHelper.pick_an_flying_unit_from_tier(race_name, current_tier)
+        unit_name = ErmRaceSettingsHelper.pick_a_flying_unit_from_tier(race_name, current_tier)
     elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
-        unit_name = ErmRaceSettingsHelper.pick_an_dropship_unit(race_name)
+        unit_name = ErmRaceSettingsHelper.pick_dropship_unit(race_name)
+    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FEATURED then
+        unit_name = ErmRaceSettingsHelper.pick_featured_unit(race_name, group_tracker.featured_group_id)
+        is_featured_group = true
+    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING then
+        unit_name = ErmRaceSettingsHelper.pick_featured_flying_unit(race_name, group_tracker.featured_group_id)
+        is_featured_group = true
     else
         unit_name = ErmRaceSettingsHelper.pick_an_unit(race_name)
     end
 
-    group_tracker.current_tier_unit = group_tracker.current_tier_unit + 1
+    if not is_featured_group then
+        group_tracker.current_tier_unit = group_tracker.current_tier_unit + 1
 
-    if group_tracker.current_tier_unit == group_tracker.tiers[current_tier] then
-        group_tracker.current_tier_unit = 0
-        group_tracker.current_tier = math.min(current_tier + 1, ErmConfig.MAX_TIER)
+        if group_tracker.current_tier_unit == group_tracker.tiers[current_tier] then
+            group_tracker.current_tier_unit = 0
+            group_tracker.current_tier = math.min(current_tier + 1, ErmConfig.MAX_TIER)
+        end
     end
 
     return unit_name
@@ -116,7 +126,13 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
     local i = 0
     repeat
         local unit_name = pick_an_unit(race_name)
-        local unit_full_name = ErmRaceSettingsHelper.get_race_entity_name(race_name, unit_name)
+        local unit_full_name = nil
+        if group_tracker.is_elite_attack then
+            unit_full_name = ErmRaceSettingsHelper.get_race_entity_name(race_name, unit_name, ErmRaceSettingsHelper.get_level(race_name) + ErmConfig.elite_squad_level())
+        else
+            unit_full_name = ErmRaceSettingsHelper.get_race_entity_name(race_name, unit_name, ErmRaceSettingsHelper.get_level(race_name))
+        end
+
         local position = surface.find_non_colliding_position(unit_full_name, group.position,
                 AttackGroupProcessor.GROUP_AREA, 1)
         local entity = surface.create_entity({
@@ -180,7 +196,7 @@ local pick_gathering_location = function(surface, force, race_name)
     return surface.find_non_colliding_position(target_cc.name, target_cc.position, AttackGroupProcessor.GROUP_AREA, 1)
 end
 
-local generate_unit_queue = function(surface, center_location, force, race_name, units_number, group_type)
+local generate_unit_queue = function(surface, center_location, force, race_name, units_number, group_type, featured_group_id, is_elite_attack)
     if group_type == nil then
         group_type = AttackGroupProcessor.GROUP_TYPE_MIXED
     end
@@ -196,7 +212,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
     local tiers = nil
     local is_precision_attack = false
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level(race_name), ErmConfig.MAX_TIER) ]
+        tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level_for_tier(race_name), ErmConfig.MAX_TIER) ]
 
         local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
         local spawn_as_flying_unit_precision = can_spawn(ErmConfig.flying_squad_precision_chance())
@@ -224,7 +240,9 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = tiers_units,
         current_tier = 1,
         current_tier_unit = 0,
-        is_precision_attack = is_precision_attack
+        is_precision_attack = is_precision_attack,
+        is_elite_attack = is_elite_attack,
+        featured_group_id = featured_group_id
     })
 
     repeat
@@ -249,42 +267,58 @@ function AttackGroupProcessor.add_to_group_cron(arg)
 end
 
 function AttackGroupProcessor.exec(race_name, force, attack_points)
-    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / 20)
-    local group_tracker = get_group_tracker(race_name)
-    if group_tracker then
+    if get_group_tracker(race_name) then
         return false
     end
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance())
-    local status = false
-    --- Flying Squad starts at level 2.  Max tier at level 4
-    if flying_enabled and ErmRaceSettingsHelper.get_level(race_name) > 1 and
-            spawn_as_flying_squad then
+    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance()) and ErmRaceSettingsHelper.get_level(race_name) > 1
+    local spawn_as_featured_squad = can_spawn(ErmConfig.featured_squad_chance()) and ErmRaceSettingsHelper.get_tier(race_name) == 3
 
+    --- Try flying Squad. starts at level 2 and max tier at level 4
+    if flying_enabled and spawn_as_flying_squad then
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
         local spawn_as_dropship_squad = can_spawn(ErmConfig.dropship_chance())
 
-        if dropship_enabled and spawn_as_dropship_squad then
+        if spawn_as_featured_squad and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
+            --- Drop as featured flying group
+            local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
+            local units_number = math.min(math.ceil(attack_points / ErmRaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING, squad_id)
+        elseif dropship_enabled and spawn_as_dropship_squad then
+            --- Dropship Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
-            status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
         else
+            --- Regular Flying Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
-            status = AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
         end
     else
-        local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
-        status = AttackGroupProcessor.generate_group(race_name, force, units_number)
+        if spawn_as_featured_squad and ErmRaceSettingsHelper.has_featured_squad(race_name) then
+            --- Regular featured Group
+            local squad_id = ErmRaceSettingsHelper.get_featured_squad_id(race_name);
+            local units_number = math.min(math.ceil(attack_points / ErmRaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FEATURED, squad_id)
+        else
+            --- Mixed Group
+            local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number)
+        end
     end
-
-    return status
 end    
 
-function AttackGroupProcessor.generate_group(race_name, force, units_number, type)
+function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack)
+    if get_group_tracker(race_name) then
+        return false
+    end
+
+    AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
+
     local surface = pick_surface(race_name)
     local center_location = pick_gathering_location(surface, force, race_name)
     if surface and center_location then
-        generate_unit_queue(surface, center_location, force, race_name, units_number, type)
+        generate_unit_queue(surface, center_location, force, race_name, units_number, type, featured_group_id, is_elite_attack)
         return true
     end
 
@@ -342,6 +376,33 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
             group.set_autonomous()
         end
     end
+end
+
+-- Spawn Elite Group
+function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
+    if get_group_tracker(race_name) then
+        return false
+    end
+
+    if not ErmRaceSettingsHelper.has_featured_flying_squad(race_name) and
+        not ErmRaceSettingsHelper.has_featured_squad(race_name) then
+        return false
+    end
+
+    local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
+    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance())
+
+    if flying_enabled and spawn_as_flying_squad and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
+        local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
+        local units_number = math.min(math.ceil(attack_points / ErmRaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+        return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING, squad_id, true)
+    elseif ErmRaceSettingsHelper.has_featured_squad(race_name) then
+        local squad_id = ErmRaceSettingsHelper.get_featured_squad_id(race_name);
+        local units_number = math.min(math.ceil(attack_points / ErmRaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+        return AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FEATURED, squad_id, true)
+    end
+
+    return false
 end
 
 return AttackGroupProcessor

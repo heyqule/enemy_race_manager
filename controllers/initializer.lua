@@ -64,9 +64,29 @@ local addRaceSettings = function()
     race_settings.flying_units = {
         {'defender'},
         {'distractor', 'logistic-robot'},
-        {'destroyer', 'construction-robot'},
+        {'destroyer'},
     }
     race_settings.dropship = 'logistic-robot'
+    race_settings.droppable_units = {
+        {{'medium-spitter', 'medium-biter', 'defender'}, {1, 2, 1}},
+        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {1, 2, 1, 1}},
+        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {1, 2, 1, 1}},
+    }
+    race_settings.construction_buildings = {
+        {{'biter-spawner', 'spitter-spawner'}, {1, 1}},
+        {{ 'biter-spawner', 'spitter-spawner', 'big-worm-turret'}, {1, 1, 2}},
+        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'big-worm-turret' }, {1, 1, 1, 2}}
+    }
+    race_settings.featured_groups = {
+        --Unit list, spawn percentage, unit_cost
+        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 20},
+        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 20},
+    }
+    race_settings.featured_flying_groups = {
+        {{'distractor','destroyer'}, {2, 1}, 50},
+    }
+
+    ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
     remote.call('enemy_race_manager', 'register_race', race_settings)
 

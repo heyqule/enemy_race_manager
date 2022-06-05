@@ -60,9 +60,9 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     return biter
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     -- 1, 50 - 10, 175 - 20, 275 (org: 50)
     data:extend({ makeLevelEnemy(i, 'small-armoured-biter') })
     -- 1, 100 - 10, 350 - 20, 600 (org: 200)

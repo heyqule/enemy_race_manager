@@ -20,9 +20,9 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.spawn_concrete(surface)
     scenarios_helper.build_base(surface, blueprint_string)
     scenarios_helper.set_tech_level(force, 20)
-    scenarios_helper.set_enemy_params(20)
+    scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
-    scenarios_helper.set_game_speed(10)
+    scenarios_helper.set_game_speed(1)
 
     surface.freeze_daytime = true
     surface.daytime = 1

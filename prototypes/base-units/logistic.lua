@@ -42,8 +42,8 @@ local incremental_laser_modifier = 3
 
 -- Handles Attack Speed
 local attack_speed_multiplier = settings.startup["enemyracemanager-level-multipliers"].value
-local base_attack_speed = 900
-local incremental_attack_speed = 300
+local base_attack_speed = 2700
+local incremental_attack_speed = 900
 
 local attack_range = 3
 
@@ -188,8 +188,8 @@ function makeLogisticRobot(level)
     return robot
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     data:extend({ makeLogisticRobot(i) })
 end

@@ -166,9 +166,9 @@ local disable_level_spawner = function(type, name, level)
 end
 
 local disable_level_spawners = function()
-    local level = ErmConfig.MAX_LEVELS
+    local max_level = ErmConfig.MAX_LEVELS
 
-    for i = 1, level do
+    for i = 1, max_level do
         disable_level_spawner('unit-spawner', 'biter-spawner', i)
         disable_level_spawner('unit-spawner', 'spitter-spawner', i)
         disable_level_spawner('unit-spawner', 'roboport', i)

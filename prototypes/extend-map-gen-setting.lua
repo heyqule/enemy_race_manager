@@ -11,7 +11,7 @@ map_gen_settings['default']['erm-roach-world'] = {
     {
         enemy_expansion =
         {
-            min_expansion_cooldown = 2 * 3600,
+            min_expansion_cooldown = 4 * 3600,
             max_expansion_cooldown = 10 * 3600
         },
         difficulty_settings =
@@ -41,7 +41,7 @@ map_gen_settings['default']['erm-roach-death-world'] = {
         },
         enemy_expansion =
         {
-            min_expansion_cooldown = 2 * 3600,
+            min_expansion_cooldown = 4 * 3600,
             max_expansion_cooldown = 10 * 3600
         },
         pollution =

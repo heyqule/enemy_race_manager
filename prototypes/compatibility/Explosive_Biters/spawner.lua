@@ -76,8 +76,8 @@ function makeLevelSpawners(level, type)
     return spawner
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'explosive-biter-spawner') })
 end

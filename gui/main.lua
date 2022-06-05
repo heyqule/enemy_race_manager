@@ -209,31 +209,22 @@ local process_evolution_factor_slider = function(event, race_name)
 end
 
 function ERM_DetailWindow.confirm(event)
-    if element_valid(event) then
-        local nameToken = String.split(event.element.name, '/')
-        if nameToken[2] == ERM_DetailWindow.confirm_name then
-            process_level_slider(event, nameToken[1])
-            process_evolution_factor_slider(event, nameToken[1])
+    local nameToken = String.split(event.element.name, '/')
+    process_level_slider(event, nameToken[1])
+    process_evolution_factor_slider(event, nameToken[1])
 
-            ERM_MainWindow.require_update_all = true
-
-            local owner = game.players[event.element.player_index]
-            ERM_DetailWindow.hide(owner)
-        end
-    end
+    local owner = game.players[event.element.player_index]
+    ERM_DetailWindow.hide(owner)
+    ERM_MainWindow.update_all()
 end
 
 function ERM_DetailWindow.replace_enemy(event)
-    if element_valid(event) then
-        if String.find(event.element.name, "/replace_enemy", 1, true) then
-            local nameToken = String.split(event.element.name, '/')
-            if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
-                local owner = game.players[event.element.player_index]
-                SurfaceProcessor.assign_race(owner.surface, nameToken[1])
-                ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
-                ERM_MainWindow.require_update_all = true
-            end
-        end
+    local nameToken = String.split(event.element.name, '/')
+    if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
+        local owner = game.players[event.element.player_index]
+        SurfaceProcessor.assign_race(owner.surface, nameToken[1])
+        ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
+        ERM_MainWindow.update_all()
     end
 end
 
@@ -243,12 +234,10 @@ function ERM_DetailWindow.hide(player)
 end
 
 function ERM_DetailWindow.toggle_close(event)
-    if element_valid(event) then
         local owner = game.players[event.element.player_index]
-        if owner and event.element.name == "erm_detail_close_button" then
+        if owner then
             ERM_DetailWindow.hide(owner)
         end
-    end
 end
 
 --- Main Windows functions
@@ -333,9 +322,13 @@ function ERM_MainWindow.show(player)
         local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
         bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
         local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
-        button_pusher.style.width = ERM_MainWindow.window_width - 320
+        button_pusher.style.width = 150
         button_pusher.style.height = 24
         bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
+        local button_pusher_2 = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
+        button_pusher_2.style.width = 100
+        button_pusher_2.style.height = 24
+        bottom_flow.add { type = "button", name = "erm_nuke_biters", caption = { 'gui.nuke_biters' }, tooltip = { 'gui.nuke_biters_tooltip' }, style = 'red_button' }
     end
 end
 
@@ -369,59 +362,56 @@ function ERM_MainWindow.is_showing(player)
 end
 
 function ERM_MainWindow.toggle_main_window(event)
-    if element_valid(event) then
-        local owner = game.players[event.element.player_index]
-        if owner and event.element.name == "erm_toggle" then
-            local button_flow = mod_gui.get_button_flow(owner)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        local button_flow = mod_gui.get_button_flow(owner)
 
-            if ERM_MainWindow.is_hidden(owner) then
-                button_flow.erm_toggle.tooltip = { 'gui.hide-enemy-stats' }
-                ERM_MainWindow.show(owner)
-            else
-                button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
-                ERM_MainWindow.hide(owner)
-            end
-        end
-    end
-end
-
-function ERM_MainWindow.toggle_close(event)
-    if element_valid(event) then
-        local owner = game.players[event.element.player_index]
-        if owner and event.element.name == "erm_close_button" then
-            local button_flow = mod_gui.get_button_flow(owner)
+        if ERM_MainWindow.is_hidden(owner) then
+            button_flow.erm_toggle.tooltip = { 'gui.hide-enemy-stats' }
+            ERM_MainWindow.show(owner)
+        else
             button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
             ERM_MainWindow.hide(owner)
         end
     end
 end
 
+function ERM_MainWindow.toggle_close(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        local button_flow = mod_gui.get_button_flow(owner)
+        button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
+        ERM_MainWindow.hide(owner)
+    end
+end
+
 function ERM_MainWindow.open_detail_window(event)
-    if element_valid(event) then
-        local owner = game.players[event.element.player_index]
-        if owner and String.find(event.element.name, "/more_action", 1, true) then
-            nameToken = String.split(event.element.name, '/')
-            ERM_DetailWindow.show(owner, global.race_settings[nameToken[1]])
-        end
+    local owner = game.players[event.element.player_index]
+    if owner then
+        nameToken = String.split(event.element.name, '/')
+        ERM_DetailWindow.show(owner, global.race_settings[nameToken[1]])
     end
 end
 
 function ERM_MainWindow.reset_default(event)
-    if element_valid(event) then
-        if event.element.name == "erm_reset_default_bitter" then
-            for _, surface in pairs(game.surfaces) do
-                ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
-                ERM_MainWindow.require_update_all = true;
-            end
-        end
+    for _, surface in pairs(game.surfaces) do
+        ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
+        ERM_MainWindow.update_all()
     end
 end
 
 function ERM_MainWindow.kill_idle_units(event)
-    if element_valid(event) then
-        if event.element.name == "erm_clean_idle_biter" then
-            SurfaceProcessor.wander_unit_clean_up()
-        end
+    SurfaceProcessor.wander_unit_clean_up()
+end
+
+
+function ERM_MainWindow.nuke_biters(event)
+    local owner = game.players[event.element.player_index]
+    local surface = owner.surface
+    local pp = owner.position
+    local units = surface.find_entities_filtered({force=ForceHelper.get_all_enemy_forces(), radius=32, position=pp, type='unit'})
+    for _, entity in pairs(units) do
+        entity.destroy()
     end
 end
 

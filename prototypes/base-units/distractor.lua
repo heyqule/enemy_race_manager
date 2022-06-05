@@ -193,8 +193,8 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     return robot
 end
 
-local level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
 
-for i = 1, level do
+for i = 1, max_level do
     data:extend({ makeLevelCombatRobots(i, 'distractor') })
 end

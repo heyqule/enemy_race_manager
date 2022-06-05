@@ -25,7 +25,20 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, 
     if level == 1 then
         return base_health
     end
-    return Math.floor(base_health + (incremental_health * 1.25 * (level * multiplier / 100)))
+    local internal_multiplier = math.log(level) / 2.3965 * (level * multiplier / 100)
+
+    local extra_health = 0
+    if level <= 5 then
+        extra_health = level * 10 * level * 0.8
+    elseif level <= 10 then
+        extra_health = level * 40 - level * 40 * (level * 3 / 100)
+    elseif level <= 15 then
+        extra_health = level * 35 - level * 35 * (level * 4 / 100)
+    elseif level < 20 then
+        extra_health = level * 50 - level * 50 * (level * 5 / 100)
+    end
+
+    return Math.floor(base_health + (incremental_health * internal_multiplier) + extra_health)
 end
 
 -- Unit Health
@@ -66,7 +79,7 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, multipli
     if level == 1 then
         return base_speed
     end
-    return Math.max(base_speed - (incremental_speed * (level * multiplier / 100)), max_attack_speed)
+    return Math.max(base_speed - (incremental_speed * (Math.min(100, level * multiplier) / 100)), max_attack_speed)
 end
 
 -- Movement Speed
@@ -74,7 +87,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multip
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * (level * multiplier / 100)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
+    return base_speed + (incremental_speed * (Math.min(100, level * multiplier) / 100)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
 end
 
 -- unit healing (full heal in 120s)

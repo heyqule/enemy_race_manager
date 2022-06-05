@@ -3,6 +3,12 @@ local Table = require('__stdlib__/stdlib/utils/table')
 
 local RaceSettingHelper = {}
 
+local FEATURE_RACE_NAME = 1
+local FEATURE_RACE_SPAWN_DATA = 2
+local FEATURE_RACE_SPAWN_COST = 3
+local FEATURE_RACE_SPAWN_CACHE = 4
+local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+
 local find_unit_from_current_table = function(race_settings, unit_type, unit_name)
     local key = 'current_' .. unit_type .. '_tier'
     for index, value in pairs(race_settings[key]) do
@@ -167,7 +173,7 @@ function RaceSettingHelper.has_flying_unit(target_race)
     return true
 end
 
-function RaceSettingHelper.pick_an_flying_unit_from_tier(target_race, tier)
+function RaceSettingHelper.pick_a_flying_unit_from_tier(target_race, tier)
     local units = global.race_settings[target_race]['flying_units'][tier]
     local unit_name = units[math.random(1, #units)]
     return unit_name
@@ -181,11 +187,9 @@ function RaceSettingHelper.has_dropship_unit(target_race)
     return true
 end
 
-function RaceSettingHelper.pick_an_dropship_unit(target_race)
+function RaceSettingHelper.pick_dropship_unit(target_race)
     return global.race_settings[target_race]['dropship']
 end
-
-
 
 function RaceSettingHelper.is_command_center(target_race, name)
     local command_centers = global.race_settings[target_race]['current_command_centers_tier']
@@ -221,7 +225,7 @@ end
 function RaceSettingHelper.add_to_attack_meter(target_race, value)
     global.race_settings[target_race].attack_meter = math.min(global.race_settings[target_race].attack_meter + value, 999999)
     if (value > 0) then
-        global.race_settings[target_race].attack_meter_total = global.race_settings[target_race].attack_meter_total + math.min(value, 999999)
+        RaceSettingHelper.set_accumulated_attack_meter(target_race, global.race_settings[target_race].attack_meter_total + math.min(value, 999999))
     end
 end
 
@@ -231,6 +235,22 @@ end
 
 function RaceSettingHelper.set_next_attack_threshold(target_race, value)
     global.race_settings[target_race].next_attack_threshold = value
+end
+
+function RaceSettingHelper.get_accumulated_attack_meter(target_race)
+    return global.race_settings[target_race].attack_meter_total
+end
+
+function RaceSettingHelper.set_accumulated_attack_meter(target_race, value)
+    global.race_settings[target_race].attack_meter_total = value
+end
+
+function RaceSettingHelper.get_last_accumulated_attack_meter(target_race)
+    return global.race_settings[target_race].last_attack_meter_total
+end
+
+function RaceSettingHelper.set_last_accumulated_attack_meter(target_race, value)
+    global.race_settings[target_race].last_attack_meter_total = value
 end
 
 function RaceSettingHelper.get_evolution_base_point(target_race)
@@ -249,8 +269,8 @@ function RaceSettingHelper.get_tier(target_race)
     return global.race_settings[target_race].tier
 end
 
-function RaceSettingHelper.get_race_entity_name(target_race, name)
-    return target_race .. '/' .. name .. '/' .. RaceSettingHelper.get_level(target_race)
+function RaceSettingHelper.get_race_entity_name(target_race, name, level)
+    return target_race .. '/' .. name .. '/' .. level
 end
 
 function RaceSettingHelper.add_killed_units_count(target_race, count)
@@ -291,5 +311,93 @@ function RaceSettingHelper.refresh_current_tier(race_name)
     )
     global.race_settings[race_name] = race_settings
 end
+
+local process_spawn_chance_cache = function(featured_group)
+    featured_group[FEATURE_RACE_SPAWN_CACHE] = {}
+    for key, spawn_rate in pairs(featured_group[FEATURE_RACE_SPAWN_DATA]) do
+        for i = 1, spawn_rate, 1 do
+            table.insert(featured_group[FEATURE_RACE_SPAWN_CACHE], key)
+        end
+    end
+    featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE] = #featured_group[FEATURE_RACE_SPAWN_CACHE]
+end
+
+function RaceSettingHelper.process_unit_spawn_rate_cache(race_data)
+    if race_data.droppable_units then
+        for _, unit_tier in pairs(race_data.droppable_units) do
+            process_spawn_chance_cache(unit_tier)
+        end
+    end
+
+    if race_data.construction_buildings then
+        for _, unit_tier in pairs(race_data.construction_buildings) do
+            process_spawn_chance_cache(unit_tier)
+        end
+    end
+
+    if race_data.featured_groups then
+        for _, featured_groups in pairs(race_data.featured_groups) do
+            process_spawn_chance_cache(featured_groups)
+        end
+        race_data['featured_groups_total'] = #race_data.featured_groups
+    end
+
+    if race_data.featured_flying_groups then
+        for _, featured_groups in pairs(race_data.featured_flying_groups) do
+            process_spawn_chance_cache(featured_groups)
+        end
+        race_data['featured_flying_groups_total'] = #race_data.featured_flying_groups
+    end
+
+    return race_data
+end
+
+function RaceSettingHelper.get_featured_squad_id(race_name)
+    return math.random(1, global.race_settings[race_name]['featured_groups_total'])
+end
+
+function RaceSettingHelper.get_featured_flying_squad_id(race_name)
+    return math.random(1, global.race_settings[race_name]['featured_flying_groups_total'])
+end
+
+function RaceSettingHelper.get_featured_unit_cost(target_race, featured_group_id)
+    local featured_group = global.race_settings[target_race]['featured_groups'][featured_group_id]
+    return featured_group[FEATURE_RACE_SPAWN_COST];
+end
+
+function RaceSettingHelper.pick_featured_unit(target_race, featured_group_id)
+    local featured_group = global.race_settings[target_race]['featured_groups'][featured_group_id]
+    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1,featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
+end
+
+function RaceSettingHelper.pick_featured_flying_unit(target_race, featured_group_id)
+    local featured_group = global.race_settings[target_race]['featured_flying_groups'][featured_group_id]
+    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1,featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
+end
+
+function RaceSettingHelper.has_featured_flying_squad(target_race)
+    if global.race_settings[target_race]['featured_flying_groups'] == nil then
+        return false
+    end
+
+    return true
+end
+
+function RaceSettingHelper.has_featured_squad(target_race)
+    if global.race_settings[target_race]['featured_groups'] == nil then
+        return false
+    end
+
+    return true
+end
+
+function RaceSettingHelper.get_total_featured_squads(target_race)
+    return global.race_settings[target_race]['featured_groups_total'] or 0
+end
+
+function RaceSettingHelper.get_total_featured_flying_squads(target_race)
+    return global.race_settings[target_race]['featured_flying_groups_total'] or 0
+end
+
 
 return RaceSettingHelper
