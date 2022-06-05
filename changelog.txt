@@ -32,7 +32,7 @@ Date: 2022-06-06
     - Adjusted unit health algo. levels 2 - 4 health have lowered to balance health raise between levels. Level 5 - 19 have approx +/- 5% changes. Level 20 stays the same.
     - Refactored custom attack handling (dropships and proxy builder)
     - Changed max projectile range to 64 tiles by default.
-    - Increased Artillery damage bonus from 25% to 33% each level.
+    - Increased Artillery damage bonus from 25% to 33% for each strong explosive level.
     - Increased spidertron health from 3000 to 6000
     - Increased tank health from 4000 to 5000
     - Increased car health from 1350 to 2250
@@ -40,7 +40,7 @@ Date: 2022-06-06
     - Reduced explosion damage reduction on vehicles (tank, spidertron, car), as explosion friendly fire has been removed.
     - -- Biter Race Changes ---
     - logistic bot will no longer spawn from regular flying attack squad.
-    - logistic bot unit drop timer changed from 15-10s to 45-30s
+    - logistic bot unit cooldown changed from 15-10s to 45-30s
 
   Bugfixes:
     - Fix an issue which a custom group may stuck at gathering when calling a generating group function from remote API.
