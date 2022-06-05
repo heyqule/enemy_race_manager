@@ -3,24 +3,24 @@ Version: 1.15.0
 Date: 2022-06-06
 
   Features:
-    ---- Featured squad ----
+    - --- Featured squad ----
     - this spawns a signature squad from each race.
     - e.g a team of zergling and ultralisk.  Please refer to race mods changelog for details
     - Default spawn chance is 25%
-    ---------------------
-    ---- Elite squad ----
+    - ------------------
+    - --- Elite squad ----
     - this spawn higher level squads.  Default elite level is your current level + 2 (adjustable, 1 - 5).
     - Max elite unit levels are up to level 25.
     - Units have about 20-30% more HP and damage when they are at level 25, comparing to level 20.
     - this squad utilizes team formations from featured squads.
     - they spawn based on the accumulated attack points. (default 50000 points, adjustable)
     - ON by default. It starts to spawn when race tier reaches 3. (0.8 evolution factor)
-    ---------------------
-    ---- Biter Featured Squads ----
+    - --------------------
+    - --- Biter Featured Squads ----
     - added {'behemoth-spitter', 'behemoth-biter'} to featured group
-    ---- Biter Featured Flying Squads ----
+    - --- Biter Featured Flying Squads ----
     - added {'distractor','destroyer'} to flying featured group
-    ---------------------
+    - --------------------
     - Featured and elite squads start to spawn when they reach tier 3.
     - Added Remote API endpoint to spawn featured group and elite group
     - Added Remote API endpoint to add attack points to an enemy race.
@@ -38,7 +38,7 @@ Date: 2022-06-06
     - Increased car health from 1350 to 2250
     - Slightly lowered car, tank, spidertron overall damage resistances.
     - Reduced explosion damage reduction on vehicles (tank, spidertron, car), as explosion friendly fire has been removed.
-    --- Biter Race Changes ---
+    - -- Biter Race Changes ---
     - logistic bot will no longer spawn from regular flying attack squad.
     - logistic bot unit drop timer changed from 15-10s to 45-30s
 
