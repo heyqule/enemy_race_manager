@@ -159,3 +159,14 @@ AOE units are in higher range. Tier 3 AOE units generally take 300-400 range.
 ##### vision_distance Guideline:
 Ground: 30
 Air: 35
+
+##### Projectile max range
+call ERM_Config.get_max_projectile_range().  Default is 64 without multiplier.  The following example returns 128.
+```
+  action_delivery = {
+      type = "projectile",
+      projectile = "scout-rocket",
+      starting_speed = 0.3,
+      max_range = ERM_Config.get_max_projectile_range(2),
+  }
+```
