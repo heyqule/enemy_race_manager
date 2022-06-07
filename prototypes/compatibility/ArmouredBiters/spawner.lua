@@ -93,7 +93,7 @@ for i = 1, max_level do
             unitSet[#unitSet + 1] = { MOD_NAME .. "/behemoth-armoured-biter/" .. i, { { 0.9, 0.0 }, { 1.0, 0.35 * bb_r } } }
 
             if l_r > 0 then
-                unitSet[#unitSet + 1] = { MOD_NAME .. '/leviathan-armoured-biter/' .. level, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } }
+                unitSet[#unitSet + 1] = { MOD_NAME .. '/leviathan-armoured-biter/' .. i, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } }
             end
         end
     end

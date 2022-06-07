@@ -148,8 +148,8 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * Enemy will send out an army to attack when a killed threshold is reached.  The check happens every few minutes.
 * These attack groups are independent of pollution.
 * The default threshold is around 3000 points(~150 units) per attack group. 
-  * The threshold is configurable.
-  * The threshold randomly reset after each attack.
+    - The threshold is configurable.
+    - The threshold randomly reset after each attack.
 * When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets with player structure.
 * Launching rockets and using super weapons may increase attack points.
 * There are multiple types of attack groups.
@@ -177,11 +177,11 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
     * Default setting is 2%, takes about 50 minutes if you are playing peacefully.
 
 ##### Featured Groups and Elite Featured Groups
-* Featured group are groups with predefined unit types. Please watch the following video for examples. 
+* Featured group are groups with predefined unit types. Please watch the following video for examples.
 * [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
-* Elite featured groups have the enemy level of current level + N
-  * Default is 2 level higher than current level. It can be set up to 5 level higher.
-  * They spawn based on accumulated attack points.  Default is every 60000 points.
+* Elite featured groups have the enemy level of current level + 2 by default
+    * It can be set up to 5 level higher, which is level 25 max.  HP and damages at level 25 are about 20-30% more than level 20.
+    * They spawn based on accumulated attack points.  Default is every 60000 points.
 
 ### Free for all 
 This can be enabled in startup setting tab.
@@ -200,10 +200,10 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode.
-  * If you know how to fix it, please message me.
+    * If you know how to fix it, please message me.
 * High level units rarely escape the async level processing matrix.
-  * Some players treat them as early bosses. :)
-  * If you can't defeat them, please use the nuke biter button in ERM UI to kill it.
+    * Some players treat them as early bosses. :)
+    * If you can't defeat them, please use the nuke biter button in ERM UI to kill it.
 
 ### Mod Compatibility
 
