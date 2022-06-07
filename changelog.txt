@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.15.0
-Date: 2022-06-06
+Version: 1.15.1
+Date: 2022-06-07
 
   Bugfixes:
     - Fix a crash when leviathan armor biter has enabled.
