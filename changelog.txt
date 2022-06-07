@@ -2,6 +2,13 @@
 Version: 1.15.0
 Date: 2022-06-06
 
+  Bugfixes:
+    - Fix a crash when leviathan armor biter has enabled.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.15.0
+Date: 2022-06-06
+
   Features:
     - --- Featured squad ----
     - this spawns a signature squad from each race.
