@@ -264,7 +264,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "erm-reinforced-stone-wall",
             2,
             nil,
-            4,
+            10,
             "stone-wall",
             50
     )
