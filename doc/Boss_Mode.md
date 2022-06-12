@@ -2,6 +2,7 @@
 
 - The Boss Base are discovered by sending PSI-Emitter satellites. 10% chance, not configurable.
 - Only one boss base can exist in a game at a time, regardless of races / surfaces.
+- Add BOSS_GROUP_SIZE setting (default 100)
 
 ## Boss Base functionalities
 ####When the psi-emitter launched
