@@ -18,7 +18,7 @@
 - They join default enemy force, erm_vanilla.
 - The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
 
-#### Rampant AI (limited)
+#### Rampant AI (limited, may have interferences)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
 - It may interfere with ERM custom attack groups.
 - Rampant enemies override ERM enemies!  DO NOT enable them.
