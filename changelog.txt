@@ -1,9 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.2
-Date: 2022-06-13
+Date: 2022-06-22
 
   Changes:
     - Reinforced wall now take 10 wall to produce 10 reinforced wall. Upped from 4.
+    - Updated surface exclusion list
+
+  Bugfixes:
+    - Added support to set neutral for neutral forces which created from other mods. (fixes new races attack indestructible entities in Ribbon Maze mod)
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.1
