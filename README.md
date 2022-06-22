@@ -216,8 +216,9 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 #### Krastorio2 (Requires 1.2+)
 * New races support creep generation
 
-#### Rampant AI (limited)
+#### Rampant AI (limited, not properly tested)
 * It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
+* May have interference with ERM custom attack groups.
 * Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Armoured Biters & Explosive Biters & Cold Biters

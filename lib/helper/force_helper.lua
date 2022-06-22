@@ -11,6 +11,10 @@ local Table = require('__stdlib__/stdlib/utils/table')
 
 local ForceHelper = {}
 
+local NEUTRAL_FORCES = {
+    'maze-terraforming-targets',
+}
+
 function ForceHelper.init_globals()
     global.force_entity_name_cache = global.force_entity_name_cache or {}
     global.force_race_name_cache = global.force_race_name_cache or {}
@@ -61,6 +65,15 @@ function ForceHelper.set_friends(game, force_name, is_friend)
     end
 end
 
+function ForceHelper.set_neutral_force(game, force_name)
+    for _, force in pairs(NEUTRAL_FORCES) do
+        if game.forces[force] ~= nil then
+            game.forces[force].set_cease_fire(force_name, true);
+            game.forces[force_name].set_cease_fire(force, true);
+        end
+    end
+end
+
 function ForceHelper.split_name(name)
     return String.split(name, '/')
 end
@@ -92,24 +105,31 @@ function ForceHelper.refresh_all_enemy_forces()
 end
 
 -- Whether a surface can assign enemy
--- Based off rampant 2.0's surface exclusion
+-- Based off Rampant 3.0's surface exclusion
 function ForceHelper.can_have_enemy_on(surface)
     if surface.valid then
         local surface_name = surface.name
-        if global.surface_inclusion_list[surface_name] == nil and 
+        if global.surface_inclusion_list[surface_name] == nil and
             (
                 global.surface_exclusion_list[surface_name] == true or
+
                 string.find(surface_name, "Factory floor") or
                 string.find(surface_name, " Orbit") or
                 string.find(surface_name, "clonespace") or
                 string.find(surface_name, "BPL_TheLabplayer") or
-                string.find(surface_name, "starmap-") or
-                (surface_name == "aai-signals") or
+                string.find(surface_name, "starmap%-") or
                 string.find(surface_name, "NiceFill") or
                 string.find(surface_name, "Asteroid Belt") or
                 string.find(surface_name, "Vault ") or
+                string.find(surface_name, "spaceship") or
+                string.find(surface_name,"bpsb%-lab%-") or
+
+                (surface_name == "aai-signals") or
                 (surface_name == "RTStasisRealm") or
-                string.find(surface_name, "spaceship")
+                (surface_name == "minime_dummy_dungeon") or
+                (surface_name == "minime-preview-character") or
+                (surface_name == "pipelayer") or
+                (surface_name == "beltlayer")
             )
         then        
             global.surface_exclusion_list[surface_name] = true
