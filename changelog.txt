@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.15.3
+Date: 2022-xx-xx
+
+  Changes:
+    - Buffed HP on reinforced belt from 510 to 680
+    - Buffed HP on reinforced inserter from 480 to 600
+    - Buffed HP on reinforced pipe from 500 to 600
+    - Buffed HP on reinforced underground pipe from 600 to 750
+    - Changed setting description for 1.1.61 Setting UI Changes.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.15.2
 Date: 2022-06-22
 

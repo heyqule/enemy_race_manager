@@ -156,7 +156,6 @@ data:extend({
 if settings.startup['enemyracemanager-enhance-defense'].value == true then
     -- Red belt
     -- 3x health, 33% resistance
-    -- cost 2 original, 1 structure, 2 concrete > 2 belt
     add_entity(
             "transport-belt",
             "fast-transport-belt",
@@ -178,12 +177,11 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- Blue belt
     -- 3x health, 33% resistance
-    -- cost 2 original, 1 structure, 2 concrete > 2 belt
     add_entity(
             "transport-belt",
             "express-transport-belt",
             "erm-reinforced-express-transport-belt",
-            3,
+            4,
             nil,
             4,
             "logistics-3"
@@ -192,7 +190,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "underground-belt",
             "express-underground-belt",
             "erm-reinforced-express-underground-belt",
-            3,
+            4,
             nil,
             4,
             "logistics-3"
@@ -200,12 +198,11 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- fast inserter
     -- 3x health, 33% resistance
-    -- cost 1 original, 1 structure, 1 concrete > 1 reinforced
     add_entity(
             "inserter",
             "fast-inserter",
             "erm-reinforced-fast-inserter",
-            3,
+            4,
             nil,
             2,
             "fast-inserter"
@@ -213,13 +210,12 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
 
     -- Pipe / underground pipe
-    -- 5x health, 33% resistance
-    -- cost 2 original, 1 structure, 2 concrete > 2 reinforced
+    -- 6x health, 33% resistance
     add_entity(
             "pipe",
             "pipe",
             "erm-reinforced-pipe",
-            5,
+            6,
             nil,
             4
     )
@@ -227,7 +223,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "pipe-to-ground",
             "pipe-to-ground",
             "erm-reinforced-pipe-to-ground",
-            4,
+            5,
             nil,
             4
     )
