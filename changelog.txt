@@ -7,7 +7,13 @@ Date: 2022-xx-xx
     - Buffed HP on reinforced inserter from 480 to 600
     - Buffed HP on reinforced pipe from 500 to 600
     - Buffed HP on reinforced underground pipe from 600 to 750
+    - Buffed HP on reinforced underground belt from 600 to 750
     - Changed setting description for 1.1.61 Setting UI Changes.
+    - Level processor check interval can now be changed in startup setting. Default: 60 minutes, Options: 5, 15, 30, 60
+    - Improve unit performance by changing enemies distraction_cooldown from 20 to 300.
+
+  Bugfixes:
+    - Fixed The enemy level requirement multiplier is not taken into account when manually setting a race's level. (Github Issue 22)
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.2
@@ -35,21 +41,20 @@ Date: 2022-06-06
     - --- Featured squad ----
     - this spawns a signature squad from each race.
     - e.g a team of zergling and ultralisk.  Please refer to race mods changelog for details
-    - Default spawn chance is 25%
-    - ------------------
+    - Default spawn chance is 25%.
+    - --- / Featured squad ----
     - --- Elite squad ----
     - this spawn higher level squads.  Default elite level is your current level + 2 (adjustable, 1 - 5).
     - Max elite unit levels are up to level 25.
     - Units have about 20-30% more HP and damage when they are at level 25, comparing to level 20.
     - this squad utilizes team formations from featured squads.
     - they spawn based on the accumulated attack points. (default 60000 points, adjustable)
-    - ON by default. It starts to spawn when race tier reaches 3. (0.8 evolution factor)
-    - --------------------
+    - ON by default. It starts to spawn when race tier reaches 3. (0.8 evolution factor).
+    - --- / Elite squad ----
     - --- Biter Featured Squads ----
     - added {'behemoth-spitter', 'behemoth-biter'} to featured group
     - --- Biter Featured Flying Squads ----
-    - added {'distractor','destroyer'} to flying featured group
-    - --------------------
+    - added {'distractor', 'destroyer'} to flying featured group
     - Featured and elite squads start to spawn when they reach tier 3.
     - Added Remote API endpoint to spawn featured group and elite group
     - Added Remote API endpoint to add attack points to an enemy race.
@@ -126,7 +131,7 @@ Date: 2022-03-04
 Version: 1.13.4
 Date: 2022-02-11
 
-  Change:
+  Changes:
     - Added "spaceship" and "RTStasisRealm" surface to exclusion list.
     - map process queue and attack group indexer now ignore surfaces in exclusion list
 
