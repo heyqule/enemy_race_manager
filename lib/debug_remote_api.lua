@@ -239,4 +239,9 @@ function Debug_RemoteAPI.check_race_level_curve()
     ErmLevelProcessor.print_level_curve_table()
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'set_evolution_base_point'，‘erm_zerg', 100)
+function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
+    global.race_settings[race_name].evolution_base_point = value
+end
+
 return Debug_RemoteAPI

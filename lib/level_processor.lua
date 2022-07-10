@@ -193,7 +193,7 @@ function LevelManager.get_calculated_current_level(race_setting)
             break
         end
 
-        if key < max_level and race_setting.evolution_point < value then
+        if key < max_level and race_setting.evolution_point < value * ErmConfig.get_level_curve_multiplier()  then
             return key
         end
     end
@@ -202,7 +202,7 @@ function LevelManager.get_calculated_current_level(race_setting)
 end
 
 function LevelManager.canLevelByCommand(race_settings, force, race_name, target_level)
-    local calculated_level = LevelManager.get_calculated_current_level(race_settings[race_name], force)
+    local calculated_level = LevelManager.get_calculated_current_level(race_settings[race_name])
 
     if target_level < calculated_level then
         return false

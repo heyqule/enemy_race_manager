@@ -29,7 +29,7 @@ if DEBUG_MODE then
     ErmConfig.THREE_SECONDS_CRON = defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 60 * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = settings.startup['enemyracemanager-level-up-check-interval'].value * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
