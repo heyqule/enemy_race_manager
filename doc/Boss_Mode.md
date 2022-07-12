@@ -1,8 +1,8 @@
 ## Boss Mode 
 
-- The Boss Base are discovered by sending PSI-Emitter satellites. 10% chance, not configurable.
+- The Boss Base are discovered by sending PSI-Emitter satellites.
 - Only one boss base can exist in a game at a time, regardless of races / surfaces.
-- Add BOSS_GROUP_SIZE setting (default 100, range 50 - 500)
+- Add BOSS_GROUP_SIZE setting (default 100, range 50 - 1000)
 
 ## Boss Base functionalities
 ####When the psi-emitter launched
@@ -33,9 +33,11 @@
 - Spawn regular spawners / defenses every nauvis day.  within radius of 128.
 - It will perform long range siege attack on player structures (miner, rocket-silos, artillery) every nauvis day.  A 5 radius attack that does 1000 damage.
 
-#### When the base is despawned or dead.
-- Boss base despawns after some time. It will send 3 nukes like attack around your base. (miner, rocket-silos, artillery) 
-- Beating a boss group will spawn an unkillable infinite chest with low-mid level intermediate products for 30 nauvis days (210 minutes, 3 and half hours).
+#### When the base is despawned
+- Boss base despawns after some time. It will spawn a 2x size group to attack your base.
+
+#### When the base is killed by force
+- Beating a boss group will spawn an unkillable infinite chest with low-mid level intermediate products for 14 nauvis days (97mins, one and half hours).
 
 ##Boss Tiers
 - T1 
