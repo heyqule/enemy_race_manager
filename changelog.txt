@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.0
+
+  Features:
+    - Added Boss mode.  Boss spawner is revealed by launching a Psi Tracking Satellite.
+    - Added Psi Tracking Satellite. It reveals a boss spawner and returns 1200 space science pack.
+    - Once boss spawner revealed, launching additional Psi Tracking satellite will not spawn new boss until the existing boss has either killed or despawned.
+
+  Changes:
+    - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of assigning to automatic group.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.15.5
 Date: 2022-09-02
 

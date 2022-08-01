@@ -22,7 +22,7 @@ function DebugHelper.print_translate_to_console(mode_name, name, level)
 end
 
 function DebugHelper.print(message)
-    if (DEBUG_MODE) then
+    if DEBUG_MODE then
         print(message)
     end
 end

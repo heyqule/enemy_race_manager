@@ -24,9 +24,9 @@ if DEBUG_MODE then
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
-    ErmConfig.THIRTY_SECONDS_CRON = 3 * defines.time.second + 1
+    ErmConfig.FIFTEEN_SECONDS_CRON = 3 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
-    ErmConfig.THREE_SECONDS_CRON = defines.time.second + 1
+    ErmConfig.TWO_SECONDS_CRON = defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = settings.startup['enemyracemanager-level-up-check-interval'].value * defines.time.minute
@@ -35,9 +35,9 @@ else
 
     -- +1 to spread the job across all ticks
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
-    ErmConfig.THIRTY_SECONDS_CRON = 30 * defines.time.second + 1
+    ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
-    ErmConfig.THREE_SECONDS_CRON = 3 * defines.time.second + 1
+    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
 
@@ -57,6 +57,10 @@ ErmConfig.RACE_MODE_PREFIX = 'erm_'
 ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
+ErmConfig.BOSS_DESPAWN_TIMER = {30, 45, 60, 90, 120}
+ErmConfig.BOSS_LEVELS = {25,35,50,75,99}
+ErmConfig.BOSS_BUILDING_HITPOINT = {2000000, 4000000, 8000000, 16000000, 32000000}
+
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
 if DEBUG_MODE then
@@ -65,6 +69,7 @@ if DEBUG_MODE then
 end
 
 ErmConfig.FFA_MULTIPLIER = 10
+ErmConfig.BUILD_GROUP_CAP = 50
 
 local refreshable_settings = {
     startup = {
@@ -76,6 +81,7 @@ local refreshable_settings = {
     global = {
         'enemyracemanager-max-gathering-groups',
         'enemyracemanager-max-group-size',
+        'enemyracemanager-boss-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-accelerator',
@@ -400,6 +406,10 @@ end
 
 function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
+end
+
+function ErmConfig.boss_group_size()
+    return get_global_setting_value('enemyracemanager-boss-group-size')
 end
 
 function ErmConfig.initialize_races_data()

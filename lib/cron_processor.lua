@@ -38,17 +38,17 @@ end
 
 function CronProcessor.init_globals()
     global.one_minute_cron = global.one_minute_cron or Queue()
-    global.thirty_seconds_cron = global.thirty_seconds_cron or Queue()
+    global.fifteen_seconds_cron = global.fifteen_seconds_cron or Queue()
     global.ten_seconds_cron = global.ten_seconds_cron or Queue()
-    global.three_seconds_cron = global.three_seconds_cron or Queue()
+    global.two_seconds_cron = global.two_seconds_cron or Queue()
     global.one_second_cron = global.one_second_cron or Queue()
 end
 
 function CronProcessor.rebuild_queue()
     Queue.load(global.one_minute_cron)
-    Queue.load(global.thirty_seconds_cron)
+    Queue.load(global.fifteen_seconds_cron)
     Queue.load(global.ten_seconds_cron)
-    Queue.load(global.three_seconds_cron)
+    Queue.load(global.two_seconds_cron)
     Queue.load(global.one_second_cron)
 end
 
@@ -59,7 +59,7 @@ end
 
 function CronProcessor.add_30_sec_queue(request, ...)
     local arg = {...}
-    global.thirty_seconds_cron({request, arg})
+    global.fifteen_seconds_cron({request, arg})
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
@@ -67,9 +67,9 @@ function CronProcessor.add_10_sec_queue(request, ...)
     global.ten_seconds_cron({request, arg})
 end
 
-function CronProcessor.add_3_sec_queue(request, ...)
+function CronProcessor.add_2_sec_queue(request, ...)
     local arg = {...}
-    global.three_seconds_cron({request, arg})
+    global.two_seconds_cron({request, arg})
 end
 
 function CronProcessor.add_1_sec_queue(request, ...)
@@ -81,12 +81,12 @@ function CronProcessor.process_1_min_queue()
     process_all_jobs(global.one_minute_cron)
 end
 
-function CronProcessor.process_30_sec_queue()
-    process_all_jobs(global.thirty_seconds_cron)
+function CronProcessor.process_15_sec_queue()
+    process_all_jobs(global.fifteen_seconds_cron)
 end
 
-function CronProcessor.process_3_sec_queue()
-    process_all_jobs(global.three_seconds_cron)
+function CronProcessor.process_2_sec_queue()
+    process_all_jobs(global.two_seconds_cron)
 end
 
 function CronProcessor.process_10_sec_queue()

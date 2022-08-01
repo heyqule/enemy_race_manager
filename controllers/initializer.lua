@@ -22,6 +22,8 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
+
 local ErmGui = require('__enemyracemanager__/gui/main')
 
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
@@ -119,7 +121,7 @@ local prepare_world = function()
     ErmAttackGroupChunkProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
 
-    ErmCron.add_3_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
+    ErmCron.add_2_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
 end
 
 local conditional_events = function()
@@ -168,6 +170,7 @@ local init_globals = function()
     ErmCron.init_globals()
     ErmAttackGroupChunkProcessor.init_globals()
     ErmAttackGroupSurfaceProcessor.init_globals()
+    ErmBossProcessor.init_globals()
 end
 
 --- Init events

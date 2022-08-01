@@ -16,6 +16,7 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 
 local Debug_RemoteAPI = {}
 
@@ -242,6 +243,20 @@ end
 --- Usage: remote.call('enemy_race_manager_debug', 'set_evolution_base_point'，‘erm_zerg', 100)
 function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
     global.race_settings[race_name].evolution_base_point = value
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'spawn_boss')
+function Debug_RemoteAPI.spawn_boss()
+    local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
+    if rocket_silos and rocket_silos[1] then
+        ErmBossProcessor.reset()
+        ErmBossProcessor.exec(rocket_silos[1])
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'reset_boss')
+function Debug_RemoteAPI.reset_boss()
+    ErmBossProcessor.reset()
 end
 
 return Debug_RemoteAPI

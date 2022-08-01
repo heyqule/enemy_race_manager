@@ -535,7 +535,7 @@ function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     return entity
 end
 
-function AttackGroupChunkProcessor.pick_attack_location(surface, group)
+function AttackGroupChunkProcessor.pick_attack_location(surface)
     local position_node = nil
     local retry = 0
     repeat

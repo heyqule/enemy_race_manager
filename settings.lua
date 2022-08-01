@@ -248,6 +248,16 @@ data:extend {
         order = "enemyracemanager-002"
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-boss-group-size",
+        description = "enemyracemanager-boss-group-size",
+        setting_type = "runtime-global",
+        default_value = 100,
+        minimum_value = 50,
+        maximum_value = 1000,
+        order = "enemyracemanager-003"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-build-style",
         description = "enemyracemanager-build-style",
@@ -486,7 +496,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = {1, 2, 3, 5, 8, 10, 15, 20},
+        allowed_values = {1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90, 99},
         order = "enemyracemanager-451"
     },
 }

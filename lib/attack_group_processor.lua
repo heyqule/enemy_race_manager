@@ -165,7 +165,11 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                     group.surface.print({
                         'description.message-incoming-precision-attack',
                         race_name,
-                        '[gps='..(position.x + AttackGroupProcessor.CHUNK_CENTER_POINT)..','..(position.y + AttackGroupProcessor.CHUNK_CENTER_POINT)..','..group.surface.name..']'
+                        ErmSurfaceProcessor.get_gps_message(
+                                (position.x + AttackGroupProcessor.CHUNK_CENTER_POINT),
+                                (position.y + AttackGroupProcessor.CHUNK_CENTER_POINT),
+                                group.surface.name
+                        )
                     }, {r=1,g=0,b=0})
                 end
             end

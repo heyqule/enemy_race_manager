@@ -116,4 +116,8 @@ function SurfaceProcessor.get_enemy_on(surface_name)
     return races[math.random(1, ErmConfig.get_enemy_races_total())]
 end
 
+function SurfaceProcessor.get_gps_message(x, y, surface_name)
+    return '[gps='..x..','..y..','..surface_name..']'
+end
+
 return SurfaceProcessor

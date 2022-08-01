@@ -12,6 +12,7 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 
@@ -31,7 +32,7 @@ local onUnitFinishGathering = function(event)
     local max_settler = global.settings.enemy_expansion_max_settler
 
     if max_settler == nil then
-        max_settler = math.min(50, game.map_settings.enemy_expansion.settler_group_max_size)
+        max_settler = math.min(ErmConfig.BUILD_GROUP_CAP, game.map_settings.enemy_expansion.settler_group_max_size)
         global.settings.enemy_expansion_max_settler = max_settler
     end
 
@@ -97,7 +98,17 @@ local onAiCompleted = function(event)
         end
 
         if group.valid and group.command == nil then
-            group.set_autonomous()
+            local attack_location = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface)
+            if attack_location then
+                local command = {
+                    type = defines.command.attack_area,
+                    destination = {x = attack_location.x + ErmAttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_location.y + ErmAttackGroupProcessor.CHUNK_CENTER_POINT},
+                    radius = ErmAttackGroupProcessor.CHUNK_CENTER_POINT
+                }
+                group.set_command(command)
+            else
+                group.set_autonomous()
+            end
         end
 
         local group_count = table_size(global.erm_unit_groups)
