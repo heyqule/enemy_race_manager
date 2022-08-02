@@ -70,7 +70,7 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 8, true)
+        position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 3, true)
     end
 
     if position then

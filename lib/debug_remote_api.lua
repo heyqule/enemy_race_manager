@@ -259,4 +259,14 @@ function Debug_RemoteAPI.reset_boss()
     ErmBossProcessor.reset()
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'request_path')
+function Debug_RemoteAPI.request_path()
+    local surface = game.surfaces[1]
+    local rocket_silos = surface.find_entities_filtered {name = 'rocket-silo'}
+    if rocket_silos and rocket_silos[1] and global.boss.entity then
+        surface.request_path({start=global.boss.entity.position, goal=rocket_silo.position, force=force})
+    end
+
+end
+
 return Debug_RemoteAPI

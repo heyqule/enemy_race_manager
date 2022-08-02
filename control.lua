@@ -17,6 +17,8 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 
 require('prototypes/compatibility/controls')
 
@@ -48,6 +50,21 @@ cron_switch = {
     end,
     ['AttackGroupSurfaceProcessor.exec'] = function(args)
         ErmAttackGroupSurfaceProcessor.exec(args[1])
+    end,
+    ['BossProcessor.check_pathing'] = function(args)
+        ErmBossProcessor.check_pathing()
+    end,
+    ['BossProcessor.heartbeat'] = function(args)
+        ErmBossProcessor.heartbeat()
+    end,
+    ['BossProcessor.units_spawn'] = function(args)
+        ErmBossProcessor.units_spawn()
+    end,
+    ['BossProcessor.support_structures_spawn'] = function(args)
+        ErmBossProcessor.support_structures_spawn()
+    end,
+    ['BossGroupProcessor.generate_units'] = function(args)
+        ErmBossGroupProcessor.generate_units()
     end
 }
 

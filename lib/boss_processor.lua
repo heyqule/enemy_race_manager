@@ -7,10 +7,12 @@
 require('__stdlib__/stdlib/utils/defines/time')
 
 local ErmConfig = require('lib/global_config')
-local ErmForceHelper = require('lib/helper/force_helper')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -36,16 +38,22 @@ local boss_setting_default = function()
     return {
         entity = nil,
         entity_name = '',
-        surface_name = '',
-        race = '',
-        boss_tier = 1,
+        entity_position = '',
         surface = nil,
-        location = nil,
+        surface_name = '',
+        race_name = '',
+        force = nil,
+        force_name = '',
+        boss_tier = 1,
         flying_only = false,
-        boss_artillery_target = nil,
         spawned_tick = 0,
         despawn_at_tick = 0,
-        victory = false,
+        pathing_entity = nil,
+        pathing_entity_checks = 0,
+        last_hp_defense_unit = 0,
+        last_hp_artillery = 0,
+        last_hp_heavy_artillery = 0,
+        victory = false
     }
 end
 
@@ -81,6 +89,12 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
     end
 end
 
+local start_unit_spawn = function()
+    ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
+    ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
+    ErmBossGroupProcessor.spawn_initial_group()
+end
+
 local boss_spawnable_index_switch = {
     [tostring(defines.direction.north)] = function(gunturret)
         local area = {left_top = {gunturret.position.x - scanRadius, gunturret.position.y - scanLength}, right_bottom = {gunturret.position.x + scanRadius, gunturret.position.y - scanMinLength}}
@@ -103,7 +117,7 @@ local boss_spawnable_index_switch = {
 function BossProcessor.init_globals()
     global.boss = global.boss or boss_setting_default()
     global.boss_attack_groups = global.boss_attack_groups or {}
-    global.boss_defense_group = global.boss_defense_group or {}
+    global.boss_group_spawn = global.boss_group_spawn or ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = global.boss_spawnable_index or boss_spawnable_index_default()
 end
 
@@ -115,8 +129,9 @@ function BossProcessor.exec(rocket_silo)
         local race_name = ErmSurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
         local force = game.forces[ErmForceHelper.get_force_name_from(race_name)]
         ErmDebugHelper.print('BossProcessor: Data setup...')
-        global.boss.race = race_name
+        global.boss.race_name = race_name
         global.boss.force = force
+        global.boss.force_name = force.name
         global.boss.surface = surface
         global.boss.surface_name = surface.name
         global.boss.spawned_tick = game.tick
@@ -160,6 +175,7 @@ function BossProcessor.exec(rocket_silo)
         global.boss.entity = boss_entity
         global.boss.beacon_entity = boss_beacon_entity
         global.boss.entity_name = boss_entity.name
+        global.boss.entity_position = boss_entity.position
 
         game.print({
             'description.boss-base-spawn-at',
@@ -169,15 +185,76 @@ function BossProcessor.exec(rocket_silo)
                 surface.name
             )
         })
+
+        ErmDebugHelper.print('BossProcessor: Create Pathing Unit...')
+        local pathing_entity_name = BossProcessor.get_pathing_entity_name(race_name)
+        local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, 32, 8, true)
+        local pathing_entity = surface.create_entity {
+            name=pathing_entity_name,
+            position=pathing_spawn_location,
+            force=force
+        }
+        local command = {
+            type = defines.command.attack,
+            target = rocket_silo,
+            distraction = defines.distraction.by_damage
+        }
+        pathing_entity.set_command(command)
+        global.boss.pathing_entity = pathing_entity
+        ErmCron.add_2_sec_queue('BossProcessor.check_pathing')
+        ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
     end
 end
 
+function BossProcessor.check_pathing()
+    if global.boss.pathing_entity_checks == 5 then
+        local pathing_entity = global.boss.pathing_entity
+        ErmDebugHelper.print('BossProcessor: Comparing path unit position')
+        if pathing_entity and pathing_entity.valid then
+            if pathing_entity.spawner then
+                ErmDebugHelper.print('BossProcessor: flying only [attached spawner]')
+                global.boss.flying_only = true
+                start_unit_spawn()
+                return
+            end
+
+            local boss_base = pathing_entity.surface.find_entities_filtered {name=global.boss.entity_name, position=pathing_entity.position, radius=chunkSize/2}
+            if boss_base and boss_base[1] then
+                ErmDebugHelper.print('BossProcessor: flying only [unit proximity]')
+                ErmDebugHelper.print(#boss_base)
+                ErmDebugHelper.print(boss_base[1].name)
+                global.boss.flying_only = true
+                start_unit_spawn()
+                return
+            end
+        end
+        ErmDebugHelper.print('BossProcessor: Not a flying only boss ')
+        start_unit_spawn()
+        return
+    end
+
+    ErmDebugHelper.print('BossProcessor: Waiting to check path unit')
+    global.boss.pathing_entity_checks = global.boss.pathing_entity_checks + 1
+    ErmCron.add_2_sec_queue('BossProcessor.check_pathing')
+end
+
 function BossProcessor.get_boss_name(race_name)
-    return race_name..'/'..global.race_settings[race_name].boss_building..'/'..ErmConfig.BOSS_LEVELS[global.race_settings[race_name].boss_tier]
+    return ErmRaceSettingsHelper.get_race_entity_name(
+            race_name,
+            global.race_settings[race_name].boss_building,
+            ErmConfig.BOSS_LEVELS[global.race_settings[race_name].boss_tier]
+    )
+end
+
+function BossProcessor.get_pathing_entity_name(race_name)
+    return ErmRaceSettingsHelper.get_race_entity_name(
+            race_name,
+            global.race_settings[race_name].pathing_unit,
+            global.race_settings[race_name].level
+    )
 end
 
 function BossProcessor.heartbeat()
-    ErmDebugHelper.print('BossProcessor: Heartbeat...')
     if global.boss.victory then
         -- start reward process
         return
@@ -187,8 +264,9 @@ function BossProcessor.heartbeat()
         -- start despawn process
         return
     end
-end
 
+    ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
+end
 
 function BossProcessor.index_ammo_turret(surface)
     local gunturrets = surface.find_entities_filtered({type=indexable_turrets})
@@ -205,6 +283,14 @@ function BossProcessor.index_ammo_turret(surface)
     end
 end
 
+function BossProcessor.units_spawn()
+
+end
+
+function BossProcessor.support_structures_spawn()
+
+end
+
 function BossProcessor.reset()
     if global.boss.entity then
         global.boss.entity.destroy()
@@ -219,7 +305,7 @@ function BossProcessor.reset()
     -- Kill all attack groups and its units
     global.boss_attack_groups = {}
     -- Kill all defense groups and its units
-    global.boss_defense_group = {}
+    global.boss_group_spawn = ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = boss_spawnable_index_default()
     ErmDebugHelper.print('BossProcessor: Reset...')
 end

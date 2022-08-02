@@ -26,14 +26,19 @@ local process_all_jobs = function(cron_list)
         return
     end
 
+    local cron_list_copy = Queue.new()
     repeat
-        local job = cron_list()
+        cron_list_copy(cron_list())
+    until Queue.is_empty(cron_list)
+
+    repeat
+        local job = cron_list_copy()
         if cron_switch[job[1]] then
             cron_switch[job[1]](job[2])
         else
             log('Invalid Call: '..job[1])
         end
-    until Queue.is_empty(cron_list)
+    until Queue.is_empty(cron_list_copy)
 end
 
 function CronProcessor.init_globals()
@@ -57,7 +62,7 @@ function CronProcessor.add_1_min_queue(request, ...)
     global.one_minute_cron({request, arg})
 end
 
-function CronProcessor.add_30_sec_queue(request, ...)
+function CronProcessor.add_15_sec_queue(request, ...)
     local arg = {...}
     global.fifteen_seconds_cron({request, arg})
 end

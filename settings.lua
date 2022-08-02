@@ -249,13 +249,23 @@ data:extend {
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-boss-group-size",
-        description = "enemyracemanager-boss-group-size",
+        name = "enemyracemanager-boss-spawn-size",
+        description = "enemyracemanager-boss-spawn-size",
         setting_type = "runtime-global",
-        default_value = 100,
-        minimum_value = 50,
-        maximum_value = 1000,
+        default_value = 10,
+        minimum_value = 5,
+        maximum_value = 50,
         order = "enemyracemanager-003"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-boss-defense-spawn-size",
+        description = "enemyracemanager-boss-defense-spawn-size",
+        setting_type = "runtime-global",
+        default_value = 5,
+        minimum_value = 1,
+        maximum_value = 50,
+        order = "enemyracemanager-004"
     },
     {
         type = "string-setting",

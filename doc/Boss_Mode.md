@@ -2,40 +2,30 @@
 
 - The Boss Base are discovered by sending PSI-Emitter satellites. [Done]
 - Only one boss base can exist in a game at a time, regardless of races / surfaces. [Done]
-- Add BOSS_GROUP_SIZE setting (default 100, range 50 - 500) [Done]
+- Add Boss Spawn size setting [Done]
 - Boss building spawn table uses ErmConfig.MAX_LEVEL [Done]
 
 ## Boss Base functionalities
 ####When the psi-emitter launched
 - Pick a spawn location. [Done]
 - Spawn the base and reveal the area [Done]
-- Check path whether it's flying only.
+- Check path whether it's flying only. [Done]
 
 
 ####When the base spawns
-- pave [-32,-32] to [32, 32] landfill tile to be walkable ground.
-- Send a boss attack group to player base. 
-- tracks with boss_offense_group attribute.
-- This group is controlled by AI to attack various places until they are all killed.
-- If group is unable to path, generate flying group, regardless of the flying setting.
-- Every midnight on a surface,
-  - If the group is alive, sned new reinforcement to join the group. 
-  - If the group is dead, new wave will spawn.
+- Spawn a group of regular size * 12 group to attack. [Done]
+- A new group spawn after 15sec, start with X regular spawn unit
 
 
 ####When the base received damage
-- It spawns boss defense group.
-- Only one defense group exists at a time.
-- Defense group work within 320 tiles of the base.
-- Patrol with 128 tiles.
-- Once they are all killed.  They have 1 nauvis day of cooldown before respawn (7 minutes)
-- Check every 3 minutes on defense group (half day)
-- If the group is alive, full group reinforcement will spawn when the base is under 75%, 50% and 25% health.
-- If the group is alive, 10% of the group reinforcement will spawn every half day,
+- Spawn X defense units for every 10K damage
+- New units joins existing forming group.
+
 
 #### When the base is alive
 - Spawn regular spawners / defenses every nauvis day.  within radius of 128.
-- It will perform long range siege attack on player structures (miner, rocket-silos, artillery) every nauvis day.  A 5 radius attack that does 1000 damage.
+- perform long range siege attack on player structures every attack cycle (3 minutes). 
+- Targets: miners, rocket-silos, artillery or closest turrets
 
 #### When the base is despawned
 - Boss base despawns after some time. It will spawn 3 full size group to attack your base.
@@ -45,43 +35,43 @@
 
 ##Boss Tiers
 - T1 
-  - 2000000 HP (scales 10% of HP multiplier)
+  - 8000000 HP (scales 10% of HP multiplier)
   - lvl 25 damage stats
   - 10 defense structures, 
   - despawn time: 30mins
-  - 67K / min
+  - 266667 / min
   - 50% 1 infinite chest drop
   - rewards tier 1 items
 - T2 
-  - 4000000 HP
+  - 16000000 HP
   - lvl 35 damage stats
   - 20 defense structures
   - despawn time: 45mins
-  - 88K / min
+  - 355555 / min
   - 100% 1 infinite chest drop
   - rewards tier 1, 2 items
 - T3 
-  - 8000000 HP
+  - 32000000 HP
   - lvl 50 damage stats
   - 30 defense structures
   - despawn time: 60mins
-  - 133K / min
+  - 533333 / min
   - 20% 2 infinite chest drop, with 100% 1 drop.
   - rewards tier 1, 2 items
 - T4
-  - 16000000 HP
+  - 64000000 HP
   - lvl 70 damage stats
   - 40 defense structures
   - despawn time: 90mins
-  - 177K / min
+  - 711111 / min
   - 50% 1 infinite chest drop, with 100% 1 drop
   - rewards tier 1, 2, 3 items
 - T5 
-  - 32000000 HP
+  - 128000000 HP
   - lvl 99 damage stats
   - 50 defense structures
   - despawn time: 120 mins
-  - 267K per minutes
+  - 1066666 per minutes
   - 100% 2 infinite chest drop
   - rewards tier 2, 3 items
 
@@ -139,4 +129,21 @@ Tier 3 items
     "respawn_tick": 0
   }
 }
+```
+
+
+Island test map seed
+```
+>>>eNpjZGBksGUAAwcHBoYDDhwsyfmJOQwMDfYwzJWcX1CQWqSbX
+5SKLMyZXFSakqqbn4mqODUvNbdSNymxOBVkGlAIhO05Movy89BNY
+C0uyc9DFSkpSk0tRhbhLi1KzMsszUXXy8D41Wd5SkOLHAMI/69nU
+Pj/H4SBrAdAv4AwA2MDyFcMjEAxGGBNzslMS2NgUHAEYieQQYyMj
+NUi69wfVk2xZ4So0XOAMj5ARQ4kwUQ8YQw/B5xSKjCGCZI5xmDwG
+YkBsbQEaAVUFYcDggGRbAFJMjL2vt264PuxC3aMf1Z+vOSblGDPa
+Ogq8u6D0To7oCQ7yJ9McGLWTBDYCfMKA8zMB/ZQqZv2jGfPgMAbe
+0ZWkA4REOFgASQOeDMzMArwAVkLeoCEggwDzGl2MGNEHBjTwOAbz
+CePYYzL9uj+AAaEDchwORBxAkSALYS7jBHCdOh3YHSQh8lKIpQA9
+RsxILshBeHDkzBrDyPZj+YQzIhA9geaiIoDlmjgAlmYAideMMNdA
+wzPC+wwnsN8B0ZmEAOk6gtQDMIDJz6oURBawAEc3MwMCABMG0J3W
+VoAguahAA==<<<
 ```

@@ -57,9 +57,11 @@ ErmConfig.RACE_MODE_PREFIX = 'erm_'
 ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
-ErmConfig.BOSS_DESPAWN_TIMER = {30, 45, 60, 90, 120}
-ErmConfig.BOSS_LEVELS = {25,35,50,75,99}
-ErmConfig.BOSS_BUILDING_HITPOINT = {2000000, 4000000, 8000000, 16000000, 32000000}
+ErmConfig.BOSS_DESPAWN_TIMER = {30, 45, 60, 80, 120}
+ErmConfig.BOSS_LEVELS = {25, 35, 50, 75, 99}
+ErmConfig.BOSS_BUILDING_HITPOINT = {8000000, 16000000, 32000000, 64000000, 128000000}
+ErmConfig.BOSS_SUPPORT_STRUCTURES = {10, 20, 30, 40, 50}
+ErmConfig.BOSS_DEFENSE_ATTACKS = {10000, 25000, 50000, 100000}
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256
@@ -81,7 +83,8 @@ local refreshable_settings = {
     global = {
         'enemyracemanager-max-gathering-groups',
         'enemyracemanager-max-group-size',
-        'enemyracemanager-boss-group-size',
+        'enemyracemanager-boss-spawn-size',
+        'enemyracemanager-boss-defense-spawn-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-accelerator',
@@ -408,8 +411,13 @@ function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
 end
 
-function ErmConfig.boss_group_size()
-    return get_global_setting_value('enemyracemanager-boss-group-size')
+function ErmConfig.boss_spawn_size()
+    return get_global_setting_value('enemyracemanager-boss-spawn-size')
+end
+
+
+function ErmConfig.boss_defense_spawn_size()
+    return get_global_setting_value('enemyracemanager-boss-defense-spawn-size')
 end
 
 function ErmConfig.initialize_races_data()
