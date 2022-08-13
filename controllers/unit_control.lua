@@ -97,18 +97,9 @@ local onAiCompleted = function(event)
             group.destroy()
         end
 
-        if group.valid and group.command == nil then
-            local attack_location = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface)
-            if attack_location then
-                local command = {
-                    type = defines.command.attack_area,
-                    destination = {x = attack_location.x + ErmAttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_location.y + ErmAttackGroupProcessor.CHUNK_CENTER_POINT},
-                    radius = ErmAttackGroupProcessor.CHUNK_CENTER_POINT
-                }
-                group.set_command(command)
-            else
-                group.set_autonomous()
-            end
+        if group.valid and (group.command == nil or
+                group.state == defines.group_state.finished)then
+            ErmAttackGroupProcessor.process_attack_position(group)
         end
 
         local group_count = table_size(global.erm_unit_groups)

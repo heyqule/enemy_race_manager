@@ -23,21 +23,23 @@ if DEBUG_MODE then
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
-    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
-    ErmConfig.FIFTEEN_SECONDS_CRON = 3 * defines.time.second + 1
-    ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
+    ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
+    ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
     ErmConfig.TWO_SECONDS_CRON = defines.time.second + 1
+
+    ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = settings.startup['enemyracemanager-level-up-check-interval'].value * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
     ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
-    ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
     ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
+
+    ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
 end
 
@@ -57,10 +59,11 @@ ErmConfig.RACE_MODE_PREFIX = 'erm_'
 ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
-ErmConfig.BOSS_DESPAWN_TIMER = {30, 45, 60, 80, 120}
+ErmConfig.BOSS_DESPAWN_TIMER = {30, 45, 60, 90, 120}
 ErmConfig.BOSS_LEVELS = {25, 35, 50, 75, 99}
 ErmConfig.BOSS_BUILDING_HITPOINT = {8000000, 16000000, 32000000, 64000000, 128000000}
-ErmConfig.BOSS_SUPPORT_STRUCTURES = {10, 20, 30, 40, 50}
+ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {20, 25, 30, 40, 50}
+ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 5, 5, 10, 10}
 ErmConfig.BOSS_DEFENSE_ATTACKS = {10000, 25000, 50000, 100000}
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute

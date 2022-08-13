@@ -79,10 +79,6 @@ local get_unit_level_for_tier = function(race_name)
     return level
 end
 
-local can_spawn = function(chance_value)
-    return  math.random(1, 100) > (100 - chance_value)
-end
-
 local pick_an_unit = function(race_name)
     local group_tracker = get_group_tracker(race_name)
     local current_tier = group_tracker.current_tier
@@ -148,7 +144,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
     if group_tracker.current_size >= group_tracker.size then
         --local profiler = game.create_profiler()
-        local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group)
+        local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface)
         --profiler.stop()
         --log({'', 'Attack Path finding...  ', profiler})
 
@@ -219,7 +215,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level_for_tier(race_name), ErmConfig.MAX_TIER) ]
 
         local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
-        local spawn_as_flying_unit_precision = can_spawn(ErmConfig.flying_squad_precision_chance())
+        local spawn_as_flying_unit_precision = ErmRaceSettingsHelper.can_spawn(ErmConfig.flying_squad_precision_chance())
 
         if flying_unit_precision_enabled and spawn_as_flying_unit_precision then
             is_precision_attack = true
@@ -276,13 +272,13 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance()) and ErmRaceSettingsHelper.get_level(race_name) > 1
-    local spawn_as_featured_squad = can_spawn(ErmConfig.featured_squad_chance()) and ErmRaceSettingsHelper.get_tier(race_name) == 3
+    local spawn_as_flying_squad = ErmRaceSettingsHelper.can_spawn(ErmConfig.flying_squad_chance()) and ErmRaceSettingsHelper.get_level(race_name) > 1
+    local spawn_as_featured_squad = ErmRaceSettingsHelper.can_spawn(ErmConfig.featured_squad_chance()) and ErmRaceSettingsHelper.get_tier(race_name) == 3
 
     --- Try flying Squad. starts at level 2 and max tier at level 4
     if flying_enabled and spawn_as_flying_squad then
         local dropship_enabled = ErmConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
-        local spawn_as_dropship_squad = can_spawn(ErmConfig.dropship_chance())
+        local spawn_as_dropship_squad = ErmRaceSettingsHelper.can_spawn(ErmConfig.dropship_chance())
 
         if spawn_as_featured_squad and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
             --- Drop as featured flying group
@@ -367,18 +363,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
             end
         end
 
-        local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group)
-
-        if attack_position then
-            local command = {
-                type = defines.command.attack_area,
-                destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-                radius = AttackGroupProcessor.CHUNK_CENTER_POINT
-            }
-            group.set_command(command)
-        else
-            group.set_autonomous()
-        end
+        AttackGroupProcessor.process_attack_position(group)
     end
 end
 
@@ -394,7 +379,7 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     end
 
     local flying_enabled = ErmConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = can_spawn(ErmConfig.flying_squad_chance())
+    local spawn_as_flying_squad = ErmRaceSettingsHelper.can_spawn(ErmConfig.flying_squad_chance())
 
     if flying_enabled and spawn_as_flying_squad and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
         local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
@@ -407,6 +392,21 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     end
 
     return false
+end
+
+function AttackGroupProcessor.process_attack_position(group)
+    local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface)
+
+    if attack_position then
+        local command = {
+            type = defines.command.attack_area,
+            destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
+            radius = AttackGroupProcessor.CHUNK_CENTER_POINT
+        }
+        group.set_command(command)
+    else
+        group.set_autonomous()
+    end
 end
 
 return AttackGroupProcessor

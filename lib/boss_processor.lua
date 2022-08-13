@@ -13,6 +13,7 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -20,11 +21,12 @@ local BossProcessor = {}
 
 -- beam scan up to 100 chunks
 local scanLength = 3200
--- 10 chunks
+-- 7 chunks
 local scanMinLength = 224
-local scanRadius = 8
+local scanRadius = 16
 
 local chunkSize = 32
+local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
@@ -50,10 +52,12 @@ local boss_setting_default = function()
         despawn_at_tick = 0,
         pathing_entity = nil,
         pathing_entity_checks = 0,
-        last_hp_defense_unit = 0,
-        last_hp_artillery = 0,
-        last_hp_heavy_artillery = 0,
-        victory = false
+        last_hp_defense_unit = 0, -- T1 defense, see ErmConfig.BOSS_DEFENSE_ATTACKS
+        last_hp_artillery = 0, -- T2 defense
+        last_hp_spawner = 0, -- T3 defense
+        last_hp_superweapon = 0, -- T4 defense
+        victory = false,
+        high_level_enemy_list = nil,  -- Track all high level enemies, they die when the base destroys.
     }
 end
 
@@ -80,7 +84,7 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
 
     if target_spawner then
         -- Skip if it's too close to any of the turrets
-        local turret = surface.find_entities_filtered {position=target_spawner.position, radius=160, type=turrets, limit = 1}
+        local turret = surface.find_entities_filtered {position=target_spawner.position, radius=192, type=turrets, limit = 1}
         if turret[1] then
             return
         end
@@ -92,6 +96,7 @@ end
 local start_unit_spawn = function()
     ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
     ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
+    ErmCron.add_15_sec_queue('BossGroupProcessor.process_attack_groups')
     ErmBossGroupProcessor.spawn_initial_group()
 end
 
@@ -110,9 +115,39 @@ local boss_spawnable_index_switch = {
     end,
     [tostring(defines.direction.west)] = function(gunturret)
         local area = {left_top = {gunturret.position.x - scanLength, gunturret.position.y - scanRadius}, right_bottom = {gunturret.position.x - scanMinLength, gunturret.position.y + scanRadius}}
-        index_boss_spawnable_chunk(gunturret, area )
+        index_boss_spawnable_chunk(gunturret, area)
     end,
 }
+
+local spawn_building = function()
+    for i = 1, ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[ErmRaceSettingsHelper.boss_tier(global.boss.race_name)] do
+        local building_name
+        if ErmRaceSettingsHelper.can_spawn(10) then
+            building_name = ErmBaseBuildProcessor.getBuildingName(global.boss.race_name, 'cc')
+        elseif ErmRaceSettingsHelper.can_spawn(50) then
+            building_name = ErmBaseBuildProcessor.getBuildingName(global.boss.race_name, 'support')
+        else
+            building_name = ErmBaseBuildProcessor.getBuildingName(global.boss.race_name, 'turret')
+        end
+        ErmBaseBuildProcessor.build(global.boss.surface, building_name, global.boss.force_name, global.boss.entity_position)
+    end
+end
+
+local destroy_beacons = function()
+    local beacons = global.boss.surface.find_entities_filtered {name=beacon_name}
+    for i=1,#beacons do
+        beacons[i].destroy()
+    end
+end
+
+local unset_boss_data = function()
+    global.boss = boss_setting_default()
+    -- Kill all attack groups and its units
+    global.boss_attack_groups = {}
+    -- Kill all defense groups and its units
+    global.boss_group_spawn = ErmBossGroupProcessor.get_default_data()
+    global.boss_spawnable_index = boss_spawnable_index_default()
+end
 
 function BossProcessor.init_globals()
     global.boss = global.boss or boss_setting_default()
@@ -174,6 +209,10 @@ function BossProcessor.exec(rocket_silo)
         ErmDebugHelper.print('BossProcessor: Assign Entities...')
         global.boss.entity = boss_entity
         global.boss.beacon_entity = boss_beacon_entity
+        global.boss.last_hp_defense_unit = boss_entity.health
+        global.boss.last_hp_artillery = boss_entity.health
+        global.boss.last_hp_spawner = boss_entity.health
+        global.boss.last_hp_superweapon = boss_entity.health
         global.boss.entity_name = boss_entity.name
         global.boss.entity_position = boss_entity.position
 
@@ -188,7 +227,7 @@ function BossProcessor.exec(rocket_silo)
 
         ErmDebugHelper.print('BossProcessor: Create Pathing Unit...')
         local pathing_entity_name = BossProcessor.get_pathing_entity_name(race_name)
-        local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, 32, 8, true)
+        local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, chunkSize, 2, true)
         local pathing_entity = surface.create_entity {
             name=pathing_entity_name,
             position=pathing_spawn_location,
@@ -265,6 +304,40 @@ function BossProcessor.heartbeat()
         return
     end
 
+    if not ErmRaceSettingsHelper.is_in_boss_mode() then
+        destroy_beacons()
+        unset_boss_data()
+        return
+    end
+
+
+    if global.boss.last_hp_defense_unit - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[1] then
+        global.boss.last_hp_defense_unit = global.boss.entity.health
+        ErmDebugHelper.print('BossProcessor: Base Defense Attack'..global.boss.entity.health)
+    end
+
+    if global.boss.last_hp_artillery - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[2] then
+        global.boss.last_hp_artillery = global.boss.entity.health
+        ErmDebugHelper.print('BossProcessor: Spawning Defense Unit'..global.boss.entity.health)
+        ErmBossGroupProcessor.spawn_defense_group()
+    end
+
+    if global.boss.last_hp_spawner - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[3] then
+        global.boss.last_hp_spawner = global.boss.entity.health
+        if ErmRaceSettingsHelper.can_spawn(50) then
+            ErmDebugHelper.print('BossProcessor: Building Defense Spawner'..global.boss.entity.health)
+            spawn_building()
+        else
+            ErmDebugHelper.print('BossProcessor: Spawn T2 attack'..global.boss.entity.health)
+        end
+
+    end
+
+    if global.boss.last_hp_superweapon - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[4] then
+        global.boss.last_hp_superweapon = global.boss.entity.health
+        ErmDebugHelper.print('BossProcessor: Super Attack, '..global.boss.entity.health)
+    end
+
     ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
 end
 
@@ -284,30 +357,33 @@ function BossProcessor.index_ammo_turret(surface)
 end
 
 function BossProcessor.units_spawn()
+    if not ErmRaceSettingsHelper.is_in_boss_mode() then
+        return
+    end
 
+    ErmBossGroupProcessor.spawn_regular_group()
+    ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
 end
 
 function BossProcessor.support_structures_spawn()
+    if not ErmRaceSettingsHelper.is_in_boss_mode() then
+        return
+    end
 
+    local nearby_buildings = global.boss.surface.find_entities_filtered({type=enemy_buildings, force=global.boss.force})
+    if #nearby_buildings < ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[global.race_settings[global.boss.race_name].boss_tier] then
+        spawn_building()
+    end
+    ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
 end
 
 function BossProcessor.reset()
-    if global.boss.entity then
+    if ErmRaceSettingsHelper.is_in_boss_mode() then
         global.boss.entity.destroy()
-
-        local beacons = global.boss.surface.find_entities_filtered {name=beacon_name}
-        for i=1,#beacons do
-            beacons[i].destroy()
-        end
+        destroy_beacons()
+        unset_boss_data()
+        ErmDebugHelper.print('BossProcessor: Reset...')
     end
-
-    global.boss = boss_setting_default()
-    -- Kill all attack groups and its units
-    global.boss_attack_groups = {}
-    -- Kill all defense groups and its units
-    global.boss_group_spawn = ErmBossGroupProcessor.get_default_data()
-    global.boss_spawnable_index = boss_spawnable_index_default()
-    ErmDebugHelper.print('BossProcessor: Reset...')
 end
 
 
