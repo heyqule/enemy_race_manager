@@ -20,6 +20,7 @@
 
 #### Rampant AI (limited)
 - It works with default settings.  However, its AI code only work for "enemy" force.  It does not affect custom enemy forces.
+- It may interfere with ERM custom attack groups.
 - Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Other biter mods with tiers and level, like bobs enemy or natural evolution enemies.
