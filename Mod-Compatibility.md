@@ -30,6 +30,11 @@
 - When "reset evolution factor" is checked, level, tier and evolution points are preserved. Evolution factor and attack meter get reset.
 - When "reset research" is checked, everything reset.
 
+#### AAI programmable vehicle
+- It has a feature that prevent player/enemy build too close to each other.
+- This affects proxy builder units which they build too close to your defenses, and you can't replace destroyed buildings.
+- Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
+
 ####Super Weapon Attack Points / Counter Attack supported mods
 - space exploration: Irdium Driver(Super weapon), Plague Rocket (Purifier type weapon) 
 - AtomicArtillery 
