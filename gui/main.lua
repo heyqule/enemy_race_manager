@@ -131,9 +131,11 @@ function ERM_DetailWindow.show(player, race_setting)
                                                          tooltip = { 'gui.level_up_slider_tooltip' },
                                                          minimum_value = current_level,
                                                          maximum_value = max_level,
+                                                         value_step = 0.01,
                                                          style = 'notched_slider'
             }
-            level_slider.slider_value = race_setting.level
+            level_slider.slider_value = current_level
+            level_slider.set_slider_value_step(1)
             level_slider.style.vertical_align = "bottom"
             level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_value_name, caption = race_setting.level }
             add_confirm_button = true
