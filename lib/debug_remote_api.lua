@@ -249,14 +249,14 @@ end
 function Debug_RemoteAPI.spawn_boss()
     local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
     if rocket_silos and rocket_silos[1] then
-        ErmBossProcessor.reset()
+        ErmBossProcessor.unset()
         ErmBossProcessor.exec(rocket_silos[1])
     end
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'reset_boss')
-function Debug_RemoteAPI.reset_boss()
-    ErmBossProcessor.reset()
+--- Usage: remote.call('enemy_race_manager_debug', 'unset_boss')
+function Debug_RemoteAPI.unset_boss()
+    ErmBossProcessor.unset()
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'request_path')

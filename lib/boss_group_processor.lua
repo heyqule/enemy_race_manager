@@ -166,7 +166,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     ErmDebugHelper.print('BossProcessor.spawn_initial_group')
     pick_featured_group()
-    create_group(spawn_cycles/3, ErmConfig.boss_spawn_size()*3)
+    create_group(spawn_cycles/3, ErmConfig.boss_spawn_size()*3, true)
     ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', true, true)
 end
 

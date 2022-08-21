@@ -296,17 +296,25 @@ end
 function BossProcessor.heartbeat()
     if global.boss.victory then
         -- start reward process
+        destroy_beacons()
+        ErmDebugHelper.print('BossProcessor: is victory')
+        ErmDebugHelper.print('BossProcessor: Heartbeat stops')
         return
     end
 
     if game.tick > global.boss.despawn_at_tick then
         -- start despawn process
+        BossProcessor.unset()
+        ErmDebugHelper.print('BossProcessor: start despawn process')
+        ErmDebugHelper.print('BossProcessor: Heartbeat stops')
         return
     end
 
     if not ErmRaceSettingsHelper.is_in_boss_mode() then
         destroy_beacons()
         unset_boss_data()
+        ErmDebugHelper.print('BossProcessor: No longer in boss mode')
+        ErmDebugHelper.print('BossProcessor: Heartbeat stops')
         return
     end
 
@@ -377,7 +385,7 @@ function BossProcessor.support_structures_spawn()
     ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
 end
 
-function BossProcessor.reset()
+function BossProcessor.unset()
     if ErmRaceSettingsHelper.is_in_boss_mode() then
         global.boss.entity.destroy()
         destroy_beacons()

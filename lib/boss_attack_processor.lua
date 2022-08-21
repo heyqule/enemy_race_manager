@@ -8,6 +8,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 
 local ErmConfig = require('lib/global_config')
 local ErmForceHelper = require('lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
@@ -15,6 +16,15 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossAttackProcessor = {}
 
+local pick_player_entity = function()
+    local surface = global.boss.surface
+end
+
+function BossAttackProcessor.exec_normal()
+end
+
+function BossAttackProcessor.exec_super()
+end
 
 
 return BossAttackProcessor

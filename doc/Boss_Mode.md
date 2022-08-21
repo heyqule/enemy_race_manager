@@ -13,25 +13,30 @@
 
 
 ####When the base spawns
-- Spawn a group of regular size * 12 group to attack. [Done]
-- A new group spawn after 15sec, start with X regular spawn unit
+- Spawn a 120(configurable) units group to attack your base. [Done]
+- A new batch of units spawn every 15sec, start with 10(configurable) units per cycle.　Once it ticks 12 cycles(3 and half minutes), it will send to your base.[Done]
 
 
 ####When the base received damage
-- Spawn X defense units for every 10K damage
-- New units joins existing forming group.
+- It may spawn 5(configurable) defense units　[Done]
+- New units join existing attack group.　[Done]
+- It may spawn regular spawner / defenses [Done]
+- Perform normal defense attack
+- It may perform nearby attacks (80% of the time when your military units are near)
+- It may perform artillery attacks (20% of the time when your military units are near, 100% when your entity are in its range)
+- When it takes huge amount of damage, it may perform more devastating attacks.
 
 
 #### When the base is alive
-- Spawn regular spawners / defenses every nauvis day.  within radius of 128.
+- Spawn regular spawners / defenses every nauvis day.  within radius of 64. [Done]
 - perform long range siege attack on player structures every attack cycle (3 minutes). 
-- Targets: miners, rocket-silos, artillery or closest turrets
+- Targets: miners, rocket-silos, artillery and turrets
 
 #### When the base is despawned
-- Boss base despawns after some time. It will spawn 3 full size group to attack your base.
+- Boss base despawns after some time. It will spawn up to 3 full size groups to attack your base.
 
-#### When the base is killed by force
-- Beating a boss group will spawn an unkillable infinite chest with low-mid level intermediate products for 14 nauvis days (97mins, one and half hours).
+#### When the base is killed
+- Beating a boss group will spawn 1-2 unkillable infinite chest with intermediate products for (90 minutes).
 
 ##Boss Tiers
 - T1 
@@ -40,7 +45,7 @@
   - 10 defense structures, 
   - despawn time: 30mins
   - 266667 / min
-  - 50% 1 infinite chest drop
+  - 100% 1 infinite chest drop
   - rewards tier 1 items
 - T2 
   - 16000000 HP
@@ -49,23 +54,23 @@
   - despawn time: 45mins
   - 355555 / min
   - 100% 1 infinite chest drop
-  - rewards tier 1, 2 items
+  - rewards tier 1(50%), 2(50%) items
 - T3 
   - 32000000 HP
   - lvl 50 damage stats
   - 30 defense structures
   - despawn time: 60mins
   - 533333 / min
-  - 20% 2 infinite chest drop, with 100% 1 drop.
-  - rewards tier 1, 2 items
+  - 33% 2 infinite chest drop, with 100% 1 drop.
+  - rewards tier 1(20%), 2(80%) items
 - T4
   - 64000000 HP
   - lvl 70 damage stats
   - 40 defense structures
   - despawn time: 90mins
   - 711111 / min
-  - 50% 1 infinite chest drop, with 100% 1 drop
-  - rewards tier 1, 2, 3 items
+  - 66% 1 infinite chest drop, with 100% 1 drop
+  - rewards tier 1(20%), 2(60%), 3(20%) items
 - T5 
   - 128000000 HP
   - lvl 99 damage stats
@@ -73,29 +78,53 @@
   - despawn time: 120 mins
   - 1066666 per minutes
   - 100% 2 infinite chest drop
-  - rewards tier 2, 3 items
+  - rewards tier 1(10%), 2(50%), 3(40%) items
 
-Once a tier is unlock, it can be set in race details.  
+New tier can only be unlocked when you defeat the current tier.
 
-New tier can only be unlocked when defeat the highest tier.
+Tier spawn rate @ Tier 2 - 5
+Tier 2 spawn when you are at tier 3 = 50%
+Tier 3 spawn when you are at tier 3  = 50%
 
-Tier 1 items 
-   - ores
-Tier 2 items 
-   - plates, 
-   - steel, 
-   - plastic, 
-   - explosive, 
+You'll have option to lock 100% at current tier.  
+
+Tier 1 items
+   - plates
+   - brick
+   - crude oil
+   
+Tier 2 items
+   - plastic
+   - steel,
+   - Iron gear wheel
+   - gas
+   - Heavy Oil
+   - Light Oil
+   - Gas
+   - wall
+   - explosive,
+   - concrete
    - red bullet
+   - green chip
+   - rail,
+   - yellow belt,
+   - yellow inserter,
+   - engine,
+   - landfill
+   - Sulfur
+   - solid fuel
+   - Repair pack
+   - Radar
+
 Tier 3 items 
-   - green/red chips, 
-   - engine, 
+   - red chips,
    - electric engine, 
-   - battery, 
-   - rail, 
-   - belt, 
-   - inserter, 
-   - green bullet
+   - battery,
+   - Uranium-238
+   - Flying robot frame
+   - Speed module
+   - Productivity module
+   - Artillery shell
 
 
 ###Boss Spawn data structure
