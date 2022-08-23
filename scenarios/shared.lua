@@ -41,6 +41,28 @@ function ScenarioHelper.spawn_concrete(surface)
     end
 end
 
+function ScenarioHelper.spawn_lab_tiles(surface, radius)
+
+    local tile_types = {"lab-dark-1", "lab-dark-2"}
+    local tiles = {}
+    radius = radius or 128
+    for x = (radius * -1), radius, 1 do
+        for y = (radius * -1), radius, 1 do
+               local odd = ((x + y) % 2)
+                if odd <= 0 then odd = odd + 2 end
+                table.insert(tiles, {name=tile_types[odd], position={x, y}})
+        end
+    end
+    surface.set_tiles(tiles, true, true, true, true)
+
+    local entities = surface.find_entities({{(radius * -1), (radius * -1)},{radius, radius}})
+    for _, entity in pairs(entities) do
+        entity.destroy()
+    end
+
+    surface.destroy_decoratives{area={{(radius * -1), (radius * -1)},{radius, radius}}}
+end
+
 function ScenarioHelper.set_tech_level(force, level)
 
     for _, tech in pairs(force.technologies) do

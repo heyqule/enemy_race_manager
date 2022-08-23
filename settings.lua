@@ -239,26 +239,6 @@ data:extend {
         order = "enemyracemanager-002"
     },
     {
-        type = "int-setting",
-        name = "enemyracemanager-boss-spawn-size",
-        description = "enemyracemanager-boss-spawn-size",
-        setting_type = "runtime-global",
-        default_value = 10,
-        minimum_value = 2,
-        maximum_value = 50,
-        order = "enemyracemanager-003"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-boss-defense-spawn-size",
-        description = "enemyracemanager-boss-defense-spawn-size",
-        setting_type = "runtime-global",
-        default_value = 5,
-        minimum_value = 1,
-        maximum_value = 50,
-        order = "enemyracemanager-004"
-    },
-    {
         type = "string-setting",
         name = "enemyracemanager-build-style",
         description = "enemyracemanager-build-style",
@@ -499,6 +479,26 @@ data:extend {
         default_value = 2,
         allowed_values = {1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90, 99},
         order = "enemyracemanager-451"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-boss-spawn-size",
+        description = "enemyracemanager-boss-spawn-size",
+        setting_type = "runtime-global",
+        default_value = 10,
+        minimum_value = 2,
+        maximum_value = 50,
+        order = "enemyracemanager-500"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-boss-defense-spawn-size",
+        description = "enemyracemanager-boss-defense-spawn-size",
+        setting_type = "runtime-global",
+        default_value = 5,
+        minimum_value = 1,
+        maximum_value = 50,
+        order = "enemyracemanager-501"
     },
 }
 
