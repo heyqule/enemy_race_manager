@@ -245,12 +245,12 @@ function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
     global.race_settings[race_name].evolution_base_point = value
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'spawn_boss')
-function Debug_RemoteAPI.spawn_boss()
+--- Usage: remote.call('enemy_race_manager_debug', 'spawn_boss', {x=100,y=100})
+function Debug_RemoteAPI.spawn_boss(position)
     local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
     if rocket_silos and rocket_silos[1] then
-        ErmBossProcessor.unset()
-        ErmBossProcessor.exec(rocket_silos[1])
+        --ErmBossProcessor.unset()
+        ErmBossProcessor.exec(rocket_silos[1], position)
     end
 end
 

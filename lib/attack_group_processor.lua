@@ -394,14 +394,16 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     return false
 end
 
-function AttackGroupProcessor.process_attack_position(group)
+function AttackGroupProcessor.process_attack_position(group, distraction)
+    distraction = distraction or defines.distraction.by_enemy
     local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface)
 
     if attack_position then
         local command = {
             type = defines.command.attack_area,
             destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-            radius = AttackGroupProcessor.CHUNK_CENTER_POINT
+            radius = AttackGroupProcessor.CHUNK_CENTER_POINT,
+            distraction = distraction
         }
         group.set_command(command)
     else

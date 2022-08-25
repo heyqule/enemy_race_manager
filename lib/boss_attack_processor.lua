@@ -6,8 +6,8 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('lib/global_config')
-local ErmForceHelper = require('lib/helper/force_helper')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
@@ -16,14 +16,42 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossAttackProcessor = {}
 
-local pick_player_entity = function()
+local pick_near_by_player_entity_position = function()
     local surface = global.boss.surface
+    local entities = surface.find_entities_filtered {
+        force = ErmForceHelper.get_player_forces(),
+        radius = 64,
+        position = global.boss.entity_position,
+        limit = 30
+    }
+    return entities[math.random(1,#entities)].position
 end
 
-function BossAttackProcessor.exec_normal()
+function BossAttackProcessor.exec_basic()
+    local surface = global.boss.surface
+    local position = pick_near_by_player_entity_position()
+    surface.create_entity({
+        name = "erm-energy-explosion-blue-1",
+        position = position
+    })
+end
+
+function BossAttackProcessor.exec_advanced()
+    local surface = global.boss.surface
+    local position = pick_near_by_player_entity_position()
+    surface.create_entity({
+        name = "erm-energy-explosion-green-1",
+        position = position
+    } )
 end
 
 function BossAttackProcessor.exec_super()
+    local surface = global.boss.surface
+    local position = pick_near_by_player_entity_position()
+    surface.create_entity({
+        name = "erm-ball-explosion-fire-2",
+        position = position
+    } )
 end
 
 

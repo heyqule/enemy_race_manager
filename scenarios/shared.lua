@@ -21,13 +21,14 @@ function ScenarioHelper.build_base(surface, blueprint_string)
     surface.create_entity({name="stone", amount=500000000, position={-29, -13}})
 end
 
-function ScenarioHelper.spawn_concrete(surface)
+function ScenarioHelper.spawn_concrete(surface, radius)
+    radius = radius or 128
     --Spawn concrete tiles
     local prototypes = game.tile_prototypes
     local tile_name = 'concrete'
     local tiles = {}
-    for x = -96, 64, 1 do
-        for y = -48, 32, 1 do
+    for x = (radius * -1), radius, 1 do
+        for y = (radius * -1), radius, 1 do
             if prototypes[tile_name] then
                 table.insert(tiles,{name = tile_name, position = {x, y}})
             end
@@ -35,7 +36,7 @@ function ScenarioHelper.spawn_concrete(surface)
     end
     surface.set_tiles(tiles, true, true, true, true)
 
-    local entities = surface.find_entities({{-96,-48},{64,32}})
+    local entities = surface.find_entities({{(radius * -1), (radius * -1)},{radius, radius}})
     for _, entity in pairs(entities) do
         entity.destroy()
     end

@@ -79,7 +79,8 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
             entity.set_command({
                 type = defines.command.attack_area,
                 destination = {x = position.x, y = position.y},
-                radius = CHUNK_SIZE
+                radius = CHUNK_SIZE,
+                distraction = defines.distraction.by_anything
             })
         end
     end

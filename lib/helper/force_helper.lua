@@ -90,6 +90,13 @@ function ForceHelper.get_name_token(name)
     return global.force_entity_name_cache[name]
 end
 
+function ForceHelper.get_non_player_forces()
+    return global.non_player_forces
+end
+
+function ForceHelper.get_player_forces()
+    return global.player_forces
+end
 
 function ForceHelper.get_all_enemy_forces()
     return global.enemy_force_cache
@@ -97,9 +104,31 @@ end
 
 function ForceHelper.refresh_all_enemy_forces()
     global.enemy_force_cache = {}
+    global.non_player_forces = {}
+    global.player_forces = {}
     for _, force in pairs(game.forces) do
         if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
             Table.insert(global.enemy_force_cache, force.name)
+            Table.insert(global.non_player_forces, force.name)
+        end
+    end
+
+    for _, value in pairs(NEUTRAL_FORCES) do
+        Table.insert(global.non_player_forces, value)
+    end
+    Table.insert(global.non_player_forces, 'neutral')
+
+    for _, force in pairs(game.forces) do
+        local is_player_force = true
+        for _, non_player_force in pairs(global.non_player_forces) do
+            if(force.name == non_player_force) then
+                is_player_force = false
+                break
+            end
+        end
+
+        if is_player_force then
+            Table.insert(global.player_forces, force.name)
         end
     end
 end

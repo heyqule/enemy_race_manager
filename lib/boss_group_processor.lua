@@ -6,7 +6,7 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('lib/global_config')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
@@ -79,6 +79,7 @@ local pick_featured_group = function()
 
     local boss = global.boss
     local race_name = boss.race_name
+    print('pick_featured_group:'..race_name)
     if is_flying_only_boss() and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
         local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
         global.boss_group_spawn.featured_group_id = squad_id
@@ -153,7 +154,7 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     if global.boss_group_spawn.current_cycle == global.boss_group_spawn.max_cycles or
             global.boss_group_spawn.total_units >= global.boss_group_spawn.max_units
     then
-        ErmAttackGroupProcessor.process_attack_position(group)
+        ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
 
         table.insert(global.boss_attack_groups, spawn_data)
         global.boss_group_spawn = BossGroupProcessor.get_default_data()
@@ -218,7 +219,7 @@ function BossGroupProcessor.process_attack_groups()
                 if group.command == nil or
                         group.state == defines.group_state.finished then
                     ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: New Target for '..global.boss_attack_groups[i].group_number)
-                    ErmAttackGroupProcessor.process_attack_position(group)
+                    ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
                 end
             else
                 ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: Removing Group'..global.boss_attack_groups[i].group_number)
