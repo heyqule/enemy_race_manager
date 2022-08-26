@@ -54,10 +54,11 @@ local boss_setting_default = function()
         despawn_at_tick = 0,
         pathing_entity = nil,
         pathing_entity_checks = 0,
-        last_hp_defense_unit = 0, -- T1 defense, see ErmConfig.BOSS_DEFENSE_ATTACKS
-        last_hp_artillery = 0, -- T2 defense
-        last_hp_spawner = 0, -- T3 defense
-        last_hp_superweapon = 0, -- T4 defense
+        last_hp_attk1 = 0, -- T1 defense, see ErmConfig.BOSS_DEFENSE_ATTACKS
+        last_hp_attk2 = 0,
+        last_hp_attk3 = 0,
+        last_hp_attk4 = 0,
+        last_hp_attk5 = 0,
         victory = false,
         high_level_enemy_list = nil,  -- Track all high level enemies, they die when the base destroys.
         loading = false
@@ -229,10 +230,11 @@ function BossProcessor.exec(rocket_silo, spawn_position)
 
         ErmDebugHelper.print('BossProcessor: Assign Entities...')
         global.boss.entity = boss_entity
-        global.boss.last_hp_defense_unit = boss_entity.health
-        global.boss.last_hp_artillery = boss_entity.health
-        global.boss.last_hp_spawner = boss_entity.health
-        global.boss.last_hp_superweapon = boss_entity.health
+        global.boss.last_hp_attk1 = boss_entity.health
+        global.boss.last_hp_attk2 = boss_entity.health
+        global.boss.last_hp_attk3 = boss_entity.health
+        global.boss.last_hp_attk4 = boss_entity.health
+        global.boss.last_hp_attk5 = boss_entity.health
         global.boss.entity_name = boss_entity.name
         global.boss.entity_position = boss_entity.position
 
@@ -343,33 +345,35 @@ function BossProcessor.heartbeat()
     end
 
 
-    if global.boss.last_hp_defense_unit - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[1] then
-        global.boss.last_hp_defense_unit = global.boss.entity.health
+    if global.boss.last_hp_attk1 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[1] then
+        global.boss.last_hp_attk1 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Base Defense Attack'..global.boss.entity.health)
         ErmBossAttackProcessor.exec_basic()
         boss_attacked = true
     end
 
-    if global.boss.last_hp_artillery - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[2] then
-        global.boss.last_hp_artillery = global.boss.entity.health
+    if global.boss.last_hp_attk2 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[2] then
+        global.boss.last_hp_attk2 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Spawning Defense Unit'..global.boss.entity.health)
         ErmBossGroupProcessor.spawn_defense_group()
     end
 
-    if global.boss.last_hp_spawner - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[3] then
-        global.boss.last_hp_spawner = global.boss.entity.health
-        if ErmRaceSettingsHelper.can_spawn(80) then
-            ErmDebugHelper.print('BossProcessor: Building Defense Spawner'..global.boss.entity.health)
-            spawn_building()
-        end
+    if global.boss.last_hp_attk3 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[3] then
+        global.boss.last_hp_attk3 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Spawn T2 attack'..global.boss.entity.health)
         ErmBossAttackProcessor.exec_advanced()
         boss_attacked = true
     end
 
-    if global.boss.last_hp_superweapon - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[4] then
-        global.boss.last_hp_superweapon = global.boss.entity.health
-        ErmDebugHelper.print('BossProcessor: Super Attack, '..global.boss.entity.health)
+    if global.boss.last_hp_attk4 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[4] then
+        global.boss.last_hp_attk4 = global.boss.entity.health
+        ErmDebugHelper.print('BossProcessor: Building Defense Spawner'..global.boss.entity.health)
+        spawn_building()
+    end
+
+    if global.boss.last_hp_attk5 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[5] then
+        global.boss.last_hp_attk5 = global.boss.entity.health
+        ErmDebugHelper.print('BossProcessor: Super Attack / Phase change, '..global.boss.entity.health)
         ErmBossAttackProcessor.exec_super()
         boss_attacked = true
     end

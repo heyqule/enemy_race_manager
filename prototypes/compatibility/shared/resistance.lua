@@ -28,14 +28,14 @@ local enemies_subgroups = {
     ['erm-builder-enemies'] = true,
 }
 
-local resistance_mutiplier = settings.startup["enemyracemanager-level-multipliers"].value
+
 
 local set_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and ErmForceHelper.is_erm_unit(unit) then
         local name = ErmForceHelper.split_name(unit.name)
         for _, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances then
-                table.insert(unit.resistances,{ type = damage_type[1], percent = ErmUnitHelper.get_resistance(damage_type[2], damage_type[3], resistance_mutiplier, tonumber(name[3]))})
+                table.insert(unit.resistances,{ type = damage_type[1], percent = ErmUnitHelper.get_resistance(damage_type[2], damage_type[3],  tonumber(name[3]))})
             end
         end
     end

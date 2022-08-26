@@ -21,9 +21,9 @@
 - It may spawn 5(configurable) defense units　[Done]
 - New units join existing attack group.　[Done]
 - It may spawn regular spawner / defenses [Done]
-- Perform normal defense attack
-- It may perform nearby attacks (80% of the time when your military units are near)
-- It may perform artillery attacks (20% of the time when your military units are near, 100% when your entity are in its range)
+- Perform normal defense attack [WIP]
+- It may perform nearby advanced attacks (80% of the time when your military units are near) [WIP]
+- It may perform artillery advanced attacks (20% of the time when your military units are near, 100% when your entity are in its range) [WIP]
 - When it takes huge amount of damage, it may perform more devastating attacks.
 
 
