@@ -122,8 +122,20 @@ local boss_spawnable_index_switch = {
     end,
 }
 
+
 local spawn_building = function()
-    for i = 1, ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[ErmRaceSettingsHelper.boss_tier(global.boss.race_name)] do
+    local boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
+    local nearby_buildings = global.boss.surface.find_entities_filtered({
+        position=global.boss.entity_position,
+        radius=spawnRadius,
+        type=enemy_buildings,
+        force=global.boss.force}
+    )
+    if #nearby_buildings >= ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
+        return
+    end
+
+    for i = 1, ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
         local building_name
         if ErmRaceSettingsHelper.can_spawn(10) then
             building_name = ErmBaseBuildProcessor.getBuildingName(global.boss.race_name, 'cc')
@@ -145,9 +157,8 @@ end
 
 local unset_boss_data = function()
     global.boss = boss_setting_default()
-    -- Kill all attack groups and its units
+    -- Kill all attack group units
     global.boss_attack_groups = {}
-    -- Kill all defense groups and its units
     global.boss_group_spawn = ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = boss_spawnable_index_default()
 end
@@ -306,6 +317,7 @@ function BossProcessor.get_pathing_entity_name(race_name)
 end
 
 function BossProcessor.heartbeat()
+    local boss_attacked = false
     if global.boss.victory then
         -- start reward process
         destroy_beacons()
@@ -335,6 +347,7 @@ function BossProcessor.heartbeat()
         global.boss.last_hp_defense_unit = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Base Defense Attack'..global.boss.entity.health)
         ErmBossAttackProcessor.exec_basic()
+        boss_attacked = true
     end
 
     if global.boss.last_hp_artillery - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[2] then
@@ -351,14 +364,19 @@ function BossProcessor.heartbeat()
         end
         ErmDebugHelper.print('BossProcessor: Spawn T2 attack'..global.boss.entity.health)
         ErmBossAttackProcessor.exec_advanced()
+        boss_attacked = true
     end
 
     if global.boss.last_hp_superweapon - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[4] then
         global.boss.last_hp_superweapon = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Super Attack, '..global.boss.entity.health)
         ErmBossAttackProcessor.exec_super()
+        boss_attacked = true
     end
 
+    if boss_attacked then
+        ErmBossAttackProcessor.unset_attackable_entities_cache()
+    end        
     ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
 end
 
@@ -391,10 +409,7 @@ function BossProcessor.support_structures_spawn()
         return
     end
 
-    local nearby_buildings = global.boss.surface.find_entities_filtered({type=enemy_buildings, force=global.boss.force})
-    if #nearby_buildings < ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[global.race_settings[global.boss.race_name].boss_tier] then
-        spawn_building()
-    end
+    spawn_building()
     ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
 end
 

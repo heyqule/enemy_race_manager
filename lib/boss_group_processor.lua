@@ -149,7 +149,7 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     ErmDebugHelper.print('BossGroupProcessor: Spawned Cycle: '..tostring(global.boss_group_spawn.current_cycle))
     ErmDebugHelper.print('BossGroupProcessor: Spawned units:'..tostring(i))
     ErmDebugHelper.print('BossGroupProcessor: Total units:'..tostring(spawn_data.total_units))
-    ErmDebugHelper.print('BossGroupProcessor: TYPE: '..serpent.block(spawn_data))
+    --ErmDebugHelper.print('BossGroupProcessor: TYPE: '..serpent.block(spawn_data))
 
     if global.boss_group_spawn.current_cycle == global.boss_group_spawn.max_cycles or
             global.boss_group_spawn.total_units >= global.boss_group_spawn.max_units

@@ -3,6 +3,22 @@ local scenarios_helper = require('__enemyracemanager__/scenarios/shared.lua')
 
 local Event = require('__stdlib__/stdlib/event/event')
 
+local spawned
+
+Event.on_init(function(event)
+    game.map_settings.enemy_expansion.enabled = false
+    local surface = game.surfaces[1]
+    local mgs = surface.map_gen_settings
+    mgs.autoplace_controls["enemy-base"].frequency = 0
+    mgs.autoplace_controls["enemy-base"].size = 0
+    mgs.autoplace_controls["enemy-base"].richness = 0
+    game.surfaces[1].map_gen_settings = mgs
+    local entities = surface.find_entities_filtered({type='unit-spawner'})
+    for _, entity in pairs(entities) do
+        entity.destroy()
+    end
+end)
+
 Event.register(defines.events.on_player_created, function(event)
     local surface = game.surfaces[1]
     local player = game.players[1]
@@ -29,6 +45,8 @@ Event.register(defines.events.on_player_created, function(event)
         player=1,
         position={-10,-10}
     })
+
+    print(surface.map_gen_settings.autoplace_controls["enemy-base"].frequency)
 end)
 
 Event.on_nth_tick(900, function(event)
@@ -47,36 +65,48 @@ Event.on_nth_tick(900, function(event)
         })
     end
 
-    surface.create_entity({
+    local entities = {}
+    table.insert(entities, surface.create_entity({
         name='erm_terran/battlecruiser/yamato',
         force='player',
         position={-10,-10}
-    })
-    surface.create_entity({
+    }))
+    table.insert(entities, surface.create_entity({
         name='erm_terran/battlecruiser/laser',
         force='player',
         position={-10,-10}
-    })
-    surface.create_entity({
+    }))
+    table.insert(entities, surface.create_entity({
         name='erm_terran/tank/mk2',
         force='player',
-        position={-20,-20}
-    })
-    for i=1, 3 do
-        surface.create_entity({
+        position={15,15}
+    }))
+    for i=1, 5 do
+        table.insert(entities, surface.create_entity({
             name='erm_terran/wraith',
             force='player',
-            position={-10,-10}
-        })
+            position={-20,-20}
+        }))
     end
     for i=1, 10 do
-        surface.create_entity({
+        table.insert(entities, surface.create_entity({
             name='erm_terran/marine/mk3',
             force='player',
-            position={-20,-20}
-        })
+            position={10,10}
+        }))
+    end
+    local command = {
+        type = defines.command.attack_area,
+        destination = { x = 100, y = 0 },
+        radius = 20
+    }
+    for _, entity in pairs(entities) do
+        entity.set_command(command)
     end
 
-    remote.call('enemy_race_manager_debug', 'spawn_boss', {x=100,y=100})
+    if not spawned then
+        remote.call('enemy_race_manager_debug', 'spawn_boss', {x=100,y=0})
+        spawned = true
+    end
 end)
 

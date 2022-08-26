@@ -40,19 +40,19 @@
 
 ##Boss Tiers
 - T1 
-  - 8000000 HP (scales 10% of HP multiplier)
+  - 10000000 HP
   - lvl 25 damage stats
   - 10 defense structures, 
-  - despawn time: 30mins
-  - 266667 / min
+  - despawn time: 45mins
+  - 222222 / min
   - 100% 1 infinite chest drop
   - rewards tier 1 items
 - T2 
-  - 16000000 HP
+  - 20000000 HP
   - lvl 35 damage stats
   - 20 defense structures
   - despawn time: 45mins
-  - 355555 / min
+  - 444444 / min
   - 100% 1 infinite chest drop
   - rewards tier 1(50%), 2(50%) items
 - T3 
@@ -60,33 +60,35 @@
   - lvl 50 damage stats
   - 30 defense structures
   - despawn time: 60mins
-  - 533333 / min
+  - 533333 / minute
   - 33% 2 infinite chest drop, with 100% 1 drop.
   - rewards tier 1(20%), 2(80%) items
 - T4
-  - 64000000 HP
+  - 50000000 HP
   - lvl 70 damage stats
   - 40 defense structures
-  - despawn time: 90mins
-  - 711111 / min
+  - despawn time: 75 minute
+  - 666666 / minute
   - 66% 1 infinite chest drop, with 100% 1 drop
   - rewards tier 1(20%), 2(60%), 3(20%) items
 - T5 
-  - 128000000 HP
+  - 99999999 HP
   - lvl 99 damage stats
   - 50 defense structures
-  - despawn time: 120 mins
-  - 1066666 per minutes
+  - despawn time: 99 minute
+  - 1010101 / minute
   - 100% 2 infinite chest drop
   - rewards tier 1(10%), 2(50%), 3(40%) items
 
-New tier can only be unlocked when you defeat the current tier.
+New tier can only be unlocked when you defeat the current tier. 
 
-Tier spawn rate @ Tier 2 - 5
-Tier 2 spawn when you are at tier 3 = 50%
-Tier 3 spawn when you are at tier 3  = 50%
+You will not advance to new tier automatically.  You set it in the UI.
 
-You'll have option to lock 100% at current tier.  
+Once you are on new tier, you will not able to spawn lower tier.
+
+
+
+
 
 Tier 1 items
    - plates

@@ -16,15 +16,26 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossAttackProcessor = {}
 
+local attackable_entities_cache = nil
+local attackable_entities_cache_size = 0
+
 local pick_near_by_player_entity_position = function()
-    local surface = global.boss.surface
-    local entities = surface.find_entities_filtered {
-        force = ErmForceHelper.get_player_forces(),
-        radius = 64,
-        position = global.boss.entity_position,
-        limit = 30
-    }
-    return entities[math.random(1,#entities)].position
+    if attackable_entities_cache == nil then
+        local surface = global.boss.surface
+        attackable_entities_cache = surface.find_entities_filtered {
+            force = ErmForceHelper.get_player_forces(),
+            radius = 64,
+            position = global.boss.entity_position,
+            limit = 50
+        }
+        attackable_entities_cache_size = #attackable_entities_cache
+    end
+    return attackable_entities_cache[math.random(1,attackable_entities_cache_size)].position
+end
+
+function BossAttackProcessor.unset_attackable_entities_cache()
+    attackable_entities_cache = nil
+    attackable_entities_cache_size = 0
 end
 
 function BossAttackProcessor.exec_basic()
