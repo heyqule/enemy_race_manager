@@ -259,12 +259,19 @@ function Debug_RemoteAPI.unset_boss()
     ErmBossProcessor.unset()
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'request_path')
-function Debug_RemoteAPI.request_path()
-    local surface = game.surfaces[1]
-    local rocket_silos = surface.find_entities_filtered {name = 'rocket-silo'}
-    if rocket_silos and rocket_silos[1] and global.boss.entity then
-        surface.request_path({start=global.boss.entity.position, goal=rocket_silo.position, force=force})
+--- Usage: remote.call('enemy_race_manager_debug', 'forces_relation')
+function Debug_RemoteAPI.forces_relation()
+    local forces = game.forces
+    for key = 1, #forces do
+        local forceA = forces[key]
+        print('------ '..forceA.name..' ------')
+        for _, forceB in pairs(forces) do
+            print('Is friend with '..forceB.name..': '..tostring(forceA.is_friend(forceB)))
+            print('Is in friend list with '..forceB.name..': '..tostring(forceA.get_friend(forceB)))
+            print('Is cease_fire with '..forceB.name..': '..tostring(forceA.get_cease_fire(forceB)))
+            print('--------------')
+        end
+        print('------ END '..forceA.name..'------')
     end
 
 end

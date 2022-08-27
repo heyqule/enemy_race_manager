@@ -24,10 +24,10 @@ Event.on_nth_tick(ErmConfig.TEN_SECONDS_CRON, function(event)
     ErmCron.process_10_sec_queue()
 end)
 
-Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
-    ErmCron.process_1_sec_queue()
-end)
-
 Event.on_nth_tick(ErmConfig.TWO_SECONDS_CRON, function(event)
     ErmCron.process_2_sec_queue()
+end)
+
+Event.on_nth_tick(ErmConfig.QUICK_CRON, function(event)
+    ErmCron.process_quick_queue()
 end)

@@ -81,11 +81,16 @@ local addRaceSettings = function()
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 20},
-        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 20},
+        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 25},
+        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 25},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 10},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 10},
+        {{'destroyer','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {1, 1, 1, 2, 2}, 20},
     }
     race_settings.featured_flying_groups = {
-        {{'distractor','destroyer'}, {2, 1}, 50},
+        {{'distractor','destroyer'}, {1, 1}, 50},
+        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 30},
+        {{'logistic', 'distractor','destroyer'}, {1, 1, 1}, 40},
     }
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)

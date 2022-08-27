@@ -35,7 +35,7 @@ local maxRetry = 3
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}
 local turrets = {'ammo-turret','electric-turret','fluid-turret'}
-local indexable_turrets = {'ammo-turret','fluid-turret'}
+local indexable_turrets = {'ammo-turret', 'fluid-turret'}
 local beacon_name = 'erm-boss-beacon'
 
 local boss_setting_default = function()
@@ -125,13 +125,13 @@ local boss_spawnable_index_switch = {
 
 
 local spawn_building = function()
-    local boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
+    local boss_tier = global.boss.boss_tier
     local nearby_buildings = global.boss.surface.find_entities_filtered({
-        position=global.boss.entity_position,
-        radius=spawnRadius,
-        type=enemy_buildings,
-        force=global.boss.force}
-    )
+        position = global.boss.entity_position,
+        radius  = spawnRadius,
+        type    = enemy_buildings,
+        force   = global.boss.force
+    })
     if #nearby_buildings >= ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
         return
     end
@@ -145,7 +145,14 @@ local spawn_building = function()
         else
             building_name = ErmBaseBuildProcessor.getBuildingName(global.boss.race_name, 'turret')
         end
-        ErmBaseBuildProcessor.build(global.boss.surface, building_name, global.boss.force_name, global.boss.entity_position)
+
+        ErmCron.add_quick_queue(
+                'BaseBuildProcessor.build',
+                global.boss.surface,
+                global.boss.entity_position,
+                building_name,
+                global.boss.force_name
+        )
     end
 end
 
@@ -186,6 +193,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         global.boss.surface = surface
         global.boss.surface_name = surface.name
         global.boss.spawned_tick = game.tick
+        global.boss.boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
         global.boss.despawn_at_tick = game.tick + (defines.time.minute * ErmConfig.BOSS_DESPAWN_TIMER[global.boss.boss_tier])
         BossProcessor.index_ammo_turret(surface)
         ErmDebugHelper.print('BossProcessor: Indexed positions: '..global.boss_spawnable_index.size)
@@ -306,7 +314,7 @@ function BossProcessor.get_boss_name(race_name)
     return ErmRaceSettingsHelper.get_race_entity_name(
             race_name,
             global.race_settings[race_name].boss_building,
-            ErmConfig.BOSS_LEVELS[global.race_settings[race_name].boss_tier]
+            ErmConfig.BOSS_LEVELS[global.boss.boss_tier]
     )
 end
 
@@ -374,6 +382,7 @@ function BossProcessor.heartbeat()
     if global.boss.last_hp_attk5 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[5] then
         global.boss.last_hp_attk5 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Super Attack / Phase change, '..global.boss.entity.health)
+
         ErmBossAttackProcessor.exec_super()
         boss_attacked = true
     end

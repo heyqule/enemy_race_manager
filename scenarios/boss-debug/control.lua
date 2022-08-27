@@ -24,7 +24,7 @@ Event.register(defines.events.on_player_created, function(event)
     local player = game.players[1]
     local force = player.force
 
-    scenarios_helper.spawn_concrete(surface, 32)
+    scenarios_helper.spawn_tile(surface, 32)
     scenarios_helper.set_tech_level(force, 20)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()

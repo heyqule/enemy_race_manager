@@ -13,7 +13,9 @@ local process_one_job = function(cron_list)
     if(Queue.is_empty(cron_list)) then
         return
     end
+    
     local job = cron_list()
+
     if cron_switch[job[1]] then
         cron_switch[job[1]](job[2])
     else
@@ -47,6 +49,7 @@ function CronProcessor.init_globals()
     global.ten_seconds_cron = global.ten_seconds_cron or Queue()
     global.two_seconds_cron = global.two_seconds_cron or Queue()
     global.one_second_cron = global.one_second_cron or Queue()
+    global.quick_cron = global.quick_cron or Queue()
 end
 
 function CronProcessor.rebuild_queue()
@@ -55,6 +58,7 @@ function CronProcessor.rebuild_queue()
     Queue.load(global.ten_seconds_cron)
     Queue.load(global.two_seconds_cron)
     Queue.load(global.one_second_cron)
+    Queue.load(global.quick_cron)
 end
 
 function CronProcessor.add_1_min_queue(request, ...)
@@ -82,6 +86,11 @@ function CronProcessor.add_1_sec_queue(request, ...)
     global.one_second_cron({request, arg})
 end
 
+function CronProcessor.add_quick_queue(request, ...)
+    local arg = {...}
+    global.quick_cron({request, arg})
+end
+
 function CronProcessor.process_1_min_queue()
     process_all_jobs(global.one_minute_cron)
 end
@@ -100,6 +109,10 @@ end
 
 function CronProcessor.process_1_sec_queue()
     process_one_job(global.one_second_cron)
+end
+
+function CronProcessor.process_quick_queue()
+    process_one_job(global.quick_cron)
 end
 
 return CronProcessor

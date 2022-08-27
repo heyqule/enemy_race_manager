@@ -61,29 +61,20 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     return biter
 end
 
-local max_level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
 
 for i = 1, max_level do
-    -- 15 - 158
     data:extend({ makeLevelEnemy(i, 'small-biter') })
-    -- 10 - 105
-    data:extend({ makeLevelEnemy(i, 'small-spitter') })
-    -- 75 - 1900
-    data:extend({ makeLevelEnemy(i, 'medium-biter', 0.33 ) })
-    -- 50 - 1300
-    data:extend({ makeLevelEnemy(i, 'medium-spitter', 0.33) })
-    -- 375 - 5000
-    data:extend({ makeLevelEnemy(i, 'big-biter') })
-    -- 200 - 2700
-    data:extend({ makeLevelEnemy(i, 'big-spitter') })
-    -- 3000 - 7700
-    data:extend({ makeLevelEnemy(i, 'behemoth-biter', 8) })
-    -- 1500 - 3800
-    data:extend({ makeLevelEnemy(i, 'behemoth-spitter', 8) })
-end
 
--- Add Elite biters
-for i = ErmConfig.MAX_LEVELS, ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS do
+    data:extend({ makeLevelEnemy(i, 'small-spitter') })
+
+    data:extend({ makeLevelEnemy(i, 'medium-biter', 0.33 ) })
+
+    data:extend({ makeLevelEnemy(i, 'medium-spitter', 0.33) })
+
+    data:extend({ makeLevelEnemy(i, 'big-biter') })
+
+    data:extend({ makeLevelEnemy(i, 'big-spitter') })
 
     data:extend({ makeLevelEnemy(i, 'behemoth-biter', 8) })
 

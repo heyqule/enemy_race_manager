@@ -19,6 +19,7 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
 
 require('prototypes/compatibility/controls')
 
@@ -68,6 +69,9 @@ cron_switch = {
     end,
     ['BossGroupProcessor.process_attack_groups'] = function(args)
         ErmBossGroupProcessor.process_attack_groups()
+    end,
+    ['BossAttackProcessor.process_attack'] = function(args)
+        ErmBossAttackProcessor.process_attack(args[1])
     end
 }
 

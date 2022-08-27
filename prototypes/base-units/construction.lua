@@ -194,7 +194,7 @@ function makeConstructionRobot(level)
     return robot
 end
 
-local max_level = ErmConfig.MAX_LEVELS
+local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeConstructionRobot(i) })
