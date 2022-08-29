@@ -68,7 +68,7 @@ local global_assets_explosion = function(surface)
             position = {-100 + (key * 15), 0}
         })
         surface.create_entity({
-            name = "erm-small-explosion-"..value.."-0-5",
+            name = "erm-small-explosion-"..value.."-2",
             position = {-100 + (key * 15), 20}
         })
     end
@@ -84,8 +84,8 @@ local zerg_explosions = function(surface)
         'colony-explosion',
         'mutalisk-explosion-small',
         'hydralisk-explosion-small',
-        'defiler-cloud-explosion',
-        'queen-cloud-explosion',
+        'blood-cloud-explosion',
+        'acid-cloud-explosion',
         'devourer-cloud-explosion',
         'overlord-air-death',
         'guardian-air-death'

@@ -32,6 +32,8 @@ local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
+local INCLUDE_SPAWNS = false
+
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}
 local turrets = {'ammo-turret','electric-turret','fluid-turret'}
@@ -101,7 +103,9 @@ local start_unit_spawn = function()
     ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
     ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
     ErmCron.add_15_sec_queue('BossGroupProcessor.process_attack_groups')
-    ErmBossGroupProcessor.spawn_initial_group()
+    if INCLUDE_SPAWNS then
+        ErmBossGroupProcessor.spawn_initial_group()
+    end
 end
 
 local boss_spawnable_index_switch = {
@@ -123,8 +127,7 @@ local boss_spawnable_index_switch = {
     end,
 }
 
-
-local spawn_building = function()
+local can_build_spawn_building = function()
     local boss_tier = global.boss.boss_tier
     local nearby_buildings = global.boss.surface.find_entities_filtered({
         position = global.boss.entity_position,
@@ -133,9 +136,18 @@ local spawn_building = function()
         force   = global.boss.force
     })
     if #nearby_buildings >= ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
+        return false
+    end
+
+    return true
+end
+
+local spawn_building = function()
+    if not can_build_spawn_building() then
         return
     end
 
+    local boss_tier = global.boss.boss_tier
     for i = 1, ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
         local building_name
         if ErmRaceSettingsHelper.can_spawn(10) then
@@ -147,11 +159,11 @@ local spawn_building = function()
         end
 
         ErmCron.add_quick_queue(
-                'BaseBuildProcessor.build',
+                'BaseBossProcessor.build_spawner',
                 global.boss.surface,
-                global.boss.entity_position,
                 building_name,
-                global.boss.force_name
+                global.boss.force_name,
+                global.boss.entity_position
         )
     end
 end
@@ -363,7 +375,9 @@ function BossProcessor.heartbeat()
     if global.boss.last_hp_attk2 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[2] then
         global.boss.last_hp_attk2 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Spawning Defense Unit'..global.boss.entity.health)
-        ErmBossGroupProcessor.spawn_defense_group()
+        if INCLUDE_SPAWNS then
+            ErmBossGroupProcessor.spawn_defense_group()
+        end
     end
 
     if global.boss.last_hp_attk3 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[3] then
@@ -376,7 +390,9 @@ function BossProcessor.heartbeat()
     if global.boss.last_hp_attk4 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[4] then
         global.boss.last_hp_attk4 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Building Defense Spawner'..global.boss.entity.health)
-        spawn_building()
+        if INCLUDE_SPAWNS then
+            spawn_building()
+        end
     end
 
     if global.boss.last_hp_attk5 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[5] then
@@ -408,22 +424,30 @@ function BossProcessor.index_ammo_turret(surface)
     end
 end
 
+--- Queue to spawn boss units
+--- @see enemyracemanager/control.lua
 function BossProcessor.units_spawn()
     if not ErmRaceSettingsHelper.is_in_boss_mode() then
         return
     end
 
-    ErmBossGroupProcessor.spawn_regular_group()
-    ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
+    if INCLUDE_SPAWNS then
+        ErmBossGroupProcessor.spawn_regular_group()
+        ErmCron.add_15_sec_queue('BossProcessor.units_spawn')
+    end
 end
 
+--- Queue to build boss Spawner
+--- @see enemyracemanager/control.lua
 function BossProcessor.support_structures_spawn()
     if not ErmRaceSettingsHelper.is_in_boss_mode() then
         return
     end
 
-    spawn_building()
-    ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
+    if INCLUDE_SPAWNS then
+        spawn_building()
+        ErmCron.add_1_min_queue('BossProcessor.support_structures_spawn')
+    end
 end
 
 function BossProcessor.unset()
@@ -435,5 +459,14 @@ function BossProcessor.unset()
     end
 end
 
+--- Build boss spawner
+--- @see enemyracemanager/control.lua
+function BossProcessor.build_spawner(surface, name, force, position)
+    if not ErmRaceSettingsHelper.is_in_boss_mode() or not can_build_spawn_building() then
+        return
+    end
+
+    ErmBaseBuildProcessor.build(surface, name, force, position)
+end
 
 return BossProcessor

@@ -92,6 +92,15 @@ data:extend({
         duration_in_ticks = 30 * 60,
         target_movement_modifier = 0.50,
         vehicle_speed_modifier = 0.50,
+    },
+    {
+        type = "sticker",
+        name = "30-075-slowdown-sticker",
+        flags = {},
+        animation = Sprites.empty_pictures(),
+        duration_in_ticks = 30 * 60,
+        target_movement_modifier = 0.50,
+        vehicle_speed_modifier = 0.50,
     }
 })
 

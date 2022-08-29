@@ -64,6 +64,9 @@ cron_switch = {
     ['BossProcessor.support_structures_spawn'] = function(args)
         ErmBossProcessor.support_structures_spawn()
     end,
+    ['BaseBossProcessor.build_spawner'] = function(args)
+        ErmBossProcessor.build_spawner(args[1], args[2], args[3], args[4])
+    end,
     ['BossGroupProcessor.generate_units'] = function(args)
         ErmBossGroupProcessor.generate_units(args[1], args[2])
     end,

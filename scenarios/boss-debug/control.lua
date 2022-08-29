@@ -45,8 +45,6 @@ Event.register(defines.events.on_player_created, function(event)
         player=1,
         position={-10,-10}
     })
-
-    print(surface.map_gen_settings.autoplace_controls["enemy-base"].frequency)
 end)
 
 Event.on_nth_tick(900, function(event)
@@ -76,11 +74,13 @@ Event.on_nth_tick(900, function(event)
         force='player',
         position={-10,-10}
     }))
-    table.insert(entities, surface.create_entity({
-        name='erm_terran/tank/mk2',
-        force='player',
-        position={15,15}
-    }))
+    for i=1, 2 do
+        table.insert(entities, surface.create_entity({
+            name='erm_terran/tank/mk2',
+            force='player',
+            position={15,15}
+        }))
+    end
     for i=1, 5 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/wraith',
@@ -88,7 +88,7 @@ Event.on_nth_tick(900, function(event)
             position={-20,-20}
         }))
     end
-    for i=1, 10 do
+    for i=1, 15 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/marine/mk3',
             force='player',

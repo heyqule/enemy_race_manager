@@ -17,6 +17,11 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossAttackProcessor = {}
 
+BossAttackProcessor.TYPE_PROJECTILE = 'projectile'
+BossAttackProcessor.TYPE_BEAM = 'beam'
+BossAttackProcessor.TYPE_EXPLOSION = 'explosion'
+BossAttackProcessor.TYPE_ARTILLERY = 'artillery'
+
 local pick_near_by_player_entity_position = function()
     local attackable_entities_cache = global.boss.attackable_entities_cache
     local attackable_entities_cache_size = global.boss.attackable_entities_cache_size
@@ -33,7 +38,15 @@ local pick_near_by_player_entity_position = function()
         global.boss.attackable_entities_cache = attackable_entities_cache
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
     end
-    return attackable_entities_cache[math.random(1,attackable_entities_cache_size)].position
+
+    local return_position = nil
+    local retry = 0
+    repeat
+        return_position = attackable_entities_cache[math.random(1,attackable_entities_cache_size)].position
+        retry = retry + 1
+    until return_position or retry == 3
+
+    return return_position
 end
 
 function BossAttackProcessor.unset_attackable_entities_cache()
@@ -42,11 +55,7 @@ function BossAttackProcessor.unset_attackable_entities_cache()
 end
 
 function BossAttackProcessor.exec_basic()
-    local data = {
-        entity_name = "erm-energy-explosion-blue-1",
-        count = 1,
-        spread = 3
-    }
+    local data = remote.call(global.boss.race_name..'_boss_attacks','get_basic_attack', global.boss.boss_tier)
     for i=1, data['spread'] do
         local position = pick_near_by_player_entity_position()
         data['position'] = position;
@@ -58,7 +67,8 @@ function BossAttackProcessor.exec_advanced()
     local data = {
         entity_name = "erm-energy-explosion-green-1",
         count = 1,
-        spread = 2
+        spread = 1,
+        type = BossAttackProcessor.TYPE_EXPLOSION
     }
     for i=1, data['spread'] do
         local position = pick_near_by_player_entity_position()
@@ -71,7 +81,8 @@ function BossAttackProcessor.exec_super()
     local data = {
         entity_name = "erm-ball-explosion-fire-2",
         count = 1,
-        spread = 3
+        spread = 1,
+        type = BossAttackProcessor.TYPE_EXPLOSION
     }
 
     for i=1, data['spread'] do
@@ -87,12 +98,46 @@ function BossAttackProcessor.process_attack(data)
     end
 
     local surface = global.boss.surface
-    local position = data['position']
     local entity_name = data['entity_name']
-    surface.create_entity({
-        name = entity_name,
-        position = position
-    })
+    for i = 1, data['count'] do
+        local position = data['position']
+        if i > 1 then
+            position['x'] = position['x'] + math.random(-8, 8)
+            position['y'] = position['y'] + math.random(-8, 8)
+        end
+        if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
+            surface.create_entity({
+                name = entity_name,
+                position = global.boss.entity_position,
+                target = position,
+                speed = data['speed'] or 0.2,
+                max_range = data['range'] or 64,
+                create_build_effect_smoke = false,
+                raise_built = false,
+                force = global.boss.force
+            })
+        elseif data['type'] == BossAttackProcessor.TYPE_BEAM then
+            --- target_position
+            --- source_position
+            --- duration
+            --- source_offset
+            surface.create_entity({
+                name = entity_name,
+                position = position,
+                create_build_effect_smoke = false,
+                raise_built = false,
+                force = global.boss.force
+            })
+        else
+            surface.create_entity({
+                name = entity_name,
+                position = position,
+                create_build_effect_smoke = false,
+                raise_built = false,
+                force = global.boss.force
+            })
+        end
+    end
 end
 
 return BossAttackProcessor
