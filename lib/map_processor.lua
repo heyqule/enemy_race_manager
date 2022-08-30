@@ -108,9 +108,15 @@ local process_enemy_level = function(surface, area, race_settings)
         end
     end
 
-    local units = surface.find_entities_filtered({ area = area, type = {'unit'}, force = ErmForceHelper.get_all_enemy_forces()})
+    --- Check for potential high level units over the border of the chunk.
+    local larger_radius = 8
+    local larger_area = {
+        top_left = { area.left_top.x - larger_radius, area.left_top.y - larger_radius},
+        bottom_right = { area.right_bottom.x + larger_radius, area.right_bottom.y + larger_radius},
+    }
+    local units = surface.find_entities_filtered({ area = larger_area, type = {'unit'}, force = ErmForceHelper.get_all_enemy_forces()})
     if Table.size(units) > 0 then
-        for k, entity in pairs(units) do
+        for _, entity in pairs(units) do
             if entity.unit_group == nil then
                 entity.destroy()
             end

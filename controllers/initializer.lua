@@ -128,6 +128,19 @@ local conditional_events = function()
             ErmCompat_NewGamePlus.exec(event)
         end)
     end
+
+    --- Another attempt to fix high level unit spawns in early game.
+    if not global.tick or global.tick < (defines.time.hour * 15) then
+        Event.register(defines.events.on_entity_spawned, function (event)
+            local entity = event.entity
+            if entity and entity.valid then
+                local nameToken = ErmForceHelper.get_name_token(entity.name)
+                if tonumber(nameToken[3]) > ErmRaceSettingsHelper.get_level(nameToken[1]) then
+                    entity.destroy()
+                end
+            end
+        end)
+    end
 end
 
 local init_globals = function()
@@ -141,6 +154,7 @@ local init_globals = function()
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     global.settings = global.settings or {}
+    global.tick = global.tick or 0
 
     global.installed_races = {}
     global.active_races = {}
