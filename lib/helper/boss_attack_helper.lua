@@ -9,6 +9,19 @@ local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_pro
 
 local BossAttacks = {}
 
+--Example:
+--BossAttacks.basic_attacks =
+--{
+--    projectile_name = {'blood-cloud','acid-cloud','blood-fire'},
+--    projectile_type = {
+--        ErmBossAttackProcessor.TYPE_PROJECTILE,
+--        ErmBossAttackProcessor.TYPE_PROJECTILE,
+--        ErmBossAttackProcessor.TYPE_PROJECTILE
+--    },
+--    projectile_chance = {25, 25, 100},
+--    projectile_count = {1, 1, 1},
+--    projectile_spread = {1, 1, 2}
+--}
 BossAttacks.basic_attacks = {}
 BossAttacks.advanced_attacks = {}
 BossAttacks.super_attacks = {}

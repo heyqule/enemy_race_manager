@@ -72,6 +72,16 @@ local global_assets_explosion = function(surface)
             position = {-100 + (key * 15), 20}
         })
     end
+
+    surface.create_entity({
+        name = "erm-aura_v9_v1-1",
+        position = {-100 + (12 * 15), 20}
+    })
+
+    surface.create_entity({
+        name = "erm-aura_v5_v1-1",
+        position = {-100 + (14 * 15), 20}
+    })
 end
 
 local zerg_explosions = function(surface)
@@ -145,7 +155,7 @@ local marspeople_explosions = function(surface)
     end
 end
 
-Event.on_nth_tick(120, function(event)
+Event.on_nth_tick(180, function(event)
     local surface = game.surfaces[1]
 
     global_assets_explosion(surface)

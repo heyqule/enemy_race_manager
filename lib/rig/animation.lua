@@ -6,7 +6,7 @@
 
 local ERM_AnimationRig = {}
 
-function set_properties(layer, name, value)
+local set_properties = function(layer, name, value)
     layer[name] = value
     if layer['hr_version'] then
         layer['hr_version'][name] = value
