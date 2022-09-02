@@ -13,6 +13,7 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 Event.on_nth_tick(ErmConfig.ONE_MINUTE_CRON, function(event)
     ErmCron.process_1_min_queue()
+    global.tick = event.tick
 end)
 
 Event.on_nth_tick(ErmConfig.THIRTY_SECONDS_CRON, function(event)

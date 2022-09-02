@@ -208,3 +208,28 @@ end
 if ErmConfig.mapgen_is_4_races_split() then
     process_4_ways()
 end
+
+-- Set autoplace to zero for any high level spawner/turret which are higher than max_level setting
+local max_level = ErmConfig.get_max_level()
+if not max_level == ErmConfig.max_level then
+    ErmDebugHelper.print('Disabling high level spawners autoplace:')
+    for _, v in pairs(data.raw["unit-spawner"]) do
+        if String.find( v.name, '/', 1, true) then
+            local nameToken = String.split( v.name, '/')
+            if tonumber(nameToken[3]) > max_level then
+                ErmDebugHelper.print('Disabling:' .. v.name)
+                data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
+            end
+        end
+    end
+
+    for _, v in pairs(data.raw["turret"]) do
+        if String.find( v.name, '/', 1, true) then
+            local nameToken = String.split( v.name, '/')
+            if tonumber(nameToken[3]) > max_level then
+                ErmDebugHelper.print('Disabling:' .. v.name)
+                data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
+            end
+        end
+    end
+end
