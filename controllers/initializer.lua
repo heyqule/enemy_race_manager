@@ -130,7 +130,7 @@ local conditional_events = function()
     end
 
     --- Another attempt to fix high level unit spawns in early game.
-    if not global.tick or global.tick < (defines.time.hour * 15) then
+    if not global.tick or global.tick < (defines.time.hour * 12) then
         Event.register(defines.events.on_entity_spawned, function (event)
             local entity = event.entity
             if entity and entity.valid then

@@ -1,9 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.5
-Date: 2022-09-03
+Date: 2022-09-02
 
   Bugfixes:
-    - Another attempt to fix high level units escaping the level processor in early game.
+    - Yet another attempt to fix high level units escaping the level processor in early game.
+    - Added an early game high level unit elimination function.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.4
