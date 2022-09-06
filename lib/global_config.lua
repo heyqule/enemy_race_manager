@@ -61,13 +61,18 @@ ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
 ErmConfig.BOSS_MAX_TIERS = 5
+-- 5 Tiers of boss and their properties
 ErmConfig.BOSS_DESPAWN_TIMER = {45, 45, 60, 75, 99}
 ErmConfig.BOSS_LEVELS = {25, 35, 50, 75, 99}
 ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 99999999}
 ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
 ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
+-- 5 type of attacks based on damage taken
 ErmConfig.BOSS_DEFENSE_ATTACKS = {9999, 25000, 69420, 99999, 999999}
-ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 1500
+-- Change phase every 15 Million HP
+ErmConfig.BOSS_PHASE_CHANGE = 15000000
+-- 96 width x up to 3000 length
+ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3000
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 256

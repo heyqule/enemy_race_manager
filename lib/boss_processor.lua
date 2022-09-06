@@ -32,7 +32,7 @@ local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
-local INCLUDE_SPAWNS = false
+local INCLUDE_SPAWNS = true -- Only for debug
 
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}

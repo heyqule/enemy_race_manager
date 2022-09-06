@@ -25,9 +25,8 @@ Event.register(defines.events.on_player_created, function(event)
 end)
 
 local global_assets_explosion = function(surface)
-    local ball_types = {'fire','ice','blood','ioncannon'}
+    local ball_types = {'fire','blood'}
     local small_types = {'acid','blood','cold','fire','xray'}
-    local others = {'green','blue','purple'}
 
     for key, value in pairs(ball_types) do
         surface.create_entity({
@@ -37,28 +36,6 @@ local global_assets_explosion = function(surface)
         surface.create_entity({
             name = "erm-ball-explosion-"..value.."-2",
             position = {-100 + (key * 15), -30}
-        })
-    end
-
-    for key, value in pairs(others) do
-        surface.create_entity({
-            name = "erm-energy-explosion-"..value.."-1",
-            position = {-20 + (key * 15), -50}
-        })
-        surface.create_entity({
-            name = "erm-energy-explosion-"..value.."-2",
-            position = {-20 + (key * 15), -30}
-        })
-    end
-
-    for key, value in pairs(others) do
-        surface.create_entity({
-            name = "erm-ring-explosion-"..value.."-1",
-            position = {0 + (key * 15), 0}
-        })
-        surface.create_entity({
-            name = "erm-ring-explosion-"..value.."-2",
-            position = {0 + (key * 15), 20}
         })
     end
 
@@ -74,18 +51,26 @@ local global_assets_explosion = function(surface)
     end
 
     surface.create_entity({
-        name = "erm-aura_v9_v1-1",
-        position = {-100 + (12 * 15), 20}
+        name = "erm-fire-explosion-air_a-1",
+        position = {0, 20}
     })
 
     surface.create_entity({
-        name = "erm-aura_v5_v1-1",
-        position = {-100 + (14 * 15), 20}
+        name = "erm-fire-explosion-air_b-1",
+        position = {20, 20}
     })
+
+    surface.create_entity({
+        name = "erm-fire-explosion-ground_a-1",
+        position = {40, 20}
+    })
+
+
+
 end
 
 local zerg_explosions = function(surface)
-    if script.active_mods['erm_zerg'] == false then
+    if not script.active_mods['erm_zerg'] then
         return
     end
 
@@ -110,7 +95,7 @@ local zerg_explosions = function(surface)
 end
 
 local protoss_explosions = function(surface)
-    if script.active_mods['erm_toss'] == false then
+    if not script.active_mods['erm_toss'] then
         return
     end
     local explosion_types = {
@@ -134,7 +119,7 @@ local protoss_explosions = function(surface)
 end
 
 local marspeople_explosions = function(surface)
-    if script.active_mods['erm_marspeople'] == false then
+    if not script.active_mods['erm_marspeople'] then
         return
     end
     local explosion_types = {

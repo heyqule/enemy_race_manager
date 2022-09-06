@@ -65,7 +65,7 @@ end
 
 function BossAttackProcessor.exec_advanced()
     local data = {
-        entity_name = "erm-energy-explosion-green-1",
+        entity_name = "erm-ball-explosion-fire-2",
         count = 1,
         spread = 1,
         type = BossAttackProcessor.TYPE_EXPLOSION
