@@ -51,18 +51,23 @@ local global_assets_explosion = function(surface)
     end
 
     surface.create_entity({
-        name = "erm-fire-explosion-air_a-1",
+        name = "erm-fire-explosion-air_normal-1",
         position = {0, 20}
     })
 
     surface.create_entity({
-        name = "erm-fire-explosion-air_b-1",
+        name = "erm-fire-explosion-air_large-1",
         position = {20, 20}
     })
 
     surface.create_entity({
-        name = "erm-fire-explosion-ground_a-1",
+        name = "erm-fire-explosion-ground_normal-1",
         position = {40, 20}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-fire-1",
+        position = {60, 20}
     })
 
 

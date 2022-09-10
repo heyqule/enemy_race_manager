@@ -15,13 +15,6 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local BossAttackProcessor = {}
-
-BossAttackProcessor.TYPE_PROJECTILE = 'projectile'
-BossAttackProcessor.TYPE_BEAM = 'beam'
-BossAttackProcessor.TYPE_EXPLOSION = 'explosion'
-BossAttackProcessor.TYPE_ARTILLERY = 'artillery'
-
 local pick_near_by_player_entity_position = function()
     local attackable_entities_cache = global.boss.attackable_entities_cache
     local attackable_entities_cache_size = global.boss.attackable_entities_cache_size
@@ -49,6 +42,24 @@ local pick_near_by_player_entity_position = function()
     return return_position
 end
 
+local queue_attack = function(data)
+    for i=1, data['spread'] do
+        local position = pick_near_by_player_entity_position()
+        data['position'] = position;
+        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
+    end
+end
+
+local maxFailedAttack = 10
+local failedAttack = 0
+
+local BossAttackProcessor = {}
+
+BossAttackProcessor.TYPE_PROJECTILE = 'projectile'
+BossAttackProcessor.TYPE_BEAM = 'beam'
+BossAttackProcessor.TYPE_EXPLOSION = 'explosion'
+BossAttackProcessor.TYPE_ARTILLERY = 'artillery'
+
 function BossAttackProcessor.unset_attackable_entities_cache()
     global.boss.attackable_entities_cache = nil
     global.boss.attackable_entities_cache_size = 0
@@ -56,44 +67,22 @@ end
 
 function BossAttackProcessor.exec_basic()
     local data = remote.call(global.boss.race_name..'_boss_attacks','get_basic_attack', global.boss.boss_tier)
-    for i=1, data['spread'] do
-        local position = pick_near_by_player_entity_position()
-        data['position'] = position;
-        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
-    end
+    queue_attack(data)
 end
 
 function BossAttackProcessor.exec_advanced()
-    local data = {
-        entity_name = "erm-ball-explosion-fire-2",
-        count = 1,
-        spread = 1,
-        type = BossAttackProcessor.TYPE_EXPLOSION
-    }
-    for i=1, data['spread'] do
-        local position = pick_near_by_player_entity_position()
-        data['position'] = position;
-        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
-    end
+    local data = remote.call(global.boss.race_name..'_boss_attacks','get_advanced_attack', global.boss.boss_tier)
+    queue_attack(data)
 end
 
 function BossAttackProcessor.exec_super()
-    local data = {
-        entity_name = "erm-ball-explosion-fire-2",
-        count = 1,
-        spread = 1,
-        type = BossAttackProcessor.TYPE_EXPLOSION
-    }
-
-    for i=1, data['spread'] do
-        local position = pick_near_by_player_entity_position()
-        data['position'] = position;
-        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
-    end
+    local data = remote.call(global.boss.race_name..'_boss_attacks','get_super_attack', global.boss.boss_tier)
+    queue_attack(data)
 end
 
 function BossAttackProcessor.process_attack(data)
-    if data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid then
+    if data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'] then
+        failedAttack = failedAttack + 1
         return
     end
 
@@ -138,6 +127,12 @@ function BossAttackProcessor.process_attack(data)
             })
         end
     end
+
+    failedAttack = 0
+end
+
+function BossAttackProcessor.is_failed_to_attack()
+    return failedAttack >= maxFailedAttack
 end
 
 return BossAttackProcessor

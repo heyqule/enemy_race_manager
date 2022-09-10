@@ -32,7 +32,7 @@ local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
-local INCLUDE_SPAWNS = true -- Only for debug
+local INCLUDE_SPAWNS = false -- Only for debug
 
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}
@@ -45,6 +45,8 @@ local boss_setting_default = function()
         entity = nil,
         entity_name = '',
         entity_position = nil,
+        target_position = {0, 0},
+        target_direction = defines.direction.north,
         surface = nil,
         surface_name = '',
         race_name = '',
@@ -94,7 +96,11 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
         if turret[1] then
             return
         end
-        table.insert(global.boss_spawnable_index.chunks, target_spawner.position)
+        table.insert(global.boss_spawnable_index.chunks, {
+            spawn_position=target_spawner.position,
+            turret_position=gunturret.position,
+            turret_direction=gunturret.direction
+        })
         global.boss_spawnable_index.size = global.boss_spawnable_index.size + 1
     end
 end
@@ -108,22 +114,34 @@ local start_unit_spawn = function()
     end
 end
 
+
+local get_scan_area = {
+    [defines.direction.north] = function(x, y)
+        return {left_top = {x - scanRadius, y - scanLength}, right_bottom = {x + scanRadius, y - scanMinLength}}
+    end,
+    [defines.direction.east] = function(x, y)
+        return {left_top = {x + scanMinLength, y - scanRadius}, right_bottom = {x + scanLength, y + scanRadius}}
+    end,
+    [defines.direction.south] = function(x, y)
+        return {left_top = {x - scanRadius, y + scanMinLength}, right_bottom = {x + scanRadius, y + scanLength}}
+    end,
+    [defines.direction.west] = function(x, y)
+        return {left_top = {x - scanLength, y - scanRadius}, right_bottom = {x - scanMinLength, y + scanRadius}}
+    end,    
+}
+
 local boss_spawnable_index_switch = {
-    [tostring(defines.direction.north)] = function(gunturret)
-        local area = {left_top = {gunturret.position.x - scanRadius, gunturret.position.y - scanLength}, right_bottom = {gunturret.position.x + scanRadius, gunturret.position.y - scanMinLength}}
-        index_boss_spawnable_chunk(gunturret, area)
+    [defines.direction.north] = function(gunturret)
+        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.north](gunturret.position.x, gunturret.position.y))
     end,
-    [tostring(defines.direction.east)] = function(gunturret)
-        local area = {left_top = {gunturret.position.x + scanMinLength, gunturret.position.y - scanRadius}, right_bottom = {gunturret.position.x + scanLength, gunturret.position.y + scanRadius}}
-        index_boss_spawnable_chunk(gunturret, area, true)
+    [defines.direction.east] = function(gunturret)
+        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.east](gunturret.position.x, gunturret.position.y), true)
     end,
-    [tostring(defines.direction.south)] = function(gunturret)
-        local area = {left_top = {gunturret.position.x - scanRadius, gunturret.position.y + scanMinLength}, right_bottom = {gunturret.position.x + scanRadius, gunturret.position.y + scanLength}}
-        index_boss_spawnable_chunk(gunturret, area, true)
+    [defines.direction.south] = function(gunturret)
+        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.south](gunturret.position.x, gunturret.position.y), true)
     end,
-    [tostring(defines.direction.west)] = function(gunturret)
-        local area = {left_top = {gunturret.position.x - scanLength, gunturret.position.y - scanRadius}, right_bottom = {gunturret.position.x - scanMinLength, gunturret.position.y + scanRadius}}
-        index_boss_spawnable_chunk(gunturret, area)
+    [defines.direction.west] = function(gunturret)
+        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.west](gunturret.position.x, gunturret.position.y))
     end,
 }
 
@@ -212,11 +230,15 @@ function BossProcessor.exec(rocket_silo, spawn_position)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
             surface.print('Unable to find location to spawn a boss')
+            --ErmCron.add_2_sec_queue('BossProcessor.check_pathing')
             return
         end
 
         if not StdIs.position(spawn_position) then
-            spawn_position = global.boss_spawnable_index.chunks[math.random(1, global.boss_spawnable_index.size)]
+            local target_chunk_data =  global.boss_spawnable_index.chunks[math.random(1, global.boss_spawnable_index.size)]
+            spawn_position = target_chunk_data.spawn_position
+            global.boss.target_position = target_chunk_data.turret_position
+            global.boss.target_direction = target_chunk_data.turret_direction
         end
 
         local entities = surface.find_entities_filtered {
@@ -418,7 +440,7 @@ function BossProcessor.index_ammo_turret(surface)
     ErmDebugHelper.print('BossProcessor: Gap: '..turret_gap..'/'..turret_gap_pick)
     for i=1, #gunturrets do
         if i%turret_gap == turret_gap_pick then
-            boss_spawnable_index_switch[tostring(gunturrets[i].direction)](gunturrets[i])
+            boss_spawnable_index_switch[gunturrets[i].direction](gunturrets[i])
             i = i + turret_gap - 2
         end
     end

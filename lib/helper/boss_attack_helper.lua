@@ -29,16 +29,15 @@ BossAttacks.phases = {}
 
 local can_spawn = ErmRaceSettingsHelper.can_spawn
 
-function BossAttacks.get_basic_attack(tier)
-    local basic_attacks = BossAttacks.basic_attacks
+local select_attack = function(attacks, tier)
     local data
-    for i, value in pairs(basic_attacks['projectile_name']) do
-        if can_spawn(basic_attacks['projectile_chance'][i]) then
+    for i, value in pairs(attacks['projectile_name']) do
+        if can_spawn(attacks['projectile_chance'][i]) then
             data = {
-                entity_name = MOD_NAME..'/'..value..'-'..basic_attacks['projectile_type'][i]..'-t'..tier,
-                count = basic_attacks['projectile_count'][i],
-                spread = basic_attacks['projectile_spread'][i],
-                type = basic_attacks['projectile_type'][i]
+                entity_name = MOD_NAME..'/'..value..'-'..attacks['projectile_type'][i]..'-t'..tier,
+                count = attacks['projectile_count'][i],
+                spread = attacks['projectile_spread'][i],
+                type = attacks['projectile_type'][i]
             }
             break
         end
@@ -46,12 +45,19 @@ function BossAttacks.get_basic_attack(tier)
     return data
 end
 
-function BossAttacks.get_advanced_attack(tier)
+function BossAttacks.get_basic_attack(tier)
+    local attacks = BossAttacks.basic_attacks
+    return select_attack(attacks, tier)
+end
 
+function BossAttacks.get_advanced_attack(tier)
+    local attacks = BossAttacks.advanced_attacks
+    return select_attack(attacks, tier)
 end
 
 function BossAttacks.get_super_attack(tier)
-
+    local attacks = BossAttacks.advanced_attacks
+    return select_attack(attacks, tier)
 end
 
 return BossAttacks
