@@ -1,5 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.16.0
+Date: 2022-??-??
 
   Features:
     - Added Boss mode.  Boss spawner is revealed by launching a Psi Tracking Satellite.
@@ -11,7 +12,7 @@ Version: 1.16.0
 
   Changes:
     - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of assigning to automatic group.
-    - Level up function now runs every 10 mins. The check is disabled when boss is up.
+    - Level up function now runs every 10 mins.
     - When boss is active, Leveling up is halt until boss mode is ended.
 
 ---------------------------------------------------------------------------------------------------

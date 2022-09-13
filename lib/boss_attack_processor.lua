@@ -50,8 +50,43 @@ local queue_attack = function(data)
     end
 end
 
-local maxFailedAttack = 10
-local failedAttack = 0
+local can_spawn = ErmRaceSettingsHelper.can_spawn
+
+local select_attack = function(mod_name, attacks, tier)
+    local data
+    for i, value in pairs(attacks['projectile_name']) do
+        if can_spawn(attacks['projectile_chance'][i]) then
+            data = {
+                entity_name = mod_name..'/'..value..'-'..attacks['projectile_type'][i]..'-t'..tier,
+                count = attacks['projectile_count'][i],
+                spread = attacks['projectile_spread'][i],
+                type = attacks['projectile_type'][i]
+            }
+
+            if attacks['projectile_use_multiplier'][i] then
+                data['count'] = data['count'] * attacks['projectile_count_multiplier'][i][tier]
+                data['spread'] = data['spread'] * attacks['projectile_spread_multiplier'][i][tier]
+            end
+
+            break
+        end
+    end
+    return data
+end
+
+local fetch_attack_data = function(race_name)
+    if not global.boss.attack_cache then
+        global.boss.attack_cache = remote.call(race_name..'_boss_attacks','get_attack_data')
+    end
+end
+
+local prepare_attack = function(type)
+    local race_name = global.boss.race_name
+    local tier = global.boss.boss_tier
+    fetch_attack_data(race_name)
+    local data = select_attack(race_name, global.boss.attack_cache[type], tier)
+    queue_attack(data)
+end
 
 local BossAttackProcessor = {}
 
@@ -66,28 +101,25 @@ function BossAttackProcessor.unset_attackable_entities_cache()
 end
 
 function BossAttackProcessor.exec_basic()
-    local data = remote.call(global.boss.race_name..'_boss_attacks','get_basic_attack', global.boss.boss_tier)
-    queue_attack(data)
+    prepare_attack('basic_attacks')
 end
 
 function BossAttackProcessor.exec_advanced()
-    local data = remote.call(global.boss.race_name..'_boss_attacks','get_advanced_attack', global.boss.boss_tier)
-    queue_attack(data)
+    prepare_attack('advanced_attacks')
 end
 
 function BossAttackProcessor.exec_super()
-    local data = remote.call(global.boss.race_name..'_boss_attacks','get_super_attack', global.boss.boss_tier)
-    queue_attack(data)
+    prepare_attack('super_attacks')
 end
 
 function BossAttackProcessor.process_attack(data)
     if data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'] then
-        failedAttack = failedAttack + 1
         return
     end
 
     local surface = global.boss.surface
     local entity_name = data['entity_name']
+
     for i = 1, data['count'] do
         local position = data['position']
         if i > 1 then
@@ -127,12 +159,6 @@ function BossAttackProcessor.process_attack(data)
             })
         end
     end
-
-    failedAttack = 0
-end
-
-function BossAttackProcessor.is_failed_to_attack()
-    return failedAttack >= maxFailedAttack
 end
 
 return BossAttackProcessor

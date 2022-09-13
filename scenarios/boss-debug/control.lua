@@ -43,13 +43,13 @@ Event.register(defines.events.on_player_created, function(event)
         name='rocket-silo',
         force='player',
         player=1,
-        position={-10,-10}
+        position={-10, -10}
     })
     surface.create_entity({
         name='gun-turret',
         force='player',
         player=1,
-        position={10,10}
+        position={5, 5}
     })
 end)
 

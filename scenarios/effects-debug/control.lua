@@ -66,8 +66,48 @@ local global_assets_explosion = function(surface)
     })
 
     surface.create_entity({
-        name = "erm-circular-effect-fire-1",
+        name = "erm-circular-effect-fire-2",
         position = {60, 20}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-cold-2",
+        position = {80, 20}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-cloud-green-2",
+        position = {0, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-cloud-orange-2",
+        position = {20, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-fluid-green-2",
+        position = {40, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-fluid-blue-2",
+        position = {60, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-flare-green-2",
+        position = {80, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-flare-blue-2",
+        position = {100, 0}
+    })
+
+    surface.create_entity({
+        name = "erm-circular-effect-flare-red-2",
+        position = {120, 0}
     })
 
 

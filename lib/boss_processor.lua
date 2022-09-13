@@ -84,7 +84,9 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
 
     local target_spawner
     local last = #spawners
-    if usefirst then
+    if gunturret.direction == defines.direction.east or
+        gunturret.direction == defines.direction.south
+    then
         target_spawner = spawners[1]
     else
         target_spawner = spawners[last]
@@ -128,21 +130,6 @@ local get_scan_area = {
     [defines.direction.west] = function(x, y)
         return {left_top = {x - scanLength, y - scanRadius}, right_bottom = {x - scanMinLength, y + scanRadius}}
     end,    
-}
-
-local boss_spawnable_index_switch = {
-    [defines.direction.north] = function(gunturret)
-        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.north](gunturret.position.x, gunturret.position.y))
-    end,
-    [defines.direction.east] = function(gunturret)
-        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.east](gunturret.position.x, gunturret.position.y), true)
-    end,
-    [defines.direction.south] = function(gunturret)
-        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.south](gunturret.position.x, gunturret.position.y), true)
-    end,
-    [defines.direction.west] = function(gunturret)
-        index_boss_spawnable_chunk(gunturret, get_scan_area[defines.direction.west](gunturret.position.x, gunturret.position.y))
-    end,
 }
 
 local can_build_spawn_building = function()
@@ -440,7 +427,8 @@ function BossProcessor.index_ammo_turret(surface)
     ErmDebugHelper.print('BossProcessor: Gap: '..turret_gap..'/'..turret_gap_pick)
     for i=1, #gunturrets do
         if i%turret_gap == turret_gap_pick then
-            boss_spawnable_index_switch[gunturrets[i].direction](gunturrets[i])
+            local gunturret = gunturrets[i]
+            index_boss_spawnable_chunk(gunturret, get_scan_area[gunturret.direction](gunturret.position.x, gunturret.position.y))
             i = i + turret_gap - 2
         end
     end
@@ -450,6 +438,7 @@ end
 --- @see enemyracemanager/control.lua
 function BossProcessor.units_spawn()
     if not ErmRaceSettingsHelper.is_in_boss_mode() then
+        ErmDebugHelper.print('BossProcessor: units_spawn stops...')
         return
     end
 
@@ -463,6 +452,7 @@ end
 --- @see enemyracemanager/control.lua
 function BossProcessor.support_structures_spawn()
     if not ErmRaceSettingsHelper.is_in_boss_mode() then
+        ErmDebugHelper.print('BossProcessor: support_structures_spawn stops...')
         return
     end
 
