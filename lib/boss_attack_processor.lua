@@ -131,7 +131,7 @@ function BossAttackProcessor.process_attack(data)
                 name = entity_name,
                 position = global.boss.entity_position,
                 target = position,
-                speed = data['speed'] or 0.2,
+                speed = data['speed'] or 0.3,
                 max_range = data['range'] or 64,
                 create_build_effect_smoke = false,
                 raise_built = false,

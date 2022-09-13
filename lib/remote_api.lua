@@ -54,6 +54,13 @@ function ERM_RemoteAPI.get_race_level(race)
     return 1
 end
 
+function ERM_RemoteAPI.get_boss_data()
+    if global.boss and global.boss.entity then
+        return global.boss
+    end
+    return nil
+end
+
 --- Add points to attack meter of a race
 --- Usage: remote.call('enemy_race_manager', 'add_points_to_attack_meter', 'erm_zerg', 5000)
 function ERM_RemoteAPI.add_points_to_attack_meter(race, value)

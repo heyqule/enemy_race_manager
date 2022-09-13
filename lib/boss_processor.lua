@@ -377,7 +377,8 @@ function BossProcessor.heartbeat()
     if global.boss.last_hp_attk1 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[1] then
         global.boss.last_hp_attk1 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Base Defense Attack'..global.boss.entity.health)
-        ErmBossAttackProcessor.exec_basic()
+        ErmBossAttackProcessor.exec_super()
+        --ErmBossAttackProcessor.exec_basic()
         boss_attacked = true
     end
 
@@ -392,7 +393,7 @@ function BossProcessor.heartbeat()
     if global.boss.last_hp_attk3 - global.boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[3] then
         global.boss.last_hp_attk3 = global.boss.entity.health
         ErmDebugHelper.print('BossProcessor: Spawn T2 attack'..global.boss.entity.health)
-        ErmBossAttackProcessor.exec_advanced()
+        --ErmBossAttackProcessor.exec_advanced()
         boss_attacked = true
     end
 

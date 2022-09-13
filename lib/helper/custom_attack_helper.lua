@@ -35,16 +35,20 @@ local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
 local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+local race_settings
 
 local CustomAttackHelper = {}
 
 function CustomAttackHelper.valid(event, race_name)
-    return event.source_entity and
-            String.find(event.source_entity.name, race_name, 1, true) ~= nil
+    return (event.source_entity and
+            String.find(event.source_entity.name, race_name, 1, true) ~= nil) or
+            String.find(event.effect_id, '-bs', 1, true) ~= nil
 end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
-    local race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    if race_settings == nil then
+        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    end
 
     if race_settings == nil or race_settings[unit_type] == nil then
         return
@@ -84,6 +88,39 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
             })
         end
     end
+end
+
+function CustomAttackHelper.drop_boss_unit(event, race_name, unit_name, count)
+    count = count or 10
+    local boss_data = remote.call('enemy_race_manager', 'get_boss_data')
+    local surface = game.surfaces[event.surface_index]
+    local nameToken = get_name_token(boss_data.entity_name)
+    local level = tonumber(nameToken[3])
+
+    local position = event.target_position
+    position.x = position.x + 2
+
+    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
+
+    local i = 0
+    repeat
+        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+            position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+        end
+
+        if position then
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = boss_data.force })
+            if entity.type == 'unit' then
+                entity.set_command({
+                    type = defines.command.attack_area,
+                    destination = {x = position.x, y = position.y},
+                    radius = CHUNK_SIZE * 2,
+                    distraction = defines.distraction.by_anything
+                })
+            end
+        end
+        i = i + 1
+    until i == count
 end
 
 

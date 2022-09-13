@@ -14,6 +14,7 @@ Date: 2022-??-??
     - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of assigning to automatic group.
     - Level up function now runs every 10 mins.
     - When boss is active, Leveling up is halt until boss mode is ended.
+    - Refactor custom attack handler to reduce remote call.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.5
