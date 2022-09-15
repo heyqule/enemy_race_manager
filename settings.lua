@@ -486,7 +486,7 @@ data:extend {
         description = "enemyracemanager-boss-spawn-size",
         setting_type = "runtime-global",
         default_value = 10,
-        minimum_value = 2,
+        minimum_value = 5,
         maximum_value = 50,
         order = "enemyracemanager-500"
     },
@@ -496,7 +496,7 @@ data:extend {
         description = "enemyracemanager-boss-defense-spawn-size",
         setting_type = "runtime-global",
         default_value = 5,
-        minimum_value = 1,
+        minimum_value = 5,
         maximum_value = 50,
         order = "enemyracemanager-501"
     },

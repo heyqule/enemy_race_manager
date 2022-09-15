@@ -59,6 +59,18 @@ local onUnitFinishGathering = function(event)
     end
 end
 
+local destroyMembers = function(group)
+    local members = group.members
+    local refundPoints = 0
+    for _, member in pairs(members) do
+        member.destroy()
+        refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+    end
+
+    ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
+    group.destroy()
+end
+
 local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
     for _, group_data in pairs(target_table) do
@@ -66,8 +78,10 @@ local ermGroupCacheTableCleanup = function(target_table)
                 and group_data.group and group_data.group.valid
         then
             local group = group_data.group
-            if #group.members > 0 then
+            if #group.members >= 5 then
                 tmp[group.group_number] = group_data
+            else
+                destroyMembers(group)
             end
         end
     end
@@ -77,24 +91,17 @@ local ermGroupCacheTableCleanup = function(target_table)
 end
 
 local onAiCompleted = function(event)
-    if global.erm_unit_groups[event.unit_number] and global.erm_unit_groups[event.unit_number].group and global.erm_unit_groups[event.unit_number].group.valid then
-        local group = global.erm_unit_groups[event.unit_number].group
-        local start_position = global.erm_unit_groups[event.unit_number].start_position
+    local erm_unit_groups = global.erm_unit_groups
+    if erm_unit_groups[event.unit_number] and erm_unit_groups[event.unit_number].group and erm_unit_groups[event.unit_number].group.valid then
+        local group = erm_unit_groups[event.unit_number].group
+        local start_position = erm_unit_groups[event.unit_number].start_position
         if group.valid and
-                group.is_script_driven and
-                group.command == nil and
-                (start_position.x == group.position.x and start_position.y == group.position.y) and
-                ErmForceHelper.is_enemy_force(group.force)
+            group.is_script_driven and
+            group.command == nil and
+            (start_position.x == group.position.x and start_position.y == group.position.y) and
+            ErmForceHelper.is_enemy_force(group.force)
         then
-            local members = group.members
-            local refundPoints = 0
-            for _, member in pairs(members) do
-                member.destroy()
-                refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
-            end
-
-            ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
-            group.destroy()
+            destroyMembers(group)
         end
 
         if group.valid and (group.command == nil or
@@ -102,9 +109,11 @@ local onAiCompleted = function(event)
             ErmAttackGroupProcessor.process_attack_position(group)
         end
 
-        local group_count = table_size(global.erm_unit_groups)
-        if group_count > ErmConfig.CONFIG_CACHE_SIZE then
-            global.erm_unit_groups = ermGroupCacheTableCleanup(global.erm_unit_groups)
+        if(event.tick - global.tick >= defines.time.minute * 5) then
+            local group_count = table_size(erm_unit_groups)
+            if group_count > ErmConfig.CONFIG_CACHE_SIZE then
+                global.erm_unit_groups = ermGroupCacheTableCleanup(erm_unit_groups)
+            end
         end
     end
 end
