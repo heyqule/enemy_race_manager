@@ -109,7 +109,7 @@ local onAiCompleted = function(event)
             ErmAttackGroupProcessor.process_attack_position(group)
         end
 
-        if(event.tick - global.tick >= defines.time.minute * 5) then
+        if(event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
             local group_count = table_size(erm_unit_groups)
             if group_count > ErmConfig.CONFIG_CACHE_SIZE then
                 global.erm_unit_groups = ermGroupCacheTableCleanup(erm_unit_groups)

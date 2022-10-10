@@ -55,13 +55,13 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
         global.boss_group_spawn.group = group
         global.boss_group_spawn.group_number = group.group_number
         ErmDebugHelper.print('BossGroupProcessor: Create Group...'..tostring(group.group_number))
-        unit_per_cycle = unit_per_cycle or ErmConfig.boss_spawn_size()
+        unit_per_cycle = unit_per_cycle or ErmConfig.boss_spawn_size
         global.boss_group_spawn.max_cycles = max_cycles or spawn_cycles
         global.boss_group_spawn.unit_per_cycle = unit_per_cycle
 
         local max_units
         if default_max_group then
-            max_units = global.boss_group_spawn.max_cycles * ErmConfig.boss_spawn_size()
+            max_units = global.boss_group_spawn.max_cycles * ErmConfig.boss_spawn_size
         else
             max_units = global.boss_group_spawn.max_cycles * unit_per_cycle
         end
@@ -167,7 +167,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     ErmDebugHelper.print('BossProcessor.spawn_initial_group')
     pick_featured_group()
-    create_group(spawn_cycles/3, ErmConfig.boss_spawn_size()*3, true)
+    create_group(spawn_cycles/3, ErmConfig.boss_spawn_size * 3, true)
     ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', true, true)
 end
 
@@ -181,7 +181,7 @@ end
 function BossGroupProcessor.spawn_defense_group()
     ErmDebugHelper.print('BossProcessor.spawn_defense_group')
     pick_featured_group()
-    create_group(nil, ErmConfig.boss_defense_spawn_size())
+    create_group(nil, ErmConfig.boss_spawn_size)
     BossGroupProcessor.generate_units(false, false)
 end
 

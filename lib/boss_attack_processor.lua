@@ -15,6 +15,7 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local type_name = {'projectile', 'beam', 'explosion'}
 local pick_near_by_player_entity_position = function()
     local attackable_entities_cache = global.boss.attackable_entities_cache
     local attackable_entities_cache_size = global.boss.attackable_entities_cache_size
@@ -52,21 +53,32 @@ end
 
 local can_spawn = ErmRaceSettingsHelper.can_spawn
 
+local set_optional_data = function(data, attacks, index, name)
+    if attacks[name] then
+        data[name] = attacks[name][index]
+    end
+
+    return data
+end
+
 local select_attack = function(mod_name, attacks, tier)
     local data
     for i, value in pairs(attacks['projectile_name']) do
         if can_spawn(attacks['projectile_chance'][i]) then
             data = {
-                entity_name = mod_name..'/'..value..'-'..attacks['projectile_type'][i]..'-t'..tier,
+                entity_name = mod_name..'/'..value..'-'..type_name[attacks['projectile_type'][i]]..'-t'..tier,
                 count = attacks['projectile_count'][i],
                 spread = attacks['projectile_spread'][i],
-                type = attacks['projectile_type'][i]
+                type = attacks['projectile_type'][i],
             }
 
             if attacks['projectile_use_multiplier'][i] then
-                data['count'] = data['count'] * attacks['projectile_count_multiplier'][i][tier]
-                data['spread'] = data['spread'] * attacks['projectile_spread_multiplier'][i][tier]
+                data['count'] = math.floor(data['count'] * attacks['projectile_count_multiplier'][i][tier])
+                data['spread'] = math.floor(data['spread'] * attacks['projectile_spread_multiplier'][i][tier])
             end
+
+            data = set_optional_data(data, attacks, i, 'projectile_speed')
+            data = set_optional_data(data, attacks, i, 'projectile_range')
 
             break
         end
@@ -90,10 +102,9 @@ end
 
 local BossAttackProcessor = {}
 
-BossAttackProcessor.TYPE_PROJECTILE = 'projectile'
-BossAttackProcessor.TYPE_BEAM = 'beam'
-BossAttackProcessor.TYPE_EXPLOSION = 'explosion'
-BossAttackProcessor.TYPE_ARTILLERY = 'artillery'
+BossAttackProcessor.TYPE_PROJECTILE = 1
+BossAttackProcessor.TYPE_BEAM = 2
+BossAttackProcessor.TYPE_EXPLOSION = 3
 
 function BossAttackProcessor.unset_attackable_entities_cache()
     global.boss.attackable_entities_cache = nil
@@ -112,6 +123,10 @@ function BossAttackProcessor.exec_super()
     prepare_attack('super_attacks')
 end
 
+function BossAttackProcessor.exec_phase()
+
+end
+
 function BossAttackProcessor.process_attack(data)
     if data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'] then
         return
@@ -123,8 +138,8 @@ function BossAttackProcessor.process_attack(data)
     for i = 1, data['count'] do
         local position = data['position']
         if i > 1 then
-            position['x'] = position['x'] + math.random(-8, 8)
-            position['y'] = position['y'] + math.random(-8, 8)
+            position['x'] = position['x'] + math.random(-16, 16)
+            position['y'] = position['y'] + math.random(-16, 16)
         end
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
@@ -132,7 +147,7 @@ function BossAttackProcessor.process_attack(data)
                 position = global.boss.entity_position,
                 target = position,
                 speed = data['speed'] or 0.3,
-                max_range = data['range'] or 64,
+                max_range = data['range'] or 96,
                 create_build_effect_smoke = false,
                 raise_built = false,
                 force = global.boss.force

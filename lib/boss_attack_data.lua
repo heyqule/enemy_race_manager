@@ -5,6 +5,9 @@
 ---
 local BossAttacksData = {}
 
+BossAttacksData.default_range = 64
+BossAttacksData.default_speed = 1
+
 --Example:
 --BossAttacks.basic_attacks =
 --{
@@ -17,6 +20,8 @@ local BossAttacksData = {}
 --    projectile_chance = {25, 25, 100},
 --    projectile_count = {1, 1, 1},
 --    projectile_spread = {1, 1, 2},
+--    projectile_speed = {BossAttacksData.default_speed, BossAttacksData.default_speed, BossAttacksData.default_speed},
+--    projectile_range = {BossAttacksData.default_range, BossAttacksData.default_range, BossAttacksData.default_range},
 --    projectile_use_multiplier = {false, false, true},
 --    projectile_count_multiplier = {
 --        {},

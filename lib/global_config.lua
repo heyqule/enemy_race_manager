@@ -25,7 +25,7 @@ if DEBUG_MODE then
 
     ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
     ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
-    ErmConfig.TWO_SECONDS_CRON = defines.time.second + 1
+    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
 
     ErmConfig.TEN_SECONDS_CRON = 5 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
@@ -36,11 +36,14 @@ else
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
 
     -- +1 to spread the job across all ticks
+    -- execute all job on designated tick
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
     ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
     ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
 
+    -- execute one job on designated tick
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
+    ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
     ErmConfig.QUICK_CRON = 21
 end
 
@@ -63,19 +66,33 @@ ErmConfig.MAX_ELITE_LEVELS = 5
 ErmConfig.BOSS_MAX_TIERS = 5
 -- 5 Tiers of boss and their properties
 ErmConfig.BOSS_DESPAWN_TIMER = {45, 45, 60, 75, 99}
-ErmConfig.BOSS_LEVELS = {25, 35, 50, 75, 99}
+
+local boss_difficulty = {
+    [BOSS_NORMAL] = {25, 30, 36, 42, 50},
+    [BOSS_HARD] = {35, 42, 50, 61, 75},
+    [BOSS_GODLIKE] = {50, 62, 75, 87, 99}
+}
+ErmConfig.BOSS_LEVELS = boss_difficulty[settings.startup['enemyracemanager-boss-difficulty'].value]
+
+local boss_spawn_size = {
+    [BOSS_SPAWN_SQUAD] = 10,
+    [BOSS_SPAWN_PATROL] = 20,
+    [BOSS_SPAWN_PLATOON] = 40,
+}
+ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
 ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 99999999}
 ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
 ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
--- 5 type of attacks based on damage taken
-ErmConfig.BOSS_DEFENSE_ATTACKS = {9999, 25000, 69420, 99999, 19999}
--- Change phase every 15 Million HP
-ErmConfig.BOSS_PHASE_CHANGE = 15000000
--- 96 width x up to 3000 length
-ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3000
+-- 1 phase change and 5 types of attacks based on damage taken
+ErmConfig.BOSS_DEFENSE_ATTACKS = {15000000, 999999, 200000, 99999, 69420, 20000}
+ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {2, 3, 3, 4, 4}
+
+-- 320 radius toward the target area.
+ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
+ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
-ErmConfig.CONFIG_CACHE_SIZE = 256
+ErmConfig.CONFIG_CACHE_SIZE = 1024
 if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
     ErmConfig.CONFIG_CACHE_SIZE = 8
@@ -94,8 +111,6 @@ local refreshable_settings = {
     global = {
         'enemyracemanager-max-gathering-groups',
         'enemyracemanager-max-group-size',
-        'enemyracemanager-boss-spawn-size',
-        'enemyracemanager-boss-defense-spawn-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-accelerator',
@@ -325,7 +340,6 @@ function ErmConfig.build_style()
     return get_global_setting_value('enemyracemanager-build-style')
 end
 
-
 function ErmConfig.build_formation()
     return get_global_setting_value('enemyracemanager-build-formation')
 end
@@ -422,14 +436,6 @@ function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
 end
 
-function ErmConfig.boss_spawn_size()
-    return get_global_setting_value('enemyracemanager-boss-spawn-size')
-end
-
-
-function ErmConfig.boss_defense_spawn_size()
-    return get_global_setting_value('enemyracemanager-boss-defense-spawn-size')
-end
 
 function ErmConfig.initialize_races_data()
     global.installed_races = {MOD_NAME}

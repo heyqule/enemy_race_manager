@@ -21,24 +21,24 @@
 - It may spawn 5(configurable) defense units　[Done]
 - New units join existing attack group.　[Done]
 - It may spawn regular spawner / defenses [Done]
-- Perform normal defense attack [WIP]
-- It may perform nearby advanced attacks (80% of the time when your military units are near) [WIP]
-- It may perform artillery advanced attacks (20% of the time when your military units are near, 100% when your entity are in its range) [WIP]
-- When it takes huge amount of damage, it may perform more devastating attacks.
+- Perform normal defense attack [DONE]
+- It may perform nearby advanced attacks (80% of the time when your military units are near) [DONE]
+- It may perform artillery advanced attacks (20% of the time when your military units are near, 100% when your entity are in its range) [TO DO]
+- When it takes huge amount of damage, it may perform more devastating attacks. [DONE]
 
 
 #### When the base is alive
 - Spawn regular spawners / defenses every nauvis day.  within radius of 64. [Done]
-- perform long range siege attack on player structures every attack cycle (3 minutes). 
+- perform long range siege attack on player structures every attack cycle (3 minutes).[TO DO] 
 - Targets: miners, rocket-silos, artillery and turrets
 
 #### When the base is despawned
-- Boss base despawns after some time. It will spawn up to 3 full size groups to attack your base.
+- Boss base despawns after some time. It will launch x amount of super attack your base before it despawn.
 
 #### When the base is killed
 - Beating a boss group will spawn 1-2 unkillable infinite chest with intermediate products for (90 minutes).
 
-##Boss Tiers
+##Boss Tiers [DONE]
 - T1 
   - 10000000 HP
   - lvl 25 damage stats
@@ -61,16 +61,16 @@
   - 30 defense structures
   - despawn time: 60mins
   - 533333 / minute
-  - 33% 2 infinite chest drop, with 100% 1 drop.
-  - rewards tier 1(20%), 2(80%) items
+  - 25% 2 infinite chest drop, with 100% 1 drop.
+  - rewards tier 1(30%), 2(70%) items
 - T4
   - 50000000 HP
   - lvl 70 damage stats
   - 40 defense structures
   - despawn time: 75 minute
   - 666666 / minute
-  - 66% 1 infinite chest drop, with 100% 1 drop
-  - rewards tier 1(20%), 2(60%), 3(20%) items
+  - 50% 2 infinite chest drop, with 100% 1 drop
+  - rewards tier 1(30%), 2(60%), 3(10%) items
 - T5 
   - 99999999 HP
   - lvl 99 damage stats
@@ -78,7 +78,7 @@
   - despawn time: 99 minute
   - 1010101 / minute
   - 100% 2 infinite chest drop
-  - rewards tier 1(10%), 2(50%), 3(40%) items
+  - rewards tier 1(30%), 2(50%), 3(20%) items
 
 New tier can only be unlocked when you defeat the current tier. 
 
@@ -86,81 +86,38 @@ You will not advance to new tier automatically.  You set it in the UI.
 
 Once you are on new tier, you will not able to spawn lower tier.
 
-
-
-
-
 Tier 1 items
    - plates
    - brick
-   - crude oil
+   - Iron gear wheel
+   - green chip
    
 Tier 2 items
    - plastic
    - steel,
-   - Iron gear wheel
-   - gas
-   - Heavy Oil
    - Light Oil
-   - Gas
    - wall
    - explosive,
    - concrete
    - red bullet
-   - green chip
    - rail,
    - yellow belt,
    - yellow inserter,
    - engine,
    - landfill
-   - Sulfur
+   - sulfur
    - solid fuel
-   - Repair pack
-   - Radar
+   - repair pack
+   - red chips,
 
 Tier 3 items 
-   - red chips,
+   - blue chips,
    - electric engine, 
    - battery,
-   - Uranium-238
-   - Flying robot frame
-   - Speed module
-   - Productivity module
-   - Artillery shell
-
-
-###Boss Spawn data structure
-
-```json
-{
-  "race_setting": {
-    "...": {
-      "boss_building": "hive",
-      "boss_tier": 1
-    }
-  },
-  "boss_base": {
-    "entity": "luaEntity",
-    "entity_name": "",
-    "location": "position",
-    "flying_only": false,
-    "boss_artillery_target": "position,  rotate every minute based on attackable chunk",
-    "spawned_tick": 0
-  },
-  "boss_offense_group": {
-    "group": "luaGroup",
-    "position": "position",
-    "unable_to_path": false
-  },
-  "boss_defense_group": {
-    "group": "luaGroup",
-    "position": "position",
-    "on_cooldown": false,
-    "cooldown_tick": 0,
-    "respawn_tick": 0
-  }
-}
-```
+   - Speed module 1
+   - Productivity module 1
+   - low density structure,
+   - Heavy Oil
 
 
 Island test map seed

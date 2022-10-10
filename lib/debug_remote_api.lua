@@ -214,6 +214,14 @@ function Debug_RemoteAPI.set_tier(value)
     end
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'set_boss_tier', 1)
+function Debug_RemoteAPI.set_boss_tier(value)
+    for race_name, _ in pairs(global.race_settings) do
+        global.race_settings[race_name].boss_tier = math.max(1,math.min(value, 5))
+    end
+end
+
+
 --- Usage: remote.call('enemy_race_manager_debug', 'reset_level')
 function Debug_RemoteAPI.reset_level()
     for race_name, _ in pairs(global.race_settings) do
@@ -249,14 +257,22 @@ end
 function Debug_RemoteAPI.spawn_boss(position)
     local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
     if rocket_silos and rocket_silos[1] then
-        --ErmBossProcessor.unset()
         ErmBossProcessor.exec(rocket_silos[1], position)
     end
 end
 
---- Usage: remote.call('enemy_race_manager_debug', 'unset_boss')
-function Debug_RemoteAPI.unset_boss()
-    ErmBossProcessor.unset()
+--- Usage: remote.call('enemy_race_manager_debug', 'win_boss')
+function Debug_RemoteAPI.win_boss()
+    if global.boss then
+        global.boss.victory = true
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'loss_boss')
+function Debug_RemoteAPI.loss_boss()
+    if global.boss then
+        global.boss.despawn_at_tick = 1
+    end
 end
 
 --- Usage: remote.call('enemy_race_manager_debug', 'forces_relation')

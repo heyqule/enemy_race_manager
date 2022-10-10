@@ -90,7 +90,7 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     end
 end
 
-function CustomAttackHelper.drop_boss_unit(event, race_name, unit_name, count)
+function CustomAttackHelper.drop_boss_unit(event, race_name, count)
     count = count or 10
     local boss_data = remote.call('enemy_race_manager', 'get_boss_data')
     local surface = game.surfaces[event.surface_index]
@@ -100,10 +100,13 @@ function CustomAttackHelper.drop_boss_unit(event, race_name, unit_name, count)
     local position = event.target_position
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
-
     local i = 0
+    local teamsize = 0
+    local group = surface.create_unit_group {
+        position = position, force = boss_data.force
+    }
     repeat
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
         if not surface.can_place_entity({ name = final_unit_name, position = position }) then
             position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
         end
@@ -111,16 +114,29 @@ function CustomAttackHelper.drop_boss_unit(event, race_name, unit_name, count)
         if position then
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = boss_data.force })
             if entity.type == 'unit' then
-                entity.set_command({
-                    type = defines.command.attack_area,
-                    destination = {x = position.x, y = position.y},
-                    radius = CHUNK_SIZE * 2,
-                    distraction = defines.distraction.by_anything
-                })
+                teamsize = teamsize + 1
+                group.add_member(entity)
             end
         end
         i = i + 1
     until i == count
+
+    local target_position = boss_data.target_position
+
+    if target_position == nil then
+        target_position = boss_data.silo_position
+    end
+
+    print(serpent.block(target_position))
+
+    group.set_command({
+        type = defines.command.attack_area,
+        destination = {x = target_position.x, y = target_position.y},
+        radius = CHUNK_SIZE * 2,
+        distraction = defines.distraction.by_anything
+    })
+
+    remote.call('enemy_race_manager', 'add_boss_attack_group', group)
 end
 
 

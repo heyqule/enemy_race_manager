@@ -32,6 +32,11 @@ BUILDING_FORMATION_1_3_8 = '1-3-8'
 BUILDING_FORMATION_1_9_0 = '1-9-0'
 BUILDING_FORMATION_RANDOM = 'random'
 
-HUNTER_NORMAL = 'normal'
-HUNTER_HARDCORE = 'hardcore'
-HUNTER_EXTREME = 'extreme hardcore'
+BOSS_NORMAL = "Normal (L25-50)"
+BOSS_HARD = "Advanced (L35-75)"
+BOSS_GODLIKE = "Godlike (L50-99)"
+
+BOSS_SPAWN_SQUAD = "Squad (10, 6)"
+BOSS_SPAWN_PATROL = "Patrol (20, 12)"
+BOSS_SPAWN_PLATOON  = "Platoon (40, 24)"
+

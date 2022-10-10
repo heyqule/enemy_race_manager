@@ -20,6 +20,7 @@ local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
+local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 
 require('prototypes/compatibility/controls')
 
@@ -64,8 +65,8 @@ cron_switch = {
     ['BossProcessor.support_structures_spawn'] = function(args)
         ErmBossProcessor.support_structures_spawn()
     end,
-    ['BaseBossProcessor.build_spawner'] = function(args)
-        ErmBossProcessor.build_spawner(args[1], args[2], args[3], args[4])
+    ['BossProcessor.remove_boss_groups'] = function(args)
+        ErmBossProcessor.remove_boss_groups(args[1])
     end,
     ['BossGroupProcessor.generate_units'] = function(args)
         ErmBossGroupProcessor.generate_units(args[1], args[2])
@@ -99,6 +100,8 @@ require('__enemyracemanager__/controllers/cron')
 
 --- Script Trigger for attacks
 require('__enemyracemanager__/controllers/on_script_trigger_effects_biter')
+
+require('__enemyracemanager__/controllers/on_script_trigger_effects_boss')
 
 require('__enemyracemanager__/controllers/on_script_trigger_effects_player')
 

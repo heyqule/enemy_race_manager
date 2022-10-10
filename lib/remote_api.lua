@@ -10,6 +10,7 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 
 local ERM_RemoteAPI = {}
 
@@ -208,6 +209,15 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
                 true
         )
     end
+end
+
+
+function ERM_RemoteAPI.add_boss_attack_group(group)
+    local group_data = ErmBossGroupProcessor.get_default_data()
+    group_data['group'] = group
+    group_data['group_number'] = group.group_number
+    group_data['total_units'] = table_size(group.members)
+    table.insert(global.boss_attack_groups, group_data)
 end
 
 return ERM_RemoteAPI

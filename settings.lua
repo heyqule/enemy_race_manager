@@ -217,6 +217,24 @@ data:extend {
         default_value = false,
         order = "enemyracemanager-601",
     },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-boss-difficulty",
+        description = "enemyracemanager-boss-difficulty",
+        setting_type = "startup",
+        default_value = BOSS_NORMAL,
+        allowed_values = { BOSS_NORMAL, BOSS_HARD, BOSS_GODLIKE },
+        order = "enemyracemanager-700",
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-boss-unit-spawn-size",
+        description = "enemyracemanager-boss-unit-spawn-size",
+        setting_type = "startup",
+        default_value = BOSS_SPAWN_SQUAD,
+        allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },
+        order = "enemyracemanager-701",
+    },
     --- Map Settings Tab ---
     {
         type = "int-setting",
@@ -479,26 +497,6 @@ data:extend {
         default_value = 2,
         allowed_values = {1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90, 99},
         order = "enemyracemanager-451"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-boss-spawn-size",
-        description = "enemyracemanager-boss-spawn-size",
-        setting_type = "runtime-global",
-        default_value = 10,
-        minimum_value = 5,
-        maximum_value = 50,
-        order = "enemyracemanager-500"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-boss-defense-spawn-size",
-        description = "enemyracemanager-boss-defense-spawn-size",
-        setting_type = "runtime-global",
-        default_value = 5,
-        minimum_value = 5,
-        maximum_value = 50,
-        order = "enemyracemanager-501"
     },
 }
 
