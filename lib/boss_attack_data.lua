@@ -37,6 +37,8 @@ BossAttacksData.default_speed = 1
 BossAttacksData.basic_attacks = {}
 BossAttacksData.advanced_attacks = {}
 BossAttacksData.super_attacks = {}
+-- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_unit().
+BossAttacksData.despawn_attacks = {}
 BossAttacksData.phases = {}
 
 function BossAttacksData.get_attack_data()
@@ -44,6 +46,7 @@ function BossAttacksData.get_attack_data()
       basic_attacks = BossAttacksData.basic_attacks,
       advanced_attacks = BossAttacksData.advanced_attacks,
       super_attacks = BossAttacksData.super_attacks,
+      despawn_attacks = BossAttacksData.despawn_attacks,
       phases = BossAttacksData.phases,
     }
 end

@@ -4,12 +4,16 @@
 --- DateTime: 9/25/2022 12:58 AM
 ---
 
+local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
+
+
 --- Punish player when they can't beat boss within the time limit.
 --- Launch X amount of super attacks at various targetable places
+
 local BossDespawnProcessor = {}
 
 function BossDespawnProcessor.exec()
-
+    ErmBossAttackProcessor.process_despawn_attack()
 end
 
 return BossDespawnProcessor

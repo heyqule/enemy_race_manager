@@ -108,7 +108,7 @@ function CustomAttackHelper.drop_boss_unit(event, race_name, count)
     repeat
         local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
         if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-            position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
         end
 
         if position then
@@ -126,8 +126,6 @@ function CustomAttackHelper.drop_boss_unit(event, race_name, count)
     if target_position == nil then
         target_position = boss_data.silo_position
     end
-
-    print(serpent.block(target_position))
 
     group.set_command({
         type = defines.command.attack_area,

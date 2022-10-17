@@ -15,6 +15,12 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local BossAttackProcessor = {}
+
+BossAttackProcessor.TYPE_PROJECTILE = 1
+BossAttackProcessor.TYPE_BEAM = 2
+BossAttackProcessor.TYPE_EXPLOSION = 3
+
 local type_name = {'projectile', 'beam', 'explosion'}
 local pick_near_by_player_entity_position = function()
     local attackable_entities_cache = global.boss.attackable_entities_cache
@@ -100,38 +106,15 @@ local prepare_attack = function(type)
     queue_attack(data)
 end
 
-local BossAttackProcessor = {}
-
-BossAttackProcessor.TYPE_PROJECTILE = 1
-BossAttackProcessor.TYPE_BEAM = 2
-BossAttackProcessor.TYPE_EXPLOSION = 3
-
-function BossAttackProcessor.unset_attackable_entities_cache()
-    global.boss.attackable_entities_cache = nil
-    global.boss.attackable_entities_cache_size = 0
+local get_despawn_attack = function()
+    local race_name = global.boss.race_name
+    local tier = global.boss.boss_tier
+    fetch_attack_data(race_name)
+    local data = select_attack(race_name, global.boss.attack_cache['despawn_attacks'], tier)
+    return data
 end
 
-function BossAttackProcessor.exec_basic()
-    prepare_attack('basic_attacks')
-end
-
-function BossAttackProcessor.exec_advanced()
-    prepare_attack('advanced_attacks')
-end
-
-function BossAttackProcessor.exec_super()
-    prepare_attack('super_attacks')
-end
-
-function BossAttackProcessor.exec_phase()
-
-end
-
-function BossAttackProcessor.process_attack(data)
-    if data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'] then
-        return
-    end
-
+local process_attack = function(data)
     local surface = global.boss.surface
     local entity_name = data['entity_name']
 
@@ -174,6 +157,44 @@ function BossAttackProcessor.process_attack(data)
             })
         end
     end
+end
+
+
+function BossAttackProcessor.unset_attackable_entities_cache()
+    global.boss.attackable_entities_cache = nil
+    global.boss.attackable_entities_cache_size = 0
+end
+
+function BossAttackProcessor.exec_basic()
+    prepare_attack('basic_attacks')
+end
+
+function BossAttackProcessor.exec_advanced()
+    prepare_attack('advanced_attacks')
+end
+
+function BossAttackProcessor.exec_super()
+    prepare_attack('super_attacks')
+end
+
+function BossAttackProcessor.exec_phase()
+
+end
+
+function BossAttackProcessor.process_despawn_attack()
+    ErmDebugHelper.print('Despawn Attack...')
+    local data = get_despawn_attack()
+    local position = pick_near_by_player_entity_position()
+    data['position'] = position;
+    process_attack(data)
+end
+
+function BossAttackProcessor.process_attack(data)
+    if (data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position']) then
+        return
+    end
+
+    process_attack(data)
 end
 
 return BossAttackProcessor

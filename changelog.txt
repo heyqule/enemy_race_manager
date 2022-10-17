@@ -5,10 +5,12 @@ Date: 2022-??-??
   Features:
     - Added Boss mode.  Boss spawner is revealed by launching a Psi Tracking Satellite.
     - Added Psi Tracking Satellite. It reveals a boss spawner and returns 1200 space science pack.
-    - Once boss spawner revealed, launching additional Psi Tracking satellite will not spawn new boss until the existing boss has either killed or despawned.
+    - Once boss spawner revealed, launching additional Psi Tracking Satellite will not spawn new boss until the existing boss has either killed or despawned.
     - The map chunk where the boss sit is revealed to player.
     - Boss sends out elite attack group periodically.
     - Boss performs various attacks when it takes damage.
+    - When the boss is defeated, infinity chest with items will spawn for 14 nauvis days.
+    - When you don't defeat the boss within the timer, it releases super attacks to your base!
 
   Changes:
     - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of assigning to automatic group.

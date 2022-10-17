@@ -17,6 +17,7 @@ local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_proce
 local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
 local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
+local ErmBossDespawnProcessor = require('__enemyracemanager__/lib/boss_despawn_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -33,7 +34,7 @@ local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
-local INCLUDE_SPAWNS = true -- Only for debug
+local INCLUDE_SPAWNS = false -- Only for debug
 
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}
@@ -284,8 +285,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         ErmDebugHelper.print('BossProcessor: Indexed positions: '..global.boss_spawnable_index.size)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
-            surface.print('Unable to find location to spawn a boss')
-            --ErmCron.add_2_sec_queue('BossProcessor.check_pathing')
+            surface.print('Unable to find a boss spawner.  Please try again on a surface with enemy spawners.')
             return
         end
 
@@ -434,8 +434,9 @@ function BossProcessor.heartbeat()
 
     if current_tick > boss.despawn_at_tick then
         -- start despawn process
-        BossProcessor.unset()
         ErmDebugHelper.print('BossProcessor: start despawn process')
+        ErmBossDespawnProcessor.exec()
+        BossProcessor.unset()
         ErmDebugHelper.print('BossProcessor: Heartbeat stops')
         return
     end
