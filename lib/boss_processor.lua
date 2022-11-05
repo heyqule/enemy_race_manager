@@ -19,6 +19,8 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 local ErmBossDespawnProcessor = require('__enemyracemanager__/lib/boss_despawn_processor')
 
+local ErmGui = require('__enemyracemanager__/gui/main')
+
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossProcessor = {}
@@ -419,12 +421,37 @@ function BossProcessor.get_pathing_entity_name(race_name)
     )
 end
 
+local display_victory_dialog = function(boss)
+    local targetPlayer = nil
+    for _, player in pairs(game.players) do
+        if player.valid and player.connected and player.surface == boss.surface then
+            targetPlayer = player
+            break
+        end
+    end
+
+    if targetPlayer == nil then
+        for _, player in pairs(game.players) do
+            if player.valid and player.connected then
+                targetPlayer = player
+                break
+            end
+        end
+    end
+
+    if targetPlayer then
+        ErmGui.victory_dialog.show(targetPlayer, global.race_settings[boss.race_name])
+    end
+end
+
 function BossProcessor.heartbeat()
     local boss = global.boss
     local current_tick = game.tick
     local max_attacks = ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT[boss.boss_tier]
     if boss.victory then
         -- start reward process
+        global.race_settings[boss.race_name].boss_kill_count = global.race_settings[boss.race_name].boss_kill_count + 1
+        display_victory_dialog(boss)
         ErmBossRewardProcessor.exec()
         BossProcessor.unset()
         ErmDebugHelper.print('BossProcessor: is victory')

@@ -30,15 +30,15 @@
 #### When the base is alive
 - Spawn regular spawners / defenses every nauvis day.  within radius of 64. [Done]
 - perform long range siege attack on player structures every attack cycle (3 minutes).[TO DO] 
-- Targets: miners, rocket-silos, artillery and turrets
+- Targets: miners, rocket-silos, artillery and turrets [Done]
 
 #### When the base is despawned
-- Boss base despawns after some time. It will launch x amount of super attack your base before it despawn.
+- Boss base despawns after some time. It will launch x amount of super attack your base before it despawn. [WIP]
 
 #### When the base is killed
-- Beating a boss group will spawn 1-2 unkillable infinite chest with intermediate products for (90 minutes).
+- Beating a boss group will spawn 1-2 unkillable infinite chest with intermediate products for (90 minutes). [Done]
 
-##Boss Tiers [DONE]
+###Boss Tiers [WIP]
 - T1 
   - 10000000 HP
   - lvl 25 damage stats
@@ -80,11 +80,19 @@
   - 100% 2 infinite chest drop
   - rewards tier 1(30%), 2(50%), 3(20%) items
 
-New tier can only be unlocked when you defeat the current tier. 
+### GUI
+- A dialog will show whether you want to advance to next tier once you defeat a boss.  [WIP]
+  - Once you are on new tier, you will not able to spawn lower tier.
+- Each race will track best time for each tier.
+- Each race will have achievement when you beat each tier.
+- Add boss event log to track each boss encounter.
+  - Race, Tier, Location, Win/Loss, Start time, Time End. Boss difficulty, squad size
+- Changing boss difficulty or boss squad size 
+  - reset the best timers.
+  - reset achievements.
+  - It also adds to boss event log
 
-You will not advance to new tier automatically.  You set it in the UI.
-
-Once you are on new tier, you will not able to spawn lower tier.
+##### Base-game items
 
 Tier 1 items
    - plates

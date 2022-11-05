@@ -7,10 +7,8 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local CustomAttacks = require('__enemyracemanager__/prototypes/base-units/custom_attacks')
-
 local attack_functions = {
-    ['embss-die'] = function(args)
+    [TRIGGER_BOSS_DIES] = function(args)
         global.boss.victory = true
     end
 }

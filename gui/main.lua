@@ -17,6 +17,18 @@ local element_valid = function(event)
     return event.element and event.element.valid
 end
 
+--- Boss victory upgrade dialog
+local ERM_BossVictoryDialog = {
+    root_name = 'erm_races_manager_boss_victory_dialog',
+    window_width = 340
+}
+
+--- Boss Details Windows
+local ERM_BossDetailsWindow = {
+    root_name = 'erm_races_manager_boss_details',
+    window_width = 680
+}
+
 --- Detail Windows
 local ERM_DetailWindow = {
     root_name = 'erm_races_manager_detail',
@@ -36,6 +48,51 @@ local ERM_MainWindow = {
     window_height = 400,
 }
 
+---
+function ERM_BossVictoryDialog.show(player, race_setting)
+    local gui = player.gui.screen
+    local dialog = gui.add {
+        type = "frame",
+        name = ERM_BossVictoryDialog.root_name,
+        direction = "vertical",
+    }
+    dialog.force_auto_center()
+    ERM_BossVictoryDialog.parent_window = player.opened
+    player.opened = dialog
+
+    local title_flow = dialog.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
+    title_flow.style.minimal_width = ERM_BossVictoryDialog.window_width
+
+    local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.boss_victory_title", race_setting.race }, style = 'caption_label' }
+
+    local main_flow = dialog.add { type = 'flow', direction = "vertical"}
+    local description = main_flow.add { type = 'label', name = 'description', caption = { "gui.boss_victory_description" } }
+
+    local center_gap = main_flow.add {type="empty-widget"}
+    center_gap.style.height = 16
+
+    local bottom_flow = main_flow.add { type = "flow", direction = 'horizontal' }
+    bottom_flow.add {type = "button", name = race_setting.race.."/victory_dialog_tier_cancel", caption = {"gui.victory_dialog_tier_cancel"}, style="red_button"}
+
+    local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
+    button_pusher.style.width = 150
+    button_pusher.style.height = 24
+
+    bottom_flow.add {type = "button", name = race_setting.race.."/victory_dialog_tier_confirm", caption = {"gui.victory_dialog_tier_confirm"}, style="green_button"}
+end
+
+function ERM_BossVictoryDialog.hide(player)
+    if player.gui.screen[ERM_BossVictoryDialog.root_name] then
+        player.gui.screen[ERM_BossVictoryDialog.root_name].destroy()
+    end
+end
+
+function ERM_BossVictoryDialog.confirm(race_name)
+    if global.race_settings[race_name].boss_tier < GlobalConfig.BOSS_MAX_TIERS then
+        global.race_settings[race_name].boss_tier = global.race_settings[race_name].boss_tier + 1
+        game.print("[color=#ff0000]"..race_name..'[/color] is now on boss tier '..tostring(global.race_settings[race_name].boss_tier))
+    end
+end
 
 --- Detail Windows functions
 function ERM_DetailWindow.show(player, race_setting)
@@ -107,10 +164,18 @@ function ERM_DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { 'gui.total_structures_killed' } }
     item_table.add { type = "label", caption = structure_killed_count }
 
-    if admin then
-        local right_flow = main_flow.add { type = 'flow', direction = "vertical"}
-        right_flow.style.width = ERM_DetailWindow.window_width / 2
+    local boss_tier = race_setting.boss_tier or 1
+    item_table.add { type = "label", caption = { 'gui.boss_tier' } }
+    item_table.add { type = "label", caption = boss_tier }
 
+    local boss_kill_count = race_setting.boss_kill_count or 0
+    item_table.add { type = "label", caption = { 'gui.boss_kill_count' } }
+    item_table.add { type = "label", caption = boss_kill_count }
+
+    local right_flow = main_flow.add { type = 'flow', direction = "vertical"}
+    right_flow.style.width = ERM_DetailWindow.window_width / 2
+
+    if admin then
         local setting_flow = right_flow.add { type = "flow", name = "setting_flow", direction = 'vertical' }
         setting_flow.add { type = "label", name="setting_description", caption={"gui.setting_description"}}
 
@@ -169,7 +234,7 @@ function ERM_DetailWindow.show(player, race_setting)
 
         local gap = setting_flow.add {type="empty-widget"}
         gap.style.height = 4
-        setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="confirm_button"}
+        setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="green_button"}
 
         local center_gap = right_flow.add {type="empty-widget"}
         center_gap.style.height = 16
@@ -181,7 +246,14 @@ function ERM_DetailWindow.show(player, race_setting)
         if pass_new_race or pass_biter_race then
             action_flow.add { type = "button", name = race_setting.race .. "/replace_enemy", caption = { 'gui.replace_enemy' }, tooltip = { 'gui.replace_enemy_tooltip' } }
         end
+
+        local center_gap = right_flow.add {type="empty-widget"}
+        center_gap.style.height = 16
     end
+
+    local boss_flow = right_flow.add { type = "flow", name = "boss_flow", direction = 'vertical' }
+    boss_flow.add { type = "label", name="boss_flow_description", caption={"gui.boss_flow_description"}}
+    boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { 'gui.boss_details' }, tooltip = { 'gui.boss_details_tooltip' } }
 end
 
 function ERM_DetailWindow.update_slider_text(event, slider_name, slider_value)
@@ -217,6 +289,7 @@ function ERM_DetailWindow.confirm(event)
 
     local owner = game.players[event.element.player_index]
     ERM_DetailWindow.hide(owner)
+    ERM_MainWindow.show(owner)
     ERM_MainWindow.update_all()
 end
 
@@ -232,13 +305,13 @@ end
 
 function ERM_DetailWindow.hide(player)
     player.gui.screen[ERM_DetailWindow.root_name].destroy()
-    ERM_MainWindow.show(player)
 end
 
 function ERM_DetailWindow.toggle_close(event)
         local owner = game.players[event.element.player_index]
         if owner then
             ERM_DetailWindow.hide(owner)
+            ERM_MainWindow.show(owner)
         end
 end
 
@@ -428,7 +501,8 @@ end
 
 local ERM_GUI = {
     main_window = ERM_MainWindow,
-    detail_window = ERM_DetailWindow
+    detail_window = ERM_DetailWindow,
+    victory_dialog = ERM_BossVictoryDialog
 }
 
 return ERM_GUI

@@ -20,3 +20,5 @@ PLAYER_PLANET_PURIFIER_ATTACK = 'emptk-pp'
 PLAYER_SUPER_WEAPON_COUNTER_ATTACK = 'empck-sw'
 -- Planet Purifier: Counter attack
 PLAYER_PLANET_PURIFIER_COUNTER_ATTACK = 'empck-pp'
+
+TRIGGER_BOSS_DIES = 'embss-die'

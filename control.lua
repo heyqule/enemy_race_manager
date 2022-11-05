@@ -101,7 +101,7 @@ require('__enemyracemanager__/controllers/cron')
 --- Script Trigger for attacks
 require('__enemyracemanager__/controllers/on_script_trigger_effects_biter')
 
-require('__enemyracemanager__/controllers/on_script_trigger_effects_boss')
+require('__enemyracemanager__/controllers/on_script_trigger_effects_general')
 
 require('__enemyracemanager__/controllers/on_script_trigger_effects_player')
 

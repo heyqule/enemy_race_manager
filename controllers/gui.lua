@@ -52,6 +52,26 @@ EventGui.on_click('.*/replace_enemy', function(event)
     ErmGui.detail_window.replace_enemy(event)
 end)
 
+EventGui.on_click('.*/boss_details', function(event)
+    local nameToken = String.split(event.element.name, '/')
+    local owner = game.players[event.element.player_index]
+    ErmGui.victory_dialog.hide(owner)
+    ErmGui.victory_dialog.show(owner, global.race_settings[nameToken[1]])
+end)
+
+EventGui.on_click('.*/victory_dialog_tier_cancel', function(event)
+    local owner = game.players[event.element.player_index]
+    ErmGui.victory_dialog.hide(owner)
+end)
+
+EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
+    local nameToken = String.split(event.element.name, '/')
+    local owner = game.players[event.element.player_index]
+    ErmGui.victory_dialog.confirm(nameToken[1])
+    ErmGui.victory_dialog.hide(owner)
+end)
+
+
 --- on_gui_closed events
 local gui_close_switch = {
     [ErmGui.main_window.root_name] = function(owner)
