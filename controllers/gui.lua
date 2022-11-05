@@ -17,19 +17,29 @@ end)
 
 --- On Click Events
 EventGui.on_click('erm_detail_close_button',function(event)
-    ErmGui.detail_window.toggle_close(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        ErmGui.detail_window.toggle_close(owner)
+        ErmGui.main_window.show(owner)
+    end
 end)
 
 EventGui.on_click('erm_toggle', function(event)
-    ErmGui.main_window.toggle_main_window(event)
+    local owner = game.players[event.element.player_index]
+    ErmGui.main_window.toggle_main_window(owner)
 end)
 
 EventGui.on_click('erm_close_button', function(event)
-    ErmGui.main_window.toggle_close(event)
+    local owner = game.players[event.element.player_index]
+    ErmGui.main_window.toggle_close(owner)
 end)
 
 EventGui.on_click('.*/more_action',  function(event)
-    ErmGui.main_window.open_detail_window(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        local nameToken = String.split(event.element.name, '/')
+        ErmGui.detail_window.show(owner, global.race_settings[nameToken[1]])
+    end
 end)
 
 EventGui.on_click('erm_nuke_biters',  function(event)
@@ -45,11 +55,22 @@ EventGui.on_click('erm_reset_default_bitter', function(event)
 end)
 
 EventGui.on_click(".*/"..ErmGui.detail_window.confirm_name, function(event)
-    ErmGui.detail_window.confirm(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        local nameToken = String.split(event.element.name, '/')
+        ErmGui.detail_window.confirm(owner, nameToken, event.element)
+        ErmGui.main_window.show(owner)
+        ErmGui.main_window.update_all()
+    end
 end)
 
 EventGui.on_click('.*/replace_enemy', function(event)
-    ErmGui.detail_window.replace_enemy(event)
+    local nameToken = String.split(event.element.name, '/')
+    if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
+        local owner = game.players[event.element.player_index]
+        ErmGui.detail_window.replace_enemy(owner, nameToken)
+        ErmGui.main_window.update_all()
+    end
 end)
 
 EventGui.on_click('.*/boss_details', function(event)
