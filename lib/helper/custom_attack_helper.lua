@@ -94,7 +94,6 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     if race_settings == nil then
         race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
     end
-    print(serpent.block(race_settings))
 
     if race_settings == nil then
         return
@@ -112,7 +111,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local group = surface.create_unit_group {
         position = position, force = race_settings.force
     }
-    print('Load Units')
+
     repeat
         local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
         if not surface.can_place_entity({ name = final_unit_name, position = position }) then
