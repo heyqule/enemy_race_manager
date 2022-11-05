@@ -80,17 +80,15 @@
   - 100% 2 infinite chest drop
   - rewards tier 1(30%), 2(50%), 3(20%) items
 
-### GUI
-- A dialog will show whether you want to advance to next tier once you defeat a boss.  [WIP]
-  - Once you are on new tier, you will not able to spawn lower tier.
-- Each race will track best time for each tier.
-- Each race will have achievement when you beat each tier.
-- Add boss event log to track each boss encounter.
-  - Race, Tier, Location, Win/Loss, Start time, Time End. Boss difficulty, squad size
+### GUI [WIP]
+- A dialog will show whether you want to advance to next tier once you defeat a boss.  [DONE]
+  - once you are on new tier, you will not able to spawn lower tier. [DONE]
+- Each race will track its victory best time.
+- Each race will have achievements when you beat max tier on each difficulty.
+- Add boss event log to track each boss encounter. [Done]
+  - Race, Tier, Location, Win/Loss, Start time, Time End. Boss difficulty, Squad Size
 - Changing boss difficulty or boss squad size 
-  - reset the best timers.
-  - reset achievements.
-  - It also adds to boss event log
+  - reset the best timers. [Done]
 
 ##### Base-game items
 

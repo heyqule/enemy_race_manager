@@ -37,7 +37,8 @@ BossAttacksData.default_speed = 1
 BossAttacksData.basic_attacks = {}
 BossAttacksData.advanced_attacks = {}
 BossAttacksData.super_attacks = {}
--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_unit().
+-- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
+-- Use CustomAttackHelper.drop_batch_units() instead
 BossAttacksData.despawn_attacks = {}
 BossAttacksData.phases = {}
 

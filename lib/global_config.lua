@@ -81,7 +81,9 @@ local boss_spawn_size = {
 }
 ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
 ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 99999999}
+
 ErmConfig.BOSS_BUILDING_HITPOINT = {1000, 20000000, 32000000, 50000000, 99999999}
+
 ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
 ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
 -- 1 phase change and 5 types of attacks based on damage taken
@@ -90,6 +92,7 @@ ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {2, 3, 3, 4, 4}
 
 -- 320 radius toward the target area.
 ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
+ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3200
 ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute

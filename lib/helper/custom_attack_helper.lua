@@ -90,7 +90,55 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     end
 end
 
-function CustomAttackHelper.drop_boss_unit(event, race_name, count)
+function CustomAttackHelper.drop_batch_units(event, race_name, count)
+    if race_settings == nil then
+        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    end
+    print(serpent.block(race_settings))
+
+    if race_settings == nil then
+        return
+    end
+
+    count = count or 10
+    local surface = game.surfaces[event.surface_index]
+    local level = race_settings.level
+
+    local position = event.target_position
+    position.x = position.x + 2
+
+    local i = 0
+    local teamsize = 0
+    local group = surface.create_unit_group {
+        position = position, force = race_settings.force
+    }
+    print('Load Units')
+    repeat
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
+        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
+        end
+
+        if position then
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = race_settings.force })
+            if entity.type == 'unit' then
+                teamsize = teamsize + 1
+                group.add_member(entity)
+            end
+        end
+        i = i + 1
+    until i == count
+
+    group.set_command({
+        type = defines.command.attack_area,
+        destination = {x = position.x, y = position.y},
+        radius = CHUNK_SIZE * 2,
+        distraction = defines.distraction.by_anything
+    })
+end
+
+
+function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
     local boss_data = remote.call('enemy_race_manager', 'get_boss_data')
     local surface = game.surfaces[event.surface_index]

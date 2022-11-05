@@ -26,7 +26,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local BossProcessor = {}
 
 -- beam scan up to 100 chunks
-local scanLength = 3200
+local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
 -- 7 chunks
 local scanMinLength = 224
 local scanRadius = 16
@@ -257,12 +257,73 @@ local draw_time = function(boss, current_tick)
     })
 end
 
+local initialize_result_log = function(race_name, difficulty, squad_size)
+    local default_best_record = {
+        tier = 1,
+        time = 0,
+    }
+    if global.boss_logs[race_name] == nil then
+        global.boss_logs[race_name] = {
+            difficulty = difficulty,
+            squad_size = squad_size,
+            best_record = default_best_record,
+            entries = {}
+        }
+    end
+
+    if not global.boss_logs[race_name].difficulty == difficulty or
+        not global.boss_logs[race_name].difficulty == squad_size then
+        global.boss_logs[race_name].best_record = default_best_record
+    end
+end
+
+local has_better_record = function(current_best_record, record)
+    local race_name = record.race
+    return record.tier == current_best_record.tier and
+            ((global.boss_logs[race_name].best_record.time == 0) or
+             (record.last_tick - record.spawn_tick) < global.boss_logs[race_name].best_record.time)
+end
+
+local update_best_time = function(record)
+    local race_name = record.race
+    local current_best_record = global.boss_logs[race_name].best_record
+    if record.tier > current_best_record.tier or has_better_record(current_best_record, record) then
+        global.boss_logs[race_name].best_record.tier = record.tier
+        global.boss_logs[race_name].best_record.time = record.last_tick - record.spawn_tick
+    end
+end
+
+
+local write_result_log = function(victory)
+    local boss = global.boss
+    local difficulty = settings.startup['enemyracemanager-boss-difficulty'].value
+    local squad_size = settings.startup['enemyracemanager-boss-unit-spawn-size'].value
+
+    initialize_result_log(boss.race_name, difficulty, squad_size)
+
+    local record = {
+        race = boss.race_name,
+        tier = boss.boss_tier,
+        victory = victory,
+        surface = boss.surface_name,
+        location = boss.entity_position,
+        difficulty = difficulty,
+        squad_size = squad_size,
+        spawn_tick = boss.spawned_tick,
+        last_tick = game.tick
+    }
+    table.insert(global.boss_logs[boss.race_name].entries, record)
+
+    update_best_time(record)
+end
+
 function BossProcessor.init_globals()
     global.boss = global.boss or boss_setting_default()
     global.boss_attack_groups = global.boss_attack_groups or {}
     global.boss_group_spawn = global.boss_group_spawn or ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = global.boss_spawnable_index or boss_spawnable_index_default()
     global.boss_rewards = global.boss_rewards or {}
+    global.boss_logs = global.boss_logs or {}
 end
 
 --- Start the boss spawn flow
@@ -422,6 +483,10 @@ function BossProcessor.get_pathing_entity_name(race_name)
 end
 
 local display_victory_dialog = function(boss)
+    if global.race_settings[boss.race_name].boss_tier >= ErmConfig.BOSS_MAX_TIERS then
+        return
+    end
+
     local targetPlayer = nil
     for _, player in pairs(game.players) do
         if player.valid and player.connected and player.surface == boss.surface then
@@ -451,6 +516,7 @@ function BossProcessor.heartbeat()
     if boss.victory then
         -- start reward process
         global.race_settings[boss.race_name].boss_kill_count = global.race_settings[boss.race_name].boss_kill_count + 1
+        write_result_log(true)
         display_victory_dialog(boss)
         ErmBossRewardProcessor.exec()
         BossProcessor.unset()
@@ -462,6 +528,7 @@ function BossProcessor.heartbeat()
     if current_tick > boss.despawn_at_tick then
         -- start despawn process
         ErmDebugHelper.print('BossProcessor: start despawn process')
+        write_result_log(false)
         ErmBossDespawnProcessor.exec()
         BossProcessor.unset()
         ErmDebugHelper.print('BossProcessor: Heartbeat stops')

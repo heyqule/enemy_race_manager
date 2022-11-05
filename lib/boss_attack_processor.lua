@@ -21,17 +21,39 @@ BossAttackProcessor.TYPE_PROJECTILE = 1
 BossAttackProcessor.TYPE_BEAM = 2
 BossAttackProcessor.TYPE_EXPLOSION = 3
 
+local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
+local scanRadius = ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS
+local scanMinLength = 128
 local type_name = {'projectile', 'beam', 'explosion'}
-local pick_near_by_player_entity_position = function()
-    local attackable_entities_cache = global.boss.attackable_entities_cache
-    local attackable_entities_cache_size = global.boss.attackable_entities_cache_size
 
-    if attackable_entities_cache == nil then
-        local surface = global.boss.surface
+local get_scan_area = {
+    [defines.direction.north] = function(x, y)
+        return {left_top = {x - scanRadius, y - scanLength}, right_bottom = {x + scanRadius, y - scanMinLength}}
+    end,
+    [defines.direction.east] = function(x, y)
+        return {left_top = {x + scanMinLength, y - scanRadius}, right_bottom = {x + scanLength, y + scanRadius}}
+    end,
+    [defines.direction.south] = function(x, y)
+        return {left_top = {x - scanRadius, y + scanMinLength}, right_bottom = {x + scanRadius, y + scanLength}}
+    end,
+    [defines.direction.west] = function(x, y)
+        return {left_top = {x - scanLength, y - scanRadius}, right_bottom = {x - scanMinLength, y + scanRadius}}
+    end,
+}
+
+local pick_near_by_player_entity_position = function(use_artillery)
+    use_artillery = use_artillery or false
+    local artillery_mode = false
+    local boss = global.boss
+    local surface = boss.surface
+    local attackable_entities_cache = boss.attackable_entities_cache
+    local attackable_entities_cache_size = boss.attackable_entities_cache_size
+
+    if attackable_entities_cache == nil and not use_artillery then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ErmForceHelper.get_player_forces(),
             radius = 64,
-            position = global.boss.entity_position,
+            position = boss.entity_position,
             limit = 50
         }
         attackable_entities_cache_size = #attackable_entities_cache
@@ -39,19 +61,45 @@ local pick_near_by_player_entity_position = function()
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
     end
 
+    if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
+        attackable_entities_cache = surface.find_entities_filtered {
+            force = ErmForceHelper.get_player_forces(),
+            area = get_scan_area[boss.target_direction](global.boss.entity_position.x, global.boss.entity_position.y),
+            limit = ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT
+        }
+        attackable_entities_cache_size = #attackable_entities_cache
+        global.boss.attackable_entities_cache = attackable_entities_cache
+        global.boss.attackable_entities_cache_size = attackable_entities_cache_size
+        artillery_mode = true
+    end
+
+    --- target players and their vehicles if it can't target from above
+    if attackable_entities_cache_size == 0 then
+        attackable_entities_cache = surface.find_entities_filtered {
+            force = ErmForceHelper.get_player_forces(),
+            type = {'character','car','spider-vehicle'},
+            limit = 10
+        }
+        attackable_entities_cache_size = #attackable_entities_cache
+        global.boss.attackable_entities_cache = attackable_entities_cache
+        global.boss.attackable_entities_cache_size = attackable_entities_cache_size
+        artillery_mode = true
+    end
+
     local return_position = nil
     local retry = 0
     repeat
-        return_position = attackable_entities_cache[math.random(1,attackable_entities_cache_size)].position
-        retry = retry + 1
+        return_position = attackable_entities_cache[math.random(1, attackable_entities_cache_size)].position
+        retry = retry + 3
     until return_position or retry == 3
 
-    return return_position
+    return return_position, artillery_mode
 end
 
 local queue_attack = function(data)
     for i=1, data['spread'] do
-        local position = pick_near_by_player_entity_position()
+        local position, artillery_mode = pick_near_by_player_entity_position()
+        data['artillery_mode'] = artillery_mode
         data['position'] = position;
         ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
     end
@@ -117,6 +165,11 @@ end
 local process_attack = function(data)
     local surface = global.boss.surface
     local entity_name = data['entity_name']
+
+    if data['artillery_mode'] then
+        data['speed'] = 1
+        data['range'] = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
+    end
 
     for i = 1, data['count'] do
         local position = data['position']
@@ -184,7 +237,8 @@ end
 function BossAttackProcessor.process_despawn_attack()
     ErmDebugHelper.print('Despawn Attack...')
     local data = get_despawn_attack()
-    local position = pick_near_by_player_entity_position()
+    local position, artillery_mode = pick_near_by_player_entity_position(true)
+    data['artillery_mode'] = artillery_mode
     data['position'] = position;
     process_attack(data)
 end
