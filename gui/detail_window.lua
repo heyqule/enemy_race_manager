@@ -31,6 +31,9 @@ end
 --- Detail Windows functions
 function ERM_DetailWindow.show(player, race_setting)
     local gui = player.gui.screen
+    if gui[ERM_DetailWindow.root_name] then
+        return
+    end
     local detail_window = gui.add {
         type = "frame",
         name = ERM_DetailWindow.root_name,
@@ -187,7 +190,7 @@ function ERM_DetailWindow.show(player, race_setting)
 
     local boss_flow = right_flow.add { type = "flow", name = "boss_flow", direction = 'vertical' }
     boss_flow.add { type = "label", name="boss_flow_description", caption={"gui.boss_flow_description"}}
-    boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { 'gui.boss_details' }, tooltip = { 'gui.boss_details_tooltip' } }
+    boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { 'gui.boss_details' } }
 end
 
 function ERM_DetailWindow.update_slider_text(event, slider_name, slider_value)

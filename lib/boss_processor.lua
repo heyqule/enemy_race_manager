@@ -238,15 +238,10 @@ local attack_functions = {
 }
 
 local draw_time = function(boss, current_tick)
-    local difference = boss.despawn_at_tick - current_tick
-    local hour = math.floor(difference / defines.time.hour)
-    local minute_difference = difference - (hour * defines.time.hour)
-    local minute = math.floor(minute_difference  / defines.time.minute)
-    local second_difference = difference - (hour * defines.time.hour) - (minute * defines.time.minute)
-    local second = math.floor(second_difference / defines.time.second)
+    local datetime_str = ErmConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
 
     rendering.draw_text({
-        text={"description.boss-despawn-in", hour, minute, second},
+        text={"description.boss-despawn-in", datetime_str},
         surface=boss.surface_name,
         target=boss.entity,
         target_offset={-3.5,-8},
@@ -260,7 +255,7 @@ end
 local initialize_result_log = function(race_name, difficulty, squad_size)
     local default_best_record = {
         tier = 1,
-        time = 0,
+        time = -1,
     }
     if global.boss_logs[race_name] == nil then
         global.boss_logs[race_name] = {
@@ -273,6 +268,8 @@ local initialize_result_log = function(race_name, difficulty, squad_size)
 
     if not global.boss_logs[race_name].difficulty == difficulty or
         not global.boss_logs[race_name].difficulty == squad_size then
+        global.boss_logs[race_name]['difficulty'] = difficulty
+        global.boss_logs[race_name]['squad_size'] = squad_size
         global.boss_logs[race_name].best_record = default_best_record
     end
 end
@@ -280,14 +277,14 @@ end
 local has_better_record = function(current_best_record, record)
     local race_name = record.race
     return record.tier == current_best_record.tier and
-            ((global.boss_logs[race_name].best_record.time == 0) or
+            ((global.boss_logs[race_name].best_record.time == -1) or
              (record.last_tick - record.spawn_tick) < global.boss_logs[race_name].best_record.time)
 end
 
 local update_best_time = function(record)
     local race_name = record.race
     local current_best_record = global.boss_logs[race_name].best_record
-    if record.tier > current_best_record.tier or has_better_record(current_best_record, record) then
+    if record.victory and (record.tier > current_best_record.tier or has_better_record(current_best_record, record)) then
         global.boss_logs[race_name].best_record.tier = record.tier
         global.boss_logs[race_name].best_record.time = record.last_tick - record.spawn_tick
     end
@@ -318,7 +315,7 @@ local write_result_log = function(victory)
 end
 
 function BossProcessor.init_globals()
-    global.boss = global.boss or boss_setting_default()
+    global.boss = boss_setting_default()
     global.boss_attack_groups = global.boss_attack_groups or {}
     global.boss_group_spawn = global.boss_group_spawn or ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = global.boss_spawnable_index or boss_spawnable_index_default()
@@ -329,7 +326,8 @@ end
 --- Start the boss spawn flow
 function BossProcessor.exec(rocket_silo, spawn_position)
     ErmDebugHelper.print('BossProcessor: Check rocket_silo valid...')
-    if rocket_silo and rocket_silo.valid and global.boss.loading == false and global.boss.entity == nil then
+    if rocket_silo and rocket_silo.valid and global.boss.loading == false and
+            (global.boss.entity == nil or global.boss.entity.valid == false) then
         global.boss.loading = true
         local surface = rocket_silo.surface
         local race_name = ErmSurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
@@ -438,9 +436,9 @@ function BossProcessor.check_pathing()
         if pathing_entity and pathing_entity.valid then
             if pathing_entity.spawner then
                 ErmDebugHelper.print('BossProcessor: flying only [attached spawner]')
-                boss.flying_only = true
+                global.boss.flying_only = true
                 start_unit_spawn()
-                boss.loading = false
+                global.boss.loading = false
                 return
             end
 
@@ -449,9 +447,9 @@ function BossProcessor.check_pathing()
                 ErmDebugHelper.print('BossProcessor: flying only [unit proximity]')
                 ErmDebugHelper.print(#boss_base)
                 ErmDebugHelper.print(boss_base[1].name)
-                boss.flying_only = true
+                global.boss.flying_only = true
                 start_unit_spawn()
-                boss.loading = false
+                global.boss.loading = false
                 return
             end
         end

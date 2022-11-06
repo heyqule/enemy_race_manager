@@ -15,15 +15,7 @@ Event.register(defines.events.on_player_created, function(event)
     ErmGui.main_window.update_overhead_button(event.player_index)
 end)
 
---- On Click Events
-EventGui.on_click('erm_detail_close_button',function(event)
-    local owner = game.players[event.element.player_index]
-    if owner then
-        ErmGui.detail_window.toggle_close(owner)
-        ErmGui.main_window.show(owner)
-    end
-end)
-
+--- Main Windows Events ---
 EventGui.on_click('erm_toggle', function(event)
     local owner = game.players[event.element.player_index]
     ErmGui.main_window.toggle_main_window(owner)
@@ -54,6 +46,15 @@ EventGui.on_click('erm_reset_default_bitter', function(event)
     ErmGui.main_window.reset_default(event)
 end)
 
+--- Enemy Details window events ---
+EventGui.on_click('erm_detail_close_button',function(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        ErmGui.detail_window.toggle_close(owner)
+        ErmGui.main_window.show(owner)
+    end
+end)
+
 EventGui.on_click(".*/"..ErmGui.detail_window.confirm_name, function(event)
     local owner = game.players[event.element.player_index]
     if owner then
@@ -76,10 +77,10 @@ end)
 EventGui.on_click('.*/boss_details', function(event)
     local nameToken = String.split(event.element.name, '/')
     local owner = game.players[event.element.player_index]
-    ErmGui.victory_dialog.hide(owner)
-    ErmGui.victory_dialog.show(owner, global.race_settings[nameToken[1]])
+    ErmGui.boss_detail_window.show(owner, nameToken[1], global.boss_logs[nameToken[1]])
 end)
 
+--- Victory Dialog events ---
 EventGui.on_click('.*/victory_dialog_tier_cancel', function(event)
     local owner = game.players[event.element.player_index]
     ErmGui.victory_dialog.hide(owner)
@@ -92,6 +93,20 @@ EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
     ErmGui.victory_dialog.hide(owner)
 end)
 
+--- Boss Detail events ---
+EventGui.on_click('erm_boss_detail_close_button',function(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        ErmGui.boss_detail_window.toggle_close(owner)
+        ErmGui.main_window.show(owner)
+    end
+end)
+
+EventGui.on_selection_state_changed('.*/erm_boss_detail_list_box', function(event)
+    local element = event.element
+    local owner = game.players[event.element.player_index]
+    ErmGui.boss_detail_window.update_data_box(element, owner)
+end)
 
 --- on_gui_closed events
 local gui_close_switch = {
@@ -100,6 +115,9 @@ local gui_close_switch = {
     end,
     [ErmGui.detail_window.root_name] = function(owner)
         ErmGui.detail_window.hide(owner)
+    end,
+    [ErmGui.boss_detail_window.root_name] = function(owner)
+        ErmGui.boss_detail_window.hide(owner)
     end
 }
 

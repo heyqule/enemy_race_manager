@@ -490,9 +490,49 @@ function ErmConfig.race_is_active(race_name)
     return global.active_races[race_name] == true
 end
 
-
 function ErmConfig.get_installed_races()
     return global.installed_races
+end
+
+function ErmConfig.format_daytime(start_tick, end_tick)
+    local difference = end_tick - start_tick
+    local day = math.floor(difference / defines.time.day)
+    local hour_difference = difference - (day * defines.time.day)
+    local hour = math.floor(hour_difference / defines.time.hour)
+    local minute_difference = difference - (day * defines.time.day) - (hour * defines.time.hour)
+    local minute = math.floor(minute_difference  / defines.time.minute)
+    local second_difference = difference - (day * defines.time.day) - (hour * defines.time.hour) - (minute * defines.time.minute)
+    local second = math.floor(second_difference / defines.time.second)
+    return day, hour, minute, second
+end
+
+local format_time = function(datetime_str, time, has_colon)
+    has_colon = has_colon or false
+    if time < 10 then
+        datetime_str = datetime_str .. '0'..time
+    else
+        datetime_str = datetime_str .. time
+    end
+
+    if has_colon == true then
+        datetime_str = datetime_str .. ':'
+    end
+
+    return datetime_str
+end
+
+function ErmConfig.format_daytime_string(start_tick, end_tick)
+    local day, hour, minute, second = ErmConfig.format_daytime(start_tick, end_tick)
+    local datetime_str = ''
+    if day > 0 then
+        datetime_str = datetime_str .. day ..'D '
+    end
+
+    datetime_str = format_time(datetime_str, hour, true)
+    datetime_str = format_time(datetime_str, minute, true)
+    datetime_str = format_time(datetime_str, second)
+
+    return datetime_str;
 end
 
 return ErmConfig

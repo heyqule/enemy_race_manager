@@ -119,15 +119,7 @@ function ForceHelper.refresh_all_enemy_forces()
     Table.insert(global.non_player_forces, 'neutral')
 
     for _, force in pairs(game.forces) do
-        local is_player_force = true
-        for _, non_player_force in pairs(global.non_player_forces) do
-            if(force.name == non_player_force) then
-                is_player_force = false
-                break
-            end
-        end
-
-        if is_player_force then
+        if #force.players > 0 then
             Table.insert(global.player_forces, force.name)
         end
     end

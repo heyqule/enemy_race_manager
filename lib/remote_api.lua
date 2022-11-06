@@ -220,4 +220,13 @@ function ERM_RemoteAPI.add_boss_attack_group(group)
     table.insert(global.boss_attack_groups, group_data)
 end
 
+function ERM_RemoteAPI.add_erm_attack_group(group)
+    if group.valid and table_size(group.members) > 0 then
+        global.erm_unit_groups[group.group_number] = {
+            group =  group,
+            start_position = group.position
+        }
+    end
+end
+
 return ERM_RemoteAPI

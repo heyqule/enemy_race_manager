@@ -14,6 +14,9 @@ local ERM_BossVictoryDialog = {
 
 function ERM_BossVictoryDialog.show(player, race_setting)
     local gui = player.gui.screen
+    if gui[ERM_BossVictoryDialog.root_name] then
+        return
+    end
     local dialog = gui.add {
         type = "frame",
         name = ERM_BossVictoryDialog.root_name,

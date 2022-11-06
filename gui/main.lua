@@ -7,11 +7,13 @@
 local ERM_MainWindow = require('__enemyracemanager__/gui/main_window')
 local ERM_DetailWindow = require('__enemyracemanager__/gui/detail_window')
 local ERM_BossVictoryDialog = require('__enemyracemanager__/gui/victory_dialog')
+local ERM_BossDetailWindow = require('__enemyracemanager__/gui/boss_detail_window')
 
 local ERM_GUI = {
     main_window = ERM_MainWindow,
     detail_window = ERM_DetailWindow,
-    victory_dialog = ERM_BossVictoryDialog
+    victory_dialog = ERM_BossVictoryDialog,
+    boss_detail_window = ERM_BossDetailWindow
 }
 
 return ERM_GUI

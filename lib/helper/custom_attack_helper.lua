@@ -134,6 +134,8 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         radius = CHUNK_SIZE * 2,
         distraction = defines.distraction.by_anything
     })
+
+    remote.call('enemy_race_manager', 'add_erm_attack_group', group)
 end
 
 
