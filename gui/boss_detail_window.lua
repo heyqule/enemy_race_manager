@@ -11,7 +11,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local ERM_BossDetailsWindow = {
     root_name = 'erm_races_manager_boss_details',
     window_width = 680,
-    window_height = 600,
+    window_height = 400,
 }
 
 local get_victory_label = function(victory)
@@ -33,7 +33,7 @@ local add_data_entry = function(data_box, entry)
     data_box.add { type = "label", caption = get_victory_label(entry.victory) }
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_location' } }
-    data_box.add { type = "label", caption = entry.surface .. ' x: '..entry.location.x..' y:'..entry.location.y}
+    data_box.add { type = "label", caption = entry.surface .. '  X:'..entry.location.x..' Y:'..entry.location.y}
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_spawned_at' } }
     data_box.add { type = "label", caption = ErmConfig.format_daytime_string(0, entry.spawn_tick) }
@@ -97,16 +97,17 @@ function ERM_BossDetailsWindow.show(player, race_name, boss_log)
         type = "list-box",
         name = race_name.."/erm_boss_detail_list_box"
     }
-    list_box.style.width = ERM_BossDetailsWindow.window_width * 0.3
-    list_box.style.height = ERM_BossDetailsWindow.window_height - 100
+    list_box.style.width = ERM_BossDetailsWindow.window_width * 0.35
+    list_box.style.height = ERM_BossDetailsWindow.window_height - 80
 
     local data_box = entries_horizontal_flow.add{
         type = 'table',
         name = race_name..'/erm_boss_detail_data_box',
-        column_count = 2
+        column_count = 2,
+        style = 'bordered_table'
     }
-    data_box.style.width = ERM_BossDetailsWindow.window_width * 0.65
-    data_box.style.height = ERM_BossDetailsWindow.window_height - 100
+    data_box.style.width = ERM_BossDetailsWindow.window_width * 0.6
+    data_box.style.height = ERM_BossDetailsWindow.window_height - 80
     data_box.style.horizontally_stretchable = true
 
     if boss_log and boss_log.entries[1] then

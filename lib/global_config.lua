@@ -79,10 +79,18 @@ local boss_spawn_size = {
     [BOSS_SPAWN_PATROL] = 20,
     [BOSS_SPAWN_PLATOON] = 40,
 }
+local boss_defense_spawn_size = {
+    [BOSS_SPAWN_SQUAD] = 6,
+    [BOSS_SPAWN_PATROL] = 12,
+    [BOSS_SPAWN_PLATOON] = 24,
+}
 ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
+ErmConfig.boss_defense_spawn_size = boss_defense_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
 ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 99999999}
 
-ErmConfig.BOSS_BUILDING_HITPOINT = {1000, 20000000, 32000000, 50000000, 99999999}
+if DEBUG_MODE then
+    ErmConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 9999999}
+end
 
 ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
 ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
