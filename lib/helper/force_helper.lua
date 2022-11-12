@@ -91,15 +91,15 @@ function ForceHelper.get_name_token(name)
 end
 
 function ForceHelper.get_non_player_forces()
-    return global.non_player_forces
+    return global.non_player_forces or {'neutral'}
 end
 
 function ForceHelper.get_player_forces()
-    return global.player_forces
+    return global.player_forces or {'player'}
 end
 
 function ForceHelper.get_all_enemy_forces()
-    return global.enemy_force_cache
+    return global.enemy_force_cache or {'enemy'}
 end
 
 function ForceHelper.refresh_all_enemy_forces()

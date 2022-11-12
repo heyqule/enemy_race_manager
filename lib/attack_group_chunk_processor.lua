@@ -366,7 +366,7 @@ local is_cachable_attack_position = function(surface, area)
         limit = 1
     })
 
-    if #entities ~= 0 then
+    if #entities > 0 then
         return true
     end
 
@@ -460,7 +460,7 @@ function AttackGroupChunkProcessor.init_index()
     local total_surfaces = 0
     for _, surface in pairs(game.surfaces) do
        if ErmForceHelper.can_have_enemy_on(surface) then
-           current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
+           local current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
            spawn_chunk = spawn_chunk + current_spawn_chunk
            attack_chunk = attack_chunk + current_attack_chunk
            total_surfaces = total_surfaces + 1

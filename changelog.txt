@@ -6,18 +6,39 @@ Date: 2022-??-??
     - Added Boss mode.  Boss spawner is revealed by launching a Psi Tracking Satellite.
     - Added Psi Tracking Satellite. It reveals a boss spawner and returns 1200 space science pack.
     - Once boss spawner revealed, launching additional Psi Tracking Satellite will not spawn new boss until the existing boss has either killed or despawned.
-    - The map chunk where the boss sit is revealed to player.
-    - Boss sends out elite attack group periodically.
+    - The map chunk where the boss sit is revealed to players.
+    - Boss sends out elite attack group periodically. (approx twice per nauvis day)
+    - Boss fires artillery periodically. (approx twice per nauvis day)
     - Boss performs various attacks when it takes damage.
-    - When the boss is defeated, infinity chest with items will spawn for 14 nauvis days.
+    - When the boss is defeated, infinity chest(s) with items will spawn for 14 nauvis days.
     - When you don't defeat the boss within the timer, it releases super attacks to your base!
+    - --------------------
+    - Player Army Population Control
+    - Base Max Population is 150. It increases with Follower combat drone research.
+    - Each unit can have different pop. 1 for marine, 2 for tank/wraith, 5 for battlecruiser.
+    - --------------------
+    - Player Army Auto Deployment
+    - --------------------
+    - Player Army Teleportation
+    - Can teleport between surfaces.
+
+  Graphics:
+    - Add new graphics for explosion and attack effects.
+
+  Sounds:
+    - Added full population sound effect
+    - Added force under attack when unit dies.
+    - Added base under attack to replace default alert.
 
   Changes:
-    - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of assigning to automatic group.
-    - Level up function now runs every 10 mins.
+    - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of converting to automatic group.
+    - Level up check now runs every 10 mins.
     - When boss is active, Leveling up is halt until boss mode is ended.
-    - Refactored custom attack handler to reduce remote call.
+    - Refactored custom attack handler to reduce remote calls.
     - Refactored GUI handlers.
+    - Killing units / turrets now always count toward evolution points.
+    - Tweaked building formation number.
+    - Tweaked unit group will not slow down to wait members. Slow members run double speed to catch up.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.5

@@ -83,6 +83,8 @@ require('__enemyracemanager__/controllers/initializer')
 
 require('__enemyracemanager__/controllers/unit_control')
 
+require('__enemyracemanager__/controllers/army_population')
+
 --- GUIs
 require('__enemyracemanager__/controllers/gui')
 

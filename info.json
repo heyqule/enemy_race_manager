@@ -10,6 +10,7 @@
     "base >= 1.1.0",
     "stdlib >= 1.4.6",
     "enemyracemanager_assets >= 1.0.0",
+    "~ zerm_postprocess >= 1.0.0",
     "!hardcorio",
     "!bobenemies",
     "!Nova-Natural_Evolution_Enemies",

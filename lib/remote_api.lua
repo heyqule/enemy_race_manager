@@ -11,6 +11,7 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ERM_RemoteAPI = {}
 
@@ -228,5 +229,12 @@ function ERM_RemoteAPI.add_erm_attack_group(group)
         }
     end
 end
+
+--- Internal Management remote calls
+ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
+
+ERM_RemoteAPI.army_register_unit = ErmArmyPopulationProcessor.register_unit
+ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
+
 
 return ERM_RemoteAPI

@@ -57,6 +57,7 @@ ErmConfig.BASE_BUILT_EVENT = 'erm_base_built'
 -- Check race exists
 -- update settings
 ErmConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
+ErmConfig.PREPARE_WORLD = 'erm_prepare_world'
 
 ErmConfig.RACE_MODE_PREFIX = 'erm_'
 
@@ -69,8 +70,8 @@ ErmConfig.BOSS_DESPAWN_TIMER = {45, 45, 60, 75, 99}
 
 local boss_difficulty = {
     [BOSS_NORMAL] = {25, 30, 36, 42, 50},
-    [BOSS_HARD] = {35, 42, 50, 61, 75},
-    [BOSS_GODLIKE] = {50, 62, 75, 87, 99}
+    [BOSS_HARD] = {36, 42, 51, 62, 75},
+    [BOSS_GODLIKE] = {51, 62, 74, 86, 99}
 }
 ErmConfig.BOSS_LEVELS = boss_difficulty[settings.startup['enemyracemanager-boss-difficulty'].value]
 
@@ -96,7 +97,7 @@ ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
 ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
 -- 1 phase change and 5 types of attacks based on damage taken
 ErmConfig.BOSS_DEFENSE_ATTACKS = {15000000, 999999, 200000, 99999, 69420, 20000}
-ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {2, 3, 3, 4, 4}
+ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {3, 3, 3, 4, 4}
 
 -- 320 radius toward the target area.
 ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
@@ -107,7 +108,7 @@ ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
 ErmConfig.CONFIG_CACHE_SIZE = 1024
 if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
-    ErmConfig.CONFIG_CACHE_SIZE = 8
+    ErmConfig.CONFIG_CACHE_SIZE = 128
 end
 
 ErmConfig.FFA_MULTIPLIER = 10
@@ -125,7 +126,6 @@ local refreshable_settings = {
         'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
-        'enemyracemanager-evolution-point-accelerator',
         'enemyracemanager-evolution-point-multipliers',
         'enemyracemanager-attack-meter-enable',
         'enemyracemanager-attack-meter-threshold',

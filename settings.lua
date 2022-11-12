@@ -272,27 +272,20 @@ data:extend {
         setting_type = "runtime-global",
         default_value = BUILDING_FORMATION_1_4_5,
         allowed_values = {
+            BUILDING_FORMATION_1_1_2,
             BUILDING_FORMATION_1_2_4,
-            BUILDING_FORMATION_1_4_5,
-            BUILDING_FORMATION_1_6_8,
-            BUILDING_FORMATION_1_8_12,
-            BUILDING_FORMATION_1_4_10,
-            BUILDING_FORMATION_1_2_16,
             BUILDING_FORMATION_1_3_8,
+            BUILDING_FORMATION_1_4_5,
+            BUILDING_FORMATION_1_4_15,
+            BUILDING_FORMATION_1_6_8,
+            BUILDING_FORMATION_1_8_11,
             BUILDING_FORMATION_1_9_0,
+            BUILDING_FORMATION_1_9_10,
             BUILDING_FORMATION_RANDOM
         },
         order = "enemyracemanager-101"
     },
     --- Evolution Point and level up ---
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-evolution-point-accelerator",
-        description = "enemyracemanager-evolution-point-accelerator",
-        setting_type = "runtime-global",
-        default_value = true,
-        order = "enemyracemanager-200"
-    },
     {
         type = "double-setting",
         name = "enemyracemanager-evolution-point-multipliers",

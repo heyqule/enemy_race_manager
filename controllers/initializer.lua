@@ -23,6 +23,7 @@ local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ErmGui = require('__enemyracemanager__/gui/main')
 
@@ -107,7 +108,9 @@ local prepare_world = function()
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
     game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
-
+    game.map_settings.unit_group.max_member_speedup_when_behind = 2
+    game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
+    game.map_settings.unit_group.max_group_slowdown_factor = 1
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
@@ -126,7 +129,8 @@ local prepare_world = function()
     ErmAttackGroupChunkProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
 
-    ErmCron.add_2_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
+    print('Done Prepare World')
+    -- See zerm_postprocess for additional post-process after race_mods loaded
 end
 
 local conditional_events = function()
@@ -176,6 +180,7 @@ local init_globals = function()
     ErmAttackGroupChunkProcessor.init_globals()
     ErmAttackGroupSurfaceProcessor.init_globals()
     ErmBossProcessor.init_globals()
+    ErmArmyPopulationProcessor.init_globals()
 end
 
 --- Init events
