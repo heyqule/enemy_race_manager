@@ -128,8 +128,6 @@ local prepare_world = function()
 
     ErmAttackGroupChunkProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
-
-    print('Done Prepare World')
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
 

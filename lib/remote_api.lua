@@ -233,7 +233,7 @@ end
 --- Internal Management remote calls
 ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
 
-ERM_RemoteAPI.army_register_unit = ErmArmyPopulationProcessor.register_unit
+ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
 ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
 
 

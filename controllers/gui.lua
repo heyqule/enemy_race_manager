@@ -108,6 +108,20 @@ EventGui.on_selection_state_changed('.*/erm_boss_detail_list_box', function(even
     ErmGui.boss_detail_window.update_data_box(element, owner)
 end)
 
+--- Army Control Window events ---
+EventGui.on_click('erm_army_control_toggle', function(event)
+    local owner = game.players[event.element.player_index]
+    ErmGui.army_control_window.toggle_main_window(owner)
+end)
+
+EventGui.on_click('erm_army_close_button',function(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        ErmGui.army_control_window.toggle_close(owner)
+    end
+end)
+
+
 --- on_gui_closed events
 local gui_close_switch = {
     [ErmGui.main_window.root_name] = function(owner)
@@ -118,6 +132,9 @@ local gui_close_switch = {
     end,
     [ErmGui.boss_detail_window.root_name] = function(owner)
         ErmGui.boss_detail_window.hide(owner)
+    end,
+    [ErmGui.army_control_window.root_name] = function(owner)
+        ErmGui.army_control_window.hide(owner)
     end
 }
 

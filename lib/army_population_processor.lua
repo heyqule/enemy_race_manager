@@ -113,4 +113,12 @@ function ArmyPopulationProcessor.remove_unit_count(unit)
     end
 end
 
+function ArmyPopulationProcessor.get_army_data(force)
+    if global.army_populations[force.name] == nil then
+        init_force_data(force)
+    end
+
+    return global.army_populations[force.name]
+end
+
 return ArmyPopulationProcessor

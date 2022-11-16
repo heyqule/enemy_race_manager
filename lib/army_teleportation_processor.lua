@@ -1,0 +1,3 @@
+local ArmyTeleportationProcessor = {}
+
+return ArmyTeleportationProcessor
