@@ -5,8 +5,6 @@
 -- Time: 11:29 AM
 -- To change this template use File | Settings | File Templates.
 --
-local config = require('__stdlib__/stdlib/config')
-config.skip_script_protections = true
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
@@ -85,8 +83,12 @@ require('__enemyracemanager__/controllers/unit_control')
 
 require('__enemyracemanager__/controllers/army_population')
 
+require('__enemyracemanager__/controllers/army_teleportation')
+
 --- GUIs
 require('__enemyracemanager__/controllers/gui')
+
+require('__enemyracemanager__/controllers/custom-input')
 
 --- Race Data Events
 require('__enemyracemanager__/controllers/race_management')

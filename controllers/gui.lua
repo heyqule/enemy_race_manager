@@ -11,11 +11,11 @@ require('__enemyracemanager__/global')
 local ErmGui = require('__enemyracemanager__/gui/main')
 local EventGui = require('__stdlib__/stdlib/event/gui')
 
+--- Enemy Main window events ---
 Event.register(defines.events.on_player_created, function(event)
     ErmGui.main_window.update_overhead_button(event.player_index)
 end)
 
---- Main Windows Events ---
 EventGui.on_click('erm_toggle', function(event)
     local owner = game.players[event.element.player_index]
     ErmGui.main_window.toggle_main_window(owner)
@@ -157,4 +157,31 @@ end)
 
 EventGui.on_value_changed(ErmGui.detail_window.evolution_factor_slider_name, function(event)
     ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.evolution_factor_slider_name, ErmGui.detail_window.evolution_factor_value_name)
+end)
+
+--- Army GUI
+local gui_tab_changed = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid and event.element and event.element.valid then
+        ErmGui.army_control_window.tab_player_data[event.player_index].active_tab_id = event.element.selected_tab_index
+        ErmGui.army_control_window.update(player, event.element.selected_tab_index)
+    end
+end
+Event.register(defines.events.on_gui_selected_tab_changed, gui_tab_changed)
+
+EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
+    local element = event.element
+    local player = game.players[event.element.player_index]
+    ErmGui.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
+end)
+
+EventGui.on_click('army_cc/.*_link', function(event)
+    local player = game.players[event.element.player_index]
+    if player and player.valid and event.element and event.element.valid then
+        if event.element.name == ErmGui.army_control_window.start_link_button then
+            ErmGui.army_control_window.start_link(player)
+        elseif event.element.name == ErmGui.army_control_window.stop_link_button then
+            ErmGui.army_control_window.stop_link(player)
+        end
+    end
 end)

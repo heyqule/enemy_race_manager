@@ -33,11 +33,7 @@ for _, unit in pairs(data.raw['unit']) do
                 action_delivery =
                 {
                     type = "instant",
-                    target_effects =
-                    {
-                        type = "script",
-                        effect_id = ARMY_POPULATION_INCREASE
-                    }
+                    target_effects = increase_pop
                 }
             }
         end

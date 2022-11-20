@@ -5,10 +5,11 @@
 ---
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
+local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
 local isFollowResearch = function(research)
     return string.find(research.name, 'follower-robot-count-', 1, true)
@@ -41,6 +42,7 @@ Event.register(defines.events.on_research_finished, function(event)
     local research = event.research
     if isFollowResearch(research)  then
         ErmArmyPopulation.calculate_max_units(research.force)
+        ErmArmyControlUI.update_army_stats()
     end
 end)
 
@@ -55,5 +57,6 @@ Event.register(defines.events.on_script_trigger_effect, function(event)
     if population_functions[event.effect_id]
     then
         population_functions[event.effect_id](event)
+        ErmArmyControlUI.update_army_stats()
     end
 end)

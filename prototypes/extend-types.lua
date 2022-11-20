@@ -50,10 +50,17 @@ data:extend(
                 group = "combat",
                 order = "z-erm_controlable_units"
             },
+            {
+                type = "item-subgroup",
+                name = "erm_controlable_buildings",
+                group = "combat",
+                order = "z-erm_controlable_buildings"
+            },
         })
 -- Recipe Category
 data:extend({
     { type = "recipe-category", name = 'erm_controlable_units' },
+    { type = "recipe-category", name = 'erm_controlable_buildings' },
 })
 
 --- Ammo Category

@@ -48,6 +48,11 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'accumulator',
 }
 
+AttackGroupChunkProcessor.attack_group_valid_targets = {}
+for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
+    AttackGroupChunkProcessor.attack_group_valid_targets[value] = true
+end
+
 local create_race_cursor_node = function()
     return {
         current_direction = 1, -- corresponding to DIRECTION_CURSOR
@@ -497,12 +502,12 @@ function AttackGroupChunkProcessor.add_spawnable_chunk(surface, position)
     end
 end
 
-function AttackGroupChunkProcessor.get_built_entity_event_filter()
-    local filter = {}
-    for _, type in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
-        table.insert(filter, {filter = "type", type = type})
+function AttackGroupChunkProcessor.is_valid_target(event, patterns)
+    local entity = event.created_entity or event.entity
+    if entity and entity.valid and AttackGroupChunkProcessor.attack_group_valid_targets[entity.type] then
+        return true
     end
-    return filter
+    return nil
 end
 
 function AttackGroupChunkProcessor.pick_spawn_location(surface, force)

@@ -22,4 +22,6 @@ require "prototypes.extend-map-gen-setting"
 
 require "prototypes/extend-boss-items"
 
+require "prototypes/extend-inputs"
+
 require "prototypes/extend-army-events"

@@ -105,7 +105,7 @@ ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3200
 ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
 
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
-ErmConfig.CONFIG_CACHE_SIZE = 1024
+ErmConfig.CONFIG_CACHE_SIZE = 1000
 if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
     ErmConfig.CONFIG_CACHE_SIZE = 128

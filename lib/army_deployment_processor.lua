@@ -4,6 +4,7 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 
+--- Max 20 active deployers
 local ArmyDeploymentProcessor = {}
 
 return ArmyDeploymentProcessor
