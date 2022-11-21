@@ -89,8 +89,11 @@ local pick_near_by_player_entity_position = function(use_artillery)
     local return_position = nil
     local retry = 0
     repeat
-        return_position = attackable_entities_cache[math.random(1, attackable_entities_cache_size)].position
-        retry = retry + 3
+        local entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
+        if entity.valid then
+            return_position = entity.position
+        end
+        retry = retry + 1
     until return_position or retry == 3
 
     return return_position, artillery_mode
@@ -101,7 +104,7 @@ local queue_attack = function(data)
         local position, artillery_mode = pick_near_by_player_entity_position()
         data['artillery_mode'] = artillery_mode
         data['position'] = position;
-        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
+        ErmCron.add_boss_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
     end
 end
 

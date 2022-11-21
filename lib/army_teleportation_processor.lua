@@ -4,11 +4,62 @@
 --- DateTime: 11/15/2022 10:25 PM
 ---
 
---- It can teleport registered army units, base-game spidertron, base-game car, base-game tank, base-game character
+--- It can teleport registered army units and base-game character
+local util = require('util')
 local ArmyTeleportationProcessor = {}
+local Event = require('__stdlib__/stdlib/event/event')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
--- Disable link if cc link idle for 60s.
-local MAX_RETRY = 30;
+-- Disable link if cc is idle for 60s.
+local MAX_RETRY = 4;
+
+local BOX_WIDTH = 32;
+local DOUBLE_BOX_WIDTH = 64;
+
+local unset_indicator = function(teleport)
+    if teleport and teleport.indicator then
+        rendering.destroy(teleport.indicator)
+        teleport.indicator = nil
+    end
+end
+
+local process_teleport_queue = function()
+    ErmCron.process_teleport_queue()
+end
+
+function ArmyTeleportationProcessor.start_event(reload)
+    print('starting event...')
+    if global.army_teleporter_event == false or reload then
+        print('started event...')
+        if not reload then
+            print('init scan...')
+            ArmyTeleportationProcessor.scan_units()
+        end
+        global.army_teleporter_event = true
+        Event.on_nth_tick(ErmConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
+    end
+end
+
+local can_stop_event = function()
+    local stopped = 0
+    local teleporters = global.army_entrance_teleporters
+    for _, teleporter in pairs(teleporters) do
+        if teleporter.idle_retry == nil then
+            stopped = stopped + 1
+        end
+    end
+    return stopped == table_size(teleporters)
+end
+
+local stop_event = function()
+    print('Stopping Event.')
+    if global.army_teleporter_event == true then
+        print('Stopped Event.')
+        Event.remove(ErmConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
+        global.army_teleporter_event = false
+    end
+end
 
 function ArmyTeleportationProcessor.init_globals()
     global.army_entrance_teleporters = global.army_entrance_teleporters or {}
@@ -16,6 +67,7 @@ function ArmyTeleportationProcessor.init_globals()
     global.army_built_teleporters = global.army_built_teleporters or {}
     global.army_teleporters_name_mapping = global.army_teleporters_name_mapping or {}
     global.army_registered_command_centers = global.army_registered_command_centers or {}
+    global.army_teleporter_event = global.army_teleporter_event or false
 end
 
 function ArmyTeleportationProcessor.register_building(name)
@@ -23,24 +75,30 @@ function ArmyTeleportationProcessor.register_building(name)
 end
 
 function ArmyTeleportationProcessor.add_entity(entity)
-    if global.army_built_teleporters[entity.force.index] == nil then
-        global.army_built_teleporters[entity.force.index] = {}
+    local army_built_teleporters = global.army_built_teleporters
+    local force = entity.force
+    local surface = entity.surface
+    local position = entity.position
+    local unit_number = entity.unit_number
+
+    if army_built_teleporters[force.index] == nil then
+        army_built_teleporters[force.index] = {}
     end
 
-    if global.army_built_teleporters[entity.force.index][entity.surface.index] == nil then
-        global.army_built_teleporters[entity.force.index][entity.surface.index] = {}
+    if army_built_teleporters[force.index][surface.index] == nil then
+        global.army_built_teleporters[force.index][surface.index] = {}
     end
-    local name = entity.surface.name .. ', X:'..entity.position.x..', Y:'.. entity.position.y
+    local name = surface.name .. ', X:'..position.x..', Y:'.. position.y
     entity.backer_name = name
-    global.army_built_teleporters[entity.force.index][entity.surface.index][entity.unit_number] = {
+    global.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
         -- To do support rally points
         rally_point = {}
     }
-    global.army_teleporters_name_mapping[entity.backer_name] = {
-        force_id = entity.force.index,
-        surface_id = entity.surface.index,
-        unit_number = entity.unit_number
+    global.army_teleporters_name_mapping[name] = {
+        force_id = force.index,
+        surface_id = surface.index,
+        unit_number = unit_number
     }
 end
 
@@ -59,29 +117,202 @@ function ArmyTeleportationProcessor.getEntityByName(backer_name)
 end
 
 function ArmyTeleportationProcessor.remove_entity(entity)
-    global.army_built_teleporters[entity.force.index][entity.surface.index][entity.unit_number] = nil
+    local force = entity.force
+    global.army_built_teleporters[force.index][entity.surface.index][entity.unit_number] = nil
     global.army_teleporters_name_mapping[entity.backer_name] = nil
-end
 
-function ArmyTeleportationProcessor.link(player, from, to)
-    global.army_entrance_teleporters[player.force.index] = from
-    global.army_entrance_teleporters[player.force.index].idle_retry = 0
-    global.army_exit_teleporters[player.force.index] = to
-end
+    local entrance = global.army_entrance_teleporters[force.index]
+    local exit = global.army_exit_teleporters[force.index]
 
-function ArmyTeleportationProcessor.unlink(player)
-    global.army_entrance_teleporters[player.force.index] = nil
-    global.army_exit_teleporters[player.force.index] = nil
-end
-
-function ArmyTeleportationProcessor.get_linked_entities(player)
-    if global.army_entrance_teleporters[player.force.index] then
-        return global.army_entrance_teleporters[player.force.index].entity, global.army_exit_teleporters[player.force.index].entity
+    if (entrance and entrance.entity == entity) or
+        ( exit and exit.entity == entity) then
+        unset_indicator(entrance)
+        unset_indicator(exit)
+        global.army_entrance_teleporters[force.index] = nil
+        global.army_exit_teleporters[force.index] = nil
     end
 end
 
-function ArmyTeleportationProcessor.teleport()
+function ArmyTeleportationProcessor.link(from, to)
+    if not (from.entity and from.entity.valid) or not (to.entity and to.entity.valid) then
+        return
+    end
 
+    local force = from.entity.force
+    local entrance = global.army_entrance_teleporters[force.index]
+    if  entrance then
+        unset_indicator(entrance)
+    end
+
+    local exit = global.army_exit_teleporters[force.index]
+    if  exit then
+        unset_indicator(exit)
+    end
+
+    global.army_entrance_teleporters[force.index] = from
+    global.army_entrance_teleporters[force.index].idle_retry = 0
+    global.army_exit_teleporters[force.index] = to
+
+    entrance = global.army_entrance_teleporters[force.index]
+    exit = global.army_exit_teleporters[force.index]
+
+    if entrance and entrance.indicator == nil then
+        local from_entity = from.entity
+        local from_position = from_entity.position
+        entrance.indicator = rendering.draw_rectangle({
+            color={ g = 0.8, a = 0.05 },
+            left_top={from_position.x - BOX_WIDTH, from_position.y - BOX_WIDTH},
+            right_bottom={from_position.x + BOX_WIDTH, from_position.y + BOX_WIDTH},
+            surface=from_entity.surface.index,
+            forces={from_entity.force.name},
+            filled=false,
+            draw_on_ground=true,
+            width=8
+        })
+    end
+
+
+    if exit and exit.indicator == nil then
+        local to_entity = to.entity
+        local to_position = to_entity.position
+        exit.indicator = rendering.draw_rectangle({
+            color={ r = 0.8,  a = 0.05 },
+            left_top={to_position.x - BOX_WIDTH, to_position.y - BOX_WIDTH},
+            right_bottom={to_position.x + BOX_WIDTH, to_position.y + BOX_WIDTH},
+            surface=to_entity.surface.index,
+            forces={to_entity.force.name},
+            filled=false,
+            draw_on_ground=true,
+            width=8
+        })
+    end
+
+    ArmyTeleportationProcessor.start_event()
+end
+
+function ArmyTeleportationProcessor.unlink(force)
+    local entrance = global.army_entrance_teleporters[force.index]
+    local exit = global.army_exit_teleporters[force.index]
+    if entrance or exit then
+        unset_indicator(entrance)
+        unset_indicator(exit)
+        global.army_entrance_teleporters[force.index] = nil
+        global.army_exit_teleporters[force.index] = nil
+    end
+
+    if can_stop_event() then
+        stop_event()
+    end
+end
+
+function ArmyTeleportationProcessor.get_linked_entities(force)
+    if global.army_entrance_teleporters[force.index] then
+        return global.army_entrance_teleporters[force.index].entity, global.army_exit_teleporters[force.index].entity
+    end
+end
+
+local can_teleport = function(force_index)
+    local from = global.army_entrance_teleporters[force_index].entity
+    local to = global.army_exit_teleporters[force_index].entity
+    return from and from.valid and from.status == defines.entity_status.working and
+            to and to.valid and to.status == defines.entity_status.working
+end
+
+local unit_close_to_entrance = function (unit, target_entity)
+    local distance = util.distance(unit.position, target_entity.position)
+    return distance <= DOUBLE_BOX_WIDTH
+end
+
+
+function ArmyTeleportationProcessor.scan_units()
+    for force_index, teleporter in pairs(global.army_entrance_teleporters) do
+        print('scan_units: checking '..force_index)
+        if can_teleport(force_index) then
+            local from_entity = teleporter.entity
+            local to_entity = global.army_exit_teleporters[force_index].entity
+            local surface = from_entity.surface
+            local position = from_entity.position
+            local units = surface.find_entities_filtered {
+                area = {
+                    left_top = {position.x - BOX_WIDTH, position.y - BOX_WIDTH},
+                    right_bottom = {position.x + BOX_WIDTH, position.y + BOX_WIDTH}
+                },
+                force = from_entity.force,
+                type = 'unit',
+                limit = 10
+            }
+            print('scan_units: Selected Units: '..table_size(units))
+            if units[1] then
+                print('scan_units: Adding Unit to QUEUE')
+                ArmyTeleportationProcessor.queue_units(units, from_entity, to_entity)
+                teleporter.idle_retry = 0
+            else
+                print('scan_units: Adding Idle Retry')
+                teleporter.idle_retry = teleporter.idle_retry + 1
+            end
+        else
+            print('scan_units: Adding Idle Retry')
+            teleporter.idle_retry = teleporter.idle_retry + 1
+        end
+
+        if teleporter and teleporter.idle_retry  > MAX_RETRY then
+            ArmyTeleportationProcessor.unlink(teleporter.entity.force)
+        end
+    end
+
+    if can_stop_event() then
+        print('scan_units: Trigger Stop Event')
+        stop_event()
+    else
+        print('scan_units: Readd scan unit to 15s queue')
+        ErmCron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
+    end
+end
+
+function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
+    for _, unit in pairs(units) do
+        print('queue_units'..unit.unit_number)
+        ErmCron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
+    end
+end
+
+function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
+    print('checking unit...')
+    if not (unit and unit.valid) then return end
+
+    print('prepare to teleport: '..unit.unit_number)
+
+    if can_teleport(unit.force.index) and unit_close_to_entrance(unit, from_entity) then
+        local surface = exit_entity.surface
+        local position = surface.find_non_colliding_position(
+                unit.name, exit_entity.position, BOX_WIDTH, 2, true
+        )
+
+        if position == nil then
+            position = surface.find_non_colliding_position(
+                    unit.name, exit_entity.position, DOUBLE_BOX_WIDTH, 4, true
+            )
+        end
+
+        if position then
+            if unit.surface == exit_entity.surface then
+                unit.teleport(position)
+            else
+                local unit_health = unit.health
+                local exit_surface = exit_entity.surface
+                local entity =  exit_surface.create_entity({
+                    name = unit.name,
+                    position = position,
+                    force = unit.force,
+                    create_build_effect_smoke = false,
+                })
+                entity.health = unit_health
+                if entity then
+                    unit.destroy()
+                end
+            end
+        end
+    end
 end
 
 return ArmyTeleportationProcessor

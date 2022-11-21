@@ -6,6 +6,7 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
+local Event = require('__stdlib__/stdlib/event/event')
 local StdIs = require('__stdlib__/stdlib/utils/is')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -36,7 +37,7 @@ local spawnRadius = 64
 local cleanChunkSize = 8
 local maxRetry = 3
 
-local INCLUDE_SPAWNS = false -- Only for debug
+local INCLUDE_SPAWNS = true -- Only for debug
 
 local enemy_entities = {'unit-spawner','turret','unit'}
 local enemy_buildings = {'unit-spawner','turret'}
@@ -118,6 +119,19 @@ local start_unit_spawn = function()
 end
 
 
+local process_boss_queue = function(event)
+    ErmCron.process_boss_queue()
+end
+
+local start_boss_event = function()
+    Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, process_boss_queue)
+end
+
+local remove_boss_event = function()
+    Event.remove(ErmConfig.BOSS_QUEUE_CRON * -1, process_boss_queue)
+    ErmCron.empty_boss_queue()
+end
+
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
         return {left_top = {x - scanRadius, y - scanLength}, right_bottom = {x + scanRadius, y - scanMinLength}}
@@ -192,6 +206,7 @@ local unset_boss_data = function()
     global.boss_attack_groups = {}
     global.boss_group_spawn = ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = boss_spawnable_index_default()
+    remove_boss_event()
 end
 
 local spawn_unit_attack = function()
@@ -425,6 +440,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         global.boss.pathing_entity = pathing_entity
         ErmCron.add_2_sec_queue('BossProcessor.check_pathing')
         ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
+        start_boss_event()
     end
 end
 
@@ -616,14 +632,12 @@ end
 
 function BossProcessor.unset()
     if ErmRaceSettingsHelper.is_in_boss_mode() then
-        if global.boss.entity then
-            global.boss.entity.destroy()
-            ErmDebugHelper.print('BossProcessor: destroy boss base...')
-        end
-        destroy_beacons()
-        unset_boss_data()
-        ErmDebugHelper.print('BossProcessor: unset...')
+        global.boss.entity.destroy()
+        ErmDebugHelper.print('BossProcessor: destroy boss base...')
     end
+    destroy_beacons()
+    unset_boss_data()
+    ErmDebugHelper.print('BossProcessor: unset...')
 end
 
 --- Build boss spawner

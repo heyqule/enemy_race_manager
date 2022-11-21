@@ -26,6 +26,10 @@ end
 -- Remove prefix enemy_ if force isn't enemy
 function ForceHelper.extract_race_name_from(force_name)
     if string.find(force_name, 'enemy_') ~= nil then
+        if global.force_race_name_cache == nil then
+            global.force_race_name_cache = {}
+        end
+
         if global.force_race_name_cache[force_name] == nil then
             global.force_race_name_cache[force_name] = String.gsub(force_name, 'enemy_', '')
         end

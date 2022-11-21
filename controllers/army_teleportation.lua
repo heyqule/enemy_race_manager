@@ -24,7 +24,7 @@ end
 
 local is_valid_command_center = function(event, patterns)
     local entity = event.created_entity or event.entity
-    if entity and entity.valid then
+    if entity and entity.valid and global.army_registered_command_centers then
         return global.army_registered_command_centers[entity.name]
     end
     return nil

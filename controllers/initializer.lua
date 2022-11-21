@@ -151,6 +151,10 @@ local conditional_events = function()
             end
         end)
     end
+
+    if global.army_teleporter_event then
+        ArmyTeleportationProcessor.start_event(true)
+    end
 end
 
 local init_globals = function()

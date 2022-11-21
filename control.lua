@@ -19,6 +19,7 @@ local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
 local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
+local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 
 require('prototypes/compatibility/controls')
 
@@ -74,6 +75,12 @@ cron_switch = {
     end,
     ['BossAttackProcessor.process_attack'] = function(args)
         ErmBossAttackProcessor.process_attack(args[1])
+    end,
+    ['ArmyTeleportationProcessor.teleport'] = function(args)
+        ErmArmyTeleportationProcessor.teleport(args[1], args[2], args[3])
+    end,
+    ['ArmyTeleportationProcessor.scan_units'] = function(args)
+        ErmArmyTeleportationProcessor.scan_units()
     end
 }
 

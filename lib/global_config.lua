@@ -22,6 +22,10 @@ if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
     ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
+    --- Boss Queue only last while boss is live.  Clean up jobs need to be done in other queue.
+    ErmConfig.BOSS_QUEUE_CRON = 11
+    ErmConfig.TELEPORT_QUEUE_CRON = 62
+    ErmConfig.AUTO_DEPLOY_CRON = 307
 
     ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
     ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
@@ -33,7 +37,10 @@ if DEBUG_MODE then
 else
     ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
-    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
+    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
+    ErmConfig.BOSS_QUEUE_CRON = 11
+    ErmConfig.TELEPORT_QUEUE_CRON = 62
+    ErmConfig.AUTO_DEPLOY_CRON = 307
 
     -- +1 to spread the job across all ticks
     -- execute all job on designated tick

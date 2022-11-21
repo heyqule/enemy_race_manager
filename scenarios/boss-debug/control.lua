@@ -28,8 +28,8 @@ Event.register(defines.events.on_player_created, function(event)
     scenarios_helper.set_tech_level(force, 20)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
-    scenarios_helper.set_game_speed(1)
-    scenarios_helper.set_boss_tier(1)
+    scenarios_helper.set_game_speed(10)
+    scenarios_helper.set_boss_tier(2)
 
     --surface.daytime = 0.5
     surface.daytime = 1
@@ -96,7 +96,9 @@ local spawn_units = function(surface)
         radius = 20
     }
     for _, entity in pairs(entities) do
-        entity.set_command(command)
+        if entity and entity.valid then
+            entity.set_command(command)
+        end
     end
 
     return entities

@@ -99,6 +99,20 @@ local get_selected_index = function(commandcenters, player, type)
     return nil
 end
 
+local add_mini_map = function(pane, name, player, entity, style)
+    local from_map = pane.add {
+        type='minimap',
+        name=name,
+        force=entity.force.name,
+        chart_player_index=player.index,
+        surface_index=entity.surface.index,
+        position=entity.position
+    }
+    for key, value in pairs(style) do
+        from_map.style[key] = value
+    end
+end
+
 local get_cc_name = function(entity)
     local rc = 'N/A'
     if entity and entity.valid then
@@ -110,14 +124,15 @@ end
 local get_command_centers = function(player)
     local name_list = {}
     local force_list = global.army_built_teleporters[player.force.index];
+    local surface = player.surface
 
-    if force_list and force_list[player.surface.index] then
-        for _, item in pairs(force_list[player.surface.index]) do
+    if force_list and force_list[surface.index] then
+        for _, item in pairs(force_list[surface.index]) do
             table.insert(name_list, item.entity.backer_name)
         end
 
         for surface_index, surface_items in pairs(force_list) do
-            if not surface_index == player.surface.index then
+            if surface_index ~= surface.index then
                 for _, item in pairs(surface_items) do
                     table.insert(name_list, item.entity.backer_name)
                 end
@@ -144,7 +159,7 @@ local update_cc_screen = function(player)
     local commandcenters = get_command_centers(player)
     local from_selected = get_selected_index(commandcenters, player, 'from') or 0
     local to_selected = get_selected_index(commandcenters, player, 'to') or 0
-    local entrance, exit = ArmyTeleportationProcessor.get_linked_entities(player)
+    local entrance, exit = ArmyTeleportationProcessor.get_linked_entities(player.force)
 
     local pane = main_tab[Army_MainWindow.tab_names[3]]
     local horizontal = pane.add {
@@ -189,17 +204,14 @@ local update_cc_screen = function(player)
     }
 
     local selected_from_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.from)
-    if selected_from_entity then
-        local from_map = center_pane_row_map.add {
-            type='minimap',
-            name="army_cc/from_map",
-            force=selected_from_entity.force.name,
-            chart_player_index=player.index,
-            surface_index=selected_from_entity.surface.index,
-            position=selected_from_entity.position
-        }
-        from_map.style.width = 150
-        from_map.style.height = 150
+    if selected_from_entity and selected_from_entity.valid then
+        add_mini_map(
+                center_pane_row_map,
+         "army_cc/from_map",
+                player,
+                selected_from_entity,
+          {width=150, height=150}
+        )
     else
         local from_map = center_pane_row_map.add {
             type = 'flow',
@@ -211,17 +223,14 @@ local update_cc_screen = function(player)
     end
 
     local selected_to_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.to)
-    if selected_to_entity then
-        local to_map = center_pane_row_map.add {
-            type='minimap', name="army_cc/to_map",
-            force=selected_to_entity.force.name,
-            chart_player_index=player.index,
-            surface_index=selected_to_entity.surface.index,
-            position=selected_to_entity.position
-        }
-        to_map.style.width = 150
-        to_map.style.height = 150
-        to_map.style.left_margin = 85
+    if selected_to_entity and selected_to_entity.valid then
+        add_mini_map(
+                center_pane_row_map,
+                "army_cc/to_map",
+                player,
+                selected_to_entity,
+                {width=150, height=150, left_margin = 85}
+        )
     end
 
 
@@ -253,6 +262,32 @@ local update_cc_screen = function(player)
     center_pane_row_selected_to.add { type = 'label', name = "army_cc/selected/to_label", caption=get_cc_name(selected_to_entity)}
 
 
+    -- CENTER CC LINK BUTTONS
+    local center_pane_row_links = center_pane.add {
+        type = 'flow',
+        direction = 'horizontal'
+    }
+
+    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption='UNLINK', style="red_button"}
+    unlink_button.tooltip = 'Stop Communication'
+
+    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button , caption='LINK', style="green_button"}
+    link_button.style.left_margin = 165
+    link_button.tooltip = 'Start Communication'
+
+    if player_data.error_message ~= '' then
+        local error_message = center_pane.add { type = 'label', name = "army_cc/linked/error_message", caption=player_data.error_message, visible =  true, style='bold_red_label'}
+        error_message.style.top_margin = 10
+        player_data.error_message = ''
+    end
+
+    if player_data.success_message ~= '' then
+        local success_message = center_pane.add { type = 'label', name = "army_cc/linked/success_message", caption=player_data.success_message, visible =  true, style='bold_green_label'}
+        success_message.style.top_margin = 10
+        player_data.success_message = ''
+    end
+
+
     local center_pane_row_active = center_pane.add {
         type = 'flow',
         direction = 'horizontal',
@@ -278,30 +313,39 @@ local update_cc_screen = function(player)
     center_pane_row_active_to.add { type = 'label', caption='Linked TO: '}
     center_pane_row_active_to.add { type = 'label', name = "army_cc/linked/to_label", caption=get_cc_name(exit)}
 
-
-    -- CENTER CC LINK BUTTONS
-    local center_pane_row_links = center_pane.add {
+    local center_pane_row_link_map = center_pane.add {
         type = 'flow',
-        direction = 'horizontal'
+        direction = 'horizontal',
+        name='army_cc/link_minimap_row',
     }
 
-    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption='UNLINK', style="red_button"}
-    unlink_button.tooltip = 'Stop Communication'
 
-    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button , caption='LINK', style="green_button"}
-    link_button.style.left_margin = 165
-    link_button.tooltip = 'Start Communication'
-
-    if player_data.error_message ~= '' then
-        local error_message = center_pane.add { type = 'label', name = "army_cc/linked/error_message", caption=player_data.error_message, visible =  true, style='bold_red_label'}
-        error_message.style.top_margin = 10
-        player_data.error_message = ''
+    if entrance and entrance.valid then
+        add_mini_map(
+                center_pane_row_link_map,
+                "army_cc/from_map",
+                player,
+                entrance,
+                {width=150, height=150}
+        )
+    else
+        local from_map = center_pane_row_link_map.add {
+            type = 'flow',
+            direction = 'horizontal',
+            name='army_cc/link_minimap_row',
+        }
+        from_map.style.width = 150
+        from_map.style.height = 150
     end
 
-    if player_data.success_message ~= '' then
-        local success_message = center_pane.add { type = 'label', name = "army_cc/linked/success_message", caption=player_data.success_message, visible =  true, style='bold_green_label'}
-        success_message.style.top_margin = 10
-        player_data.success_message = ''
+    if exit and exit.valid then
+        add_mini_map(
+                center_pane_row_link_map,
+                "army_cc/to_map",
+                player,
+                exit,
+                {width=150, height=150, left_margin = 85}
+        )
     end
 
     -- Right CC LISTBOX
@@ -501,18 +545,21 @@ function Army_MainWindow.set_selected_cc(player, cc_selector, cc_name)
     end
 
     local player_data = get_player_tab_data(player)
+    local selected_cc = player_data.selected_cc
 
     if cc_selector.name == Army_MainWindow.cc_from_selector then
-        if player_data.selected_cc.to == cc_name then
-            player_data.error_message = 'Error: You can not select the same command center!'
+        if selected_cc.to == cc_name then
+            selected_cc.to = selected_cc.from
+            selected_cc.from = cc_name
         else
-            player_data.selected_cc.from = cc_name
+            selected_cc.from = cc_name
         end
     elseif cc_selector.name == Army_MainWindow.cc_to_selector then
-        if player_data.selected_cc.from == cc_name then
-            player_data.error_message = 'Error: You can not select the same command center!'
+        if selected_cc.from == cc_name then
+            selected_cc.from = selected_cc.to
+            selected_cc.to = cc_name
         else
-            player_data.selected_cc.to = cc_name
+            selected_cc.to = cc_name
         end
     end
 
@@ -524,7 +571,7 @@ function Army_MainWindow.start_link(player)
     local from_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.from)
     local to_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.to)
     if from_cc and to_cc then
-        ArmyTeleportationProcessor.link(player, from_cc, to_cc)
+        ArmyTeleportationProcessor.link(from_cc, to_cc)
         player_data.success_message = player_data.selected_cc.from..' is now linking with '..player_data.selected_cc.to
     else
         player_data.error_message = 'Missing selections. Unable to link command centers.'
@@ -534,8 +581,7 @@ end
 
 function Army_MainWindow.stop_link(player)
     local player_data = get_player_tab_data(player)
-    local force_data =
-    ArmyTeleportationProcessor.unlink(player)
+    ArmyTeleportationProcessor.unlink(player.force)
     player_data.success_message = player_data.selected_cc.from..' has now unlinked with '..player_data.selected_cc.to
     Army_MainWindow.update_command_centers()
 end
