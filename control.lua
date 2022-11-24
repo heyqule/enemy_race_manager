@@ -92,6 +92,8 @@ require('__enemyracemanager__/controllers/army_population')
 
 require('__enemyracemanager__/controllers/army_teleportation')
 
+require('__enemyracemanager__/controllers/army_deployment')
+
 --- GUIs
 require('__enemyracemanager__/controllers/gui')
 

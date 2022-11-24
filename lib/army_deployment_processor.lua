@@ -4,7 +4,222 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 
---- Max 20 active deployers
+local util = require('util')
+local Event = require('__stdlib__/stdlib/event/event')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+
+--- Max 24 active deployers / force
 local ArmyDeploymentProcessor = {}
+--- Internal unit spawn cooldown for each deployer
+local spawn_cooldown = 300
+--- Internal retry before removing the deployer from active list, appox 2 mins idle time.
+local retry_threshold = 24
+
+local process_deployer_queue = function(event)
+    ArmyDeploymentProcessor.deploy()
+end
+
+local can_stop_event = function()
+    local stop = 0
+    for _, force_data in pairs(global.army_active_deployers) do
+        if force_data.total == 0 then
+            stop = stop + 1
+        end
+    end
+    return table_size(global.army_active_deployers) == stop
+end
+
+local stop_event = function()
+    if global.army_deployer_event_running == true and can_stop_event() then
+        Event.remove(ErmConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
+        global.army_deployer_event_running = false
+    end
+end
+
+local statistics = {}
+local add_statistic = function(entity, item_name, count)
+    local force = entity.force;
+    if force then
+        if statistics[force.name] == nil then
+            statistics[force.name] = force.item_production_statistics
+        end
+        statistics[force.name].on_flow(item_name, count * -1)
+    end
+end
+
+local spawn_unit = function(data_unit)
+    local entity = data_unit.entity
+    local surface = entity.surface
+    local registered_units = global.army_registered_units
+    if entity and entity.valid and
+       surface and surface.valid then
+        local force = entity.force
+        if entity.energy > entity.electric_buffer_size * 0.9 then
+            local inventory = entity.get_inventory(defines.inventory.assembling_machine_output)
+            local contents = inventory.get_contents()
+            for unit_name, count in pairs(contents) do
+                if registered_units[unit_name] and count > 0 and
+                    ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force)
+                then
+                    local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
+                    local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
+                    ErmArmyFunctions.assign_wander_command(spawned_entity)
+                    if spawned_entity then
+                        inventory.remove({name=unit_name,count=1})
+                        add_statistic(entity, unit_name, count)
+                        return true
+                    end
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+local init_built_data = function(force)
+    if global.army_built_deployers[force.index] == nil then
+        global.army_built_deployers[force.index] = {}
+    end
+end
+
+local init_active_data = function(force)
+    if global.army_active_deployers[force.index] == nil then
+        global.army_active_deployers[force.index] = {
+            deployers = {},
+            total = 0
+        }
+    end
+end
+
+function ArmyDeploymentProcessor.init_globals()
+    global.army_active_deployers = global.army_active_deployers or {}
+    global.army_built_deployers = global.army_built_deployers or {}
+    global.army_registered_deployers = global.army_registered_deployers or {}
+    global.army_deployer_event_running = global.army_deployer_event_running or false
+end
+
+function ArmyDeploymentProcessor.register_building(name)
+    global.army_registered_deployers[name] = true
+end
+
+function ArmyDeploymentProcessor.start_event(reload)
+    if global.army_deployer_event_running == false or reload then
+        if not reload then
+            global.army_deployer_event_running = true
+        end
+        Event.on_nth_tick(ErmConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
+    end
+end
+
+local add_to_active_data = function(force, unit_number)
+    global.army_active_deployers[force.index]['deployers'][unit_number] = global.army_built_deployers[force.index][unit_number]
+    global.army_active_deployers[force.index]['deployers'][unit_number]['idle_retry'] = 0
+    global.army_active_deployers[force.index]['deployers'][unit_number]['next_tick'] = game.tick + spawn_cooldown
+    global.army_active_deployers[force.index].total = global.army_active_deployers[force.index].total + 1
+end
+
+function ArmyDeploymentProcessor.add_entity(entity)
+    local force = entity.force
+    local unit_number = entity.unit_number
+
+    init_built_data(force)
+    init_active_data(force)
+
+    global.army_built_deployers[force.index][unit_number] = {
+        entity = entity,
+        -- @Todo support rally points
+        rally_point = {}
+    }
+
+    add_to_active_data(force, unit_number)
+
+    ArmyDeploymentProcessor.start_event()
+end
+
+function ArmyDeploymentProcessor.add_to_active(entity)
+    local force = entity.force
+    local unit_number = entity.unit_number
+
+    init_active_data(force)
+
+    add_to_active_data(force, unit_number)
+
+    ArmyDeploymentProcessor.start_event()
+end
+
+function ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
+    if global.army_active_deployers[force_index] and global.army_active_deployers[force_index][unit_number] then
+        global.army_active_deployers[force_index]['deployers'][unit_number] = nil
+        global.army_active_deployers[force_index].total = global.army_active_deployers[force_index].total - 1
+    end
+end
+
+function ArmyDeploymentProcessor.remove_entity(force_index, unit_number)
+    if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        global.army_built_deployers[force_index][unit_number] = nil
+        ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
+    end
+end
+
+function ArmyDeploymentProcessor.remove_data_by_force_index(force_index)
+    global.army_built_deployers[force_index] = nil
+    global.army_active_deployers[force_index] = nil
+    stop_event()
+end
+
+function ArmyDeploymentProcessor.process_retry(force_index, unit_number)
+    if (global.army_active_deployers[force_index]['deployers'][unit_number].idle_retry == retry_threshold) then
+        ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
+    end
+end
+
+local stop_event_check = 2 * defines.time.minute
+local stop_event_check_modular = stop_event_check - ErmConfig.AUTO_DEPLOY_CRON
+
+function ArmyDeploymentProcessor.deploy()
+    local current_tick = game.tick
+    print('running deployment')
+    for force_index, force_data in pairs(global.army_active_deployers) do
+        if force_data.total > 0 then
+            local force = game.forces[force_index]
+            if force and force.valid then
+                if ErmArmyPopulationProcessor.pop_count(force) < ErmArmyPopulationProcessor.max_pop(force) then
+                    for unit_number, deployer_data in pairs(force_data['deployers']) do
+                        if deployer_data.entity and deployer_data.entity.valid then
+                            if current_tick > deployer_data.next_tick then
+                                local success = spawn_unit(deployer_data)
+                                if success then
+                                    deployer_data.idle_retry = 0
+                                else
+                                    deployer_data.idle_retry = deployer_data.idle_retry + 1
+                                    ArmyDeploymentProcessor.process_retry(force_index, unit_number)
+                                end
+                                deployer_data.next_tick = current_tick + spawn_cooldown
+                            end
+                        else
+                            ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
+                        end
+                    end
+                else
+                    for unit_number, deployer_data in pairs(force_data['deployers']) do
+                        deployer_data.idle_retry = deployer_data.idle_retry + 1
+                        deployer_data.next_tick = current_tick + spawn_cooldown
+                        ArmyDeploymentProcessor.process_retry(force_index, unit_number)
+                    end
+                end
+            else
+                print('Invalid Force')
+                ArmyDeploymentProcessor.remove_data_by_force_index(force_index)
+            end
+        end
+    end
+
+    if current_tick % stop_event_check > stop_event_check_modular then
+        stop_event()
+    end
+end
 
 return ArmyDeploymentProcessor

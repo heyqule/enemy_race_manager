@@ -25,6 +25,7 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
 local ErmGui = require('__enemyracemanager__/gui/main')
 
@@ -152,8 +153,16 @@ local conditional_events = function()
         end)
     end
 
-    if global.army_teleporter_event then
+    if global.army_teleporter_event_running then
         ArmyTeleportationProcessor.start_event(true)
+    end
+
+    if global.army_deployer_event_running then
+        ArmyDeploymentProcessor.start_event(true)
+    end
+
+    if global.quick_cron_is_running then
+        Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
     end
 end
 
@@ -185,6 +194,7 @@ local init_globals = function()
     ErmBossProcessor.init_globals()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
+    ArmyDeploymentProcessor.init_globals()
 end
 
 --- Init events

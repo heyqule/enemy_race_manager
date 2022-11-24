@@ -6,13 +6,15 @@
 
 --- It can teleport registered army units and base-game character
 local util = require('util')
-local ArmyTeleportationProcessor = {}
 local Event = require('__stdlib__/stdlib/event/event')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
 
--- Disable link if cc is idle for 60s.
-local MAX_RETRY = 4;
+local ArmyTeleportationProcessor = {}
+
+-- Disable link if cc is idle for 120s.
+local MAX_RETRY = 8;
 
 local BOX_WIDTH = 32;
 local DOUBLE_BOX_WIDTH = 64;
@@ -29,14 +31,11 @@ local process_teleport_queue = function()
 end
 
 function ArmyTeleportationProcessor.start_event(reload)
-    print('starting event...')
-    if global.army_teleporter_event == false or reload then
-        print('started event...')
+    if global.army_teleporter_event_running == false or reload then
         if not reload then
-            print('init scan...')
             ArmyTeleportationProcessor.scan_units()
+            global.army_teleporter_event_running = true
         end
-        global.army_teleporter_event = true
         Event.on_nth_tick(ErmConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
 end
@@ -53,11 +52,9 @@ local can_stop_event = function()
 end
 
 local stop_event = function()
-    print('Stopping Event.')
-    if global.army_teleporter_event == true then
-        print('Stopped Event.')
+    if global.army_teleporter_event_running == true then
         Event.remove(ErmConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
-        global.army_teleporter_event = false
+        global.army_teleporter_event_running = false
     end
 end
 
@@ -67,7 +64,7 @@ function ArmyTeleportationProcessor.init_globals()
     global.army_built_teleporters = global.army_built_teleporters or {}
     global.army_teleporters_name_mapping = global.army_teleporters_name_mapping or {}
     global.army_registered_command_centers = global.army_registered_command_centers or {}
-    global.army_teleporter_event = global.army_teleporter_event or false
+    global.army_teleporter_event_running = global.army_teleporter_event_running or false
 end
 
 function ArmyTeleportationProcessor.register_building(name)
@@ -82,7 +79,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     local unit_number = entity.unit_number
 
     if army_built_teleporters[force.index] == nil then
-        army_built_teleporters[force.index] = {}
+        global.army_built_teleporters[force.index] = {}
     end
 
     if army_built_teleporters[force.index][surface.index] == nil then
@@ -92,7 +89,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     entity.backer_name = name
     global.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
-        -- To do support rally points
+        -- @Todo support rally points
         rally_point = {}
     }
     global.army_teleporters_name_mapping[name] = {
@@ -196,6 +193,7 @@ function ArmyTeleportationProcessor.unlink(force)
     if entrance or exit then
         unset_indicator(entrance)
         unset_indicator(exit)
+        --- @todo render CC light overlay on entrance
         global.army_entrance_teleporters[force.index] = nil
         global.army_exit_teleporters[force.index] = nil
     end
@@ -226,7 +224,6 @@ end
 
 function ArmyTeleportationProcessor.scan_units()
     for force_index, teleporter in pairs(global.army_entrance_teleporters) do
-        print('scan_units: checking '..force_index)
         if can_teleport(force_index) then
             local from_entity = teleporter.entity
             local to_entity = global.army_exit_teleporters[force_index].entity
@@ -239,19 +236,16 @@ function ArmyTeleportationProcessor.scan_units()
                 },
                 force = from_entity.force,
                 type = 'unit',
-                limit = 10
+                limit = 24
             }
-            print('scan_units: Selected Units: '..table_size(units))
-            if units[1] then
-                print('scan_units: Adding Unit to QUEUE')
+
+            if next(units) then
                 ArmyTeleportationProcessor.queue_units(units, from_entity, to_entity)
                 teleporter.idle_retry = 0
             else
-                print('scan_units: Adding Idle Retry')
                 teleporter.idle_retry = teleporter.idle_retry + 1
             end
         else
-            print('scan_units: Adding Idle Retry')
             teleporter.idle_retry = teleporter.idle_retry + 1
         end
 
@@ -261,56 +255,39 @@ function ArmyTeleportationProcessor.scan_units()
     end
 
     if can_stop_event() then
-        print('scan_units: Trigger Stop Event')
         stop_event()
     else
-        print('scan_units: Readd scan unit to 15s queue')
         ErmCron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
     end
 end
 
 function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
     for _, unit in pairs(units) do
-        print('queue_units'..unit.unit_number)
         ErmCron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
     end
 end
 
 function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
-    print('checking unit...')
     if not (unit and unit.valid) then return end
 
-    print('prepare to teleport: '..unit.unit_number)
-
     if can_teleport(unit.force.index) and unit_close_to_entrance(unit, from_entity) then
-        local surface = exit_entity.surface
-        local position = surface.find_non_colliding_position(
-                unit.name, exit_entity.position, BOX_WIDTH, 2, true
-        )
-
-        if position == nil then
-            position = surface.find_non_colliding_position(
-                    unit.name, exit_entity.position, DOUBLE_BOX_WIDTH, 4, true
-            )
-        end
+        local position = ErmArmyFunctions.get_position(unit.name, exit_entity, exit_entity.position)
 
         if position then
             if unit.surface == exit_entity.surface then
                 unit.teleport(position)
             else
                 local unit_health = unit.health
-                local exit_surface = exit_entity.surface
-                local entity =  exit_surface.create_entity({
-                    name = unit.name,
-                    position = position,
-                    force = unit.force,
-                    create_build_effect_smoke = false,
-                })
-                entity.health = unit_health
-                if entity then
+                local spawned_entity = ErmArmyFunctions.spawn_unit(exit_entity, unit.name, position)
+                if spawned_entity then
+                    spawned_entity.health = unit_health
+                    --- @todo render Recall effect on entrance position
                     unit.destroy()
+                    unit = spawned_entity
                 end
             end
+
+            ErmArmyFunctions.assign_wander_command(unit)
         end
     end
 end

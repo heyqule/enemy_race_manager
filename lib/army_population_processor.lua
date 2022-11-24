@@ -120,4 +120,20 @@ function ArmyPopulationProcessor.get_army_data(force)
     return global.army_populations[force.name]
 end
 
+function ArmyPopulationProcessor.max_pop(force)
+    return global.army_populations[force.name].max_pop
+end
+
+function ArmyPopulationProcessor.pop_count(force)
+    return global.army_populations[force.name].pop_count
+end
+
+function ArmyPopulationProcessor.unit_count(force)
+    return global.army_populations[force.name].unit_count
+end
+
+function ArmyPopulationProcessor.unit_count_by_name(force, name)
+    return global.army_populations[force.name]['unit_types'][name]['unit_count']
+end
+
 return ArmyPopulationProcessor

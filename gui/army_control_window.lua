@@ -12,7 +12,7 @@ local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_telepo
 local Army_MainWindow = {
     require_update_all = false,
     root_name = 'erm_army_main',
-    window_width = 800,
+    window_width = 820,
     window_height = 400,
     cc_from_selector = "army_cc/cc_select_from",
     cc_to_selector = "army_cc/cc_select_to",
@@ -28,8 +28,6 @@ local Army_MainWindow = {
     },
     --- @see Army_MainWindow.check_player_data
     tab_player_data = { },
-    --- @see Army_MainWindow.check_force_data
-    tab_force_data = { }
 }
 
 
@@ -38,10 +36,6 @@ local get_player_tab_data = function(player)
     return Army_MainWindow.tab_player_data[player.index]
 end
 
-local get_force_tab_data = function(force)
-    Army_MainWindow.check_force_data(force)
-    return Army_MainWindow.tab_force_data[force.index]
-end
 
 local get_main_tab = function(player)
     if player.gui.screen[Army_MainWindow.root_name] and player.gui.screen[Army_MainWindow.root_name]['main-tab'] then
@@ -446,6 +440,16 @@ function Army_MainWindow.update_army_stats()
     end
 end
 
+
+function Army_MainWindow.update_deployers()
+    for k, player in pairs(game.players) do
+        local main_tab = get_main_tab(player)
+        if player and main_tab and  main_tab.selected_tab_index == 2 then
+            Army_MainWindow.update(player, 2)
+        end
+    end
+end
+
 function Army_MainWindow.update_command_centers()
     for k, player in pairs(game.players) do
         local main_tab = get_main_tab(player)
@@ -482,15 +486,6 @@ function Army_MainWindow.check_player_data(player)
             selected_cc = { from = '', to = '' },
             error_message = '',
             success_message = '',
-        }
-    end
-end
-
-function Army_MainWindow.check_force_data(player)
-    if Army_MainWindow.tab_force_data[player.force.index] == nil then
-        Army_MainWindow.tab_force_data[player.force.index] = {
-            linked_from = '',
-            linked_to = '',
         }
     end
 end

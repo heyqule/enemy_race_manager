@@ -17,7 +17,7 @@ local damage_types = {
 
 -- max resist 75
 local controlable_subgroups = {
-    ['erm_controlable_units'] = true
+    ['erm_controllable_units'] = true
 }
 
 -- max resist 10 - 90

@@ -13,6 +13,7 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
 local ERM_RemoteAPI = {}
 
@@ -238,5 +239,7 @@ ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
 ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
 
 ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
+
+ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
 
 return ERM_RemoteAPI

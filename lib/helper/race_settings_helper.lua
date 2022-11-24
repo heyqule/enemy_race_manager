@@ -411,8 +411,4 @@ function RaceSettingHelper.boss_tier(target_race)
     return global.race_settings[target_race]['boss_tier'] or 1
 end
 
-function RaceSettingHelper.max_boss_tier(target_race)
-    return global.race_settings[target_race]['max_boss_tier'] or 1
-end
-
 return RaceSettingHelper

@@ -14,14 +14,10 @@ local valid_erm_left_click = {
         local player =  game.players[event.player_index]
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
-            local entity = game.surfaces[1].find_entity(event.selected_prototype.name, event.cursor_position)
+            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
-            if entity then
-                print(entity.is_connected_to_electric_network())
-                print(entity.radar_scan_progress)
-                print(entity.energy)
-                print(entity.electric_buffer_size)
-            end
+
+            --- @todo auto select FROM cc
         end
     end,
     ['assembling-machine'] = function(event)
@@ -36,14 +32,15 @@ Event.register('erm-left-click', function(event)
     end
 end)
 
-local valid_erm_right_click = {
+local valid_erm_alt_left_click = {
     ['radar'] = function(event)
-        print('setting TO radar')
         local player =  game.players[event.player_index]
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
-            local entity = game.surfaces[1].find_entity(event.selected_prototype.name, event.cursor_position)
+            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
+
+            --- @todo auto select TO cc
         end
     end,
     ['assembling-machine'] = function(event)
@@ -53,8 +50,8 @@ local valid_erm_right_click = {
 
 
 Event.register('erm-alt-left-click', function(event)
-    if event.selected_prototype and valid_erm_right_click[event.selected_prototype.derived_type] then
-        valid_erm_right_click[event.selected_prototype.derived_type](event)
+    if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
+        valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
     end
 end)
 

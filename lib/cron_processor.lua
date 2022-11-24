@@ -56,10 +56,11 @@ function CronProcessor.init_globals()
 
     -- Conditional Crons
     global.quick_cron = global.quick_cron or Queue()  -- Spawn
+    global.quick_cron_is_running = false
+
     global.boss_cron = global.boss_cron or Queue()
 
     -- Multi force Cron.
-    global.auto_deploy_cron = global.auto_deploy_cron or {}
     global.teleport_cron = global.teleport_cron or {}
 end
 
@@ -71,12 +72,6 @@ function CronProcessor.rebuild_queue()
     Queue.load(global.one_second_cron)
     Queue.load(global.quick_cron)
     Queue.load(global.boss_cron)
-
-    if Type.Table(global.auto_deploy_cron) then
-        for _, queue in pairs(global.auto_deploy_cron) do
-            Queue.load(queue)
-        end
-    end
 
     if Type.Table(global.teleport_cron) then
         for _, queue in pairs(global.teleport_cron) do
@@ -114,8 +109,9 @@ function CronProcessor.add_quick_queue(request, ...)
     local arg = {...}
     global.quick_cron({request, arg})
 
-    local event_handler = Event.get_event_handler(ErmConfig.QUICK_CRON)
-    if event_handler.handlers == nil then
+
+    if global.quick_cron_is_running == false then
+        global.quick_cron_is_running = true
         Event.on_nth_tick(ErmConfig.QUICK_CRON, CronProcessor.process_quick_queue)
     end
 end
@@ -159,7 +155,8 @@ end
 function CronProcessor.process_quick_queue()
     process_one_job(global.quick_cron)
 
-    if(Queue.is_empty(global.quick_cron)) then
+    if global.quick_cron_is_running == true and Queue.is_empty(global.quick_cron) then
+        global.quick_cron_is_running = false
         Event.remove(ErmConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
     end
 end

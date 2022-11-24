@@ -46,21 +46,23 @@ data:extend(
             },
             {
                 type = "item-subgroup",
-                name = "erm_controlable_units",
+                name = "erm_controllable_units",
                 group = "combat",
-                order = "z-erm_controlable_units"
+                order = "z-erm_controllable_units"
             },
             {
                 type = "item-subgroup",
-                name = "erm_controlable_buildings",
+                name = "erm_controllable_buildings",
                 group = "combat",
-                order = "z-erm_controlable_buildings"
+                order = "z-erm_controllable_buildings"
             },
         })
 -- Recipe Category
 data:extend({
-    { type = "recipe-category", name = 'erm_controlable_units' },
-    { type = "recipe-category", name = 'erm_controlable_buildings' },
+    { type = "recipe-category", name = 'erm_controllable_infantry' },
+    { type = "recipe-category", name = 'erm_controllable_factory' },
+    { type = "recipe-category", name = 'erm_controllable_starport' },
+    { type = "recipe-category", name = 'erm_controllable_buildings' },
 })
 
 --- Ammo Category
