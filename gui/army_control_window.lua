@@ -56,15 +56,15 @@ local update_unit_screen = function(player)
 
     local pane = main_tab[Army_MainWindow.tab_names[1]]
     local army_data = ArmyPopulationProcessor.get_army_data(player.force)
-    pane.add { type = 'label', name = 'army_pop_general_info', caption={"gui.army_pop_general_info",army_data['max_pop'], army_data['pop_count'], army_data['unit_count']}}
+    pane.add { type = 'label', name = 'army_pop_general_info', caption={"gui-army.pop_general_info",army_data['max_pop'], army_data['pop_count'], army_data['unit_count']}}
 
     if table_size(army_data['unit_types']) > 0 then
         local item_table = pane.add { type = "table", column_count = 3, style = "bordered_table" }
         item_table.style.horizontally_stretchable = false
 
-        item_table.add { type = "label", caption = { 'gui.army_control_unit_type'}}
-        item_table.add { type = "label", caption = { 'gui.army_control_unit_pop'}}
-        item_table.add { type = "label", caption = { 'gui.army_control_unit_count'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_type'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_pop'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_count'}}
 
         for name, unit_data in pairs(army_data['unit_types']) do
             if unit_data['unit_count'] > 0 then
@@ -147,6 +147,10 @@ local update_deployer = function(player)
 
     local force = player.force
 
+    pane.add { type="label", caption={'gui-army.deployer_description1'}}
+    pane.add { type="label", caption={'gui-army.deployer_description2'}}
+    pane.add { type="label", caption={'gui-army.deployer_description3'}}
+
     if global.army_built_deployers[force.index] ==  nil then
         pane.add { type="label", caption={'gui-army.no_deployer'}}
         return
@@ -156,9 +160,9 @@ local update_deployer = function(player)
     local batch_label = all_on_panel.add {type="label", caption={'gui-army.deployer_batch_option'}}
     batch_label.style.right_margin = 20
 
-    local turn_all_on = all_on_panel.add {type="button", name="army_deployer/all/on", caption={'gui-army.deployer_all_on'}, style='green_button'}
+    local turn_all_on = all_on_panel.add {type="button", name="army_deployer/all/on", caption={'gui-army.deployer_all_on'}, style='green_button', tooltip={"gui-army.deployer_all_on_tooltip"}}
     turn_all_on.style.right_margin = 20
-    all_on_panel.add {type="button", name="army_deployer/all/off", caption={'gui-army.deployer_all_off'}, style='red_button'}
+    all_on_panel.add {type="button", name="army_deployer/all/off", caption={'gui-army.deployer_all_off'}, style='red_button', tooltip={"gui-army.deployer_all_off_tooltip"}}
 
     local table = pane.add {
         type='table',
@@ -437,7 +441,7 @@ function Army_MainWindow.show(player)
     title_flow.style.minimal_width = Army_MainWindow.window_width
     title_flow.style.maximal_width = Army_MainWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui.army-control-title" }, style = 'caption_label' }
+    local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui-army.control-title" }, style = 'caption_label' }
 
     local pusher = title_flow.add{type = "empty-widget", name = "header-pusher", style = "draggable_space_header"}
     pusher.style.width = Army_MainWindow.window_width - 24 - 220
@@ -448,7 +452,7 @@ function Army_MainWindow.show(player)
                                           name = 'erm_army_close_button',
                                           sprite = "utility/close_white",
                                           style = 'frame_action_button',
-                                          tooltip = {"gui.close-instruction"}
+                                          tooltip = {"gui-army.close-button"}
     }
     close_button.style.width = 24
     close_button.style.height = 24
@@ -560,10 +564,10 @@ function Army_MainWindow.toggle_main_window(owner)
         local button_flow = mod_gui.get_button_flow(owner)
 
         if Army_MainWindow.is_hidden(owner) then
-            button_flow.erm_army_control_toggle.tooltip = { 'gui.show-army-control' }
+            button_flow.erm_army_control_toggle.tooltip = { 'gui-army.show-control' }
             Army_MainWindow.open_tab(owner)
         else
-            button_flow.erm_army_control_toggle.tooltip = { 'gui.show-army-control' }
+            button_flow.erm_army_control_toggle.tooltip = { 'gui-army.hide-control' }
             Army_MainWindow.hide(owner)
         end
     end
@@ -572,7 +576,7 @@ end
 function Army_MainWindow.toggle_close(owner)
     if owner then
         local button_flow = mod_gui.get_button_flow(owner)
-        button_flow.erm_army_control_toggle.tooltip = { 'gui.show-army-control' }
+        button_flow.erm_army_control_toggle.tooltip = { 'gui-army.show-control' }
         Army_MainWindow.hide(owner)
     end
 end
@@ -638,7 +642,7 @@ function Army_MainWindow.stop_link(player)
         player_data.success_message = player_data.selected_cc.from..' has now unlinked with '..player_data.selected_cc.to
         ArmyTeleportationProcessor.unlink(force)
     else
-        player_data.error_message = 'Command centers has not linked.'
+        player_data.error_message = 'Command centers have not linked.'
     end
     Army_MainWindow.update_command_centers()
 end
