@@ -60,20 +60,35 @@ local update_unit_screen = function(player)
     pane.add { type = 'label', name = 'army_pop_general_info', caption={"gui-army.pop_general_info",army_data['max_pop'], army_data['pop_count'], army_data['unit_count']}}
 
     if table_size(army_data['unit_types']) > 0 then
-        local item_table = pane.add { type = "table", column_count = 3, style = "bordered_table" }
+        local item_table = pane.add { type = "table", column_count = 5, style = "bordered_table" }
         item_table.style.horizontally_stretchable = false
 
         item_table.add { type = "label", caption = { 'gui-army.control_unit_type'}}
         item_table.add { type = "label", caption = { 'gui-army.control_unit_pop'}}
         item_table.add { type = "label", caption = { 'gui-army.control_unit_count'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy_pop'}}
 
         for name, unit_data in pairs(army_data['unit_types']) do
             if unit_data['unit_count'] > 0 then
                 local sprite = item_table.add { type = "sprite", sprite = 'recipe/'..name }
                 sprite.style.width = 32
                 sprite.style.height = 32
+                sprite.style.stretch_image_to_widget_size = true
                 item_table.add { type = "label", caption = unit_data['pop_count']  }
                 item_table.add { type = "label", caption = unit_data['unit_count'] }
+
+                local auto_deploy = math.floor(50 / ArmyPopulationProcessor.unit_population(name))
+                if army_data['auto_deploy'][name] then
+                    auto_deploy = army_data['auto_deploy'][name]
+                else
+                    ArmyPopulationProcessor.set_auto_deploy_unit_count(player.force, name, auto_deploy)
+                end
+
+                local textfield = item_table.add { type = "textfield",numeric=true, name='army_deployer/planner/'..name, text=auto_deploy}
+                textfield.style.width = 48
+                textfield.style.height = 24
+                item_table.add { type = "label", caption = auto_deploy * ArmyPopulationProcessor.unit_population(name)  }
             end
         end
     end
@@ -161,7 +176,7 @@ local update_deployer = function(player)
     turn_all_on.style.right_margin = 20
     all_on_panel.add {type="button", name="army_deployer/all/off", caption={'gui-army.deployer_all_off'}, style='red_button', tooltip={"gui-army.deployer_all_off_tooltip"}}
 
-    local table = pane.add {
+    local deployer_table = pane.add {
         type='table',
         column_count = 5,
         vertical_centering = false,
@@ -173,10 +188,17 @@ local update_deployer = function(player)
         active_deployers = global.army_active_deployers[force.index]['deployers']
     end
 
+    local descending = {}
+    for _, deployer in pairs(global.army_built_deployers[force.index]) do
+        if deployer.entity.valid then
+            table.insert(descending,1, deployer)
+        end
+    end
 
-    for unit_number, deployer in pairs(global.army_built_deployers[force.index]) do
+    for _, deployer in pairs(descending) do
         local entity = deployer.entity
-        local cell = table.add {
+        local unit_number = deployer.entity.unit_number
+        local cell = deployer_table.add {
             type = 'frame', direction = 'vertical',
             style = 'deep_frame_in_shallow_frame',
             name="deployer_cell_"..unit_number
@@ -225,8 +247,6 @@ local update_deployer = function(player)
             global.army_built_deployers[force.index][unit_number] = nil
         end
     end
-
-
 end
 
 local update_cc_screen = function(player)
@@ -753,6 +773,16 @@ function Army_MainWindow.set_build_only(player, unit_number, build_only)
     local force = player.force
     ArmyDeploymentProcessor.set_build_only(force.index, unit_number, build_only)
     Army_MainWindow.update_deployers()
+end
+
+function Army_MainWindow.update_army_planner(player, element)
+    if player and player.valid and element and element.valid then
+        local unit_count = math.abs(tonumber(element.text))
+        local force = player.force
+        local name = string.gsub(element.name,'army_deployer/planner/','')
+        ArmyPopulationProcessor.set_auto_deploy_unit_count(force, name, unit_count)
+        Army_MainWindow.update_army_stats()
+    end
 end
 
 return Army_MainWindow

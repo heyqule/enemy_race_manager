@@ -11,7 +11,8 @@ local set_default_values = function(force)
         max_pop = BASE_MAX_UNIT + force.maximum_following_robot_count,
         unit_count = 0,
         pop_count = 0,
-        unit_types = {}
+        unit_types = {},
+        auto_deploy = {},
     }
 end
 
@@ -134,6 +135,26 @@ end
 
 function ArmyPopulationProcessor.unit_count_by_name(force, name)
     return global.army_populations[force.name]['unit_types'][name]['unit_count']
+end
+
+function ArmyPopulationProcessor.unit_population(name)
+    return global.army_registered_units[name]
+end
+
+function ArmyPopulationProcessor.set_auto_deploy_unit_count(force, name, unit_count)
+    global.army_populations[force.name]['auto_deploy'][name] = unit_count
+end
+
+function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
+    return global.army_populations[force.name]['auto_deploy'][name]
+end
+
+function ArmyPopulationProcessor.is_under_max_pop(force)
+    return ArmyPopulationProcessor.pop_count(force) < ArmyPopulationProcessor.max_pop(force)
+end
+
+function ArmyPopulationProcessor.is_under_max_auto_deploy(force, name)
+    return ArmyPopulationProcessor.unit_count_by_name(force, name) < ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
 end
 
 return ArmyPopulationProcessor

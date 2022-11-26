@@ -13,8 +13,8 @@ local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
 
 local ArmyTeleportationProcessor = {}
 
--- Disable link if cc is idle for 120s.
-local MAX_RETRY = 8;
+-- Disable link if cc is idle for about 5 minutes.
+local MAX_RETRY = 20;
 
 local BOX_WIDTH = 32;
 local DOUBLE_BOX_WIDTH = 64;

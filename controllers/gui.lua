@@ -238,6 +238,12 @@ local gui_tab_changed = function(event)
 end
 Event.register(defines.events.on_gui_selected_tab_changed, gui_tab_changed)
 
+Event.register(defines.events.on_gui_confirmed, function(event)
+    local element = event.element
+    local player = game.players[event.player_index]
+    ErmGui.army_control_window.update_army_planner(player, element)
+end, Event.Filters.gui, 'army_deployer/planner/.*')
+
 EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
     local element = event.element
     local player = game.players[element.player_index]

@@ -59,7 +59,8 @@ local spawn_unit = function(data_unit)
             local contents = inventory.get_contents()
             for unit_name, count in pairs(contents) do
                 if registered_units[unit_name] and count > 0 and
-                    ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force)
+                    ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force) and
+                    ErmArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
                 then
                     local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
                     local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
@@ -192,7 +193,7 @@ function ArmyDeploymentProcessor.deploy()
         if force_data.total > 0 then
             local force = game.forces[force_index]
             if force and force.valid then
-                if ErmArmyPopulationProcessor.pop_count(force) < ErmArmyPopulationProcessor.max_pop(force) then
+                if ErmArmyPopulationProcessor.is_under_max_pop(force) then
                     for unit_number, deployer_data in pairs(force_data['deployers']) do
                         if deployer_data.entity and deployer_data.entity.valid then
                             if current_tick > deployer_data.next_tick then
