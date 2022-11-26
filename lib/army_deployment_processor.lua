@@ -12,8 +12,8 @@ local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_popula
 local ArmyDeploymentProcessor = {}
 --- Internal unit spawn cooldown for each deployer (in tick)
 local spawn_cooldown = 300
---- Internal retry before removing the deployer from active list, appox 5 mins idle time.
-local retry_threshold = 60
+--- Internal retry before removing the deployer from active list
+local retry_threshold = settings.startup['enemyracemanager-unit-framework-timeout'].value * 12
 
 local process_deployer_queue = function(event)
     ArmyDeploymentProcessor.deploy()

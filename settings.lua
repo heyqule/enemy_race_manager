@@ -235,6 +235,15 @@ data:extend {
         allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },
         order = "enemyracemanager-701",
     },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-unit-framework-timeout",
+        description = "enemyracemanager-unit-framework-timeout",
+        setting_type = "startup",
+        default_value = 5,
+        allowed_values = { 5, 15, 30, 60, 9999999 },
+        order = "enemyracemanager-801",
+    },
     --- Map Settings Tab ---
     {
         type = "int-setting",

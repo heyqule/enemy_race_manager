@@ -66,8 +66,8 @@ local update_unit_screen = function(player)
         item_table.add { type = "label", caption = { 'gui-army.control_unit_type'}}
         item_table.add { type = "label", caption = { 'gui-army.control_unit_pop'}}
         item_table.add { type = "label", caption = { 'gui-army.control_unit_count'}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy'}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy_pop'}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy'}, tooltip={"gui-army.control_unit_deploy_tooltip"}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy_pop'}, tooltip={"gui-army.control_unit_deploy_pop_tooltip"}}
 
         for name, unit_data in pairs(army_data['unit_types']) do
             if unit_data['unit_count'] > 0 then
@@ -85,7 +85,7 @@ local update_unit_screen = function(player)
                     ArmyPopulationProcessor.set_auto_deploy_unit_count(player.force, name, auto_deploy)
                 end
 
-                local textfield = item_table.add { type = "textfield",numeric=true, name='army_deployer/planner/'..name, text=auto_deploy}
+                local textfield = item_table.add { type = "textfield",numeric=true, name='army_deployer/planner/'..name, text=auto_deploy, tooltip={"gui-army.control_unit_deploy_box_tooltip"}}
                 textfield.style.width = 48
                 textfield.style.height = 24
                 item_table.add { type = "label", caption = auto_deploy * ArmyPopulationProcessor.unit_population(name)  }
