@@ -4,18 +4,16 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 
-local util = require('util')
 local Event = require('__stdlib__/stdlib/event/event')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
 local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
---- Max 24 active deployers / force
 local ArmyDeploymentProcessor = {}
---- Internal unit spawn cooldown for each deployer
+--- Internal unit spawn cooldown for each deployer (in tick)
 local spawn_cooldown = 300
---- Internal retry before removing the deployer from active list, appox 2 mins idle time.
-local retry_threshold = 24
+--- Internal retry before removing the deployer from active list, appox 5 mins idle time.
+local retry_threshold = 60
 
 local process_deployer_queue = function(event)
     ArmyDeploymentProcessor.deploy()
@@ -151,7 +149,7 @@ function ArmyDeploymentProcessor.add_to_active(entity)
 end
 
 function ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
-    if global.army_active_deployers[force_index] and global.army_active_deployers[force_index][unit_number] then
+    if global.army_active_deployers[force_index] and global.army_active_deployers[force_index]['deployers'][unit_number] then
         global.army_active_deployers[force_index]['deployers'][unit_number] = nil
         global.army_active_deployers[force_index].total = global.army_active_deployers[force_index].total - 1
     end
@@ -181,7 +179,6 @@ local stop_event_check_modular = stop_event_check - ErmConfig.AUTO_DEPLOY_CRON
 
 function ArmyDeploymentProcessor.deploy()
     local current_tick = game.tick
-    print('running deployment')
     for force_index, force_data in pairs(global.army_active_deployers) do
         if force_data.total > 0 then
             local force = game.forces[force_index]
@@ -211,7 +208,6 @@ function ArmyDeploymentProcessor.deploy()
                     end
                 end
             else
-                print('Invalid Force')
                 ArmyDeploymentProcessor.remove_data_by_force_index(force_index)
             end
         end

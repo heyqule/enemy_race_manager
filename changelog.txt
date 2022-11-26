@@ -14,20 +14,22 @@ Date: 2022-??-??
     - When the boss is defeated, infinity chest(s) with items will spawn for 14 nauvis days. (appox 1.5hr game time)
     - When you don't defeat the boss when the timer end, it releases super attacks to your base!
     - --------------------
+    - The following player army frameworks only apply to ERM - Terran at the moment.
+    ----------------------
     - Player army population control framework
     - Base Max Population is 150. Max pop can be increased with Follower Combat Drone research at 1:1 ratio.
     - Each unit can have different population value. E.g 1 for marine, 2 for tank/wraith, 5 for battlecruiser.
     - --------------------
     - Player army auto deployment framework
     - Build a deployer (styled assembling machines)
-    - Feed units into the deployer.
+    - deployer is now required to build unit from scratch. It can also deploy built units.
     - Deployer deploy units when total population under player set threshold and max population.
     - --------------------
     - Player army teleportation framework
     - Build 2 command centers (styled radars)
     - Select "from" and "to" CC to link them
     - Move your unit to "from" CC, indicated by green outline
-    - Active CC scans player units to teleport once every 15 seconds. 24 units per batch.
+    - Active CC scans player units to teleport every 15 seconds. 24 units per batch. Up to 96 units per minute.
 
 
   Graphics:

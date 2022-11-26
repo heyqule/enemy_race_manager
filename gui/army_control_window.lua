@@ -8,6 +8,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 
 local Army_MainWindow = {
     require_update_all = false,
@@ -93,17 +94,19 @@ local get_selected_index = function(commandcenters, player, type)
     return nil
 end
 
-local add_mini_map = function(pane, name, player, entity, style)
-    local from_map = pane.add {
+local add_mini_map = function(pane, name, player, entity, zoom, style)
+    zoom = zoom or 0.75
+    local map = pane.add {
         type='minimap',
         name=name,
         force=entity.force.name,
         chart_player_index=player.index,
         surface_index=entity.surface.index,
-        position=entity.position
+        position=entity.position,
+        zoom=zoom
     }
     for key, value in pairs(style) do
-        from_map.style[key] = value
+        map.style[key] = value
     end
 end
 
@@ -141,7 +144,61 @@ local update_deployer = function(player)
     local main_tab = get_main_tab(player)
     clear_tabs(main_tab)
     local pane = main_tab[Army_MainWindow.tab_names[2]]
-    pane.add { type = "label", caption = "Deployer Windows Test"}
+
+    local force = player.force
+
+    if global.army_built_deployers[force.index] ==  nil then
+        pane.add { type="label", caption={'gui-army.no_deployer'}}
+        return
+    end
+
+    local all_on_panel = pane.add { type = 'flow', direction="horizontal" }
+    local batch_label = all_on_panel.add {type="label", caption={'gui-army.deployer_batch_option'}}
+    batch_label.style.right_margin = 20
+
+    local turn_all_on = all_on_panel.add {type="button", name="army_deployer/all/on", caption={'gui-army.deployer_all_on'}, style='green_button'}
+    turn_all_on.style.right_margin = 20
+    all_on_panel.add {type="button", name="army_deployer/all/off", caption={'gui-army.deployer_all_off'}, style='red_button'}
+
+    local table = pane.add {
+        type='table',
+        column_count = 5,
+        vertical_centering = false,
+        name="deployer_table"
+    }
+
+    local active_deployers = {}
+    if global.army_active_deployers[force.index] then
+        active_deployers = global.army_active_deployers[force.index]['deployers']
+    end
+
+
+    for unit_number, deployer in pairs(global.army_built_deployers[force.index]) do
+        local entity = deployer.entity
+        local cell = table.add {
+            type = 'frame', direction = 'vertical',
+            style = 'deep_frame_in_shallow_frame',
+            name="deployer_cell_"..unit_number
+        }
+        cell.style.margin = 5
+
+        if entity and entity.valid then
+            add_mini_map(cell, entity.name..'/'..entity.unit_number,
+                    player, entity, 1, {width=135, height=135})
+            local label_name = cell.add { type="label", caption={'gui-army.deployer_name', entity.localised_name}}
+            label_name.style.left_margin = 5
+            local label_position = cell.add { type="label", caption={'gui-army.deployer_location', entity.surface.name, entity.position.x, entity.position.y}}
+            label_position.style.left_margin = 5
+            local switch = cell.add { type="switch", name="army_deployer/"..entity.unit_number, allow_none_state = false, left_label_caption="OFF", right_label_caption="ON"}
+            if active_deployers[unit_number] then
+                switch.switch_state = 'right'
+            end
+        else
+            global.army_built_deployers[force.index][unit_number] = nil
+        end
+    end
+
+
 end
 
 local update_cc_screen = function(player)
@@ -383,7 +440,7 @@ function Army_MainWindow.show(player)
     local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui.army-control-title" }, style = 'caption_label' }
 
     local pusher = title_flow.add{type = "empty-widget", name = "header-pusher", style = "draggable_space_header"}
-    pusher.style.width = Army_MainWindow.window_width - 24 - 160
+    pusher.style.width = Army_MainWindow.window_width - 24 - 220
     pusher.style.height = 24
     pusher.drag_target = main_window
 
@@ -402,15 +459,15 @@ function Army_MainWindow.show(player)
     local tab2 = tabbed_pane.add{type="tab", caption="Deployers", name='deployer-tab'}
     local tab3 = tabbed_pane.add{type="tab", caption="Command Center", name='command-center-tab'}
 
-    local army_stats_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[1], style = "scroll_pane_in_shallow_frame" }
+    local army_stats_pane = tabbed_pane.add { type = "flow", name=Army_MainWindow.tab_names[1], direction = 'vertical' }
     army_stats_pane.style.margin = 5
     army_stats_pane.style.width = Army_MainWindow.window_width - 40
 
-    local deployer_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[2], style = "scroll_pane_in_shallow_frame" }
+    local deployer_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[2] }
     deployer_pane.style.margin = 5
     deployer_pane.style.width = Army_MainWindow.window_width - 40
 
-    local command_center_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[3], style = "scroll_pane_in_shallow_frame" }
+    local command_center_pane = tabbed_pane.add { type = "flow", name=Army_MainWindow.tab_names[3], direction = 'vertical' }
     command_center_pane.style.margin = 5
     command_center_pane.style.width = Army_MainWindow.window_width - 40
 
@@ -576,11 +633,59 @@ end
 
 function Army_MainWindow.stop_link(player)
     local player_data = get_player_tab_data(player)
-    ArmyTeleportationProcessor.unlink(player.force)
-    player_data.success_message = player_data.selected_cc.from..' has now unlinked with '..player_data.selected_cc.to
+    local force = player.force
+    if global.army_entrance_teleporters[force.index] then
+        player_data.success_message = player_data.selected_cc.from..' has now unlinked with '..player_data.selected_cc.to
+        ArmyTeleportationProcessor.unlink(force)
+    else
+        player_data.error_message = 'Command centers has not linked.'
+    end
     Army_MainWindow.update_command_centers()
 end
 
+function Army_MainWindow.deployer_turn_all_on(player)
+    local force = player.force
+    if global.army_built_deployers[force.index] then
+        for _, deployer in pairs(global.army_built_deployers[force.index]) do
+            if deployer.entity.valid then
+                ArmyDeploymentProcessor.add_to_active(deployer.entity)
+            end
+        end
+        Army_MainWindow.update_deployers()
+    end
+end
 
+function Army_MainWindow.deployer_turn_all_off(player)
+    local force = player.force
+    global.army_active_deployers[force.index] = nil
+    Army_MainWindow.update_deployers()
+end
+
+function Army_MainWindow.deployer_turn_on(player, unit_number)
+    local force = player.force
+    if global.army_built_deployers[force.index] then
+        local deployer = global.army_built_deployers[force.index][tonumber(unit_number)]
+        if deployer and deployer.entity.valid then
+            ArmyDeploymentProcessor.add_to_active(deployer.entity)
+        end
+    end
+    Army_MainWindow.update_deployers()
+end
+
+function Army_MainWindow.deployer_turn_off(player, unit_number)
+    local force = player.force
+    ArmyDeploymentProcessor.remove_from_active(force.index, tonumber(unit_number))
+    Army_MainWindow.update_deployers()
+end
+
+function Army_MainWindow.scroll_to_deployer(player, unit_number)
+    local main_tab = get_main_tab(player)
+    if main_tab then
+        local scroll_pan =  main_tab[Army_MainWindow.tab_names[2]]
+        local target_cell = main_tab[Army_MainWindow.tab_names[2]]['deployer_table']['deployer_cell_'..unit_number]
+        target_cell.style = 'erm_deep_frame_in_highlight_frame'
+        scroll_pan.scroll_to_element(target_cell)
+    end
+end
 
 return Army_MainWindow

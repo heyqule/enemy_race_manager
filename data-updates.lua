@@ -18,6 +18,8 @@ require('prototypes/extend-weapons.lua')
 
 require('prototypes/extend-super-weapons.lua')
 
+require('prototypes/extend-styles.lua')
+
 require "prototypes.extend-map-gen-setting"
 
 require "prototypes/extend-boss-items"
