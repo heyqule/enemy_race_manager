@@ -16,8 +16,10 @@ local valid_erm_left_click = {
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
-
-            --- @todo auto select FROM cc
+            if entity then
+                local element = player.gui.screen[ErmArmyControlUI.root_name]['main-tab'][ErmArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_from']
+                ErmArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+            end
         end
     end,
 }
@@ -36,8 +38,10 @@ local valid_erm_alt_left_click = {
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
-
-            --- @todo auto select TO cc
+            if entity then
+                local element = player.gui.screen[ErmArmyControlUI.root_name]['main-tab'][ErmArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_to']
+                ErmArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+            end
         end
     end,
     ['assembling-machine'] = function(event)

@@ -269,10 +269,18 @@ local deployer_switch = function(event)
     local player = game.players[element.player_index]
     if player and player.valid then
         local nameToken = String.split(element.name, '/')
-        if element.switch_state == 'left' then
-            ErmGui.army_control_window.deployer_turn_off(player, nameToken[2])
-        else
-            ErmGui.army_control_window.deployer_turn_on(player, nameToken[2])
+        if nameToken[2] == 'auto_deploy' then
+            if element.switch_state == 'left' then
+                ErmGui.army_control_window.deployer_turn_off(player, nameToken[3])
+            else
+                ErmGui.army_control_window.deployer_turn_on(player, nameToken[3])
+            end
+        elseif nameToken[2] == 'build_only' then
+            local build_only = true
+            if element.switch_state == 'left' then
+                build_only = false
+            end
+            ErmGui.army_control_window.set_build_only(player, nameToken[3], build_only)
         end
     end
 end

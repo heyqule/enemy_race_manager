@@ -124,15 +124,13 @@ function ArmyDeploymentProcessor.add_entity(entity)
     local unit_number = entity.unit_number
 
     init_built_data(force)
-    init_active_data(force)
 
     global.army_built_deployers[force.index][unit_number] = {
         entity = entity,
+        build_only = false,
         -- @Todo support rally points
         rally_point = {}
     }
-
-    add_to_active_data(force, unit_number)
 
     ArmyDeploymentProcessor.start_event()
 end
@@ -166,6 +164,17 @@ function ArmyDeploymentProcessor.remove_data_by_force_index(force_index)
     global.army_built_deployers[force_index] = nil
     global.army_active_deployers[force_index] = nil
     stop_event()
+end
+
+function ArmyDeploymentProcessor.set_build_only(force_index, unit_number, build_only)
+    unit_number = tonumber(unit_number)
+    if global.army_active_deployers[force_index] and global.army_active_deployers[force_index]['deployers'][unit_number] then
+        global.army_active_deployers[force_index]['deployers'][unit_number]['build_only'] = build_only
+    end
+
+    if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        global.army_built_deployers[force_index][unit_number]['build_only'] = build_only
+    end
 end
 
 function ArmyDeploymentProcessor.process_retry(force_index, unit_number)

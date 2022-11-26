@@ -23,9 +23,10 @@ local Army_MainWindow = {
         ['army-stats-pane'] = 1,
         ['deployer-pane'] = 2,
         ['command-center-pane'] = 3,
+        ['help-pane'] = 4,
     },
     tab_names = {
-        'army-stats-pane', 'deployer-pane', 'command-center-pane'
+        'army-stats-pane', 'deployer-pane', 'command-center-pane','help-pane'
     },
     --- @see Army_MainWindow.check_player_data
     tab_player_data = { },
@@ -147,10 +148,6 @@ local update_deployer = function(player)
 
     local force = player.force
 
-    pane.add { type="label", caption={'gui-army.deployer_description1'}}
-    pane.add { type="label", caption={'gui-army.deployer_description2'}}
-    pane.add { type="label", caption={'gui-army.deployer_description3'}}
-
     if global.army_built_deployers[force.index] ==  nil then
         pane.add { type="label", caption={'gui-army.no_deployer'}}
         return
@@ -189,11 +186,38 @@ local update_deployer = function(player)
         if entity and entity.valid then
             add_mini_map(cell, entity.name..'/'..entity.unit_number,
                     player, entity, 1, {width=135, height=135})
-            local label_name = cell.add { type="label", caption={'gui-army.deployer_name', entity.localised_name}}
+            local switch = cell.add {
+                type="switch",
+                name="army_deployer/build_only/"..entity.unit_number,
+                allow_none_state = false,
+                left_label_caption="B/D",
+                left_label_tooltip="Build and Deploy",
+                right_label_caption="BO",
+                right_label_tooltip="Build only, it will not affect by Turn ON all"
+            }
+            if deployer.build_only then
+                switch.switch_state = 'right'
+            end
+
+            local label_name = cell.add {
+                type="label",
+                caption={'gui-army.deployer_name',
+                         entity.localised_name}
+            }
             label_name.style.left_margin = 5
-            local label_position = cell.add { type="label", caption={'gui-army.deployer_location', entity.surface.name, entity.position.x, entity.position.y}}
+            local label_position = cell.add {
+                type="label",
+                caption={'gui-army.deployer_location',
+                         entity.surface.name, entity.position.x, entity.position.y}
+            }
             label_position.style.left_margin = 5
-            local switch = cell.add { type="switch", name="army_deployer/"..entity.unit_number, allow_none_state = false, left_label_caption="OFF", right_label_caption="ON"}
+            local switch = cell.add {
+                type="switch",
+                name="army_deployer/auto_deploy/"..entity.unit_number,
+                allow_none_state = false,
+                left_label_caption="OFF",
+                right_label_caption="ON"
+            }
             if active_deployers[unit_number] then
                 switch.switch_state = 'right'
             end
@@ -220,7 +244,7 @@ local update_cc_screen = function(player)
     local horizontal = pane.add {
         type = 'flow',
         direction = 'horizontal',
-        name = ''
+        name = 'main-pane'
     }
     -- LEFT CC LISTBOX
     local cc_from = horizontal.add {
@@ -265,6 +289,7 @@ local update_cc_screen = function(player)
          "army_cc/from_map",
                 player,
                 selected_from_entity,
+                nil,
           {width=150, height=150}
         )
     else
@@ -284,6 +309,7 @@ local update_cc_screen = function(player)
                 "army_cc/to_map",
                 player,
                 selected_to_entity,
+                nil,
                 {width=150, height=150, left_margin = 85}
         )
     end
@@ -381,6 +407,7 @@ local update_cc_screen = function(player)
                 "army_cc/from_map",
                 player,
                 entrance,
+                nil,
                 {width=150, height=150}
         )
     else
@@ -399,6 +426,7 @@ local update_cc_screen = function(player)
                 "army_cc/to_map",
                 player,
                 exit,
+                nil,
                 {width=150, height=150, left_margin = 85}
         )
     end
@@ -414,10 +442,33 @@ local update_cc_screen = function(player)
     cc_to.selected_index = to_selected
 end
 
+local update_help_screen = function(player)
+    local main_tab = get_main_tab(player)
+    clear_tabs(main_tab)
+
+    local pane = main_tab[Army_MainWindow.tab_names[4]]
+
+    pane.add { type="label", caption={'gui-army.deployer_title'}, style="heading_1_label"}
+    pane.add { type="label", caption={'gui-army.deployer_description0'}}
+    pane.add { type="label", caption={'gui-army.deployer_description1'}}
+    pane.add { type="label", caption={'gui-army.deployer_description2'}}
+    pane.add { type="label", caption={'gui-army.deployer_description3'}}
+    pane.add { type="label", caption={'gui-army.deployer_description4'}}
+    pane.add { type="label", caption={'gui-army.deployer_description5'}}
+    pane.add { type="label", caption={'gui-army.deployer_description6'}}
+    pane.add { type="label", caption={'gui-army.cc_title'}, style="heading_1_label"}
+    pane.add { type="label", caption={'gui-army.cc_description0'}}
+    pane.add { type="label", caption={'gui-army.cc_description1'}}
+    pane.add { type="label", caption={'gui-army.cc_description2'}}
+    pane.add { type="label", caption={'gui-army.cc_description3'}}
+    pane.add { type="label", caption={'gui-army.cc_description4'}}
+end
+
 local update_tabs = {
     ['army-stats-pane'] = update_unit_screen,
     ['deployer-pane'] = update_deployer,
     ['command-center-pane'] = update_cc_screen,
+    ['help-pane'] = update_help_screen,
 }
 
 function Army_MainWindow.show(player)
@@ -462,6 +513,7 @@ function Army_MainWindow.show(player)
     local tab1 = tabbed_pane.add{type="tab", caption="Army Stats", name='army-stats-tab'}
     local tab2 = tabbed_pane.add{type="tab", caption="Deployers", name='deployer-tab'}
     local tab3 = tabbed_pane.add{type="tab", caption="Command Center", name='command-center-tab'}
+    local tab4 = tabbed_pane.add{type="tab", caption="Help", name='help-tab'}
 
     local army_stats_pane = tabbed_pane.add { type = "flow", name=Army_MainWindow.tab_names[1], direction = 'vertical' }
     army_stats_pane.style.margin = 5
@@ -475,9 +527,14 @@ function Army_MainWindow.show(player)
     command_center_pane.style.margin = 5
     command_center_pane.style.width = Army_MainWindow.window_width - 40
 
+    local help_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[4], direction = 'vertical' }
+    help_pane.style.margin = 5
+    help_pane.style.width = Army_MainWindow.window_width - 40
+
     tabbed_pane.add_tab(tab1, army_stats_pane)
     tabbed_pane.add_tab(tab2, deployer_pane)
     tabbed_pane.add_tab(tab3, command_center_pane)
+    tabbed_pane.add_tab(tab4, help_pane)
 end
 
 function Army_MainWindow.hide(player)
@@ -651,7 +708,7 @@ function Army_MainWindow.deployer_turn_all_on(player)
     local force = player.force
     if global.army_built_deployers[force.index] then
         for _, deployer in pairs(global.army_built_deployers[force.index]) do
-            if deployer.entity.valid then
+            if (deployer.build_only == nil or deployer.build_only == false) and deployer.entity.valid then
                 ArmyDeploymentProcessor.add_to_active(deployer.entity)
             end
         end
@@ -690,6 +747,12 @@ function Army_MainWindow.scroll_to_deployer(player, unit_number)
         target_cell.style = 'erm_deep_frame_in_highlight_frame'
         scroll_pan.scroll_to_element(target_cell)
     end
+end
+
+function Army_MainWindow.set_build_only(player, unit_number, build_only)
+    local force = player.force
+    ArmyDeploymentProcessor.set_build_only(force.index, unit_number, build_only)
+    Army_MainWindow.update_deployers()
 end
 
 return Army_MainWindow
