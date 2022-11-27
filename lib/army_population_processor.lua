@@ -6,14 +6,26 @@
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local BASE_MAX_UNIT = 150
 
+local ArmyPopulationProcessor = {}
+
 local set_default_values = function(force)
-    return {
+    local default_values = {
         max_pop = BASE_MAX_UNIT + force.maximum_following_robot_count,
         unit_count = 0,
         pop_count = 0,
         unit_types = {},
         auto_deploy = {},
     }
+
+    for name, value in pairs(global.army_registered_units) do
+        if not default_values['unit_types'][name] then
+            default_values['unit_types'][name] = { pop_count = 0, unit_count = 0 }
+        end
+
+        default_values['auto_deploy'][name] = math.floor(50 / value)
+    end
+
+    return default_values
 end
 
 local init_force_data = function(force, force_reset)
@@ -22,8 +34,6 @@ local init_force_data = function(force, force_reset)
         global.army_populations[force.name] = set_default_values(force)
     end
 end
-
-local ArmyPopulationProcessor = {}
 
 function ArmyPopulationProcessor.init_globals()
     global.army_populations = global.army_populations or {}
@@ -90,9 +100,6 @@ function ArmyPopulationProcessor.add_unit_count(unit)
         local force_name = unit_force.name
         army_pop[force_name]['pop_count'] = army_pop[force_name]['pop_count'] + pop
         army_pop[force_name]['unit_count'] = army_pop[force_name]['unit_count'] + 1
-        if not army_pop[force_name]['unit_types'][unit_name] then
-            army_pop[force_name]['unit_types'][unit_name] = { pop_count = 0, unit_count = 0 }
-        end
         army_pop[force_name]['unit_types'][unit_name]['unit_count'] = army_pop[force_name]['unit_types'][unit_name]['unit_count'] + 1
         army_pop[force_name]['unit_types'][unit_name]['pop_count'] = army_pop[force_name]['unit_types'][unit_name]['pop_count'] + pop
     end

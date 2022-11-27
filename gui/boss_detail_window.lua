@@ -6,6 +6,7 @@
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local String = require('__stdlib__/stdlib/utils/string')
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 --- Boss Details Windows
 local ERM_BossDetailsWindow = {
@@ -33,7 +34,8 @@ local add_data_entry = function(data_box, entry)
     data_box.add { type = "label", caption = get_victory_label(entry.victory) }
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_location' } }
-    data_box.add { type = "label", caption = entry.surface .. '  X:'..entry.location.x..' Y:'..entry.location.y}
+    local position_label = data_box.add { type = "label", caption = SurfaceProcessor.get_gps_message(entry.location.x, entry.location.y, entry.surface)}
+    position_label.style.rich_text_setting = defines.rich_text_setting.highlight
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_spawned_at' } }
     data_box.add { type = "label", caption = ErmConfig.format_daytime_string(0, entry.spawn_tick) }

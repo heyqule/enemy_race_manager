@@ -15,6 +15,8 @@ local spawn_cooldown = 300
 --- Internal retry before removing the deployer from active list
 local retry_threshold = settings.startup['enemyracemanager-unit-framework-timeout'].value * 12
 
+local start_with_auto_deploy = settings.startup['enemyracemanager-unit-framework-start-auto-deploy'].value
+
 local process_deployer_queue = function(event)
     ArmyDeploymentProcessor.deploy()
 end
@@ -132,6 +134,10 @@ function ArmyDeploymentProcessor.add_entity(entity)
         -- @Todo support rally points
         rally_point = {}
     }
+
+    if start_with_auto_deploy then
+        ArmyDeploymentProcessor.add_to_active(entity)
+    end
 
     ArmyDeploymentProcessor.start_event()
 end

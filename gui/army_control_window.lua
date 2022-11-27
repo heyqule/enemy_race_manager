@@ -78,14 +78,12 @@ local update_unit_screen = function(player)
                 item_table.add { type = "label", caption = unit_data['pop_count']  }
                 item_table.add { type = "label", caption = unit_data['unit_count'] }
 
-                local auto_deploy = math.floor(50 / ArmyPopulationProcessor.unit_population(name))
-                if army_data['auto_deploy'][name] then
-                    auto_deploy = army_data['auto_deploy'][name]
-                else
-                    ArmyPopulationProcessor.set_auto_deploy_unit_count(player.force, name, auto_deploy)
-                end
-
-                local textfield = item_table.add { type = "textfield",numeric=true, name='army_deployer/planner/'..name, text=auto_deploy, tooltip={"gui-army.control_unit_deploy_box_tooltip"}}
+                local textfield = item_table.add {
+                    type = "textfield",numeric=true,
+                    name='army_deployer/planner/'..name,
+                    text=army_data['auto_deploy'][name],
+                    tooltip={"gui-army.control_unit_deploy_box_tooltip"}
+                }
                 textfield.style.width = 48
                 textfield.style.height = 24
                 item_table.add { type = "label", caption = auto_deploy * ArmyPopulationProcessor.unit_population(name)  }
@@ -178,7 +176,7 @@ local update_deployer = function(player)
 
     local deployer_table = pane.add {
         type='table',
-        column_count = 5,
+        column_count = 4,
         vertical_centering = false,
         name="deployer_table"
     }
@@ -207,7 +205,7 @@ local update_deployer = function(player)
 
         if entity and entity.valid then
             add_mini_map(cell, entity.name..'/'..entity.unit_number,
-                    player, entity, 1, {width=135, height=135})
+                    player, entity, 1, {width=175, height=135})
             local switch = cell.add {
                 type="switch",
                 name="army_deployer/build_only/"..entity.unit_number,
@@ -480,7 +478,11 @@ local update_help_screen = function(player)
     pane.add { type="label", caption={'gui-army.cc_description0'}}
     pane.add { type="label", caption={'gui-army.cc_description1'}}
     pane.add { type="label", caption={'gui-army.cc_description2'}}
-    pane.add { type="label", caption={'gui-army.cc_description3'}}
+    local help_msg = pane.add { type="label", caption={'gui-army.cc_description3'}}
+    help_msg.style.rich_text_setting = defines.rich_text_setting.highlight
+    help_msg.style.horizontally_stretchable = true
+    help_msg.style.horizontally_squashable = true
+    help_msg.style.single_line = false
     pane.add { type="label", caption={'gui-army.cc_description4'}}
 end
 

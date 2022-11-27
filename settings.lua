@@ -244,6 +244,14 @@ data:extend {
         allowed_values = { 5, 15, 30, 60, 9999999 },
         order = "enemyracemanager-801",
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-unit-framework-start-auto-deploy",
+        description = "enemyracemanager-unit-start-auto-deploy",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-802",
+    },
     --- Map Settings Tab ---
     {
         type = "int-setting",
