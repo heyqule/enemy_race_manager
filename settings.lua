@@ -241,7 +241,7 @@ data:extend {
         description = "enemyracemanager-unit-framework-timeout",
         setting_type = "startup",
         default_value = 5,
-        allowed_values = { 5, 15, 30, 60, 9999999 },
+        allowed_values = { 5, 15, 30, 60, 512640 },
         order = "enemyracemanager-801",
     },
     {

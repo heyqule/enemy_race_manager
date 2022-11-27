@@ -78,15 +78,16 @@ local update_unit_screen = function(player)
                 item_table.add { type = "label", caption = unit_data['pop_count']  }
                 item_table.add { type = "label", caption = unit_data['unit_count'] }
 
+                local auto_deploy_units = army_data['auto_deploy'][name]
                 local textfield = item_table.add {
                     type = "textfield",numeric=true,
                     name='army_deployer/planner/'..name,
-                    text=army_data['auto_deploy'][name],
+                    text=auto_deploy_units,
                     tooltip={"gui-army.control_unit_deploy_box_tooltip"}
                 }
                 textfield.style.width = 48
                 textfield.style.height = 24
-                item_table.add { type = "label", caption = auto_deploy * ArmyPopulationProcessor.unit_population(name)  }
+                item_table.add { type = "label", caption = auto_deploy_units * ArmyPopulationProcessor.unit_population(name)  }
             end
         end
     end
@@ -465,25 +466,32 @@ local update_help_screen = function(player)
     clear_tabs(main_tab)
 
     local pane = main_tab[Army_MainWindow.tab_names[4]]
+    local timeout = settings.startup['enemyracemanager-unit-framework-timeout'].value
+    local auto_deploy = 'off'
+    if settings.startup['enemyracemanager-unit-framework-start-auto-deploy'].value then
+        auto_deploy = 'on'
+    end
 
     pane.add { type="label", caption={'gui-army.deployer_title'}, style="heading_1_label"}
     pane.add { type="label", caption={'gui-army.deployer_description0'}}
-    pane.add { type="label", caption={'gui-army.deployer_description1'}}
+    pane.add { type="label", caption={'gui-army.deployer_description1', auto_deploy}}
     pane.add { type="label", caption={'gui-army.deployer_description2'}}
     pane.add { type="label", caption={'gui-army.deployer_description3'}}
-    pane.add { type="label", caption={'gui-army.deployer_description4'}}
+    pane.add { type="label", caption={'gui-army.deployer_description4', timeout}}
     pane.add { type="label", caption={'gui-army.deployer_description5'}}
     pane.add { type="label", caption={'gui-army.deployer_description6'}}
+
     pane.add { type="label", caption={'gui-army.cc_title'}, style="heading_1_label"}
     pane.add { type="label", caption={'gui-army.cc_description0'}}
     pane.add { type="label", caption={'gui-army.cc_description1'}}
     pane.add { type="label", caption={'gui-army.cc_description2'}}
-    local help_msg = pane.add { type="label", caption={'gui-army.cc_description3'}}
-    help_msg.style.rich_text_setting = defines.rich_text_setting.highlight
-    help_msg.style.horizontally_stretchable = true
-    help_msg.style.horizontally_squashable = true
-    help_msg.style.single_line = false
+    pane.add { type="label", caption={'gui-army.cc_description3', timeout}}
     pane.add { type="label", caption={'gui-army.cc_description4'}}
+
+    pane.add { type="label", caption={'gui-army.deploy_planner_title'}, style="heading_1_label"}
+    pane.add { type="label", caption={'gui-army.deploy_planner_description0'}}
+    pane.add { type="label", caption={'gui-army.deploy_planner_description1'}}
+    pane.add { type="label", caption={'gui-army.deploy_planner_description2'}}
 end
 
 local update_tabs = {
