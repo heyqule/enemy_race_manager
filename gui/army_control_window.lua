@@ -212,9 +212,9 @@ local update_deployer = function(player)
                 name="army_deployer/build_only/"..entity.unit_number,
                 allow_none_state = false,
                 left_label_caption="B/D",
-                left_label_tooltip="Build and Deploy",
+                left_label_tooltip= {'gui-army.deployer_bd_tooltip'},
                 right_label_caption="BO",
-                right_label_tooltip="Build only, it will not affect by Turn ON all"
+                right_label_tooltip={'gui-army.deployer_bo_tooltip'}
             }
             if deployer.build_only then
                 switch.switch_state = 'right'
@@ -288,10 +288,10 @@ local update_cc_screen = function(player)
         direction = 'horizontal'
     }
 
-    local from_label = center_pane_top_row.add { type='label', caption="FROM: "}
+    local from_label = center_pane_top_row.add { type='label', caption={'gui-army.cc_from_title'}}
     from_label.style.left_margin = 50
 
-    local to_label = center_pane_top_row.add { type='label', caption="TO: "}
+    local to_label = center_pane_top_row.add { type='label', caption={'gui-army.cc_to_title'}}
     to_label.style.left_margin = 200
 
     -- CENTER CC MAP ROW
@@ -347,7 +347,7 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = Army_MainWindow.cc_from_selector
     }
-    center_pane_row_selected_from.add { type = 'label', caption='Selected FROM: '}
+    center_pane_row_selected_from.add { type = 'label', caption= { 'gui-army.cc_selected_from' }}
     center_pane_row_selected_from.add { type = 'label', name = "army_cc/selected/from_label", caption=get_cc_name(selected_from_entity)}
     center_pane_row_selected_from.style.width = 200
     center_pane_row_selected_from.style.right_margin = 20
@@ -358,7 +358,7 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = 'army_cc/selected/to_pane'
     }
-    center_pane_row_selected_to.add { type = 'label', caption='Selected TO: '}
+    center_pane_row_selected_to.add { type = 'label', caption={ 'gui-army.cc_selected_to' }}
     center_pane_row_selected_to.add { type = 'label', name = "army_cc/selected/to_label", caption=get_cc_name(selected_to_entity)}
 
 
@@ -368,10 +368,10 @@ local update_cc_screen = function(player)
         direction = 'horizontal'
     }
 
-    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption='UNLINK', style="red_button"}
+    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption={ 'gui-army.cc_unlink' }, style="red_button"}
     unlink_button.tooltip = 'Stop Communication'
 
-    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button , caption='LINK', style="green_button"}
+    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button , caption={ 'gui-army.cc_link' }, style="green_button"}
     link_button.style.left_margin = 165
     link_button.tooltip = 'Start Communication'
 
@@ -400,7 +400,7 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = 'army_cc/active/from_pane'
     }
-    center_pane_row_active_from.add { type = 'label', caption='Linked FROM: '}
+    center_pane_row_active_from.add { type = 'label', caption= { 'gui-army.cc_linked_from' }}
     center_pane_row_active_from.add { type = 'label', name = "army_cc/linked/from_label", caption=get_cc_name(entrance)}
     center_pane_row_active_from.style.width = 200
     center_pane_row_active_from.style.right_margin = 20
@@ -410,7 +410,7 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = 'army_cc/active/to_pane'
     }
-    center_pane_row_active_to.add { type = 'label', caption='Linked TO: '}
+    center_pane_row_active_to.add { type = 'label', caption={ 'gui-army.cc_linked_to' }}
     center_pane_row_active_to.add { type = 'label', name = "army_cc/linked/to_label", caption=get_cc_name(exit)}
 
     local center_pane_row_link_map = center_pane.add {
@@ -715,9 +715,9 @@ function Army_MainWindow.start_link(player)
     local to_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.to)
     if from_cc and to_cc then
         ArmyTeleportationProcessor.link(from_cc, to_cc)
-        player_data.success_message = player_data.selected_cc.from..' is now linking with '..player_data.selected_cc.to
+        player_data.success_message = {'gui-army.cc_linked_with', player_data.selected_cc.from, player_data.selected_cc.to}
     else
-        player_data.error_message = 'Missing selections. Unable to link command centers.'
+        player_data.error_message = {'gui-army.cc_linked_with_error'}
     end
     Army_MainWindow.update_command_centers()
 end
@@ -726,10 +726,10 @@ function Army_MainWindow.stop_link(player)
     local player_data = get_player_tab_data(player)
     local force = player.force
     if global.army_entrance_teleporters[force.index] then
-        player_data.success_message = player_data.selected_cc.from..' has now unlinked with '..player_data.selected_cc.to
+        player_data.success_message = {'gui-army.cc_unlinked_with', player_data.selected_cc.from, player_data.selected_cc.to}
         ArmyTeleportationProcessor.unlink(force)
     else
-        player_data.error_message = 'Command centers have not linked.'
+        player_data.error_message = {'gui-army.cc_unlinked_with_error'}
     end
     Army_MainWindow.update_command_centers()
 end
