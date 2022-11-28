@@ -177,8 +177,8 @@ local process_attack = function(data)
     for i = 1, data['count'] do
         local position = data['position']
         if i > 1 then
-            position['x'] = position['x'] + math.random(-16, 16)
-            position['y'] = position['y'] + math.random(-16, 16)
+            position['x'] = position['x'] + math.random(-8, 8)
+            position['y'] = position['y'] + math.random(-8, 8)
         end
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({

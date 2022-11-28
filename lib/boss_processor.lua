@@ -147,6 +147,24 @@ local get_scan_area = {
     end,    
 }
 
+local get_target_direction = function(spawn_position, target_position)
+    local diffThreshold = chunkSize * 3
+    local direction = defines.direction.south
+    if (spawn_position.x - target_position.x) > diffThreshold then
+        direction = defines.direction.west
+    elseif ( (spawn_position.x - target_position.x) < (diffThreshold * -1) ) then
+        direction = defines.direction.east
+    elseif ( (spawn_position.y - target_position.y) > diffThreshold ) then
+        direction = defines.direction.north
+    end
+
+    print('---- Target Difference ----')
+    print((spawn_position.x - target_position.x))
+    print((spawn_position.y - target_position.y))
+    print(direction)
+    print('----')
+end
+
 local can_build_spawn_building = function()
     local boss_tier = global.boss.boss_tier
     local nearby_buildings = global.boss.surface.find_entities_filtered({
@@ -369,7 +387,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
             local target_chunk_data =  global.boss_spawnable_index.chunks[math.random(1, global.boss_spawnable_index.size)]
             spawn_position = target_chunk_data.spawn_position
             global.boss.target_position = target_chunk_data.turret_position
-            global.boss.target_direction = target_chunk_data.turret_direction
+            global.boss.target_direction = get_target_direction(spawn_position, target_chunk_data.turret_position)
         end
 
         local entities = surface.find_entities_filtered {
@@ -393,10 +411,11 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         }
 
         for _, value in pairs(ErmForceHelper.get_player_forces()) do
+            ErmDebugHelper.print('BossProcessor: Add Beacon for '..value)
             local boss_beacon_entity = surface.create_entity {
                 name=beacon_name,
                 position=spawn_position,
-                force=value.name
+                force=value
             }
             boss_beacon_entity.destructible = false
         end
