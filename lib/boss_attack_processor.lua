@@ -165,7 +165,10 @@ local get_despawn_attack = function()
     return data
 end
 
-local process_attack = function(data)
+local process_attack = function(data, unique_position)
+    unique_position = unique_position or false
+    data['artillery_mode'] = data['artillery_mode'] or false
+
     local surface = global.boss.surface
     local entity_name = data['entity_name']
 
@@ -177,8 +180,12 @@ local process_attack = function(data)
     for i = 1, data['count'] do
         local position = data['position']
         if i > 1 then
-            position['x'] = position['x'] + math.random(-8, 8)
-            position['y'] = position['y'] + math.random(-8, 8)
+            if unique_position then
+                position = pick_near_by_player_entity_position(data['artillery_mode'])
+            else
+                position['x'] = position['x'] + math.random(-16, 16)
+                position['y'] = position['y'] + math.random(-16, 16)
+            end
         end
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
@@ -243,7 +250,7 @@ function BossAttackProcessor.process_despawn_attack()
     local position, artillery_mode = pick_near_by_player_entity_position(true)
     data['artillery_mode'] = artillery_mode
     data['position'] = position;
-    process_attack(data)
+    process_attack(data, true)
 end
 
 function BossAttackProcessor.process_attack(data)

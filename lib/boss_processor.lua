@@ -102,8 +102,7 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
         end
         table.insert(global.boss_spawnable_index.chunks, {
             spawn_position=target_spawner.position,
-            turret_position=gunturret.position,
-            turret_direction=gunturret.direction
+            turret_position=gunturret.position
         })
         global.boss_spawnable_index.size = global.boss_spawnable_index.size + 1
     end
@@ -158,11 +157,14 @@ local get_target_direction = function(spawn_position, target_position)
         direction = defines.direction.north
     end
 
-    print('---- Target Difference ----')
-    print((spawn_position.x - target_position.x))
-    print((spawn_position.y - target_position.y))
-    print(direction)
-    print('----')
+    if DEBUG_MODE then
+        local directionText = {['0'] = 'North', ['2'] = 'East', ['4'] = 'South', ['6'] = 'West'}
+        ErmDebugHelper.print('BossProcessor: Targeting Direction: '..directionText[tostring(direction)])
+        ErmDebugHelper.print(serpent.block(spawn_position))
+        ErmDebugHelper.print(serpent.block(target_position))
+    end
+
+    return direction
 end
 
 local can_build_spawn_building = function()
@@ -375,7 +377,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         global.boss.spawned_tick = game.tick
         global.boss.boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
         global.boss.despawn_at_tick = game.tick + (defines.time.minute * ErmConfig.BOSS_DESPAWN_TIMER[global.boss.boss_tier])
-        BossProcessor.index_ammo_turret(surface)
+        BossProcessor.index_turrets(surface)
         ErmDebugHelper.print('BossProcessor: Indexed positions: '..global.boss_spawnable_index.size)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
@@ -465,6 +467,11 @@ end
 
 function BossProcessor.check_pathing()
     local boss = global.boss
+
+    if global.boss.entity == nil then
+        return
+    end
+
     if boss.pathing_entity_checks == 5 then
         local pathing_entity = boss.pathing_entity
         ErmDebugHelper.print('BossProcessor: Comparing path unit position')
@@ -605,7 +612,7 @@ function BossProcessor.heartbeat()
     ErmCron.add_2_sec_queue('BossProcessor.heartbeat')
 end
 
-function BossProcessor.index_ammo_turret(surface)
+function BossProcessor.index_turrets(surface)
     local gunturrets = surface.find_entities_filtered({type=indexable_turrets})
     local totalturrets = #gunturrets;
     local turret_gap = math.max(4,  math.floor(totalturrets / 64))
