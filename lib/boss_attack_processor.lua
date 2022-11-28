@@ -54,56 +54,55 @@ local pick_near_by_player_entity_position = function(use_artillery)
             force = ErmForceHelper.get_player_forces(),
             radius = 64,
             position = boss.entity_position,
-            limit = 50
+            limit = 50,
+            is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
         global.boss.attackable_entities_cache = attackable_entities_cache
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
+        print('using nearby scan')
     end
 
     if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ErmForceHelper.get_player_forces(),
             area = get_scan_area[boss.target_direction](global.boss.entity_position.x, global.boss.entity_position.y),
-            limit = ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT
+            limit = ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
+            is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
         global.boss.attackable_entities_cache = attackable_entities_cache
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
         artillery_mode = true
-    end
-
-    --- target players and their vehicles if it can't target from above
-    if attackable_entities_cache_size == 0 then
-        attackable_entities_cache = surface.find_entities_filtered {
-            force = ErmForceHelper.get_player_forces(),
-            type = {'character','car','spider-vehicle'},
-            limit = 10
-        }
-        attackable_entities_cache_size = #attackable_entities_cache
-        global.boss.attackable_entities_cache = attackable_entities_cache
-        global.boss.attackable_entities_cache_size = attackable_entities_cache_size
-        artillery_mode = true
+        print('using artillery_mode military target scan')
     end
 
     local return_position = nil
-    local retry = 0
-    repeat
-        local entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
-        if entity.valid then
-            return_position = entity.position
-        end
-        retry = retry + 1
-    until return_position or retry == 3
+    if global.boss.attackable_entities_cache_size > 0 then
+        local retry = 0
+        repeat
+            entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
+            if entity.valid then
+                return_position = entity.position
+            end
+            retry = retry + 1
+        until return_position or retry == 3
+    end
+
+    if return_position == nil then
+        return_position = ErmAttackGroupChunkProcessor.pick_attack_location(boss.surface)
+        artillery_mode = true
+    end
 
     return return_position, artillery_mode
+
 end
 
 local queue_attack = function(data)
     for i=1, data['spread'] do
         local position, artillery_mode = pick_near_by_player_entity_position()
         data['artillery_mode'] = artillery_mode
-        data['position'] = position;
+        data['position'] = position
         ErmCron.add_boss_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
     end
 end
@@ -169,7 +168,8 @@ local process_attack = function(data, unique_position)
     unique_position = unique_position or false
     data['artillery_mode'] = data['artillery_mode'] or false
 
-    local surface = global.boss.surface
+    local boss = global.boss
+    local surface = boss.surface
     local entity_name = data['entity_name']
 
     if data['artillery_mode'] then
@@ -183,20 +183,20 @@ local process_attack = function(data, unique_position)
             if unique_position then
                 position = pick_near_by_player_entity_position(data['artillery_mode'])
             else
-                position['x'] = position['x'] + math.random(-16, 16)
-                position['y'] = position['y'] + math.random(-16, 16)
+                position['x'] = position['x'] + math.random(-8, 8)
+                position['y'] = position['y'] + math.random(-8, 8)
             end
         end
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
                 name = entity_name,
-                position = global.boss.entity_position,
+                position = boss.entity_position,
                 target = position,
                 speed = data['speed'] or 0.3,
                 max_range = data['range'] or 96,
                 create_build_effect_smoke = false,
                 raise_built = false,
-                force = global.boss.force
+                force = boss.force
             })
         elseif data['type'] == BossAttackProcessor.TYPE_BEAM then
             --- target_position
@@ -208,7 +208,7 @@ local process_attack = function(data, unique_position)
                 position = position,
                 create_build_effect_smoke = false,
                 raise_built = false,
-                force = global.boss.force
+                force = boss.force
             })
         else
             surface.create_entity({
@@ -216,7 +216,7 @@ local process_attack = function(data, unique_position)
                 position = position,
                 create_build_effect_smoke = false,
                 raise_built = false,
-                force = global.boss.force
+                force = boss.force
             })
         end
     end
@@ -246,6 +246,7 @@ end
 
 function BossAttackProcessor.process_despawn_attack()
     ErmDebugHelper.print('Despawn Attack...')
+    BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
     local position, artillery_mode = pick_near_by_player_entity_position(true)
     data['artillery_mode'] = artillery_mode

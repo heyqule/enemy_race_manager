@@ -99,7 +99,16 @@ function ForceHelper.get_non_player_forces()
 end
 
 function ForceHelper.get_player_forces()
-    return global.player_forces or {'player'}
+    if next(global.player_forces) == nil then
+        table.insert(global.player_forces, 'player')
+        for _, force in pairs(game.forces) do
+            if force.index ~= 1 and table_size(force.players) > 0 then
+                table.insert(global.player_forces, force.name)
+            end
+        end
+    end
+
+    return global.player_forces
 end
 
 function ForceHelper.get_all_enemy_forces()
@@ -112,19 +121,19 @@ function ForceHelper.refresh_all_enemy_forces()
     global.player_forces = {}
     for _, force in pairs(game.forces) do
         if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
-            Table.insert(global.enemy_force_cache, force.name)
-            Table.insert(global.non_player_forces, force.name)
+            table.insert(global.enemy_force_cache, force.name)
+            table.insert(global.non_player_forces, force.name)
         end
     end
 
     for _, value in pairs(NEUTRAL_FORCES) do
-        Table.insert(global.non_player_forces, value)
+        table.insert(global.non_player_forces, value)
     end
-    Table.insert(global.non_player_forces, 'neutral')
+    table.insert(global.non_player_forces, 'neutral')
 
     for _, force in pairs(game.forces) do
         if #force.players > 0 then
-            Table.insert(global.player_forces, force.name)
+            table.insert(global.player_forces, force.name)
         end
     end
 end

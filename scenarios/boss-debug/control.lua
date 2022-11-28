@@ -28,7 +28,7 @@ Event.register(defines.events.on_player_created, function(event)
     scenarios_helper.set_tech_level(force, 20)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
-    scenarios_helper.set_game_speed(10)
+    scenarios_helper.set_game_speed(3)
     scenarios_helper.set_boss_tier(2)
 
     --surface.daytime = 0.5

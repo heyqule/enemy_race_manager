@@ -521,31 +521,14 @@ function ErmConfig.format_daytime(start_tick, end_tick)
     return day, hour, minute, second
 end
 
-local format_time = function(datetime_str, time, has_colon)
-    has_colon = has_colon or false
-    if time < 10 then
-        datetime_str = datetime_str .. '0'..time
-    else
-        datetime_str = datetime_str .. time
-    end
-
-    if has_colon == true then
-        datetime_str = datetime_str .. ':'
-    end
-
-    return datetime_str
-end
-
 function ErmConfig.format_daytime_string(start_tick, end_tick)
     local day, hour, minute, second = ErmConfig.format_daytime(start_tick, end_tick)
     local datetime_str = ''
     if day > 0 then
-        datetime_str = datetime_str .. day ..'D '
+        datetime_str = datetime_str .. string.format('%02d D ',day)
     end
 
-    datetime_str = format_time(datetime_str, hour, true)
-    datetime_str = format_time(datetime_str, minute, true)
-    datetime_str = format_time(datetime_str, second)
+    datetime_str = datetime_str .. string.format('%02d:%02d:%02d', hour, minute, second)
 
     return datetime_str;
 end
