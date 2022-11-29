@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/16/2022 2:58 PM
 ---
-
+require('util')
 require('__stdlib__/stdlib/utils/defines/time')
 
 local Event = require('__stdlib__/stdlib/event/event')
@@ -82,12 +82,12 @@ end
 
 local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
     local surface = gunturret.surface
-    local spawners = surface.find_entities_filtered {type=enemy_buildings, force=global.boss.force, area=area, limit=50}
+    local spawners = surface.find_entities_filtered {type=enemy_buildings, force=global.boss.force, area=area, limit=20}
 
     local target_spawner
     local last = #spawners
     if gunturret.direction == defines.direction.east or
-        gunturret.direction == defines.direction.south
+        gunturret.direction == defines.direction.north
     then
         target_spawner = spawners[1]
     else
@@ -100,10 +100,15 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
         if turret[1] then
             return
         end
+        local distance = util.distance(target_spawner.position, gunturret.position)
         table.insert(global.boss_spawnable_index.chunks, {
             spawn_position=target_spawner.position,
-            turret_position=gunturret.position
+            turret_position=gunturret.position,
+            distance=distance
         })
+        if global.boss_spawnable_index.closest_distance > distance then
+            global.boss_spawnable_index.closest_distance = distance
+        end
         global.boss_spawnable_index.size = global.boss_spawnable_index.size + 1
     end
 end
@@ -619,6 +624,7 @@ function BossProcessor.index_turrets(surface)
     local turret_gap_pick = math.max(2, math.random(2, math.floor(turret_gap / 2)))
     ErmDebugHelper.print('BossProcessor: Total: '..totalturrets)
     ErmDebugHelper.print('BossProcessor: Gap: '..turret_gap..'/'..turret_gap_pick)
+    global.boss_spawnable_index.closest_distance = 9999
     for i=1, #gunturrets do
         if i%turret_gap == turret_gap_pick then
             local gunturret = gunturrets[i]
@@ -626,6 +632,15 @@ function BossProcessor.index_turrets(surface)
             i = i + turret_gap - 2
         end
     end
+
+    local newChunkList = {}
+    for _, chunk in pairs(global.boss_spawnable_index.chunks) do
+        if chunk.distance <= global.boss_spawnable_index.closest_distance * 2 then
+            table.insert(newChunkList, chunk)
+        end
+    end
+    global.boss_spawnable_index.chunks = newChunkList
+    global.boss_spawnable_index.size = table_size(newChunkList)
 end
 
 --- Queue to spawn boss units
