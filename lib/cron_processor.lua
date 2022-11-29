@@ -109,7 +109,6 @@ function CronProcessor.add_quick_queue(request, ...)
     local arg = {...}
     global.quick_cron({request, arg})
 
-
     if global.quick_cron_is_running == false then
         global.quick_cron_is_running = true
         Event.on_nth_tick(ErmConfig.QUICK_CRON, CronProcessor.process_quick_queue)

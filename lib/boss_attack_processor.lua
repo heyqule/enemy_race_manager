@@ -19,12 +19,11 @@ local BossAttackProcessor = {}
 
 BossAttackProcessor.TYPE_PROJECTILE = 1
 BossAttackProcessor.TYPE_BEAM = 2
-BossAttackProcessor.TYPE_EXPLOSION = 3
 
 local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
 local scanRadius = ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
-local type_name = {'projectile', 'beam', 'explosion'}
+local type_name = {'projectile', 'beam'}
 
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
@@ -41,15 +40,14 @@ local get_scan_area = {
     end,
 }
 
-local pick_near_by_player_entity_position = function(use_artillery)
-    use_artillery = use_artillery or false
-    local artillery_mode = false
+local pick_near_by_player_entity_position = function(artillery_mode)
+    artillery_mode = artillery_mode or false
     local boss = global.boss
     local surface = boss.surface
     local attackable_entities_cache = boss.attackable_entities_cache
     local attackable_entities_cache_size = boss.attackable_entities_cache_size
 
-    if attackable_entities_cache == nil and not use_artillery then
+    if attackable_entities_cache == nil and not artillery_mode then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ErmForceHelper.get_player_forces(),
             radius = 64,
@@ -60,7 +58,6 @@ local pick_near_by_player_entity_position = function(use_artillery)
         attackable_entities_cache_size = #attackable_entities_cache
         global.boss.attackable_entities_cache = attackable_entities_cache
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
-        print('using nearby scan')
     end
 
     if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
@@ -74,7 +71,6 @@ local pick_near_by_player_entity_position = function(use_artillery)
         global.boss.attackable_entities_cache = attackable_entities_cache
         global.boss.attackable_entities_cache_size = attackable_entities_cache_size
         artillery_mode = true
-        print('using artillery_mode military target scan')
     end
 
     local return_position = nil
@@ -119,6 +115,7 @@ end
 
 local select_attack = function(mod_name, attacks, tier)
     local data
+    local boss = global.boss
     for i, value in pairs(attacks['projectile_name']) do
         if can_spawn(attacks['projectile_chance'][i]) then
             data = {
@@ -139,6 +136,9 @@ local select_attack = function(mod_name, attacks, tier)
             break
         end
     end
+    data['entity_position'] = boss.entity_position
+    data['surface'] = boss.surface
+    data['entity_force'] = boss.force
     return data
 end
 
@@ -168,8 +168,13 @@ local process_attack = function(data, unique_position)
     unique_position = unique_position or false
     data['artillery_mode'] = data['artillery_mode'] or false
 
-    local boss = global.boss
-    local surface = boss.surface
+    local surface = data['surface']
+    local entity_force = data['entity_force']
+    if not (surface and surface.valid and entity_force and entity_force.valid) then
+        print('not valid surface / force')
+        return
+    end
+    local start_position = data['entity_position']
     local entity_name = data['entity_name']
 
     if data['artillery_mode'] then
@@ -190,27 +195,19 @@ local process_attack = function(data, unique_position)
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
                 name = entity_name,
-                position = boss.entity_position,
+                position = start_position,
                 target = position,
                 speed = data['speed'] or 0.3,
                 max_range = data['range'] or 96,
                 create_build_effect_smoke = false,
                 raise_built = false,
-                force = boss.force
+                force = entity_force
             })
         elseif data['type'] == BossAttackProcessor.TYPE_BEAM then
             --- target_position
             --- source_position
             --- duration
             --- source_offset
-            surface.create_entity({
-                name = entity_name,
-                position = position,
-                create_build_effect_smoke = false,
-                raise_built = false,
-                force = boss.force
-            })
-        else
             surface.create_entity({
                 name = entity_name,
                 position = position,
@@ -248,14 +245,16 @@ function BossAttackProcessor.process_despawn_attack()
     ErmDebugHelper.print('Despawn Attack...')
     BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
-    local position, artillery_mode = pick_near_by_player_entity_position(true)
-    data['artillery_mode'] = artillery_mode
-    data['position'] = position;
-    process_attack(data, true)
+    for i=1, data['spread'] do
+        local position, artillery_mode = pick_near_by_player_entity_position(true)
+        data['artillery_mode'] = artillery_mode
+        data['position'] = position
+        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data), true)
+    end
 end
 
-function BossAttackProcessor.process_attack(data)
-    if (data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position']) then
+function BossAttackProcessor.process_attack(data, force)
+    if (force ~= true and (data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'])) then
         return
     end
 

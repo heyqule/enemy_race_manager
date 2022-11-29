@@ -74,7 +74,7 @@ cron_switch = {
         ErmBossGroupProcessor.process_attack_groups()
     end,
     ['BossAttackProcessor.process_attack'] = function(args)
-        ErmBossAttackProcessor.process_attack(args[1])
+        ErmBossAttackProcessor.process_attack(args[1], args[2])
     end,
     ['ArmyTeleportationProcessor.teleport'] = function(args)
         ErmArmyTeleportationProcessor.teleport(args[1], args[2], args[3])

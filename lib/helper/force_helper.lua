@@ -99,16 +99,7 @@ function ForceHelper.get_non_player_forces()
 end
 
 function ForceHelper.get_player_forces()
-    if next(global.player_forces) == nil then
-        table.insert(global.player_forces, 'player')
-        for _, force in pairs(game.forces) do
-            if force.index ~= 1 and table_size(force.players) > 0 then
-                table.insert(global.player_forces, force.name)
-            end
-        end
-    end
-
-    return global.player_forces
+    return global.player_forces or {'player'}
 end
 
 function ForceHelper.get_all_enemy_forces()
@@ -131,8 +122,9 @@ function ForceHelper.refresh_all_enemy_forces()
     end
     table.insert(global.non_player_forces, 'neutral')
 
+    table.insert(global.player_forces, 'player')
     for _, force in pairs(game.forces) do
-        if #force.players > 0 then
+        if force.index ~= 1 and table_size(force.players) > 0 then
             table.insert(global.player_forces, force.name)
         end
     end

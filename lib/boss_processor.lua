@@ -605,7 +605,6 @@ function BossProcessor.heartbeat()
     end
 
     if boss_direct_attack then
-        print('unsetting entity cache...')
         ErmBossAttackProcessor.unset_attackable_entities_cache()
     end
 
