@@ -125,6 +125,7 @@ local zerg_explosions = function(surface)
         'mutalisk-explosion-small',
         'hydralisk-explosion-small',
         'blood-cloud-explosion',
+        'dark-swarm-explosion',
         'acid-cloud-explosion',
         'devourer-cloud-explosion',
         'overlord-air-death',
