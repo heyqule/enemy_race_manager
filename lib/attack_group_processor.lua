@@ -172,7 +172,8 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             group.set_command(command)
             global.erm_unit_groups[group.group_number] = {
                 group =  group,
-                start_position = group.position
+                start_position = group.position,
+                always_angry = false
             }
         else
             group.set_autonomous()
@@ -363,7 +364,13 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
             end
         end
 
-        AttackGroupProcessor.process_attack_position(group)
+        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+
+        global.erm_unit_groups[group.group_number] = {
+            group =  group,
+            start_position = group.position,
+            always_angry = true
+        }
     end
 end
 

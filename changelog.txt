@@ -9,7 +9,7 @@ Date: 2022-??-??
     - Once boss spawner revealed, launching additional Psi Tracking Satellite will not spawn new boss until the existing boss has either killed or despawned.
     - The map chunk where the boss sit is revealed to players.
     - Boss sends out elite attack group periodically. (approx twice per nauvis day)
-    - Boss fires artillery periodically. (approx twice per nauvis day)
+    - Boss fires its artillery periodically. (approx twice per nauvis day)
     - Boss performs various attacks when it takes damage.
     - When the boss is defeated, infinity chest(s) with items will spawn for 14 nauvis days. (appox 1.5hr game time)
     - When you don't defeat the boss when the timer end, it releases super attacks to your base!
@@ -46,12 +46,13 @@ Date: 2022-??-??
   Changes:
     - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of converting to automatic group.
     - Level up check now runs every 10 mins, not configurable.
-    - When boss is active, Leveling up is halt until boss mode has ended.
+    - When boss is active, Leveling up is halt until boss mode end.
     - Refactored custom attack handler to reduce remote calls.
     - Refactored GUI handlers.
     - Killing units / turrets now always count toward evolution points.
     - Tweaked base expansion formation number.
     - Tweaked unit group will not slow down to wait members. Slow members run double speed to catch up.
+    - When a unit group marks as always angry, they will always be distracted by anything.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.5

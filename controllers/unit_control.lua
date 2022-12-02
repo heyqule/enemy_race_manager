@@ -104,9 +104,12 @@ local onAiCompleted = function(event)
             destroyMembers(group)
         end
 
-        if group.valid and (group.command == nil or
-                group.state == defines.group_state.finished)then
-            ErmAttackGroupProcessor.process_attack_position(group)
+        if group.valid and (group.command == nil or group.state == defines.group_state.finished) then
+            if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
+                ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+            else
+                ErmAttackGroupProcessor.process_attack_position(group)
+            end
         end
 
         if(event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then

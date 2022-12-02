@@ -214,7 +214,7 @@ local spawn_building = function()
 end
 
 local destroy_beacons = function()
-    local beacons = global.boss.surface.find_entities_filtered {name=beacon_name}
+    local beacons = global.boss.surface.find_entities_filtered {name=beacon_name, type='radar'}
     for i=1,#beacons do
         beacons[i].destroy()
     end
@@ -387,6 +387,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
             surface.print('Unable to find a boss spawner.  Please try again on a surface with enemy spawners.')
+            BossProcessor.unset()
             return
         end
 
@@ -625,7 +626,7 @@ function BossProcessor.index_turrets(surface)
     ErmDebugHelper.print('BossProcessor: Total: '..totalturrets)
     ErmDebugHelper.print('BossProcessor: Gap: '..turret_gap..'/'..turret_gap_pick)
     global.boss_spawnable_index.closest_distance = 9999
-    for i=1, #gunturrets do
+    for i=1, totalturrets do
         if i%turret_gap == turret_gap_pick then
             local gunturret = gunturrets[i]
             index_boss_spawnable_chunk(gunturret, get_scan_area[gunturret.direction](gunturret.position.x, gunturret.position.y))
