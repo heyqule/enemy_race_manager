@@ -54,9 +54,9 @@ Date: 2022-??-??
     - Tweaked base expansion formation number.
     - Tweaked unit group will not slow down to wait members. Slow members run double speed to catch up.
     - When a unit group marks as always angry, they will always be distracted by anything.
-    - Most reinforced item health have buff to around 900 - 1000. Except express belt stay at 680.
-    - Add reinforced substation
-    - All reinforced entities are now military entities, except wall
+    - Most reinforced item health have buffed to around 900 - 1000. Except express belt stay at 680.
+    - Added reinforced substation with 1000 HP
+    - Reinforced inserters and power poles, substations are now military targets.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.15.5
