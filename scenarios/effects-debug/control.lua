@@ -125,6 +125,7 @@ local zerg_explosions = function(surface)
         'mutalisk-explosion-small',
         'hydralisk-explosion-small',
         'blood-cloud-explosion',
+        'dark-swarm-80-explosion',
         'dark-swarm-explosion',
         'acid-cloud-explosion',
         'devourer-cloud-explosion',
@@ -186,7 +187,7 @@ local marspeople_explosions = function(surface)
     end
 end
 
-Event.on_nth_tick(180, function(event)
+Event.on_nth_tick(300, function(event)
     local surface = game.surfaces[1]
 
     global_assets_explosion(surface)

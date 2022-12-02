@@ -16,25 +16,39 @@ local can_spawn = ErmRaceSettingsHelper.can_spawn
 
 local rewards_items_data = {
     {
+        'uranium-238',
         'advanced-circuit',
-        'engine-unit',
         'electric-engine-unit',
-        'battery'
+        'battery',
+        'rocket',
+        'heavy-oil-barrel',
+        'sulfuric-acid-barrel',
     },
     {
+        'engine-unit',
         'electronic-circuit',
         'plastic-bar',
         'sulfur',
-        'iron-gear-wheel',
         'steel-plate',
         'explosives',
+        'solid-fuel',
+        'piercing-rounds-magazine',
+        'grenade',
+        'wall',
+        'light-oil-barrel',
+        'petroleum-gas-barrel',
     },
     {
         'copper-plate',
         'iron-plate',
         'stone-brick',
+        'crude-oil-barrel',
+        'iron-gear-wheel',
     }
 }
+
+--- Big Mod Compaibility rewards
+
 
 local reward_settings =
 {

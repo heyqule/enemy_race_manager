@@ -41,7 +41,7 @@ Event.register(defines.events.on_player_created, function(event)
     --player.teleport({0, 0})
 end)
 
-Event.on_nth_tick(3600, function(event)
+Event.on_nth_tick(600, function(event)
 
     local surface = game.surfaces[1]
     local entities = surface.find_entities_filtered({type={'unit','electric-turret'}})
@@ -58,7 +58,7 @@ Event.on_nth_tick(3600, function(event)
     })
 
     surface.create_entity({
-        name='erm_zerg/zergling/20',
+        name='erm_zerg/defiler/20',
         force='enemy_erm_zerg',
         position={10,10}
     })
