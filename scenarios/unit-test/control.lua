@@ -30,8 +30,8 @@ Event.register(defines.events.on_player_created, function(event)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(1)
 
-    --surface.daytime = 0.5
-    surface.daytime = 1
+    surface.daytime = 0.5
+    --surface.daytime = 1
     surface.freeze_daytime = true
 
     -- Comment out the following to start with godmode
@@ -49,17 +49,30 @@ Event.on_nth_tick(600, function(event)
         entity.destroy()
     end
 
+    --surface.create_entity({
+    --    name='erm-reinforced-laser-turret',
+    --    --name='erm_terran/battlecruiser/yamato',
+    --    force='player',
+    --    player=1,
+    --    position={-10,-10}
+    --})
     surface.create_entity({
-        name='erm-reinforced-laser-turret',
-        --name='erm_terran/battlecruiser/yamato',
+        --name ='erm_terran/marine/mk3',
+        name='erm_terran/firebat/mk2',
         force='player',
         player=1,
         position={-10,-10}
     })
 
+    --surface.create_entity({
+    --    name='erm_vanilla/queen/20',
+    --    force='enemy_erm_zerg',
+    --    position={10,10}
+    --})
+
     surface.create_entity({
-        name='erm_zerg/defiler/20',
-        force='enemy_erm_zerg',
+        name='erm_vanilla/behemoth-biter/20',
+        force='enemy',
         position={10,10}
     })
 end)
