@@ -94,16 +94,16 @@ local boss_defense_spawn_size = {
 }
 ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
 ErmConfig.boss_defense_spawn_size = boss_defense_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
-ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 99999999}
+ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 55000000, 90000000}
 
-if DEBUG_MODE then
-    ErmConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 9999999}
-end
+--if DEBUG_MODE then
+--    ErmConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 9999999}
+--end
 
 ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
-ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 9, 12}
+ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {2, 3, 4, 5, 6}
 -- 1 phase change and 5 types of attacks based on damage taken
-ErmConfig.BOSS_DEFENSE_ATTACKS = {15000000, 999999, 200000, 99999, 69420, 20000}
+ErmConfig.BOSS_DEFENSE_ATTACKS = {15000000, 999999, 330000, 150000, 69420, 20000}
 ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {3, 3, 3, 4, 4}
 
 -- 320 radius toward the target area.

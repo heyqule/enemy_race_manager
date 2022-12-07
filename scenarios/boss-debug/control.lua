@@ -29,7 +29,7 @@ Event.register(defines.events.on_player_created, function(event)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(3)
-    scenarios_helper.set_boss_tier(2)
+    scenarios_helper.set_boss_tier(5)
 
     --surface.daytime = 0.5
     surface.daytime = 1
@@ -56,7 +56,7 @@ end)
 
 local spawn_units = function(surface)
     local entities = {}
-    for i=1, 1 do
+    for i=1, 2 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/battlecruiser/yamato',
             force='player',
@@ -68,35 +68,33 @@ local spawn_units = function(surface)
             position={-10,-10}
         }))
     end
-    for i=1, 2 do
+    for i=1, 4 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/tank/mk2',
             force='player',
             position={15,15}
         }))
     end
-    for i=1, 5 do
+    for i=1, 10 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/wraith',
             force='player',
             position={-20,-20}
         }))
-    end
-    for i=1, 5 do
+
         table.insert(entities, surface.create_entity({
             name='erm_terran/goliath',
             force='player',
             position={20,20}
         }))
     end
-    for i=1, 10 do
+    for i=1, 20 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/marine/mk3',
             force='player',
             position={10,10}
         }))
-    end
-    for i=1, 10 do
+
         table.insert(entities, surface.create_entity({
             name='erm_terran/firebat/mk2',
             force='player',

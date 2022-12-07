@@ -16,36 +16,30 @@ local can_spawn = ErmRaceSettingsHelper.can_spawn
 
 --- Intermediate products / weapon consumables
 local rewards_items_data = {
-    {
-        'uranium-238',
-        'advanced-circuit',
-        'electric-engine-unit',
-        'battery',
-        'rocket',
-        'heavy-oil-barrel',
-        'sulfuric-acid-barrel',
-    },
-    {
-        'engine-unit',
-        'electronic-circuit',
-        'plastic-bar',
-        'sulfur',
-        'steel-plate',
-        'explosives',
-        'solid-fuel',
-        'piercing-rounds-magazine',
-        'grenade',
-        'stone-wall',
-        'light-oil-barrel',
-        'petroleum-gas-barrel',
-    },
-    {
-        'copper-plate',
-        'iron-plate',
-        'stone-brick',
-        'crude-oil-barrel',
-        'iron-gear-wheel',
-    }
+    'uranium-238',
+    'advanced-circuit',
+    'electric-engine-unit',
+    'battery',
+    'rocket',
+    'heavy-oil-barrel',
+    'sulfuric-acid-barrel',
+    'engine-unit',
+    'electronic-circuit',
+    'plastic-bar',
+    'sulfur',
+    'steel-plate',
+    'explosives',
+    'solid-fuel',
+    'piercing-rounds-magazine',
+    'grenade',
+    'stone-wall',
+    'light-oil-barrel',
+    'petroleum-gas-barrel',
+    'copper-plate',
+    'iron-plate',
+    'stone-brick',
+    'crude-oil-barrel',
+    'iron-gear-wheel',
 }
 
 --- Big Mod Compaibility rewards
@@ -69,14 +63,6 @@ local reward_settings =
         position_offset= {x=10, y=-10},
         chance = {0, 0, 0, 5, 20},
     }
-}
-
-local reward_tiers = {
-    {0, 0},
-    {0, 33},
-    {5, 50},
-    {20, 66},
-    {33, 75},
 }
 
 -- Infinite chests stay for 14 Nauvis Days.
@@ -121,15 +107,8 @@ local spawn_chest = function(reward_setting, boss_data)
     return nil
 end
 
-local get_item_name = function(tier)
-    for key, value in pairs(reward_tiers[tier]) do
-        if (can_spawn(value)) then
-            return rewards_items_data[key][math.random(1,#rewards_items_data[key])]
-        end
-    end
-
-    return rewards_items_data[3][math.random(1,#rewards_items_data[3])]
-
+local get_item_name = function()
+    return rewards_items_data[math.random(1,#rewards_items_data)]
 end
 
 function BossRewardProcessor.exec()
@@ -138,7 +117,7 @@ function BossRewardProcessor.exec()
         if(can_spawn(value['chance'][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
             if chest then
-                local infinity_item_name = get_item_name(boss.boss_tier)
+                local infinity_item_name = get_item_name()
                 chest.set_infinity_container_filter(1, {
                     name = infinity_item_name,
                     count = 100,

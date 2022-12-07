@@ -59,6 +59,7 @@ Date: 2022-??-??
     - Reinforced inserters and power poles, substations are now military targets.
     - Attack point consumption change, air unit group 75 -> 50, dropship group 150 -> 100.
     - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
+    - Changed building process to have 13 tiles in find_non_colliding_position
 
 
 ---------------------------------------------------------------------------------------------------
