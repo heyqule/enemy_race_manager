@@ -121,7 +121,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
         biter['attack_parameters']['damage_modifier'] = 0.25 * biter['attack_parameters']['damage_modifier']
     end
 
-    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
         biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
@@ -129,7 +129,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
 end
 
 function ERM_UnitHelper.modify_worm_damage(worm, level)
-    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
         worm['attack_parameters']['damage_modifier'] = worm['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)

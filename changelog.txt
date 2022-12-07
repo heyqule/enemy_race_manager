@@ -33,7 +33,7 @@ Date: 2022-??-??
     - ----- End Teleportation Framework -----
     - ----- End Player Army Frameworks -----
     - Added post process package for some indexes. Requires "Enemy Race Manager - Post Process" package.
-    - Add barrel > steele plate recipe for furnace. Rewards may return liquid barrels. You can use this recipe to recycle.
+    - Added barrel > steele plate recipe for furnace. Boss Rewards may return liquid barrels. You can use this recipe to recycle empty barrel.
 
 
   Graphics:
@@ -57,6 +57,8 @@ Date: 2022-??-??
     - Most reinforced item with lower than 1000HP have buffed to around 900 - 1000 HP. Except express belt, which stay at 680.
     - Added reinforced substation with 1000 HP.
     - Reinforced inserters and power poles, substations are now military targets.
+    - Attack point consumption change, air unit group 75 -> 50, dropship group 150 -> 100.
+    - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
 
 
 ---------------------------------------------------------------------------------------------------

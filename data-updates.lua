@@ -29,3 +29,5 @@ require "prototypes/extend-inputs"
 require "prototypes/extend-army-events"
 
 require "prototypes/extend-recipes"
+
+require "prototypes/extend-freeforall"
