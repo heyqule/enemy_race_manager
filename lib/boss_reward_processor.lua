@@ -14,6 +14,7 @@ local BossRewardProcessor = {}
 
 local can_spawn = ErmRaceSettingsHelper.can_spawn
 
+--- Intermediate products / weapon consumables
 local rewards_items_data = {
     {
         'uranium-238',
@@ -34,7 +35,7 @@ local rewards_items_data = {
         'solid-fuel',
         'piercing-rounds-magazine',
         'grenade',
-        'wall',
+        'stone-wall',
         'light-oil-barrel',
         'petroleum-gas-barrel',
     },

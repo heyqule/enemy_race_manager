@@ -60,7 +60,7 @@ local spawn_units = function(surface)
         table.insert(entities, surface.create_entity({
             name='erm_terran/battlecruiser/yamato',
             force='player',
-            position={-10,-10}
+            position={-15,-15}
         }))
         table.insert(entities, surface.create_entity({
             name='erm_terran/battlecruiser/laser',
@@ -82,11 +82,25 @@ local spawn_units = function(surface)
             position={-20,-20}
         }))
     end
+    for i=1, 5 do
+        table.insert(entities, surface.create_entity({
+            name='erm_terran/goliath',
+            force='player',
+            position={20,20}
+        }))
+    end
     for i=1, 10 do
         table.insert(entities, surface.create_entity({
             name='erm_terran/marine/mk3',
             force='player',
             position={10,10}
+        }))
+    end
+    for i=1, 10 do
+        table.insert(entities, surface.create_entity({
+            name='erm_terran/firebat/mk2',
+            force='player',
+            position={10,-10}
         }))
     end
 
