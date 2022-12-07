@@ -20,7 +20,7 @@ data:extend(
         {
             {
                 type = "trigger-target-type",
-                name = "flying"
+                name = "air-unit"
             }
         })
 --- Item Subgroup
