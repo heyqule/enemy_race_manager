@@ -272,8 +272,8 @@ local attack_functions = {
     phase_change,
     super_attack,
     spawn_unit_attack,
-    advanced_attack,
     spawn_base_attack,
+    advanced_attack,
     basic_attack
 }
 
@@ -355,7 +355,7 @@ local write_result_log = function(victory)
 end
 
 function BossProcessor.init_globals()
-    global.boss = boss_setting_default()
+    global.boss = global.boss or boss_setting_default()
     global.boss_attack_groups = global.boss_attack_groups or {}
     global.boss_group_spawn = global.boss_group_spawn or ErmBossGroupProcessor.get_default_data()
     global.boss_spawnable_index = global.boss_spawnable_index or boss_spawnable_index_default()

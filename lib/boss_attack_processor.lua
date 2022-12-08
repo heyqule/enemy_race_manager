@@ -42,6 +42,8 @@ local get_scan_area = {
 
 local pick_near_by_player_entity_position = function(artillery_mode)
     artillery_mode = artillery_mode or false
+
+    local return_position
     local boss = global.boss
     local surface = boss.surface
     local attackable_entities_cache = boss.attackable_entities_cache
@@ -73,7 +75,6 @@ local pick_near_by_player_entity_position = function(artillery_mode)
         artillery_mode = true
     end
 
-    local return_position = nil
     if global.boss.attackable_entities_cache_size > 0 then
         local retry = 0
         repeat
@@ -170,8 +171,8 @@ local process_attack = function(data, unique_position)
 
     local surface = data['surface']
     local entity_force = data['entity_force']
-    if not (surface and surface.valid and entity_force and entity_force.valid) then
-        print('not valid surface / force')
+    if not (surface and surface.valid and entity_force and entity_force.valid) or data['position'] == nil then
+        print('not valid surface / force / position')
         return
     end
     local start_position = data['entity_position']

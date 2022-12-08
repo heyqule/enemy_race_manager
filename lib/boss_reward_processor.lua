@@ -15,6 +15,7 @@ local BossRewardProcessor = {}
 local can_spawn = ErmRaceSettingsHelper.can_spawn
 
 --- Intermediate products / weapon consumables
+--- No raw materials
 local rewards_items_data = {
     'uranium-238',
     'advanced-circuit',
@@ -44,7 +45,7 @@ local rewards_items_data = {
 
 --- Big Mod Compaibility rewards
 
-
+-- Up to 8 infinity chests on each boss defeat
 local reward_settings =
 {
     {
@@ -53,15 +54,31 @@ local reward_settings =
     },
     {
         position_offset= {x=-10, y=-10},
-        chance = {0, 10, 33, 66, 100},
+        chance = {0, 50, 100, 100, 100},
     },
     {
         position_offset= {x=-10, y=10},
-        chance = {0, 0, 0, 10, 30},
+        chance = {0, 0, 50, 100, 100},
     },
     {
         position_offset= {x=10, y=-10},
-        chance = {0, 0, 0, 5, 20},
+        chance = {0, 0, 0, 50, 100},
+    },
+    {
+        position_offset= {x=32, y=32},
+        chance = {33, 36, 39, 42, 45},
+    },
+    {
+        position_offset= {x=-32, y=-32},
+        chance = {20, 23, 26, 29, 33},
+    },
+    {
+        position_offset= {x=-32, y=32},
+        chance = {10, 12, 15, 18, 20},
+    },
+    {
+        position_offset= {x=32, y=-32},
+        chance = {6, 7, 8, 9, 10},
     }
 }
 
@@ -96,7 +113,7 @@ local spawn_chest = function(reward_setting, boss_data)
     }
 
     if not surface.can_place_entity({ name = name, force = force, position = position }) then
-        position = surface.find_non_colliding_position(name, position, 32, 10, true)
+        position = surface.find_non_colliding_position(name, position, 32, 8, true)
     end
 
     if position then

@@ -164,6 +164,10 @@ local conditional_events = function()
     if global.quick_cron_is_running then
         Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
     end
+
+    if global.boss.entity then
+        Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
+    end
 end
 
 local init_globals = function()

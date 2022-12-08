@@ -24,12 +24,18 @@ Event.register(defines.events.on_player_created, function(event)
     local player = game.players[1]
     local force = player.force
 
+    local current_tech = 20
     scenarios_helper.spawn_tile(surface, 32)
-    scenarios_helper.set_tech_level(force, 20)
+    scenarios_helper.set_tech_level(force, current_tech)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(3)
-    scenarios_helper.set_boss_tier(5)
+    local tier = 5
+    scenarios_helper.set_boss_tier(tier)
+
+    for i=0, ((tier - 1) * 5),1 do
+        force.technologies["follower-robot-count-7"].researched = true
+    end
 
     --surface.daytime = 0.5
     surface.daytime = 1
