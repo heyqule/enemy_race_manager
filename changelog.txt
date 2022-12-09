@@ -2,28 +2,30 @@
 Version: 1.16.0
 Date: 2022-??-??
 
-  Features:
-    - ----- Boss Framework -----
-    - Boss spawner is revealed by launching a Psi Tracking Satellite.
+  Major Features:
+    - ----- Boss Framework (Proof of Concept release) -----
+    - Boss spawner is revealed by launching a "Psi Tracking Satellite".
+    - Currently only supported by erm_zerg and erm_protoss. Plan to support all races when it's out of POC phase.
     - Added Psi Tracking Satellite. It reveals a boss spawner and returns 1200 space science pack.
     - Once boss spawner revealed, launching additional Psi Tracking Satellite will not spawn new boss until the existing boss has either killed or despawned.
     - The map chunk where the boss sit is revealed to players.
-    - Boss sends out elite attack group periodically. (approx twice per nauvis day)
-    - Boss fires its artillery periodically. (approx twice per nauvis day)
+    - Boss fires its artillery, then sends out elite attack group periodically. (approx twice per nauvis day)
     - Boss performs various attacks when it takes damage.
-    - When the boss is defeated, infinity chest(s) with items will spawn for 14 nauvis days. (appox 1.5hr game time)
-    - When you don't defeat the boss when the timer end, it releases super attacks to your base!
+    - When the boss is defeated, infinity chest(s) with intermediate products will spawn for 14 nauvis days. (appox 1.5hr game time)
+    - When you don't defeat the boss in time, it'll release super attacks to your base before it despawn!
+    - Added barrel > steele plate recipe for furnace. Boss Rewards may return liquid barrels. You can use this recipe to recycle empty barrel.
+    - It's NOT balanced at all and may be buggy.  Good luck if you want to try it.
     - ----- End Boss Framework -----
     - ----- Player Army Frameworks -----
     - The player army frameworks only apply to ERM - Terran at the moment.
     - ----- Population Framework -----
     - Base Max Population is 150. Max pop can be increased with Follower Combat Drone research at 1:1 ratio.
-    - Each unit can have different population value. E.g 1 for marine, 2 for tank/wraith, 5 for battlecruiser.
+    - Each unit can have different population value. E.g 1 for marine, 2 for tank/wraith, 5 for battlecruiser and etc.
     - ----- End Population Framework -----
-    - ----- Deployment Framework -----
+    - ----- Army Deployment Framework -----
     - Build a deployer (styled assembling machines)
-    - deployer is now required to build unit from scratch. It can also deploy built units.
-    - Deployer deploy units when total population under player set threshold and max population.
+    - Deployer is now required to build military units. Assembling machine can no longer build them.
+    - Deployer may automatically deploy military units when total population under player set threshold and max population.
     - ----- End Deployment Framework -----
     - ----- Teleportation Framework -----
     - Build 2 command centers (styled radars)
@@ -32,8 +34,9 @@ Date: 2022-??-??
     - Active CC scans player units to teleport every 15 seconds. 24 units per batch. Up to 96 units per minute.
     - ----- End Teleportation Framework -----
     - ----- End Player Army Frameworks -----
+
+  Features:
     - Added post process package for some indexes. Requires "Enemy Race Manager - Post Process" package.
-    - Added barrel > steele plate recipe for furnace. Boss Rewards may return liquid barrels. You can use this recipe to recycle empty barrel.
 
 
   Graphics:
@@ -56,10 +59,10 @@ Date: 2022-??-??
     - When a unit group marks as always angry, they will always be distracted by anything.
     - Most reinforced item with lower than 1000HP have buffed to around 900 - 1000 HP. Except express belt, which stay at 680.
     - Added reinforced substation with 1000 HP.
-    - Reinforced inserters and power poles, substations are now military targets.
-    - Attack point consumption change, air unit group 75 -> 50, dropship group 150 -> 100.
+    - Reinforced inserters and Reinforced power poles, Reinforced substations are now military targets.
+    - Attack point consumption change for custom attack groups, air unit group 75 -> 50, dropship group 150 -> 100.
     - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
-    - Changed building process to have 13 tiles in find_non_colliding_position
+    - Changed building processor to have 11.5 tiles in find_non_colliding_position
 
 
 ---------------------------------------------------------------------------------------------------

@@ -184,15 +184,22 @@ local process_attack = function(data, unique_position)
     end
 
     for i = 1, data['count'] do
+        -- First shot always accurate, subsequent shot varies
         local position = data['position']
         if i > 1 then
             if unique_position then
                 position = pick_near_by_player_entity_position(data['artillery_mode'])
+            end
+
+            if data['artillery_mode'] then
+                position['x'] = position['x'] + math.random(-16, 16)
+                position['y'] = position['y'] + math.random(-16, 16)
             else
                 position['x'] = position['x'] + math.random(-8, 8)
                 position['y'] = position['y'] + math.random(-8, 8)
             end
         end
+
         if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
                 name = entity_name,

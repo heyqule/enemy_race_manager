@@ -64,6 +64,7 @@ local reward_settings =
         position_offset= {x=10, y=-10},
         chance = {0, 0, 0, 50, 100},
     },
+    -- Bonus lucky draw
     {
         position_offset= {x=32, y=32},
         chance = {33, 36, 39, 42, 45},

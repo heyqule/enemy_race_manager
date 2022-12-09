@@ -94,24 +94,6 @@ local global_assets_explosion = function(surface)
         name = "erm-circular-effect-fluid-blue-2",
         position = {60, 0}
     })
-
-    surface.create_entity({
-        name = "erm-circular-effect-flare-green-2",
-        position = {80, 0}
-    })
-
-    surface.create_entity({
-        name = "erm-circular-effect-flare-blue-2",
-        position = {100, 0}
-    })
-
-    surface.create_entity({
-        name = "erm-circular-effect-flare-red-2",
-        position = {120, 0}
-    })
-
-
-
 end
 
 local zerg_explosions = function(surface)
