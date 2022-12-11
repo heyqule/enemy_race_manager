@@ -83,6 +83,10 @@ function ForceHelper.split_name(name)
 end
 
 function ForceHelper.get_name_token(name)
+    if global.force_entity_name_cache == nil then
+        global.force_entity_name_cache = {}
+    end
+
     if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
             global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }

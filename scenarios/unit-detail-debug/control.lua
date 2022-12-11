@@ -2,6 +2,7 @@ require('util')
 local scenarios_helper = require('__enemyracemanager__/scenarios/shared.lua')
 
 local Event = require('__stdlib__/stdlib/event/event')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local spawned
 
@@ -45,19 +46,47 @@ Event.register(defines.events.on_player_created, function(event)
     local x = -100
     local y = -100
     local gap = 10
+    --for _, item in pairs(prototypes) do
+    --    x = -100 + i * gap
+    --    local entity = surface.create_entity({
+    --        name=item.name,
+    --        force='neutral',
+    --        position={x, y}
+    --    })
+    --    entity.active = false
+    --    i = i + 1
+    --    if i % 20 == 0 then
+    --        x = -100
+    --        y = y + gap
+    --        i = 0
+    --    end
+    --end
+
+    local acceptLevels = {
+        --['1'] = true,
+        --['2'] = true,
+        --['5'] = true,
+        --['10'] = true,
+        --['15'] = true,
+        --['25'] = true,
+        ['20'] = true,
+    }
     for _, item in pairs(prototypes) do
         x = -100 + i * gap
-        local entity = surface.create_entity({
-            name=item.name,
-            force='neutral',
-            position={x, y}
-        })
-        entity.active = false
-        i = i + 1
-        if i % 20 == 0 then
-            x = -100
-            y = y + gap
-            i = 0
+        local nameToken = ForceHelper.get_name_token(item.name)
+        if nameToken[3] == nil or acceptLevels[nameToken[3]] then
+            local entity = surface.create_entity({
+                name=item.name,
+                force='neutral',
+                position={x, y}
+            })
+            entity.active = false
+            i = i + 1
+            if i % 20 == 0 then
+                x = -100
+                y = y + gap
+                i = 0
+            end
         end
     end
 

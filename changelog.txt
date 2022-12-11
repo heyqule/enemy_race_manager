@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.16.0
-Date: 2022-??-??
+Date: 2022-12-12
 
   Major Features:
     - ----- Boss Framework (Proof of Concept release) -----
@@ -52,7 +52,7 @@ Date: 2022-??-??
   Changes:
     - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of converting to automatic group.
     - Level up check now runs every 10 mins, not configurable.
-    - When boss is active, Leveling up is halt until boss mode end.
+    - When boss is active, leveling up is halt until boss mode end.
     - Refactored custom attack handler to reduce remote calls.
     - Refactored GUI handlers.
     - Killing units / turrets now always count toward evolution points.
@@ -64,7 +64,8 @@ Date: 2022-??-??
     - Reinforced inserters and Reinforced power poles, Reinforced substations are now military targets.
     - Attack point consumption change for custom attack groups, air unit group 75 -> 50, dropship group 150 -> 100.
     - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
-    - Changed building processor to have 11.5 tiles in find_non_colliding_position
+    - Changed building processor to have 11.5 tiles when calling find_non_colliding_position
+    - Construction bots are now not repairable. They have 2x of health and can regen health from 1 to full in 60seconds.
 
 
 ---------------------------------------------------------------------------------------------------
