@@ -79,7 +79,6 @@ local pick_featured_group = function()
 
     local boss = global.boss
     local race_name = boss.race_name
-    print('pick_featured_group:'..race_name)
     if is_flying_only_boss() and ErmRaceSettingsHelper.has_featured_flying_squad(race_name) then
         local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
         global.boss_group_spawn.featured_group_id = squad_id

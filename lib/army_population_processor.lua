@@ -148,8 +148,13 @@ function ArmyPopulationProcessor.unit_population(name)
     return global.army_registered_units[name]
 end
 
-function ArmyPopulationProcessor.set_auto_deploy_unit_count(force, name, unit_count)
+function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count)
+    if unit_count < 1 then
+        player.print('You can not set deploy planner to fewer than 1 unit.')
+        return false
+    end
     global.army_populations[force.name]['auto_deploy'][name] = unit_count
+    return true
 end
 
 function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)

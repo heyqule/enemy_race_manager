@@ -165,7 +165,7 @@ local conditional_events = function()
         Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
     end
 
-    if global.boss.entity then
+    if global.boss and global.boss.entity then
         Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
     end
 end

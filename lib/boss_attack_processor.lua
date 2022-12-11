@@ -172,7 +172,7 @@ local process_attack = function(data, unique_position)
     local surface = data['surface']
     local entity_force = data['entity_force']
     if not (surface and surface.valid and entity_force and entity_force.valid) or data['position'] == nil then
-        print('not valid surface / force / position')
+        ErmDebugHelper.print('not valid surface / force / position')
         return
     end
     local start_position = data['entity_position']

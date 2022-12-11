@@ -31,7 +31,6 @@ if settings.startup['enemyracemanager-free-for-all'].value then
 
             -- Updates medpack in SE
             if string.find(entity_name,"medpack") ~= nil and entity['capsule_action'] then
-                print('upgrading: '..entity_name)
                 entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount']
                     = entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] * ErmConfig.FFA_MULTIPLIER
             end

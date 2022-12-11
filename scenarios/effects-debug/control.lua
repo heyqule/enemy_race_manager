@@ -128,10 +128,10 @@ local protoss_explosions = function(surface)
         return
     end
     local explosion_types = {
-        'dragoon-explosion-small',
-        'corsair-explosion-small',
-        'stasis-explosion-small',
-         'electric-cloud-explosion',
+        'dragoon-explosion',
+        'corsair-explosion',
+        'stasis-explosion',
+         'psystorm-explosion',
         'archon-hit-explosion',
         'protoss-small-air-death',
         'protoss-large-air-death',

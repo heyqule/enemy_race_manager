@@ -790,8 +790,9 @@ function Army_MainWindow.update_army_planner(player, element)
         local unit_count = math.abs(tonumber(element.text))
         local force = player.force
         local name = string.gsub(element.name,'army_deployer/planner/','')
-        ArmyPopulationProcessor.set_auto_deploy_unit_count(force, name, unit_count)
-        Army_MainWindow.update_army_stats()
+        if ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count) then
+            Army_MainWindow.update_army_stats()
+        end
     end
 end
 
