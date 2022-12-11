@@ -68,6 +68,9 @@ function ArmyTeleportationProcessor.init_globals()
 end
 
 function ArmyTeleportationProcessor.register_building(name)
+    if global.army_registered_command_centers == nil then
+        global.army_registered_command_centers = {}
+    end
     global.army_registered_command_centers[name] = true
 end
 

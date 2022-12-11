@@ -103,6 +103,9 @@ function ArmyDeploymentProcessor.init_globals()
 end
 
 function ArmyDeploymentProcessor.register_building(name)
+    if global.army_registered_deployers == nil then
+        global.army_registered_deployers = {}
+    end
     global.army_registered_deployers[name] = true
 end
 

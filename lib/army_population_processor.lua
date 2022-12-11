@@ -42,6 +42,10 @@ function ArmyPopulationProcessor.init_globals()
 end
 
 function ArmyPopulationProcessor.register_unit(unit_name, pop_count)
+    if global.army_registered_units == nil then
+        global.army_registered_units = {}
+    end
+
     global.army_registered_units[unit_name] = pop_count
 end
 
