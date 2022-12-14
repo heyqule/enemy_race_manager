@@ -279,18 +279,17 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
         if position then
             if unit.surface == exit_entity.surface then
                 unit.teleport(position)
+                ErmArmyFunctions.assign_wander_command(unit)
             else
                 local unit_health = unit.health
                 local spawned_entity = ErmArmyFunctions.spawn_unit(exit_entity, unit.name, position)
-                if spawned_entity then
+                if spawned_entity and spawned_entity.valid then
                     spawned_entity.health = unit_health
                     --- @todo render Recall effect on entrance position
                     unit.destroy()
-                    unit = spawned_entity
+                    ErmArmyFunctions.assign_wander_command(spawned_entity)
                 end
             end
-
-            ErmArmyFunctions.assign_wander_command(unit)
         end
     end
 end

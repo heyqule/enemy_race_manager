@@ -8,16 +8,24 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 - ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 
-### 1.15.0 feature highlight
-- Featured and Elite Featured Groups
-  - [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
-  - Elite group units can be adjusted up to level 25.
-- Increased explosive research bonus on artillery from 25% damage to 33% damage
-- Increased vehicles health, lowered resistances.
-- Re-added "nuke biter" button to kill bugged very high level units in early game.
-- Adjusted unit health algo. levels 2 - 4 health have lowered to balance health raise between levels. Level 5 - 19 have approx +/- 5% changes. Level 20 stays the same.
-- Remote API enhancement and [API doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+### 1.16 feature highlight
+- Army controls enhancements (for ERM - Terran)
+  - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
+  - Automated unit deployment.
+  - Unit Teleportation between 2 areas, including between planets/surfaces.
+  - Unit Population Control
+- Buff reinforced entities HP and marked some of them as military targets. 
+  - Added reinforced substation.
+- Construction bots are now not repairable. They have a health buff, health regen and replenish health at roboport.
+  - This avoids bots stacking when they try to repair each other, and freed up the internal construction bot queue.
+- Unit group will not slow down to wait members. Slow members run double speed to catch up. 
+- Many other minor changes.
+- Zerg and Protoss learned additional attacks. E.g Dark swamp and disrupt etc.
+- Boss spawner, proof of concept alpha release.  It can activate by launching a new satellite.
+  - Only supported for erm_zerg and erm_toss at the moment.
+  - Nothing is final at this point.
 
+This update introduces 2 additional dependencies. enemyracemanager_assets and zerm_postprocess. You can either re-select the "enemy race manager" mod in game to pull the dependencies or manually download them into your mod folder.
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.

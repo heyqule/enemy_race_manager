@@ -372,8 +372,9 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         local surface = rocket_silo.surface
         local race_name = ErmSurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
 
-        if race_name ~= 'erm_zerg' or race_name ~= 'erm_toss' then
+        if race_name ~= 'erm_zerg' and race_name ~= 'erm_toss' then
             game.print('Unable to spawn boss on unsupported race: '..race_name)
+            return nil
         end
 
         local force = game.forces[ErmForceHelper.get_force_name_from(race_name)]
@@ -518,11 +519,15 @@ function BossProcessor.check_pathing()
 end
 
 function BossProcessor.get_boss_name(race_name)
-    return ErmRaceSettingsHelper.get_race_entity_name(
-            race_name,
-            global.race_settings[race_name].boss_building,
-            ErmConfig.BOSS_LEVELS[global.boss.boss_tier]
-    )
+    if global.race_settings[race_name].boss_building then
+        return ErmRaceSettingsHelper.get_race_entity_name(
+                race_name,
+                global.race_settings[race_name].boss_building,
+                ErmConfig.BOSS_LEVELS[global.boss.boss_tier]
+        )
+    end
+
+    return nil
 end
 
 function BossProcessor.get_pathing_entity_name(race_name)

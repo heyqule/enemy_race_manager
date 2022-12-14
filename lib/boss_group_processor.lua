@@ -180,7 +180,7 @@ end
 function BossGroupProcessor.spawn_defense_group()
     ErmDebugHelper.print('BossProcessor.spawn_defense_group')
     pick_featured_group()
-    create_group(nil, ErmConfig.boss_defense_spawn_size)
+    create_group(nil, ErmConfig.boss_spawn_size)
     BossGroupProcessor.generate_units(false, false)
 end
 

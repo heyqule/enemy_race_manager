@@ -118,9 +118,6 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         }
     end
 
-
-    -- Buff Robots, immune fire, bump all other resist to 75
-    -- Construction bots are no longer repairable to preserve construction bot queue.
     if (ErmConfig.get_max_level() == 15) then
         data.raw['construction-robot']['construction-robot']['max_health'] = 175
         data.raw['logistic-robot']['logistic-robot']['max_health'] =  175
@@ -128,15 +125,16 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         data.raw['construction-robot']['construction-robot']['max_health'] = 250
         data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
     end
-
-    for name, entity in pairs(data.raw['construction-robot']) do
-        data.raw['construction-robot'][name]['max_health'] = entity.max_health * 2
-        table.insert(data.raw['construction-robot'][name]['flags'],'not-repairable')
-        data.raw['construction-robot'][name]['healing_per_tick'] = data.raw['construction-robot'][name]['max_health'] / (60 * defines.time.second)
-    end
-
-    data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
-    data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
-    data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
-    data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
 end
+
+-- Buff Robots, immune fire, bump all other resist to 75
+-- Construction bots are no longer repairable to preserve construction bot queue. They repair themselve in roboport
+for name, entity in pairs(data.raw['construction-robot']) do
+    data.raw['construction-robot'][name]['max_health'] = entity.max_health * 2
+    table.insert(data.raw['construction-robot'][name]['flags'],'not-repairable')
+end
+
+data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
+data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
+data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
+data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
