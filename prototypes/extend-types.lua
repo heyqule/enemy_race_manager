@@ -20,7 +20,7 @@ data:extend(
         {
             {
                 type = "trigger-target-type",
-                name = "flying"
+                name = "air-unit"
             }
         })
 --- Item Subgroup
@@ -46,14 +46,23 @@ data:extend(
             },
             {
                 type = "item-subgroup",
-                name = "erm_controlable_units",
+                name = "erm_controllable_units",
                 group = "combat",
-                order = "z-erm_controlable_units"
+                order = "z-erm_controllable_units"
+            },
+            {
+                type = "item-subgroup",
+                name = "erm_controllable_buildings",
+                group = "combat",
+                order = "z-erm_controllable_buildings"
             },
         })
 -- Recipe Category
 data:extend({
-    { type = "recipe-category", name = 'erm_controlable_units' },
+    { type = "recipe-category", name = 'erm_controllable_infantry' },
+    { type = "recipe-category", name = 'erm_controllable_factory' },
+    { type = "recipe-category", name = 'erm_controllable_starport' },
+    { type = "recipe-category", name = 'erm_controllable_buildings' },
 })
 
 --- Ammo Category
@@ -87,6 +96,15 @@ data:extend({
     {
         type = "sticker",
         name = "30-050-slowdown-sticker",
+        flags = {},
+        animation = Sprites.empty_pictures(),
+        duration_in_ticks = 30 * 60,
+        target_movement_modifier = 0.50,
+        vehicle_speed_modifier = 0.50,
+    },
+    {
+        type = "sticker",
+        name = "30-075-slowdown-sticker",
         flags = {},
         animation = Sprites.empty_pictures(),
         duration_in_ticks = 30 * 60,

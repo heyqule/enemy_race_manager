@@ -56,4 +56,41 @@ map_gen_settings['default']['erm-roach-death-world'] = {
     }
 }
 
+if DEBUG_MODE then
+    map_gen_settings['default']['erm-debug'] = {
+        order = "k",
+        basic_settings =
+        {
+            property_expression_names = {},
+            autoplace_controls =
+            {
+                ["enemy-base"] = { frequency = 5, size = 5}
+            },
+            starting_area = "small"
+        },
+        advanced_settings =
+        {
+            enemy_evolution =
+            {
+                time_factor = 0.00002,
+                pollution_factor = 0.0000012
+            },
+            enemy_expansion =
+            {
+                min_expansion_cooldown = 5 * 3600,
+                max_expansion_cooldown = 10 * 3600
+            },
+            pollution =
+            {
+                ageing = 0.5,
+                enemy_attack_pollution_consumption_modifier = 0.5
+            },
+            difficulty_settings =
+            {
+                research_queue_setting = 'always'
+            }
+        }
+    }
+end
+
 data.raw['map-gen-presets'] = map_gen_settings

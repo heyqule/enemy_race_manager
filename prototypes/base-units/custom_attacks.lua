@@ -4,11 +4,6 @@
 --- DateTime: 12/23/2020 8:27 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
-local Math = require('__stdlib__/stdlib/utils/math')
-local Table = require('__stdlib__/stdlib/utils/table')
-
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local CustomAttackHelper = require('__enemyracemanager__/lib/helper/custom_attack_helper')
 
 local CustomAttacks = {}

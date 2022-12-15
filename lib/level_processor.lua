@@ -84,6 +84,10 @@ end
 
 
 function LevelManager.calculateLevels()
+    if ErmRaceSettingsHelper.is_in_boss_mode() then
+        return
+    end
+
     local race_settings = global.race_settings
     local forces =  game.forces
     local settings = settings

@@ -1,4 +1,86 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.1
+Date: 2022-12-16
+
+  Changes:
+    - "construction bot not repairable" always apply, regardless of defense enhance option.
+
+  Bugfixes:
+    - Fix a crash when spawn a boss on a not supported race.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.16.0
+Date: 2022-12-12
+
+  Major Features:
+    - ----- Boss Framework (Proof of Concept release) -----
+    - Boss spawner is revealed by launching a "Psi Tracking Satellite".
+    - Currently only supported by **erm_zerg** and **erm_protoss**. Plan to support all races when it's out of POC phase.
+    - The goal of this mode is time trail boss fight and of course, to rekt your base.
+    - Added Psi Tracking Satellite. It reveals a boss spawner and returns 1200 space science pack.
+    - Once boss spawner revealed, launching additional Psi Tracking Satellite will not spawn new boss until the existing boss has either killed or despawned.
+    - The map chunk where the boss sit is revealed to players.
+    - Boss sends out elite attack group periodically. (approx twice per nauvis day)
+    - Boss performs various attacks when it takes damage.
+    - When the boss is defeated, infinity chest(s) with intermediate products will spawn for 14 nauvis days. (appox 1.5hr game time)
+    - When you don't defeat the boss in time, it'll release super attacks to your base before it despawn!
+    - Added barrel >> steele plate recipe for furnace. Boss Rewards may return liquid barrels. You can use this recipe to recycle empty barrel.
+    - It's NOT balanced at all, attacks are not final, and it may be buggy.  Good luck if you want to try it.
+    - ----- End Boss Framework -----
+    - ----- Player Army Frameworks -----
+    - The player army frameworks only apply to ERM - Terran at the moment.
+    - Press Ctrl + A (default) to bring up the Army UI
+    - ----- Population Framework -----
+    - Base Max Population is 150. Max pop can be increased with Follower Combat Drone research at 1:1 ratio.
+    - Each unit can have different population value. E.g 1 for marine, 2 for tank/wraith, 5 for battlecruiser.
+    - Set the number of units which you want to automatically deployed.
+    - ----- End Population Framework -----
+    - ----- Teleportation Framework -----
+    - Build 2 command centers (styled radars)
+    - Select "from" and "to" CC to link them
+    - Move your units to "from" CC, indicated by green outline
+    - Active CC scans player units to teleport every 15 seconds. 24 units per batch. Up to 96 units per minute.
+    - ----- End Teleportation Framework -----
+    - ----- Army Deployment Framework -----
+    - Build a deployer (styled assembling machines)
+    - Deployer is now required to build military units. Assembling machine can no longer build them.
+    - Deployer may automatically deploy military units when total population under player set threshold and max population.
+    - ----- End Deployment Framework -----
+    - ----- End Player Army Frameworks -----
+
+  Features:
+    - Added post process package for some indexes. Requires "Enemy Race Manager - Post Process" package.
+
+  Graphics:
+    - Added new graphics for explosions and attack effects. Requires "Enemy Race Manager Asset Pack" package.
+
+  Sounds:
+    - Added "max population" sound effect
+    - Added "force under attack" when player unit dies.
+    - Added "base under attack" to replace default alert.
+
+  Changes:
+    - When a custom attack squad completes an attack command, it will pick a new attack area. Instead of converting to automatic group.
+    - Level up check now runs every 10 mins, not configurable.
+    - When boss is active, leveling up is halt until boss mode end.
+    - Killing units / turrets now always count toward evolution points.
+    - Tweaked base expansion formation number.
+    - Tweaked unit group will not slow down to wait members. Slow members run double speed to catch up.
+    - When a unit group marks as always angry, they will always be distracted by anything.
+    - Most reinforced item with lower than 1000HP have buffed to around 900 - 1000 HP. Except blue belt, which stay at 680.
+    - Added reinforced substation with 1000 HP.
+    - Reinforced inserters, reinforced power poles and reinforced substations are military targets.
+    - Attack point consumption change for custom attack groups, air unit group 75 -> 50, dropship group 150 -> 100.
+    - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
+    - Changed building processor to have 11.5 tiles gaps when calling find_non_colliding_position
+
+  Optimizations
+    - Refactored custom attack handler to reduce remote calls.
+    - Refactored GUI handlers.
+    - Construction bots are now not repairable. They have 2x of health. This change prevented bots stacking when they try to repair each other. It also freed up the internal construction queue. They replenish health when they dock.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.15.5
 Date: 2022-09-02
 

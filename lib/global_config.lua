@@ -21,24 +21,37 @@ ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
 if DEBUG_MODE then
     ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
-    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
+    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
+    --- Boss Queue only last while boss is live.  Clean up jobs need to be done in other queue.
+    ErmConfig.BOSS_QUEUE_CRON = 11
+    ErmConfig.TELEPORT_QUEUE_CRON = 33
+    ErmConfig.AUTO_DEPLOY_CRON = 311
 
-    ErmConfig.ONE_MINUTE_CRON = 5 * defines.time.second + 1
-    ErmConfig.THIRTY_SECONDS_CRON = 3 * defines.time.second + 1
-    ErmConfig.TEN_SECONDS_CRON = 2 * defines.time.second + 1
-    ErmConfig.THREE_SECONDS_CRON = defines.time.second + 1
-    ErmConfig.ONE_SECOND_CRON = defines.time.second / 4 + 1
+    ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
+    ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
+    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
+
+    ErmConfig.TEN_SECONDS_CRON = 5 * defines.time.second + 1
+    ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
+    ErmConfig.QUICK_CRON = 21
 else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = settings.startup['enemyracemanager-level-up-check-interval'].value * defines.time.minute
+    ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
     ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
-    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 1
+    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
+    ErmConfig.BOSS_QUEUE_CRON = 11
+    ErmConfig.TELEPORT_QUEUE_CRON = 33
+    ErmConfig.AUTO_DEPLOY_CRON = 311
 
     -- +1 to spread the job across all ticks
+    -- execute all job on designated tick
     ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
-    ErmConfig.THIRTY_SECONDS_CRON = 30 * defines.time.second + 1
+    ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
+    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
+
+    -- execute one job on designated tick
     ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
-    ErmConfig.THREE_SECONDS_CRON = 3 * defines.time.second + 1
     ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
+    ErmConfig.QUICK_CRON = 21
 end
 
 -- EVENTS
@@ -51,20 +64,56 @@ ErmConfig.BASE_BUILT_EVENT = 'erm_base_built'
 -- Check race exists
 -- update settings
 ErmConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
+ErmConfig.PREPARE_WORLD = 'erm_prepare_world'
 
 ErmConfig.RACE_MODE_PREFIX = 'erm_'
 
 ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
+ErmConfig.BOSS_MAX_TIERS = 5
+-- 5 Tiers of boss and their properties
+ErmConfig.BOSS_DESPAWN_TIMER = {45, 45, 60, 75, 99}
+
+local boss_difficulty = {
+    [BOSS_NORMAL] = {25, 30, 36, 42, 50},
+    [BOSS_HARD] = {36, 42, 51, 62, 75},
+    [BOSS_GODLIKE] = {51, 62, 74, 86, 99}
+}
+ErmConfig.BOSS_LEVELS = boss_difficulty[settings.startup['enemyracemanager-boss-difficulty'].value]
+
+local boss_spawn_size = {
+    [BOSS_SPAWN_SQUAD] = 10,
+    [BOSS_SPAWN_PATROL] = 20,
+    [BOSS_SPAWN_PLATOON] = 40,
+}
+ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
+ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 75000000}
+
+--if DEBUG_MODE then
+--    ErmConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 7500000}
+--end
+
+ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
+ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 8, 10}
+-- 1 phase change and 5 types of attacks based on damage taken
+ErmConfig.BOSS_DEFENSE_ATTACKS = {12000000, 999999, 500000, 250000, 69420, 20000}
+ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {3, 3, 4, 4, 4}
+
+-- 320 radius toward the target area.
+ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
+ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3200
+ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
+
 ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
-ErmConfig.CONFIG_CACHE_SIZE = 256
+ErmConfig.CONFIG_CACHE_SIZE = 1000
 if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
-    ErmConfig.CONFIG_CACHE_SIZE = 8
+    ErmConfig.CONFIG_CACHE_SIZE = 256
 end
 
 ErmConfig.FFA_MULTIPLIER = 10
+ErmConfig.BUILD_GROUP_CAP = 50
 
 local refreshable_settings = {
     startup = {
@@ -78,7 +127,6 @@ local refreshable_settings = {
         'enemyracemanager-max-group-size',
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
-        'enemyracemanager-evolution-point-accelerator',
         'enemyracemanager-evolution-point-multipliers',
         'enemyracemanager-attack-meter-enable',
         'enemyracemanager-attack-meter-threshold',
@@ -305,7 +353,6 @@ function ErmConfig.build_style()
     return get_global_setting_value('enemyracemanager-build-style')
 end
 
-
 function ErmConfig.build_formation()
     return get_global_setting_value('enemyracemanager-build-formation')
 end
@@ -402,6 +449,7 @@ function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
 end
 
+
 function ErmConfig.initialize_races_data()
     global.installed_races = {MOD_NAME}
     global.active_races = {[MOD_NAME] = true}
@@ -451,9 +499,32 @@ function ErmConfig.race_is_active(race_name)
     return global.active_races[race_name] == true
 end
 
-
 function ErmConfig.get_installed_races()
     return global.installed_races
+end
+
+function ErmConfig.format_daytime(start_tick, end_tick)
+    local difference = end_tick - start_tick
+    local day = math.floor(difference / defines.time.day)
+    local hour_difference = difference - (day * defines.time.day)
+    local hour = math.floor(hour_difference / defines.time.hour)
+    local minute_difference = difference - (day * defines.time.day) - (hour * defines.time.hour)
+    local minute = math.floor(minute_difference  / defines.time.minute)
+    local second_difference = difference - (day * defines.time.day) - (hour * defines.time.hour) - (minute * defines.time.minute)
+    local second = math.floor(second_difference / defines.time.second)
+    return day, hour, minute, second
+end
+
+function ErmConfig.format_daytime_string(start_tick, end_tick)
+    local day, hour, minute, second = ErmConfig.format_daytime(start_tick, end_tick)
+    local datetime_str = ''
+    if day > 0 then
+        datetime_str = datetime_str .. string.format('%02d D ',day)
+    end
+
+    datetime_str = datetime_str .. string.format('%02d:%02d:%02d', hour, minute, second)
+
+    return datetime_str;
 end
 
 return ErmConfig

@@ -118,8 +118,6 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         }
     end
 
-
-    -- Buff Robots, immune fire, bump all other to 75
     if (ErmConfig.get_max_level() == 15) then
         data.raw['construction-robot']['construction-robot']['max_health'] = 175
         data.raw['logistic-robot']['logistic-robot']['max_health'] =  175
@@ -127,25 +125,16 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         data.raw['construction-robot']['construction-robot']['max_health'] = 250
         data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
     end
-
-    data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
-    data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
-    data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
-    data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
 end
 
-if settings.startup['enemyracemanager-free-for-all'].value then
-    for _, types in pairs(data.raw) do
-        for _, entity in pairs(types) do
-            if type(entity) == 'table' and entity.max_health and (entity.subgroup == nil or string.find(entity.subgroup, 'enemies') == nil) then
-                entity.max_health = entity.max_health * ErmConfig.FFA_MULTIPLIER * 1.25
-
-                if  entity.repair_speed_modifier then
-                    entity.repair_speed_modifier = entity.repair_speed_modifier * ErmConfig.FFA_MULTIPLIER
-                else
-                    entity.repair_speed_modifier = 1 * ErmConfig.FFA_MULTIPLIER
-                end
-            end
-        end
-    end
+-- Buff Robots, immune fire, bump all other resist to 75
+-- Construction bots are no longer repairable to preserve construction bot queue. They repair themselve in roboport
+for name, entity in pairs(data.raw['construction-robot']) do
+    data.raw['construction-robot'][name]['max_health'] = entity.max_health * 2
+    table.insert(data.raw['construction-robot'][name]['flags'],'not-repairable')
 end
+
+data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
+data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
+data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
+data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100

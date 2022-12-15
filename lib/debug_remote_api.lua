@@ -16,6 +16,7 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 
 local Debug_RemoteAPI = {}
 
@@ -213,6 +214,14 @@ function Debug_RemoteAPI.set_tier(value)
     end
 end
 
+--- Usage: remote.call('enemy_race_manager_debug', 'set_boss_tier', 1)
+function Debug_RemoteAPI.set_boss_tier(value)
+    for race_name, _ in pairs(global.race_settings) do
+        global.race_settings[race_name].boss_tier = math.max(1,math.min(value, 5))
+    end
+end
+
+
 --- Usage: remote.call('enemy_race_manager_debug', 'reset_level')
 function Debug_RemoteAPI.reset_level()
     for race_name, _ in pairs(global.race_settings) do
@@ -242,6 +251,45 @@ end
 --- Usage: remote.call('enemy_race_manager_debug', 'set_evolution_base_point'，‘erm_zerg', 100)
 function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
     global.race_settings[race_name].evolution_base_point = value
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'spawn_boss', {x=100,y=100})
+function Debug_RemoteAPI.spawn_boss(position)
+    local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
+    if rocket_silos and rocket_silos[1] then
+        ErmBossProcessor.exec(rocket_silos[1], position)
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'win_boss')
+function Debug_RemoteAPI.win_boss()
+    if global.boss then
+        global.boss.victory = true
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'loss_boss')
+function Debug_RemoteAPI.loss_boss()
+    if global.boss then
+        global.boss.despawn_at_tick = 1
+    end
+end
+
+--- Usage: remote.call('enemy_race_manager_debug', 'forces_relation')
+function Debug_RemoteAPI.forces_relation()
+    local forces = game.forces
+    for key = 1, #forces do
+        local forceA = forces[key]
+        print('------ '..forceA.name..' ------')
+        for _, forceB in pairs(forces) do
+            print('Is friend with '..forceB.name..': '..tostring(forceA.is_friend(forceB)))
+            print('Is in friend list with '..forceB.name..': '..tostring(forceA.get_friend(forceB)))
+            print('Is cease_fire with '..forceB.name..': '..tostring(forceA.get_cease_fire(forceB)))
+            print('--------------')
+        end
+        print('------ END '..forceA.name..'------')
+    end
+
 end
 
 return Debug_RemoteAPI

@@ -11,25 +11,42 @@ require('__enemyracemanager__/global')
 local ErmGui = require('__enemyracemanager__/gui/main')
 local EventGui = require('__stdlib__/stdlib/event/gui')
 
+--- Enemy Main window events ---
 Event.register(defines.events.on_player_created, function(event)
     ErmGui.main_window.update_overhead_button(event.player_index)
 end)
 
---- On Click Events
-EventGui.on_click('erm_detail_close_button',function(event)
-    ErmGui.detail_window.toggle_close(event)
-end)
-
 EventGui.on_click('erm_toggle', function(event)
-    ErmGui.main_window.toggle_main_window(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    ErmGui.main_window.toggle_main_window(owner)
 end)
 
 EventGui.on_click('erm_close_button', function(event)
-    ErmGui.main_window.toggle_close(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    ErmGui.main_window.toggle_close(owner)
 end)
 
 EventGui.on_click('.*/more_action',  function(event)
-    ErmGui.main_window.open_detail_window(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    if owner then
+        local nameToken = String.split(event.element.name, '/')
+        ErmGui.detail_window.show(owner, global.race_settings[nameToken[1]])
+    end
 end)
 
 EventGui.on_click('erm_nuke_biters',  function(event)
@@ -44,13 +61,125 @@ EventGui.on_click('erm_reset_default_bitter', function(event)
     ErmGui.main_window.reset_default(event)
 end)
 
+--- Enemy Details window events ---
+EventGui.on_click('erm_detail_close_button',function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    if owner then
+        ErmGui.detail_window.toggle_close(owner)
+        ErmGui.main_window.show(owner)
+    end
+end)
+
 EventGui.on_click(".*/"..ErmGui.detail_window.confirm_name, function(event)
-    ErmGui.detail_window.confirm(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    if owner then
+        local nameToken = String.split(element.name, '/')
+        ErmGui.detail_window.confirm(owner, nameToken, element)
+        ErmGui.main_window.show(owner)
+        ErmGui.main_window.update_all()
+    end
 end)
 
 EventGui.on_click('.*/replace_enemy', function(event)
-    ErmGui.detail_window.replace_enemy(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local nameToken = String.split(element.name, '/')
+    if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
+        local owner = game.players[element.player_index]
+        ErmGui.detail_window.replace_enemy(owner, nameToken)
+        ErmGui.main_window.update_all()
+    end
 end)
+
+EventGui.on_click('.*/boss_details', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local nameToken = String.split(element.name, '/')
+    local owner = game.players[element.player_index]
+    ErmGui.boss_detail_window.show(owner, nameToken[1], global.boss_logs[nameToken[1]])
+end)
+
+--- Victory Dialog events ---
+EventGui.on_click('.*/victory_dialog_tier_cancel', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    ErmGui.victory_dialog.hide(owner)
+end)
+
+EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local nameToken = String.split(element.name, '/')
+    local owner = game.players[element.player_index]
+    ErmGui.victory_dialog.confirm(nameToken[1])
+    ErmGui.victory_dialog.hide(owner)
+end)
+
+--- Boss Detail events ---
+EventGui.on_click('erm_boss_detail_close_button',function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    if owner then
+        ErmGui.boss_detail_window.toggle_close(owner)
+        ErmGui.main_window.show(owner)
+    end
+end)
+
+EventGui.on_selection_state_changed('.*/erm_boss_detail_list_box', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    ErmGui.boss_detail_window.update_data_box(element, owner)
+end)
+
+--- Army Control Window events ---
+EventGui.on_click('erm_army_control_toggle', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local owner = game.players[element.player_index]
+    ErmGui.army_control_window.toggle_main_window(owner)
+end)
+
+EventGui.on_click('erm_army_close_button',function(event)
+    local owner = game.players[event.element.player_index]
+    if owner then
+        ErmGui.army_control_window.toggle_close(owner)
+    end
+end)
+
 
 --- on_gui_closed events
 local gui_close_switch = {
@@ -59,13 +188,24 @@ local gui_close_switch = {
     end,
     [ErmGui.detail_window.root_name] = function(owner)
         ErmGui.detail_window.hide(owner)
+    end,
+    [ErmGui.boss_detail_window.root_name] = function(owner)
+        ErmGui.boss_detail_window.hide(owner)
+    end,
+    [ErmGui.army_control_window.root_name] = function(owner)
+        ErmGui.army_control_window.hide(owner)
     end
 }
 
 local onGuiClose = function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
     local owner = game.players[event.player_index]
-    if owner and event.element and event.element.valid then
-        local name = event.element.name
+    if owner then
+        local name = element.name
         if gui_close_switch[name] then
             gui_close_switch[name](owner)
         end
@@ -81,4 +221,90 @@ end)
 
 EventGui.on_value_changed(ErmGui.detail_window.evolution_factor_slider_name, function(event)
     ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.evolution_factor_slider_name, ErmGui.detail_window.evolution_factor_value_name)
+end)
+
+--- Army GUI
+local gui_tab_changed = function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        ErmGui.army_control_window.tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
+        ErmGui.army_control_window.update(player, element.selected_tab_index)
+    end
+end
+Event.register(defines.events.on_gui_selected_tab_changed, gui_tab_changed)
+
+Event.register(defines.events.on_gui_confirmed, function(event)
+    local element = event.element
+    local player = game.players[event.player_index]
+    ErmGui.army_control_window.update_army_planner(player, element)
+end, Event.Filters.gui, 'army_deployer/planner/.*')
+
+EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
+    local element = event.element
+    local player = game.players[element.player_index]
+    ErmGui.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
+end)
+
+EventGui.on_click('army_cc/.*_link', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[event.element.player_index]
+    if player and player.valid then
+        if element.name == ErmGui.army_control_window.start_link_button then
+            ErmGui.army_control_window.start_link(player)
+        elseif element.name == ErmGui.army_control_window.stop_link_button then
+            ErmGui.army_control_window.stop_link(player)
+        end
+    end
+end)
+
+local deployer_switch = function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local nameToken = String.split(element.name, '/')
+        if nameToken[2] == 'auto_deploy' then
+            if element.switch_state == 'left' then
+                ErmGui.army_control_window.deployer_turn_off(player, nameToken[3])
+            else
+                ErmGui.army_control_window.deployer_turn_on(player, nameToken[3])
+            end
+        elseif nameToken[2] == 'build_only' then
+            local build_only = true
+            if element.switch_state == 'left' then
+                build_only = false
+            end
+            ErmGui.army_control_window.set_build_only(player, nameToken[3], build_only)
+        end
+    end
+end
+Event.register(defines.events.on_gui_switch_state_changed, deployer_switch, Event.Filters.gui, 'army_deployer/.*')
+
+EventGui.on_click('army_deployer/all/.*', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local nameToken = String.split(element.name, '/')
+        if nameToken[3] == 'on' then
+            ErmGui.army_control_window.deployer_turn_all_on(player)
+        else
+            ErmGui.army_control_window.deployer_turn_all_off(player)
+        end
+    end
 end)

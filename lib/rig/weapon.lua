@@ -24,7 +24,7 @@ end
 
 function ERM_WeaponRig.standardize_cannon_projectile(data, name)
     data['name'] = name
-    data['piercing_damage'] = 9999
+    data['piercing_damage'] = 5000
     data['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
         damage = {amount = 6.5, type = "physical"}
@@ -38,7 +38,7 @@ end
 
 function ERM_WeaponRig.standardize_explosive_cannon_projectile(data, name)
     data['name'] = name
-    data['piercing_damage'] = 9999
+    data['piercing_damage'] = 5000
     data['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
         damage = {amount = 3.5, type = "explosion"}

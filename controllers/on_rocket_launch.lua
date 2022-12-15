@@ -11,6 +11,7 @@ require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 Event.register(defines.events.on_rocket_launched, function(event)
@@ -21,4 +22,12 @@ Event.register(defines.events.on_rocket_launched, function(event)
             ErmRaceSettingHelper.add_to_attack_meter(race_name, ErmConfig.rocket_attack_points())
         end
     end
+
+    local item = event.rocket.get_inventory(defines.inventory.rocket).find_item_stack('psi-tracking-satellite')
+    if item and item.valid and item.name == 'psi-tracking-satellite' then
+        local surface = event.rocket_silo
+        surface.print('Psi Tracking Satellite Launched...')
+        ErmBossProcessor.exec(event.rocket_silo)
+    end
+
 end)

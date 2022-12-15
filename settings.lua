@@ -210,21 +210,47 @@ data:extend {
         allowed_values = { 1, 2, 3, 4, 5, 10 }
     },
     {
-        type = "int-setting",
-        name = "enemyracemanager-level-up-check-interval",
-        description = "enemyracemanager-level-up-check-interval",
-        setting_type = "startup",
-        default_value = 60,
-        order = "enemyracemanager-501",
-        allowed_values = { 5, 15, 30, 60 }
-    },
-    {
         type = "bool-setting",
         name = "enemyracemanager-free-for-all",
         description = "enemyracemanager-free-for-all",
         setting_type = "startup",
         default_value = false,
         order = "enemyracemanager-601",
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-boss-difficulty",
+        description = "enemyracemanager-boss-difficulty",
+        setting_type = "startup",
+        default_value = BOSS_NORMAL,
+        allowed_values = { BOSS_NORMAL, BOSS_HARD, BOSS_GODLIKE },
+        order = "enemyracemanager-700",
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-boss-unit-spawn-size",
+        description = "enemyracemanager-boss-unit-spawn-size",
+        setting_type = "startup",
+        default_value = BOSS_SPAWN_SQUAD,
+        allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },
+        order = "enemyracemanager-701",
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-unit-framework-timeout",
+        description = "enemyracemanager-unit-framework-timeout",
+        setting_type = "startup",
+        default_value = 5,
+        allowed_values = { 5, 15, 30, 60, 1440, 43200 },
+        order = "enemyracemanager-801",
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-unit-framework-start-auto-deploy",
+        description = "enemyracemanager-unit-start-auto-deploy",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-802",
     },
     --- Map Settings Tab ---
     {
@@ -263,27 +289,20 @@ data:extend {
         setting_type = "runtime-global",
         default_value = BUILDING_FORMATION_1_4_5,
         allowed_values = {
+            BUILDING_FORMATION_1_1_2,
             BUILDING_FORMATION_1_2_4,
-            BUILDING_FORMATION_1_4_5,
-            BUILDING_FORMATION_1_6_8,
-            BUILDING_FORMATION_1_8_12,
-            BUILDING_FORMATION_1_4_10,
-            BUILDING_FORMATION_1_2_16,
             BUILDING_FORMATION_1_3_8,
+            BUILDING_FORMATION_1_4_5,
+            BUILDING_FORMATION_1_4_15,
+            BUILDING_FORMATION_1_6_8,
+            BUILDING_FORMATION_1_8_11,
             BUILDING_FORMATION_1_9_0,
+            BUILDING_FORMATION_1_9_10,
             BUILDING_FORMATION_RANDOM
         },
         order = "enemyracemanager-101"
     },
     --- Evolution Point and level up ---
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-evolution-point-accelerator",
-        description = "enemyracemanager-evolution-point-accelerator",
-        setting_type = "runtime-global",
-        default_value = true,
-        order = "enemyracemanager-200"
-    },
     {
         type = "double-setting",
         name = "enemyracemanager-evolution-point-multipliers",
@@ -486,7 +505,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = {1, 2, 3, 5, 8, 10, 15, 20},
+        allowed_values = {1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90},
         order = "enemyracemanager-451"
     },
 }

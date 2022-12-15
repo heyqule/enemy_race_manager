@@ -18,12 +18,12 @@ end
 
 function DebugHelper.print_translate_to_console(mode_name, name, level)
     -- Print translate to console
-    print(mode_name .. '/' .. name .. '/' .. level .. '=' .. fixName(name) .. ' L' .. level)
+    log(mode_name .. '/' .. name .. '/' .. level .. '=' .. fixName(name) .. ' L' .. level)
 end
 
 function DebugHelper.print(message)
-    if (DEBUG_MODE) then
-        print(message)
+    if DEBUG_MODE then
+        log(message)
     end
 end
 

@@ -22,6 +22,11 @@ local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_gr
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
+local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
+
 local ErmGui = require('__enemyracemanager__/gui/main')
 
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
@@ -79,11 +84,16 @@ local addRaceSettings = function()
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 20},
-        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 20},
+        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 25},
+        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 25},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 10},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 10},
+        {{'destroyer','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {1, 1, 1, 2, 2}, 20},
     }
     race_settings.featured_flying_groups = {
-        {{'distractor','destroyer'}, {2, 1}, 50},
+        {{'distractor','destroyer'}, {1, 1}, 50},
+        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 30},
+        {{'logistic', 'distractor','destroyer'}, {1, 1, 1}, 40},
     }
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
@@ -100,7 +110,9 @@ local prepare_world = function()
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
     game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
-
+    game.map_settings.unit_group.max_member_speedup_when_behind = 2
+    game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
+    game.map_settings.unit_group.max_group_slowdown_factor = 1
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
@@ -118,8 +130,7 @@ local prepare_world = function()
 
     ErmAttackGroupChunkProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
-
-    ErmCron.add_3_sec_queue('ForceHelper.refresh_all_enemy_forces', true)
+    -- See zerm_postprocess for additional post-process after race_mods loaded
 end
 
 local conditional_events = function()
@@ -140,6 +151,22 @@ local conditional_events = function()
                 end
             end
         end)
+    end
+
+    if global.army_teleporter_event_running then
+        ArmyTeleportationProcessor.start_event(true)
+    end
+
+    if global.army_deployer_event_running then
+        ArmyDeploymentProcessor.start_event(true)
+    end
+
+    if global.quick_cron_is_running then
+        Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
+    end
+
+    if global.boss and global.boss.entity then
+        Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
     end
 end
 
@@ -168,6 +195,10 @@ local init_globals = function()
     ErmCron.init_globals()
     ErmAttackGroupChunkProcessor.init_globals()
     ErmAttackGroupSurfaceProcessor.init_globals()
+    ErmBossProcessor.init_globals()
+    ErmArmyPopulationProcessor.init_globals()
+    ArmyTeleportationProcessor.init_globals()
+    ArmyDeploymentProcessor.init_globals()
 end
 
 --- Init events

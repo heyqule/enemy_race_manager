@@ -10,6 +10,10 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
 local ERM_RemoteAPI = {}
 
@@ -52,6 +56,13 @@ function ERM_RemoteAPI.get_race_level(race)
         return global.race_settings[race].level
     end
     return 1
+end
+
+function ERM_RemoteAPI.get_boss_data()
+    if global.boss and global.boss.entity then
+        return global.boss
+    end
+    return nil
 end
 
 --- Add points to attack meter of a race
@@ -202,5 +213,33 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
         )
     end
 end
+
+
+function ERM_RemoteAPI.add_boss_attack_group(group)
+    local group_data = ErmBossGroupProcessor.get_default_data()
+    group_data['group'] = group
+    group_data['group_number'] = group.group_number
+    group_data['total_units'] = table_size(group.members)
+    table.insert(global.boss_attack_groups, group_data)
+end
+
+function ERM_RemoteAPI.add_erm_attack_group(group)
+    if group.valid and table_size(group.members) > 0 then
+        global.erm_unit_groups[group.group_number] = {
+            group =  group,
+            start_position = group.position
+        }
+    end
+end
+
+--- Internal Management remote calls
+ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
+
+ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
+ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
+
+ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
+
+ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
 
 return ERM_RemoteAPI

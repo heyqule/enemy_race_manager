@@ -35,16 +35,20 @@ local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
 local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+local race_settings
 
 local CustomAttackHelper = {}
 
 function CustomAttackHelper.valid(event, race_name)
-    return event.source_entity and
-            String.find(event.source_entity.name, race_name, 1, true) ~= nil
+    return (event.source_entity and
+            String.find(event.source_entity.name, race_name, 1, true) ~= nil) or
+            String.find(event.effect_id, '-bs', 1, true) ~= nil
 end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
-    local race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    if race_settings == nil then
+        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    end
 
     if race_settings == nil or race_settings[unit_type] == nil then
         return
@@ -70,7 +74,7 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 8, true)
+        position = surface.find_non_colliding_position(final_unit_name, event.source_position, 10, 3, true)
     end
 
     if position then
@@ -79,10 +83,107 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
             entity.set_command({
                 type = defines.command.attack_area,
                 destination = {x = position.x, y = position.y},
-                radius = CHUNK_SIZE
+                radius = CHUNK_SIZE,
+                distraction = defines.distraction.by_anything
             })
         end
     end
+end
+
+function CustomAttackHelper.drop_batch_units(event, race_name, count)
+    if race_settings == nil then
+        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+    end
+
+    if race_settings == nil then
+        return
+    end
+
+    count = count or 10
+    local surface = game.surfaces[event.surface_index]
+    local level = race_settings.level
+
+    local position = event.target_position
+    position.x = position.x + 2
+
+    local i = 0
+    local teamsize = 0
+    local group = surface.create_unit_group {
+        position = position, force = race_settings.force
+    }
+
+    repeat
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
+        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
+        end
+
+        if position then
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = race_settings.force })
+            if entity.type == 'unit' then
+                teamsize = teamsize + 1
+                group.add_member(entity)
+            end
+        end
+        i = i + 1
+    until i == count
+
+    group.set_command({
+        type = defines.command.attack_area,
+        destination = {x = position.x, y = position.y},
+        radius = CHUNK_SIZE * 2,
+        distraction = defines.distraction.by_anything
+    })
+
+    remote.call('enemy_race_manager', 'add_erm_attack_group', group)
+end
+
+
+function CustomAttackHelper.drop_boss_units(event, race_name, count)
+    count = count or 10
+    local boss_data = remote.call('enemy_race_manager', 'get_boss_data')
+    local surface = game.surfaces[event.surface_index]
+    local nameToken = get_name_token(boss_data.entity_name)
+    local level = tonumber(nameToken[3])
+
+    local position = event.target_position
+    position.x = position.x + 2
+
+    local i = 0
+    local teamsize = 0
+    local group = surface.create_unit_group {
+        position = position, force = boss_data.force
+    }
+    repeat
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
+        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
+        end
+
+        if position then
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = boss_data.force })
+            if entity.type == 'unit' then
+                teamsize = teamsize + 1
+                group.add_member(entity)
+            end
+        end
+        i = i + 1
+    until i == count
+
+    local target_position = boss_data.target_position
+
+    if target_position == nil then
+        target_position = boss_data.silo_position
+    end
+
+    group.set_command({
+        type = defines.command.attack_area,
+        destination = {x = target_position.x, y = target_position.y},
+        radius = CHUNK_SIZE * 2,
+        distraction = defines.distraction.by_anything
+    })
+
+    remote.call('enemy_race_manager', 'add_boss_attack_group', group)
 end
 
 

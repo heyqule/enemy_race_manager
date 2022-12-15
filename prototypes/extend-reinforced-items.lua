@@ -76,6 +76,11 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     entity.icons = change_icon(entity)
     entity.minable.result = new_item_name
 
+    if type == 'inserter' or type == 'electric-pole' then
+        entity.is_military_target = true
+        entity.allow_run_time_change_of_is_military_target = false
+    end
+
     if entity.fast_replaceable_group == nil then
         entity.fast_replaceable_group = type
     end
@@ -160,7 +165,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "transport-belt",
             "fast-transport-belt",
             "erm-reinforced-fast-transport-belt",
-            3,
+            6,
             "erm-reinforced-express-transport-belt",
             4,
             'logistics-2'
@@ -169,7 +174,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "underground-belt",
             "fast-underground-belt",
             "erm-reinforced-fast-underground-belt",
-            3,
+            6,
             "erm-reinforced-express-underground-belt",
             4,
             'logistics-2'
@@ -202,7 +207,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "inserter",
             "fast-inserter",
             "erm-reinforced-fast-inserter",
-            4,
+            6,
             nil,
             2,
             "fast-inserter"
@@ -215,7 +220,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "pipe",
             "pipe",
             "erm-reinforced-pipe",
-            6,
+            9,
             nil,
             4
     )
@@ -223,7 +228,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "pipe-to-ground",
             "pipe-to-ground",
             "erm-reinforced-pipe-to-ground",
-            5,
+            6,
             nil,
             4
     )
@@ -235,10 +240,20 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "electric-pole",
             "medium-electric-pole",
             "erm-reinforced-medium-electric-pole",
+            10,
+            nil,
+            4,
+            "electric-energy-distribution-1"
+    )
+
+    add_entity(
+            "electric-pole",
+            "substation",
+            "erm-reinforced-substation",
             5,
             nil,
             2,
-            "electric-energy-distribution-1"
+            "electric-energy-distribution-2"
     )
 
     -- reinforced request chest
@@ -248,7 +263,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "logistic-container",
             "logistic-chest-requester",
             "erm-reinforced-logistic-chest-requester",
-            2,
+            3,
             nil,
             2,
             "logistic-system"

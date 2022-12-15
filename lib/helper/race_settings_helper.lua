@@ -399,5 +399,16 @@ function RaceSettingHelper.get_total_featured_flying_squads(target_race)
     return global.race_settings[target_race]['featured_flying_groups_total'] or 0
 end
 
+function RaceSettingHelper.can_spawn(chance_value)
+    return  math.random(1, 100) > (100 - chance_value)
+end
+
+function RaceSettingHelper.is_in_boss_mode()
+    return global.boss.entity and global.boss.entity.valid
+end
+
+function RaceSettingHelper.boss_tier(target_race)
+    return global.race_settings[target_race]['boss_tier'] or 1
+end
 
 return RaceSettingHelper

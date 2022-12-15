@@ -12,6 +12,7 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 
@@ -31,7 +32,7 @@ local onUnitFinishGathering = function(event)
     local max_settler = global.settings.enemy_expansion_max_settler
 
     if max_settler == nil then
-        max_settler = math.min(50, game.map_settings.enemy_expansion.settler_group_max_size)
+        max_settler = math.min(ErmConfig.BUILD_GROUP_CAP, game.map_settings.enemy_expansion.settler_group_max_size)
         global.settings.enemy_expansion_max_settler = max_settler
     end
 
@@ -58,6 +59,18 @@ local onUnitFinishGathering = function(event)
     end
 end
 
+local destroyMembers = function(group)
+    local members = group.members
+    local refundPoints = 0
+    for _, member in pairs(members) do
+        member.destroy()
+        refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+    end
+
+    ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
+    group.destroy()
+end
+
 local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
     for _, group_data in pairs(target_table) do
@@ -65,8 +78,10 @@ local ermGroupCacheTableCleanup = function(target_table)
                 and group_data.group and group_data.group.valid
         then
             local group = group_data.group
-            if #group.members > 0 then
+            if #group.members >= 5 then
                 tmp[group.group_number] = group_data
+            else
+                destroyMembers(group)
             end
         end
     end
@@ -76,33 +91,32 @@ local ermGroupCacheTableCleanup = function(target_table)
 end
 
 local onAiCompleted = function(event)
-    if global.erm_unit_groups[event.unit_number] and global.erm_unit_groups[event.unit_number].group and global.erm_unit_groups[event.unit_number].group.valid then
-        local group = global.erm_unit_groups[event.unit_number].group
-        local start_position = global.erm_unit_groups[event.unit_number].start_position
+    local erm_unit_groups = global.erm_unit_groups
+    if erm_unit_groups[event.unit_number] and erm_unit_groups[event.unit_number].group and erm_unit_groups[event.unit_number].group.valid then
+        local group = erm_unit_groups[event.unit_number].group
+        local start_position = erm_unit_groups[event.unit_number].start_position
         if group.valid and
-                group.is_script_driven and
-                group.command == nil and
-                (start_position.x == group.position.x and start_position.y == group.position.y) and
-                ErmForceHelper.is_enemy_force(group.force)
+            group.is_script_driven and
+            group.command == nil and
+            (start_position.x == group.position.x and start_position.y == group.position.y) and
+            ErmForceHelper.is_enemy_force(group.force)
         then
-            local members = group.members
-            local refundPoints = 0
-            for _, member in pairs(members) do
-                member.destroy()
-                refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+            destroyMembers(group)
+        end
+
+        if group.valid and (group.command == nil or group.state == defines.group_state.finished) then
+            if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
+                ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+            else
+                ErmAttackGroupProcessor.process_attack_position(group)
             end
-
-            ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
-            group.destroy()
         end
 
-        if group.valid and group.command == nil then
-            group.set_autonomous()
-        end
-
-        local group_count = table_size(global.erm_unit_groups)
-        if group_count > ErmConfig.CONFIG_CACHE_SIZE then
-            global.erm_unit_groups = ermGroupCacheTableCleanup(global.erm_unit_groups)
+        if(event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
+            local group_count = table_size(erm_unit_groups)
+            if group_count > ErmConfig.CONFIG_CACHE_SIZE then
+                global.erm_unit_groups = ermGroupCacheTableCleanup(erm_unit_groups)
+            end
         end
     end
 end

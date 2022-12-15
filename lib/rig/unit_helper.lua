@@ -20,12 +20,23 @@ local get_damage_multiplier = function()
     return settings.startup['enemyracemanager-damage-multipliers'].value
 end
 
+local get_strength_multiplier = function()
+    return settings.startup['enemyracemanager-level-multipliers'].value
+end
+
+local get_strength_percentage = function(level, multiplier, proper)
+    if proper then
+        return Math.min(100, level * multiplier) / 100
+    end
+    return level * multiplier / 100
+end
+
 -- Unit Health
-function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, level)
+function ERM_UnitHelper.get_health(base_health, incremental_health, level)
     if level == 1 then
         return base_health
     end
-    local internal_multiplier = math.log(level) / 2.3965 * (level * multiplier / 100)
+    local internal_multiplier = math.log(level) / 2.3965 * get_strength_percentage(level, get_strength_multiplier())
 
     local extra_health = 0
     if level <= 5 then
@@ -42,30 +53,30 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, multiplier, 
 end
 
 -- Unit Health
-function ERM_UnitHelper.get_building_health(base_health, incremental_health, multiplier, level)
+function ERM_UnitHelper.get_building_health(base_health, incremental_health, level)
     if level == 1 then
         return base_health
     end
-    return Math.floor(base_health + (incremental_health * (level * multiplier / 100)))
+    return Math.floor(base_health + (incremental_health * get_strength_percentage(level, get_strength_multiplier())))
 end
 
 
 -- Percentage Based Resistance
 -- base_resistance + incremental_resistance is the maximum resistance
-function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, multiplier, level)
+function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, level)
     if level == 1 then
         return base_resistance
     end
-    return Math.min(Math.floor(base_resistance + (incremental_resistance * (level * multiplier * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
+    return Math.min(Math.floor(base_resistance + (incremental_resistance * (level * get_strength_multiplier() * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
 -- Attack Damage
-function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
+function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, level)
     local damage = 0
     if level == 1 then
-        damage = base_dmg * get_damage_multiplier()
+        damage = base_dmg
     else
-        damage = (base_dmg + (incremental_dmg * (level * multiplier / 100))) * get_damage_multiplier()
+        damage = (base_dmg + (incremental_dmg * get_strength_percentage(level, get_strength_multiplier())) * get_damage_multiplier())
     end
     
     if settings.startup['enemyracemanager-free-for-all'].value then
@@ -75,30 +86,30 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, multiplier, level)
 end
 
 -- Max speed 15 tick per attack, 4 attack  / second
-function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, multiplier, level)
+function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return Math.max(base_speed - (incremental_speed * (Math.min(100, level * multiplier) / 100)), max_attack_speed)
+    return Math.max(base_speed - (incremental_speed * get_strength_percentage(level, get_strength_multiplier(), true)), max_attack_speed)
 end
 
 -- Movement Speed
-function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, multiplier, level)
+function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * (Math.min(100, level * multiplier) / 100)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
+    return base_speed + (incremental_speed *  get_strength_percentage(level, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
 end
 
 -- unit healing (full heal in 120s)
-function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, multiplier, level)
+function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, level)
     return 0
-    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (2 * defines.time.minute)
+    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (2 * defines.time.minute)
 end
 
 -- building healing (full heal in 300s)
-function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, multiplier, level)
-    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, multiplier, level) / (5 * defines.time.minute)
+function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, level)
+    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (5 * defines.time.minute)
 end
 
 function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
@@ -110,7 +121,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
         biter['attack_parameters']['damage_modifier'] = 0.25 * biter['attack_parameters']['damage_modifier']
     end
 
-    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
         biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
@@ -118,7 +129,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
 end
 
 function ERM_UnitHelper.modify_worm_damage(worm, level)
-    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
         worm['attack_parameters']['damage_modifier'] = worm['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)

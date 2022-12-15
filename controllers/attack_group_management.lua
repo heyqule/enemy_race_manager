@@ -22,15 +22,13 @@ Event.on_nth_tick(ErmConfig.ATTACK_GROUP_GATHERING_CRON, function(event)
     ErmAttackMeterProcessor.add_form_group_cron()
 end)
 
---- Native Event Handlers
-script.on_event(defines.events.on_built_entity, function(event)
-    if event.created_entity and event.created_entity.valid then
-        ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(event.created_entity)
-    end
-end, ErmAttackGroupChunkProcessor.get_built_entity_event_filter())
+local add_attackable_chunk = function(event)
+    local entity = event.created_entity or event.entity
+    ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(entity)
+end
 
-script.on_event(defines.events.on_robot_built_entity, function(event)
-    if event.created_entity and event.created_entity.valid then
-        ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(event.created_entity)
-    end
-end, ErmAttackGroupChunkProcessor.get_built_entity_event_filter())
+--- Native Event Handlers
+Event.register(defines.events.script_raised_revive, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.script_raised_built, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.on_built_entity, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.on_robot_built_entity, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)

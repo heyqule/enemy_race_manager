@@ -10,24 +10,26 @@ require('__enemyracemanager__/global')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 
 Event.on_nth_tick(ErmConfig.ONE_MINUTE_CRON, function(event)
     ErmCron.process_1_min_queue()
+    ErmBossRewardProcessor.clean_up()
     global.tick = event.tick
 end)
 
-Event.on_nth_tick(ErmConfig.THIRTY_SECONDS_CRON, function(event)
-    ErmCron.process_30_sec_queue()
+Event.on_nth_tick(ErmConfig.FIFTEEN_SECONDS_CRON, function(event)
+    ErmCron.process_15_sec_queue()
 end)
 
 Event.on_nth_tick(ErmConfig.TEN_SECONDS_CRON, function(event)
     ErmCron.process_10_sec_queue()
 end)
 
-Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
-    ErmCron.process_1_sec_queue()
+Event.on_nth_tick(ErmConfig.TWO_SECONDS_CRON, function(event)
+    ErmCron.process_2_sec_queue()
 end)
 
-Event.on_nth_tick(ErmConfig.THREE_SECONDS_CRON, function(event)
-    ErmCron.process_3_sec_queue()
+Event.on_nth_tick(ErmConfig.ONE_SECOND_CRON, function(event)
+    ErmCron.process_1_sec_queue()
 end)

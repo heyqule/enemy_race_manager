@@ -48,11 +48,16 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'accumulator',
 }
 
+AttackGroupChunkProcessor.attack_group_valid_targets = {}
+for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
+    AttackGroupChunkProcessor.attack_group_valid_targets[value] = true
+end
+
 local create_race_cursor_node = function()
     return {
         current_direction = 1, -- corresponding to DIRECTION_CURSOR
         rotatable_directions = AttackGroupChunkProcessor.AREA_ALL,
-        current_node_name = {
+        current = {
             northwest = nil,
             northeast = nil,
             southeast = nil,
@@ -64,8 +69,8 @@ end
 local get_chunk_node_list = function()
     return {
         chunks = {},
-        head_node_name = nil,
-        new_node_name = nil,
+        head = nil,
+        tail = nil,
     }
 end
 
@@ -158,8 +163,8 @@ local create_spawnable_node = function(x, y)
     return {
         x = x,
         y = y,
-        next_node_name = nil,
-        prev_node_name = nil,
+        next = nil,
+        prev = nil,
     }
 end
 
@@ -176,45 +181,45 @@ local append_chunk = function(chunk_data, x, y)
     local node = create_spawnable_node(x, y)
     local prev_name = nil
 
-    if chunk_data.head_node_name == nil then
-        chunk_data.head_node_name = node_name
+    if chunk_data.head == nil then
+        chunk_data.head = node_name
     else
-        prev_name = chunk_data.new_node_name
-        node.prev_node_name = chunk_data.new_node_name
+        prev_name = chunk_data.tail
+        node.prev = chunk_data.tail
     end
 
     if chunk_data.chunks[prev_name] then
-        chunk_data.chunks[prev_name].next_node_name = node_name
+        chunk_data.chunks[prev_name].next = node_name
     end
 
     chunk_data.chunks[node_name] = node
-    chunk_data.new_node_name = node_name
+    chunk_data.tail = node_name
 end
 
 local remove_chunk_from_list = function(chunk_set, node, node_name)
-    local next_node_name = node.next_node_name
-    local prev_node_name = node.prev_node_name
-    if node_name == chunk_set.head_node_name then
+    local next = node.next
+    local prev = node.prev
+    if node_name == chunk_set.head then
         --- Reset Head and the next node to be head
-        chunk_set.head_node_name = next_node_name
-        if chunk_set.chunks[next_node_name] then
-            chunk_set.chunks[next_node_name].prev_node_name = nil
+        chunk_set.head = next
+        if chunk_set.chunks[next] then
+            chunk_set.chunks[next].prev = nil
         end
-    elseif node.next_node_name == nil then
+    elseif node.next == nil then
         --- Change Last node
-        if chunk_set.chunks[prev_node_name] then
-            chunk_set.chunks[prev_node_name].next_node_name = nil
+        if chunk_set.chunks[prev] then
+            chunk_set.chunks[prev].next = nil
         end
     else
         --- Rewire next/prev in middle node
-        local prev_node = chunk_set.chunks[prev_node_name]
-        local next_node = chunk_set.chunks[next_node_name]
+        local prev_node = chunk_set.chunks[prev]
+        local next_node = chunk_set.chunks[next]
         if prev_node then
-            chunk_set.chunks[prev_node_name].next_node_name =
+            chunk_set.chunks[prev].next =
             get_location_name(next_node.x, next_node.y)
         end
         if next_node then
-            chunk_set.chunks[next_node_name].prev_node_name =
+            chunk_set.chunks[next].prev =
             get_location_name(prev_node.x, prev_node.y)
         end
     end
@@ -223,8 +228,8 @@ local remove_chunk_from_list = function(chunk_set, node, node_name)
     local new_node_length = Table.count_keys(chunk_set.chunks)
 
     if new_node_length == 0 then
-        chunk_set.head_node_name = nil
-        chunk_set.new_node_name = nil
+        chunk_set.head = nil
+        chunk_set.tail = nil
     end
 end
 
@@ -324,18 +329,18 @@ local find_spawn_position = function(surface, race_name)
     ]
 
     local current_chunk_list = surface_data[current_direction]
-    local current_race_cursor_name = race_cursor.current_node_name[current_direction]
-    if current_race_cursor_name == nil and current_chunk_list.head_node_name ~= nil then
+    local current_race_cursor_name = race_cursor.current[current_direction]
+    if current_race_cursor_name == nil and current_chunk_list.head ~= nil then
         --- Pick head node
-        race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
-        position_node = current_chunk_list.chunks[current_chunk_list.head_node_name]
-    elseif current_race_cursor_name ~= '' and current_chunk_list.head_node_name ~= nil then
+        race_cursor.current[current_direction] = current_chunk_list.head
+        position_node = current_chunk_list.chunks[current_chunk_list.head]
+    elseif current_race_cursor_name ~= '' and current_chunk_list.head ~= nil then
         position_node = current_chunk_list.chunks[current_race_cursor_name]
         --- Pick Next node until the end, then pick head and start again
-        if position_node and position_node.next_node_name then
-            race_cursor.current_node_name[current_direction] = position_node.next_node_name
+        if position_node and position_node.next then
+            race_cursor.current[current_direction] = position_node.next
         elseif position_node then
-            race_cursor.current_node_name[current_direction] = current_chunk_list.head_node_name
+            race_cursor.current[current_direction] = current_chunk_list.head
         end
     end
 
@@ -353,7 +358,7 @@ end
 local init_attackable_chunk = function(surface, forced_init)
     if global.attack_group_attackable_chunk[surface.name] == nil or forced_init then
         global.attack_group_attackable_chunk[surface.name] = get_chunk_node_list()
-        global.attack_group_attackable_chunk[surface.name].current_node_name = nil
+        global.attack_group_attackable_chunk[surface.name].current = nil
         global.attack_group_attackable_chunk[surface.name].current_direction = 1
     end
 end
@@ -366,7 +371,7 @@ local is_cachable_attack_position = function(surface, area)
         limit = 1
     })
 
-    if #entities ~= 0 then
+    if #entities > 0 then
         return true
     end
 
@@ -394,20 +399,20 @@ local find_attack_position = function(surface)
         return nil
     end
 
-    if surface_data.current_node_name == nil and surface_data.head_node_name then
-        surface_data.current_node_name = surface_data.head_node_name
+    if surface_data.current == nil and surface_data.head then
+        surface_data.current = surface_data.head
 
-        return surface_data.chunks[surface_data.current_node_name]
+        return surface_data.chunks[surface_data.current]
     end
 
-    if surface_data.current_node_name ~= nil then
-        surface_data.current_node_name = surface_data.chunks[surface_data.current_node_name].next_node_name
+    if surface_data.current ~= nil then
+        surface_data.current = surface_data.chunks[surface_data.current].next
 
-        if surface_data.current_node_name == nil then
-            surface_data.current_node_name = surface_data.head_node_name
+        if surface_data.current == nil then
+            surface_data.current = surface_data.head
         end
 
-        return surface_data.chunks[surface_data.current_node_name]
+        return surface_data.chunks[surface_data.current]
     end
 
     return nil
@@ -460,7 +465,7 @@ function AttackGroupChunkProcessor.init_index()
     local total_surfaces = 0
     for _, surface in pairs(game.surfaces) do
        if ErmForceHelper.can_have_enemy_on(surface) then
-           current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
+           local current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
            spawn_chunk = spawn_chunk + current_spawn_chunk
            attack_chunk = attack_chunk + current_attack_chunk
            total_surfaces = total_surfaces + 1
@@ -497,12 +502,12 @@ function AttackGroupChunkProcessor.add_spawnable_chunk(surface, position)
     end
 end
 
-function AttackGroupChunkProcessor.get_built_entity_event_filter()
-    local filter = {}
-    for _, type in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
-        table.insert(filter, {filter = "type", type = type})
+function AttackGroupChunkProcessor.is_valid_target(event, patterns)
+    local entity = event.created_entity or event.entity
+    if entity and entity.valid and AttackGroupChunkProcessor.attack_group_valid_targets[entity.type] then
+        return true
     end
-    return filter
+    return nil
 end
 
 function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
@@ -535,7 +540,7 @@ function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     return entity
 end
 
-function AttackGroupChunkProcessor.pick_attack_location(surface, group)
+function AttackGroupChunkProcessor.pick_attack_location(surface)
     local position_node = nil
     local retry = 0
     repeat
@@ -553,7 +558,7 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, group)
         if position_node and next(entities) == nil then
             local surface_data = global.attack_group_attackable_chunk[surface.name]
             remove_chunk_from_list(surface_data, position_node, get_location_name(position_node.x, position_node.y))
-            surface_data.current_node_name = nil
+            surface_data.current = nil
             position_node = nil
         end
 

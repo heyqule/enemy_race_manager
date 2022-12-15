@@ -26,6 +26,10 @@ end
 -- Remove prefix enemy_ if force isn't enemy
 function ForceHelper.extract_race_name_from(force_name)
     if string.find(force_name, 'enemy_') ~= nil then
+        if global.force_race_name_cache == nil then
+            global.force_race_name_cache = {}
+        end
+
         if global.force_race_name_cache[force_name] == nil then
             global.force_race_name_cache[force_name] = String.gsub(force_name, 'enemy_', '')
         end
@@ -79,6 +83,10 @@ function ForceHelper.split_name(name)
 end
 
 function ForceHelper.get_name_token(name)
+    if global.force_entity_name_cache == nil then
+        global.force_entity_name_cache = {}
+    end
+
     if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
             global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
@@ -90,16 +98,38 @@ function ForceHelper.get_name_token(name)
     return global.force_entity_name_cache[name]
 end
 
+function ForceHelper.get_non_player_forces()
+    return global.non_player_forces or {'neutral'}
+end
+
+function ForceHelper.get_player_forces()
+    return global.player_forces or {'player'}
+end
 
 function ForceHelper.get_all_enemy_forces()
-    return global.enemy_force_cache
+    return global.enemy_force_cache or {'enemy'}
 end
 
 function ForceHelper.refresh_all_enemy_forces()
     global.enemy_force_cache = {}
+    global.non_player_forces = {}
+    global.player_forces = {}
     for _, force in pairs(game.forces) do
         if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
-            Table.insert(global.enemy_force_cache, force.name)
+            table.insert(global.enemy_force_cache, force.name)
+            table.insert(global.non_player_forces, force.name)
+        end
+    end
+
+    for _, value in pairs(NEUTRAL_FORCES) do
+        table.insert(global.non_player_forces, value)
+    end
+    table.insert(global.non_player_forces, 'neutral')
+
+    table.insert(global.player_forces, 'player')
+    for _, force in pairs(game.forces) do
+        if force.index ~= 1 and table_size(force.players) > 0 then
+            table.insert(global.player_forces, force.name)
         end
     end
 end
