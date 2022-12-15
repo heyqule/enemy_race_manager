@@ -10,22 +10,22 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### 1.16 feature highlight
 - Army controls enhancements (for ERM - Terran)
-  - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
-  - Automated unit deployment.
-  - Unit Teleportation between 2 areas, including between planets/surfaces.
-  - Unit Population Control
+    - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
+    - Automated unit deployment.
+    - Unit Teleportation between 2 areas, including between planets/surfaces.
+    - Unit Population Control
 - Buff reinforced entities HP and marked some of them as military targets. 
-  - Added reinforced substation.
+    - Added reinforced substation.
 - Construction bots are now not repairable. They have a health buff, health regen and replenish health at roboport.
-  - This avoids bots stacking when they try to repair each other, and freed up the internal construction bot queue.
+    - This avoids bots stacking when they try to repair each other, and freed up the internal construction bot queue.
 - Unit group will not slow down to wait members. Slow members run double speed to catch up. 
 - Many other minor changes.
 - Zerg and Protoss learned additional attacks. E.g Dark swamp and disrupt etc.
 - Boss spawner, proof of concept alpha release.  It can activate by launching a new satellite.
-  - Only supported for erm_zerg and erm_toss at the moment.
-  - Nothing is final at this point.
+    - Only supported for erm_zerg and erm_toss at the moment.
+    - Nothing is final at this point.
 
-This update introduces 2 additional dependencies. enemyracemanager_assets and zerm_postprocess. You can either re-select the "enemy race manager" mod in game to pull the dependencies or manually download them into your mod folder.
+*** This update introduces 2 additional dependencies. enemyracemanager_assets and zerm_postprocess. You can either re-select the "enemy race manager" mod in game to pull the dependencies or manually download them into your mod folder. ***
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
