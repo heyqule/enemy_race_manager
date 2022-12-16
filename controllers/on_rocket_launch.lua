@@ -25,7 +25,7 @@ Event.register(defines.events.on_rocket_launched, function(event)
 
     local item = event.rocket.get_inventory(defines.inventory.rocket).find_item_stack('psi-tracking-satellite')
     if item and item.valid and item.name == 'psi-tracking-satellite' then
-        local surface = event.rocket_silo
+        local surface = event.rocket_silo.surface
         surface.print('Psi Tracking Satellite Launched...')
         ErmBossProcessor.exec(event.rocket_silo)
     end

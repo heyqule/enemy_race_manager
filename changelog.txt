@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.2
+Date: 2022-12-16
+
+  Bugfixes:
+    - Fix a crash when launching Psi tracking satellite.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.1
 Date: 2022-12-16
 
@@ -74,7 +81,7 @@ Date: 2022-12-12
     - Base game Energy-Shield and SE adaptive armour, SE medpack now multiply with FreeForAll multiplier.
     - Changed building processor to have 11.5 tiles gaps when calling find_non_colliding_position
 
-  Optimizations
+  Optimizations:
     - Refactored custom attack handler to reduce remote calls.
     - Refactored GUI handlers.
     - Construction bots are now not repairable. They have 2x of health. This change prevented bots stacking when they try to repair each other. It also freed up the internal construction queue. They replenish health when they dock.
