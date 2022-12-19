@@ -167,6 +167,7 @@ end
 local is_enemy_race = function(name)
     local helper_mods = {
         erm_terran=true,
+        zerm_postprocess=true,
     }
     if helper_mods[name] == nil then
         return true

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.3
+Date: 2022-12-19
+
+  Bugfixes:
+    - Fixed that nuking the boss can kill the player vision.
+    - Fixed a tab handler crash with LTN management window.
+    - Fixed a crash caused by post process mod was treated as an enemy race in 1 race / surface configuration.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.2
 Date: 2022-12-16
 

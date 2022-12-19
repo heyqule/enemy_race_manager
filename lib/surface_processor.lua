@@ -57,8 +57,9 @@ function SurfaceProcessor.rebuild_race()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
-                (race ~= MOD_NAME and game.active_mods[race] == nil) or
-                not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
+            (race ~= MOD_NAME and game.active_mods[race] == nil) or
+            global.active_races[race] == nil or
+            not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
