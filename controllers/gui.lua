@@ -224,16 +224,25 @@ EventGui.on_value_changed(ErmGui.detail_window.evolution_factor_slider_name, fun
 end)
 
 --- Army GUI
+local gui_tab_handlers = {
+    [ErmGui.army_control_window.root_name] = function(event)
+        local element = event.element
+        local player = game.players[event.player_index]
+        if player and player.valid then
+            ErmGui.army_control_window.tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
+            ErmGui.army_control_window.update(player, element.selected_tab_index)
+        end
+    end
+}
+
 local gui_tab_changed = function(event)
     local element = event.element
     if not (element and element.valid) then
         return
     end
 
-    local player = game.players[event.player_index]
-    if player and player.valid then
-        ErmGui.army_control_window.tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
-        ErmGui.army_control_window.update(player, element.selected_tab_index)
+    if element.parent and element.parent.valid and gui_tab_handlers[element.parent.name] then
+        gui_tab_handlers[element.parent.name](event)
     end
 end
 Event.register(defines.events.on_gui_selected_tab_changed, gui_tab_changed)

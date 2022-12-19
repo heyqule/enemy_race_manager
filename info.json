@@ -4,7 +4,7 @@
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
-  "description": "Add support to have multiple races of enemies and add various enhancements to enemy races. Please visit the mod page for additional details and search \"ERM -\" to download the new demo races. v1.16 adds additional dependencies to be downloaded. You may have to re-select this mod to pull the dependencies",
+  "description": "Add support to have multiple races of enemies and add various enhancements to enemy races.  They become tougher as you kill them.  Added aerial enemies to all races.  Buffed defensive entities and some attacks to balance with high level enemies.  Please visit the mod page or search \"ERM -\" mods to download the new demo races.",
   "factorio_version": "1.1",
   "dependencies": [
     "base >= 1.1.0",
