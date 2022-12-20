@@ -118,13 +118,8 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
         }
     end
 
-    if (ErmConfig.get_max_level() == 15) then
-        data.raw['construction-robot']['construction-robot']['max_health'] = 175
-        data.raw['logistic-robot']['logistic-robot']['max_health'] =  175
-    elseif (ErmConfig.get_max_level() == 20) then
-        data.raw['construction-robot']['construction-robot']['max_health'] = 250
-        data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
-    end
+    data.raw['construction-robot']['construction-robot']['max_health'] = 250
+    data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
 end
 
 -- Buff Robots, immune fire, bump all other resist to 75
