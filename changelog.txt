@@ -6,7 +6,7 @@ Date: 2022-12-20
     - Buffed player's construction / logistic robot to have 500 health, regardless of max level difficulty.
 
   Bugfixes:
-    - Fixed a crash when logistic robot spawn in vanilla biter feature group.
+    - Fixed a crash when logistic robot spawn in vanilla biter feature group. (no one play against biters with this mod, lol).
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.16.4
