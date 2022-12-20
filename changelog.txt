@@ -3,7 +3,7 @@ Version: 1.16.5
 Date: 2022-12-20
 
   Changes:
-    - Buffed player's construction / logistic robot to have 500 health, regardless of difficulty.
+    - Buffed player's construction / logistic robot to have 500 health, regardless of max level difficulty.
 
   Bugfixes:
     - Fixed a crash when logistic robot spawn in vanilla biter feature group.
