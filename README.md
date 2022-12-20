@@ -9,7 +9,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 
 ### 1.16 feature highlight
-- Army controls enhancements (for ERM - Terran)
+- Army controls enhancements (for ERM - Terran tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY))
     - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
     - Automated unit deployment.
     - Unit Teleportation between 2 areas, including between planets/surfaces.
@@ -243,3 +243,8 @@ https://github.com/heyqule/enemy_race_manager/projects/1
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
 
 ### SPECIAL THANKS TO ALL CROWDIN TRANSLATORS
+- UK: Yuriy
+- DE: PatrickBlack
+- ES: Jose Eduardo
+- FR: Wiwok, Daiky Raraga
+- RU: SeptiSe7en, Misha Mitchell
