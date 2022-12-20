@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.5
+Date: 2022-12-20
+
+  Bugfixes:
+    - Fixed a crash when logistic robot spawn in vanilla biter feature group.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.16.4
+Date: 2022-12-19
+
+  Bugfixes:
+    - Fixed a multiplayer issue, mod-enemyracemanager was registered for the following events when the map was saved but has not re-registered them as a result of loading: on_entity_spawned.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.3
 Date: 2022-12-19
 

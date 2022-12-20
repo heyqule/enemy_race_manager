@@ -93,7 +93,7 @@ local addRaceSettings = function()
     race_settings.featured_flying_groups = {
         {{'distractor','destroyer'}, {1, 1}, 50},
         {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 30},
-        {{'logistic', 'distractor','destroyer'}, {1, 1, 1}, 40},
+        {{'logistic-robot', 'distractor','destroyer'}, {1, 1, 1}, 40},
     }
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
@@ -133,23 +133,26 @@ local prepare_world = function()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
 
+local on_entity_spawned_threshold = defines.time.hour * 12
+--- Another attempt to fix high level unit spawns in early game.
+Event.register(defines.events.on_entity_spawned, function (event)
+    if global.tick and global.tick > on_entity_spawned_threshold then
+        return
+    end
+    local entity = event.entity
+    if entity and entity.valid then
+        local nameToken = ErmForceHelper.get_name_token(entity.name)
+        if tonumber(nameToken[3]) > ErmRaceSettingsHelper.get_level(nameToken[1]) then
+            entity.destroy()
+        end
+    end
+end)
+
+
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
             ErmCompat_NewGamePlus.exec(event)
-        end)
-    end
-
-    --- Another attempt to fix high level unit spawns in early game.
-    if not global.tick or global.tick < (defines.time.hour * 12) then
-        Event.register(defines.events.on_entity_spawned, function (event)
-            local entity = event.entity
-            if entity and entity.valid then
-                local nameToken = ErmForceHelper.get_name_token(entity.name)
-                if tonumber(nameToken[3]) > ErmRaceSettingsHelper.get_level(nameToken[1]) then
-                    entity.destroy()
-                end
-            end
         end)
     end
 
