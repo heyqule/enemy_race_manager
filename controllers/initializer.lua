@@ -134,11 +134,7 @@ local prepare_world = function()
 end
 
 local on_entity_spawned_threshold = defines.time.hour * 12
---- Another attempt to fix high level unit spawns in early game.
-Event.register(defines.events.on_entity_spawned, function (event)
-    if global.tick and global.tick > on_entity_spawned_threshold then
-        return
-    end
+local on_entity_spawned_handler = function (event)
     local entity = event.entity
     if entity and entity.valid then
         local nameToken = ErmForceHelper.get_name_token(entity.name)
@@ -146,14 +142,20 @@ Event.register(defines.events.on_entity_spawned, function (event)
             entity.destroy()
         end
     end
-end)
-
+end
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
             ErmCompat_NewGamePlus.exec(event)
         end)
+    end
+
+    --- Another attempt to fix high level unit spawns in early game.
+    Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
+
+    if global.tick and global.tick > on_entity_spawned_threshold then
+        Event.remove(defines.events.on_entity_spawned, on_entity_spawned_handler)
     end
 
     if global.army_teleporter_event_running then
