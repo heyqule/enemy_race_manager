@@ -650,6 +650,10 @@ function Army_MainWindow.toggle_main_window(owner)
     if owner then
         local button_flow = mod_gui.get_button_flow(owner)
 
+        if button_flow.erm_army_control_toggle == nil then
+            return
+        end
+
         if Army_MainWindow.is_hidden(owner) then
             button_flow.erm_army_control_toggle.tooltip = { 'gui-army.show-control' }
             Army_MainWindow.open_tab(owner)
