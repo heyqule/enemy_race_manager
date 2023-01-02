@@ -55,6 +55,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
     }
     biter['healing_per_tick'] = 0
+    biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
     ERM_UnitHelper.modify_biter_damage(biter, type, level)
     biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
 

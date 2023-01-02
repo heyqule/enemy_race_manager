@@ -184,7 +184,7 @@ function makeConstructionRobot(level)
     robot['distance_per_frame'] = 0.17
     robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed,  level)
     robot['vision_distance'] = vision_distance
-    robot['pollution_to_join_attack'] = pollution_to_join_attack
+    robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
     robot['distraction_cooldown'] = distraction_cooldown
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box

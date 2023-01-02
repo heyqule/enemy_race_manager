@@ -59,6 +59,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     }
     spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
     spawner['spawning_cooldown'] = {600, 300}
+    spawner['pollution_absorption_absolute'] = spawner['pollution_absorption_absolute'] * 10
 
     if String.find(type, 'spitter', 1, true) then
         spawner['result_units'] = (function()
