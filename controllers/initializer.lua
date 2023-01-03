@@ -74,8 +74,8 @@ local addRaceSettings = function()
     race_settings.dropship = 'logistic-robot'
     race_settings.droppable_units = {
         {{'medium-spitter', 'medium-biter', 'defender'}, {1, 2, 1}},
-        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {1, 2, 1, 1}},
-        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {1, 2, 1, 1}},
+        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {2, 3, 1, 1}},
+        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {2, 3, 1, 1}},
     }
     race_settings.construction_buildings = {
         {{'biter-spawner', 'spitter-spawner'}, {1, 1}},
@@ -86,14 +86,14 @@ local addRaceSettings = function()
         --Unit list, spawn percentage, unit_cost
         {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 25},
         {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 25},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 10},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 10},
-        {{'destroyer','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {1, 1, 1, 2, 2}, 20},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 15},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 15},
+        {{'destroyer','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {1, 1, 1, 2, 2}, 25},
     }
     race_settings.featured_flying_groups = {
         {{'distractor','destroyer'}, {1, 1}, 50},
-        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 30},
-        {{'logistic-robot', 'distractor','destroyer'}, {1, 1, 1}, 40},
+        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 50},
+        {{'logistic-robot', 'distractor','destroyer'}, {1, 1, 1}, 50},
     }
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
@@ -135,6 +135,9 @@ end
 
 local on_entity_spawned_threshold = defines.time.hour * 12
 local on_entity_spawned_handler = function (event)
+    if global.tick and global.tick > on_entity_spawned_threshold then
+        return
+    end
     local entity = event.entity
     if entity and entity.valid then
         local nameToken = ErmForceHelper.get_name_token(entity.name)
@@ -143,19 +146,14 @@ local on_entity_spawned_handler = function (event)
         end
     end
 end
+--- Another attempt to fix high level unit spawns in early game.
+Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
             ErmCompat_NewGamePlus.exec(event)
         end)
-    end
-
-    --- Another attempt to fix high level unit spawns in early game.
-    Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
-
-    if global.tick and global.tick > on_entity_spawned_threshold then
-        Event.remove(defines.events.on_entity_spawned, on_entity_spawned_handler)
     end
 
     if global.army_teleporter_event_running then
