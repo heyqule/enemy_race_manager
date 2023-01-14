@@ -15,7 +15,9 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 
 local process_attack_point_event = function(event, attack_point)
     local race_name = ErmSurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
-    ErmRaceSettingHelper.add_to_attack_meter(race_name,attack_point)
+    if race_name then
+        ErmRaceSettingHelper.add_to_attack_meter(race_name,attack_point)
+    end
 end
 
 local process_counter_attack_event = function(event, radius)

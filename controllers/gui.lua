@@ -229,7 +229,7 @@ local gui_tab_handlers = {
         local element = event.element
         local player = game.players[event.player_index]
         if player and player.valid then
-            ErmGui.army_control_window.tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
+            global.army_windows_tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
             ErmGui.army_control_window.update(player, element.selected_tab_index)
         end
     end

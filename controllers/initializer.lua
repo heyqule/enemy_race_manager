@@ -79,13 +79,13 @@ local addRaceSettings = function()
     }
     race_settings.construction_buildings = {
         {{'biter-spawner', 'spitter-spawner'}, {1, 1}},
-        {{ 'biter-spawner', 'spitter-spawner', 'big-worm-turret'}, {1, 1, 2}},
-        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'big-worm-turret' }, {1, 1, 1, 2}}
+        {{ 'biter-spawner', 'spitter-spawner', 'short-range-big-worm-turret'}, {1, 1, 1}},
+        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'short-range-big-worm-turret' }, {1, 1, 1, 2}}
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 25},
-        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 25},
+        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 30},
+        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 30},
         {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 15},
         {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 15},
         {{'defender','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {2, 1, 1, 2, 2}, 20},
@@ -113,6 +113,7 @@ local prepare_world = function()
     game.map_settings.unit_group.max_member_speedup_when_behind = 2
     game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
     game.map_settings.unit_group.max_group_slowdown_factor = 1
+    game.map_settings.min_group_gathering_time = 2 * 3600
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
@@ -202,6 +203,7 @@ local init_globals = function()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
+    ErmGui.init_globals()
 end
 
 --- Init events

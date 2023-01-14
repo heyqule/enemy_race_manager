@@ -120,6 +120,34 @@ function makeLevelWorm(level, type, health_cut_ratio)
     return worm
 end
 
+function makeShortRangeLevelWorm(level, type, health_cut_ratio)
+    health_cut_ratio = health_cut_ratio or 1
+    local worm = util.table.deepcopy(data.raw['turret'][type])
+    local original_hitpoint = worm['max_health']
+
+    worm['name'] = 'short-range-'..worm['name']
+    worm['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. worm['name'], level }
+    worm['name'] = MOD_NAME .. '/' .. worm['name'] .. '/' .. level;
+    worm['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_worm_hitpoint_multiplier / health_cut_ratio,  level)
+    worm['resistances'] = {
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+    }
+    worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
+    ERM_UnitHelper.modify_worm_damage(worm, level)
+
+    worm['attack_parameters']['range'] = ErmConfig.get_max_attack_range()
+    worm['prepare_range'] = 24
+
+    return worm
+end
+
 local max_level = ErmConfig.MAX_LEVELS
 
 for i = 1, max_level do
@@ -131,4 +159,6 @@ for i = 1, max_level do
     data:extend({ makeLevelWorm(i, 'medium-worm-turret') })
     data:extend({ makeLevelWorm(i, 'big-worm-turret', 2) })
     data:extend({ makeLevelWorm(i, 'behemoth-worm-turret') })
+
+    data:extend({ makeShortRangeLevelWorm(i, 'big-worm-turret', 2) })
 end
