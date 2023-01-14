@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.16.7
-Date: 2023-01-16
+Date: 2023-01-13
 
   Changes:
     - Added pollution to join attack multiplier to mod's start up setting.  Higher level unit requires more pollution to generate.
