@@ -372,6 +372,10 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         local surface = rocket_silo.surface
         local race_name = ErmSurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
 
+        if race_name == nil then
+            return nil
+        end
+
         if race_name ~= 'erm_zerg' and race_name ~= 'erm_toss' then
             game.print('Unable to spawn boss on unsupported race: '..race_name)
             return nil

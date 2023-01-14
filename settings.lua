@@ -91,6 +91,15 @@ data:extend {
         order = "enemyracemanager-115"
     },
     {
+        type = "double-setting",
+        name = "enemyracemanager-pollution-to-attack-multipliers",
+        description = "enemyracemanager-pollution-to-attack-multipliers",
+        setting_type = "startup",
+        default_value = 0.05,
+        allowed_values = {0, 0.01, 0.025, 0.05},
+        order = "enemyracemanager-116"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",

@@ -74,26 +74,26 @@ local addRaceSettings = function()
     race_settings.dropship = 'logistic-robot'
     race_settings.droppable_units = {
         {{'medium-spitter', 'medium-biter', 'defender'}, {1, 2, 1}},
-        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {1, 2, 1, 1}},
-        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {1, 2, 1, 1}},
+        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {2, 3, 1, 1}},
+        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {2, 3, 1, 1}},
     }
     race_settings.construction_buildings = {
         {{'biter-spawner', 'spitter-spawner'}, {1, 1}},
-        {{ 'biter-spawner', 'spitter-spawner', 'big-worm-turret'}, {1, 1, 2}},
-        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'big-worm-turret' }, {1, 1, 1, 2}}
+        {{ 'biter-spawner', 'spitter-spawner', 'short-range-big-worm-turret'}, {1, 1, 1}},
+        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'short-range-big-worm-turret' }, {1, 1, 1, 2}}
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 25},
-        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 25},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 10},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 10},
-        {{'destroyer','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {1, 1, 1, 2, 2}, 20},
+        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 30},
+        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 30},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 15},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 15},
+        {{'defender','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {2, 1, 1, 2, 2}, 20},
     }
     race_settings.featured_flying_groups = {
         {{'distractor','destroyer'}, {1, 1}, 50},
-        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 30},
-        {{'logistic-robot', 'distractor','destroyer'}, {1, 1, 1}, 40},
+        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 50},
+        {{'logistic-robot', 'defender', 'distractor','destroyer'}, {1, 2, 2, 1}, 50},
     }
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
@@ -113,6 +113,7 @@ local prepare_world = function()
     game.map_settings.unit_group.max_member_speedup_when_behind = 2
     game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
     game.map_settings.unit_group.max_group_slowdown_factor = 1
+    game.map_settings.min_group_gathering_time = 2 * 3600
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
@@ -135,6 +136,9 @@ end
 
 local on_entity_spawned_threshold = defines.time.hour * 12
 local on_entity_spawned_handler = function (event)
+    if global.tick and global.tick > on_entity_spawned_threshold then
+        return
+    end
     local entity = event.entity
     if entity and entity.valid then
         local nameToken = ErmForceHelper.get_name_token(entity.name)
@@ -143,19 +147,14 @@ local on_entity_spawned_handler = function (event)
         end
     end
 end
+--- Another attempt to fix high level unit spawns in early game.
+Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
             ErmCompat_NewGamePlus.exec(event)
         end)
-    end
-
-    --- Another attempt to fix high level unit spawns in early game.
-    Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
-
-    if global.tick and global.tick > on_entity_spawned_threshold then
-        Event.remove(defines.events.on_entity_spawned, on_entity_spawned_handler)
     end
 
     if global.army_teleporter_event_running then
@@ -204,6 +203,7 @@ local init_globals = function()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
+    ErmGui.init_globals()
 end
 
 --- Init events

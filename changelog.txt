@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.7
+Date: 2023-01-16
+
+  Changes:
+    - Added pollution to join attack multiplier to mod's start up setting.  Higher level unit requires more pollution to generate.
+    - (Default Setting: 0.05) Level 20 unit requires 2x pollution to generate.  Level 10 unit requires 1.5x pollution to generate.
+    - (Setting: 0.025) Level 20 unit requires 1.5x pollution to generate.  Level 10 unit requires 1.25x pollution to generate.
+    - (Setting: 0.01) Level 20 unit requires 1.2x pollution to generate.  Level 10 unit requires 1.1x pollution to generate.
+    - (Setting: 0) No change to unit's pollution value.
+    - Small damage reduction at lower levels for corrupted robots.
+    - Biter's featured group changes.
+    - Add short range big worm for construction bot spawn.
+
+  Bugfixes:
+    - Moved some UI variables to global table.
+    - Fixed a crash when rocket launch on a surface which does not have an assigned enemy force.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.6
 Date: 2022-12-29
 

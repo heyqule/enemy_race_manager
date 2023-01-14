@@ -136,4 +136,13 @@ function ERM_UnitHelper.modify_worm_damage(worm, level)
     end
 end
 
+function ERM_UnitHelper.get_pollution_attack(value, level)
+    local setting_value = settings.startup['enemyracemanager-pollution-to-attack-multipliers'].value
+    if level == 1 or setting_value == 0 then
+        return value
+    end
+
+    return value * (1 + level * setting_value)
+end
+
 return ERM_UnitHelper

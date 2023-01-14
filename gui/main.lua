@@ -19,4 +19,8 @@ local ERM_GUI = {
     army_control_window = ERM_ArmyControlWindow
 }
 
+function ERM_GUI.init_globals()
+    global.army_windows_tab_player_data = global.army_windows_tab_player_data or {}
+end
+
 return ERM_GUI

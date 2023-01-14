@@ -63,13 +63,13 @@ Event.register(defines.events.on_player_created, function(event)
     --end
 
     local acceptLevels = {
-        --['1'] = true,
-        --['2'] = true,
-        --['5'] = true,
-        --['10'] = true,
-        --['15'] = true,
-        --['25'] = true,
+        ['1'] = true,
+        ['2'] = true,
+        ['5'] = true,
+        ['10'] = true,
+        ['15'] = true,
         ['20'] = true,
+        ['25'] = true,
     }
     for _, item in pairs(prototypes) do
         x = -100 + i * gap

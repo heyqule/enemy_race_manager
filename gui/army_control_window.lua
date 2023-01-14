@@ -28,14 +28,11 @@ local Army_MainWindow = {
     tab_names = {
         'army-stats-pane', 'deployer-pane', 'command-center-pane','help-pane'
     },
-    --- @see Army_MainWindow.check_player_data
-    tab_player_data = { },
 }
-
 
 local get_player_tab_data = function(player)
     Army_MainWindow.check_player_data(player)
-    return Army_MainWindow.tab_player_data[player.index]
+    return global.army_windows_tab_player_data[player.index]
 end
 
 
@@ -94,7 +91,7 @@ local update_unit_screen = function(player)
 end
 
 local has_selected_cc = function(player, backer_name, type)
-    if Army_MainWindow.tab_player_data[player.index].selected_cc[type] == backer_name then
+    if global.army_windows_tab_player_data[player.index].selected_cc[type] == backer_name then
         return true
     end
     return false
@@ -628,8 +625,8 @@ function Army_MainWindow.open_tab(player, tab_name)
 end
 
 function Army_MainWindow.check_player_data(player)
-    if Army_MainWindow.tab_player_data[player.index] == nil then
-        Army_MainWindow.tab_player_data[player.index] = {
+    if global.army_windows_tab_player_data[player.index] == nil then
+        global.army_windows_tab_player_data[player.index] = {
             active_tab_id = 1,
             selected_cc = { from = '', to = '' },
             error_message = '',

@@ -19,7 +19,9 @@ Event.register(defines.events.on_rocket_launched, function(event)
         local silo = event.rocket_silo
         if silo.valid then
             local race_name = ErmSurfaceProcessor.get_enemy_on(silo.surface.name)
-            ErmRaceSettingHelper.add_to_attack_meter(race_name, ErmConfig.rocket_attack_points())
+            if race_name then
+                ErmRaceSettingHelper.add_to_attack_meter(race_name, ErmConfig.rocket_attack_points())
+            end
         end
     end
 
