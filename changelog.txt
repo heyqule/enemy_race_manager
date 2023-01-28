@@ -8,7 +8,7 @@ Date: 2023-01-29
 
   Bugfixes:
     - Fixed a crash when IR3 enabled.
-    - Fixed IR3 projectiles do not hit air. It had same issue as IR2.
+    - Fixed IR3 projectiles do not hit air. It had same issues as IR2.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.16.7

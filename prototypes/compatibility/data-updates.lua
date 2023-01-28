@@ -28,6 +28,7 @@ end
 
 if mods['IndustrialRevolution3'] then
     require "IndustrialRevolution/projectile"
+    require "IndustrialRevolution3/projectile"
     require "IndustrialRevolution3/recipe"
 end
 
