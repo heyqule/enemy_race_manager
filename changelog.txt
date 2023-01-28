@@ -4,7 +4,7 @@ Date: 2023-01-29
 
   Changes:
     - Removed enhanced electric-pole and substation from military target
-    - Barrel to steel plate recipe return 32 plates to balance IR3 price.
+    - Barrel to steel plate recipe return 32 plates to balance IR3 price [IR3-only].
 
   Bugfixes:
     - Fixed a crash when IR3 enabled.
