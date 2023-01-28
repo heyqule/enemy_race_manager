@@ -76,7 +76,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     entity.icons = change_icon(entity)
     entity.minable.result = new_item_name
 
-    if type == 'inserter' or type == 'electric-pole' then
+    if type == 'inserter' then
         entity.is_military_target = true
         entity.allow_run_time_change_of_is_military_target = false
     end

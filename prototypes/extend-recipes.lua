@@ -9,6 +9,7 @@ data:extend(
             {
                 type = "recipe",
                 name = "barrel-steel-plate",
+                order = "z[smelt-to-steel-plate]",
                 subgroup = "empty-barrel",
                 category = "smelting",
                 energy_required = 5,
