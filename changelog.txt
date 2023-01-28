@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.16.8
+Date: 2023-01-29
+
+  Changes:
+    - Removed enhanced electric-pole and substation from military target
+    - Barrel to steel plate recipe return 32 plates to balance IR3 price.
+
+  Bugfixes:
+    - Fixed a crash when IR3 enabled.
+    - Fixed IR3 projectiles do not hit air. It had same issue as IR2.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.7
 Date: 2023-01-13
 
