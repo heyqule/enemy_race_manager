@@ -24,10 +24,10 @@ local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_tel
 require('prototypes/compatibility/controls')
 
 local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
-remote.add_interface("enemy_race_manager", ErmRemoteApi)
+remote.add_interface("enemyracemanager", ErmRemoteApi)
 
 local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
-remote.add_interface("enemy_race_manager_debug", ErmDebugRemoteApi)
+remote.add_interface("enemyracemanager_debug", ErmDebugRemoteApi)
 
 -- Establish Cron Switches
 cron_switch = {
@@ -121,8 +121,10 @@ require('__enemyracemanager__/controllers/on_script_trigger_effects_player')
 --- On Rocket Launch Events
 require('__enemyracemanager__/controllers/on_rocket_launch')
 
+require('__enemyracemanager__/controllers/debug_events')
+
 -- Commands
 require('__enemyracemanager__/controllers/commands')
 
--- Compatibility Events
-require('__enemyracemanager__/controllers/compatibility_events/k2')
+-- Compatibility
+require('__enemyracemanager__/controllers/compatibility/k2')

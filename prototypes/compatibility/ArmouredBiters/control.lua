@@ -4,7 +4,7 @@ local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local modify_race_setting = function()
-    local race_settings = remote.call('enemy_race_manager', 'get_race', MOD_NAME)
+    local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
 
     if game.active_mods['ArmouredBiters'] then
         ErmDebugHelper.print('ArmouredBiters is active')

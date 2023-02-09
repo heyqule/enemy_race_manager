@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.17.0
+Date: 2023-??-??
+
+  Feature:
+    - Added support for Milestones mod.
+    - *** "Default" enemy spawner generating method changes ***
+    - Each race groups together under certain autoplace conditions.
+    - Free for all now works better under this method too.
+
+  Changes:
+    - Remote API name changed from "enemy_race_manager" to "enemyracemanager". Made it consistent the name in info.json.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.16.8
 Date: 2023-01-29
 

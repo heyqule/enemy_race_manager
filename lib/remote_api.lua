@@ -18,7 +18,7 @@ local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deploy
 local ERM_RemoteAPI = {}
 
 --- Create or update race setting
---- Usage: remote.call('enemy_race_manager', 'register_race', {settings...})
+--- Usage: remote.call('enemyracemanager', 'register_race', {settings...})
 function ERM_RemoteAPI.register_race(race_setting)
     if global and global.race_settings then
         global.race_settings[race_setting.race] = race_setting
@@ -27,7 +27,7 @@ function ERM_RemoteAPI.register_race(race_setting)
 end
 
 --- Return race setting
---- Usage: remote.call('enemy_race_manager', 'get_race', 'erm_zerg')
+--- Usage: remote.call('enemyracemanager', 'get_race', 'erm_zerg')
 function ERM_RemoteAPI.get_race(race)
     if global and global.race_settings and global.race_settings[race] then
         return global.race_settings[race]
@@ -36,7 +36,7 @@ function ERM_RemoteAPI.get_race(race)
 end
 
 --- Return race tier
---- Usage: remote.call('enemy_race_manager', 'get_race_tier', 'erm_zerg')
+--- Usage: remote.call('enemyracemanager', 'get_race_tier', 'erm_zerg')
 function ERM_RemoteAPI.get_race_tier(race)
     if global and global.race_settings and
             global.race_settings[race] and global.race_settings[race].tier then
@@ -47,7 +47,7 @@ function ERM_RemoteAPI.get_race_tier(race)
 end
 
 --- Return race level
---- Usage: remote.call('enemy_race_manager', 'get_race_level', 'erm_zerg')
+--- Usage: remote.call('enemyracemanager', 'get_race_level', 'erm_zerg')
 function ERM_RemoteAPI.get_race_level(race)
     if global.race_settings and
             global.race_settings[race] and
@@ -66,7 +66,7 @@ function ERM_RemoteAPI.get_boss_data()
 end
 
 --- Add points to attack meter of a race
---- Usage: remote.call('enemy_race_manager', 'add_points_to_attack_meter', 'erm_zerg', 5000)
+--- Usage: remote.call('enemyracemanager', 'add_points_to_attack_meter', 'erm_zerg', 5000)
 function ERM_RemoteAPI.add_points_to_attack_meter(race, value)
     local races = ErmConfig.get_enemy_races()
     race = race or races[math.random(1, ErmConfig.get_enemy_races_total())]
@@ -80,9 +80,9 @@ function ERM_RemoteAPI.add_points_to_attack_meter(race, value)
 end
 
 --- Proper way to update race_setting in enemy mods ---
---- 1. local race_settings =  remote.call('enemy_race_manager', 'get_race', MOD_NAME)
+--- 1. local race_settings =  remote.call('enemyracemanager', 'get_race', MOD_NAME)
 --- 2. make change to race_settings
---- 3. remote.call('enemy_race_manager', 'update_race_setting', race_settings)
+--- 3. remote.call('enemyracemanager', 'update_race_setting', race_settings)
 function ERM_RemoteAPI.update_race_setting(race_setting)
     if global and global.race_settings and global.race_settings[race_setting.race] then
         global.race_settings[race_setting.race] = race_setting
@@ -91,7 +91,7 @@ function ERM_RemoteAPI.update_race_setting(race_setting)
 end
 
 --- Generate a mixed attack group
---- Usage: remote.call('enemy_race_manager', 'generate_attack_group', 'erm_zerg', 100)
+--- Usage: remote.call('enemyracemanager', 'generate_attack_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name] or ErmConfig.max_group_size()
@@ -103,7 +103,7 @@ function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
 end
 
 --- Generate a flying attack group
---- Usage: remote.call('enemy_race_manager', 'generate_flying_group', 'erm_zerg', 100)
+--- Usage: remote.call('enemyracemanager', 'generate_flying_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -116,7 +116,7 @@ function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
 end
 
 --- Generate a dropship attack group
---- Usage: remote.call('enemy_race_manager', 'generate_dropship_group', 'erm_zerg', 100)
+--- Usage: remote.call('enemyracemanager', 'generate_dropship_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_dropship_group(race_name, units_number)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -140,7 +140,7 @@ local is_valid_featured_flying_squad = function(race_name, squad_id)
             squad_id < ErmRaceSettingsHelper.get_total_featured_squads(race_name)
 end
 
---- Usage: remote.call('enemy_race_manager', 'generate_featured_group', 'erm_zerg', 100, 1)
+--- Usage: remote.call('enemyracemanager', 'generate_featured_group', 'erm_zerg', 100, 1)
 function ERM_RemoteAPI.generate_featured_group(race_name, size, squad_id)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -157,7 +157,7 @@ function ERM_RemoteAPI.generate_featured_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call('enemy_race_manager', 'generate_featured_flying_group', 'erm_zerg', 50, 1)
+--- Usage: remote.call('enemyracemanager', 'generate_featured_flying_group', 'erm_zerg', 50, 1)
 function ERM_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -174,7 +174,7 @@ function ERM_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call('enemy_race_manager', 'generate_elite_featured_group', 'erm_zerg', 100, 1)
+--- Usage: remote.call('enemyracemanager', 'generate_elite_featured_group', 'erm_zerg', 100, 1)
 function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -194,7 +194,7 @@ function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call('enemy_race_manager', 'generate_elite_featured_flying_group', 'erm_zerg', 50, 1)
+--- Usage: remote.call('enemyracemanager', 'generate_elite_featured_flying_group', 'erm_zerg', 50, 1)
 function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squad_id)
     local force_name = ErmForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
@@ -230,6 +230,25 @@ function ERM_RemoteAPI.add_erm_attack_group(group)
             start_position = group.position
         }
     end
+end
+
+function ERM_RemoteAPI.milestones_preset_addons()
+    if settings.startup['enemyracemanager-enable-bitters'].value then
+        return {
+            ["enemyracemanager"] = {
+                required_mods = {"enemyracemanager"},
+                milestones = {
+                    {type="group", name="Kills"},
+                    {type="kill", name="erm_vanilla/biter-spawner/5",  quantity=1},
+                    {type="kill", name="erm_vanilla/biter-spawner/10",  quantity=1},
+                    {type="kill", name="erm_vanilla/biter-spawner/15",  quantity=1},
+                    {type="kill", name="erm_vanilla/biter-spawner/20",  quantity=1, next="x10"},
+                }
+            }
+        }
+    end
+
+    return {}
 end
 
 --- Internal Management remote calls

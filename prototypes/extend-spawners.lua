@@ -14,6 +14,7 @@ require('util')
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
+local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
 
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
@@ -92,11 +93,12 @@ function makeLevelSpawners(level, type, health_cut_ratio)
             return res
         end)()
     end
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
 
     return spawner
 end
 
-function makeLevelWorm(level, type, health_cut_ratio)
+function makeLevelWorm(level, type, health_cut_ratio, distance)
     health_cut_ratio = health_cut_ratio or 1
     local worm = util.table.deepcopy(data.raw['turret'][type])
     local original_hitpoint = worm['max_health']
@@ -116,6 +118,7 @@ function makeLevelWorm(level, type, health_cut_ratio)
     }
     worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
     ERM_UnitHelper.modify_worm_damage(worm, level)
+    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
 
     return worm
 end
@@ -155,10 +158,10 @@ for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'biter-spawner', 0.75) })
     data:extend({ makeLevelSpawners(i, 'spitter-spawner', 0.75) })
 
-    data:extend({ makeLevelWorm(i, 'small-worm-turret', 2) })
-    data:extend({ makeLevelWorm(i, 'medium-worm-turret') })
-    data:extend({ makeLevelWorm(i, 'big-worm-turret', 2) })
-    data:extend({ makeLevelWorm(i, 'behemoth-worm-turret') })
+    data:extend({ makeLevelWorm(i, 'small-worm-turret', 2, 0) })
+    data:extend({ makeLevelWorm(i, 'medium-worm-turret',1,2) })
+    data:extend({ makeLevelWorm(i, 'big-worm-turret', 2, 5) })
+    data:extend({ makeLevelWorm(i, 'behemoth-worm-turret',1, 8) })
 
     data:extend({ makeShortRangeLevelWorm(i, 'big-worm-turret', 2) })
 end

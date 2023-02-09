@@ -7,8 +7,11 @@ local noise = require("noise")
 local String = require('__stdlib__/stdlib/utils/string')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+
 require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
+local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
+local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
 
 local SPLIT_POINT = settings.startup['enemyracemanager-2way-group-split-point'].value
 -- Add 4 chunks gap between races
@@ -158,26 +161,18 @@ local process_4_ways = function()
     end
 end
 
-local disable_level_spawner = function(type, name, level)
-    local spawner = data.raw[type][MOD_NAME .. '/' .. name .. '/' .. level]
-    if spawner then
-        spawner['autoplace'] = zero_probability_expression()
+local disable_vanilla_force = function(type)
+    for name, entity in pairs(data.raw[type]) do
+        if String.find(name, MOD_NAME) then
+            entity['autoplace'] = zero_probability_expression()
+        end
     end
 end
 
 local disable_level_spawners = function()
-    local max_level = ErmConfig.MAX_LEVELS
-
-    for i = 1, max_level do
-        disable_level_spawner('unit-spawner', 'biter-spawner', i)
-        disable_level_spawner('unit-spawner', 'spitter-spawner', i)
-        disable_level_spawner('unit-spawner', 'roboport', i)
-        disable_level_spawner('turret', 'behemoth-worm-turret', i)
-        disable_level_spawner('turret', 'big-worm-turret', i)
-        disable_level_spawner('turret', 'medium-worm-turret', i)
-        disable_level_spawner('turret', 'small-worm-turret', i)
-    end
-end
+    disable_vanilla_force('unit-spawner')
+    disable_vanilla_force('turret')
+ end
 
 local disable_normal_biters = function()
     ErmDebugHelper.print('Disabling Vanilla Spawners...')
@@ -230,6 +225,67 @@ if not max_level == ErmConfig.max_level then
                 ErmDebugHelper.print('Disabling:' .. v.name)
                 data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
             end
+        end
+    end
+end
+
+
+local distances = {
+    medium = 2,
+    big = 5,
+    behemoth = 8,
+    leviathan = 16,
+    mother = 32
+}
+
+local tune_autoplace = function(v, is_turret, volume)
+    if String.find( v.name, MOD_NAME, 1, true) and v.autoplace then
+        if is_turret then
+            local distance = 0
+            for name, d in pairs(distances) do
+                if String.find( v.name, name, 1, true) then
+                    distance = d
+                end
+            end
+            v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, FORCE_NAME, volume, 999)
+        else
+            v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, FORCE_NAME, volume, 999)
+        end
+
+    end
+end
+
+
+if ErmConfig.mapgen_is_mixed() then
+    local volume = nil
+    local erm_races = AutoplaceHelper.get_erm_races()
+    local active_races = table_size(erm_races)
+    if settings.startup['enemyracemanager-enable-bitters'].value and  active_races >= 2  then
+        volume = {
+            aux_min = 0,
+            aux_max = 0.16,
+        }
+    elseif settings.startup['enemyracemanager-enable-bitters'].value and active_races == 1 then
+        if erm_races['erm_toss'] or erm_races['erm_redarmy'] then
+            volume = {
+                water_min = 0,
+                water_max = 0.51,
+            }
+        else
+            volume = {
+                water_min = 0.49,
+                water_max = 1,
+            }
+        end
+    end
+
+    if volume then
+        for _, v in pairs(data.raw["unit-spawner"]) do
+            tune_autoplace(v, false, volume)
+        end
+
+        for _, v in pairs(data.raw["turret"]) do
+            tune_autoplace(v, true, volume)
         end
     end
 end

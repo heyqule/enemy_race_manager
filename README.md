@@ -248,3 +248,9 @@ Please use the "Reset to default biters" button to replace ERM enemies with defa
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
 - RU: SeptiSe7en, Misha Mitchell
+
+You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race Manager":
+
+https://crowdin.com/project/factorio-mods-localization
+
+New translation will be released in the next version.
