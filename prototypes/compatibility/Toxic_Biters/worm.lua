@@ -21,16 +21,19 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 -- Handles acid and poison resistance
 local base_acid_resistance = 0
-local incremental_acid_resistance = 50
+local incremental_acid_resistance = 80
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 75
+local incremental_physical_resistance = 85
 -- Handles fire and explosive resistance
-local base_fire_resistance = -100
-local incremental_fire_resistance = 0
+local base_fire_resistance = 0
+local incremental_fire_resistance = 80
 -- Handles laser and electric resistance
 local base_electric_resistance = -50
 local incremental_electric_resistance = 100
+-- Handles cold resistance
+local base_cold_resistance = -50
+local incremental_cold_resistance = 100
 
 function makeLevelTurrets(level, type, distance)
     local turret = util.table.deepcopy(data.raw['turret'][type])
@@ -42,17 +45,16 @@ function makeLevelTurrets(level, type, distance)
     turret['name'] = MOD_NAME .. '/' .. turret['name'] .. '/' .. level;
     turret['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier,  level)
     turret['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
+        { type = "acid", percent = 95 },
+        { type = "poison", percent = 95 },
         { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
         { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
         { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
         { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = 95 }
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
     }
     turret['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
-
     turret['attack_parameters']['damage_modifier'] = 0.33
 
     ERM_UnitHelper.modify_biter_damage(turret, level)
@@ -64,13 +66,13 @@ end
 local max_level = ErmConfig.MAX_LEVELS
 
 for i = 1, max_level do
-    data:extend({ makeLevelTurrets(i, 'small-cold-worm-turret',0)})
-    data:extend({ makeLevelTurrets(i, 'medium-cold-worm-turret',2) })
-    data:extend({ makeLevelTurrets(i, 'big-cold-worm-turret',5) })
-    data:extend({ makeLevelTurrets(i, 'behemoth-cold-worm-turret',8) })
-    data:extend({ makeLevelTurrets(i, 'leviathan-cold-worm-turret',16) })
+    data:extend({ makeLevelTurrets(i, 'small-toxic-worm-turret',0)})
+    data:extend({ makeLevelTurrets(i, 'medium-toxic-worm-turret',2) })
+    data:extend({ makeLevelTurrets(i, 'big-toxic-worm-turret',5) })
+    data:extend({ makeLevelTurrets(i, 'behemoth-toxic-worm-turret',8) })
+    data:extend({ makeLevelTurrets(i, 'leviathan-toxic-worm-turret',16) })
 
-    if not settings.startup["cb-disable-mother"].value then
-        data:extend({ makeLevelTurrets(i, 'mother-cold-worm-turret',32) })
+    if not settings.startup["tb-disable-mother"].value then
+        data:extend({ makeLevelTurrets(i, 'mother-toxic-worm-turret',32) })
     end
 end

@@ -7,25 +7,12 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Features Reel: [https://www.youtube.com/watch?v=phLRReAjxHA](https://www.youtube.com/watch?v=phLRReAjxHA)
 - ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 - ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
+- ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.16 feature highlight
-- Army controls enhancements (for ERM - Terran tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY))
-    - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
-    - Automated unit deployment.
-    - Unit Teleportation between 2 areas, including between planets/surfaces.
-    - Unit Population Control
-- Buff reinforced entities HP and marked some of them as military targets. 
-    - Added reinforced substation.
-- Construction bots are now not repairable. They have a health buff, health regen and replenish health at roboport.
-    - This avoids bots stacking when they try to repair each other, and freed up the internal construction bot queue.
-- Unit group will not slow down to wait members. Slow members run double speed to catch up. 
-- Many other minor changes.
-- Zerg and Protoss learned additional attacks. E.g Dark swamp and disrupt etc.
-- Boss spawner, proof of concept alpha release.  It can activate by launching a new satellite.
-    - Only supported for erm_zerg and erm_toss at the moment.
-    - Nothing is final at this point.
-
-*** This update introduces 2 additional dependencies. enemyracemanager_assets and zerm_postprocess. You can either re-select the "enemy race manager" mod in game to pull the dependencies or manually download them into your mod folder. ***
+### 1.17 changes
+- Add compatibility with Milestone mod
+- "Default" enemy spawner generator group each races together based on world parameters.
+- Pollution multiplier changed from 0.05 to 0.025 by default
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -43,7 +30,10 @@ New Enemy Races:
 [>>>>Mars People<<<<](https://mods.factorio.com/mod/erm_marspeople)
 
 Player Controllable Units:
+
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
+
+ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 Tips on defense:
 - A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
@@ -101,7 +91,7 @@ This defines how enemy bases are generated when a new chunk is charted.
 Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 
 Default
-* using base game autoplace. All races are mixed together.
+* using base game autoplace. All races are mixed together.  Each race are grouped base on surface conditions.
 
 2 races split
 
@@ -119,7 +109,7 @@ Default
 One race per surface/planet
 
 * randomly assign a race for each surface / planet.
-* It's for Space Exploration.
+* Designed for Space Exploration.
 * The race of a planet can be changed using replace race button from UI.
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
@@ -200,6 +190,13 @@ This can be enabled in startup setting tab.
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
+### Advanced Army Controls (Only for ERM - Terran)
+- Army controls enhancements 
+  - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
+  - Automated unit deployment.
+  - Unit Teleportation between 2 areas, including between planets/surfaces.
+  - Unit Population Control
+
 ### Commands
 * /ERM_GetRaceSettings - show detailed race settings
 
@@ -209,9 +206,6 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode.
     * If you know how to fix it, please message me.
-* High level units rarely escape the async level processing matrix.
-    * Some players treat them as early bosses. :)
-    * If you can't defeat them, please use the nuke biter button in ERM UI to kill it.
 
 ### Mod Compatibility
 
@@ -230,8 +224,6 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 * Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Armoured Biters & Explosive Biters & Cold Biters
-
-#### New Game Plus and more
 
 Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility details.
 

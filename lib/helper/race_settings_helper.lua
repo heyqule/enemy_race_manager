@@ -305,10 +305,10 @@ function RaceSettingHelper.refresh_current_tier(race_name)
         i = i + 1
     end
 
-    race_settings.current_building_tier =  Table.array_combine(
+    race_settings.current_building_tier =  Table.unique_values(Table.array_combine(
         race_settings.current_command_centers_tier,
         race_settings.current_support_structures_tier
-    )
+    ))
     global.race_settings[race_name] = race_settings
 end
 

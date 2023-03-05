@@ -52,7 +52,10 @@ function makeLevelTurrets(level, type, distance)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
     }
     turret['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
-    ERM_UnitHelper.modify_worm_damage(turret, level)
+
+    turret['attack_parameters']['damage_modifier'] = 0.33
+
+    ERM_UnitHelper.modify_biter_damage(turret, level)
 
     turret['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(distance, FORCE_NAME)
 

@@ -11,15 +11,31 @@ local modify_race_setting = function()
 
         RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'explosive-biter-spawner')
 
+        RaceSettingHelper.add_turret_to_tier(race_settings, 1, 'medium-explosive-worm-turret')
+        RaceSettingHelper.add_turret_to_tier(race_settings, 2, 'big-explosive-worm-turret')
+        RaceSettingHelper.add_turret_to_tier(race_settings, 3, 'behemoth-explosive-worm-turret')
+
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-explosive-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 1, 'medium-explosive-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 2, 'big-explosive-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 2, 'big-explosive-spitter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-explosive-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-explosive-spitter')
+
+
+        table.insert(race_settings.featured_groups, {{'behemoth-explosive-biter','behemoth-explosive-spitter'}, {5, 2}, 50})
+        table.insert(race_settings.featured_groups, {{'behemoth-explosive-spitter','behemoth-explosive-biter'}, {5, 2}, 50})
+
+        RaceSettingHelper.process_unit_spawn_rate_cache(race_settings)
+        RaceSettingHelper.refresh_current_tier(MOD_NAME)
+
     else
         ErmDebugHelper.print('Explosive_biters is inactive')
         RaceSettingHelper.remove_structure_from_tier(race_settings, 1, 'explosive-biter-spawner')
+
+        RaceSettingHelper.remove_turret_from_tier(race_settings, 1, 'medium-explosive-worm-turret')
+        RaceSettingHelper.remove_turret_from_tier(race_settings, 2, 'large-explosive-worm-turret')
+        RaceSettingHelper.remove_turret_from_tier(race_settings, 3, 'behemoth-explosive-worm-turret')
 
         RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-explosive-biter')
         RaceSettingHelper.remove_unit_from_tier(race_settings, 1, 'small-explosive-spitter')

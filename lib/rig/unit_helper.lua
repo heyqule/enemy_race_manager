@@ -112,27 +112,15 @@ function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplie
     return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (5 * defines.time.minute)
 end
 
-function ERM_UnitHelper.modify_biter_damage(biter, biter_type, level)
+function ERM_UnitHelper.modify_biter_damage(biter, level)
     if biter['attack_parameters']['damage_modifier'] == nil then
         biter['attack_parameters']['damage_modifier'] = 1
-    end
-
-    if string.find(biter_type,'spitter') then
-        biter['attack_parameters']['damage_modifier'] = 0.25 * biter['attack_parameters']['damage_modifier']
     end
 
     biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
         biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
-    end
-end
-
-function ERM_UnitHelper.modify_worm_damage(worm, level)
-    worm['attack_parameters']['damage_modifier'] = 0.25 * ERM_UnitHelper.get_damage(worm['attack_parameters']['damage_modifier'], worm['attack_parameters']['damage_modifier'], level)
-
-    if settings.startup['enemyracemanager-free-for-all'].value then
-        worm['attack_parameters']['damage_modifier'] = worm['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
     end
 end
 

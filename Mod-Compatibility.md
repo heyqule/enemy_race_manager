@@ -38,6 +38,7 @@
 
 #### Milestone
 - Milestone for killing level 5/10/15/20 enemy command centers.
+- Milestone for killing bosses
 
 #### Super Weapon Attack Points / Counter Attack supported mods
 - space exploration: Irdium Driver(Super weapon), Plague Rocket (Purifier type weapon) 
