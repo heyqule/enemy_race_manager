@@ -90,27 +90,16 @@ This defines how enemy bases are generated when a new chunk is charted.
 
 Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 
-Default
-* using base game autoplace. All races are mixed together.  Each race are grouped base on surface conditions.
+- Default
+- 2 ways split
+- 4 ways split
 
-2 races split
+![Enemy Autoplace](https://assets-mod.factorio.com/assets/9d1adb9316bbed9d83a373f8ff713745fd4580f8.png "Enemy Autoplace")
 
-* race A spawns at positive axis, race B spawns at negative axis
-* can be divided by (X-axis) East/West or (Y-axis) North/South.
-* Example:When you choose Y-axis, Zerg (Race A) will spawn North, Protoss (Race B) will spawn South.
-
-4 races split
-
-* One race in each area of top left, top right, bottom left and bottom right.
-
-![2 races split](https://mods-data.factorio.com/assets/4a18da6eda30b7f3e8bc3c1dea98f42115b90eaa.png "2 races split")
-
-
-One race per surface/planet
-
-* randomly assign a race for each surface / planet.
-* Designed for Space Exploration.
-* The race of a planet can be changed using replace race button from UI.
+* One race per surface/planet
+    - randomly assign a race for each surface / planet.
+    - Designed for Space Exploration.
+    - The race of a planet can be changed using replace race button from UI.
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
 
@@ -223,7 +212,7 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 * May have interference with ERM custom attack groups.
 * Rampant enemies override ERM enemies!  DO NOT enable them.
 
-#### Armoured Biters & Explosive Biters & Cold Biters
+#### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 
 Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility details.
 

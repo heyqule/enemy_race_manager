@@ -10,11 +10,13 @@ Date: 2023-??-??
     - Free for all now works better under this method.
 
   Changes:
-    - Remote API name changed from "enemy_race_manager" to "enemyracemanager". Made it consistent the name in info.json.
+    - Remote API name changed from "enemy_race_manager" to "enemyracemanager". Made it consistent with the name in info.json.
     - Pollution multiplier changed from 0.05 to 0.025 by default
     - Changed default featured groups spawn chance from 25% to 33%
-    - Tweak featured groups for Armour biter, cold biter, explosive biter and toxic biter.
-    - Tune spitter damage for cold biter, explosive biter and toxic biter.
+    - Tweaked featured groups for Armour biter, cold biter, explosive biter and toxic biter.
+    - Tweaked splitter damage for cold biter, explosive biter and toxic biter.
+    - Changed tooltip for reset biter button.
+    - Add profilers to reset biter function.
 
 
 ---------------------------------------------------------------------------------------------------
