@@ -75,10 +75,11 @@ New races may have up to 3 tiers of unit-spawners and turrets.
 * 0.4 adds tier 2
 * 0.8 adds tier 3
 
-#### Artillery-Shell damage buff
-Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
+#### Defense Enhancement
 
-* Added this due to structure resistance and health increase
+* Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
+    * Added this due to structure resistance and health increase
+* New tier of defense structures with higher HP and resistances.
 
 #### GUI to view each race's stats.
 * replace races on a surface
@@ -93,13 +94,12 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 - Default
 - 2 ways split
 - 4 ways split
-
-![Enemy Autoplace](https://assets-mod.factorio.com/assets/9d1adb9316bbed9d83a373f8ff713745fd4580f8.png "Enemy Autoplace")
-
-* One race per surface/planet
+- One race per surface/planet
     - randomly assign a race for each surface / planet.
     - Designed for Space Exploration.
     - The race of a planet can be changed using replace race button from UI.
+
+![Enemy Autoplace](https://assets-mod.factorio.com/assets/9d1adb9316bbed9d83a373f8ff713745fd4580f8.png "Enemy Autoplace")
 
 ![One race per surface/planet](https://mods-data.factorio.com/assets/0da5fad0ee211f160a359e8b994e80269716a56e.png "One race per surface")
 
@@ -185,6 +185,8 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
   - Automated unit deployment.
   - Unit Teleportation between 2 areas, including between planets/surfaces.
   - Unit Population Control
+
+ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 ### Commands
 * /ERM_GetRaceSettings - show detailed race settings
