@@ -22,6 +22,12 @@ if mods['Explosive_biters'] then
     require "Explosive_Biters/worm"
 end
 
+if mods['Toxic_biters'] then
+    require "Toxic_Biters/biter"
+    require "Toxic_Biters/spawner"
+    require "Toxic_Biters/worm"
+end
+
 if mods['IndustrialRevolution'] then
     require "IndustrialRevolution/projectile"
 end

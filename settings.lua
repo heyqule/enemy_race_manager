@@ -95,7 +95,7 @@ data:extend {
         name = "enemyracemanager-pollution-to-attack-multipliers",
         description = "enemyracemanager-pollution-to-attack-multipliers",
         setting_type = "startup",
-        default_value = 0.05,
+        default_value = 0.025,
         allowed_values = {0, 0.01, 0.025, 0.05},
         order = "enemyracemanager-116"
     },
@@ -443,7 +443,7 @@ data:extend {
         name = "enemyracemanager-featured-squad-chance",
         description = "enemyracemanager-featured-squad-chance",
         setting_type = "runtime-global",
-        default_value = 25,
+        default_value = 33,
         allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
         order = "enemyracemanager-405"
     },

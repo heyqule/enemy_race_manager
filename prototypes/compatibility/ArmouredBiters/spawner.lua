@@ -11,7 +11,7 @@ local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 require('util')
-
+local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
@@ -44,6 +44,7 @@ local l_r = setting_utils.getPositivePercentageOf("ab-leviathan-armoured-biter-s
 
 function makeLevelSpawners(level, type)
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
+    data.raw['unit-spawner'][type]['autoplace'] = nil
 
     local original_hitpoint = spawner['max_health']
 
@@ -74,6 +75,7 @@ function makeLevelSpawners(level, type)
     end
 
     spawner['result_units'] = result_units
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
 
     return spawner
 end

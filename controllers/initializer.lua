@@ -32,7 +32,7 @@ local ErmGui = require('__enemyracemanager__/gui/main')
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
 
 local addRaceSettings = function()
-    local race_settings = remote.call('enemy_race_manager', 'get_race', MOD_NAME)
+    local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
     if race_settings == nil then
         race_settings = {}
     end
@@ -98,7 +98,7 @@ local addRaceSettings = function()
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
-    remote.call('enemy_race_manager', 'register_race', race_settings)
+    remote.call('enemyracemanager', 'register_race', race_settings)
 
     Event.dispatch({
         name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })

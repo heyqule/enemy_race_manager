@@ -2,8 +2,6 @@
 require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
 
-require('prototypes/map-generation.lua')
-
 require('prototypes/extend-defense.lua')
 
 require("prototypes/extend-reinforced-items")
@@ -27,3 +25,5 @@ require "prototypes/extend-recipes"
 require "prototypes/extend-freeforall"
 
 require('prototypes/compatibility/data-updates.lua')
+
+require('prototypes/map-generation.lua')

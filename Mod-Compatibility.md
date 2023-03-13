@@ -13,7 +13,7 @@
 #### Industrial Revolution
 - Custom bullets can hit air
 
-#### Armoured Biters & Explosive Biters & Cold Biters
+#### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 - All biters, worms and spawners support leveling.
 - They join default enemy force, erm_vanilla.
 - The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
@@ -36,7 +36,12 @@
 - This affects proxy builder units which they build too close to your defenses, and you can't replace destroyed buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
-####Super Weapon Attack Points / Counter Attack supported mods
+#### Milestone
+- Milestone for killing level 5/10/15/20 enemy command centers.
+- Milestone for killing bosses
+
+#### Super Weapon Attack Points / Counter Attack supported mods
+Super weapon - 
 - space exploration: Irdium Driver(Super weapon), Plague Rocket (Purifier type weapon) 
 - AtomicArtillery 
 - M.I.R.V (Purifier type weapon)

@@ -142,7 +142,7 @@ Event.on_nth_tick(900, function(event)
     --spawn_units(surface)
 
     if not spawned then
-        remote.call('enemy_race_manager_debug', 'spawn_boss', {x=100,y=0})
+        remote.call('enemyracemanager_debug', 'spawn_boss', {x=100,y=0})
         spawned = true
     end
 end)

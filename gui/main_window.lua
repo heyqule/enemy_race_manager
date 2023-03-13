@@ -166,10 +166,14 @@ function ERM_MainWindow.toggle_close(owner)
 end
 
 function ERM_MainWindow.reset_default(event)
+    local profiler = game.create_profiler()
+    profiler.start()
     for _, surface in pairs(game.surfaces) do
         ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
         ERM_MainWindow.update_all()
     end
+    profiler.stop()
+    game.print({ '', 'Reset enemies to default: ', profiler })
 end
 
 function ERM_MainWindow.kill_idle_units(event)

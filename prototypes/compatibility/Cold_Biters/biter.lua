@@ -24,12 +24,12 @@ local base_acid_resistance = 0
 local incremental_acid_resistance = 80
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 85
+local incremental_physical_resistance = 95
 -- Handles fire and explosive resistance
-local base_fire_resistance = -100
-local incremental_fire_resistance = 75
+local base_fire_resistance = -50
+local incremental_fire_resistance = 100
 -- Handles laser and electric resistance
-local base_electric_resistance = -50
+local base_electric_resistance = -100
 local incremental_electric_resistance = 100
 -- Handles cold resistance
 local base_cold_resistance = 100
@@ -54,11 +54,15 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "cold", percent = 95 }
     }
     biter['healing_per_tick'] = 0
-    ERM_UnitHelper.modify_biter_damage(biter, type, level)
+
+    if string.find(type,'spitter') then
+        biter['attack_parameters']['damage_modifier'] = 0.35 * biter['attack_parameters']['damage_modifier']
+    end
+
+    ERM_UnitHelper.modify_biter_damage(biter, level)
     biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
 
     biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
-    ERM_UnitHelper.modify_biter_damage(biter, type, level)
 
     return biter
 end

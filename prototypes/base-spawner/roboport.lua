@@ -80,6 +80,7 @@ function make_roboport(level)
             type = "unit-spawner",
             name = MOD_NAME .. '/' .. name .. '/' .. level,
             localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
+            order="b-d-c",
             icon = "__base__/graphics/icons/roboport.png",
             icons = {
                 {
@@ -234,7 +235,7 @@ function make_roboport(level)
             -- distance_factor used to be 1, but Twinsen says:
             -- "The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty)."
             -- (2018-12-07)
-            autoplace = enemy_autoplace.enemy_spawner_autoplace(-0.25),
+            autoplace = enemy_autoplace.enemy_spawner_autoplace(0),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
         }

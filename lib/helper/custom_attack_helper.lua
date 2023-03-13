@@ -47,7 +47,7 @@ end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
     if race_settings == nil then
-        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+        race_settings = remote.call('enemyracemanager', 'get_race', race_name)
     end
 
     if race_settings == nil or race_settings[unit_type] == nil then
@@ -92,7 +92,7 @@ end
 
 function CustomAttackHelper.drop_batch_units(event, race_name, count)
     if race_settings == nil then
-        race_settings = remote.call('enemy_race_manager', 'get_race', race_name)
+        race_settings = remote.call('enemyracemanager', 'get_race', race_name)
     end
 
     if race_settings == nil then
@@ -135,13 +135,13 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         distraction = defines.distraction.by_anything
     })
 
-    remote.call('enemy_race_manager', 'add_erm_attack_group', group)
+    remote.call('enemyracemanager', 'add_erm_attack_group', group)
 end
 
 
 function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
-    local boss_data = remote.call('enemy_race_manager', 'get_boss_data')
+    local boss_data = remote.call('enemyracemanager', 'get_boss_data')
     local surface = game.surfaces[event.surface_index]
     local nameToken = get_name_token(boss_data.entity_name)
     local level = tonumber(nameToken[3])
@@ -183,7 +183,7 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         distraction = defines.distraction.by_anything
     })
 
-    remote.call('enemy_race_manager', 'add_boss_attack_group', group)
+    remote.call('enemyracemanager', 'add_boss_attack_group', group)
 end
 
 
