@@ -1,8 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.17.1
+Date: 2023-05-01
+
+  Bugfixes:
+    - Fixed reset button profiler crash.
+    - Fixed a crash when replacing enemy with SearchlightAssault mod installed.
+    - Added cold/explosive/toxic biter spawner to vanilla structure list.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.17.0
 Date: 2023-03-12
 
-  Feature:
+  Features:
     - Added support for Milestones mod.
     - Added Toxic Biters compatibility
     - *** "Default" enemy spawner generating method changes ***

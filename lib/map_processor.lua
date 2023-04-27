@@ -29,6 +29,11 @@ local vanilla_structures = {
     ['medium-worm-turret'] = true,
     ['big-worm-turret'] = true,
     ['behemoth-worm-turret'] = true,
+
+    ['armoured-biter-spawner'] = true,
+    ['explosive-biter-spawner'] = true,
+    ['cb-cold-spawner'] = true,
+    ['toxic-biter-spawner'] = true,
 }
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)

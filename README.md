@@ -220,7 +220,7 @@ Please visit https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compati
 
 
 ### Roadmap
-https://github.com/heyqule/enemy_race_manager/projects/1
+https://github.com/users/heyqule/projects/1
 
 ### Uninstall
 Please use the "Reset to default biters" button to replace ERM enemies with default biters before you remove the mod.  Otherwise, your map won't have any enemies on generated chucks as the ERM enemies are removed automatically.
