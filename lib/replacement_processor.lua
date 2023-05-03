@@ -58,7 +58,7 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
     local turret_size = Table.size(turrets)
     if turret_size > 0 then
         Table.each(turrets, function(entity)
-            if ErmForceHelper.is_enemy_force(entity.force.name) then
+            if ErmForceHelper.is_enemy_force(entity.force) then
                 replace_turrets(surface, entity, race_settings)
             end
         end)
@@ -68,7 +68,7 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
     local spawners_size = Table.size(spawners)
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
-            if ErmForceHelper.is_enemy_force(entity.force.name) then
+            if ErmForceHelper.is_enemy_force(entity.force) then
                 replace_structures(surface, entity, race_settings)
             end
         end)
@@ -84,7 +84,7 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
         end
 
         for _, force in pairs(game.forces) do
-            if ErmForceHelper.is_enemy_force(force.name) then
+            if ErmForceHelper.is_enemy_force(force) then
                 force.kill_all_units()
             end
         end
@@ -96,7 +96,7 @@ end
 function ReplacementProcessor.replace_entity(surface, entity, race_settings, target_force_name)
     local returned_entity = entity
 
-    if ErmForceHelper.is_enemy_force(entity.force.name) == false then
+    if ErmForceHelper.is_enemy_force(entity.force) == false then
         return
     end
 
@@ -125,7 +125,7 @@ function ReplacementProcessor.resetDefault(surface)
     local spawner_names = { 'spitter-spawner', 'biter-spawner' }
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
-            if ErmForceHelper.is_enemy_force(entity.force.name) then
+            if ErmForceHelper.is_enemy_force(entity.force) then
                 local position = entity.position
                 local name = spawner_names[math.random(1, 2)]
                 entity.destroy()
@@ -139,7 +139,7 @@ function ReplacementProcessor.resetDefault(surface)
     local turret_names = { 'big-worm-turret', 'behemoth-worm-turret' }
     if turret_size > 0 then
         Table.each(turrets, function(entity)
-            if ErmForceHelper.is_enemy_force(entity.force.name) then
+            if ErmForceHelper.is_enemy_force(entity.force) then
                 local position = entity.position
                 local name = turret_names[math.random(1, 2)]
                 entity.destroy()
@@ -149,7 +149,7 @@ function ReplacementProcessor.resetDefault(surface)
     end
 
     for _, force in pairs(game.forces) do
-        if ErmForceHelper.is_enemy_force(force.name) then
+        if ErmForceHelper.is_enemy_force(force) then
            force.kill_all_units()
         end
     end
