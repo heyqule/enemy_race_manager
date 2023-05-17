@@ -21,7 +21,7 @@ local ERM_Sound = require('__base__/prototypes/entity/sounds')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 
-local enemy_autoplace = require ("__base__/prototypes/entity/enemy-autoplace-utils")
+local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
 local name = 'roboport'
 
 -- Hitpoints
@@ -235,7 +235,7 @@ function make_roboport(level)
             -- distance_factor used to be 1, but Twinsen says:
             -- "The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty)."
             -- (2018-12-07)
-            autoplace = enemy_autoplace.enemy_spawner_autoplace(0),
+            autoplace = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
         }

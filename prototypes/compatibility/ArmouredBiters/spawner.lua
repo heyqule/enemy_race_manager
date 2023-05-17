@@ -44,7 +44,6 @@ local l_r = setting_utils.getPositivePercentageOf("ab-leviathan-armoured-biter-s
 
 function makeLevelSpawners(level, type)
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
-    data.raw['unit-spawner'][type]['autoplace'] = nil
 
     local original_hitpoint = spawner['max_health']
 
@@ -68,10 +67,10 @@ function makeLevelSpawners(level, type)
         { MOD_NAME .. '/small-armoured-biter/' .. level, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } },
         { MOD_NAME .. '/medium-armoured-biter/' .. level, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.8, 0 } } },
         { MOD_NAME .. '/big-armoured-biter/' .. level, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } },
-        { MOD_NAME .. '/behemoth-armoured-biter/' .. level, { { 0.9, 0.0 }, { 1.0, 0.35 * bb_r } } }
+        { MOD_NAME .. '/behemoth-armoured-biter/' .. level, { { 0.85, 0.0 }, { 1.0, 0.35 * bb_r } } }
     }
     if l_r > 0 then
-        table.insert(result_units, { MOD_NAME .. '/leviathan-armoured-biter/' .. level, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } })
+        table.insert(result_units, { MOD_NAME .. '/leviathan-armoured-biter/' .. level, { { 0.825, 0.0 }, { 1.0, 0.05 * l_r } } })
     end
 
     spawner['result_units'] = result_units
@@ -92,10 +91,10 @@ for i = 1, max_level do
             unitSet[#unitSet + 1] = { MOD_NAME .. "/small-armoured-biter/" .. i, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } }
             unitSet[#unitSet + 1] = { MOD_NAME .. "/medium-armoured-biter/" .. i, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.7, 0.0 } } }
             unitSet[#unitSet + 1] = { MOD_NAME .. "/big-armoured-biter/" .. i, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "/behemoth-armoured-biter/" .. i, { { 0.9, 0.0 }, { 1.0, 0.35 * bb_r } } }
+            unitSet[#unitSet + 1] = { MOD_NAME .. "/behemoth-armoured-biter/" .. i, { { 0.75, 0.0 }, { 1.0, 0.35 * bb_r } } }
 
             if l_r > 0 then
-                unitSet[#unitSet + 1] = { MOD_NAME .. '/leviathan-armoured-biter/' .. i, { { 0.965, 0.0 }, { 1.0, 0.05 * l_r } } }
+                unitSet[#unitSet + 1] = { MOD_NAME .. '/leviathan-armoured-biter/' .. i, { { 0.8, 0.0 }, { 1.0, 0.05 * l_r } } }
             end
         end
     end

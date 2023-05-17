@@ -34,7 +34,6 @@ local incremental_cold_resistance = 0
 
 function makeLevelTurrets(level, type, distance)
     local turret = util.table.deepcopy(data.raw['turret'][type])
-    data.raw['turret'][type]['autoplace'] = nil
 
     local original_hitpoint = turret['max_health']
 
@@ -57,9 +56,13 @@ function makeLevelTurrets(level, type, distance)
 
     ERM_UnitHelper.modify_biter_damage(turret, level)
 
-    turret['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(distance, FORCE_NAME)
+    turret['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
 
     return turret
+end
+
+if settings.startup['eb-disable-worms'].value then
+    return
 end
 
 local max_level = ErmConfig.MAX_LEVELS
@@ -67,11 +70,11 @@ local max_level = ErmConfig.MAX_LEVELS
 for i = 1, max_level do
     data:extend({ makeLevelTurrets(i, 'small-explosive-worm-turret',0) })
     data:extend({ makeLevelTurrets(i, 'medium-explosive-worm-turret',2) })
-    data:extend({ makeLevelTurrets(i, 'big-explosive-worm-turret',4) })
+    data:extend({ makeLevelTurrets(i, 'big-explosive-worm-turret',5) })
     data:extend({ makeLevelTurrets(i, 'behemoth-explosive-worm-turret',8) })
-    data:extend({ makeLevelTurrets(i, 'leviathan-explosive-worm-turret',16) })
+    data:extend({ makeLevelTurrets(i, 'leviathan-explosive-worm-turret',14) })
 
     if not settings.startup["eb-disable-mother"].value then
-        data:extend({ makeLevelTurrets(i, 'mother-explosive-worm-turret',32) })
+        data:extend({ makeLevelTurrets(i, 'mother-explosive-worm-turret',14) })
     end
 end

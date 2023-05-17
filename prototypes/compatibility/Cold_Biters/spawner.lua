@@ -35,7 +35,6 @@ local incremental_electric_resistance = 100
 
 function makeLevelSpawners(level, type)
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
-    data.raw['unit-spawner'][type]['autoplace'] = nil
 
     local original_hitpoint = spawner['max_health']
 
@@ -63,12 +62,12 @@ function makeLevelSpawners(level, type)
         res[4] = {MOD_NAME .. "/medium-cold-spitter/" .. level, {{0.4, 0.0}, {0.7, 0.3}, {0.9, 0.0}}}
         res[5] = {MOD_NAME .. "/big-cold-biter/" .. level, {{0.5, 0.0}, {1.0, 0.4}}}
         res[6] = {MOD_NAME .. "/big-cold-spitter/" .. level, {{0.5, 0.0}, {1.0, 0.4}}}
-        res[7] = {MOD_NAME .. "/behemoth-cold-biter/" .. level, {{0.9, 0.0}, {1.0, 0.3}}}
-        res[8] = {MOD_NAME .. "/behemoth-cold-spitter/" .. level, {{0.9, 0.0}, {1.0, 0.3}}}
-        res[9] = {MOD_NAME .. "/leviathan-cold-biter/" .. level, {{0.965, 0.0}, {1.0, 0.03}}}
-        res[10]= {MOD_NAME .. "/leviathan-cold-spitter/" .. level, {{0.965, 0.0}, {1.0, 0.03}}}
+        res[7] = {MOD_NAME .. "/behemoth-cold-biter/" .. level, {{0.8, 0.0}, {1.0, 0.3}}}
+        res[8] = {MOD_NAME .. "/behemoth-cold-spitter/" .. level, {{0.85, 0.0}, {1.0, 0.3}}}
+        res[9] = {MOD_NAME .. "/leviathan-cold-biter/" .. level, {{0.9, 0.0}, {1.0, 0.03}}}
+        res[10]= {MOD_NAME .. "/leviathan-cold-spitter/" .. level, {{0.9, 0.0}, {1.0, 0.03}}}
         if not settings.startup["cb-disable-mother"].value then
-            res[11]= {MOD_NAME .. "/mother-cold-spitter/" .. level, {{0.98, 0.0}, {1.0, 0.02}}}
+            res[11]= {MOD_NAME .. "/mother-cold-spitter/" .. level, {{0.925, 0.0}, {1.0, 0.02}}}
         end
         return res
     end)()

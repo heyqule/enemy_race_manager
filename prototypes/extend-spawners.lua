@@ -88,12 +88,13 @@ function makeLevelSpawners(level, type, health_cut_ratio)
                 res[2] = { MOD_NAME .. '/medium-biter/' .. level, { { 0.2, 0.0 }, { 0.6, 0.3 }, { 0.7, 0.0 } } }
                 -- for evolution factor of 1 the spawning probabilities are: small-biter 0%, medium-biter 1/8, big-biter 4/8, behemoth biter 3/8
                 res[3] = { MOD_NAME .. '/big-biter/' .. level, { { 0.5, 0.0 }, { 1.0, 0.5 } } }
-                res[4] = { MOD_NAME .. '/behemoth-biter/' .. level, { { 0.8, 0.05 }, { 1.0, 0.3 } } }
+                res[4] = { MOD_NAME .. '/behemoth-biter/' .. level, { { 0.8, 0.0 }, { 1.0, 0.3 } } }
             end
             return res
         end)()
     end
-    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+
+   spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
 
     return spawner
 end
@@ -118,7 +119,8 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     }
     worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
     ERM_UnitHelper.modify_biter_damage(worm, level)
-    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
+
+   worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
 
     return worm
 end
@@ -147,6 +149,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
 
     worm['attack_parameters']['range'] = ErmConfig.get_max_attack_range()
     worm['prepare_range'] = 24
+    worm['autoplace'] = nil
 
     return worm
 end

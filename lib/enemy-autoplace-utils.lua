@@ -60,11 +60,10 @@ local function enemy_autoplace(params)
     }
 end
 
-local function enemy_spawner_autoplace(distance, force, volume, order)
-    local order = order or 999
+local function enemy_spawner_autoplace(distance, force, volume)
     local params = {
         distance_factor = distance,
-        order = "b[enemy]-a[erm-spawner]-"..order,
+        order = "b[enemy]-a[spawner]",
         force = force
     }
     if volume then
@@ -74,11 +73,10 @@ local function enemy_spawner_autoplace(distance, force, volume, order)
     return result
 end
 
-local function enemy_worm_autoplace(distance, force, volume, order)
-    local order = order or 999
+local function enemy_worm_autoplace(distance, force, volume)
     local params = {
         distance_factor = distance,
-        order = "b[enemy]-b[erm-turrets]-"..order,
+        order = "b[enemy]-b[worm]",
         is_turret = true,
         force = force
     }

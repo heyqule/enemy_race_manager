@@ -37,7 +37,6 @@ local incremental_cold_resistance = 100
 
 function makeLevelTurrets(level, type, distance)
     local turret = util.table.deepcopy(data.raw['turret'][type])
-    data.raw['turret'][type]['autoplace'] = nil
 
     local original_hitpoint = turret['max_health']
 
@@ -63,6 +62,10 @@ function makeLevelTurrets(level, type, distance)
     return turret
 end
 
+if settings.startup['tb-disable-worms'].value then
+    return
+end
+
 local max_level = ErmConfig.MAX_LEVELS
 
 for i = 1, max_level do
@@ -70,9 +73,9 @@ for i = 1, max_level do
     data:extend({ makeLevelTurrets(i, 'medium-toxic-worm-turret',2) })
     data:extend({ makeLevelTurrets(i, 'big-toxic-worm-turret',5) })
     data:extend({ makeLevelTurrets(i, 'behemoth-toxic-worm-turret',8) })
-    data:extend({ makeLevelTurrets(i, 'leviathan-toxic-worm-turret',16) })
+    data:extend({ makeLevelTurrets(i, 'leviathan-toxic-worm-turret',14) })
 
     if not settings.startup["tb-disable-mother"].value then
-        data:extend({ makeLevelTurrets(i, 'mother-toxic-worm-turret',32) })
+        data:extend({ makeLevelTurrets(i, 'mother-toxic-worm-turret',14) })
     end
 end

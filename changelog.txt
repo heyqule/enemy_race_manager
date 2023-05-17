@@ -1,9 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.17.3
+Date: 2023-05-16
+
+  Changes:
+    - The following are Cold/Explosive/Toxic Biters changes
+    - Behemoth creatures spawn evolution changed from 0.9 to 0.85.
+    - Leviathan creatures spawn evolution changed from 0.95+ to 0.9.
+    - Mother creatures spawn evolution changed from 0.975 to 0.925.
+    - Consolidated big creatures spawn chance to be 55% at 1.0 evolution.
+    - Consolidated behemoth creatures spawn chance to be 40% at 1.0 evolution.
+    - Consolidated leviathan creatures spawn chance to be 4% at 1.0 evolution.
+    - Consolidated mother creatures spawn chance to be 1% at 1.0 evolution.
+
+  Bugfixes:
+    - Fixed a bug which explosive worm from explosive biters used an incorrect autoplace function [Discovered by CC02]
+    - Fixed a crash when a player disable worm from explosive/cold/toxic biter setting.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.17.2
 Date: 2023-05-03
 
   Bugfixes:
-    - Another fixed on the enemy replacement.
+    - Syntax error on the enemy replacement from last minute change. [Fixed by bolderbrush10]
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.17.1

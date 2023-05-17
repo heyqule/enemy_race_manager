@@ -247,9 +247,9 @@ local tune_autoplace = function(v, is_turret, volume)
                     distance = d
                 end
             end
-            v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, FORCE_NAME, volume, 999)
+            v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, FORCE_NAME, volume)
         else
-            v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, FORCE_NAME, volume, 999)
+            v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, FORCE_NAME, volume)
         end
 
     end
