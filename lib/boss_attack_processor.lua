@@ -87,7 +87,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     end
 
     if return_position == nil then
-        return_position = ErmAttackGroupChunkProcessor.pick_attack_location(boss.surface)
+        return_position = ErmAttackGroupChunkProcessor.pick_attack_location(boss.surface, boss.position)
         artillery_mode = true
     end
 

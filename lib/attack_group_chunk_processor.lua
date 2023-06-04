@@ -3,6 +3,8 @@
 --- Created by heyqule.
 --- DateTime: 9/6/2021 1:34 AM
 ---
+---
+require('util')
 local Table = require('__stdlib__/stdlib/utils/table')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
@@ -47,6 +49,8 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'solar-panel',
     'accumulator',
 }
+
+AttackGroupChunkProcessor.SCAN_RANGE = {ErmConfig.BOSS_ARTILLERY_SCAN_RANGE / 1.5, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE * 1.5}
 
 AttackGroupChunkProcessor.attack_group_valid_targets = {}
 for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
@@ -393,7 +397,7 @@ local add_attackable_chunk = function(surface, chunk)
     return false
 end
 
-local find_attack_position = function(surface)
+local find_attack_position = function(surface, init_position)
     local surface_data = global.attack_group_attackable_chunk[surface.name]
     if surface_data == nil then
         return nil
@@ -406,10 +410,39 @@ local find_attack_position = function(surface)
     end
 
     if surface_data.current ~= nil then
-        surface_data.current = surface_data.chunks[surface_data.current].next
+        local max_try = 50
+        local current_try = 0
+        local node_found = false
+        local closest_distance = 99999999
+        local original_position = surface_data.current
 
-        if surface_data.current == nil then
-            surface_data.current = surface_data.head
+        for k, range in pairs(AttackGroupChunkProcessor.SCAN_RANGE) do
+            surface_data.current = original_position
+            closest_distance = 99999999
+            current_try = 0
+            repeat
+                surface_data.current = surface_data.chunks[surface_data.current].next
+
+                if surface_data.current == nil then
+                    surface_data.current = surface_data.head
+                end
+
+                local distance =  util.distance(init_position, surface_data.chunks[surface_data.current])
+
+                if distance < closest_distance then
+                    closest_distance = distance
+                end
+
+                if closest_distance < range then
+                    node_found = true
+                end
+
+                current_try = current_try + 1
+            until current_try == max_try or node_found
+
+            if node_found then
+                break
+            end
         end
 
         return surface_data.chunks[surface_data.current]
@@ -540,12 +573,12 @@ function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     return entity
 end
 
-function AttackGroupChunkProcessor.pick_attack_location(surface)
+function AttackGroupChunkProcessor.pick_attack_location(surface, init_position)
     local position_node = nil
     local retry = 0
     repeat
         local entities = nil
-        position_node = find_attack_position(surface)
+        position_node = find_attack_position(surface, init_position)
         if position_node then
             entities = surface.find_entities_filtered
             ({

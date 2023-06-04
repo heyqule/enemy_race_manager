@@ -41,7 +41,6 @@
 - Milestone for killing bosses
 
 #### Super Weapon Attack Points / Counter Attack supported mods
-Super weapon - 
 - space exploration: Irdium Driver(Super weapon), Plague Rocket (Purifier type weapon) 
 - AtomicArtillery 
 - M.I.R.V (Purifier type weapon)

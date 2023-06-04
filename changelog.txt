@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.17.4
+Date: 2023-06-??
+
+  Changes:
+    - Changed command center teleport box width from 32 to 48 tiles.
+    - Changed enemy attack area radius to 96 tiles from 32-64 to reduce enemy being stuck on custom unit-spawn attacks.
+    - Deprecated Level Requirement Multiplier in Start up setting. Please use [Level Up] Evolution Point Multiplier in map setting instead.  They serve same purpose.
+    - ** Use value < 1 to slow down or value > 1 to speed up the level speed with Evolution Point Multiplier.
+    - ** Level Requirement Multiplier setting will remove in 1.18.
+    - Attack groups will pick a closer attack position to reduce transit time.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.17.3
 Date: 2023-05-16
 

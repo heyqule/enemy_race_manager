@@ -4,6 +4,7 @@
 --- DateTime: 7/21/2021 10:45 PM
 ---
 
+require('util')
 local String = require('__stdlib__/stdlib/utils/string')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
@@ -28,6 +29,7 @@ AttackGroupProcessor.MAX_GROUP_SIZE = 2000
 
 AttackGroupProcessor.GROUP_AREA = 256
 AttackGroupProcessor.CHUNK_CENTER_POINT = 16
+AttackGroupProcessor.CHUNK_SIZE = 96
 
 AttackGroupProcessor.GROUP_TYPE_MIXED = 1
 AttackGroupProcessor.GROUP_TYPE_FLYING = 2
@@ -144,7 +146,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
     if group_tracker.current_size >= group_tracker.size then
         --local profiler = game.create_profiler()
-        local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface)
+        local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group.position)
         --profiler.stop()
         --log({'', 'Attack Path finding...  ', profiler})
 
@@ -152,7 +154,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             local command = {
                 type = defines.command.attack_area,
                 destination = {x = position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-                radius = AttackGroupProcessor.CHUNK_CENTER_POINT
+                radius = AttackGroupProcessor.CHUNK_SIZE
             }
 
             if group_tracker.is_precision_attack then
@@ -403,13 +405,13 @@ end
 
 function AttackGroupProcessor.process_attack_position(group, distraction)
     distraction = distraction or defines.distraction.by_enemy
-    local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface)
+    local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface, group.position)
 
     if attack_position then
         local command = {
             type = defines.command.attack_area,
             destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-            radius = AttackGroupProcessor.CHUNK_CENTER_POINT,
+            radius = AttackGroupProcessor.CHUNK_SIZE,
             distraction = distraction
         }
         group.set_command(command)
