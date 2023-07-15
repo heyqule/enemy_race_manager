@@ -29,7 +29,6 @@ AttackGroupProcessor.MAX_GROUP_SIZE = 2000
 
 AttackGroupProcessor.GROUP_AREA = 256
 AttackGroupProcessor.CHUNK_CENTER_POINT = 16
-AttackGroupProcessor.CHUNK_SIZE = 96
 
 AttackGroupProcessor.GROUP_TYPE_MIXED = 1
 AttackGroupProcessor.GROUP_TYPE_FLYING = 2
@@ -154,7 +153,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             local command = {
                 type = defines.command.attack_area,
                 destination = {x = position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-                radius = AttackGroupProcessor.CHUNK_SIZE
+                radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2
             }
 
             if group_tracker.is_precision_attack then
@@ -403,15 +402,25 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     return false
 end
 
-function AttackGroupProcessor.process_attack_position(group, distraction)
+function AttackGroupProcessor.process_attack_position(group, distraction, find_nearby)
     distraction = distraction or defines.distraction.by_enemy
-    local attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface, group.position)
+    find_nearby = find_nearby or false
+
+    local attack_position = nil
+
+    if find_nearby then
+        attack_position = ErmAttackGroupChunkProcessor.pick_nearby_attack_location(group.surface, group.position)
+    end
+
+    if attack_position == nil then
+        attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface, group.position)
+    end
 
     if attack_position then
         local command = {
             type = defines.command.attack_area,
             destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
-            radius = AttackGroupProcessor.CHUNK_SIZE,
+            radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2,
             distraction = distraction
         }
         group.set_command(command)

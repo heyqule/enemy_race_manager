@@ -9,7 +9,10 @@ if settings.startup['enemyracemanager-free-for-all'].value then
     for type_name, types in pairs(data.raw) do
         for entity_name, entity in pairs(types) do
             if type(entity) == 'table' and entity.max_health and (entity.subgroup == nil or string.find(entity.subgroup, 'enemies') == nil) then
-                entity.max_health = entity.max_health * ErmConfig.FFA_MULTIPLIER * 1.25
+                -- Prevents a crash from some crazy mod with crazy high HP entity.  Ignore all health over 10 million
+                if entity.max_health <= 10000000 then
+                    entity.max_health = entity.max_health * ErmConfig.FFA_MULTIPLIER * 1.25
+                end
 
                 if  entity.repair_speed_modifier then
                     entity.repair_speed_modifier = entity.repair_speed_modifier * ErmConfig.FFA_MULTIPLIER

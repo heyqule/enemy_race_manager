@@ -13,7 +13,7 @@ local util = require("util")
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
-local CHUNK_SIZE = 96
+local ATTACK_CHUNK_SIZE = 32
 
 local get_name_token = function(name)
     if global.force_entity_name_cache == nil then
@@ -83,7 +83,7 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
             entity.set_command({
                 type = defines.command.attack_area,
                 destination = {x = position.x, y = position.y},
-                radius = CHUNK_SIZE,
+                radius = ATTACK_CHUNK_SIZE,
                 distraction = defines.distraction.by_anything
             })
         end
@@ -131,7 +131,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     group.set_command({
         type = defines.command.attack_area,
         destination = {x = position.x, y = position.y},
-        radius = CHUNK_SIZE,
+        radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
 
@@ -179,7 +179,7 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
     group.set_command({
         type = defines.command.attack_area,
         destination = {x = target_position.x, y = target_position.y},
-        radius = CHUNK_SIZE,
+        radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
 

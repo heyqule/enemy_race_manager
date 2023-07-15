@@ -12,6 +12,7 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local AttackGroupChunkProcessor = {}
 
+AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS = 2
 AttackGroupChunkProcessor.CHUNK_SEARCH_RADIUS = 5
 AttackGroupChunkProcessor.CHUNK_SIZE = 32
 AttackGroupChunkProcessor.CHUNK_CENTER_POINT_RADIUS = AttackGroupChunkProcessor.CHUNK_SEARCH_RADIUS * 2
@@ -49,7 +50,7 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'solar-panel',
     'accumulator',
 }
-
+-- {2100, 3200, 4800}
 AttackGroupChunkProcessor.SCAN_RANGE = {ErmConfig.BOSS_ARTILLERY_SCAN_RANGE / 1.5, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE * 1.5}
 
 AttackGroupChunkProcessor.attack_group_valid_targets = {}
@@ -87,10 +88,11 @@ local get_spawn_area = function(position)
     return area
 end
 
-local get_attack_area = function(position)
-    local distance = 32
+local get_attack_area = function(position, multiplier)
+    multiplier = multiplier or 1
+    local distance = (AttackGroupChunkProcessor.CHUNK_SIZE * multiplier) / 2
     local area = {
-        {position.x, position.y},
+        {position.x - distance, position.y - distance},
         {position.x + distance, position.y + distance}
     }
     return area
@@ -397,6 +399,59 @@ local add_attackable_chunk = function(surface, chunk)
     return false
 end
 
+local advance_to_next_node = function(surface_data)
+    surface_data.current = surface_data.chunks[surface_data.current].next
+    if surface_data.current == nil then
+        surface_data.current = surface_data.head
+    end
+    return surface_data.current
+end
+
+local scan_closest_chunk = function(surface_data, surface_name, init_position)
+    --local profiler = game.create_profiler()
+    local max_try = 47
+    local current_try = 0
+    local max_found = 8
+    local found = 0
+    local found_nodes = {}
+    local original_position = surface_data.current
+    local assignment_node = nil
+    local last_node = nil
+
+    for k, range in pairs(AttackGroupChunkProcessor.SCAN_RANGE) do
+        surface_data.current = original_position
+        current_try = 0
+        repeat
+            surface_data.current = advance_to_next_node(surface_data)
+
+            local distance =  util.distance(init_position, surface_data.chunks[surface_data.current])
+
+            if distance <= range then
+                table.insert(found_nodes, surface_data.current)
+                found = found + 1
+            end
+
+            current_try = current_try + 1
+
+            if last_node == nil and (current_try == max_try or found == max_found) then
+                last_node = advance_to_next_node(surface_data)
+            end
+        until current_try == max_try or found == max_found
+
+        if found > 0 then
+            assignment_node = found_nodes[math.random(1, found)]
+            global.attack_group_attackable_chunk[surface_name].current = last_node
+            break
+        end
+    end
+
+    --profiler.stop()
+    --game.print({'', 'scan_closest_chunk...  ', profiler})
+    --game.print({'', 'node...  ', last_node, ' -- ', util.distance(init_position,surface_data.chunks[last_node]), ' -- ',util.distance(init_position,surface_data.chunks[assignment_node])})
+
+    return assignment_node
+end
+
 local find_attack_position = function(surface, init_position)
     local surface_data = global.attack_group_attackable_chunk[surface.name]
     if surface_data == nil then
@@ -405,47 +460,14 @@ local find_attack_position = function(surface, init_position)
 
     if surface_data.current == nil and surface_data.head then
         surface_data.current = surface_data.head
-
+        global.attack_group_attackable_chunk[surface.name].current = global.attack_group_attackable_chunk[surface.name].head
         return surface_data.chunks[surface_data.current]
     end
 
     if surface_data.current ~= nil then
-        local max_try = 50
-        local current_try = 0
-        local node_found = false
-        local closest_distance = 99999999
-        local original_position = surface_data.current
+        local assignment_node = scan_closest_chunk(surface_data, surface.name, init_position)
 
-        for k, range in pairs(AttackGroupChunkProcessor.SCAN_RANGE) do
-            surface_data.current = original_position
-            closest_distance = 99999999
-            current_try = 0
-            repeat
-                surface_data.current = surface_data.chunks[surface_data.current].next
-
-                if surface_data.current == nil then
-                    surface_data.current = surface_data.head
-                end
-
-                local distance =  util.distance(init_position, surface_data.chunks[surface_data.current])
-
-                if distance < closest_distance then
-                    closest_distance = distance
-                end
-
-                if closest_distance < range then
-                    node_found = true
-                end
-
-                current_try = current_try + 1
-            until current_try == max_try or node_found
-
-            if node_found then
-                break
-            end
-        end
-
-        return surface_data.chunks[surface_data.current]
+        return surface_data.chunks[assignment_node]
     end
 
     return nil
@@ -605,14 +627,34 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, init_position)
     return nil
 end
 
-AttackGroupChunkProcessor.can_attack = function(surface)
+---
+--- Pick nearby attack locations based on current requirement.
+---
+function AttackGroupChunkProcessor.pick_nearby_attack_location(surface, init_position)
+    local entities = surface.find_entities_filtered
+        {
+            area = get_attack_area(init_position, AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS),
+            type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
+            limit = 1
+        }
+
+    local next_index = next(entities)
+    if next_index then
+        local entity = entities[next_index]
+        return {x = entity.position.x, y = entity.position.y}
+    end
+
+    return nil
+end
+
+function AttackGroupChunkProcessor.can_attack(surface)
     if global.attack_group_spawnable_chunk[surface.name] ~= nil and global.attack_group_attackable_chunk[surface.name] ~= nil then
         return true
     end
     return false
 end
 
-AttackGroupChunkProcessor.remove_surface = function(surface_name)
+function AttackGroupChunkProcessor.remove_surface(surface_name)
     if global.attack_group_spawnable_chunk[surface_name] ~= nil then
         global.attack_group_spawnable_chunk[surface_name] = nil
     end

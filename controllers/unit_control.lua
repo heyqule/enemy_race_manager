@@ -59,6 +59,9 @@ local onUnitFinishGathering = function(event)
     end
 end
 
+---
+--- Destroy group members and refund them as attack points.
+---
 local destroyMembers = function(group)
     local members = group.members
     local refundPoints = 0
@@ -71,6 +74,9 @@ local destroyMembers = function(group)
     group.destroy()
 end
 
+---
+--- Clean up cache table, destroy groups that has less than 5 units.
+---
 local ermGroupCacheTableCleanup = function(target_table)
     local tmp = {}
     for _, group_data in pairs(target_table) do
@@ -90,25 +96,39 @@ local ermGroupCacheTableCleanup = function(target_table)
     return target_table
 end
 
-local onAiCompleted = function(event)
+
+local isErmUnitGroup = function (unit_number)
     local erm_unit_groups = global.erm_unit_groups
-    if erm_unit_groups[event.unit_number] and erm_unit_groups[event.unit_number].group and erm_unit_groups[event.unit_number].group.valid then
-        local group = erm_unit_groups[event.unit_number].group
-        local start_position = erm_unit_groups[event.unit_number].start_position
-        if group.valid and
+    return erm_unit_groups[unit_number] and erm_unit_groups[unit_number].group and erm_unit_groups[unit_number].group.valid
+end
+
+---
+--- Destroy group if the group doesn't have a valid path
+---
+local destroyInvalidGroup = function(group, start_position)
+    if group.valid and
             group.is_script_driven and
             group.command == nil and
             (start_position.x == group.position.x and start_position.y == group.position.y) and
             ErmForceHelper.is_enemy_force(group.force)
-        then
-            destroyMembers(group)
-        end
+    then
+        destroyMembers(group)
+    end
+end
+
+local onAiCompleted = function(event)
+    local erm_unit_groups = global.erm_unit_groups
+    local unit_number = event.unit_number
+    if isErmUnitGroup(unit_number) then
+        local group = erm_unit_groups[unit_number].group
+
+        destroyInvalidGroup(group, erm_unit_groups[unit_number].start_position)
 
         if group.valid and (group.command == nil or group.state == defines.group_state.finished) then
             if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
-                ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+                ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
             else
-                ErmAttackGroupProcessor.process_attack_position(group)
+                ErmAttackGroupProcessor.process_attack_position(group, nil, true)
             end
         end
 
