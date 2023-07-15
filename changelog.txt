@@ -9,7 +9,7 @@ Date: 2023-07-15
     - [Experimental] Custom attack groups should pick a closer attack position to reduce transit time.
     - Deprecated Level Requirement Multiplier in Start up setting. Please use [Level Up] Evolution Point Multiplier in map setting instead.  They serve same purpose.
     - ** Use value < 1 to slow down or value > 1 to speed up the level speed with Evolution Point Multiplier.
-    - ** Level Requirement Multiplier setting will remove in 1.18.
+    - ** Level Requirement Multiplier setting will remove in next release.
 
   Bugfixes:
     - FFA health multiplier will ignore entity with HP over 10 million to prevent crash.
