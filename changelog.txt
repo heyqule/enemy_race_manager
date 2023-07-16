@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.0
+Date: 2023-??-??
+
+  Features:
+    - Added Unit's time to live subsystem, unit dies once the time is up.
+    - This system uses Unit's min_pursue_time as time_to_live timer.
+    - min_pursue_time's base game default is 10 seconds.
+
+  Changes:
+    - Units from dropships / custom spawn should now added to its parent unit group.
+    - *** Removed Level Requirement Multiplier from setting. ***  May affect existing game. Please adjust [Level Up] Evolution Point Multiplier.
+
+  Gui:
+    - Race name column now print proper label, instead of race codename.
+
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.17.4
 Date: 2023-07-15
 

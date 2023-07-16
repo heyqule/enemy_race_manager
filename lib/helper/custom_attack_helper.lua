@@ -15,6 +15,11 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 local ATTACK_CHUNK_SIZE = 32
 
+local FEATURE_RACE_NAME = 1
+local FEATURE_RACE_SPAWN_DATA = 2
+local FEATURE_RACE_SPAWN_CACHE = 4
+local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+
 local get_name_token = function(name)
     if global.force_entity_name_cache == nil then
         global.force_entity_name_cache = {}
@@ -31,13 +36,39 @@ local get_name_token = function(name)
     return global.force_entity_name_cache[name]
 end
 
-local FEATURE_RACE_NAME = 1
-local FEATURE_RACE_SPAWN_DATA = 2
-local FEATURE_RACE_SPAWN_CACHE = 4
-local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
-local race_settings
+local register_time_to_live_unit = function(event, entity, race_name, name)
+    if global.time_to_live_units == nil then
+        global.time_to_live_units = {}
+        global.time_to_live_units_total = 0
+    end
+
+    local race_settings = global.custom_attack_race_settings[race_name]
+    if race_settings.time_to_live_units and race_settings.time_to_live_units[name] and entity.valid then
+        table.insert(global.time_to_live_units, {
+            entity = entity,
+            time = event.tick + entity.prototype.min_pursue_time
+        })
+        global.time_to_live_units_total = global.time_to_live_units_total + 1
+    end
+end
+
+local get_race_setting = function(race_name)
+    if global.custom_attack_race_settings == nil then
+        global.custom_attack_race_settings = {}
+    end
+
+    if global.custom_attack_race_settings[race_name] == nil then
+        global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
+    end
+
+    return global.custom_attack_race_settings[race_name]
+end
 
 local CustomAttackHelper = {}
+
+function CustomAttackHelper.can_spawn(chance_value)
+    return math.random(1, 100) > (100 - chance_value)
+end
 
 function CustomAttackHelper.valid(event, race_name)
     return (event.source_entity and
@@ -46,9 +77,7 @@ function CustomAttackHelper.valid(event, race_name)
 end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
-    if race_settings == nil then
-        race_settings = remote.call('enemyracemanager', 'get_race', race_name)
-    end
+    local race_settings = get_race_setting(race_name)
 
     if race_settings == nil or race_settings[unit_type] == nil then
         return
@@ -59,11 +88,15 @@ function CustomAttackHelper.get_unit(race_name, unit_type)
     return unit_data[FEATURE_RACE_NAME][unit_data[FEATURE_RACE_SPAWN_CACHE][Math.random(unit_data[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
-function CustomAttackHelper.drop_unit(event, race_name, unit_name)
+---
+--- Process single type of unit drops
+---
+function CustomAttackHelper.drop_unit(event, race_name, unit_name, count)
+    count = count or 1
+    get_race_setting(race_name)
     local surface = game.surfaces[event.surface_index]
     local nameToken = get_name_token(event.source_entity.name)
     local level = tonumber(nameToken[3])
-
     if level > ErmConfig.MAX_LEVELS then
         level = ErmConfig.MAX_LEVELS
     end
@@ -78,22 +111,33 @@ function CustomAttackHelper.drop_unit(event, race_name, unit_name)
     end
 
     if position then
-        local entity = surface.create_entity({ name = final_unit_name, position = position, force = event.source_entity.force })
-        if entity.type == 'unit' then
-            entity.set_command({
-                type = defines.command.attack_area,
-                destination = {x = position.x, y = position.y},
-                radius = ATTACK_CHUNK_SIZE,
-                distraction = defines.distraction.by_anything
-            })
+        local idx = 0;
+        while idx < count do
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = event.source_entity.force })
+            if entity.type == 'unit' then
+                entity.set_command({
+                    type = defines.command.attack_area,
+                    destination = {x = position.x, y = position.y},
+                    radius = ATTACK_CHUNK_SIZE,
+                    distraction = defines.distraction.by_anything
+                })
+
+                if event.source_entity.unit_group then
+                    event.source_entity.unit_group.add_member(entity)
+                end
+
+                register_time_to_live_unit(event, entity, race_name, unit_name)
+            end
+            idx = idx + 1
         end
     end
 end
 
+---
+--- Process batch unit drops
+---
 function CustomAttackHelper.drop_batch_units(event, race_name, count)
-    if race_settings == nil then
-        race_settings = remote.call('enemyracemanager', 'get_race', race_name)
-    end
+    local race_settings = get_race_setting(race_name)
 
     if race_settings == nil then
         return
@@ -107,10 +151,16 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     position.x = position.x + 2
 
     local i = 0
-    local teamsize = 0
-    local group = surface.create_unit_group {
-        position = position, force = race_settings.force
-    }
+    local group = nil
+    local new_group = false
+    if event.source_entity.unit_group then
+        group = event.source_entity.unit_group
+    else
+        group = surface.create_unit_group {
+            position = position, force = race_settings.force
+        }
+        new_group = true
+    end
 
     repeat
         local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
@@ -121,24 +171,28 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         if position then
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = race_settings.force })
             if entity.type == 'unit' then
-                teamsize = teamsize + 1
                 group.add_member(entity)
+                register_time_to_live_unit(event, entity, race_name, final_unit_name)
             end
         end
         i = i + 1
     until i == count
 
-    group.set_command({
-        type = defines.command.attack_area,
-        destination = {x = position.x, y = position.y},
-        radius = ATTACK_CHUNK_SIZE,
-        distraction = defines.distraction.by_anything
-    })
+    if new_group then
+        group.set_command({
+            type = defines.command.attack_area,
+            destination = {x = position.x, y = position.y},
+            radius = ATTACK_CHUNK_SIZE,
+            distraction = defines.distraction.by_anything
+        })
 
-    remote.call('enemyracemanager', 'add_erm_attack_group', group)
+        remote.call('enemyracemanager', 'add_erm_attack_group', group)
+    end
 end
 
-
+---
+--- Process Boss Attack Group
+---
 function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
     local boss_data = remote.call('enemyracemanager', 'get_boss_data')
@@ -150,7 +204,6 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
     position.x = position.x + 2
 
     local i = 0
-    local teamsize = 0
     local group = surface.create_unit_group {
         position = position, force = boss_data.force
     }
@@ -163,7 +216,6 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         if position then
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = boss_data.force })
             if entity.type == 'unit' then
-                teamsize = teamsize + 1
                 group.add_member(entity)
             end
         end
@@ -184,6 +236,60 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
     })
 
     remote.call('enemyracemanager', 'add_boss_attack_group', group)
+end
+
+
+local break_time_to_live = function(count, max_count)
+    return count == max_count or global.time_to_live_units_total == 0
+end
+
+---
+--- Clean up time to live units
+---
+function CustomAttackHelper.clear_time_to_live_units(event)
+    local time_to_live_units_total = global.time_to_live_units_total
+    local time_to_live_units = global.time_to_live_units
+
+    if time_to_live_units_total == nil or time_to_live_units_total == 0 then
+        return
+    end
+
+    log("Before Time to live unit total: "..tostring(time_to_live_units_total))
+    log("Before Time to live unit: "..tostring(#time_to_live_units))
+    local profiler = game.create_profiler()
+
+    local count = 0
+    local max_count = ErmConfig.TIME_TO_LIVE_UNIT_BATCH
+    if time_to_live_units_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
+        max_count = ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
+    end
+    for idx, value in pairs(time_to_live_units) do
+        local entity = value.entity
+        if entity.valid then
+            if value.time < event.tick then
+                entity.die('neutral')
+                time_to_live_units[idx] = nil
+                time_to_live_units_total = time_to_live_units_total - 1
+            end
+        else
+            time_to_live_units[idx] = nil
+            time_to_live_units_total = time_to_live_units_total - 1
+        end
+
+        count = count + 1
+        if break_time_to_live(count, max_count)  then
+            break
+        end
+    end
+
+    global.time_to_live_units_total = time_to_live_units_total
+    global.time_to_live_units = time_to_live_units
+
+    profiler.stop()
+    log("After Time to live unit total: "..tostring(time_to_live_units_total))
+    log("After Time to live unit: "..tostring(#time_to_live_units))
+    log("After Global Time to live unit: "..tostring(#global.time_to_live_units))
+    log({'', 'clear_time_to_live_units...  ', profiler})
 end
 
 

@@ -14,7 +14,7 @@ function ERM_UnitTint.tint_shadow()
 end
 
 function ERM_UnitTint.tint_dragoon_ball_light()
-    return { r = 135, g = 206, b = 235, a = 1 }
+    return { r = 135, g = 206, b = 235, a = 255 }
 end
 
 function ERM_UnitTint.tint_plane_burner()

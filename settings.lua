@@ -21,16 +21,6 @@ data:extend {
         order = "enemyracemanager-101"
     },
     {
-        type = "int-setting",
-        name = "enemyracemanager-level-curve-multiplier",
-        description = "enemyracemanager-level-curve-multiplier",
-        setting_type = "startup",
-        default_value = 1,
-        minimum_value = 1,
-        maximum_value = 10,
-        order = "enemyracemanager-102"
-    },
-    {
         type = "string-setting",
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",

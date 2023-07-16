@@ -30,7 +30,7 @@ data:extend(
                 type = "item-subgroup",
                 name = "erm-flying-enemies",
                 group = "enemies",
-                order = "erm-erm-flying-enemies"
+                order = "erm-flying-enemies"
             },
             {
                 type = "item-subgroup",

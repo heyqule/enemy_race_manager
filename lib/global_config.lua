@@ -115,12 +115,15 @@ end
 ErmConfig.FFA_MULTIPLIER = 10
 ErmConfig.BUILD_GROUP_CAP = 50
 
+ErmConfig.MAX_TIME_TO_LIVE_UNIT = 1000
+ErmConfig.TIME_TO_LIVE_UNIT_BATCH = 80
+ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 400
+
 local refreshable_settings = {
     startup = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
-        'enemyracemanager-level-curve-multiplier',
     },
     global = {
         'enemyracemanager-max-gathering-groups',
@@ -246,10 +249,6 @@ function ErmConfig.get_max_level()
     end
 
     return current_level_setting
-end
-
-function ErmConfig.get_level_curve_multiplier()
-    return get_global_setting_value('enemyracemanager-level-curve-multiplier')
 end
 
 function ErmConfig.get_max_attack_range()
