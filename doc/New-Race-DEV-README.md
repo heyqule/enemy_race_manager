@@ -1,19 +1,20 @@
 Developer Read Me
 --------------------
-This readme should be able give you a quick start to creating you new race.
+This readme should be give you a general start to create your new race.
 
 #### global.lua
 
-defines mod constants. Please see that file for additional requirements.
+defines mod constants.  Many constants are used as function proxy key as well.
+Please see that file for additional requirements.
 
 #### setting-update.lua
-add your race to setting's dropdowns
+add your race to ERM settings' dropdowns
 
 #### data.lua
 Use this file to add unit/spawner to the game
 
 #### control.lua
-Use this file to hook up the race data and control any custom attack.
+Use this file to hook up the race data and control any custom parameters.
 
 Point of interests:
 
@@ -26,7 +27,7 @@ Point of interests:
 * Event.register(defines.events.on_script_trigger_effect, function(event) end
     * handles custom attacks
 
-####Units:
+#### Units:
 Many of the units have unique abilities, please refer to the lua files for reference
 
 * Melee: [Zergling](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/zergling.lua)
@@ -45,7 +46,7 @@ These units' attacks are handled via on_script_trigger_effect events
 * Dropping new unit: [Overlord](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/overlord.lua)
 * Construct new building with self destruct: [Drone](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/drone.lua)
 
-######Default File to include:
+###### Default File to include:
 ```lua
 require('__stdlib__/stdlib/utils/defines/time')  --Handle date/time definies
 local Sprites = require('__stdlib__/stdlib/data/modules/sprites') --Handle empty sprites
@@ -57,7 +58,7 @@ local ERM_Config = require('__enemyracemanager__/lib/global_config') -- Get prop
 local ZergSound = require('__erm_zerg__/prototypes/sound') -- All sounds are handled in single lua file.  It's easier to modify.
 ```
 
-####Unit/Building Name Convention
+#### Unit/Building Name Convention
 ```lua
 name = MOD_NAME .. '/' .. name .. '/' .. level,
 localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
@@ -133,17 +134,17 @@ local incremental_movement_speed = 0.15
 
 ##### Attack Speed Guideline:
 Fastest attack speed for all units is 0.25s / attack.
-Attack speed range from 3s / attack to 4 attack/s depending on unit design and its level.
+Attack speed range from 3s / attack to 4 attacks/s depending on unit design and its level.
 
 ##### Attack Range Guideline:
 Meele: 1
-Dropship: 3
+Dropship: ERM_Config.get_max_attack_range()
 Short Range: 6
 Medium Range: 9
 Long Range: 12
 Max Range: ERM_Config.get_max_attack_range()
 
-min_attack_distance:
+min_attack_distance, a parameter to randomize attack distance
 - (unit_range - 2) if short range
 - (unit_range - 3) if medium Range
 - (unit_range - 4) if long range to max range

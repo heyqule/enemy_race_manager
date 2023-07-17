@@ -14,6 +14,9 @@ Date: 2023-??-??
   Gui:
     - Race name column now print proper label, instead of race codename.
 
+  Bugfixes:
+    - Fixed a bug on custom attack group is using wrong force for the new group.
+
 
 
 ---------------------------------------------------------------------------------------------------

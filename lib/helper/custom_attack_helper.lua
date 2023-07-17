@@ -146,6 +146,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     count = count or 10
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
+    local source_entity = event.source_entity
 
     local position = event.target_position
     position.x = position.x + 2
@@ -157,7 +158,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         group = event.source_entity.unit_group
     else
         group = surface.create_unit_group {
-            position = position, force = race_settings.force
+            position = position, force = source_entity.force
         }
         new_group = true
     end
@@ -169,16 +170,18 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         end
 
         if position then
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = race_settings.force })
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity.force })
             if entity.type == 'unit' then
-                group.add_member(entity)
+                if group.valid then
+                    group.add_member(entity)
+                end
                 register_time_to_live_unit(event, entity, race_name, final_unit_name)
             end
         end
         i = i + 1
     until i == count
 
-    if new_group then
+    if group.valid and new_group then
         group.set_command({
             type = defines.command.attack_area,
             destination = {x = position.x, y = position.y},
@@ -254,9 +257,9 @@ function CustomAttackHelper.clear_time_to_live_units(event)
         return
     end
 
-    log("Before Time to live unit total: "..tostring(time_to_live_units_total))
-    log("Before Time to live unit: "..tostring(#time_to_live_units))
-    local profiler = game.create_profiler()
+    --log("Before Time to live unit total: "..tostring(time_to_live_units_total))
+    --log("Before Time to live unit: "..tostring(#time_to_live_units))
+    --local profiler = game.create_profiler()
 
     local count = 0
     local max_count = ErmConfig.TIME_TO_LIVE_UNIT_BATCH
@@ -285,11 +288,11 @@ function CustomAttackHelper.clear_time_to_live_units(event)
     global.time_to_live_units_total = time_to_live_units_total
     global.time_to_live_units = time_to_live_units
 
-    profiler.stop()
-    log("After Time to live unit total: "..tostring(time_to_live_units_total))
-    log("After Time to live unit: "..tostring(#time_to_live_units))
-    log("After Global Time to live unit: "..tostring(#global.time_to_live_units))
-    log({'', 'clear_time_to_live_units...  ', profiler})
+    --profiler.stop()
+    --log("After Time to live unit total: "..tostring(time_to_live_units_total))
+    --log("After Time to live unit: "..tostring(#time_to_live_units))
+    --log("After Global Time to live unit: "..tostring(#global.time_to_live_units))
+    --log({'', 'clear_time_to_live_units...  ', profiler})
 end
 
 

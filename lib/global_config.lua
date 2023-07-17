@@ -117,7 +117,7 @@ ErmConfig.BUILD_GROUP_CAP = 50
 
 ErmConfig.MAX_TIME_TO_LIVE_UNIT = 1000
 ErmConfig.TIME_TO_LIVE_UNIT_BATCH = 80
-ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 400
+ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 240
 
 local refreshable_settings = {
     startup = {
