@@ -1,28 +1,34 @@
-Developer Read Me
+New Race developer guide line
 --------------------
-This readme should be give you a general start to create your new race.
+This readme should be gives you a general start to create your new race.
 
 #### global.lua
 
 defines mod constants.  Many constants are used as function proxy key as well.
-Please see that file for additional requirements.
+
+Example: [global.lua](https://github.com/heyqule/erm_zerg/blob/main/global.lua)
 
 #### setting-update.lua
 add your race to ERM settings' dropdowns
 
+Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
+
 #### data.lua
-Use this file to add unit/spawner to the game
+Use this file to add unit, spawner and other data entities to the game.
+
+Example: [data.lua](https://github.com/heyqule/erm_zerg/blob/main/data.lua)
 
 #### control.lua
 Use this file to hook up the race data and control any custom parameters.
 
+Example: [control.lua](https://github.com/heyqule/erm_zerg/blob/main/control.lua)
+
 Point of interests:
 
-* the race specific file includes
-    * change / remove them
+* createRace()
+    * This defines the force in-game.
 * addRaceSettings()
-    * change the unit and spawner tiers
-    * angry meter (Use as a future feature)
+    * This function set up race specific settings.
     * [__enemyracemanager__/lib/remote_api.lua](https://github.com/heyqule/enemy_race_manager/blob/main/lib/remote_api.lua)
 * Event.register(defines.events.on_script_trigger_effect, function(event) end
     * handles custom attacks
@@ -33,17 +39,17 @@ Many of the units have unique abilities, please refer to the lua files for refer
 * Melee: [Zergling](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/zergling.lua)
 * Melee AOE: [Ultralisk](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/ultralisk.lua)
 * Range: [Hydralisk](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/hydralisk.lua)
+* AOE Range:  [Lurker](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/lurker.lua)
 * Flying Unit: [Mutalisk](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/mutalisk.lua)
 * Max range attack: [Guardian](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/guardian.lua)
 * Slow attack: [Devourer](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/devourer.lua)
-* AOE healing: [Queen](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/queen.lua)
-* Range AOE: 
-    * [Defiler](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/defiler.lua)
-    * [Lurker](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/lurker.lua)
+* AOE Slow: [Queen](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/queen.lua)
+* AOE healing: [Defiler](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/defiler.lua)
+  * note that you can not do single unit healing because they can't target friendly unit.
 
 These units' attacks are handled via on_script_trigger_effect events
-* Self destruction unit: [Infested](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/infested.lua)
-* Dropping new unit: [Overlord](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/overlord.lua)
+* Self destruct unit: [Infested](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/infested.lua)
+* Dropping new units: [Overlord](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/overlord.lua)
 * Construct new building with self destruct: [Drone](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/drone.lua)
 
 ###### Default File to include:
@@ -55,10 +61,12 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/unit_helper') -- Unit H
 local ERM_UnitTint = require('__enemyracemanager__/lib/unit_tint') -- Unit tint functions, use for tinting air unit exhaust and shadows.
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper') -- some debug function
 local ERM_Config = require('__enemyracemanager__/lib/global_config') -- Get proper settings for max level, max range and etc.
+
+-- If you group all sound / other asset in a single file, you'll include those like the following.
 local ZergSound = require('__erm_zerg__/prototypes/sound') -- All sounds are handled in single lua file.  It's easier to modify.
 ```
 
-#### Unit/Building Name Convention
+#### Unit / Building Name Convention
 ```lua
 name = MOD_NAME .. '/' .. name .. '/' .. level,
 localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
@@ -71,12 +79,13 @@ Please see [prototype/building/hive.lua](https://github.com/heyqule/erm_zerg/blo
 
 
 
+
 #### Turrets:
 It feels more balance to have both splitter acid and direct attack for base defense.
 * Spitter Acid attack: [prototype/building/spore_colony.lua](https://github.com/heyqule/erm_zerg/blob/main/prototypes/building/spore_colony.lua) 
 * Direct Attack: [prototype/building/sunker_colony.lua](https://github.com/heyqule/erm_zerg/blob/main/prototypes/building/sunker_colony.lua)
 
-##### HP Guideline:
+##### HP @ L20, Guideline:
 Unit HP:
 level 1 are under 500, median none
 level 10 are 1000 - 5000, median 1500-2500
@@ -100,11 +109,11 @@ Elemental: 80%
 Weak Elemental: 75%
 
 ##### Damage Guideline:
-level 1: 10 - 50 DPS
+level 1: 10 - 50 DPS (damage per second)
 level 10: 30 - 100 DPS
 level 20:  80 - 200 DPS
 
-AOE units usually use 50%-75% of above damage
+AOE units usually use a lower value than above damage guideline.
 
 ##### Movement Speed Guideline:
 (level 1 to 20)
@@ -134,7 +143,7 @@ local incremental_movement_speed = 0.15
 
 ##### Attack Speed Guideline:
 Fastest attack speed for all units is 0.25s / attack.
-Attack speed range from 3s / attack to 4 attacks/s depending on unit design and its level.
+L20 attack speed range from 3s / attack to 4 attacks/s depending on unit design.
 
 ##### Attack Range Guideline:
 Meele: 1
@@ -143,6 +152,12 @@ Short Range: 6
 Medium Range: 9
 Long Range: 12
 Max Range: ERM_Config.get_max_attack_range()
+
+get_max_attack_range() is either 14 or 20. Gun turret may not able to attack range 20 enemy.
+
+The max range of a unit should not be further than furtherest shooting turret. 
+
+Otherwise, it will just annoy players and break the flow of the game.
 
 min_attack_distance, a parameter to randomize attack distance
 - (unit_range - 2) if short range

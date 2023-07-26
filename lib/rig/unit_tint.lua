@@ -29,6 +29,10 @@ function ERM_UnitTint.tint_archon_light()
     return { r = 0, g = 100, b = 255, a = 255 }
 end
 
+function ERM_UnitTint.tint_darkarchon_light()
+    return { r = 255, g = 80, b = 0, a = 1 }
+end
+
 function ERM_UnitTint.tint_cold()
     return { r = 153, g = 250, b = 220, a = 85 }
 end

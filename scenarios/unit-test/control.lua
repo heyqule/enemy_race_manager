@@ -30,8 +30,8 @@ Event.register(defines.events.on_player_created, function(event)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(1)
 
-    --surface.daytime = 0.5
-    surface.daytime = 1
+    surface.daytime = 0.5
+    --surface.daytime = 1
     surface.freeze_daytime = true
 
     -- Comment out the following to start with godmode
@@ -69,34 +69,42 @@ Event.on_nth_tick(1800, function(event)
     })
 
 
-    local group = surface.create_unit_group {
-        position = {10,-10}, force = 'enemy'
-    }
-    group.add_member(surface.create_entity({
-        name='erm_zerg/devourer/20',
-        force='enemy',
-        position={15,15}
-    }))
-    group.add_member(surface.create_entity({
-        name='erm_zerg/devourer/20',
-        force='enemy',
-        position={12,12}
-    }))
-    group.add_member(surface.create_entity({
-        name='erm_zerg/devourer/20',
-        force='enemy',
-        position={9,9}
-    }))
-    group.add_member(surface.create_entity({
-        name='erm_zerg/devourer/20',
-        force='enemy',
-        position={15,15}
-    }))
+    --local group = surface.create_unit_group {
+    --    position = {10,-10}, force = 'enemy'
+    --}
+    --group.add_member(surface.create_entity({
+    --    name='erm_toss/shield_battery/20',
+    --    force='enemy',
+    --    position={15,15}
+    --}))
+    --group.add_member(surface.create_entity({
+    --    name='erm_toss/shield_battery/20',
+    --    force='enemy',
+    --    position={12,12}
+    --}))
+    --group.add_member(surface.create_entity({
+    --    name='erm_toss/shield_battery/20',
+    --    force='enemy',
+    --    position={9,9}
+    --}))
+    --group.add_member(surface.create_entity({
+    --    name='erm_toss/shield_battery/20',
+    --    force='enemy',
+    --    position={15,15}
+    --}))
+    --
+    --group.set_command({
+    --    type = defines.command.attack,
+    --    target = player_entity,
+    --    distraction = defines.distraction.by_anything
+    --})
 
-    group.set_command({
-        type = defines.command.attack,
-        target = player_entity,
-        distraction = defines.distraction.by_anything
+    surface.create_entity({
+        name='erm_toss/shield_battery/20',
+        force='enemy',
+        position={15,15}
     })
+
+
 end)
 

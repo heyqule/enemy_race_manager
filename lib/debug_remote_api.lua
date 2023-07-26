@@ -57,6 +57,12 @@ end
 --- Usage: remote.call('enemyracemanager_debug', 'print_global')
 function Debug_RemoteAPI.print_global()
     game.write_file('enemyracemanager/erm-global.json',game.table_to_json(util.copy(global)))
+
+    for interface_name, functions in pairs(remote.interfaces) do
+        if functions["print_global"] and interface_name ~= 'enemyracemanager_debug'  then
+            remote.call(interface_name, "print_global")
+        end
+    end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_calculate_attack_points')
