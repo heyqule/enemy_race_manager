@@ -58,6 +58,11 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
     if string.find(type,'spitter') then
         biter['attack_parameters']['damage_modifier'] = 0.75 * biter['attack_parameters']['damage_modifier']
+        local attack_range = ErmConfig.get_max_attack_range()
+        local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
+        biter['attack_parameters']['range'] = attack_range
+        biter['attack_parameters']['vision_distance'] = vision_distance
+        biter['attack_parameters']['min_attack_distance'] = attack_range - 4
     end
     ERM_UnitHelper.modify_biter_damage(biter, level)
     biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
