@@ -51,6 +51,7 @@ These units' attacks are handled via on_script_trigger_effect events
 * Self destruct unit: [Infested](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/infested.lua)
 * Dropping new units: [Overlord](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/overlord.lua)
 * Construct new building with self destruct: [Drone](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/drone.lua)
+* Timed Units (they die after 2 minutes of spawn from another unit): [Broodling](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/broodling.lua)
 
 ###### Default File to include:
 ```lua

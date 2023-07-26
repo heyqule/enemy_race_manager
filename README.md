@@ -9,10 +9,15 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.17 changes
-- Add compatibility with Milestone mod
-- "Default" enemy spawner generator group each races together based on world parameters.
-- Pollution multiplier changed from 0.05 to 0.025 by default
+### 1.18 Changes
+- New max target range settings, 14, 20, 26*, 32*, 40*
+- Targeting range for all units depends on max range settings, long range is 75%, medium is 50% and short is 25%
+- Unit's time to live subsystem, the unit dies once the time is up.
+- Dropship logic improvements. They now drop multiple units!
+
+### Zerg and Protoss
+- Remaster graphic for Zerg and Protoss!!  Special thanks SHlNZ0U to prepare the graphics!
+- Additional units and attack changes for Zerg and Protoss!!! 
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -23,7 +28,11 @@ New Enemy Races:
 
 [>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)
 
+[>>>>Zerg HD<<<<]() - Remaster Graphic support
+
 [>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
+
+[>>>>Protoss HD<<<<]() - Remaster Graphic support
 
 [>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
 
