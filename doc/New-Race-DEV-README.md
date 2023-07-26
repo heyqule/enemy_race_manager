@@ -168,10 +168,10 @@ min_attack_distance, a parameter to randomize attack distance
 - (unit_range - 4) if long range to max range
 
 ##### pollution_to_join_attack Guideline:
-Tier 1: 5 - 50
-Tier 2: 50 - 200
-Dropship / Drone: 200
-Tier 3: 100 - 500
+* Tier 1: 5 - 50
+* Tier 2: 50 - 200
+* Tier 3: 100 - 500
+* Dropship / Drone: 200
 
 AOE units are in higher range. Tier 3 AOE units generally take 300-400 range.
 
