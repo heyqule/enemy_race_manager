@@ -87,33 +87,35 @@ It feels more balance to have both splitter acid and direct attack for base defe
 
 ##### HP @ L20, Guideline:
 Unit HP:
-level 1 are under 500, median none
-level 10 are 1000 - 5000, median 1500-2500
-level 20 are 2500 - 10000, median 3000-5000
+* level 1 are under 500, median none
+* level 10 are 1000 - 5000, median 1500-2500
+* level 20 are 2500 - 10000, median 3000-5000
 
-Spawner/Turret HP:
-turrets are 4000 - 6000 
-proxy spawners are usually 5000 - 8000 health
-support spawner are 6000 - 12000
-command center 12000+
+Spawner/Turret HP @ L20:
+* turrets are 4000 - 8000 
+* proxy spawners are usually 5000 - 8000 health
+* support spawner are 6000 - 12000
+* command center 12000+
 
 ##### Max Resistance Guideline:
 Unit Resistance:
-Max Physical: 95%
-Elemental: 90%
-Weak Elemental: 85%
+* Max Physical: 95%
+* Elemental: 90%
+* Weak Elemental: 85%
 
 Spawner/Turret Resistance:
-Max Physical: 85%
-Elemental: 80%
-Weak Elemental: 75%
+* Max Physical: 85%
+* Elemental: 80%
+* Weak Elemental: 75%
 
 ##### Damage Guideline:
-level 1: 10 - 50 DPS (damage per second)
-level 10: 30 - 100 DPS
-level 20:  80 - 200 DPS
+* level 1: 10 - 50 DPS (damage per second)
+* level 10: 30 - 100 DPS
+* level 20:  80 - 200 DPS
 
-AOE units usually use a lower value than above damage guideline.
+AOE units usually use a lower value than above damage guideline.  But you take the cooldown interval into consideration as well.  
+
+An attack may be too powerful if it does 1000 damage, but only attack once every 5s.  That's still 200 DPS.
 
 ##### Movement Speed Guideline:
 (level 1 to 20)
@@ -142,20 +144,21 @@ local incremental_movement_speed = 0.15
 ```
 
 ##### Attack Speed Guideline:
-Fastest attack speed for all units is 0.25s / attack.
+Fastest attack speed for all units is 0.25s / attack. (4 attacks / second)
+
 L20 attack speed range from 3s / attack to 4 attacks/s depending on unit design.
 
 ##### Attack Range Guideline:
 Meele: 1
-Dropship: ERM_Config.get_max_attack_range()
-Short Range: 6
-Medium Range: 9
-Long Range: 12
-Max Range: ERM_Config.get_max_attack_range()
+* Dropship: ERM_Config.get_max_attack_range()
+* Short Range: ERM_Config.get_max_attack_range() * 0.25
+* Medium Range: ERM_Config.get_max_attack_range() * 0.5
+* Long Range: ERM_Config.get_max_attack_range() * 0.75
+* Max Range: ERM_Config.get_max_attack_range()
 
-get_max_attack_range() is either 14 or 20. Gun turret may not able to attack range 20 enemy.
+get_max_attack_range() is depends on the startup setting. Gun turret may not able to attack range 20 enemy.
 
-The max range of a unit should not be further than furtherest shooting turret. 
+The max range of a unit should not be further than the longest range of player turret. 
 
 Otherwise, it will just annoy players and break the flow of the game.
 
@@ -168,7 +171,7 @@ min_attack_distance, a parameter to randomize attack distance
 Tier 1: 5 - 50
 Tier 2: 50 - 200
 Dropship / Drone: 200
-Tier 3: 100 - 400
+Tier 3: 100 - 500
 
 AOE units are in higher range. Tier 3 AOE units generally take 300-400 range.
 
