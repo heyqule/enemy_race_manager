@@ -43,7 +43,7 @@ end
 
 local can_level_up_by_evolution_points = function(current_level, race_settings, race_name)
     return current_level < ErmConfig.get_max_level() and
-            race_settings[race_name].evolution_point >= evolution_points[current_level] * ErmConfig.get_level_curve_multiplier()
+            race_settings[race_name].evolution_point >= evolution_points[current_level]
 end
 
 local handle_unit_level = function(race_settings, force, race_name, dispatch)
@@ -197,7 +197,7 @@ function LevelManager.get_calculated_current_level(race_setting)
             break
         end
 
-        if key < max_level and race_setting.evolution_point < value * ErmConfig.get_level_curve_multiplier()  then
+        if key < max_level and race_setting.evolution_point < value then
             return key
         end
     end
@@ -236,7 +236,7 @@ end
 function LevelManager.print_level_curve_table()
     local string = ''
     for i=1, ErmConfig.get_max_level() - 1 do
-        string = string .. tostring(i+1) .. " = ".. tostring(evolution_points[i] * ErmConfig.get_level_curve_multiplier()) .. ', '
+        string = string .. tostring(i+1) .. " = ".. tostring(evolution_points[i] ) .. ', '
     end
     game.print('Level Curve: '..string)
 end

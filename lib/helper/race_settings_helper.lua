@@ -191,6 +191,10 @@ function RaceSettingHelper.pick_dropship_unit(target_race)
     return global.race_settings[target_race]['dropship']
 end
 
+function RaceSettingHelper.is_timed_unit(target_race, unit_name)
+    return global.race_settings[target_race]['timed_units'][unit_name]
+end
+
 function RaceSettingHelper.is_command_center(target_race, name)
     local command_centers = global.race_settings[target_race]['current_command_centers_tier']
     for _, val in pairs(command_centers) do

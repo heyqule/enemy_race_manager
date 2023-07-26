@@ -22,21 +22,11 @@ data:extend {
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-level-curve-multiplier",
-        description = "enemyracemanager-level-curve-multiplier",
-        setting_type = "startup",
-        default_value = 1,
-        minimum_value = 1,
-        maximum_value = 10,
-        order = "enemyracemanager-102"
-    },
-    {
-        type = "string-setting",
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
         default_value = ATTACK_RANGE_14,
-        allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20 },
+        allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20, ATTACK_RANGE_26, ATTACK_RANGE_32, ATTACK_RANGE_40 },
         order = "enemyracemanager-103"
     },
     {

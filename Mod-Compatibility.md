@@ -6,7 +6,7 @@
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
 
-#### Krastorio2 (Requires 1.2+, in beta atm)
+#### Krastorio2 (Requires 1.2+)
 * New races support creep generation
 * Custom bullets can hit air
 

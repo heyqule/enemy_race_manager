@@ -9,8 +9,11 @@ MAX_LEVEL_10 = "Normal - Max L10"
 MAX_LEVEL_15 = "Advanced - Max L15"
 MAX_LEVEL_20 = "Hardcore - Max L20"
 
-ATTACK_RANGE_14 = "Normal - 14"
-ATTACK_RANGE_20 = "Advanced - 20"
+ATTACK_RANGE_14 = 14
+ATTACK_RANGE_20 = 20
+ATTACK_RANGE_26 = 26
+ATTACK_RANGE_32 = 32
+ATTACK_RANGE_40 = 40
 
 X_AXIS = 'x-axis'
 Y_AXIS = 'y-axis'

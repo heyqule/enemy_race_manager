@@ -30,7 +30,7 @@ data:extend(
                 type = "item-subgroup",
                 name = "erm-flying-enemies",
                 group = "enemies",
-                order = "erm-erm-flying-enemies"
+                order = "erm-flying-enemies"
             },
             {
                 type = "item-subgroup",
@@ -78,7 +78,7 @@ data:extend({
     {
         type = "sticker",
         name = "5-075-slowdown-sticker",
-        flags = {},
+        flags = {"not-on-map"},
         animation = Sprites.empty_pictures(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.75,
@@ -87,7 +87,7 @@ data:extend({
     {
         type = "sticker",
         name = "5-050-slowdown-sticker",
-        flags = {},
+        flags = {"not-on-map"},
         animation = Sprites.empty_pictures(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.50,
@@ -96,7 +96,7 @@ data:extend({
     {
         type = "sticker",
         name = "30-050-slowdown-sticker",
-        flags = {},
+        flags = {"not-on-map"},
         animation = Sprites.empty_pictures(),
         duration_in_ticks = 30 * 60,
         target_movement_modifier = 0.50,
@@ -105,7 +105,7 @@ data:extend({
     {
         type = "sticker",
         name = "30-075-slowdown-sticker",
-        flags = {},
+        flags = {"not-on-map"},
         animation = Sprites.empty_pictures(),
         duration_in_ticks = 30 * 60,
         target_movement_modifier = 0.50,

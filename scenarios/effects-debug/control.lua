@@ -7,7 +7,7 @@ Event.register(defines.events.on_player_created, function(event)
     local player = game.players[1]
     local force = player.force
 
-    scenarios_helper.spawn_lab_tiles(surface)
+    scenarios_helper.spawn_lab_tiles(surface, 256)
     scenarios_helper.set_tech_level(force, 20)
     scenarios_helper.set_enemy_params(20, 3, 1.0)
     --scenarios_helper.set_attack_points()
@@ -111,8 +111,9 @@ local zerg_explosions = function(surface)
         'dark-swarm-explosion',
         'acid-cloud-explosion',
         'devourer-cloud-explosion',
+        'scourge-explosion',
         'overlord-air-death',
-        'guardian-air-death'
+        'guardian-air-death',
     }
 
     for key, value in pairs(explosion_types) do
@@ -140,7 +141,14 @@ local protoss_explosions = function(surface)
         'protoss-small-air-death',
         'protoss-large-air-death',
         'protoss-zealot-death',
-        'protoss-templar-death'
+        'protoss-templar-death',
+        'darkarchon-feedback',
+        'scarab-explosion',
+        'shield-battery-explosion',
+        'demo-darkarchon-maelstrom',
+        'toss-large-building-explosion',
+        'toss-small-building-explosion',
+        'toss-red-small-building-explosion',
     }
 
     for key, value in pairs(explosion_types) do
@@ -173,7 +181,7 @@ local marspeople_explosions = function(surface)
     end
 end
 
-Event.on_nth_tick(300, function(event)
+Event.on_nth_tick(100, function(event)
     local surface = game.surfaces[1]
 
     global_assets_explosion(surface)

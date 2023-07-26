@@ -133,4 +133,12 @@ function ERM_UnitHelper.get_pollution_attack(value, level)
     return value * (1 + level * setting_value)
 end
 
+function ERM_UnitHelper.get_vision_distance(attack_range)
+    if (attack_range <= 24) then
+        return 32
+    end
+
+    return attack_range + 8
+end
+
 return ERM_UnitHelper

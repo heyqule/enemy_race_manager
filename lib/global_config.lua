@@ -115,12 +115,15 @@ end
 ErmConfig.FFA_MULTIPLIER = 10
 ErmConfig.BUILD_GROUP_CAP = 50
 
+ErmConfig.MAX_TIME_TO_LIVE_UNIT = 800
+ErmConfig.TIME_TO_LIVE_UNIT_BATCH = 64
+ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 320
+
 local refreshable_settings = {
     startup = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
-        'enemyracemanager-level-curve-multiplier',
     },
     global = {
         'enemyracemanager-max-gathering-groups',
@@ -190,14 +193,6 @@ local convert_max_level =  function(setting_value)
     return current_level_setting
 end
 
-local convert_max_range =  function(setting_value)
-    local current_range = 14
-    if setting_value == ATTACK_RANGE_20 then
-        current_range = 20
-    end
-    return current_range
-end
-
 local get_global_setting_value = function(setting_name)
     local setting_value = global.settings[setting_name]
     if setting_value == nil then
@@ -220,7 +215,7 @@ function ErmConfig.refresh_config()
         if setting_name == 'enemyracemanager-max-level' then
             global.settings[setting_name] = convert_max_level(settings.startup[setting_name].value)
         elseif setting_name == 'enemyracemanager-max-attack-range' then
-            global.settings[setting_name] = convert_max_range(settings.startup[setting_name].value)
+            global.settings[setting_name] = settings.startup[setting_name].value
         else
             global.settings[setting_name] = settings.startup[setting_name].value
         end
@@ -248,10 +243,6 @@ function ErmConfig.get_max_level()
     return current_level_setting
 end
 
-function ErmConfig.get_level_curve_multiplier()
-    return get_global_setting_value('enemyracemanager-level-curve-multiplier')
-end
-
 function ErmConfig.get_max_attack_range()
     local current_range
     if global_setting_exists() then
@@ -259,16 +250,12 @@ function ErmConfig.get_max_attack_range()
     end
 
     if current_range == nil then
-        local setting_value = settings.startup['enemyracemanager-max-attack-range'].value
-        current_range = 14
-        if setting_value == ATTACK_RANGE_20 then
-            current_range = 20
-        end
+        current_range = settings.startup['enemyracemanager-max-attack-range'].value
 
         if global_setting_exists() then
             global.settings['enemyracemanager-max-attack-range'] = current_range
         end
-    end        
+    end
     return current_range
 end
 

@@ -90,7 +90,7 @@ function ERM_MainWindow.show(player)
     LevelManager.calculateEvolutionPoints(global.race_settings, game.forces, settings)
 
     for name, race_setting in pairs(global.race_settings) do
-        item_table.add { type = "label", caption = race_setting.race }
+        item_table.add { type = "label", caption = race_setting.label  }
         item_table.add { type = "label", caption = race_setting.level }
         item_table.add { type = "label", caption = race_setting.tier }
         item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }

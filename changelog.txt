@@ -1,4 +1,35 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.0
+Date: 2023-??-??
+
+  Features:
+    - Added Unit's time to live subsystem, unit dies once the time is up.
+    - This system uses Unit's min_pursue_time as time_to_live timer.
+    - min_pursue_time's base game default is 10 seconds.  Units in this system should have lifespan of maximum 5 mins for optimal performance.
+    - A race can have maximum of 500 time_to_live units.  The older units will be killed when it overflows.
+    - Time to live unit kills do not count toward attack points
+
+  Changes:
+    - Units from dropships / custom spawn now added to its parent unit group.
+    - *** Removed Level Requirement Multiplier from setting. ***  May affect existing game. Please adjust [Level Up] Evolution Point Multiplier.
+    - Enhanced Custom attack helper to support more variances of attacks
+    - enemyracemanager-max-attack-range is now an int setting, you may have to reset it to your desire range.
+    - Added new 26, 32, 42 range
+    - unit attack ranges are now dynamic based on your max range settings.
+    - long range unit is now 0.75x of max range and medium range target is now 0.5x of max attack range.
+
+  Gui:
+    - Race name column now print proper label, instead of race codename.
+
+  Bugfixes:
+    - Fixed an issue on custom attack group is using wrong force for the new group.
+
+  Scripts:
+    - Race name in GUI is defined with race_settings.label = {gui.label-race}
+
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.17.4
 Date: 2023-07-15
 
