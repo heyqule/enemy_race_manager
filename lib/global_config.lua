@@ -66,8 +66,6 @@ ErmConfig.BASE_BUILT_EVENT = 'erm_base_built'
 ErmConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
 ErmConfig.PREPARE_WORLD = 'erm_prepare_world'
 
-ErmConfig.RACE_MODE_PREFIX = 'erm_'
-
 ErmConfig.MAX_LEVELS = 20
 ErmConfig.MAX_ELITE_LEVELS = 5
 
@@ -441,7 +439,7 @@ function ErmConfig.initialize_races_data()
 
     for name, _ in pairs(game.active_mods) do
 
-        if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and check_register_erm_race(name) then
+        if check_register_erm_race(name) then
             Table.insert(global.installed_races, name)
         end
     end
@@ -460,7 +458,7 @@ function ErmConfig.initialize_races_data()
         }
     else
         for name, _ in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and check_register_erm_race(name) then
+            if check_register_erm_race(name) then
                 global.active_races[name] = true
             end
         end

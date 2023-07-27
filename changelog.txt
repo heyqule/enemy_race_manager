@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.1
+Date: 2023-07-26
+
+  Modding:
+    - Added a new remote interface function to register new race. "register_new_enemy_race"
+    - Please see script/remote.lua in erm_zerg for example.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.18.0
 Date: 2023-07-26
 
