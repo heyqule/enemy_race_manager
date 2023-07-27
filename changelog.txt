@@ -24,7 +24,7 @@ Date: 2023-07-26
   Bugfixes:
     - Fixed an issue on custom attack group is using wrong force for the new group.
 
-  Scripts:
+  Scripting:
     - Race name in GUI is defined with race_settings.label = {gui.label-race}
 
   Modding:
