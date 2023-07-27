@@ -30,8 +30,20 @@ Point of interests:
 * addRaceSettings()
     * This function set up race specific settings.
     * [__enemyracemanager__/lib/remote_api.lua](https://github.com/heyqule/enemy_race_manager/blob/main/lib/remote_api.lua)
+  
 * Event.register(defines.events.on_script_trigger_effect, function(event) end
     * handles custom attacks
+
+* Register required function in remote.lua (See below)
+
+#### scripts/remote.lua
+[remote.lua](https://github.com/heyqule/erm_zerg/blob/main/control.lua)
+
+* RemoteAPI.milestones_preset_addons()
+  * This function registers Milestone objective
+
+* RemoteAPI.register_new_enemy_race()
+  * This function is **REQUIRED** to register your race with ERM.
 
 #### Units:
 Many of the units have unique abilities, please refer to the lua files for reference

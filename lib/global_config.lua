@@ -167,18 +167,6 @@ local get_selected_race_value = function(value)
     return value
 end
 
-local is_enemy_race = function(name)
-    local helper_mods = {
-        erm_terran=true,
-        zerm_postprocess=true,
-    }
-    if helper_mods[name] == nil then
-        return true
-    end
-
-    return false
-end
-
 local convert_max_level =  function(setting_value)
     local current_level_setting = 10;
 
@@ -204,6 +192,15 @@ end
 
 local global_setting_exists = function()
     return global and global.settings
+end
+
+local check_register_erm_race = function(mod_name)
+    if(remote.interfaces[mod_name] and
+            remote.interfaces[mod_name]['register_new_enemy_race']  and
+            remote.call(mod_name,'register_new_enemy_race') == true) then
+        return true
+    end
+    return false
 end
 
 function ErmConfig.is_cache_expired(last_tick, length)
@@ -443,7 +440,8 @@ function ErmConfig.initialize_races_data()
     global.active_races = {[MOD_NAME] = true}
 
     for name, _ in pairs(game.active_mods) do
-        if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
+
+        if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and check_register_erm_race(name) then
             Table.insert(global.installed_races, name)
         end
     end
@@ -462,7 +460,7 @@ function ErmConfig.initialize_races_data()
         }
     else
         for name, _ in pairs(game.active_mods) do
-            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and is_enemy_race(name) then
+            if String.find(name, ErmConfig.RACE_MODE_PREFIX, 1, true) and check_register_erm_race(name) then
                 global.active_races[name] = true
             end
         end
