@@ -25,7 +25,7 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.set_game_speed(1)
 
     surface.daytime = 0.5
-    --surface.daytime = 1
+    surface.daytime = 1
     surface.freeze_daytime = true
 
     -- Comment out the following to start with godmode

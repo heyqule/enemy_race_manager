@@ -14,6 +14,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Targeting range for all units depends on max range settings, long range is 75%, medium is 50% and short is 25%
 - Unit's time to live subsystem, the unit dies once the time is up.
 - Dropship logic improvements. They now drop multiple units!
+- removed "Level Requirement Multiplier" setting
 
 ### Zerg and Protoss
 - Remaster graphic for Zerg and Protoss!!  Special thanks SHlNZ0U to prepare the graphics!
@@ -28,11 +29,11 @@ New Enemy Races:
 
 [>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)
 
-[>>>>Zerg HD<<<<]() - Remaster Graphic support
+[>>>>Zerg HD<<<<](https://mods.factorio.com/mod/erm_zerg_hd) - Remaster Graphic support
 
 [>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
 
-[>>>>Protoss HD<<<<]() - Remaster Graphic support
+[>>>>Protoss HD<<<<](https://mods.factorio.com/mod/erm_toss_hd) - Remaster Graphic support
 
 [>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
 
@@ -66,6 +67,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 #### Adjustable max attack range for extra long range attack units
 * Normal, 14, default
 * Advanced, 20, outside of gun turret range.
+* New 26, 32, 40 range
 
 #### Enemy Unit Leveling
 The evolution points is tied to force's hidden evolution factors (time, pollution and enemy kills).
@@ -190,10 +192,10 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
 
 ### Advanced Army Controls (Only for ERM - Terran)
 - Army controls enhancements 
-  - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
-  - Automated unit deployment.
-  - Unit Teleportation between 2 areas, including between planets/surfaces.
-  - Unit Population Control
+    - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
+    - Automated unit deployment.
+    - Unit Teleportation between 2 areas, including between planets/surfaces.
+    - Unit Population Control
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
@@ -205,7 +207,6 @@ ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/M
 
 ### Known Issues
 * Defense turrets from new force attack player in peaceful mode.
-    * If you know how to fix it, please message me.
 
 ### Mod Compatibility
 
