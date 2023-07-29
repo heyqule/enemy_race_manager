@@ -128,7 +128,10 @@ Spawner/Turret Resistance:
 
 AOE units usually use a lower value than above damage guideline.  But you take the cooldown interval into consideration as well.  
 
-An attack may be too powerful if it does 1000 damage, but only attack once every 5s.  That's still 200 DPS.
+When designing top damage dealer, an attack is likely too powerful if it does 1000 damage, but only attack once every 5s.  That's still 200 DPS range.  
+When there are a few of these units in the group, they can one shot reinforced turrets.
+
+A reinforced gun turret (1600HP with 33% resistances) should be able to survive about 10 shots from top damage dealers.
 
 ##### Movement Speed Guideline:
 (level 1 to 20)
