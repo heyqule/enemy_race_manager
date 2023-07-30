@@ -3,7 +3,7 @@ Version: 1.18.2
 Date: 2023-07-30
 
   Changes:
-    - Boss mode no longer have hard limited to erm_zerg and erm_toss.  Other races can now extend it freely.
+    - Boss mode no longer have hard limited to erm_zerg and erm_toss.  Other races can extend it.
 
   Bugfixes:
     - Fix a crash in CustomAttackHelper.drop_batch_units()
