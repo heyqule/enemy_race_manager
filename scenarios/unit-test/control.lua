@@ -55,12 +55,12 @@ Event.on_nth_tick(3600, function(event)
         player=1,
         position={-10,-10}
     })
-    local player_entity = surface.create_entity({
-        name='erm_terran/battlecruiser/laser',
-        force='player',
-        player=1,
-        position={-10,-10}
-    })
+    --local player_entity = surface.create_entity({
+    --    name='erm_terran/battlecruiser/laser',
+    --    force='player',
+    --    player=1,
+    --    position={-10,-10}
+    --})
     --local player_entity = surface.create_entity({
     --    name='erm_terran/marine/mk3',
     --    force='player',
@@ -74,30 +74,30 @@ Event.on_nth_tick(3600, function(event)
     --    position={-10,-10}
     --})
 
-
+    local forceName = 'enemy_erm_terran_exp'
     local group = surface.create_unit_group {
-        position = {10,-10}, force = 'enemy'
+        position = {10,-10}, force = forceName
     }
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
-        force='enemy',
+        name='erm_terran_exp/marine/20',
+        force=forceName,
         position={15,15}
     }))
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
-        force='enemy',
+        name='erm_terran_exp/marine/20',
+        force=forceName,
         position={12,12}
     }))
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
-        force='enemy',
+        name='erm_terran_exp/battlecruiser/20',
+        force=forceName,
         position={9,9}
     }))
-    group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
-        force='enemy',
-        position={15,15}
-    }))
+    --group.add_member(surface.create_entity({
+    --    name='erm_terran_exp/battlecruiser/20',
+    --    force=forceName,
+    --    position={15,15}
+    --}))
 
     group.set_command({
         type = defines.command.attack,
@@ -105,6 +105,10 @@ Event.on_nth_tick(3600, function(event)
         distraction = defines.distraction.by_anything
     })
 
-
+    surface.create_entity({
+        name='erm_terran_exp/starport/20',
+        force=forceName,
+        position={20,20}
+    })
 end)
 

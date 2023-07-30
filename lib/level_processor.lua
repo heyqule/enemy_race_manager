@@ -73,15 +73,14 @@ end
 
 function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
     for _, force in pairs(forces) do
-        if String.find(force.name, 'enemy', 1, true) then
-            local force_name = force.name
-            local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        local force_name = force.name
+        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        if ErmConfig.race_is_active(race_name) then
             -- Handle Score Level
             calculate_evolution_points(race_settings, settings, force, race_name)
         end
     end
 end
-
 
 function LevelManager.calculateLevels()
     if ErmRaceSettingsHelper.is_in_boss_mode() then

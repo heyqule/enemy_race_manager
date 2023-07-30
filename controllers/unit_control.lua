@@ -19,9 +19,12 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity and entity.valid then
-        local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
-        if replaced_entity and replaced_entity.valid then
-            ErmBaseBuildProcessor.exec(replaced_entity)
+        local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
+        if ErmConfig.race_is_active(race_name) then
+            local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
+            if replaced_entity and replaced_entity.valid then
+                ErmBaseBuildProcessor.exec(replaced_entity)
+            end
         end
     end
 end

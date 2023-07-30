@@ -141,4 +141,8 @@ function ERM_UnitHelper.get_vision_distance(attack_range)
     return attack_range + 8
 end
 
+function ERM_UnitHelper.format_map_color(color)
+    return color
+end
+
 return ERM_UnitHelper

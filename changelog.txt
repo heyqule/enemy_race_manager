@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.3
+Date: 2023-07-30
+
+  Changes:
+    - Add functions for upcoming team color and map color handling.
+
+  Bugfixes:
+    - Fixed GUI crash when there are other non ERM enemy_ prefixed forces presents.
+    - Fixed a crash when onBiterBaseBuilt happens on a non ERM race.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.18.2
 Date: 2023-07-29
 
