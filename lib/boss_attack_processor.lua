@@ -221,7 +221,7 @@ local process_attack = function(data, unique_position)
                 position = position,
                 create_build_effect_smoke = false,
                 raise_built = false,
-                force = boss.force
+                force = entity_force
             })
         end
     end

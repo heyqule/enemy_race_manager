@@ -1,7 +1,9 @@
 local String = require('__stdlib__/stdlib/utils/string')
 local Table = require('__stdlib__/stdlib/utils/table')
 
-local RaceSettingHelper = {}
+local RaceSettingHelper = {
+    default_mod_name = 'erm_vanilla'
+}
 
 local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
@@ -113,7 +115,7 @@ function RaceSettingHelper.clean_up_race()
     end
 
     for _, item in pairs(global.race_settings) do
-        if item.race ~= MOD_NAME and game.active_mods[item.race] == nil then
+        if item.race ~= RaceSettingHelper.default_mod_name and game.active_mods[item.race] == nil then
             global.race_settings = Table.remove_keys(global.race_settings, { item.race })
             game.merge_forces('enemy_'..item.race, 'enemy')
         end

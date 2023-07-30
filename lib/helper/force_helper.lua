@@ -9,7 +9,9 @@
 local String = require('__stdlib__/stdlib/utils/string')
 local Table = require('__stdlib__/stdlib/utils/table')
 
-local ForceHelper = {}
+local ForceHelper = {
+    default_mod_name = 'erm_vanilla'
+}
 
 local NEUTRAL_FORCES = {
     'maze-terraforming-targets',
@@ -36,12 +38,12 @@ function ForceHelper.extract_race_name_from(force_name)
 
         return global.force_race_name_cache[force_name]
     else
-        return MOD_NAME
+        return ForceHelper.default_mod_name
     end
 end
 
 function ForceHelper.get_force_name_from(race_name)
-    if race_name == MOD_NAME then
+    if race_name == ForceHelper.default_mod_name then
         return 'enemy'
     end
     return 'enemy_'..race_name
@@ -89,7 +91,7 @@ function ForceHelper.get_name_token(name)
 
     if global.force_entity_name_cache[name] == nil then
         if not String.find(name, '/', 1, true) then
-            global.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
+            global.force_entity_name_cache[name] = { ForceHelper.default_mod_name, name, '1' }
         else
             global.force_entity_name_cache[name] = ForceHelper.split_name(name)
         end

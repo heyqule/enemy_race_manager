@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.4
+Date: 2023-07-30
+
+  Changes:
+    - Refactored force helper and race setting helper, so they can safely use on race mods.
+
+  Bugfixes:
+    - Fix drop unit in custom attack crash when it's used with projectiles.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.18.3
 Date: 2023-07-30
 
