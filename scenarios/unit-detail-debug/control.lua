@@ -27,8 +27,8 @@ Event.register(defines.events.on_player_created, function(event)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(1)
 
-    surface.daytime = 0.5
-    --surface.daytime = 1
+    --surface.daytime = 0.5
+    surface.daytime = 1
     surface.freeze_daytime = true
 
     -- Comment out the following to start with godmode
@@ -74,7 +74,7 @@ Event.register(defines.events.on_player_created, function(event)
     for _, item in pairs(prototypes) do
         x = -100 + i * gap
         local nameToken = ForceHelper.get_name_token(item.name)
-        if nameToken[3] == nil or acceptLevels[nameToken[3]] then
+        if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3],'%d') ~= 1  then
             local entity = surface.create_entity({
                 name=item.name,
                 force='neutral',

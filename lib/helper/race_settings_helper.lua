@@ -411,6 +411,10 @@ function RaceSettingHelper.is_in_boss_mode()
     return global.boss.entity and global.boss.entity.valid
 end
 
+function RaceSettingHelper.has_boss(target_race)
+    return global.race_settings[target_race]['boss_building'] or false
+end
+
 function RaceSettingHelper.boss_tier(target_race)
     return global.race_settings[target_race]['boss_tier'] or 1
 end

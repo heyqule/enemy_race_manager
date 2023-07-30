@@ -31,7 +31,7 @@ Event.register(defines.events.on_player_created, function(event)
     scenarios_helper.set_game_speed(1)
 
     surface.daytime = 0.5
-    --surface.daytime = 1
+    surface.daytime = 1
     surface.freeze_daytime = true
 
     -- Comment out the following to start with godmode
@@ -41,7 +41,7 @@ Event.register(defines.events.on_player_created, function(event)
     --player.teleport({0, 0})
 end)
 
-Event.on_nth_tick(1800, function(event)
+Event.on_nth_tick(3600, function(event)
 
     local surface = game.surfaces[1]
     local entities = surface.find_entities_filtered({type={'unit','electric-turret'}})
@@ -49,60 +49,60 @@ Event.on_nth_tick(1800, function(event)
         entity.destroy()
     end
 
-    --local player_entity = surface.create_entity({
-    --    --name ='erm_terran/marine/mk1',
-    --    --name='erm-reinforced-laser-turret',
-    --    name='erm_terran/firebat/mk2',
-    --    --name='erm_terran/battlecruiser/yamato',
-    --    force='player',
-    --    player=1,
-    --    position={-10,-10}
-    --})
     local player_entity = surface.create_entity({
-        --name ='erm_terran/marine/mk1',
-        --name='erm-reinforced-laser-turret',
-        --name='erm_terran/firebat/mk2',
         name='erm_terran/battlecruiser/yamato',
         force='player',
         player=1,
         position={-10,-10}
     })
-
-
-    --local group = surface.create_unit_group {
-    --    position = {10,-10}, force = 'enemy'
-    --}
-    --group.add_member(surface.create_entity({
-    --    name='erm_toss/shield_battery/20',
-    --    force='enemy',
-    --    position={15,15}
-    --}))
-    --group.add_member(surface.create_entity({
-    --    name='erm_toss/shield_battery/20',
-    --    force='enemy',
-    --    position={12,12}
-    --}))
-    --group.add_member(surface.create_entity({
-    --    name='erm_toss/shield_battery/20',
-    --    force='enemy',
-    --    position={9,9}
-    --}))
-    --group.add_member(surface.create_entity({
-    --    name='erm_toss/shield_battery/20',
-    --    force='enemy',
-    --    position={15,15}
-    --}))
-    --
-    --group.set_command({
-    --    type = defines.command.attack,
-    --    target = player_entity,
-    --    distraction = defines.distraction.by_anything
+    local player_entity = surface.create_entity({
+        name='erm_terran/battlecruiser/laser',
+        force='player',
+        player=1,
+        position={-10,-10}
+    })
+    --local player_entity = surface.create_entity({
+    --    name='erm_terran/marine/mk3',
+    --    force='player',
+    --    player=1,
+    --    position={-10,-10}
+    --})
+    --local player_entity = surface.create_entity({
+    --    name='erm_terran/tank/mk2',
+    --    force='player',
+    --    player=1,
+    --    position={-10,-10}
     --})
 
-    surface.create_entity({
-        name='erm_toss/shield_battery/20',
+
+    local group = surface.create_unit_group {
+        position = {10,-10}, force = 'enemy'
+    }
+    group.add_member(surface.create_entity({
+        name='erm_zerg/overlord/20',
         force='enemy',
         position={15,15}
+    }))
+    group.add_member(surface.create_entity({
+        name='erm_zerg/overlord/20',
+        force='enemy',
+        position={12,12}
+    }))
+    group.add_member(surface.create_entity({
+        name='erm_zerg/overlord/20',
+        force='enemy',
+        position={9,9}
+    }))
+    group.add_member(surface.create_entity({
+        name='erm_zerg/overlord/20',
+        force='enemy',
+        position={15,15}
+    }))
+
+    group.set_command({
+        type = defines.command.attack,
+        target = player_entity,
+        distraction = defines.distraction.by_anything
     })
 
 

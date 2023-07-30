@@ -206,11 +206,12 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local i = 0
     local group = nil
     local new_group = false
-    if event.source_entity.unit_group then
-        group = event.source_entity.unit_group
+
+    if source_entity and source_entity.unit_group then
+        group = source_entity.unit_group
     else
         group = surface.create_unit_group {
-            position = position, force = source_entity.force
+            position = position, force = race_settings.force
         }
         new_group = true
     end
@@ -222,7 +223,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
         end
 
         if position then
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity.force })
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = race_settings.force })
             if entity.type == 'unit' then
                 if group.valid then
                     group.add_member(entity)

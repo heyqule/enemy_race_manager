@@ -376,7 +376,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
             return nil
         end
 
-        if race_name ~= 'erm_zerg' and race_name ~= 'erm_toss' then
+        if not ErmRaceSettingsHelper.has_boss(race_name) then
             game.print('Unable to spawn boss on unsupported race: '..race_name)
             return nil
         end
