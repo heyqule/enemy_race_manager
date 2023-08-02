@@ -74,30 +74,30 @@ Event.on_nth_tick(3600, function(event)
     --    position={-10,-10}
     --})
 
-    local forceName = 'enemy_erm_terran_exp'
+    local forceName = 'enemy_erm_zerg'
     local group = surface.create_unit_group {
         position = {10,-10}, force = forceName
     }
     group.add_member(surface.create_entity({
-        name='erm_terran_exp/marine/20',
+        name='erm_zerg/overlord/20',
         force=forceName,
         position={15,15}
     }))
     group.add_member(surface.create_entity({
-        name='erm_terran_exp/marine/20',
+        name='erm_zerg/overlord/20',
         force=forceName,
         position={12,12}
     }))
     group.add_member(surface.create_entity({
-        name='erm_terran_exp/battlecruiser/20',
+        name='erm_zerg/overlord/20',
         force=forceName,
         position={9,9}
     }))
-    --group.add_member(surface.create_entity({
-    --    name='erm_terran_exp/battlecruiser/20',
-    --    force=forceName,
-    --    position={15,15}
-    --}))
+    group.add_member(surface.create_entity({
+        name='erm_zerg/overlord/20',
+        force=forceName,
+        position={15,15}
+    }))
 
     group.set_command({
         type = defines.command.attack,

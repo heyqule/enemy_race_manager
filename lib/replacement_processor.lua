@@ -32,7 +32,7 @@ local replace_structures = function(surface, entity, race_settings)
     end
 
     if position then
-        return surface.create_entity({ name = name, force = new_force_name, position = position })
+        return surface.create_entity({ name = name, force = new_force_name, position = position, spawn_decorations = true })
     end
 end
 
@@ -129,7 +129,7 @@ function ReplacementProcessor.resetDefault(surface)
                 local position = entity.position
                 local name = spawner_names[math.random(1, 2)]
                 entity.destroy()
-                surface.create_entity({ name = name, position = position, force = 'enemy' })
+                surface.create_entity({ name = name, position = position, force = 'enemy', spawn_decorations = true })
             end
         end)
     end

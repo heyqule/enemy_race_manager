@@ -65,6 +65,77 @@ local get_race_settings = function(race_name)
     return global.custom_attack_race_settings[race_name]
 end
 
+
+local drop_unit = function(event, race_name, unit_name, count, position)
+    position = position or event.source_position or event.source_entity.position
+    count = count or 1
+    local race_settings = get_race_settings(race_name)
+    local surface = game.surfaces[event.surface_index]
+    local level = race_settings.level
+    local force_name = ErmForceHelper.get_force_name_from(race_name)
+
+    position.x = position.x + 2
+
+    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
+
+    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+        position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+    end
+
+    if position then
+        local idx = 0;
+        while idx < count do
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
+            if entity.type == 'unit' then
+                entity.set_command({
+                    type = defines.command.attack_area,
+                    destination = {x = position.x, y = position.y},
+                    radius = ATTACK_CHUNK_SIZE,
+                    distraction = defines.distraction.by_anything
+                })
+
+                if event.source_entity and event.source_entity.type == 'unit' and event.source_entity.unit_group then
+                    event.source_entity.unit_group.add_member(entity)
+                end
+
+                register_time_to_live_unit(event, entity, race_name, unit_name)
+            end
+            idx = idx + 1
+        end
+    end
+end
+
+local drop_player_unit = function(event, race_name, unit_name, count, position)
+    position = position or event.source_position or event.source_entity.position
+    local race_settings = get_race_settings(race_name)
+    local force = event.source_entity.force or 'player'
+    local surface = game.surfaces[event.surface_index]
+
+    local final_unit_name = race_name .. '/' .. unit_name
+
+    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+        position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+    end
+
+    if position then
+        local idx = 0;
+        while idx < count do
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force })
+            if entity.type == 'unit' then
+                entity.set_command({
+                    type = defines.command.attack_area,
+                    destination = {x = position.x, y = position.y},
+                    radius = ATTACK_CHUNK_SIZE,
+                    distraction = defines.distraction.by_anything
+                })
+
+                register_time_to_live_unit(event, entity, race_name, unit_name)
+            end
+            idx = idx + 1
+        end
+    end
+end
+
 local CustomAttackHelper = {}
 
 function CustomAttackHelper.get_race_settings(race_name)
@@ -96,46 +167,17 @@ end
 
 ---
 --- Process single type of unit drops
---- for scripted attack b
---- not suitable for projectile
+---
+function CustomAttackHelper.drop_player_unit(event, race_name, unit_name, count)
+    drop_player_unit(event, race_name, unit_name, count)
+end
+
+
+---
+--- Process single type of unit drops
 ---
 function CustomAttackHelper.drop_unit_at_target(event, race_name, unit_name, count)
-    count = count or 1
-    local race_settings = get_race_settings(race_name)
-    local surface = game.surfaces[event.surface_index]
-    local level = race_settings.level
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
-
-    local position = event.target_position
-    position.x = position.x + 2
-
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
-
-    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, event.target_position, 10, 3, true)
-    end
-
-    if position then
-        local idx = 0;
-        while idx < count do
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
-            if entity.type == 'unit' then
-                entity.set_command({
-                    type = defines.command.attack_area,
-                    destination = {x = position.x, y = position.y},
-                    radius = ATTACK_CHUNK_SIZE,
-                    distraction = defines.distraction.by_anything
-                })
-
-                if event.source_entity and event.source_entity.type == 'unit' and event.source_entity.unit_group then
-                    event.source_entity.unit_group.add_member(entity)
-                end
-
-                register_time_to_live_unit(event, entity, race_name, unit_name)
-            end
-            idx = idx + 1
-        end
-    end
+    drop_unit(event, race_name, unit_name, count, event.target_position)
 end
 
 
@@ -143,57 +185,13 @@ end
 --- Process single type of unit drops
 ---
 function CustomAttackHelper.drop_unit(event, race_name, unit_name, count)
-    count = count or 1
-    local race_settings = get_race_settings(race_name)
-    local surface = game.surfaces[event.surface_index]
-    local level = race_settings.level
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
-    log(race_name)
-    log(force_name)
-    log(unit_name)
-    log('1.------')
-
-    local position = event.source_position or event.source_entity.position
-    position.x = position.x + 2
-
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
-
-    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
-    end
-
-    if position then
-        local idx = 0;
-        while idx < count do
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
-            if entity.type == 'unit' then
-                entity.set_command({
-                    type = defines.command.attack_area,
-                    destination = {x = position.x, y = position.y},
-                    radius = ATTACK_CHUNK_SIZE,
-                    distraction = defines.distraction.by_anything
-                })
-
-                log(entity.name)
-                log(entity.force.name)
-
-                if event.source_entity and event.source_entity.type == 'unit' and event.source_entity.unit_group then
-                    log(event.source_entity.name)
-                    log(event.source_entity.force.name)
-                    event.source_entity.unit_group.add_member(entity)
-                end
-                log('2.------')
-                register_time_to_live_unit(event, entity, race_name, unit_name)
-            end
-            idx = idx + 1
-        end
-    end
+    drop_unit(event, race_name, unit_name, count)
 end
 
 ---
 --- Process batch unit drops
 ---
-function CustomAttackHelper.drop_batch_units(event, race_name, count, unit_name)
+function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local race_settings = get_race_settings(race_name)
 
     if race_settings == nil then
@@ -256,7 +254,7 @@ end
 ---
 --- Process Boss Attack Group
 ---
-function CustomAttackHelper.drop_boss_units(event, race_name, count, unit_name)
+function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
     local boss_data = remote.call('enemyracemanager', 'get_boss_data')
     local surface = game.surfaces[event.surface_index]

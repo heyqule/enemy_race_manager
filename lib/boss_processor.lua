@@ -425,7 +425,8 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         local boss_entity = surface.create_entity {
             name=BossProcessor.get_boss_name(race_name),
             position=spawn_position,
-            force=force
+            force=force,
+            spawn_decorations = true
         }
 
         for _, value in pairs(ErmForceHelper.get_player_forces()) do

@@ -87,15 +87,16 @@ local addRaceSettings = function()
         --Unit list, spawn percentage, unit_cost
         {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 30},
         {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 30},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 15},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 15},
-        {{'defender','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {2, 1, 1, 2, 2}, 20},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 20},
+        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 20},
+        {{'defender','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {2, 1, 1, 2, 2}, 25},
     }
     race_settings.featured_flying_groups = {
-        {{'distractor','destroyer'}, {1, 1}, 50},
-        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 50},
-        {{'logistic-robot', 'defender', 'distractor','destroyer'}, {1, 2, 2, 1}, 50},
+        {{'distractor','destroyer'}, {1, 1}, 75},
+        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 75},
+        {{'logistic-robot', 'defender', 'distractor','destroyer'}, {1, 2, 2, 1}, 75},
     }
+    race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 

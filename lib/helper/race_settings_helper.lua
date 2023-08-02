@@ -297,6 +297,10 @@ function RaceSettingHelper.refresh_current_tier(race_name)
     local race_settings = global.race_settings[race_name]
     local i = 1
 
+    if race_settings.units == nil then
+        return
+    end
+
     race_settings.current_units_tier = {}
     race_settings.current_turrets_tier = {}
     race_settings.current_command_centers_tier = {}
@@ -419,6 +423,14 @@ end
 
 function RaceSettingHelper.boss_tier(target_race)
     return global.race_settings[target_race]['boss_tier'] or 1
+end
+
+function RaceSettingHelper.k2_creep_enabled(target_race)
+    if global.race_settings[target_race]['enable_k2_creep'] == false then
+        return false
+    end
+
+    return true
 end
 
 return RaceSettingHelper

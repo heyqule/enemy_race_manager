@@ -251,6 +251,14 @@ data:extend {
         default_value = false,
         order = "enemyracemanager-802",
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-vanilla-k2-creep",
+        description = "enemyracemanager-vanilla-k2-creep",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-1000",
+    },
     --- Map Settings Tab ---
     {
         type = "int-setting",

@@ -20,9 +20,9 @@ local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local AttackGroupProcessor = {}
 
-AttackGroupProcessor.MIXED_UNIT_POINTS = 20
-AttackGroupProcessor.FLYING_UNIT_POINTS = 50
-AttackGroupProcessor.DROPSHIP_UNIT_POINTS = 100
+AttackGroupProcessor.MIXED_UNIT_POINTS = 25
+AttackGroupProcessor.FLYING_UNIT_POINTS = 75
+AttackGroupProcessor.DROPSHIP_UNIT_POINTS = 200
 
 AttackGroupProcessor.UNIT_PER_BATCH = 5
 AttackGroupProcessor.MAX_GROUP_SIZE = 2000

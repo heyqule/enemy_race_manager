@@ -1,9 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.5
+Date: 2023-??-??
+
+  Changes:
+    - Increase cost of each unit for attack groups to balance recently change of new units and attacks
+    - Custom attack group's MIXED_UNIT_POINTS changed from 20 to 25. 150 units to 120.
+    - Custom attack group's FLYING_UNIT_POINTS changed from 50 to 75. 60 units to 40.
+    - Custom attack group's DROPSHIP_UNIT_POINTS changed from 100 to 200. 30 units to 15.
+    - K2 Creep can be toggle based on startup setting for each race.  They are default to ON.
+    - Expansion buildings now spawn decoration if the building support it.
+
+  Modding:
+    - Add drop_player_unit() to custom attack helper.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.18.4
 Date: 2023-07-30
 
   Changes:
-    - Refactored force helper and race setting helper, so they can safely use on race mods.
+    - Refactored force helper and race setting helper.
 
   Bugfixes:
     - Fix drop unit in custom attack crash when it's used with projectiles.
