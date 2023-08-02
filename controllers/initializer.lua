@@ -96,7 +96,10 @@ local addRaceSettings = function()
         {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 75},
         {{'logistic-robot', 'defender', 'distractor','destroyer'}, {1, 2, 2, 1}, 75},
     }
-    race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
+
+    if game.active_mods['Krastorio2'] then
+        race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
+    end
 
     ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
