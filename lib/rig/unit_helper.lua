@@ -148,17 +148,15 @@ end
 
 function ERM_UnitHelper.format_team_color(color)
     color = util.table.deepcopy(color)
-    if color.b > 1 then
-        color.a = 20
-        color.b = math.floor(color.b * 255 / 2)
-        color.g = math.floor(color.g * 255 / 2)
-        color.r = math.floor(color.r * 255 / 2)
+
+    if color.a then
+        color.a = color.a * 0.5
+    elseif color.b >= 1 or color.g >= 1 or color.r >= 1 then
+        color.a = 128
     else
-        color.a = 0.075
-        color.b = color.b / 2
-        color.g = color.g / 2
-        color.r = color.r / 2
+        color.a = 0.5
     end
+
     return color
 end
 

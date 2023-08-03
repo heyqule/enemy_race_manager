@@ -90,14 +90,16 @@ function ERM_MainWindow.show(player)
     LevelManager.calculateEvolutionPoints(global.race_settings, game.forces, settings)
 
     for name, race_setting in pairs(global.race_settings) do
-        item_table.add { type = "label", caption = race_setting.label  }
-        item_table.add { type = "label", caption = race_setting.level }
-        item_table.add { type = "label", caption = race_setting.tier }
-        item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
-        item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(name)) }
-        item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
-        local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
-        action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { 'gui.more_action' }, tooltip = { 'gui.more_action_tooltip' } }
+        if race_setting.label then
+            item_table.add { type = "label", caption = race_setting.label  }
+            item_table.add { type = "label", caption = race_setting.level }
+            item_table.add { type = "label", caption = race_setting.tier }
+            item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
+            item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(name)) }
+            item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
+            local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
+            action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { 'gui.more_action' }, tooltip = { 'gui.more_action_tooltip' } }
+        end
     end
 
     if admin then
