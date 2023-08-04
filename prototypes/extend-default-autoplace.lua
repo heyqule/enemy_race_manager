@@ -26,17 +26,6 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, dist
         end
     end
 end
-------------
----moisture, -- 1 = Wet and 2 = Dry
----aux, 1 = red desert, 2 = sand
----elevation, 1,2,3 (1 low elevation, 2. medium, 3 high elavation)
----temperature, 1,2,3 (1 cold, 2. normal, 3 hot)
--------------
-local temperature_range = {12,18} --- {12-14,14-16,16-18}
-local elevation_range = {0,70} --- {0-30,20-50,40-70}
-if mods['alien-biomes'] then
-    temperature_range = {-20,150} --- {-20-60,10-90,70-150}
-end
 
 local distances = {
     medium = 2,
@@ -46,43 +35,70 @@ local distances = {
     mother = 32
 }
 
+--- only apply to enemy turret
+local get_distance = function(v, force_name)
+    if force_name ~= FORCE_NAME then
+        return 0
+    end
+
+    for name, d in pairs(distances) do
+        if String.find( v.name, name, 1, true) then
+        return d
+        end
+    end
+
+    return 0
+end
+------------
+---moisture, -- 1 = Dry and 2 = Wet, {0 - 0.51, 0.49 - 1}
+---aux, 1 = red desert, 2 = sand,  {0 - 0.51, 0.49 - 1}
+---elevation, 1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+---temperature, 1,2,3 (1 cold, 2. normal, 3 hot)
+-------------
+local moisture_ranges = {{0, 0.51},{0.49, 1}}
+local aux_ranges = {{0, 0.51},{0.49, 1}}
+local temperature_ranges = {{12,14},{14,16},{16,18}}
+local elevation_ranges = {{0,30},{20,50},{40,70}}
+if mods['alien-biomes'] then
+    temperature_ranges = {{-20,60},{10,90},{70,150}}
+end
+
 if ErmConfig.mapgen_is_mixed() then
     local volume = nil
     local erm_race_data = data.erm_enemy_races
-    local active_races = table_size(erm_race_data)
+    local total_active_races = table_size(erm_race_data)
+
     log(serpent.block(erm_race_data))
-    --
-    --if active_races >= 2  then
-    --    volume = {
-    --        moist ure_min = 0,
-    --        moisture_max = 0.51,
-    --    }
-    --
-    --    if settings.startup['enemyracemanager-enable-bitters'].value and erm_races['erm_zerg'] and active_races > 2 then
-    --        volume.aux_min = 0.59
-    --        volume.aux_max = 1
-    --    elseif erm_races['erm_zerg'] and active_races > 2 then
-    --        volume.aux_min = 0.49
-    --        volume.aux_max = 1
-    --    elseif erm_races['erm_redarmy'] and active_races == 2 then
-    --        volume.moisture_min = 0.49
-    --        volume.moisture_max = 1
-    --    end
-    --
-    --elseif settings.startup['enemyracemanager-enable-bitters'].value and active_races == 1 then
-    --    volume = {
-    --        water_min = 0,
-    --        water_max = 0.51,
-    --    }
-    --end
-    --
-    --if volume then
-    --    for _, v in pairs(data.raw["unit-spawner"]) do
-    --        tune_autoplace(v, false, volume)
-    --    end
-    --
-    --    for _, v in pairs(data.raw["turret"]) do
-    --        tune_autoplace(v, true, volume)
-    --    end
-    --end
+
+    if total_active_races >= 2  then
+        for _, race_data in pairs(data.erm_enemy_races) do
+            volume = {
+                moisture_min = moisture_ranges[race_data.moisture][1],
+                moisture_max = moisture_ranges[race_data.moisture][2],
+                aux_min = aux_ranges[race_data.aux][1],
+                aux_max = aux_ranges[race_data.aux][2],
+                --temperature_min = temperature_ranges[race_data.temperature][1],
+                --temperature_max = temperature_ranges[race_data.temperature][2],
+                --elevation_min = elevation_ranges[race_data.elevation][1],
+                --elevation_max = elevation_ranges[race_data.elevation][2],
+            }
+
+            if volume then
+                for _, v in pairs(data.raw["unit-spawner"]) do
+                    tune_autoplace(
+                        v, false, volume,
+                        race_data.name, race_data.force
+                    )
+                end
+
+                for _, v in pairs(data.raw["turret"]) do
+                    tune_autoplace(
+                        v, true, volume,
+                        race_data.name, race_data.force,
+                        get_distance(v, race_data.force)
+                    )
+                end
+            end
+        end
+    end
 end
