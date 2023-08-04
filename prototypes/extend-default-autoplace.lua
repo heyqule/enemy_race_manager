@@ -65,13 +65,13 @@ end
 
 if ErmConfig.mapgen_is_mixed() then
     local volume = nil
-    local erm_race_data = data.erm_enemy_races
+    local erm_race_data = data.erm_spawn_specs
     local total_active_races = table_size(erm_race_data)
 
     log(serpent.block(erm_race_data))
 
     if total_active_races >= 2  then
-        for _, race_data in pairs(data.erm_enemy_races) do
+        for _, race_data in pairs(data.erm_spawn_specs) do
             volume = {
                 moisture_min = moisture_ranges[race_data.moisture][1],
                 moisture_max = moisture_ranges[race_data.moisture][2],
