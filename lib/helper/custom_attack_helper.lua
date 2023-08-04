@@ -307,7 +307,9 @@ end
 ---
 --- Clean up time to live units
 ---
-function CustomAttackHelper.clear_time_to_live_units(event)
+function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overflow_batch)
+    regular_batch = regular_batch or ErmConfig.TIME_TO_LIVE_UNIT_BATCH
+    overflow_batch = overflow_batch or ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
 
     local unit_total = global.time_to_live_units_total
     local units = global.time_to_live_units
@@ -322,9 +324,9 @@ function CustomAttackHelper.clear_time_to_live_units(event)
     --local profiler = game.create_profiler()
 
     local count = 0
-    local max_count = ErmConfig.TIME_TO_LIVE_UNIT_BATCH
+    local max_count = regular_batch
     if unit_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
-        max_count = ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
+        max_count = overflow_batch
         is_overflow = true
     end
     for idx, value in pairs(units) do

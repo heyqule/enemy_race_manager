@@ -240,7 +240,7 @@ function RaceSettingHelper.get_next_attack_threshold(target_race)
 end
 
 function RaceSettingHelper.set_next_attack_threshold(target_race, value)
-    global.race_settings[target_race].next_attack_threshold = value
+    global.race_settings[target_race].next_attack_threshold = math.floor(value)
 end
 
 function RaceSettingHelper.get_accumulated_attack_meter(target_race)

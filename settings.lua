@@ -326,7 +326,7 @@ data:extend {
         name = "enemyracemanager-attack-meter-threshold",
         description = "enemyracemanager-attack-meter-threshold",
         setting_type = "runtime-global",
-        default_value = 1.5,
+        default_value = 1.25,
         minimum_value = 1,
         maximum_value = 10,
         order = "enemyracemanager-301"

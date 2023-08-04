@@ -79,22 +79,22 @@ Event.on_nth_tick(3600, function(event)
         position = {10,-10}, force = forceName
     }
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
+        name='erm_zerg/ultralisk/20',
         force=forceName,
         position={15,15}
     }))
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
+        name='erm_zerg/ultralisk/20',
         force=forceName,
         position={12,12}
     }))
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
+        name='erm_zerg/ultralisk/20',
         force=forceName,
         position={9,9}
     }))
     group.add_member(surface.create_entity({
-        name='erm_zerg/overlord/20',
+        name='erm_zerg/ultralisk/20',
         force=forceName,
         position={15,15}
     }))
@@ -103,12 +103,6 @@ Event.on_nth_tick(3600, function(event)
         type = defines.command.attack,
         target = player_entity,
         distraction = defines.distraction.by_anything
-    })
-
-    surface.create_entity({
-        name='erm_terran_exp/starport/20',
-        force=forceName,
-        position={20,20}
     })
 end)
 

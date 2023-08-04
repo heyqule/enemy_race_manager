@@ -22,20 +22,42 @@ function ERM_WeaponRig.get_shotgun_bullet(category)
     return ammo_type
 end
 
+--- single target damage, small AOE
 function ERM_WeaponRig.standardize_cannon_projectile(data, name)
     data['name'] = name
     data['piercing_damage'] = 5000
     data['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
-        damage = {amount = 6.5, type = "physical"}
+        damage = {amount = 5, type = "physical"}
     }
     data['action']['action_delivery']['target_effects'][2] = {
         type = "damage",
-        damage = {amount = 3.5, type = "explosion"}
+        damage = {amount = 2, type = "explosion"}
+    }
+    data['final_action']['action_delivery']['target_effects'][2] = {
+        type = "nested-result",
+        action =
+        {
+            type = "area",
+            force = "not-same",
+            radius = 2,
+            action_delivery =
+            {
+                type = "instant",
+                target_effects =
+                {
+                    {
+                        type = "damage",
+                        damage = {amount = 3, type = "explosion"}
+                    }
+                }
+            }
+        }
     }
     return data
 end
 
+--- small target damage, large AOE damage
 function ERM_WeaponRig.standardize_explosive_cannon_projectile(data, name)
     data['name'] = name
     data['piercing_damage'] = 5000
@@ -49,7 +71,7 @@ function ERM_WeaponRig.standardize_explosive_cannon_projectile(data, name)
         {
             type = "area",
             force = "not-same",
-            radius = 3,
+            radius = 4,
             action_delivery =
             {
                 type = "instant",
