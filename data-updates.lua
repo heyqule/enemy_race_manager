@@ -27,3 +27,5 @@ require "prototypes/extend-freeforall"
 require('prototypes/compatibility/data-updates.lua')
 
 require('prototypes/map-generation.lua')
+
+require('prototypes/extend-default-autoplace.lua')
