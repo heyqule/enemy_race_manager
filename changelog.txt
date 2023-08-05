@@ -3,7 +3,11 @@ Version: 1.18.8
 Date: 2023-??-??
 
   Changes:
-    - Refactor default autoplace workflow to support any erm races mods.
+    - Rebuild default autoplace workflow to support unlimited race mods.
+    - default autoplace now supports temperature and elevation variation under certain conditions.
+    - Armoured/Cold/Explosive/Toxic terrain support for default autoplace.
+    - A patch of no-bug land may generated under certain condition. Treat it as oasis, if the enemies has not expand into it.
+
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.7

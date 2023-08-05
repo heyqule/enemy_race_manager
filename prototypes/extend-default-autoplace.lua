@@ -30,16 +30,18 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
         return
     end
 
+    if String.find( v.name, mod_name, 1, true) == nil then
+        return
+    end
+
     if entity_filter ~= nil and String.find( v.name, entity_filter, 1, true) == nil then
         return
     end
 
-    if String.find( v.name, mod_name, 1, true) and v.autoplace then
-        if is_turret then
-            v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, force_name, volume, 2)
-        else
-            v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, force_name, volume, 2)
-        end
+    if is_turret then
+        v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, force_name, volume, 2)
+    else
+        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, force_name, volume, 2)
     end
 end
 
@@ -180,19 +182,17 @@ local rearrange_specs = function()
 end
 
 --- ChatGPT function with some tweaks lol.
-local function balance_volumes(data)
+local balance_volumes = function(data)
     -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
     local uniqueMoisturePairs = {}
 
     -- Find the unique (moisture_min, moisture_max) pairs
     for _, elementData in ipairs(data) do
-        --local key = elementData.mod_name..'-'..elementData.moisture_min .. "-" .. elementData.moisture_max
         local key = elementData.moisture_min .. "-" .. elementData.moisture_max
         if not uniqueMoisturePairs[key] then
             uniqueMoisturePairs[key] = {}
         end
         table.insert(uniqueMoisturePairs[key], elementData)
-        --uniqueMoisturePairs[key] = elementData;
     end
     local offset = 0.01
     -- Calculate the auxInterval for each unique (moisture_min, moisture_max) pair
@@ -212,18 +212,6 @@ local function balance_volumes(data)
 
     for uniqueIndex, element in pairs(uniqueMoisturePairs) do
         for key, dataItem in pairs(data) do
-            --if  dataItem.modified == nil and
-            --    element.mod_name == dataItem.mod_name and
-            --    element.moisture_min == dataItem.moisture_min and
-            --    element.moisture_max == dataItem.moisture_max and
-            --    element.aux_min ~= dataItem.aux_min and
-            --    element.aux_max ~= dataItem.aux_max
-            --then
-            --    data[key] = element
-            --    data[key].modified = true
-            --    break
-            --end
-
             if  element.moisture_min == dataItem.moisture_min and
                 element.moisture_max == dataItem.moisture_max and
                 element.aux_min ~= dataItem.aux_min and
@@ -320,9 +308,15 @@ ErmDebugHelper.print('Autoplace - Volumes:')
 ErmDebugHelper.print(serpent.block(volumes))
 volumes = balance_volumes(volumes)
 
-for i, elementData in ipairs(volumes) do
-    volumes[i].aux_max = elementData.aux_max
-    volumes[i].aux_min = elementData.aux_min
+if table_size(volumes) == 3 and total_active_races == 3 then
+    volumes[1].aux_min = 0
+    volumes[1].aux_max = 0.34
+    volumes[1].moisture_min = 0
+    volumes[1].moisture_max = 1
+    volumes[2].aux_min = 0.32
+    volumes[2].aux_max = 1
+    volumes[3].aux_min = 0.32
+    volumes[3].aux_max = 1
 end
 
 ErmDebugHelper.print('Autoplace - After Balance Volumes:')
