@@ -9,6 +9,7 @@
 local ERM_UnitHelper = {}
 local Math = require('__stdlib__/stdlib/utils/math')
 require('__stdlib__/stdlib/utils/defines/time')
+local String = require('__stdlib__/stdlib/utils/string')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
@@ -158,6 +159,11 @@ function ERM_UnitHelper.format_team_color(color)
     end
 
     return color
+end
+
+function ERM_UnitHelper.is_erm_unit(dataItem)
+    local nameToken = String.split(dataItem.name, '/')
+    return (data.erm_registered_race and data.erm_registered_race[nameToken[1]]) or false
 end
 
 return ERM_UnitHelper

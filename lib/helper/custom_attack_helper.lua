@@ -22,6 +22,10 @@ local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
 
 local get_name_token = function(name)
+    if global.force_entity_name_cache and global.force_entity_name_cache[name] then
+        return global.force_entity_name_cache[name]
+    end
+
     if global.force_entity_name_cache == nil then
         global.force_entity_name_cache = {}
     end

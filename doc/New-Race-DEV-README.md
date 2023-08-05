@@ -16,6 +16,12 @@ Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/sett
 #### data.lua
 Use this file to add unit, spawner and other data entities to the game.
 
+The following is **REQUIRED** to register ERM races in data stage.
+```
+data.erm_registered_race = data.erm_registered_race or {}
+data.erm_registered_race[MOD_NAME] = true
+```
+
 This is required for tuning "default" autoplace function to use as reference.
 [Default_Autoplace.md](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
 ```
@@ -57,7 +63,7 @@ Point of interests:
   * This function registers Milestone objective
 
 * RemoteAPI.register_new_enemy_race()
-  * This function is **REQUIRED** to register your race with ERM.
+  * This function is **REQUIRED** to register your race with ERM in control stage.
 
 #### Units:
 Many of the units have unique abilities, please refer to the lua files for reference

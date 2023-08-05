@@ -17,7 +17,7 @@ data:extend {
         description = "enemyracemanager-vanilla_map_color",
         setting_type = "startup",
         default_value = VANILLA_MAP_COLOR,
-        order = "erm_marspeople-101"
+        order = "enemyracemanager-101"
     },
     {
         type = "string-setting",

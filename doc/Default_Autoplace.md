@@ -2,7 +2,7 @@
 
 [prototypes/extend-default-autoplace.lua]([prototypes/extend-default-autoplace.lua]) This files has the logic to determine the parameter for spawner and turrent autoplace under default condition.  So that a race can spawn in close proximity.
 
-Each enemy race require to have the following code to determine the spawn condition
+Each enemy race require to have the following code to determine the spawn condition and register ERM races for data stage. 
 ```lua
 --- Required Parameters
 data.erm_spawn_specs = data.erm_spawn_specs or {}

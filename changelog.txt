@@ -8,6 +8,7 @@ Date: 2023-??-??
     - Armoured/Cold/Explosive/Toxic terrain support for default autoplace.
     - A patch of no-bug land may generated under certain condition. Treat it as oasis, if the enemies has not expand into it.
     - Biter's map color can be changed under startup setting.
+    - Removed dependency of erm_ prefix.  Added new way to register ERM race for data manipulation in data stage.
 
 
 ---------------------------------------------------------------------------------------------------
