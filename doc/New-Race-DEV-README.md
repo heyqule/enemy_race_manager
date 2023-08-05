@@ -16,6 +16,19 @@ Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/sett
 #### data.lua
 Use this file to add unit, spawner and other data entities to the game.
 
+This is required for tuning "default" autoplace function to use as reference.  
+```
+data.erm_spawn_specs = data.erm_spawn_specs or {}
+table.insert(data.erm_spawn_specs, {
+  mod_name=MOD_NAME,
+  force_name=FORCE_NAME,
+  moisture=2, -- 1 = Dry and 2 = Wet
+  aux=2, -- 1 = red desert, 2 = sand
+  elevation=2, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+  temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
+})
+```
+
 Example: [data.lua](https://github.com/heyqule/erm_zerg/blob/main/data.lua)
 
 #### control.lua
