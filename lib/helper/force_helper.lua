@@ -25,21 +25,29 @@ function ForceHelper.init_globals()
     global.surface_inclusion_list = global.surface_inclusion_list or {}
 end
 
--- Remove prefix enemy_ if force isn't enemy
+---
+--- Cache force name that is one of the ERM races.
+---
 function ForceHelper.extract_race_name_from(force_name)
+    if global.force_race_name_cache[force_name] then
+        return global.force_race_name_cache[force_name]
+    end
+
     if string.find(force_name, 'enemy_') ~= nil then
         if global.force_race_name_cache == nil then
             global.force_race_name_cache = {}
         end
 
         if global.force_race_name_cache[force_name] == nil then
-            global.force_race_name_cache[force_name] = String.gsub(force_name, 'enemy_', '')
+            local unverified_race_name = String.gsub(force_name, 'enemy_', '')
+            if global.race_settings[unverified_race_name] then
+                global.force_race_name_cache[force_name] = unverified_race_name
+                return global.force_race_name_cache[force_name]
+            end
         end
-
-        return global.force_race_name_cache[force_name]
-    else
-        return ForceHelper.default_mod_name
     end
+
+    return ForceHelper.default_mod_name
 end
 
 function ForceHelper.get_force_name_from(race_name)

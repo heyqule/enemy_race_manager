@@ -209,6 +209,9 @@ local init_globals = function()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     ErmGui.init_globals()
+
+    --- Wipe this cache due to cache pollution from previous version.
+    global.force_race_name_cache = {}
 end
 
 --- Init events
