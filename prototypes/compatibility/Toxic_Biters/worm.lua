@@ -36,6 +36,7 @@ local base_cold_resistance = -50
 local incremental_cold_resistance = 100
 
 function makeLevelTurrets(level, type, distance)
+    data.raw['turret'][type]['autoplace']  = nil
     local turret = util.table.deepcopy(data.raw['turret'][type])
 
     local original_hitpoint = turret['max_health']

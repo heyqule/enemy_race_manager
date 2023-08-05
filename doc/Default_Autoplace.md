@@ -7,8 +7,8 @@ Each enemy race require to have the following code to determine the spawn condit
 --- Required Parameters
 data.erm_spawn_specs = data.erm_spawn_specs or {}
 table.insert(data.erm_spawn_specs, {
-    name=MOD_NAME,
-    force=FORCE_NAME,
+    mod_name=MOD_NAME,
+    force_name=FORCE_NAME,
     moisture=1, -- 1 = Dry and 2 = Wet
     aux=1, -- 1 = red desert, 2 = sand
     elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
@@ -18,8 +18,8 @@ table.insert(data.erm_spawn_specs, {
 --- With optional parameters and wider range for elevation / temperature
 data.erm_spawn_specs = data.erm_spawn_specs or {}
 table.insert(data.erm_spawn_specs, {
-    name=MOD_NAME,
-    force=FORCE_NAME,
+    mod_name=MOD_NAME,
+    force_name=FORCE_NAME,
     moisture=1, -- 1 = Dry and 2 = Wet
     aux=1, -- 1 = red desert, 2 = sand
     --- Regarding to wide range: it uses min for first element and max for second element.

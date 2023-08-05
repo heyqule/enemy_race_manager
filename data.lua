@@ -16,9 +16,9 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
     -- This set of data is used for set up default autoplace calculation.
     data.erm_spawn_specs = data.erm_spawn_specs or {}
     table.insert(data.erm_spawn_specs, {
-        name=MOD_NAME,
-        force=FORCE_NAME,
-        moisture=1, -- 1 = Dry and 2 = Wet
+        mod_name=MOD_NAME,
+        force_name=FORCE_NAME,
+        moisture=2, -- 1 = Dry and 2 = Wet
         aux=1, -- 1 = red desert, 2 = sand
         elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
         temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)

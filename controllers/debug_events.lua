@@ -97,11 +97,11 @@ local print_chunk_player_details =  function (event)
 end
 
 if DEBUG_MODE then
-    --Event.register(defines.events.on_chunk_generated, function(event)
-    --    print_chunk_tile_details(event)
-    --end)
+    Event.register(defines.events.on_chunk_generated, function(event)
+        print_chunk_tile_details(event)
+    end)
 
-    --Event.on_nth_tick(61, function(event)
-    --    print_chunk_player_details(event)
-    --end)
+    Event.on_nth_tick(61, function(event)
+        print_chunk_player_details(event)
+    end)
 end

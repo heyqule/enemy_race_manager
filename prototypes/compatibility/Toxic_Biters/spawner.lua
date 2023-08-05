@@ -37,6 +37,7 @@ local incremental_cold_resistance = 100
 
 
 function makeLevelSpawners(level, type)
+    data.raw['unit-spawner'][type]['autoplace']  = nil
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
 
     local original_hitpoint = spawner['max_health']
@@ -85,4 +86,19 @@ local max_level = ErmConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'toxic-biter-spawner') })
+end
+
+if settings.startup['enemyracemanager-enable-bitters'].value then
+    -- This set of data is used for set up default autoplace calculation.
+    data.erm_spawn_specs = data.erm_spawn_specs or {}
+    table.insert(data.erm_spawn_specs, {
+        mod_name=MOD_NAME,
+        force_name=FORCE_NAME,
+        moisture=2, -- 1 = Dry and 2 = Wet
+        aux=1, -- 1 = red desert, 2 = sand
+        elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+        temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
+        entity_filter = 'toxic',
+        enforce_temperature = true,
+    })
 end
