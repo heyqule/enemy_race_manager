@@ -88,7 +88,7 @@ for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'toxic-biter-spawner') })
 end
 
-if settings.startup['enemyracemanager-enable-bitters'].value then
+if settings.startup['enemyracemanager-enable-bitters'].value and settings.startup["tb-disable-terrain-check"].value == false then
     -- This set of data is used for set up default autoplace calculation.
     data.erm_spawn_specs = data.erm_spawn_specs or {}
     table.insert(data.erm_spawn_specs, {

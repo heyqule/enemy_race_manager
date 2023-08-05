@@ -66,6 +66,7 @@ local get_distance = function(v, force_name)
     return 0
 end
 
+--- ChatGPT function with some tweaks. XD
 local rebalanceTables = function(...)
     local numTables = select("#", ...)
     local newTables = {}
@@ -146,8 +147,8 @@ local rearrange_specs = function()
 
     statistic.moisture_1, statistic.moisture_2 = rebalanceTables(statistic.moisture_1,statistic.moisture_2)
     statistic.aux_1, statistic.aux_2 = rebalanceTables(statistic.aux_1,statistic.aux_2)
-    statistic.temperature_1, statistic.temperature_2, statistic.temperature_3 =
-    rebalanceTables(statistic.temperature_1, statistic.temperature_2, statistic.temperature_3)
+    --statistic.temperature_1, statistic.temperature_2, statistic.temperature_3 =
+    --    rebalanceTables(statistic.temperature_1, statistic.temperature_2, statistic.temperature_3)
     statistic.elevation_1, statistic.elevation_2, statistic.elevation_3 =
         rebalanceTables(statistic.elevation_1, statistic.elevation_2, statistic.elevation_3)
 
@@ -178,19 +179,22 @@ local rearrange_specs = function()
     return updated_specs
 end
 
+--- ChatGPT function with some tweaks lol.
 local function balance_volumes(data)
     -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
     local uniqueMoisturePairs = {}
 
     -- Find the unique (moisture_min, moisture_max) pairs
     for _, elementData in ipairs(data) do
+        --local key = elementData.mod_name..'-'..elementData.moisture_min .. "-" .. elementData.moisture_max
         local key = elementData.moisture_min .. "-" .. elementData.moisture_max
         if not uniqueMoisturePairs[key] then
             uniqueMoisturePairs[key] = {}
         end
         table.insert(uniqueMoisturePairs[key], elementData)
+        --uniqueMoisturePairs[key] = elementData;
     end
-
+    local offset = 0.01
     -- Calculate the auxInterval for each unique (moisture_min, moisture_max) pair
     for _, elements in pairs(uniqueMoisturePairs) do
         local count = #elements
@@ -198,8 +202,8 @@ local function balance_volumes(data)
 
         -- Distribute aux_min and aux_max values evenly for each same (moisture_min, moisture_max) pair
         for index, elementData in ipairs(elements) do
-            elementData.aux_min = auxInterval * (index - 1)
-            elementData.aux_max = auxInterval * index
+            elementData.aux_min = math.max(auxInterval * (index - 1) - offset, 0)
+            elementData.aux_max = math.min(auxInterval * index + offset, 1)
         end
     end
 
@@ -208,7 +212,23 @@ local function balance_volumes(data)
 
     for uniqueIndex, element in pairs(uniqueMoisturePairs) do
         for key, dataItem in pairs(data) do
-            if element.moisture_max == dataItem.moisture_max and dataItem.aux_min ~= element.aux_min and dataItem.aux_max ~= element.aux_max then
+            --if  dataItem.modified == nil and
+            --    element.mod_name == dataItem.mod_name and
+            --    element.moisture_min == dataItem.moisture_min and
+            --    element.moisture_max == dataItem.moisture_max and
+            --    element.aux_min ~= dataItem.aux_min and
+            --    element.aux_max ~= dataItem.aux_max
+            --then
+            --    data[key] = element
+            --    data[key].modified = true
+            --    break
+            --end
+
+            if  element.moisture_min == dataItem.moisture_min and
+                element.moisture_max == dataItem.moisture_max and
+                element.aux_min ~= dataItem.aux_min and
+                element.aux_max ~= dataItem.aux_max
+            then
                 data[key] = element
                 table.remove(uniqueMoisturePairs, uniqueIndex)
                 break
@@ -259,6 +279,8 @@ local updated_specs = rearrange_specs()
 local volumes = {}
 for key, race_data in pairs(updated_specs) do
     local volume = {}
+    volume['mod_name'] = race_data.mod_name
+
     if total_active_races > 1 then
         volume['moisture_min'] = moisture_ranges[race_data.moisture][1]
         volume['moisture_max'] = moisture_ranges[race_data.moisture][2]
@@ -269,16 +291,17 @@ for key, race_data in pairs(updated_specs) do
         volume['aux_max'] = aux_ranges[race_data.aux][2]
     end
 
-    if total_active_specs > 4 and total_active_races > 2 then
-        volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
-        volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
-    end
+    if total_active_races >= 4 then
+        if total_active_specs > 4 then
+            volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
+            volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
+        end
 
-    if total_active_specs > 10 and total_active_races > 4 then
-        volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
-        volume['elevation_min'] = elevation_ranges[race_data.elevation][2]
+        if total_active_specs > 10 then
+            volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
+            volume['elevation_min'] = elevation_ranges[race_data.elevation][2]
+        end
     end
-
 
     if race_data.enforce_temperature then
         volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
