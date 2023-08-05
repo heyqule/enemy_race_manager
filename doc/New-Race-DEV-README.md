@@ -16,7 +16,8 @@ Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/sett
 #### data.lua
 Use this file to add unit, spawner and other data entities to the game.
 
-This is required for tuning "default" autoplace function to use as reference.  
+This is required for tuning "default" autoplace function to use as reference.
+[Default_Autoplace.md](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
 ```
 data.erm_spawn_specs = data.erm_spawn_specs or {}
 table.insert(data.erm_spawn_specs, {

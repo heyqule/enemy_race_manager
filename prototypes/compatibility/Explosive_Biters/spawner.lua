@@ -74,6 +74,7 @@ function makeLevelSpawners(level, type)
 
     spawner['result_units'] = result_units
     spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
     return spawner
 end
 

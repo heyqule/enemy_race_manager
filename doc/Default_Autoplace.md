@@ -22,13 +22,11 @@ table.insert(data.erm_spawn_specs, {
     force_name=FORCE_NAME,
     moisture=1, -- 1 = Dry and 2 = Wet
     aux=1, -- 1 = red desert, 2 = sand
-    --- Regarding to wide range: it uses min for first element and max for second element.
-    elevation={2,3}, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
-    temperature={1,2}, --1,2,3 (1 cold, 2. normal, 3 hot)
+    elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+    temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
     entity_filter = 'cold', -- this filter entities by string.find
     enforce_temperature = false, -- enforce temperature filter
     enforce_elevation = false, -- enforce elevation filter
-    range_priority = 1 -- 1 = low, 2 = high, this is used for range refinement when there are more than 1 spec in an active filter
 })
 
 

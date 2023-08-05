@@ -58,6 +58,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
 
     biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
+    biter['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
 
     return biter
 end

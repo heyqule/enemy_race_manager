@@ -12,13 +12,21 @@ data:extend {
         order = "enemyracemanager-100"
     },
     {
+        type = "color-setting",
+        name = "enemyracemanager-vanilla_map_color",
+        description = "enemyracemanager-vanilla_map_color",
+        setting_type = "startup",
+        default_value = VANILLA_MAP_COLOR,
+        order = "erm_marspeople-101"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-max-level",
         description = "enemyracemanager-max-level",
         setting_type = "startup",
         default_value = MAX_LEVEL_10,
         allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-        order = "enemyracemanager-101"
+        order = "enemyracemanager-102"
     },
     {
         type = "int-setting",

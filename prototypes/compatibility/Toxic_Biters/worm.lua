@@ -60,6 +60,8 @@ function makeLevelTurrets(level, type, distance)
     ERM_UnitHelper.modify_biter_damage(turret, level)
     turret['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
 
+    turret['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+
     return turret
 end
 
