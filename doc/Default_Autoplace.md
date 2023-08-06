@@ -26,7 +26,6 @@ table.insert(data.erm_spawn_specs, {
     temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
     entity_filter = 'cold', -- this filter entities by string.find
     enforce_temperature = false, -- enforce temperature filter
-    enforce_elevation = false, -- enforce elevation filter
 })
 
 
@@ -39,10 +38,10 @@ table.insert(data.erm_spawn_specs, {
 -------------
 local moisture_ranges = {{0, 0.51},{0.49, 1}}
 local aux_ranges = {{0, 0.51},{0.49, 1}}
-local temperature_ranges = {{12,14.5},{13.5,16.5},{15.5,18}}
-local elevation_ranges = {{0,30},{20,50},{40,70}}
+local temperature_ranges = {{12,14.01}, {13.99,16.01}, {15.99,18}}
+local elevation_ranges = {{-1,26},{24,49},{47,70}}
 if mods['alien-biomes'] then
-    temperature_ranges = {{-20,60},{10,90},{70,150}}
+    temperature_ranges = {{-21,35},{33,97},{95,151}}
 end
 ```
 
@@ -52,7 +51,13 @@ When there are 2 active spawn specification,  Moisture will determine how the ra
 
 When there are 3-4 active spawn specification, Moisture and Aux will determine how the race spawns. If there are race in the same slot, move one to an empty slot.
 
-When more specification are added to the active races, temperature and elevation will take into consideration. 
+When more specification are added to the active races, temperature and elevation will take into consideration.
+
+Spawn probability balancing uses moisture by default.  But when temperature or enforce_temperature is used, it balanced by temperature.
+
+elevation balancing is only used when there are more than a dozen specifications, using generic balancing function.  The game doesn't extensively utilize elevation tho. 
+If it does in the future, I may add balanced by elevation
+
 
 ### World Data:
 - [Factorio World](erm-base-world-data.lua)

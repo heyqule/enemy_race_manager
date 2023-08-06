@@ -66,7 +66,6 @@ if DEBUG_MODE then
             {
                 ["enemy-base"] = { frequency = 5, size = 5}
             },
-            starting_area = "small"
         },
         advanced_settings =
         {

@@ -7,7 +7,7 @@
 - Change race for the planet you are on from UI
 
 #### Krastorio2 (Requires 1.2+)
-* New races support creep generation
+* New races support creep generation, can be changed on each race.
 * Custom bullets can hit air
 
 #### Industrial Revolution

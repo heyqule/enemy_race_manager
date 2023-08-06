@@ -76,7 +76,7 @@ function makeLevelSpawners(level, type)
 
     spawner['result_units'] = result_units
     spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
-    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-armoured_biter_map_color'].value)
 
     return spawner
 end
@@ -110,7 +110,7 @@ if settings.startup['enemyracemanager-enable-bitters'].value and settings.startu
         force_name=FORCE_NAME,
         moisture=1, -- 1 = Dry and 2 = Wet
         aux=1, -- 1 = red desert, 2 = sand
-        elevation=2, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+        elevation=3, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
         temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
         entity_filter = 'armoured',
         enforce_temperature = true,

@@ -4,6 +4,22 @@
 --- DateTime: 8/4/2023 12:02 AM
 ---
 
+--
+-- data.erm_spawn_specs = data.erm_spawn_specs or {}
+-- table.insert(data.erm_spawn_specs, {
+--    mod_name=MOD_NAME,
+--    force_name=FORCE_NAME,
+--    moisture=1, -- 1 = Dry and 2 = Wet
+--    aux=1, -- 1 = red desert, 2 = sand
+--    elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+--    temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
+--    entity_filter = 'cold', -- this filter entities by string.find (this example is using "cold" prefix from cold-biters)
+--    enforce_temperature = false, -- enforce temperature filter
+-- })
+--
+--
+
+
 local noise = require("noise")
 local String = require('__stdlib__/stdlib/utils/string')
 local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
@@ -172,11 +188,11 @@ local rearrange_specs = function()
     ErmDebugHelper.print('Autoplace - Updated Specs')
     ErmDebugHelper.print(serpent.block(updated_specs))
 
-    return updated_specs
+    return updated_specs, statistic
 end
 
 --- Another ChatGPT function with some tweaks lol.
-local balance_volumes = function(data)
+local balance_volumes_by_aux = function(data)
     -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
     local uniqueMoisturePairs = {}
 
@@ -221,6 +237,72 @@ local balance_volumes = function(data)
     return data
 end
 
+--- Another ChatGPT function with some tweaks lol.
+local balance_volumes_by_temperature = function(data)
+    -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
+    local uniqueTempPairs = {}
+
+    -- Find the unique (moisture_min, moisture_max) pairs
+    for _, elementData in ipairs(data) do
+        local key = elementData.temperature_min .. "-" .. elementData.temperature_max
+        if not uniqueTempPairs[key] then
+            uniqueTempPairs[key] = {}
+        end
+        table.insert(uniqueTempPairs[key], elementData)
+    end
+    local offset = 0.01
+    -- Calculate the auxInterval for each unique (moisture_min, moisture_max) pair
+    for _, elements in pairs(uniqueTempPairs) do
+        local count = #elements
+        local auxInterval = 1 / count
+
+        -- Distribute aux_min and aux_max values evenly for each same (moisture_min, moisture_max) pair
+        for index, elementData in ipairs(elements) do
+            elementData.aux_min = math.max(auxInterval * (index - 1) - offset, 0)
+            elementData.aux_max = math.min(auxInterval * index + offset, 1)
+        end
+    end
+
+    ErmDebugHelper.print('Autoplace - uniqueTempPairs:')
+    ErmDebugHelper.print(serpent.block(uniqueTempPairs))
+
+    for uniqueIndex, element in pairs(uniqueTempPairs) do
+        for key, dataItem in pairs(data) do
+            if  element.temperature_min == dataItem.temperature_min and
+                    element.temperature_max == dataItem.temperature_max and
+                    element.aux_min ~= dataItem.aux_min and
+                    element.aux_max ~= dataItem.aux_max
+            then
+                data[key] = element
+                table.remove(uniqueTempPairs, uniqueIndex)
+                break
+            end
+        end
+    end
+
+    return data
+end
+
+local match_temperature_filter = function(volume, statistics, i)
+   return (volume.entity_filter and
+            statistics['temperature_'..i][1] == volume.mod_name..statistic_separator..volume.entity_filter) or
+            statistics['temperature_'..i][1] == volume.mod_name
+end
+
+local temperature_has_single_item = function(volume, statistics)
+
+    local is_single_item = false
+
+    for i=1,3,1 do
+        if table_size(statistics['temperature_'..i]) == 1 and match_temperature_filter(volume, statistics, i)
+        then
+            is_single_item = true
+            break
+        end
+    end
+
+    return is_single_item
+end
 
 ------------
 ---moisture, -- 1 = Dry and 2 = Wet, {0 - 0.51, 0.49 - 1}
@@ -230,17 +312,25 @@ end
 -------------
 local moisture_ranges = {{0, 0.51},{0.49, 1}}
 local aux_ranges = {{0, 0.51},{0.49, 1}}
-local temperature_ranges = {{12,16}, {13,17}, {14,18}}
-local elevation_ranges = {{0,30},{20,50},{40,70}}
+local temperature_ranges = {{12,14.01}, {13.99,16.01}, {15.99,18}}
+local elevation_ranges = {{-1,26},{24,49},{47,70}}
 if mods['alien-biomes'] then
-    temperature_ranges = {{-20,40},{25,100},{85,150}}
+    ErmDebugHelper.print('Autoplace - Using Alien Biomes')
+    temperature_ranges = {{-21,35},{33,97},{95,151}}
+end
+
+local enforce_temp = settings.startup['enemyracemanager-default_enforce_temperature'].value
+local balance_by_temperature = false
+
+if enforce_temp then
+    balance_by_temperature = true
 end
 
 local erm_race_data = data.erm_spawn_specs
 local total_active_specs = table_size(erm_race_data)
 local active_races = {}
 
-ErmDebugHelper.print('Autoplace - Specs:')
+ErmDebugHelper.print('Autoplace - Specs: '..tonumber(table_size(erm_race_data)))
 ErmDebugHelper.print(serpent.block(erm_race_data))
 
 for _, race in pairs(erm_race_data) do
@@ -249,19 +339,20 @@ end
 
 local total_active_races = table_size(active_races)
 
-ErmDebugHelper.print('Autoplace - Active Races:')
+ErmDebugHelper.print('Autoplace - Active Races:'..tonumber(table_size(active_races)))
 ErmDebugHelper.print(serpent.block(active_races))
 
 if total_active_races < 2 then
     return
 end
 
-local updated_specs = rearrange_specs()
+local updated_specs, statistics = rearrange_specs()
 
 local volumes = {}
 for key, race_data in pairs(updated_specs) do
     local volume = {}
     volume['mod_name'] = race_data.mod_name
+    volume['entity_filter'] = race_data.entity_filter
 
     if total_active_races > 1 then
         volume['moisture_min'] = moisture_ranges[race_data.moisture][1]
@@ -274,25 +365,24 @@ for key, race_data in pairs(updated_specs) do
     end
 
     if total_active_races >= 4 then
-        if total_active_specs > 4 then
+        if total_active_specs >= 4 then
+            balance_by_temperature = true
             volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
             volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
         end
 
-        if total_active_specs > 10 then
+        -- Enable elevation balancing only when there are more than two dozen spec.
+        -- Otherwise it may create large no-bug land.
+        if total_active_specs > 24 then
             volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
-            volume['elevation_min'] = elevation_ranges[race_data.elevation][2]
+            volume['elevation_max'] = elevation_ranges[race_data.elevation][2]
         end
     end
 
-    if race_data.enforce_temperature then
+    if enforce_temp or race_data.enforce_temperature then
+        balance_by_temperature = true
         volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
         volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
-    end
-
-    if race_data.enforce_elevation then
-        volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
-        volume['elevation_max'] = elevation_ranges[race_data.elevation][2]
     end
 
     volumes[key] = volume
@@ -300,8 +390,17 @@ end
 
 ErmDebugHelper.print('Autoplace - Volumes:')
 ErmDebugHelper.print(serpent.block(volumes))
-volumes = balance_volumes(volumes)
 
+if balance_by_temperature then
+    volumes = balance_volumes_by_temperature(volumes)
+else
+    volumes = balance_volumes_by_aux(volumes)
+end
+
+ErmDebugHelper.print('Autoplace - After Balancing Volumes:')
+ErmDebugHelper.print(serpent.block(volumes))
+
+--- Fixed 3 race conditions with 3 autoplace specs
 if table_size(volumes) == 3 and total_active_races == 3 then
     volumes[1].aux_min = 0
     volumes[1].aux_max = 0.34
@@ -313,7 +412,19 @@ if table_size(volumes) == 3 and total_active_races == 3 then
     volumes[3].aux_max = 1
 end
 
-ErmDebugHelper.print('Autoplace - After Balancing Volumes:')
+for index, volume in pairs(volumes) do
+    if volume.temperature_min then
+        if temperature_has_single_item(volume, statistics) then
+            volumes[index].aux_min = 0
+            volumes[index].aux_max = 1
+        end
+
+        volumes[index].moisture_min = 0
+        volumes[index].moisture_max = 1
+    end
+end
+
+ErmDebugHelper.print('Autoplace - After Fine Tuned Volumes:')
 ErmDebugHelper.print(serpent.block(volumes))
 
 for key, race_data in pairs(updated_specs) do

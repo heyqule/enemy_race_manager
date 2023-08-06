@@ -5,10 +5,15 @@ Date: 2023-??-??
   Changes:
     - Rebuild default autoplace workflow to support unlimited race mods.
     - default autoplace now supports temperature and elevation variation under certain conditions.
-    - Armoured/Cold/Explosive/Toxic terrain support for default autoplace.
-    - A patch of no-bug land may generated under certain condition. Treat it as oasis, if the enemies has not expand into it.
+    - Armoured/Cold/Explosive/Toxic biters support terrain temperature modifier for default mapping method.
+    - Armoured/Cold/Explosive/Toxic biters support map color changes.
+    - Added Temperature startup settings, when this is set, spawner in default mapping method are generated according to its temperature specification.
+    - A patch of no-one land may generated under certain conditions. Treat it as oasis, if the enemies has not expanded into it.
     - Biter's map color can be changed under startup setting.
     - Removed dependency of erm_ prefix.  Added new way to register ERM race for data manipulation in data stage.
+
+  Bugfixes:
+    - Fixed an crash when an non ERM force somehow assigned an ERM dropship into their group. [Mod: team competition]
 
 
 ---------------------------------------------------------------------------------------------------
@@ -16,7 +21,7 @@ Version: 1.18.7
 Date: 2023-08-05
 
   Bugfixes:
-    - Fixed a crash caused by ForceHelper.extract_race_name_from is caching non ERM races.
+    - Fixed a crash caused by ForceHelper.extract_race_name_from is caching non ERM races. [Mod: team competition]
 
 
 ---------------------------------------------------------------------------------------------------
@@ -62,8 +67,8 @@ Date: 2023-07-30
     - Add functions for upcoming team color and map color handling.
 
   Bugfixes:
-    - Fixed GUI crash when there are other non ERM enemy_ prefixed forces presents.
-    - Fixed a crash when onBiterBaseBuilt happens on a non ERM race.
+    - Fixed GUI crash when there are other non ERM enemy_ prefixed forces presents. [Mod: team competition]
+    - Fixed a crash when onBiterBaseBuilt happens on a non ERM race.  [Mod: team competition]
 
 
 ---------------------------------------------------------------------------------------------------

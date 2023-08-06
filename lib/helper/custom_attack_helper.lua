@@ -98,10 +98,13 @@ local drop_unit = function(event, race_name, unit_name, count, position)
                     distraction = defines.distraction.by_anything
                 })
 
-                if event.source_entity and event.source_entity.type == 'unit' and event.source_entity.unit_group then
+                if event.source_entity and
+                    event.source_entity.type == 'unit' and
+                    event.source_entity.unit_group and
+                    event.source_entity.unit_group.force == entity.force
+                then
                     event.source_entity.unit_group.add_member(entity)
                 end
-
                 register_time_to_live_unit(event, entity, race_name, unit_name)
             end
             idx = idx + 1
