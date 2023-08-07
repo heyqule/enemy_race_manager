@@ -147,15 +147,18 @@ function ERM_UnitHelper.format_map_color(color)
     return color
 end
 
-function ERM_UnitHelper.format_team_color(color)
+function ERM_UnitHelper.format_team_color(color, tint_strength)
+    tint_strength = tint_strength or 4
     color = util.table.deepcopy(color)
 
-    if color.a then
-        color.a = color.a * 0.5
-    elseif color.b >= 1 or color.g >= 1 or color.r >= 1 then
-        color.a = 128
+    --- Blend Additive (Alpha 0), Alpha 25%, Alpha 50%, Alpha 66%, Alpha 75%, Full Strength
+    local tint_alpha_options_as_dec = {0, 0.25, 0.5, 0.66, 0.75, 0.9}
+    local tint_alpha_options_as_int = {0, 64, 128, 170, 192, 230}
+
+    if color.b >= 1 or color.g >= 1 or color.r >= 1 then
+        color.a = tint_alpha_options_as_int[tint_strength]
     else
-        color.a = 0.5
+        color.a = tint_alpha_options_as_dec[tint_strength]
     end
 
     return color

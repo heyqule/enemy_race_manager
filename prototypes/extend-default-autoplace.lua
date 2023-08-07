@@ -410,17 +410,17 @@ if table_size(volumes) == 3 and total_active_races == 3 then
     volumes[2].aux_max = 1
     volumes[3].aux_min = 0.32
     volumes[3].aux_max = 1
-end
+else
+    for index, volume in pairs(volumes) do
+        if volume.temperature_min then
+            if temperature_has_single_item(volume, statistics) then
+                volumes[index].aux_min = 0
+                volumes[index].aux_max = 1
+            end
 
-for index, volume in pairs(volumes) do
-    if volume.temperature_min then
-        if temperature_has_single_item(volume, statistics) then
-            volumes[index].aux_min = 0
-            volumes[index].aux_max = 1
+            volumes[index].moisture_min = 0
+            volumes[index].moisture_max = 1
         end
-
-        volumes[index].moisture_min = 0
-        volumes[index].moisture_max = 1
     end
 end
 

@@ -30,7 +30,6 @@ map_gen_settings['default']['erm-roach-death-world'] = {
         {
             ["enemy-base"] = { frequency = "very-high", size = "very-big"}
         },
-        starting_area = "small"
     },
     advanced_settings =
     {

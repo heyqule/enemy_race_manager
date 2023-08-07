@@ -1,16 +1,18 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.18.8
+Version: 1.19.0
 Date: 2023-??-??
 
-  Changes:
+  Features:
     - Rebuild default autoplace workflow to support unlimited race mods.
     - default autoplace now supports temperature and elevation variation under certain conditions.
     - Armoured/Cold/Explosive/Toxic biters support terrain temperature modifier for default mapping method.
-    - Armoured/Cold/Explosive/Toxic biters support map color changes.
-    - Added Temperature startup settings, when this is set, spawner in default mapping method are generated according to its temperature specification.
+    - All biters support map color changes.
+    - Added Temperature startup settings, when this is set, spawners in default mapping method are generated according to its temperature specification.
     - A patch of no-one land may generated under certain conditions. Treat it as oasis, if the enemies has not expanded into it.
-    - Biter's map color can be changed under startup setting.
     - Removed dependency of erm_ prefix.  Added new way to register ERM race for data manipulation in data stage.
+
+  Changes:
+    - ERM Roach death world now uses 100% starting area, instead of 75%
 
   Bugfixes:
     - Fixed an crash when an non ERM force somehow assigned an ERM dropship into their group. [Mod: team competition]

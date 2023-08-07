@@ -511,12 +511,4 @@ function ErmConfig.format_daytime_string(start_tick, end_tick)
     return datetime_str;
 end
 
-function ErmConfig.format_team_color(color)
-    color.a = 128
-    color.b = math.floor(color.b * 255 / 2)
-    color.g = math.floor(color.g * 255 / 2)
-    color.r = math.floor(color.r * 255 / 2)
-    return color
-end
-
 return ErmConfig

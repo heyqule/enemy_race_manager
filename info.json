@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "1.18.7",
+  "version": "1.19.0",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -10,7 +10,7 @@
     "base >= 1.1.0",
     "stdlib >= 1.4.8",
     "enemyracemanager_assets >= 1.0.0",
-    "~ zerm_postprocess >= 1.0.0",
+    "~zerm_postprocess >= 1.0.0",
     "!hardcorio",
     "!bobenemies",
     "!Nova-Natural_Evolution_Enemies",
