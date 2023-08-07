@@ -102,18 +102,18 @@ local zerg_explosions = function(surface)
     end
 
     local explosion_types = {
-        'lurker-explosion',
-        'colony-explosion',
-        'mutalisk-explosion-small',
-        'hydralisk-explosion-small',
-        'blood-cloud-explosion',
-        'dark-swarm-80-explosion',
-        'dark-swarm-explosion',
-        'acid-cloud-explosion',
-        'devourer-cloud-explosion',
-        'scourge-explosion',
-        'overlord-air-death',
-        'guardian-air-death',
+        MOD_NAME..'/lurker-explosion',
+        MOD_NAME..'/colony-explosion',
+        MOD_NAME..'/mutalisk-explosion-small',
+        MOD_NAME..'/hydralisk-explosion-small',
+        MOD_NAME..'/blood-cloud-explosion',
+        MOD_NAME..'/dark-swarm-80-explosion',
+        MOD_NAME..'/dark-swarm-explosion',
+        MOD_NAME..'/acid-cloud-explosion',
+        MOD_NAME..'/devourer-cloud-explosion',
+        MOD_NAME..'/scourge-explosion',
+        MOD_NAME..'/overlord-air-death',
+        MOD_NAME..'/guardian-air-death',
     }
 
     for key, value in pairs(explosion_types) do

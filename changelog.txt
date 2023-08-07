@@ -16,6 +16,7 @@ Date: 2023-??-??
 
   Bugfixes:
     - Fixed an crash when an non ERM force somehow assigned an ERM dropship into their group. [Mod: team competition]
+    - Fixed map generation to use string equal to compare mod_name, rather than string.find.
 
 
 ---------------------------------------------------------------------------------------------------

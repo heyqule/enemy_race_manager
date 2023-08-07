@@ -59,8 +59,9 @@ local x_axis_negative_probability_expression = function(autoplace)
 end
 
 local process_x_axis_unit = function(v)
-    local onPositive = String.find(v.name, ErmConfig.positive_axis_race(), 1, true)
-    local onNegative = String.find(v.name, ErmConfig.negative_axis_race(), 1, true)
+    local nameToken = String.split(v.name, '/')
+    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
+    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -88,8 +89,9 @@ local process_x_axis = function()
 end
 
 local process_y_axis_unit = function(v)
-    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value, 1, true)
-    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value, 1, true)
+    local nameToken = String.split(v.name, '/')
+    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
+    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -117,10 +119,11 @@ local process_y_axis = function()
 end
 
 local process_4_ways_unit = function(v)
-    local topleft = String.find(v.name, settings.startup['enemyracemanager-4way-top-left'].value, 1, true)
-    local topright = String.find(v.name, settings.startup['enemyracemanager-4way-top-right'].value, 1, true)
-    local bottomright = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-right'].value, 1, true)
-    local bottomleft = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-left'].value, 1, true)
+    local nameToken = String.split(v.name, '/')
+    local topleft = nameToken[1] == settings.startup['enemyracemanager-4way-top-left'].value
+    local topright = nameToken[1] == v.name, settings.startup['enemyracemanager-4way-top-right'].value
+    local bottomright = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-right'].value
+    local bottomleft = nameToken[1] == v.name, settings.startup['enemyracemanager-4way-bottom-left'].value
 
     if topleft and v.autoplace then
         v.autoplace.probability_expression =
