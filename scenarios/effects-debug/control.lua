@@ -101,6 +101,7 @@ local zerg_explosions = function(surface)
         return
     end
 
+    local MOD_NAME = 'erm_zerg'
     local explosion_types = {
         MOD_NAME..'/lurker-explosion',
         MOD_NAME..'/colony-explosion',
@@ -128,6 +129,7 @@ local protoss_explosions = function(surface)
     if not script.active_mods['erm_toss'] then
         return
     end
+    local MOD_NAME = 'erm_toss'
     local explosion_types = {
         MOD_NAME..'/dragoon-explosion',
         MOD_NAME..'/corsair-explosion',

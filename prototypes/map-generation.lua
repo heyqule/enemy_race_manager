@@ -22,16 +22,8 @@ local FOUR_WAY_Y_SPLIT_POINT = settings.startup['enemyracemanager-4way-y-axis'].
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
-    ErmDebugHelper.print('Using 0')
-    local probability = noise.var("enemy_base_probability")
-    return
-    {
-        control = 'enemy-base',
-        order = 'b[enemy]-misc',
-        force = "enemy",
-        probability_expression = noise.min(probability, 0),
-        richness_expression = noise.to_noise_expression(1)
-    }
+    ErmDebugHelper.print('Using nil')
+    return nil
 end
 
 local y_axis_positive_probability_expression = function(autoplace)
@@ -207,27 +199,26 @@ if ErmConfig.mapgen_is_4_races_split() then
     process_4_ways()
 end
 
--- Set autoplace to zero for any high level spawner/turret which are higher than max_level setting
-local max_level = ErmConfig.get_max_level()
-if not max_level == ErmConfig.max_level then
-    ErmDebugHelper.print('Disabling high level spawners autoplace:')
-    for _, v in pairs(data.raw["unit-spawner"]) do
-        if String.find( v.name, '/', 1, true) then
-            local nameToken = String.split( v.name, '/')
-            if tonumber(nameToken[3]) > max_level then
-                ErmDebugHelper.print('Disabling:' .. v.name)
-                data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
-            end
+--- Disable all leveled spawners / turret autoplace which are higher than level 1.
+--- Let map processor handle the level.
+--- Free up the number of autoplace entities.  Large autoplace entities lags the game when exploring new chunks
+ErmDebugHelper.print('Disabling high level spawners autoplace:')
+for _, v in pairs(data.raw["unit-spawner"]) do
+    if String.find( v.name, '/', 1, true) then
+        local nameToken = String.split( v.name, '/')
+        if tonumber(nameToken[3]) > 1 then
+            ErmDebugHelper.print('Disabling:' .. v.name)
+            data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
         end
     end
+end
 
-    for _, v in pairs(data.raw["turret"]) do
-        if String.find( v.name, '/', 1, true) then
-            local nameToken = String.split( v.name, '/')
-            if tonumber(nameToken[3]) > max_level then
-                ErmDebugHelper.print('Disabling:' .. v.name)
-                data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
-            end
+for _, v in pairs(data.raw["turret"]) do
+    if String.find( v.name, '/', 1, true) then
+        local nameToken = String.split( v.name, '/')
+        if tonumber(nameToken[3]) > 1 then
+            ErmDebugHelper.print('Disabling:' .. v.name)
+            data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
         end
     end
 end

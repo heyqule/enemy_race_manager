@@ -32,7 +32,7 @@ require "prototypes/extend-freeforall"
 
 require('prototypes/compatibility/data-updates.lua')
 
-require('prototypes/map-generation.lua')
 
---- This has to be last
 require('prototypes/extend-default-autoplace.lua')
+
+require('prototypes/map-generation.lua')

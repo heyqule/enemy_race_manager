@@ -6,6 +6,15 @@ This readme should be gives you a general start to create your new race.
 
 defines mod constants.  Many constants are used as function proxy key as well.
 
+If you copy this file from the another mod and place to use same variable name for trigger events, 
+you have to change all values that is unique to your mod.
+```lua
+from
+OVERLORD_DROP_ATTACK = 'emzrg-ovl'
+to
+OVERLORD_DROP_ATTACK = 'yourmodecode-ovl'
+```
+
 Example: [global.lua](https://github.com/heyqule/erm_zerg/blob/main/global.lua)
 
 #### setting-update.lua
@@ -99,13 +108,21 @@ local ERM_Config = require('__enemyracemanager__/lib/global_config') -- Get prop
 local ZergSound = require('__erm_zerg__/prototypes/sound') -- All sounds are handled in single lua file.  It's easier to modify.
 ```
 
-#### Unit / Building Name Convention
+## Name Convention
+Unit and building enemy have to be in this format.
 ```lua
 name = MOD_NAME .. '/' .. name .. '/' .. level,
 localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
 ```
 * MOD_NAME is defined in global.lua
 * name is the unit name
+
+Other support entities, (explosion, projectile and etc) should use the follow convention to avoid name collision.
+```lua
+name = MOD_NAME .. '/' .. entity_name
+```
+
+Name collision cause mod conflict and make game to crash at startup. 
    
 #### Unit Spawners:
 Please see [prototype/building/hive.lua](https://github.com/heyqule/erm_zerg/blob/main/prototypes/building/hive.lua) for details.
