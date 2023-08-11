@@ -10,6 +10,7 @@
     "base >= 1.1.0",
     "stdlib >= 1.4.8",
     "enemyracemanager_assets >= 1.0.0",
+    "erm_libs >= 1.0.0",
     "~zerm_postprocess >= 1.0.0",
     "!hardcorio",
     "!bobenemies",
