@@ -22,16 +22,8 @@ local FOUR_WAY_Y_SPLIT_POINT = settings.startup['enemyracemanager-4way-y-axis'].
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function()
-    ErmDebugHelper.print('Using 0')
-    local probability = noise.var("enemy_base_probability")
-    return
-    {
-        control = 'enemy-base',
-        order = 'b[enemy]-misc',
-        force = "enemy",
-        probability_expression = noise.min(probability, 0),
-        richness_expression = noise.to_noise_expression(1)
-    }
+    ErmDebugHelper.print('Using nil')
+    return nil
 end
 
 local y_axis_positive_probability_expression = function(autoplace)
@@ -59,8 +51,9 @@ local x_axis_negative_probability_expression = function(autoplace)
 end
 
 local process_x_axis_unit = function(v)
-    local onPositive = String.find(v.name, ErmConfig.positive_axis_race(), 1, true)
-    local onNegative = String.find(v.name, ErmConfig.negative_axis_race(), 1, true)
+    local nameToken = String.split(v.name, '/')
+    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
+    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -88,8 +81,9 @@ local process_x_axis = function()
 end
 
 local process_y_axis_unit = function(v)
-    local onPositive = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-positive'].value, 1, true)
-    local onNegative = String.find(v.name, settings.startup['enemyracemanager-2way-group-enemy-negative'].value, 1, true)
+    local nameToken = String.split(v.name, '/')
+    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
+    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -117,27 +111,32 @@ local process_y_axis = function()
 end
 
 local process_4_ways_unit = function(v)
-    local topleft = String.find(v.name, settings.startup['enemyracemanager-4way-top-left'].value, 1, true)
-    local topright = String.find(v.name, settings.startup['enemyracemanager-4way-top-right'].value, 1, true)
-    local bottomright = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-right'].value, 1, true)
-    local bottomleft = String.find(v.name, settings.startup['enemyracemanager-4way-bottom-left'].value, 1, true)
+    local nameToken = String.split(v.name, '/')
+    local topleft = nameToken[1] == settings.startup['enemyracemanager-4way-top-left'].value
+    local topright = nameToken[1] == settings.startup['enemyracemanager-4way-top-right'].value
+    local bottomright = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-right'].value
+    local bottomleft = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-left'].value
 
     if topleft and v.autoplace then
+        ErmDebugHelper.print('topleft:'..tostring(topleft))
         v.autoplace.probability_expression =
             noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
             noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
             v.autoplace.probability_expression
     elseif topright and v.autoplace then
+        ErmDebugHelper.print('topright:'..tostring(topright))
         v.autoplace.probability_expression =
             noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
             noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomright and v.autoplace then
+        ErmDebugHelper.print('bottomright:'..tostring(bottomright))
         v.autoplace.probability_expression =
             noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
             noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomleft and v.autoplace then
+        ErmDebugHelper.print('bottomleft:'..tostring(bottomleft))
         v.autoplace.probability_expression =
             noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
             noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
@@ -204,88 +203,26 @@ if ErmConfig.mapgen_is_4_races_split() then
     process_4_ways()
 end
 
--- Set autoplace to zero for any high level spawner/turret which are higher than max_level setting
-local max_level = ErmConfig.get_max_level()
-if not max_level == ErmConfig.max_level then
-    ErmDebugHelper.print('Disabling high level spawners autoplace:')
-    for _, v in pairs(data.raw["unit-spawner"]) do
-        if String.find( v.name, '/', 1, true) then
-            local nameToken = String.split( v.name, '/')
-            if tonumber(nameToken[3]) > max_level then
-                ErmDebugHelper.print('Disabling:' .. v.name)
-                data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
-            end
-        end
-    end
-
-    for _, v in pairs(data.raw["turret"]) do
-        if String.find( v.name, '/', 1, true) then
-            local nameToken = String.split( v.name, '/')
-            if tonumber(nameToken[3]) > max_level then
-                ErmDebugHelper.print('Disabling:' .. v.name)
-                data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
-            end
+--- Disable all leveled spawners / turret autoplace which are higher than level 1.
+--- Let map processor handle the level.
+--- Free up the number of autoplace entities.  Large autoplace entities lags the game when exploring new chunks
+ErmDebugHelper.print('Disabling high level spawners autoplace:')
+for _, v in pairs(data.raw["unit-spawner"]) do
+    if String.find( v.name, '/', 1, true) then
+        local nameToken = String.split( v.name, '/')
+        if tonumber(nameToken[3]) > 1 then
+            ErmDebugHelper.print('Disabling:' .. v.name)
+            data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
         end
     end
 end
 
-
-local distances = {
-    medium = 2,
-    big = 5,
-    behemoth = 8,
-    leviathan = 16,
-    mother = 32
-}
-
-local tune_autoplace = function(v, is_turret, volume)
-    if String.find( v.name, MOD_NAME, 1, true) and v.autoplace then
-        if is_turret then
-            local distance = 0
-            for name, d in pairs(distances) do
-                if String.find( v.name, name, 1, true) then
-                    distance = d
-                end
-            end
-            v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, FORCE_NAME, volume)
-        else
-            v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, FORCE_NAME, volume)
-        end
-
-    end
-end
-
-
-if ErmConfig.mapgen_is_mixed() then
-    local volume = nil
-    local erm_races = AutoplaceHelper.get_erm_races()
-    local active_races = table_size(erm_races)
-    if settings.startup['enemyracemanager-enable-bitters'].value and  active_races >= 2  then
-        volume = {
-            aux_min = 0,
-            aux_max = 0.16,
-        }
-    elseif settings.startup['enemyracemanager-enable-bitters'].value and active_races == 1 then
-        if erm_races['erm_toss'] or erm_races['erm_redarmy'] then
-            volume = {
-                water_min = 0,
-                water_max = 0.51,
-            }
-        else
-            volume = {
-                water_min = 0.49,
-                water_max = 1,
-            }
-        end
-    end
-
-    if volume then
-        for _, v in pairs(data.raw["unit-spawner"]) do
-            tune_autoplace(v, false, volume)
-        end
-
-        for _, v in pairs(data.raw["turret"]) do
-            tune_autoplace(v, true, volume)
+for _, v in pairs(data.raw["turret"]) do
+    if String.find( v.name, '/', 1, true) then
+        local nameToken = String.split( v.name, '/')
+        if tonumber(nameToken[3]) > 1 then
+            ErmDebugHelper.print('Disabling:' .. v.name)
+            data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
         end
     end
 end

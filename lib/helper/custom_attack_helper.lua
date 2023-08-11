@@ -22,6 +22,10 @@ local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
 
 local get_name_token = function(name)
+    if global.force_entity_name_cache and global.force_entity_name_cache[name] then
+        return global.force_entity_name_cache[name]
+    end
+
     if global.force_entity_name_cache == nil then
         global.force_entity_name_cache = {}
     end
@@ -67,6 +71,7 @@ end
 
 
 local drop_unit = function(event, race_name, unit_name, count, position)
+    --log('dropping'..race_name..'/'..unit_name..'/'..tostring(count))
     position = position or event.source_position or event.source_entity.position
     count = count or 1
     local race_settings = get_race_settings(race_name)
@@ -94,10 +99,13 @@ local drop_unit = function(event, race_name, unit_name, count, position)
                     distraction = defines.distraction.by_anything
                 })
 
-                if event.source_entity and event.source_entity.type == 'unit' and event.source_entity.unit_group then
+                if event.source_entity and
+                    event.source_entity.type == 'unit' and
+                    event.source_entity.unit_group and
+                    event.source_entity.unit_group.force == entity.force
+                then
                     event.source_entity.unit_group.add_member(entity)
                 end
-
                 register_time_to_live_unit(event, entity, race_name, unit_name)
             end
             idx = idx + 1

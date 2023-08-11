@@ -1,9 +1,39 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.19.0
+Date: 2023-??-??
+
+  Features:
+    - Rebuild default autoplace workflow to support unlimited race mods.
+    - default autoplace now supports temperature and elevation variation under certain conditions.
+    - Armoured/Cold/Explosive/Toxic biters support terrain temperature modifier for default mapping method.
+    - All custom biters support map color changes.
+    - Added "Enforce Temperature" startup settings. When this is set, spawners in default mapping method are generated according to its temperature specification.
+    - A patch of no-one land may generated under certain conditions. Treat it as oasis, if the enemies have not expanded into it.
+    - Removed dependency of erm_ prefix.  Added new way to register ERM race for data manipulation in data stage.
+    - Added erm_libs as dependency.
+
+  Changes:
+    - ERM Roach death world now uses 100% starting area, instead of 75%
+
+  Optimizations:
+    - Removed autoplace for non-level 1 spawner/turret.  Leveled entities are always corrected by controller.
+    - This also eliminates an ancient bug where high level spawns at level 1.
+
+  Gui:
+    - Main detail window has dynamic width to accompany longer race name.
+
+  Bugfixes:
+    - Fixed an crash when an non ERM force somehow assigned an ERM dropship into their group. [Mod: team competition]
+    - Fixed map generation to use string equal to compare mod_name, rather than string.find, to avoid name collision.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.18.7
 Date: 2023-08-05
 
   Bugfixes:
-    - Fixed a crash caused by ForceHelper.extract_race_name_from is caching non ERM races.
+    - Fixed a crash caused by ForceHelper.extract_race_name_from is caching non ERM races. [Mod: team competition]
+
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.6
@@ -48,8 +78,8 @@ Date: 2023-07-30
     - Add functions for upcoming team color and map color handling.
 
   Bugfixes:
-    - Fixed GUI crash when there are other non ERM enemy_ prefixed forces presents.
-    - Fixed a crash when onBiterBaseBuilt happens on a non ERM race.
+    - Fixed GUI crash when there are other non ERM enemy_ prefixed forces presents. [Mod: team competition]
+    - Fixed a crash when onBiterBaseBuilt happens on a non ERM race.  [Mod: team competition]
 
 
 ---------------------------------------------------------------------------------------------------

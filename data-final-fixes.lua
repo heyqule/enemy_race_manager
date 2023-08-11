@@ -4,8 +4,30 @@
 --- DateTime: 10/23/2021 12:53 PM
 ---
 require('__enemyracemanager__/global')
+local String = require('__stdlib__/stdlib/utils/string')
 
 if DEBUG_MODE then
     data.raw["radar"]["radar"]['max_distance_of_sector_revealed'] = 15
     data.raw["radar"]["radar"]['max_distance_of_nearby_sector_revealed'] = 15
+
+    local autoplace_count = 0
+    local prototype_count = 0
+    local erm_prototype_count = 0
+    for _, entity_type in pairs(data.raw) do
+        for _, entity in pairs(entity_type) do
+            prototype_count = prototype_count + 1
+
+            if entity.autoplace ~= nil then
+                autoplace_count = autoplace_count + 1
+
+                local nameToken = String.split(entity.name, '/')
+                if table_size(nameToken) == 3 then
+                    erm_prototype_count = erm_prototype_count + 1
+                end
+            end
+        end
+    end
+    log('Total Prototypes:'..prototype_count)
+    log('Total Prototypes with autoplace: '..autoplace_count)
+    log('Total ERM enemy prototype with autoplace: '..erm_prototype_count)
 end

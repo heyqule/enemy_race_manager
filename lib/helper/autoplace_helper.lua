@@ -50,9 +50,9 @@ function AutplaceHelper.volume_to_noise_expression(volume)
         end
     end
 
-    if (volume["water_min"] and volume["water_max"]) then
-        local water_center = (volume["water_min"] + volume["water_max"]) / 2
-        local water_range = (math.abs(volume["water_min"] - volume["water_max"]) / 2 ) + 0.005
+    if (volume["moisture_min"] and volume["moisture_max"]) then
+        local water_center = (volume["moisture_min"] + volume["moisture_max"]) / 2
+        local water_range = (math.abs(volume["moisture_min"] - volume["moisture_max"]) / 2 ) + 0.005
         local water_fitness = plateau_peak_to_noise_expression(noise.var("moisture"), water_center, water_range)
         if(result == nil) then
             result = water_fitness
@@ -84,21 +84,6 @@ function AutplaceHelper.volume_to_noise_expression(volume)
     end
 
     return result
-end
-
-AutplaceHelper.erm_race = {}
-function AutplaceHelper.get_erm_races()
-    if next(AutplaceHelper.erm_race) then
-        return AutplaceHelper.erm_race
-    end
-
-    for name, version in pairs(mods) do
-        if String.starts_with(name, 'erm_') then
-            AutplaceHelper.erm_race[name] = version
-        end
-    end
-
-    return AutplaceHelper.erm_race
 end
 
 

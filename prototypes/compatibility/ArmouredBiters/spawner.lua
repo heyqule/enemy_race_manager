@@ -43,6 +43,7 @@ local bb_r = setting_utils.getPositivePercentageOf("ab-behemoth-armoured-biter-s
 local l_r = setting_utils.getPositivePercentageOf("ab-leviathan-armoured-biter-spawn-probability")
 
 function makeLevelSpawners(level, type)
+    data.raw['unit-spawner'][type]['autoplace']  = nil
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
 
     local original_hitpoint = spawner['max_health']
@@ -75,6 +76,7 @@ function makeLevelSpawners(level, type)
 
     spawner['result_units'] = result_units
     spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-armoured_biter_map_color'].value)
 
     return spawner
 end
@@ -98,4 +100,19 @@ for i = 1, max_level do
             end
         end
     end
+end
+
+if settings.startup['enemyracemanager-enable-bitters'].value and settings.startup['ab-enable-moisture-check'] == true then
+    -- This set of data is used for set up default autoplace calculation.
+    data.erm_spawn_specs = data.erm_spawn_specs or {}
+    table.insert(data.erm_spawn_specs, {
+        mod_name=MOD_NAME,
+        force_name=FORCE_NAME,
+        moisture=1, -- 1 = Dry and 2 = Wet
+        aux=1, -- 1 = red desert, 2 = sand
+        elevation=3, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+        temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
+        entity_filter = 'armoured',
+        enforce_temperature = true,
+    })
 end

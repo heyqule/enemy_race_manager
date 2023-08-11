@@ -18,7 +18,7 @@ data:extend {
         setting_type = "startup",
         default_value = MAX_LEVEL_10,
         allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-        order = "enemyracemanager-101"
+        order = "enemyracemanager-102"
     },
     {
         type = "int-setting",
@@ -99,12 +99,20 @@ data:extend {
         order = "enemyracemanager-201"
     },
     {
+        type = "bool-setting",
+        name = "enemyracemanager-default_enforce_temperature",
+        description = "enemyracemanager-default_enforce_temperature",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-202",
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-2way-group-enemy-orientation",
         description = "enemyracemanager-2way-group-enemy-orientation",
         setting_type = "startup",
         default_value = X_AXIS,
-        order = "enemyracemanager-202",
+        order = "enemyracemanager-205",
         allowed_values = { X_AXIS, Y_AXIS }
     },
     {
@@ -115,7 +123,7 @@ data:extend {
         default_value = 0,
         minimum_value = -900000,
         maximum_value = 900000,
-        order = "enemyracemanager-203",
+        order = "enemyracemanager-206",
     },
     {
         type = "string-setting",
@@ -123,7 +131,7 @@ data:extend {
         description = "enemyracemanager-2way-group-enemy-positive",
         setting_type = "startup",
         default_value = MOD_NAME,
-        order = "enemyracemanager-204",
+        order = "enemyracemanager-207",
         allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {
@@ -132,7 +140,7 @@ data:extend {
         description = "enemyracemanager-2way-group-enemy-negative",
         setting_type = "startup",
         default_value = MOD_NAME,
-        order = "enemyracemanager-205",
+        order = "enemyracemanager-208",
         allowed_values = { RACE_EMPTY, MOD_NAME }
     },
     {
@@ -250,6 +258,15 @@ data:extend {
         setting_type = "startup",
         default_value = false,
         order = "enemyracemanager-802",
+    },
+    --- Range 1000 to 1100 reserve for map color changes
+    {
+        type = "color-setting",
+        name = "enemyracemanager-vanilla_map_color",
+        description = "enemyracemanager-vanilla_map_color",
+        setting_type = "startup",
+        default_value = VANILLA_MAP_COLOR,
+        order = "enemyracemanager-1001"
     },
     --- Map Settings Tab ---
     {

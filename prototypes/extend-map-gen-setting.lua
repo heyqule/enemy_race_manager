@@ -30,7 +30,6 @@ map_gen_settings['default']['erm-roach-death-world'] = {
         {
             ["enemy-base"] = { frequency = "very-high", size = "very-big"}
         },
-        starting_area = "small"
     },
     advanced_settings =
     {
@@ -64,9 +63,9 @@ if DEBUG_MODE then
             property_expression_names = {},
             autoplace_controls =
             {
-                ["enemy-base"] = { frequency = 5, size = 5}
+                ["enemy-base"] = { frequency = 5, size = 5},
             },
-            starting_area = "small"
+            water = 'none',
         },
         advanced_settings =
         {
@@ -77,8 +76,8 @@ if DEBUG_MODE then
             },
             enemy_expansion =
             {
-                min_expansion_cooldown = 5 * 3600,
-                max_expansion_cooldown = 10 * 3600
+                min_expansion_cooldown = 2 * 3600,
+                max_expansion_cooldown = 4 * 3600
             },
             pollution =
             {

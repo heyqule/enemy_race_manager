@@ -1,6 +1,12 @@
-
 require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
+local debugHelper = require('__enemyracemanager__/lib/debug_helper')
+if DEBUG_MODE then
+    debugHelper.print('----- data.erm_registered_race -----')
+    debugHelper.print(serpent.block(data.erm_registered_race))
+    debugHelper.print('----- data.erm_spawn_specs -----')
+    debugHelper.print(serpent.block(data.erm_spawn_specs))
+end
 
 require('prototypes/extend-defense.lua')
 
@@ -25,5 +31,8 @@ require "prototypes/extend-recipes"
 require "prototypes/extend-freeforall"
 
 require('prototypes/compatibility/data-updates.lua')
+
+
+require('prototypes/extend-default-autoplace.lua')
 
 require('prototypes/map-generation.lua')

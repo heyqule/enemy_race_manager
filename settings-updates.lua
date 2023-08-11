@@ -6,15 +6,4 @@
 
 require('global')
 
-if mods['Krastorio2'] then
-    data:extend {
-        {
-            type = "bool-setting",
-            name = "enemyracemanager-vanilla-k2-creep",
-            description = "enemyracemanager-vanilla-k2-creep",
-            setting_type = "startup",
-            default_value = true,
-            order = "enemyracemanager-1000",
-        }
-    }
-end
+require 'prototypes/compatibility/setting-updates.lua'

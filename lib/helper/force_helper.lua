@@ -34,10 +34,6 @@ function ForceHelper.extract_race_name_from(force_name)
     end
 
     if string.find(force_name, 'enemy_') ~= nil then
-        if global.force_race_name_cache == nil then
-            global.force_race_name_cache = {}
-        end
-
         if global.force_race_name_cache[force_name] == nil then
             local unverified_race_name = String.gsub(force_name, 'enemy_', '')
             if global.race_settings[unverified_race_name] then
@@ -59,7 +55,8 @@ end
 
 -- Checks enemy_erm_ prefix
 function ForceHelper.is_erm_unit(entity)
-    return String.find(entity.name, 'erm_', 1, true) ~= nil
+    local nameToken = ForceHelper.split_name(entity.name)
+    return (global and global.active_races and global.active_races[nameToken[1]]) or false
 end
 
 function ForceHelper.is_enemy_force(force)
@@ -93,15 +90,19 @@ function ForceHelper.split_name(name)
 end
 
 function ForceHelper.get_name_token(name)
+    if global.force_entity_name_cache and global.force_entity_name_cache[name] then
+        return global.force_entity_name_cache[name]
+    end
+
     if global.force_entity_name_cache == nil then
         global.force_entity_name_cache = {}
     end
 
     if global.force_entity_name_cache[name] == nil then
-        if not String.find(name, '/', 1, true) then
-            global.force_entity_name_cache[name] = { ForceHelper.default_mod_name, name, '1' }
-        else
+        if String.find(name, '/', 1, true) then
             global.force_entity_name_cache[name] = ForceHelper.split_name(name)
+        else
+            global.force_entity_name_cache[name] = { ForceHelper.default_mod_name, name, '1' }
         end
     end
 

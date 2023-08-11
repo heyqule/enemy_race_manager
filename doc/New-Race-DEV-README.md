@@ -6,6 +6,15 @@ This readme should be gives you a general start to create your new race.
 
 defines mod constants.  Many constants are used as function proxy key as well.
 
+If you copy this file from the another mod and place to use same variable name for trigger events, 
+you have to change all values that is unique to your mod.
+```lua
+from
+OVERLORD_DROP_ATTACK = 'emzrg-ovl'
+to
+OVERLORD_DROP_ATTACK = 'yourmodecode-ovl'
+```
+
 Example: [global.lua](https://github.com/heyqule/erm_zerg/blob/main/global.lua)
 
 #### setting-update.lua
@@ -15,6 +24,26 @@ Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/sett
 
 #### data.lua
 Use this file to add unit, spawner and other data entities to the game.
+
+The following is **REQUIRED** to register ERM races in data stage.
+```
+data.erm_registered_race = data.erm_registered_race or {}
+data.erm_registered_race[MOD_NAME] = true
+```
+
+This is required for tuning "default" autoplace function to use as reference.
+[Default_Autoplace.md](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
+```
+data.erm_spawn_specs = data.erm_spawn_specs or {}
+table.insert(data.erm_spawn_specs, {
+  mod_name=MOD_NAME,
+  force_name=FORCE_NAME,
+  moisture=2, -- 1 = Dry and 2 = Wet
+  aux=2, -- 1 = red desert, 2 = sand
+  elevation=2, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+  temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
+})
+```
 
 Example: [data.lua](https://github.com/heyqule/erm_zerg/blob/main/data.lua)
 
@@ -43,7 +72,7 @@ Point of interests:
   * This function registers Milestone objective
 
 * RemoteAPI.register_new_enemy_race()
-  * This function is **REQUIRED** to register your race with ERM.
+  * This function is **REQUIRED** to register your race with ERM in control stage.
 
 #### Units:
 Many of the units have unique abilities, please refer to the lua files for reference
@@ -79,13 +108,21 @@ local ERM_Config = require('__enemyracemanager__/lib/global_config') -- Get prop
 local ZergSound = require('__erm_zerg__/prototypes/sound') -- All sounds are handled in single lua file.  It's easier to modify.
 ```
 
-#### Unit / Building Name Convention
+## Name Convention
+Unit and building enemy have to be in this format.
 ```lua
 name = MOD_NAME .. '/' .. name .. '/' .. level,
 localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
 ```
 * MOD_NAME is defined in global.lua
 * name is the unit name
+
+Other support entities, (explosion, projectile and etc) should use the follow convention to avoid name collision.
+```lua
+name = MOD_NAME .. '/' .. entity_name
+```
+
+Name collision cause mod conflict and make game to crash at startup. 
    
 #### Unit Spawners:
 Please see [prototype/building/hive.lua](https://github.com/heyqule/erm_zerg/blob/main/prototypes/building/hive.lua) for details.
