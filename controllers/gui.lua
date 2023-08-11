@@ -49,10 +49,6 @@ EventGui.on_click('.*/more_action',  function(event)
     end
 end)
 
-EventGui.on_click('erm_nuke_biters',  function(event)
-    ErmGui.main_window.nuke_biters(event)
-end)
-
 EventGui.on_click('erm_clean_idle_biter', function(event)
     ErmGui.main_window.kill_idle_units(event)
 end)

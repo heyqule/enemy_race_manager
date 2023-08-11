@@ -310,13 +310,13 @@ end
 ---elevation, 1,2,3 (1 low elevation, 2. medium, 3 high elavation)
 ---temperature, 1,2,3 (1 cold, 2. normal, 3 hot)
 -------------
-local moisture_ranges = {{0, 0.51},{0.49, 1}}
-local aux_ranges = {{0, 0.51},{0.49, 1}}
+local moisture_ranges = {{0, 0.505},{0.495, 1}}
+local aux_ranges = {{0, 0.505},{0.495, 1}}
 local temperature_ranges = {{12,14.01}, {13.99,16.01}, {15.99,18}}
-local elevation_ranges = {{-1,26},{24,49},{47,70}}
+local elevation_ranges = {{-1,25.5},{24.5,48.5},{47.5,70}}
 if mods['alien-biomes'] then
     ErmDebugHelper.print('Autoplace - Using Alien Biomes')
-    temperature_ranges = {{-21,35},{33,97},{95,151}}
+    temperature_ranges = {{-21,34.75},{33.25,96.75},{95.25,151}}
 end
 
 local enforce_temp = settings.startup['enemyracemanager-default_enforce_temperature'].value
@@ -372,7 +372,7 @@ for key, race_data in pairs(updated_specs) do
         end
 
         -- Enable elevation balancing only when there are more than two dozen spec.
-        -- Otherwise it may create large no-bug land.
+        -- The game doesn't really utilize elevation anyway.
         if total_active_specs > 24 then
             volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
             volume['elevation_max'] = elevation_ranges[race_data.elevation][2]

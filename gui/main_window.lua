@@ -18,7 +18,9 @@ local ERM_MainWindow = {
     require_update_all = false,
     root_name = 'erm_races_manager',
     window_width = 680,
+    maximal_width = 1024,
     window_height = 400,
+    maximal_height = 680,
 }
 
 
@@ -37,14 +39,13 @@ function ERM_MainWindow.show(player)
     player.opened = main_window
 
     local admin = player.admin
-    main_window.style.maximal_width = ERM_MainWindow.window_width
+    main_window.style.maximal_width = ERM_MainWindow.maximal_width
     main_window.style.minimal_width = ERM_MainWindow.window_width
     main_window.style.maximal_height = ERM_MainWindow.window_height * 2
-    main_window.style.minimal_height = ERM_MainWindow.window_height
+    main_window.style.minimal_height = ERM_MainWindow.maximal_height
     -- Race Manager Title
     local title_flow = main_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
     title_flow.style.minimal_width = ERM_MainWindow.window_width
-    title_flow.style.maximal_width = ERM_MainWindow.window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
 
@@ -106,13 +107,9 @@ function ERM_MainWindow.show(player)
         local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
         bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
         local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
-        button_pusher.style.width = 150
+        button_pusher.style.width = 300
         button_pusher.style.height = 24
         bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
-        local button_pusher_2 = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
-        button_pusher_2.style.width = 100
-        button_pusher_2.style.height = 24
-        bottom_flow.add { type = "button", name = "erm_nuke_biters", caption = { 'gui.nuke_biters' }, tooltip = { 'gui.nuke_biters_tooltip' }, style = 'red_button' }
     end
 end
 
@@ -182,15 +179,6 @@ function ERM_MainWindow.kill_idle_units(event)
 end
 
 
-function ERM_MainWindow.nuke_biters(event)
-    local owner = game.players[event.element.player_index]
-    local surface = owner.surface
-    local pp = owner.position
-    local units = surface.find_entities_filtered({force=ForceHelper.get_all_enemy_forces(), radius=32, position=pp, type='unit'})
-    for _, entity in pairs(units) do
-        entity.destroy()
-    end
-end
 
 function ERM_MainWindow.update_overhead_button(player_index)
     local owner = game.players[player_index]

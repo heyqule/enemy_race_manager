@@ -113,26 +113,30 @@ end
 local process_4_ways_unit = function(v)
     local nameToken = String.split(v.name, '/')
     local topleft = nameToken[1] == settings.startup['enemyracemanager-4way-top-left'].value
-    local topright = nameToken[1] == v.name, settings.startup['enemyracemanager-4way-top-right'].value
+    local topright = nameToken[1] == settings.startup['enemyracemanager-4way-top-right'].value
     local bottomright = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-right'].value
-    local bottomleft = nameToken[1] == v.name, settings.startup['enemyracemanager-4way-bottom-left'].value
+    local bottomleft = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-left'].value
 
     if topleft and v.autoplace then
+        ErmDebugHelper.print('topleft:'..tostring(topleft))
         v.autoplace.probability_expression =
             noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
             noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
             v.autoplace.probability_expression
     elseif topright and v.autoplace then
+        ErmDebugHelper.print('topright:'..tostring(topright))
         v.autoplace.probability_expression =
             noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
             noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomright and v.autoplace then
+        ErmDebugHelper.print('bottomright:'..tostring(bottomright))
         v.autoplace.probability_expression =
             noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
             noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
             v.autoplace.probability_expression
     elseif bottomleft and v.autoplace then
+        ErmDebugHelper.print('bottomleft:'..tostring(bottomleft))
         v.autoplace.probability_expression =
             noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
             noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *

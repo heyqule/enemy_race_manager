@@ -71,6 +71,7 @@ end
 
 
 local drop_unit = function(event, race_name, unit_name, count, position)
+    --log('dropping'..race_name..'/'..unit_name..'/'..tostring(count))
     position = position or event.source_position or event.source_entity.position
     count = count or 1
     local race_settings = get_race_settings(race_name)

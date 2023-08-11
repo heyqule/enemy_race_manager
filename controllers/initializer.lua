@@ -139,21 +139,6 @@ local prepare_world = function()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
 
-local on_entity_spawned_threshold = defines.time.hour * 12
-local on_entity_spawned_handler = function (event)
-    if global.tick and global.tick > on_entity_spawned_threshold then
-        return
-    end
-    local entity = event.entity
-    if entity and entity.valid then
-        local nameToken = ErmForceHelper.get_name_token(entity.name)
-        if tonumber(nameToken[3]) > ErmRaceSettingsHelper.get_level(nameToken[1]) then
-            entity.destroy()
-        end
-    end
-end
---- Another attempt to fix high level unit spawns in early game.
-Event.register(defines.events.on_entity_spawned, on_entity_spawned_handler)
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
