@@ -101,7 +101,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     end
 
     if position then
-        surface.create_entity({ name = name, force = new_force_name, position = position })
+        surface.create_entity({ name = name, force = new_force_name, position = position, spawn_decorations = true })
     end
 end
 

@@ -15,6 +15,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - New way for race mods to register to ERM's data and control stage. It no longer depends on erm_ prefix.
 - Eliminated an ancient bug where high level may spawn at low level.
 - Custom biters(armour/cold/explosive/toxic) now supports map color change.
+- Requires erm_libs, please make sure you download it.
 
 ### Zerg and Protoss
 - Additional remaster graphic changes for Zerg and Protoss!  Special thanks SHlNZ0U to prepare the graphics!
