@@ -403,12 +403,12 @@ ErmDebugHelper.print(serpent.block(volumes))
 --- Fixed 3 race conditions with 3 autoplace specs
 if table_size(volumes) == 3 and total_active_races == 3 then
     volumes[1].aux_min = 0
-    volumes[1].aux_max = 0.34
+    volumes[1].aux_max = 0.335
     volumes[1].moisture_min = 0
     volumes[1].moisture_max = 1
-    volumes[2].aux_min = 0.32
+    volumes[2].aux_min = 0.325
     volumes[2].aux_max = 1
-    volumes[3].aux_min = 0.32
+    volumes[3].aux_min = 0.325
     volumes[3].aux_max = 1
 else
     for index, volume in pairs(volumes) do

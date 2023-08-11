@@ -10,6 +10,7 @@ Date: 2023-??-??
     - Added "Enforce Temperature" startup settings. When this is set, spawners in default mapping method are generated according to its temperature specification.
     - A patch of no-one land may generated under certain conditions. Treat it as oasis, if the enemies have not expanded into it.
     - Removed dependency of erm_ prefix.  Added new way to register ERM race for data manipulation in data stage.
+    - Added erm_libs as dependency.
 
   Changes:
     - ERM Roach death world now uses 100% starting area, instead of 75%
