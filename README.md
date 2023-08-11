@@ -9,16 +9,17 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Featured Attack Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.18 Changes
-- New max target range settings, 14, 20, 26*, 32*, 40*
-- Targeting range for all units depends on max range settings, long range is 75%, medium is 50% and short is 25%
-- Unit's time to live subsystem, the unit dies once the time is up.
-- Dropship logic improvements. They now drop multiple units!
-- removed "Level Requirement Multiplier" setting
+### 1.19 Changes
+- Default mapping method overhaul.  It's now compatible with unlimited races. (8 races at the moment).
+- Moisture & Temperature based autoplace function.
+- New way for race mods to register to ERM's data and control stage. It no longer depends on erm_ prefix.
+- Eliminated an ancient bug where high level may spawn at low level.
+- Custom biters(armour/cold/explosive/toxic) now supports map color change.
 
 ### Zerg and Protoss
-- Remaster graphic for Zerg and Protoss!!  Special thanks SHlNZ0U to prepare the graphics!
-- Additional units and attack changes for Zerg and Protoss!!! 
+- Additional remaster graphic changes for Zerg and Protoss!  Special thanks SHlNZ0U to prepare the graphics!
+- Terran asset pack is now available. (Playable Terran will upgrade in a later date.)
+- All remaster asset files are now final.  Additional assets may add in later version.
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
@@ -27,17 +28,18 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=180](https://youtu.be/phLRReAjxHA?t=180
 
 New Enemy Races:
 
-[>>>>Zerg<<<<](https://mods.factorio.com/mod/erm_zerg)
+* [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
+  * [Zerg HD](https://mods.factorio.com/mod/erm_zerg_hd) - Remaster Graphic support
+* [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss) 
+  * [Protoss HD](https://mods.factorio.com/mod/erm_toss_hd) - Remaster Graphic support
+* [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
+* [Mars People](https://mods.factorio.com/mod/erm_marspeople)
 
-[>>>>Zerg HD<<<<](https://mods.factorio.com/mod/erm_zerg_hd) - Remaster Graphic support
-
-[>>>>Protoss<<<<](https://mods.factorio.com/mod/erm_toss)
-
-[>>>>Protoss HD<<<<](https://mods.factorio.com/mod/erm_toss_hd) - Remaster Graphic support
-
-[>>>>RedArmy<<<<](https://mods.factorio.com/mod/erm_redarmy)
-
-[>>>>Mars People<<<<](https://mods.factorio.com/mod/erm_marspeople)
+The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). These only use remaster graphics.
+They have different spawn table and unit properties.  They can play together with my version, e.g Zerg vs Zerg FFA :)
+* [>>>>Zerg - Jormungand Brood<<<<](https://mods.factorio.com/mod/erm_zerg_exp)
+* [>>>>Protoss - Velari Tribe<<<<](https://mods.factorio.com/mod/erm_toss_exp)
+* [>>>>Terran - United Earth Directorate<<<<](https://mods.factorio.com/mod/erm_terran_exp)
 
 Player Controllable Units:
 
@@ -45,13 +47,15 @@ Player Controllable Units:
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-Tips on defense:
+**Tips on defense:**
 - A LOT OF construction robots and repair kits. Automate repair network ASAP.  Mix all turrets.  Uranium bullets are OP.
 - Build multiple layers of turrets in early game.  Repairing can be tedious without automated bot repairs.
 - You may add "Robot World Continued" or "Nanobots: Early Bots" to automate repairs in early game.
 
+Do you want to create your new race?  Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/New-Race-DEV-README.md) and join my discord for additional help.
+
 ### Features
-#### New enemies can be added as new forces
+#### New enemies are added as new forces
 
 Manage new race as new enemy force.  Each race has its own force statistics
 
@@ -73,14 +77,12 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 The evolution points is tied to force's hidden evolution factors (time, pollution and enemy kills).
 
 * {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-* evolution_base_point + (evolution_factor_by_pollution + evolution_factor_by_time + evolution_factor_by_killing_spawners) * level_multiplier
-* evolution_base_point is used for evolution point accelerator, which killing turret and units also count toward evolution.
-* level_multiplier default to 1.
+* killing unit and turret also contribute to these points
 
-Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters.
+Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters and all ERM races.
 
 #### Tiered unit spawns
-New races may have up to 3 tiers of unit-spawners and turrets. 
+New races may have up to 3 tiers of unit-spawners, turrets and unit. 
 
 * 0 - 0.4 evolution factor uses tier 1 units & spawns
 * 0.4 adds tier 2
@@ -103,6 +105,7 @@ This defines how enemy bases are generated when a new chunk is charted.
 Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 
 - Default
+    - Moisture or/and temperature based spawns.  Protoss and cold biter spawn in cold/wet climate, zerg and explosive biter spawn in hot/dry climate.
 - 2 ways split
 - 4 ways split
 - One race per surface/planet
@@ -142,12 +145,11 @@ Partial formation is build based on cc > support > turret priority.
 
 Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102)
 
-* Each enemy kill worth some points. Attack meter tallies the points for each race every minute. 1 point for unit, 10 points for turret, 50 points for spawners.
-* Enemy will send out an army to attack when a killed threshold is reached.  The check happens every few minutes.
+* Each enemy kill worth some points.
+* Enemy will send out an army to attack when the killed points threshold is reached.
 * These attack groups are independent of pollution.
-* The default threshold is around 3000 points(~150 units) per attack group. 
+* The default threshold is around 3000 points(~120 units) per attack group. 
     - The threshold is configurable.
-    - The threshold randomly reset after each attack.
 * When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets with player structure.
 * Launching rockets and using super weapons may increase attack points.
 * There are multiple types of attack groups.
@@ -162,7 +164,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * When "Dropship Squad" is enabled, enemy may send out dedicate dropship to drop units in your base.
 
 ##### Precision strike groups (ON by default)
-* When this group goes to its target, the units ignore any attack distraction.
+* When this group is on its way to the target, the units ignore any attack distraction.
 * They target area with rocket-silo, artillery-turret and mining-drill.  Defend them at all cost!
 * Dropship group always based on this group.
 * This feature can be enabled for flying attack group.  Default to ON.
@@ -171,14 +173,14 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 ##### Time based attack wave (ON be default)
 * Time based attack wave starts after enemy level reach 3. Default to ON
     * It adds points to attack meter every minute.
-    * The points to add can be adjusted 1% to 20% of next attack threshold. It takes about 1.5hr to 5 minutes respectively to reach next wave.
-    * Default setting is 2%, takes about 50 minutes if you are playing peacefully.
+    * The points to add can be adjusted 1% to 90% of next attack threshold. It takes about 1.5hr to 5 minutes respectively to reach next wave.
+    * Default setting is 2% of the threshold per minute.
 
 ##### Featured Groups and Elite Featured Groups
 * Featured group are groups with predefined unit types. Please watch the following video for examples.
 * [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 * Elite featured groups have the enemy level of current level + 2 by default
-    * It can be set up to 5 level higher, which is level 25 max.  HP and damages at level 25 are about 20-30% more than level 20.
+    * It can be set up to 5 level higher, which is up to level 25.  HP and damages at level 25 are about 20-30% more than level 20.
     * They spawn based on accumulated attack points.  Default is every 60000 points.
 
 ### Free for all 
@@ -190,7 +192,7 @@ This can be enabled in startup setting tab.
 
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
-### Advanced Army Controls (Only for ERM - Terran)
+### Advanced Army Controls (Only for ERM - Terran, or other compatible mods)
 - Army controls enhancements 
     - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
     - Automated unit deployment.
@@ -198,9 +200,6 @@ ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://w
     - Unit Population Control
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
-
-### Commands
-* /ERM_GetRaceSettings - show detailed race settings
 
 ### Remote API Support
 * [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)

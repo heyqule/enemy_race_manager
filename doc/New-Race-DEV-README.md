@@ -4,10 +4,10 @@ This readme should be gives you a general start to create your new race.
 
 #### global.lua
 
-defines mod constants.  Many constants are used as function proxy key as well.
+defines mod constants.  Many constants are used as function proxy keys.
 
-If you copy this file from the another mod and place to use same variable name for trigger events, 
-you have to change all values that is unique to your mod.
+If you copy this file from the another mod and plan to use same variable name for trigger events, 
+you have to change all values which are unique to your mod.
 ```lua
 from
 OVERLORD_DROP_ATTACK = 'emzrg-ovl'
@@ -66,13 +66,24 @@ Point of interests:
 * Register required function in remote.lua (See below)
 
 #### scripts/remote.lua
-[remote.lua](https://github.com/heyqule/erm_zerg/blob/main/control.lua)
+[remote.lua](https://github.com/heyqule/erm_zerg/blob/main/scripts/remote.lua)
 
 * RemoteAPI.milestones_preset_addons()
   * This function registers Milestone objective
 
 * RemoteAPI.register_new_enemy_race()
   * This function is **REQUIRED** to register your race with ERM in control stage.
+
+#### scripts/custom_attacks.lua
+[custom_attacks.lua](https://github.com/heyqule/erm_zerg/blob/main/scripts/custom_attacks.lua)
+
+This file handles custom attack for dropships and alike.
+
+
+#### scripts/boss_attacks.lua
+[custom_attacks.lua](https://github.com/heyqule/erm_zerg/blob/main/scripts/custom_attacks.lua)
+
+This file registers boss attacks
 
 #### Units:
 Many of the units have unique abilities, please refer to the lua files for reference

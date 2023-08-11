@@ -19,9 +19,9 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossGroupProcessor = {}
 
--- Number of spawn cycle to send out attack group. 15 seconds per cycle. 3.5 minutes / half narvis day.
--- spawn_cycles x enemyracemanager-boss-spawn-size = max boss group size, default 120 (10 * 12)
-local spawn_cycles = 12
+-- Number of spawn cycle to send out attack group. 15 seconds per cycle. 6 minutes / about one narvis day.
+-- spawn_cycles x enemyracemanager-boss-spawn-size = max boss group size, default 120 (10 * 24 / 2)
+local default_spawn_cycles = 24
 local chunkSize = 32
 
 local FEATURE_GROUP_TYPE_MIXED = 1
@@ -56,12 +56,12 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
         global.boss_group_spawn.group_number = group.group_number
         ErmDebugHelper.print('BossGroupProcessor: Create Group...'..tostring(group.group_number))
         unit_per_cycle = unit_per_cycle or ErmConfig.boss_spawn_size
-        global.boss_group_spawn.max_cycles = max_cycles or spawn_cycles
+        global.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
         global.boss_group_spawn.unit_per_cycle = unit_per_cycle
 
         local max_units
         if default_max_group then
-            max_units = global.boss_group_spawn.max_cycles * ErmConfig.boss_spawn_size
+            max_units = (global.boss_group_spawn.max_cycles * ErmConfig.boss_spawn_size)
         else
             max_units = global.boss_group_spawn.max_cycles * unit_per_cycle
         end
@@ -166,7 +166,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     ErmDebugHelper.print('BossProcessor.spawn_initial_group')
     pick_featured_group()
-    create_group(spawn_cycles/3, ErmConfig.boss_spawn_size * 3, true)
+    create_group(default_spawn_cycles /3, ErmConfig.boss_spawn_size * 3, true)
     ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', true, true)
 end
 
@@ -199,7 +199,7 @@ function BossGroupProcessor.get_default_data()
 end
 
 function BossGroupProcessor.get_group_size()
-    return ErmConfig.rmConfig.boss_spawn_size() * spawn_cycles
+    return ErmConfig.boss_spawn_size * default_spawn_cycles
 end
 
 -- Clean up attack group automatically

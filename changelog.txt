@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.19.0
-Date: 2023-??-??
+Date: 2023-08-11
 
   Features:
     - Rebuild default autoplace workflow to support unlimited race mods.
@@ -14,6 +14,7 @@ Date: 2023-??-??
 
   Changes:
     - ERM Roach death world now uses 100% starting area, instead of 75%
+    - Change default boss spawn attack group timer from 3.5mins to 7mins
 
   Optimizations:
     - Removed autoplace for non-level 1 spawner/turret.  Leveled entities are always corrected by controller.

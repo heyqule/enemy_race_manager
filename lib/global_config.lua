@@ -81,9 +81,9 @@ local boss_difficulty = {
 ErmConfig.BOSS_LEVELS = boss_difficulty[settings.startup['enemyracemanager-boss-difficulty'].value]
 
 local boss_spawn_size = {
-    [BOSS_SPAWN_SQUAD] = 10,
-    [BOSS_SPAWN_PATROL] = 20,
-    [BOSS_SPAWN_PLATOON] = 40,
+    [BOSS_SPAWN_SQUAD] = 5,
+    [BOSS_SPAWN_PATROL] = 10,
+    [BOSS_SPAWN_PLATOON] = 20,
 }
 ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
 ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 75000000}
