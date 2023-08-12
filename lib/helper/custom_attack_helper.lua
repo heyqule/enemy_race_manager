@@ -57,12 +57,12 @@ local register_time_to_live_unit = function(event, entity, race_name, name)
     end
 end
 
-local get_race_settings = function(race_name)
+local get_race_settings = function(race_name, force)
     if global.custom_attack_race_settings == nil then
         global.custom_attack_race_settings = {}
     end
 
-    if global.custom_attack_race_settings[race_name] == nil then
+    if global.custom_attack_race_settings[race_name] == nil or force then
         global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
     end
 
@@ -146,8 +146,8 @@ end
 
 local CustomAttackHelper = {}
 
-function CustomAttackHelper.get_race_settings(race_name)
-    local settings = get_race_settings(race_name)
+function CustomAttackHelper.get_race_settings(race_name, force)
+    local settings = get_race_settings(race_name, force)
     return settings
 end
 
