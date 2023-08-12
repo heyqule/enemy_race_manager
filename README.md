@@ -32,16 +32,17 @@ New Enemy Races:
 
 * [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
   * [Zerg HD](https://mods.factorio.com/mod/erm_zerg_hd) - Remaster Graphic support
-* [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss) 
+* [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss)
   * [Protoss HD](https://mods.factorio.com/mod/erm_toss_hd) - Remaster Graphic support
 * [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 * [Mars People](https://mods.factorio.com/mod/erm_marspeople)
 
-The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). These only use remaster graphics.
+The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou).  All hail to him as he did the remaster graphics!
 They have different spawn table and unit properties.  They can play together with my version, e.g Zerg vs Zerg FFA :)
-* [>>>>Zerg - Jormungand Brood<<<<](https://mods.factorio.com/mod/erm_zerg_exp)
-* [>>>>Protoss - Velari Tribe<<<<](https://mods.factorio.com/mod/erm_toss_exp)
-* [>>>>Terran - United Earth Directorate<<<<](https://mods.factorio.com/mod/erm_terran_exp)
+
+* [Zerg - Jormungand Brood](https://mods.factorio.com/mod/erm_zerg_exp)
+* [Protoss - Velari Tribe](https://mods.factorio.com/mod/erm_toss_exp)
+* [Terran - United Earth Directorate](https://mods.factorio.com/mod/erm_terran_exp)
 
 Player Controllable Units:
 
@@ -84,7 +85,7 @@ The evolution points is tied to force's hidden evolution factors (time, pollutio
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters and all ERM races.
 
 #### Tiered unit spawns
-New races may have up to 3 tiers of unit-spawners, turrets and unit. 
+New races may have up to 3 tiers of unit-spawners, turrets and unit.
 
 * 0 - 0.4 evolution factor uses tier 1 units & spawns
 * 0.4 adds tier 2
@@ -93,7 +94,7 @@ New races may have up to 3 tiers of unit-spawners, turrets and unit.
 #### Defense Enhancement
 
 * Artillery-Shell damage bonus now is part of infinite stronger-explosive upgrade.
-    * Added this due to structure resistance and health increase
+  * Added this due to structure resistance and health increase
 * New tier of defense structures with higher HP and resistances.
 
 #### GUI to view each race's stats.
@@ -107,13 +108,13 @@ This defines how enemy bases are generated when a new chunk is charted.
 Youtube: [https://youtu.be/phLRReAjxHA?t=12](https://youtu.be/phLRReAjxHA?t=12)
 
 - Default
-    - Moisture or/and temperature based spawns.  Protoss and cold biter spawn in cold/wet climate, zerg and explosive biter spawn in hot/dry climate.
+  - Moisture or/and temperature based spawns.  Protoss and cold biter spawn in cold/wet climate, zerg and explosive biter spawn in hot/dry climate.
 - 2 ways split
 - 4 ways split
 - One race per surface/planet
-    - randomly assign a race for each surface / planet.
-    - Designed for Space Exploration.
-    - The race of a planet can be changed using replace race button from UI.
+  - randomly assign a race for each surface / planet.
+  - Designed for Space Exploration.
+  - The race of a planet can be changed using replace race button from UI.
 
 ![Enemy Autoplace](https://assets-mod.factorio.com/assets/9d1adb9316bbed9d83a373f8ff713745fd4580f8.png "Enemy Autoplace")
 
@@ -125,13 +126,13 @@ This defines how enemy expand into new area.  In base game, each building group 
 Youtube: [https://youtu.be/phLRReAjxHA?t=88](https://youtu.be/phLRReAjxHA?t=88)
 
 * Default
-    - build one building at a time
+  - build one building at a time
 * Command Center
-    - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
+  - When the unit group base builds a command center type spawner, it triggers "Build A Town" logic. Otherwise, it's default logic
 * Build A Town (default)
-    - Always use build formation option to build the base.
+  - Always use build formation option to build the base.
 * Full Expansion
-    - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
+  - When the first biter builds, everyone from the group will build based on "Build A Town" logic.
 
 You can change the build formation option. For example:
 
@@ -150,13 +151,13 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 * Each enemy kill worth some points.
 * Enemy will send out an army to attack when the killed points threshold is reached.
 * These attack groups are independent of pollution.
-* The default threshold is around 3000 points(~120 units) per attack group. 
-    - The threshold is configurable.
+* The default threshold is around 3000 points(~120 units) per attack group.
+  - The threshold is configurable.
 * When mapping method is set to "one race per surface/planet", custom attack group can spawn on SE's planets with player structure.
 * Launching rockets and using super weapons may increase attack points.
 * There are multiple types of attack groups.
 
-##### General attack groups 
+##### General attack groups
 * This group includes all available units.
 
 ##### Flying attack groups (ON by default)
@@ -174,18 +175,18 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 
 ##### Time based attack wave (ON be default)
 * Time based attack wave starts after enemy level reach 3. Default to ON
-    * It adds points to attack meter every minute.
-    * The points to add can be adjusted 1% to 90% of next attack threshold. It takes about 1.5hr to 5 minutes respectively to reach next wave.
-    * Default setting is 2% of the threshold per minute.
+  * It adds points to attack meter every minute.
+  * The points to add can be adjusted 1% to 90% of next attack threshold. It takes about 1.5hr to 5 minutes respectively to reach next wave.
+  * Default setting is 2% of the threshold per minute.
 
 ##### Featured Groups and Elite Featured Groups
 * Featured group are groups with predefined unit types. Please watch the following video for examples.
 * [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 * Elite featured groups have the enemy level of current level + 2 by default
-    * It can be set up to 5 level higher, which is up to level 25.  HP and damages at level 25 are about 20-30% more than level 20.
-    * They spawn based on accumulated attack points.  Default is every 60000 points.
+  * It can be set up to 5 level higher, which is up to level 25.  HP and damages at level 25 are about 20-30% more than level 20.
+  * They spawn based on accumulated attack points.  Default is every 60000 points.
 
-### Free for all 
+### Free for all
 This can be enabled in startup setting tab.
 
 * Player entity health multiplied by 12.5x
@@ -195,11 +196,11 @@ This can be enabled in startup setting tab.
 ERM - Free For All Mode: [https://www.youtube.com/watch?v=fOj4gU1q7Pk](https://www.youtube.com/watch?v=fOj4gU1q7Pk)
 
 ### Advanced Army Controls (Only for ERM - Terran, or other compatible mods)
-- Army controls enhancements 
-    - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
-    - Automated unit deployment.
-    - Unit Teleportation between 2 areas, including between planets/surfaces.
-    - Unit Population Control
+- Army controls enhancements
+  - Dedicated unit assembly lines.  Regular assembly machines can no longer build terran units.
+  - Automated unit deployment.
+  - Unit Teleportation between 2 areas, including between planets/surfaces.
+  - Unit Population Control
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
