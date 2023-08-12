@@ -10,17 +10,18 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 ### 1.19 Changes
-- Default mapping method overhaul.  It's now compatible with unlimited races. (8 races at the moment).
+- Default mapping method overhaul.  It's now compatible with any ERM supported race. (8 races at the moment).
 - Moisture & Temperature based autoplace function.
-- New way for race mods to register to ERM's data and control stage. It no longer depends on erm_ prefix.
+- New way for race mods to register in ERM's data and control stage. It no longer depends on erm_ prefix.
 - Eliminated an ancient bug where high level may spawn at low level.
 - Custom biters(armour/cold/explosive/toxic) now supports map color change.
 - Requires erm_libs, please make sure you download it.
 
-### Zerg and Protoss
+### Race Mods
 - Additional remaster graphic changes for Zerg and Protoss!  Special thanks SHlNZ0U to prepare the graphics!
 - Terran asset pack is now available. (Playable Terran will upgrade in a later date.)
 - All remaster asset files are now final.  Additional assets may add in later version.
+- Turret range is now max range config(default 14) + 16, instead of fixed value 30.
 
 ### Download New race demo
 These race mods are made as educational demos. You'll have to download them separately.
