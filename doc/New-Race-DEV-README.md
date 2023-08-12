@@ -20,7 +20,7 @@ Example: [global.lua](https://github.com/heyqule/erm_zerg/blob/main/global.lua)
 #### setting-update.lua
 add your race to ERM settings' dropdowns
 
-Example: [setting-update.lua](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
+Example: [settings-updates.lua](https://github.com/heyqule/erm_zerg/blob/main/settings-updates.lua)
 
 #### data.lua
 Use this file to add unit, spawner and other data entities to the game.
@@ -32,7 +32,7 @@ data.erm_registered_race[MOD_NAME] = true
 ```
 
 This is required for tuning "default" autoplace function to use as reference.
-[Default_Autoplace.md](https://github.com/heyqule/erm_zerg/blob/main/setting-update.lua)
+[Default_Autoplace.md](https://github.com/heyqule/erm_zerg/blob/main/doc/Default_Autoplace.lua)
 ```
 data.erm_spawn_specs = data.erm_spawn_specs or {}
 table.insert(data.erm_spawn_specs, {

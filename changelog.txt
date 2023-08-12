@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.19.2
+Date: 2023-08-12
+
+  Bugfixes:
+    - Fixed a start up crash when a spawn specification did not included temperature.
+    - Fixed a start up crash when none of the spawn specifications loaded.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.19.1
 Date: 2023-08-11
 

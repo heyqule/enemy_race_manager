@@ -304,6 +304,16 @@ local temperature_has_single_item = function(volume, statistics)
     return is_single_item
 end
 
+local all_spec_have_temperature = function(volumes)
+    for _, volume in pairs(volumes) do
+        if volume.temperature_min == nil then
+            return false
+        end
+    end
+
+    return true
+end
+
 ------------
 ---moisture, -- 1 = Dry and 2 = Wet, {0 - 0.51, 0.49 - 1}
 ---aux, 1 = red desert, 2 = sand,  {0 - 0.51, 0.49 - 1}
@@ -327,6 +337,12 @@ if enforce_temp then
 end
 
 local erm_race_data = data.erm_spawn_specs
+
+-- Do nothing if erm_race_data is nil
+if erm_race_data == nil then
+    return
+end
+
 local total_active_specs = table_size(erm_race_data)
 local active_races = {}
 
@@ -372,7 +388,7 @@ for key, race_data in pairs(updated_specs) do
         end
 
         -- Enable elevation balancing only when there are more than two dozen spec.
-        -- The game doesn't really utilize elevation anyway.
+        -- The game doesn't really utilize elevation anyway.  Untested territory
         if total_active_specs > 24 then
             volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
             volume['elevation_max'] = elevation_ranges[race_data.elevation][2]
@@ -391,7 +407,7 @@ end
 ErmDebugHelper.print('Autoplace - Volumes:')
 ErmDebugHelper.print(serpent.block(volumes))
 
-if balance_by_temperature then
+if balance_by_temperature and all_spec_have_temperature(volumes) then
     volumes = balance_volumes_by_temperature(volumes)
 else
     volumes = balance_volumes_by_aux(volumes)
@@ -411,8 +427,8 @@ if table_size(volumes) == 3 and total_active_races == 3 then
     volumes[3].aux_min = 0.325
     volumes[3].aux_max = 1
 else
-    for index, volume in pairs(volumes) do
-        if volume.temperature_min then
+    if all_spec_have_temperature(volumes) then
+        for index, volume in pairs(volumes) do
             if temperature_has_single_item(volume, statistics) then
                 volumes[index].aux_min = 0
                 volumes[index].aux_max = 1
