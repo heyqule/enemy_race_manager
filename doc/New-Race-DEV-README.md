@@ -85,7 +85,25 @@ This file handles custom attack for dropships and alike.
 
 This file registers boss attacks
 
-#### Units:
+#### Units & Buildings:
+##### Units and Buildings collisions:
+```
+Unit collision box / selection box:
+local collision_box = { { -1, -1 }, {1, 1 } }
+local selection_box = { { -1.25, -1.25 }, { 1.25, 1.25 } }
+
+Building collision / selection / map bounding box
+local collision_box = { { -3, -3.5 }, { 3.25, 2.75 } }
+local map_generator_bounding_box = { { -4, -4.5 }, { 4.25, 3.75 } }
+local selection_box = { { -3, -3.5 }, { 3.25, 2.75 } }
+```
+collsion_box for unit should be under 2 tiles, under  { { -1, -1 }, {1, 1 } } in most cases.  The gap between building is designed to be 2 tiles, check collision_box and map_generator_bounding_box in buildings.  
+Any number larger will make them stuck inside the base.  However, you can change the selection box to match unit's size since it won't affect how unit behave.
+
+If you wish to keep a larger collision box, you will have to tweak your building's map_generator_bounding_box to have a wider gap.
+
+
+##### Unit abilities:
 Many of the units have unique abilities, please refer to the lua files for reference
 
 * Melee: [Zergling](https://github.com/heyqule/erm_zerg/blob/main/prototypes/enemy/zergling.lua)
