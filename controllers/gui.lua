@@ -36,7 +36,7 @@ EventGui.on_click('erm_close_button', function(event)
     ErmGui.main_window.toggle_close(owner)
 end)
 
-EventGui.on_click('.*/more_action',  function(event)
+EventGui.on_click('.*/more_action', function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -58,7 +58,7 @@ EventGui.on_click('erm_reset_default_bitter', function(event)
 end)
 
 --- Enemy Details window events ---
-EventGui.on_click('erm_detail_close_button',function(event)
+EventGui.on_click('erm_detail_close_button', function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -71,7 +71,7 @@ EventGui.on_click('erm_detail_close_button',function(event)
     end
 end)
 
-EventGui.on_click(".*/"..ErmGui.detail_window.confirm_name, function(event)
+EventGui.on_click(".*/" .. ErmGui.detail_window.confirm_name, function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -135,7 +135,7 @@ EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
 end)
 
 --- Boss Detail events ---
-EventGui.on_click('erm_boss_detail_close_button',function(event)
+EventGui.on_click('erm_boss_detail_close_button', function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -169,13 +169,12 @@ EventGui.on_click('erm_army_control_toggle', function(event)
     ErmGui.army_control_window.toggle_main_window(owner)
 end)
 
-EventGui.on_click('erm_army_close_button',function(event)
+EventGui.on_click('erm_army_close_button', function(event)
     local owner = game.players[event.element.player_index]
     if owner then
         ErmGui.army_control_window.toggle_close(owner)
     end
 end)
-
 
 --- on_gui_closed events
 local gui_close_switch = {

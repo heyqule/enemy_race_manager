@@ -108,7 +108,6 @@ function RaceSettingHelper.remove_turret_from_tier(race_settings, tier, structur
     remove_from_entity_table(race_settings, 'turrets', tier, structure)
 end
 
-
 function RaceSettingHelper.clean_up_race()
     if global.race_settings == nil then
         return
@@ -117,7 +116,7 @@ function RaceSettingHelper.clean_up_race()
     for _, item in pairs(global.race_settings) do
         if item.race ~= RaceSettingHelper.default_mod_name and game.active_mods[item.race] == nil then
             global.race_settings = Table.remove_keys(global.race_settings, { item.race })
-            game.merge_forces('enemy_'..item.race, 'enemy')
+            game.merge_forces('enemy_' .. item.race, 'enemy')
         end
     end
 end
@@ -223,7 +222,6 @@ function RaceSettingHelper.get_current_command_centers(target_race)
     return global.race_settings[target_race].current_command_centers_tier
 end
 
-
 function RaceSettingHelper.get_attack_meter(target_race)
     return global.race_settings[target_race].attack_meter
 end
@@ -315,9 +313,9 @@ function RaceSettingHelper.refresh_current_tier(race_name)
         i = i + 1
     end
 
-    race_settings.current_building_tier =  Table.unique_values(Table.array_combine(
-        race_settings.current_command_centers_tier,
-        race_settings.current_support_structures_tier
+    race_settings.current_building_tier = Table.unique_values(Table.array_combine(
+            race_settings.current_command_centers_tier,
+            race_settings.current_support_structures_tier
     ))
     global.race_settings[race_name] = race_settings
 end
@@ -377,12 +375,12 @@ end
 
 function RaceSettingHelper.pick_featured_unit(target_race, featured_group_id)
     local featured_group = global.race_settings[target_race]['featured_groups'][featured_group_id]
-    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1,featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
+    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1, featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 function RaceSettingHelper.pick_featured_flying_unit(target_race, featured_group_id)
     local featured_group = global.race_settings[target_race]['featured_flying_groups'][featured_group_id]
-    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1,featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
+    return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1, featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 function RaceSettingHelper.has_featured_flying_squad(target_race)
@@ -410,7 +408,7 @@ function RaceSettingHelper.get_total_featured_flying_squads(target_race)
 end
 
 function RaceSettingHelper.can_spawn(chance_value)
-    return  math.random(1, 100) > (100 - chance_value)
+    return math.random(1, 100) > (100 - chance_value)
 end
 
 function RaceSettingHelper.is_in_boss_mode()

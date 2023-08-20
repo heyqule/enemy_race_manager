@@ -23,7 +23,6 @@ local ERM_MainWindow = {
     maximal_height = 680,
 }
 
-
 --- Main Windows functions
 function ERM_MainWindow.show(player)
     local gui = player.gui.screen
@@ -49,7 +48,7 @@ function ERM_MainWindow.show(player)
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
 
-    local pusher = title_flow.add{type = "empty-widget", style = "draggable_space_header"}
+    local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.width = ERM_MainWindow.window_width - 24 - 160
     pusher.style.height = 24
     pusher.drag_target = main_window
@@ -58,7 +57,7 @@ function ERM_MainWindow.show(player)
                                           name = 'erm_close_button',
                                           sprite = "utility/close_white",
                                           style = 'frame_action_button',
-                                          tooltip = {"gui.close-instruction"}
+                                          tooltip = { "gui.close-instruction" }
     }
     close_button.style.width = 24
     close_button.style.height = 24
@@ -68,13 +67,13 @@ function ERM_MainWindow.show(player)
     scroll.style.margin = 5
     main_window.style.minimal_height = ERM_MainWindow.window_height / 1.25
 
-    scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet',  player.surface.name } , style = 'caption_label' }
+    scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet', player.surface.name }, style = 'caption_label' }
     if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.name] then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race',  global.enemy_surfaces[player.surface.name] } }
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race', global.enemy_surfaces[player.surface.name] } }
     elseif GlobalConfig.mapgen_is_2_races_split() then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race()} }
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
     else
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_mixed_races'} }
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_mixed_races' } }
     end
 
     local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
@@ -92,7 +91,7 @@ function ERM_MainWindow.show(player)
 
     for name, race_setting in pairs(global.race_settings) do
         if race_setting.label then
-            item_table.add { type = "label", caption = race_setting.label  }
+            item_table.add { type = "label", caption = race_setting.label }
             item_table.add { type = "label", caption = race_setting.level }
             item_table.add { type = "label", caption = race_setting.tier }
             item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
@@ -106,7 +105,7 @@ function ERM_MainWindow.show(player)
     if admin then
         local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
         bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
-        local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
+        local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
         button_pusher.style.width = 300
         button_pusher.style.height = 24
         bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
@@ -177,8 +176,6 @@ end
 function ERM_MainWindow.kill_idle_units(event)
     SurfaceProcessor.wander_unit_clean_up()
 end
-
-
 
 function ERM_MainWindow.update_overhead_button(player_index)
     local owner = game.players[player_index]

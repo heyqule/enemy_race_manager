@@ -15,7 +15,6 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
-
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity and entity.valid then
@@ -29,7 +28,6 @@ local onBiterBaseBuilt = function(event)
     end
 end
 
-
 local onUnitFinishGathering = function(event)
     local group = event.group
     local max_settler = global.settings.enemy_expansion_max_settler
@@ -42,7 +40,7 @@ local onUnitFinishGathering = function(event)
     if group.command and group.command.type == defines.command.build_base and table_size(group.members) > max_settler then
         local build_group = group.surface.create_unit_group {
             position = group.position,
-            force= group.force
+            force = group.force
         }
         for i, unit in pairs(group.members) do
             if i <= max_settler then
@@ -99,8 +97,7 @@ local ermGroupCacheTableCleanup = function(target_table)
     return target_table
 end
 
-
-local isErmUnitGroup = function (unit_number)
+local isErmUnitGroup = function(unit_number)
     local erm_unit_groups = global.erm_unit_groups
     return erm_unit_groups[unit_number] and erm_unit_groups[unit_number].group and erm_unit_groups[unit_number].group.valid
 end
@@ -135,7 +132,7 @@ local onAiCompleted = function(event)
             end
         end
 
-        if(event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
+        if (event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
             local group_count = table_size(erm_unit_groups)
             if group_count > ErmConfig.CONFIG_CACHE_SIZE then
                 global.erm_unit_groups = ermGroupCacheTableCleanup(erm_unit_groups)

@@ -21,10 +21,10 @@ else
         {
             type = "arrow",
             name = "collision-mask-flying-layer",
-            collision_mask = {flying_layer},
-            flags = {"placeable-off-grid", "not-on-map"},
-            circle_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1},
-            arrow_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1}
+            collision_mask = { flying_layer },
+            flags = { "placeable-off-grid", "not-on-map" },
+            circle_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 },
+            arrow_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 }
         }
     })
 end

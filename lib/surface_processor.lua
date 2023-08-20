@@ -57,9 +57,9 @@ function SurfaceProcessor.rebuild_race()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
-            (race ~= MOD_NAME and game.active_mods[race] == nil) or
-            global.active_races[race] == nil or
-            not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
+                (race ~= MOD_NAME and game.active_mods[race] == nil) or
+                global.active_races[race] == nil or
+                not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
@@ -104,12 +104,12 @@ function SurfaceProcessor.wander_unit_clean_up()
         end
     end
     profiler.stop()
-    game.print({'', 'Clean up orphan wandering units. Refunded units to attack meter if applicable.', profiler})
-    game.print({'', 'Checked: '..checked_count..' / Removed:'..unit_count..' '})
+    game.print({ '', 'Clean up orphan wandering units. Refunded units to attack meter if applicable.', profiler })
+    game.print({ '', 'Checked: ' .. checked_count .. ' / Removed:' .. unit_count .. ' ' })
 end
 
 function SurfaceProcessor.get_enemy_on(surface_name)
-    if(ErmConfig.mapgen_is_one_race_per_surface()) then
+    if (ErmConfig.mapgen_is_one_race_per_surface()) then
         return global.enemy_surfaces[surface_name]
     end
 
@@ -118,7 +118,7 @@ function SurfaceProcessor.get_enemy_on(surface_name)
 end
 
 function SurfaceProcessor.get_gps_message(x, y, surface_name)
-    return '[gps='..x..','..y..','..surface_name..']'
+    return '[gps=' .. x .. ',' .. y .. ',' .. surface_name .. ']'
 end
 
 return SurfaceProcessor

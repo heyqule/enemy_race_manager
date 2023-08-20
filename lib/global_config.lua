@@ -71,12 +71,12 @@ ErmConfig.MAX_ELITE_LEVELS = 5
 
 ErmConfig.BOSS_MAX_TIERS = 5
 -- 5 Tiers of boss and their properties
-ErmConfig.BOSS_DESPAWN_TIMER = {45, 45, 60, 75, 99}
+ErmConfig.BOSS_DESPAWN_TIMER = { 45, 45, 60, 75, 99 }
 
 local boss_difficulty = {
-    [BOSS_NORMAL] = {25, 30, 36, 42, 50},
-    [BOSS_HARD] = {36, 42, 51, 62, 75},
-    [BOSS_GODLIKE] = {51, 62, 74, 86, 99}
+    [BOSS_NORMAL] = { 25, 30, 36, 42, 50 },
+    [BOSS_HARD] = { 36, 42, 51, 62, 75 },
+    [BOSS_GODLIKE] = { 51, 62, 74, 86, 99 }
 }
 ErmConfig.BOSS_LEVELS = boss_difficulty[settings.startup['enemyracemanager-boss-difficulty'].value]
 
@@ -86,17 +86,17 @@ local boss_spawn_size = {
     [BOSS_SPAWN_PLATOON] = 20,
 }
 ErmConfig.boss_spawn_size = boss_spawn_size[settings.startup['enemyracemanager-boss-unit-spawn-size'].value]
-ErmConfig.BOSS_BUILDING_HITPOINT = {10000000, 20000000, 32000000, 50000000, 75000000}
+ErmConfig.BOSS_BUILDING_HITPOINT = { 10000000, 20000000, 32000000, 50000000, 75000000 }
 
 --if DEBUG_MODE then
 --    ErmConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 7500000}
 --end
 
-ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = {15, 24, 30, 40, 50}
-ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = {5, 6, 7, 8, 10}
+ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES = { 15, 24, 30, 40, 50 }
+ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = { 5, 6, 7, 8, 10 }
 -- 1 phase change and 5 types of attacks based on damage taken
-ErmConfig.BOSS_DEFENSE_ATTACKS = {12000000, 999999, 500000, 250000, 69420, 20000}
-ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = {3, 3, 4, 4, 4}
+ErmConfig.BOSS_DEFENSE_ATTACKS = { 12000000, 999999, 500000, 250000, 69420, 20000 }
+ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = { 3, 3, 4, 4, 4 }
 
 -- 320 radius toward the target area.
 ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
@@ -158,14 +158,14 @@ local refreshable_settings = {
 --- Only assign empty as erm_vanilla in control phase
 ---
 local get_selected_race_value = function(value)
-    if(value == 'empty' and global) then
+    if (value == 'empty' and global) then
         return 'erm_vanilla'
     end
 
     return value
 end
 
-local convert_max_level =  function(setting_value)
+local convert_max_level = function(setting_value)
     local current_level_setting = 10;
 
     if setting_value == MAX_LEVEL_20 then
@@ -193,9 +193,9 @@ local global_setting_exists = function()
 end
 
 local check_register_erm_race = function(mod_name)
-    if(remote.interfaces[mod_name] and
-            remote.interfaces[mod_name]['register_new_enemy_race']  and
-            remote.call(mod_name,'register_new_enemy_race') == true) then
+    if (remote.interfaces[mod_name] and
+            remote.interfaces[mod_name]['register_new_enemy_race'] and
+            remote.call(mod_name, 'register_new_enemy_race') == true) then
         return true
     end
     return false
@@ -259,7 +259,6 @@ function ErmConfig.get_max_projectile_range(multipler)
     return 64 * multipler
 end
 
-
 function ErmConfig.get_mapping_method()
     local mapping_method
     if global_setting_exists() then
@@ -273,7 +272,7 @@ function ErmConfig.get_mapping_method()
             global.settings['enemyracemanager-mapping-method'] = mapping_method
         end
     end
-    return mapping_method  
+    return mapping_method
 end
 
 function ErmConfig.mapgen_is_mixed()
@@ -432,10 +431,9 @@ function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
 end
 
-
 function ErmConfig.initialize_races_data()
-    global.installed_races = {MOD_NAME}
-    global.active_races = {[MOD_NAME] = true}
+    global.installed_races = { MOD_NAME }
+    global.active_races = { [MOD_NAME] = true }
 
     for name, _ in pairs(game.active_mods) do
 
@@ -493,7 +491,7 @@ function ErmConfig.format_daytime(start_tick, end_tick)
     local hour_difference = difference - (day * defines.time.day)
     local hour = math.floor(hour_difference / defines.time.hour)
     local minute_difference = difference - (day * defines.time.day) - (hour * defines.time.hour)
-    local minute = math.floor(minute_difference  / defines.time.minute)
+    local minute = math.floor(minute_difference / defines.time.minute)
     local second_difference = difference - (day * defines.time.day) - (hour * defines.time.hour) - (minute * defines.time.minute)
     local second = math.floor(second_difference / defines.time.second)
     return day, hour, minute, second
@@ -503,7 +501,7 @@ function ErmConfig.format_daytime_string(start_tick, end_tick)
     local day, hour, minute, second = ErmConfig.format_daytime(start_tick, end_tick)
     local datetime_str = ''
     if day > 0 then
-        datetime_str = datetime_str .. string.format('%02d D ',day)
+        datetime_str = datetime_str .. string.format('%02d D ', day)
     end
 
     datetime_str = datetime_str .. string.format('%02d:%02d:%02d', hour, minute, second)

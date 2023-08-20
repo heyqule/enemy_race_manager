@@ -15,7 +15,6 @@ require('util')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 
@@ -33,25 +32,25 @@ local base_electric_resistance = -50
 local incremental_electric_resistance = 100
 
 function makeLevelTurrets(level, type, distance)
-    data.raw['turret'][type]['autoplace']  = nil
+    data.raw['turret'][type]['autoplace'] = nil
     local turret = util.table.deepcopy(data.raw['turret'][type])
 
     local original_hitpoint = turret['max_health']
 
     turret['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. turret['name'], level }
     turret['name'] = MOD_NAME .. '/' .. turret['name'] .. '/' .. level;
-    turret['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier,  level)
+    turret['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier, level)
     turret['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
         { type = "cold", percent = 95 }
     }
-    turret['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
+    turret['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
 
     turret['attack_parameters']['damage_modifier'] = 0.33
 
@@ -70,13 +69,13 @@ end
 local max_level = ErmConfig.MAX_LEVELS
 
 for i = 1, max_level do
-    data:extend({ makeLevelTurrets(i, 'small-cold-worm-turret',0)})
-    data:extend({ makeLevelTurrets(i, 'medium-cold-worm-turret',2) })
-    data:extend({ makeLevelTurrets(i, 'big-cold-worm-turret',5) })
-    data:extend({ makeLevelTurrets(i, 'behemoth-cold-worm-turret',8) })
-    data:extend({ makeLevelTurrets(i, 'leviathan-cold-worm-turret',14) })
+    data:extend({ makeLevelTurrets(i, 'small-cold-worm-turret', 0) })
+    data:extend({ makeLevelTurrets(i, 'medium-cold-worm-turret', 2) })
+    data:extend({ makeLevelTurrets(i, 'big-cold-worm-turret', 5) })
+    data:extend({ makeLevelTurrets(i, 'behemoth-cold-worm-turret', 8) })
+    data:extend({ makeLevelTurrets(i, 'leviathan-cold-worm-turret', 14) })
 
     if not settings.startup["cb-disable-mother"].value then
-        data:extend({ makeLevelTurrets(i, 'mother-cold-worm-turret',14) })
+        data:extend({ makeLevelTurrets(i, 'mother-cold-worm-turret', 14) })
     end
 end

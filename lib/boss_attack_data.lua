@@ -44,11 +44,11 @@ BossAttacksData.phases = {}
 
 function BossAttacksData.get_attack_data()
     return {
-      basic_attacks = BossAttacksData.basic_attacks,
-      advanced_attacks = BossAttacksData.advanced_attacks,
-      super_attacks = BossAttacksData.super_attacks,
-      despawn_attacks = BossAttacksData.despawn_attacks,
-      phases = BossAttacksData.phases,
+        basic_attacks = BossAttacksData.basic_attacks,
+        advanced_attacks = BossAttacksData.advanced_attacks,
+        super_attacks = BossAttacksData.super_attacks,
+        despawn_attacks = BossAttacksData.despawn_attacks,
+        phases = BossAttacksData.phases,
     }
 end
 

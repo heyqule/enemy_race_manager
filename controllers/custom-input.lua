@@ -11,7 +11,7 @@ local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 local valid_erm_left_click = {
     ['radar'] = function(event)
 
-        local player =  game.players[event.player_index]
+        local player = game.players[event.player_index]
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
@@ -24,7 +24,6 @@ local valid_erm_left_click = {
     end,
 }
 
-
 Event.register('erm-left-click', function(event)
     if event.selected_prototype and valid_erm_left_click[event.selected_prototype.derived_type] then
         valid_erm_left_click[event.selected_prototype.derived_type](event)
@@ -33,7 +32,7 @@ end)
 
 local valid_erm_alt_left_click = {
     ['radar'] = function(event)
-        local player =  game.players[event.player_index]
+        local player = game.players[event.player_index]
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
@@ -46,8 +45,8 @@ local valid_erm_alt_left_click = {
     end,
     ['assembling-machine'] = function(event)
         --@TODO scroll_to_element
-        local player =  game.players[event.player_index]
-        if player and player.valid  and global.army_registered_deployers[event.selected_prototype.name] then
+        local player = game.players[event.player_index]
+        if player and player.valid and global.army_registered_deployers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             if entity and entity.valid then
                 ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[2])
@@ -56,7 +55,6 @@ local valid_erm_alt_left_click = {
         end
     end
 }
-
 
 Event.register('erm-alt-left-click', function(event)
     if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then

@@ -8,11 +8,11 @@ local ErmUnitHelper = require('lib.rig.unit_helper')
 
 local damage_types = {
     -- K2
-    {'kr-explosion', 10, 80},
-    {'radioactive', 5, 85},
+    { 'kr-explosion', 10, 80 },
+    { 'radioactive', 5, 70 },
     -- Bob Warfare
-    {'bob-pierce', 10, 80},
-    {'plasma', 5, 85}
+    { 'bob-pierce', 10, 80 },
+    { 'plasma', 5, 85 }
 }
 
 -- max resist 75
@@ -28,19 +28,16 @@ local enemies_subgroups = {
     ['erm-builder-enemies'] = true,
 }
 
-
-
 local set_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and ErmUnitHelper.is_erm_unit(unit) then
         local name = ErmForceHelper.split_name(unit.name)
         for _, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
-                table.insert(unit.resistances,{ type = damage_type[1], percent = ErmUnitHelper.get_resistance(damage_type[2], damage_type[3],  tonumber(name[3]))})
+                table.insert(unit.resistances, { type = damage_type[1], percent = ErmUnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
             end
         end
     end
 end
-
 
 for _, unit in pairs(data.raw["unit"]) do
     set_resistance(unit)
@@ -58,7 +55,7 @@ for _, unit in pairs(data.raw.unit) do
     if controlable_subgroups[unit.subgroup] and ErmUnitHelper.is_erm_unit(unit) then
         for _, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances then
-                table.insert(unit.resistances,{ type = damage_type[1], percent = 75})
+                table.insert(unit.resistances, { type = damage_type[1], percent = 75 })
             end
         end
     end

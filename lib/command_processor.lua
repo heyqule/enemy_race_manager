@@ -14,7 +14,7 @@ local CommandProcessor = {}
 local is_not_from_admin = function(command)
     local player = game.get_player(command.player_index)
     if (not player.admin) then
-        game.print({'description.command-error-permission'})
+        game.print({ 'description.command-error-permission' })
         return true
     end
 

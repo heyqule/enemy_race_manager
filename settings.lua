@@ -77,7 +77,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 3,
-        allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3},
+        allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3 },
         order = "enemyracemanager-115"
     },
     {
@@ -86,7 +86,7 @@ data:extend {
         description = "enemyracemanager-pollution-to-attack-multipliers",
         setting_type = "startup",
         default_value = 0.025,
-        allowed_values = {0, 0.01, 0.025, 0.05},
+        allowed_values = { 0, 0.01, 0.025, 0.05 },
         order = "enemyracemanager-116"
     },
     {
@@ -247,7 +247,7 @@ data:extend {
         name = "enemyracemanager-unit-framework-timeout",
         description = "enemyracemanager-unit-framework-timeout",
         setting_type = "startup",
-        default_value = 5,
+        default_value = 15,
         allowed_values = { 5, 15, 30, 60, 1440, 43200 },
         order = "enemyracemanager-801",
     },
@@ -521,7 +521,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = {1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90},
+        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90 },
         order = "enemyracemanager-451"
     },
 }

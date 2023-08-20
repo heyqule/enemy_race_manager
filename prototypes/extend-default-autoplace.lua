@@ -40,11 +40,11 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
         return
     end
 
-    if String.find( v.name, mod_name, 1, true) == nil then
+    if String.find(v.name, mod_name, 1, true) == nil then
         return
     end
 
-    if entity_filter ~= nil and String.find( v.name, entity_filter, 1, true) == nil then
+    if entity_filter ~= nil and String.find(v.name, entity_filter, 1, true) == nil then
         return
     end
 
@@ -70,8 +70,8 @@ local get_distance = function(v, force_name)
     end
 
     for name, d in pairs(distances) do
-        if String.find( v.name, name, 1, true) then
-        return d
+        if String.find(v.name, name, 1, true) then
+            return d
         end
     end
 
@@ -128,7 +128,6 @@ local rebalanceTables = function(...)
     return unpack(newTables)
 end
 
-
 local rearrange_specs = function()
     local statistic = {
         moisture_1 = {},
@@ -146,23 +145,22 @@ local rearrange_specs = function()
     for _, race_data in pairs(data.erm_spawn_specs) do
         local dataset = race_data.mod_name
         if race_data.entity_filter then
-            dataset = dataset..statistic_separator..race_data.entity_filter
+            dataset = dataset .. statistic_separator .. race_data.entity_filter
         end
-        table.insert(statistic['moisture_'..race_data['moisture']], dataset)
-        table.insert(statistic['aux_'..race_data['aux']], dataset)
-        table.insert(statistic['temperature_'..race_data['temperature']], dataset)
-        table.insert(statistic['elevation_'..race_data['elevation']], dataset)
+        table.insert(statistic['moisture_' .. race_data['moisture']], dataset)
+        table.insert(statistic['aux_' .. race_data['aux']], dataset)
+        table.insert(statistic['temperature_' .. race_data['temperature']], dataset)
+        table.insert(statistic['elevation_' .. race_data['elevation']], dataset)
     end
 
     ErmDebugHelper.print('Autoplace - statistic:')
     ErmDebugHelper.print(serpent.block(statistic))
 
-    statistic.moisture_1, statistic.moisture_2 = rebalanceTables(statistic.moisture_1,statistic.moisture_2)
-    statistic.aux_1, statistic.aux_2 = rebalanceTables(statistic.aux_1,statistic.aux_2)
+    statistic.moisture_1, statistic.moisture_2 = rebalanceTables(statistic.moisture_1, statistic.moisture_2)
+    statistic.aux_1, statistic.aux_2 = rebalanceTables(statistic.aux_1, statistic.aux_2)
     --statistic.temperature_1, statistic.temperature_2, statistic.temperature_3 =
     --    rebalanceTables(statistic.temperature_1, statistic.temperature_2, statistic.temperature_3)
-    statistic.elevation_1, statistic.elevation_2, statistic.elevation_3 =
-        rebalanceTables(statistic.elevation_1, statistic.elevation_2, statistic.elevation_3)
+    statistic.elevation_1, statistic.elevation_2, statistic.elevation_3 = rebalanceTables(statistic.elevation_1, statistic.elevation_2, statistic.elevation_3)
 
     ErmDebugHelper.print('Autoplace - After rebalanced statistic:')
     ErmDebugHelper.print(serpent.block(statistic))
@@ -222,10 +220,10 @@ local balance_volumes_by_aux = function(data)
 
     for uniqueIndex, element in pairs(uniqueMoisturePairs) do
         for key, dataItem in pairs(data) do
-            if  element.moisture_min == dataItem.moisture_min and
-                element.moisture_max == dataItem.moisture_max and
-                element.aux_min ~= dataItem.aux_min and
-                element.aux_max ~= dataItem.aux_max
+            if element.moisture_min == dataItem.moisture_min and
+                    element.moisture_max == dataItem.moisture_max and
+                    element.aux_min ~= dataItem.aux_min and
+                    element.aux_max ~= dataItem.aux_max
             then
                 data[key] = element
                 table.remove(uniqueMoisturePairs, uniqueIndex)
@@ -268,7 +266,7 @@ local balance_volumes_by_temperature = function(data)
 
     for uniqueIndex, element in pairs(uniqueTempPairs) do
         for key, dataItem in pairs(data) do
-            if  element.temperature_min == dataItem.temperature_min and
+            if element.temperature_min == dataItem.temperature_min and
                     element.temperature_max == dataItem.temperature_max and
                     element.aux_min ~= dataItem.aux_min and
                     element.aux_max ~= dataItem.aux_max
@@ -284,17 +282,17 @@ local balance_volumes_by_temperature = function(data)
 end
 
 local match_temperature_filter = function(volume, statistics, i)
-   return (volume.entity_filter and
-            statistics['temperature_'..i][1] == volume.mod_name..statistic_separator..volume.entity_filter) or
-            statistics['temperature_'..i][1] == volume.mod_name
+    return (volume.entity_filter and
+            statistics['temperature_' .. i][1] == volume.mod_name .. statistic_separator .. volume.entity_filter) or
+            statistics['temperature_' .. i][1] == volume.mod_name
 end
 
 local temperature_has_single_item = function(volume, statistics)
 
     local is_single_item = false
 
-    for i=1,3,1 do
-        if table_size(statistics['temperature_'..i]) == 1 and match_temperature_filter(volume, statistics, i)
+    for i = 1, 3, 1 do
+        if table_size(statistics['temperature_' .. i]) == 1 and match_temperature_filter(volume, statistics, i)
         then
             is_single_item = true
             break
@@ -320,13 +318,13 @@ end
 ---elevation, 1,2,3 (1 low elevation, 2. medium, 3 high elavation)
 ---temperature, 1,2,3 (1 cold, 2. normal, 3 hot)
 -------------
-local moisture_ranges = {{0, 0.505},{0.495, 1}}
-local aux_ranges = {{0, 0.505},{0.495, 1}}
-local temperature_ranges = {{12,14.01}, {13.99,16.01}, {15.99,18}}
-local elevation_ranges = {{-1,25.5},{24.5,48.5},{47.5,70}}
+local moisture_ranges = { { 0, 0.505 }, { 0.495, 1 } }
+local aux_ranges = { { 0, 0.505 }, { 0.495, 1 } }
+local temperature_ranges = { { 12, 14.01 }, { 13.99, 16.01 }, { 15.99, 18 } }
+local elevation_ranges = { { -1, 25.5 }, { 24.5, 48.5 }, { 47.5, 70 } }
 if mods['alien-biomes'] then
     ErmDebugHelper.print('Autoplace - Using Alien Biomes')
-    temperature_ranges = {{-21,34.75},{33.25,96.75},{95.25,151}}
+    temperature_ranges = { { -21, 34.75 }, { 33.25, 96.75 }, { 95.25, 151 } }
 end
 
 local enforce_temp = settings.startup['enemyracemanager-default_enforce_temperature'].value
@@ -346,7 +344,7 @@ end
 local total_active_specs = table_size(erm_race_data)
 local active_races = {}
 
-ErmDebugHelper.print('Autoplace - Specs: '..tonumber(table_size(erm_race_data)))
+ErmDebugHelper.print('Autoplace - Specs: ' .. tonumber(table_size(erm_race_data)))
 ErmDebugHelper.print(serpent.block(erm_race_data))
 
 for _, race in pairs(erm_race_data) do
@@ -355,7 +353,7 @@ end
 
 local total_active_races = table_size(active_races)
 
-ErmDebugHelper.print('Autoplace - Active Races:'..tonumber(table_size(active_races)))
+ErmDebugHelper.print('Autoplace - Active Races:' .. tonumber(table_size(active_races)))
 ErmDebugHelper.print(serpent.block(active_races))
 
 if total_active_races < 2 then
@@ -447,26 +445,26 @@ for key, race_data in pairs(updated_specs) do
     local volume = volumes[key]
     if volume then
         if race_data.entity_filter then
-            ErmDebugHelper.print('Autoplace - '..race_data.mod_name..'/'..race_data.entity_filter..' Volume:')
+            ErmDebugHelper.print('Autoplace - ' .. race_data.mod_name .. '/' .. race_data.entity_filter .. ' Volume:')
         else
-            ErmDebugHelper.print('Autoplace - '..race_data.mod_name..' Volume:')
+            ErmDebugHelper.print('Autoplace - ' .. race_data.mod_name .. ' Volume:')
         end
 
         ErmDebugHelper.print(serpent.block(volume))
         for _, v in pairs(data.raw["unit-spawner"]) do
             tune_autoplace(
-                v, false, volume,
-                race_data.mod_name, race_data.force_name,
-                race_data.entity_filter
+                    v, false, volume,
+                    race_data.mod_name, race_data.force_name,
+                    race_data.entity_filter
             )
         end
 
         for _, v in pairs(data.raw["turret"]) do
             tune_autoplace(
-                v, true, volume,
-                race_data.mod_name, race_data.force_name,
-                race_data.entity_filter,
-                get_distance(v, race_data.force_name)
+                    v, true, volume,
+                    race_data.mod_name, race_data.force_name,
+                    race_data.entity_filter,
+                    get_distance(v, race_data.force_name)
             )
         end
     end

@@ -7,15 +7,12 @@ local map_gen_settings = util.table.deepcopy(data.raw['map-gen-presets'])
 
 map_gen_settings['default']['erm-roach-world'] = {
     order = "h",
-    advanced_settings =
-    {
-        enemy_expansion =
-        {
+    advanced_settings = {
+        enemy_expansion = {
             min_expansion_cooldown = 4 * 3600,
             max_expansion_cooldown = 10 * 3600
         },
-        difficulty_settings =
-        {
+        difficulty_settings = {
             research_queue_setting = 'always'
         }
     }
@@ -23,33 +20,26 @@ map_gen_settings['default']['erm-roach-world'] = {
 
 map_gen_settings['default']['erm-roach-death-world'] = {
     order = "i",
-    basic_settings =
-    {
+    basic_settings = {
         property_expression_names = {},
-        autoplace_controls =
-        {
-            ["enemy-base"] = { frequency = "very-high", size = "very-big"}
+        autoplace_controls = {
+            ["enemy-base"] = { frequency = "very-high", size = "very-big" }
         },
     },
-    advanced_settings =
-    {
-        enemy_evolution =
-        {
+    advanced_settings = {
+        enemy_evolution = {
             time_factor = 0.00002,
             pollution_factor = 0.0000012
         },
-        enemy_expansion =
-        {
+        enemy_expansion = {
             min_expansion_cooldown = 4 * 3600,
             max_expansion_cooldown = 10 * 3600
         },
-        pollution =
-        {
+        pollution = {
             ageing = 0.5,
             enemy_attack_pollution_consumption_modifier = 0.5
         },
-        difficulty_settings =
-        {
+        difficulty_settings = {
             research_queue_setting = 'always'
         }
     }
@@ -58,34 +48,27 @@ map_gen_settings['default']['erm-roach-death-world'] = {
 if DEBUG_MODE then
     map_gen_settings['default']['erm-debug'] = {
         order = "k",
-        basic_settings =
-        {
+        basic_settings = {
             property_expression_names = {},
-            autoplace_controls =
-            {
-                ["enemy-base"] = { frequency = 5, size = 5},
+            autoplace_controls = {
+                ["enemy-base"] = { frequency = 5, size = 5 },
             },
             water = 'none',
         },
-        advanced_settings =
-        {
-            enemy_evolution =
-            {
+        advanced_settings = {
+            enemy_evolution = {
                 time_factor = 0.00002,
                 pollution_factor = 0.0000012
             },
-            enemy_expansion =
-            {
+            enemy_expansion = {
                 min_expansion_cooldown = 2 * 3600,
                 max_expansion_cooldown = 4 * 3600
             },
-            pollution =
-            {
+            pollution = {
                 ageing = 0.5,
                 enemy_attack_pollution_consumption_modifier = 0.5
             },
-            difficulty_settings =
-            {
+            difficulty_settings = {
                 research_queue_setting = 'always'
             }
         }

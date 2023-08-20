@@ -88,7 +88,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     if army_built_teleporters[force.index][surface.index] == nil then
         global.army_built_teleporters[force.index][surface.index] = {}
     end
-    local name = surface.name .. ', X:'..position.x..', Y:'.. position.y
+    local name = surface.name .. ', X:' .. position.x .. ', Y:' .. position.y
     entity.backer_name = name
     global.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
@@ -125,7 +125,7 @@ function ArmyTeleportationProcessor.remove_entity(entity)
     local exit = global.army_exit_teleporters[force.index]
 
     if (entrance and entrance.entity == entity) or
-        ( exit and exit.entity == entity) then
+            (exit and exit.entity == entity) then
         unset_indicator(entrance)
         unset_indicator(exit)
         global.army_entrance_teleporters[force.index] = nil
@@ -140,12 +140,12 @@ function ArmyTeleportationProcessor.link(from, to)
 
     local force = from.entity.force
     local entrance = global.army_entrance_teleporters[force.index]
-    if  entrance then
+    if entrance then
         unset_indicator(entrance)
     end
 
     local exit = global.army_exit_teleporters[force.index]
-    if  exit then
+    if exit then
         unset_indicator(exit)
     end
 
@@ -160,30 +160,29 @@ function ArmyTeleportationProcessor.link(from, to)
         local from_entity = from.entity
         local from_position = from_entity.position
         entrance.indicator = rendering.draw_rectangle({
-            color={ g = 0.8, a = 0.05 },
-            left_top={from_position.x - BOX_WIDTH, from_position.y - BOX_WIDTH},
-            right_bottom={from_position.x + BOX_WIDTH, from_position.y + BOX_WIDTH},
-            surface=from_entity.surface.index,
-            forces={from_entity.force.name},
-            filled=false,
-            draw_on_ground=true,
-            width=8
+            color = { g = 0.8, a = 0.05 },
+            left_top = { from_position.x - BOX_WIDTH, from_position.y - BOX_WIDTH },
+            right_bottom = { from_position.x + BOX_WIDTH, from_position.y + BOX_WIDTH },
+            surface = from_entity.surface.index,
+            forces = { from_entity.force.name },
+            filled = false,
+            draw_on_ground = true,
+            width = 8
         })
     end
-
 
     if exit and exit.indicator == nil then
         local to_entity = to.entity
         local to_position = to_entity.position
         exit.indicator = rendering.draw_rectangle({
-            color={ r = 0.8,  a = 0.05 },
-            left_top={to_position.x - BOX_WIDTH, to_position.y - BOX_WIDTH},
-            right_bottom={to_position.x + BOX_WIDTH, to_position.y + BOX_WIDTH},
-            surface=to_entity.surface.index,
-            forces={to_entity.force.name},
-            filled=false,
-            draw_on_ground=true,
-            width=8
+            color = { r = 0.8, a = 0.05 },
+            left_top = { to_position.x - BOX_WIDTH, to_position.y - BOX_WIDTH },
+            right_bottom = { to_position.x + BOX_WIDTH, to_position.y + BOX_WIDTH },
+            surface = to_entity.surface.index,
+            forces = { to_entity.force.name },
+            filled = false,
+            draw_on_ground = true,
+            width = 8
         })
     end
 
@@ -219,11 +218,10 @@ local can_teleport = function(force_index)
             to and to.valid and to.status == defines.entity_status.working
 end
 
-local unit_close_to_entrance = function (unit, target_entity)
+local unit_close_to_entrance = function(unit, target_entity)
     local distance = util.distance(unit.position, target_entity.position)
     return distance <= DOUBLE_BOX_WIDTH
 end
-
 
 function ArmyTeleportationProcessor.scan_units()
     for force_index, teleporter in pairs(global.army_entrance_teleporters) do
@@ -234,8 +232,8 @@ function ArmyTeleportationProcessor.scan_units()
             local position = from_entity.position
             local units = surface.find_entities_filtered {
                 area = {
-                    left_top = {position.x - BOX_WIDTH, position.y - BOX_WIDTH},
-                    right_bottom = {position.x + BOX_WIDTH, position.y + BOX_WIDTH}
+                    left_top = { position.x - BOX_WIDTH, position.y - BOX_WIDTH },
+                    right_bottom = { position.x + BOX_WIDTH, position.y + BOX_WIDTH }
                 },
                 force = from_entity.force,
                 type = 'unit',
@@ -252,7 +250,7 @@ function ArmyTeleportationProcessor.scan_units()
             teleporter.idle_retry = teleporter.idle_retry + 1
         end
 
-        if teleporter and teleporter.idle_retry  > MAX_RETRY then
+        if teleporter and teleporter.idle_retry > MAX_RETRY then
             ArmyTeleportationProcessor.unlink(teleporter.entity.force)
         end
     end
@@ -271,7 +269,9 @@ function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
 end
 
 function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
-    if not (unit and unit.valid) then return end
+    if not (unit and unit.valid) then
+        return
+    end
 
     if can_teleport(unit.force.index) and unit_close_to_entrance(unit, from_entity) then
         local position = ErmArmyFunctions.get_position(unit.name, exit_entity, exit_entity.position)

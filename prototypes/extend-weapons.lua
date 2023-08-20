@@ -31,9 +31,8 @@ WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-
 
 WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
 
-
-WeaponHelper.change_piercing_damage(data.raw['projectile']['uranium-cannon-projectile'],5000)
-WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'],5000)
+WeaponHelper.change_piercing_damage(data.raw['projectile']['uranium-cannon-projectile'], 5000)
+WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'], 5000)
 
 -- Allow artillery projectile explosion to hit air
 WeaponHelper.ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
@@ -49,13 +48,12 @@ WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['po
 WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['grenade'])
 WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
 
-
 --- Replace stunt sticker with slow sticker for land-mine, only modify vanilla build.
 local source_effects = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]
 if
-    source_effects ~= nil and
-    source_effects['action']['action_delivery'] ~= nil and
-    source_effects['action']['action_delivery']['target_effects'][2] ~= nil
+source_effects ~= nil and
+        source_effects['action']['action_delivery'] ~= nil and
+        source_effects['action']['action_delivery']['target_effects'][2] ~= nil
 then
     local land_mine_damage = source_effects['action']['action_delivery']['target_effects'][1]
 

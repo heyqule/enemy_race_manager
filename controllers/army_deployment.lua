@@ -22,7 +22,6 @@ local remove_deployer = function(event)
     ErmArmyControlUI.update_deployers()
 end
 
-
 local is_valid_deployer = function(event)
     local entity = event.created_entity or event.entity
     if entity and entity.valid and global.army_registered_deployers then

@@ -16,7 +16,6 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
 
-
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 local max_worm_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
@@ -47,19 +46,19 @@ function makeLevelSpawners(level, type, health_cut_ratio)
 
     spawner['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. spawner['name'], level }
     spawner['name'] = MOD_NAME .. '/' .. spawner['name'] .. '/' .. level;
-    spawner['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio,  level)
+    spawner['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, level)
     spawner['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
-    spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
-    spawner['spawning_cooldown'] = {600, 300}
+    spawner['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
+    spawner['spawning_cooldown'] = { 600, 300 }
     spawner['pollution_absorption_absolute'] = spawner['pollution_absorption_absolute'] * 10
 
     if String.find(type, 'spitter', 1, true) then
@@ -94,8 +93,8 @@ function makeLevelSpawners(level, type, health_cut_ratio)
         end)()
     end
 
-   spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
-   spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
 
     return spawner
 end
@@ -107,22 +106,22 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
 
     worm['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. worm['name'], level }
     worm['name'] = MOD_NAME .. '/' .. worm['name'] .. '/' .. level;
-    worm['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_worm_hitpoint_multiplier / health_cut_ratio,  level)
+    worm['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_worm_hitpoint_multiplier / health_cut_ratio, level)
     worm['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
-    worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
+    worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
     ERM_UnitHelper.modify_biter_damage(worm, level)
 
-   worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
-   worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
+    worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
 
     return worm
 end
@@ -132,21 +131,21 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
     local worm = util.table.deepcopy(data.raw['turret'][type])
     local original_hitpoint = worm['max_health']
 
-    worm['name'] = 'short-range-'..worm['name']
+    worm['name'] = 'short-range-' .. worm['name']
     worm['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. worm['name'], level }
     worm['name'] = MOD_NAME .. '/' .. worm['name'] .. '/' .. level;
-    worm['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_worm_hitpoint_multiplier / health_cut_ratio,  level)
+    worm['max_health'] = ERM_UnitHelper.get_health(original_hitpoint, original_hitpoint * max_worm_hitpoint_multiplier / health_cut_ratio, level)
     worm['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
-    worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier,  level)
+    worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
     ERM_UnitHelper.modify_biter_damage(worm, level)
 
     worm['attack_parameters']['range'] = ErmConfig.get_max_attack_range()
@@ -165,9 +164,9 @@ for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'spitter-spawner', 0.75) })
 
     data:extend({ makeLevelWorm(i, 'small-worm-turret', 2, 0) })
-    data:extend({ makeLevelWorm(i, 'medium-worm-turret',1,2) })
+    data:extend({ makeLevelWorm(i, 'medium-worm-turret', 1, 2) })
     data:extend({ makeLevelWorm(i, 'big-worm-turret', 2, 5) })
-    data:extend({ makeLevelWorm(i, 'behemoth-worm-turret',1, 8) })
+    data:extend({ makeLevelWorm(i, 'behemoth-worm-turret', 1, 8) })
 
     data:extend({ makeShortRangeLevelWorm(i, 'big-worm-turret', 2) })
 end

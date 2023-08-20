@@ -89,7 +89,7 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
             end
         end
         profiler.stop()
-        game.print({'', 'Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler})
+        game.print({ '', 'Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler })
     end
 end
 
@@ -150,7 +150,7 @@ function ReplacementProcessor.resetDefault(surface)
 
     for _, force in pairs(game.forces) do
         if ErmForceHelper.is_enemy_force(force) then
-           force.kill_all_units()
+            force.kill_all_units()
         end
     end
 end

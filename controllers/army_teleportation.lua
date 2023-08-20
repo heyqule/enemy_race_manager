@@ -21,7 +21,6 @@ local remove_command_center = function(event)
     ErmArmyControlUI.update_command_centers()
 end
 
-
 local is_valid_command_center = function(event)
     local entity = event.created_entity or event.entity
     if entity and entity.valid and global.army_registered_command_centers then

@@ -37,12 +37,12 @@ local addRaceSettings = function()
         race_settings = {}
     end
 
-    race_settings.race =  race_settings.race or MOD_NAME
-    race_settings.label = {'gui.label-biters'}
-    race_settings.level =  race_settings.level or 1
-    race_settings.tier =  race_settings.tier or 1
-    race_settings.evolution_point =  race_settings.evolution_point or 0
-    race_settings.evolution_base_point =  race_settings.evolution_base_point or 0
+    race_settings.race = race_settings.race or MOD_NAME
+    race_settings.label = { 'gui.label-biters' }
+    race_settings.level = race_settings.level or 1
+    race_settings.tier = race_settings.tier or 1
+    race_settings.evolution_point = race_settings.evolution_point or 0
+    race_settings.evolution_base_point = race_settings.evolution_base_point or 0
     race_settings.attack_meter = race_settings.attack_meter or 0
     race_settings.attack_meter_total = race_settings.attack_meter_total or 0
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
@@ -68,33 +68,33 @@ local addRaceSettings = function()
         {},
     }
     race_settings.flying_units = {
-        {'defender'},
-        {'distractor', 'logistic-robot'},
-        {'destroyer'},
+        { 'defender' },
+        { 'distractor', 'logistic-robot' },
+        { 'destroyer' },
     }
     race_settings.dropship = 'logistic-robot'
     race_settings.droppable_units = {
-        {{'medium-spitter', 'medium-biter', 'defender'}, {1, 2, 1}},
-        {{'big-spitter', 'big-biter', 'defender', 'distractor'}, {2, 3, 1, 1}},
-        {{'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer'}, {2, 3, 1, 1}},
+        { { 'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
+        { { 'big-spitter', 'big-biter', 'defender', 'distractor' }, { 2, 3, 1, 1 } },
+        { { 'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer' }, { 2, 3, 1, 1 } },
     }
     race_settings.construction_buildings = {
-        {{'biter-spawner', 'spitter-spawner'}, {1, 1}},
-        {{ 'biter-spawner', 'spitter-spawner', 'short-range-big-worm-turret'}, {1, 1, 1}},
-        {{ 'biter-spawner', 'spitter-spawner', 'roboport', 'short-range-big-worm-turret' }, {1, 1, 1, 2}}
+        { { 'biter-spawner', 'spitter-spawner' }, { 1, 1 } },
+        { { 'biter-spawner', 'spitter-spawner', 'short-range-big-worm-turret' }, { 1, 1, 1 } },
+        { { 'biter-spawner', 'spitter-spawner', 'roboport', 'short-range-big-worm-turret' }, { 1, 1, 1, 2 } }
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        {{'behemoth-biter','behemoth-spitter'}, {5, 2}, 30},
-        {{'behemoth-spitter','behemoth-biter'}, {5, 2}, 30},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {2, 1, 2, 1}, 20},
-        {{'big-spitter','big-biter','behemoth-spitter','behemoth-biter'}, {1, 2, 1, 2}, 20},
-        {{'defender','distractor', 'destroyer', 'behemoth-spitter','behemoth-biter'}, {2, 1, 1, 2, 2}, 25},
+        { { 'behemoth-biter', 'behemoth-spitter' }, { 5, 2 }, 30 },
+        { { 'behemoth-spitter', 'behemoth-biter' }, { 5, 2 }, 30 },
+        { { 'big-spitter', 'big-biter', 'behemoth-spitter', 'behemoth-biter' }, { 2, 1, 2, 1 }, 20 },
+        { { 'big-spitter', 'big-biter', 'behemoth-spitter', 'behemoth-biter' }, { 1, 2, 1, 2 }, 20 },
+        { { 'defender', 'distractor', 'destroyer', 'behemoth-spitter', 'behemoth-biter' }, { 2, 1, 1, 2, 2 }, 25 },
     }
     race_settings.featured_flying_groups = {
-        {{'distractor','destroyer'}, {1, 1}, 75},
-        {{'defender', 'distractor','destroyer'}, {3, 1, 1}, 75},
-        {{'logistic-robot', 'defender', 'distractor','destroyer'}, {1, 2, 2, 1}, 75},
+        { { 'distractor', 'destroyer' }, { 1, 1 }, 75 },
+        { { 'defender', 'distractor', 'destroyer' }, { 3, 1, 1 }, 75 },
+        { { 'logistic-robot', 'defender', 'distractor', 'destroyer' }, { 1, 2, 2, 1 }, 75 },
     }
 
     if game.active_mods['Krastorio2'] then
@@ -138,7 +138,6 @@ local prepare_world = function()
     ErmSurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
-
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
@@ -233,7 +232,7 @@ local setting_functions = {
         game.map_settings.unit_group.max_unit_group_size = global.settings[event.setting]
     end,
 }
-Event.register(defines.events.on_runtime_mod_setting_changed,function(event)
+Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
     if event.setting_type == 'runtime-global' and
             string.find(event.setting, 'enemyracemanager', 1, true)
     then

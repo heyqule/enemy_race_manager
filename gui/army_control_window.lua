@@ -26,7 +26,7 @@ local Army_MainWindow = {
         ['help-pane'] = 4,
     },
     tab_names = {
-        'army-stats-pane', 'deployer-pane', 'command-center-pane','help-pane'
+        'army-stats-pane', 'deployer-pane', 'command-center-pane', 'help-pane'
     },
 }
 
@@ -34,7 +34,6 @@ local get_player_tab_data = function(player)
     Army_MainWindow.check_player_data(player)
     return global.army_windows_tab_player_data[player.index]
 end
-
 
 local get_main_tab = function(player)
     if player.gui.screen[Army_MainWindow.root_name] and player.gui.screen[Army_MainWindow.root_name]['main-tab'] then
@@ -54,37 +53,37 @@ local update_unit_screen = function(player)
 
     local pane = main_tab[Army_MainWindow.tab_names[1]]
     local army_data = ArmyPopulationProcessor.get_army_data(player.force)
-    pane.add { type = 'label', name = 'army_pop_general_info', caption={"gui-army.pop_general_info",army_data['max_pop'], army_data['pop_count'], army_data['unit_count']}}
+    pane.add { type = 'label', name = 'army_pop_general_info', caption = { "gui-army.pop_general_info", army_data['max_pop'], army_data['pop_count'], army_data['unit_count'] } }
 
     if table_size(army_data['unit_types']) > 0 then
         local item_table = pane.add { type = "table", column_count = 5, style = "bordered_table" }
         item_table.style.horizontally_stretchable = false
 
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_type'}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_pop'}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_count'}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy'}, tooltip={"gui-army.control_unit_deploy_tooltip"}}
-        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy_pop'}, tooltip={"gui-army.control_unit_deploy_pop_tooltip"}}
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_type' } }
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_pop' } }
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_count' } }
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy' }, tooltip = { "gui-army.control_unit_deploy_tooltip" } }
+        item_table.add { type = "label", caption = { 'gui-army.control_unit_deploy_pop' }, tooltip = { "gui-army.control_unit_deploy_pop_tooltip" } }
 
         for name, unit_data in pairs(army_data['unit_types']) do
             if unit_data['unit_count'] > 0 then
-                local sprite = item_table.add { type = "sprite", sprite = 'recipe/'..name }
+                local sprite = item_table.add { type = "sprite", sprite = 'recipe/' .. name }
                 sprite.style.width = 32
                 sprite.style.height = 32
                 sprite.style.stretch_image_to_widget_size = true
-                item_table.add { type = "label", caption = unit_data['pop_count']  }
+                item_table.add { type = "label", caption = unit_data['pop_count'] }
                 item_table.add { type = "label", caption = unit_data['unit_count'] }
 
                 local auto_deploy_units = army_data['auto_deploy'][name]
                 local textfield = item_table.add {
-                    type = "textfield",numeric=true,
-                    name='army_deployer/planner/'..name,
-                    text=auto_deploy_units,
-                    tooltip={"gui-army.control_unit_deploy_box_tooltip"}
+                    type = "textfield", numeric = true,
+                    name = 'army_deployer/planner/' .. name,
+                    text = auto_deploy_units,
+                    tooltip = { "gui-army.control_unit_deploy_box_tooltip" }
                 }
                 textfield.style.width = 48
                 textfield.style.height = 24
-                item_table.add { type = "label", caption = auto_deploy_units * ArmyPopulationProcessor.unit_population(name)  }
+                item_table.add { type = "label", caption = auto_deploy_units * ArmyPopulationProcessor.unit_population(name) }
             end
         end
     end
@@ -109,13 +108,13 @@ end
 local add_mini_map = function(pane, name, player, entity, zoom, style)
     zoom = zoom or 0.75
     local map = pane.add {
-        type='minimap',
-        name=name,
-        force=entity.force.name,
-        chart_player_index=player.index,
-        surface_index=entity.surface.index,
-        position=entity.position,
-        zoom=zoom
+        type = 'minimap',
+        name = name,
+        force = entity.force.name,
+        chart_player_index = player.index,
+        surface_index = entity.surface.index,
+        position = entity.position,
+        zoom = zoom
     }
     for key, value in pairs(style) do
         map.style[key] = value
@@ -159,24 +158,24 @@ local update_deployer = function(player)
 
     local force = player.force
 
-    if global.army_built_deployers[force.index] ==  nil then
-        pane.add { type="label", caption={'gui-army.no_deployer'}}
+    if global.army_built_deployers[force.index] == nil then
+        pane.add { type = "label", caption = { 'gui-army.no_deployer' } }
         return
     end
 
-    local all_on_panel = pane.add { type = 'flow', direction="horizontal" }
-    local batch_label = all_on_panel.add {type="label", caption={'gui-army.deployer_batch_option'}}
+    local all_on_panel = pane.add { type = 'flow', direction = "horizontal" }
+    local batch_label = all_on_panel.add { type = "label", caption = { 'gui-army.deployer_batch_option' } }
     batch_label.style.right_margin = 20
 
-    local turn_all_on = all_on_panel.add {type="button", name="army_deployer/all/on", caption={'gui-army.deployer_all_on'}, style='green_button', tooltip={"gui-army.deployer_all_on_tooltip"}}
+    local turn_all_on = all_on_panel.add { type = "button", name = "army_deployer/all/on", caption = { 'gui-army.deployer_all_on' }, style = 'green_button', tooltip = { "gui-army.deployer_all_on_tooltip" } }
     turn_all_on.style.right_margin = 20
-    all_on_panel.add {type="button", name="army_deployer/all/off", caption={'gui-army.deployer_all_off'}, style='red_button', tooltip={"gui-army.deployer_all_off_tooltip"}}
+    all_on_panel.add { type = "button", name = "army_deployer/all/off", caption = { 'gui-army.deployer_all_off' }, style = 'red_button', tooltip = { "gui-army.deployer_all_off_tooltip" } }
 
     local deployer_table = pane.add {
-        type='table',
+        type = 'table',
         column_count = 4,
         vertical_centering = false,
-        name="deployer_table"
+        name = "deployer_table"
     }
 
     local active_deployers = {}
@@ -187,7 +186,7 @@ local update_deployer = function(player)
     local descending = {}
     for _, deployer in pairs(global.army_built_deployers[force.index]) do
         if deployer.entity.valid then
-            table.insert(descending,1, deployer)
+            table.insert(descending, 1, deployer)
         end
     end
 
@@ -197,44 +196,44 @@ local update_deployer = function(player)
         local cell = deployer_table.add {
             type = 'frame', direction = 'vertical',
             style = 'deep_frame_in_shallow_frame',
-            name="deployer_cell_"..unit_number
+            name = "deployer_cell_" .. unit_number
         }
         cell.style.margin = 5
 
         if entity and entity.valid then
-            add_mini_map(cell, entity.name..'/'..entity.unit_number,
-                    player, entity, 1, {width=175, height=135})
+            add_mini_map(cell, entity.name .. '/' .. entity.unit_number,
+                    player, entity, 1, { width = 175, height = 135 })
             local switch = cell.add {
-                type="switch",
-                name="army_deployer/build_only/"..entity.unit_number,
+                type = "switch",
+                name = "army_deployer/build_only/" .. entity.unit_number,
                 allow_none_state = false,
-                left_label_caption="B/D",
-                left_label_tooltip= {'gui-army.deployer_bd_tooltip'},
-                right_label_caption="BO",
-                right_label_tooltip={'gui-army.deployer_bo_tooltip'}
+                left_label_caption = "B/D",
+                left_label_tooltip = { 'gui-army.deployer_bd_tooltip' },
+                right_label_caption = "BO",
+                right_label_tooltip = { 'gui-army.deployer_bo_tooltip' }
             }
             if deployer.build_only then
                 switch.switch_state = 'right'
             end
 
             local label_name = cell.add {
-                type="label",
-                caption={'gui-army.deployer_name',
-                         entity.localised_name}
+                type = "label",
+                caption = { 'gui-army.deployer_name',
+                            entity.localised_name }
             }
             label_name.style.left_margin = 5
             local label_position = cell.add {
-                type="label",
-                caption={'gui-army.deployer_location',
-                         entity.surface.name, entity.position.x, entity.position.y}
+                type = "label",
+                caption = { 'gui-army.deployer_location',
+                            entity.surface.name, entity.position.x, entity.position.y }
             }
             label_position.style.left_margin = 5
             local switch = cell.add {
-                type="switch",
-                name="army_deployer/auto_deploy/"..entity.unit_number,
+                type = "switch",
+                name = "army_deployer/auto_deploy/" .. entity.unit_number,
                 allow_none_state = false,
-                left_label_caption="OFF",
-                right_label_caption="ON"
+                left_label_caption = "OFF",
+                right_label_caption = "ON"
             }
             if active_deployers[unit_number] then
                 switch.switch_state = 'right'
@@ -249,7 +248,6 @@ local update_cc_screen = function(player)
     local player_data = get_player_tab_data(player)
     local main_tab = get_main_tab(player)
     clear_tabs(main_tab)
-
 
     local commandcenters = get_command_centers(player)
     local from_selected = get_selected_index(commandcenters, player, 'from') or 0
@@ -285,34 +283,34 @@ local update_cc_screen = function(player)
         direction = 'horizontal'
     }
 
-    local from_label = center_pane_top_row.add { type='label', caption={'gui-army.cc_from_title'}}
+    local from_label = center_pane_top_row.add { type = 'label', caption = { 'gui-army.cc_from_title' } }
     from_label.style.left_margin = 50
 
-    local to_label = center_pane_top_row.add { type='label', caption={'gui-army.cc_to_title'}}
+    local to_label = center_pane_top_row.add { type = 'label', caption = { 'gui-army.cc_to_title' } }
     to_label.style.left_margin = 200
 
     -- CENTER CC MAP ROW
     local center_pane_row_map = center_pane.add {
         type = 'flow',
         direction = 'horizontal',
-        name='army_cc/minimap_row',
+        name = 'army_cc/minimap_row',
     }
 
     local selected_from_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.from)
     if selected_from_entity and selected_from_entity.valid then
         add_mini_map(
                 center_pane_row_map,
-         "army_cc/from_map",
+                "army_cc/from_map",
                 player,
                 selected_from_entity,
                 nil,
-          {width=150, height=150}
+                { width = 150, height = 150 }
         )
     else
         local from_map = center_pane_row_map.add {
             type = 'flow',
             direction = 'horizontal',
-            name='army_cc/minimap_row',
+            name = 'army_cc/minimap_row',
         }
         from_map.style.width = 150
         from_map.style.height = 150
@@ -326,7 +324,7 @@ local update_cc_screen = function(player)
                 player,
                 selected_to_entity,
                 nil,
-                {width=150, height=150, left_margin = 85}
+                { width = 150, height = 150, left_margin = 85 }
         )
     end
 
@@ -344,19 +342,18 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = Army_MainWindow.cc_from_selector
     }
-    center_pane_row_selected_from.add { type = 'label', caption= { 'gui-army.cc_selected_from' }}
-    center_pane_row_selected_from.add { type = 'label', name = "army_cc/selected/from_label", caption=get_cc_name(selected_from_entity)}
+    center_pane_row_selected_from.add { type = 'label', caption = { 'gui-army.cc_selected_from' } }
+    center_pane_row_selected_from.add { type = 'label', name = "army_cc/selected/from_label", caption = get_cc_name(selected_from_entity) }
     center_pane_row_selected_from.style.width = 200
     center_pane_row_selected_from.style.right_margin = 20
-
 
     local center_pane_row_selected_to = center_pane_row_selected.add {
         type = 'flow',
         direction = 'vertical',
         name = 'army_cc/selected/to_pane'
     }
-    center_pane_row_selected_to.add { type = 'label', caption={ 'gui-army.cc_selected_to' }}
-    center_pane_row_selected_to.add { type = 'label', name = "army_cc/selected/to_label", caption=get_cc_name(selected_to_entity)}
+    center_pane_row_selected_to.add { type = 'label', caption = { 'gui-army.cc_selected_to' } }
+    center_pane_row_selected_to.add { type = 'label', name = "army_cc/selected/to_label", caption = get_cc_name(selected_to_entity) }
 
 
     -- CENTER CC LINK BUTTONS
@@ -365,25 +362,24 @@ local update_cc_screen = function(player)
         direction = 'horizontal'
     }
 
-    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption={ 'gui-army.cc_unlink' }, style="red_button"}
+    local unlink_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.stop_link_button, caption = { 'gui-army.cc_unlink' }, style = "red_button" }
     unlink_button.tooltip = 'Stop Communication'
 
-    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button , caption={ 'gui-army.cc_link' }, style="green_button"}
+    local link_button = center_pane_row_links.add { type = 'button', name = Army_MainWindow.start_link_button, caption = { 'gui-army.cc_link' }, style = "green_button" }
     link_button.style.left_margin = 165
     link_button.tooltip = 'Start Communication'
 
     if player_data.error_message ~= '' then
-        local error_message = center_pane.add { type = 'label', name = "army_cc/linked/error_message", caption=player_data.error_message, visible =  true, style='bold_red_label'}
+        local error_message = center_pane.add { type = 'label', name = "army_cc/linked/error_message", caption = player_data.error_message, visible = true, style = 'bold_red_label' }
         error_message.style.top_margin = 10
         player_data.error_message = ''
     end
 
     if player_data.success_message ~= '' then
-        local success_message = center_pane.add { type = 'label', name = "army_cc/linked/success_message", caption=player_data.success_message, visible =  true, style='bold_green_label'}
+        local success_message = center_pane.add { type = 'label', name = "army_cc/linked/success_message", caption = player_data.success_message, visible = true, style = 'bold_green_label' }
         success_message.style.top_margin = 10
         player_data.success_message = ''
     end
-
 
     local center_pane_row_active = center_pane.add {
         type = 'flow',
@@ -397,8 +393,8 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = 'army_cc/active/from_pane'
     }
-    center_pane_row_active_from.add { type = 'label', caption= { 'gui-army.cc_linked_from' }}
-    center_pane_row_active_from.add { type = 'label', name = "army_cc/linked/from_label", caption=get_cc_name(entrance)}
+    center_pane_row_active_from.add { type = 'label', caption = { 'gui-army.cc_linked_from' } }
+    center_pane_row_active_from.add { type = 'label', name = "army_cc/linked/from_label", caption = get_cc_name(entrance) }
     center_pane_row_active_from.style.width = 200
     center_pane_row_active_from.style.right_margin = 20
 
@@ -407,15 +403,14 @@ local update_cc_screen = function(player)
         direction = 'vertical',
         name = 'army_cc/active/to_pane'
     }
-    center_pane_row_active_to.add { type = 'label', caption={ 'gui-army.cc_linked_to' }}
-    center_pane_row_active_to.add { type = 'label', name = "army_cc/linked/to_label", caption=get_cc_name(exit)}
+    center_pane_row_active_to.add { type = 'label', caption = { 'gui-army.cc_linked_to' } }
+    center_pane_row_active_to.add { type = 'label', name = "army_cc/linked/to_label", caption = get_cc_name(exit) }
 
     local center_pane_row_link_map = center_pane.add {
         type = 'flow',
         direction = 'horizontal',
-        name='army_cc/link_minimap_row',
+        name = 'army_cc/link_minimap_row',
     }
-
 
     if entrance and entrance.valid then
         add_mini_map(
@@ -424,13 +419,13 @@ local update_cc_screen = function(player)
                 player,
                 entrance,
                 nil,
-                {width=150, height=150}
+                { width = 150, height = 150 }
         )
     else
         local from_map = center_pane_row_link_map.add {
             type = 'flow',
             direction = 'horizontal',
-            name='army_cc/link_minimap_row',
+            name = 'army_cc/link_minimap_row',
         }
         from_map.style.width = 150
         from_map.style.height = 150
@@ -443,7 +438,7 @@ local update_cc_screen = function(player)
                 player,
                 exit,
                 nil,
-                {width=150, height=150, left_margin = 85}
+                { width = 150, height = 150, left_margin = 85 }
         )
     end
 
@@ -469,26 +464,26 @@ local update_help_screen = function(player)
         auto_deploy = 'on'
     end
 
-    pane.add { type="label", caption={'gui-army.deployer_title'}, style="heading_1_label"}
-    pane.add { type="label", caption={'gui-army.deployer_description0'}}
-    pane.add { type="label", caption={'gui-army.deployer_description1', auto_deploy}}
-    pane.add { type="label", caption={'gui-army.deployer_description2'}}
-    pane.add { type="label", caption={'gui-army.deployer_description3'}}
-    pane.add { type="label", caption={'gui-army.deployer_description4', timeout}}
-    pane.add { type="label", caption={'gui-army.deployer_description5'}}
-    pane.add { type="label", caption={'gui-army.deployer_description6'}}
+    pane.add { type = "label", caption = { 'gui-army.deployer_title' }, style = "heading_1_label" }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description0' } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description1', auto_deploy } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description2' } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description3' } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description4', timeout } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description5' } }
+    pane.add { type = "label", caption = { 'gui-army.deployer_description6' } }
 
-    pane.add { type="label", caption={'gui-army.cc_title'}, style="heading_1_label"}
-    pane.add { type="label", caption={'gui-army.cc_description0'}}
-    pane.add { type="label", caption={'gui-army.cc_description1'}}
-    pane.add { type="label", caption={'gui-army.cc_description2'}}
-    pane.add { type="label", caption={'gui-army.cc_description3', timeout}}
-    pane.add { type="label", caption={'gui-army.cc_description4'}}
+    pane.add { type = "label", caption = { 'gui-army.cc_title' }, style = "heading_1_label" }
+    pane.add { type = "label", caption = { 'gui-army.cc_description0' } }
+    pane.add { type = "label", caption = { 'gui-army.cc_description1' } }
+    pane.add { type = "label", caption = { 'gui-army.cc_description2' } }
+    pane.add { type = "label", caption = { 'gui-army.cc_description3', timeout } }
+    pane.add { type = "label", caption = { 'gui-army.cc_description4' } }
 
-    pane.add { type="label", caption={'gui-army.deploy_planner_title'}, style="heading_1_label"}
-    pane.add { type="label", caption={'gui-army.deploy_planner_description0'}}
-    pane.add { type="label", caption={'gui-army.deploy_planner_description1'}}
-    pane.add { type="label", caption={'gui-army.deploy_planner_description2'}}
+    pane.add { type = "label", caption = { 'gui-army.deploy_planner_title' }, style = "heading_1_label" }
+    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description0' } }
+    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description1' } }
+    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description2' } }
 end
 
 local update_tabs = {
@@ -521,7 +516,7 @@ function Army_MainWindow.show(player)
 
     local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui-army.control-title" }, style = 'caption_label' }
 
-    local pusher = title_flow.add{type = "empty-widget", name = "header-pusher", style = "draggable_space_header"}
+    local pusher = title_flow.add { type = "empty-widget", name = "header-pusher", style = "draggable_space_header" }
     pusher.style.width = Army_MainWindow.window_width - 24 - 220
     pusher.style.height = 24
     pusher.drag_target = main_window
@@ -530,31 +525,31 @@ function Army_MainWindow.show(player)
                                           name = 'erm_army_close_button',
                                           sprite = "utility/close_white",
                                           style = 'frame_action_button',
-                                          tooltip = {"gui-army.close-button"}
+                                          tooltip = { "gui-army.close-button" }
     }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local tabbed_pane = main_window.add{ type="tabbed-pane", name='main-tab' }
-    local tab1 = tabbed_pane.add{type="tab", caption="Army Stats", name='army-stats-tab'}
-    local tab2 = tabbed_pane.add{type="tab", caption="Deployers", name='deployer-tab'}
-    local tab3 = tabbed_pane.add{type="tab", caption="Command Center", name='command-center-tab'}
-    local tab4 = tabbed_pane.add{type="tab", caption="Help", name='help-tab'}
+    local tabbed_pane = main_window.add { type = "tabbed-pane", name = 'main-tab' }
+    local tab1 = tabbed_pane.add { type = "tab", caption = "Army Stats", name = 'army-stats-tab' }
+    local tab2 = tabbed_pane.add { type = "tab", caption = "Deployers", name = 'deployer-tab' }
+    local tab3 = tabbed_pane.add { type = "tab", caption = "Command Center", name = 'command-center-tab' }
+    local tab4 = tabbed_pane.add { type = "tab", caption = "Help", name = 'help-tab' }
 
-    local army_stats_pane = tabbed_pane.add { type = "flow", name=Army_MainWindow.tab_names[1], direction = 'vertical' }
+    local army_stats_pane = tabbed_pane.add { type = "flow", name = Army_MainWindow.tab_names[1], direction = 'vertical' }
     army_stats_pane.style.margin = 5
     army_stats_pane.style.width = Army_MainWindow.window_width - 40
 
-    local deployer_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[2] }
+    local deployer_pane = tabbed_pane.add { type = "scroll-pane", name = Army_MainWindow.tab_names[2] }
     deployer_pane.style.margin = 5
     deployer_pane.style.width = Army_MainWindow.window_width - 40
 
-    local command_center_pane = tabbed_pane.add { type = "flow", name=Army_MainWindow.tab_names[3], direction = 'vertical' }
+    local command_center_pane = tabbed_pane.add { type = "flow", name = Army_MainWindow.tab_names[3], direction = 'vertical' }
     command_center_pane.style.margin = 5
     command_center_pane.style.width = Army_MainWindow.window_width - 40
 
-    local help_pane = tabbed_pane.add { type = "scroll-pane", name=Army_MainWindow.tab_names[4], direction = 'vertical' }
+    local help_pane = tabbed_pane.add { type = "scroll-pane", name = Army_MainWindow.tab_names[4], direction = 'vertical' }
     help_pane.style.margin = 5
     help_pane.style.width = Army_MainWindow.window_width - 40
 
@@ -585,11 +580,10 @@ function Army_MainWindow.update_army_stats()
     end
 end
 
-
 function Army_MainWindow.update_deployers()
     for k, player in pairs(game.players) do
         local main_tab = get_main_tab(player)
-        if player and main_tab and  main_tab.selected_tab_index == 2 then
+        if player and main_tab and main_tab.selected_tab_index == 2 then
             Army_MainWindow.update(player, 2)
         end
     end
@@ -598,7 +592,7 @@ end
 function Army_MainWindow.update_command_centers()
     for k, player in pairs(game.players) do
         local main_tab = get_main_tab(player)
-        if player and main_tab and  main_tab.selected_tab_index == 3 then
+        if player and main_tab and main_tab.selected_tab_index == 3 then
             Army_MainWindow.update(player, 3)
         end
     end
@@ -716,9 +710,9 @@ function Army_MainWindow.start_link(player)
     local to_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.to)
     if from_cc and to_cc then
         ArmyTeleportationProcessor.link(from_cc, to_cc)
-        player_data.success_message = {'gui-army.cc_linked_with', player_data.selected_cc.from, player_data.selected_cc.to}
+        player_data.success_message = { 'gui-army.cc_linked_with', player_data.selected_cc.from, player_data.selected_cc.to }
     else
-        player_data.error_message = {'gui-army.cc_linked_with_error'}
+        player_data.error_message = { 'gui-army.cc_linked_with_error' }
     end
     Army_MainWindow.update_command_centers()
 end
@@ -727,10 +721,10 @@ function Army_MainWindow.stop_link(player)
     local player_data = get_player_tab_data(player)
     local force = player.force
     if global.army_entrance_teleporters[force.index] then
-        player_data.success_message = {'gui-army.cc_unlinked_with', player_data.selected_cc.from, player_data.selected_cc.to}
+        player_data.success_message = { 'gui-army.cc_unlinked_with', player_data.selected_cc.from, player_data.selected_cc.to }
         ArmyTeleportationProcessor.unlink(force)
     else
-        player_data.error_message = {'gui-army.cc_unlinked_with_error'}
+        player_data.error_message = { 'gui-army.cc_unlinked_with_error' }
     end
     Army_MainWindow.update_command_centers()
 end
@@ -773,8 +767,8 @@ end
 function Army_MainWindow.scroll_to_deployer(player, unit_number)
     local main_tab = get_main_tab(player)
     if main_tab then
-        local scroll_pan =  main_tab[Army_MainWindow.tab_names[2]]
-        local target_cell = main_tab[Army_MainWindow.tab_names[2]]['deployer_table']['deployer_cell_'..unit_number]
+        local scroll_pan = main_tab[Army_MainWindow.tab_names[2]]
+        local target_cell = main_tab[Army_MainWindow.tab_names[2]]['deployer_table']['deployer_cell_' .. unit_number]
         target_cell.style = 'erm_deep_frame_in_highlight_frame'
         scroll_pan.scroll_to_element(target_cell)
     end
@@ -790,7 +784,7 @@ function Army_MainWindow.update_army_planner(player, element)
     if player and player.valid and element and element.valid then
         local unit_count = math.abs(tonumber(element.text))
         local force = player.force
-        local name = string.gsub(element.name,'army_deployer/planner/','')
+        local name = string.gsub(element.name, 'army_deployer/planner/', '')
         if ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count) then
             Army_MainWindow.update_army_stats()
         end

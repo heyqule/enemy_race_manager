@@ -24,14 +24,14 @@ AttackGroupChunkProcessor.RETRY = 12
 
 AttackGroupChunkProcessor.PROXY_DISTANCE = 480 -- 15 chunks
 
-AttackGroupChunkProcessor.AREA_NORTH = {1,2}
-AttackGroupChunkProcessor.AREA_SOUTH = {3,4}
+AttackGroupChunkProcessor.AREA_NORTH = { 1, 2 }
+AttackGroupChunkProcessor.AREA_SOUTH = { 3, 4 }
 
-AttackGroupChunkProcessor.AREA_WEST = {1,4}
-AttackGroupChunkProcessor.AREA_EAST = {2,3}
-AttackGroupChunkProcessor.AREA_ALL = {1, 2, 3, 4}
+AttackGroupChunkProcessor.AREA_WEST = { 1, 4 }
+AttackGroupChunkProcessor.AREA_EAST = { 2, 3 }
+AttackGroupChunkProcessor.AREA_ALL = { 1, 2, 3, 4 }
 
-AttackGroupChunkProcessor.DIRECTION_CURSOR = {'northwest', 'northeast', 'southeast', 'southwest'}
+AttackGroupChunkProcessor.DIRECTION_CURSOR = { 'northwest', 'northeast', 'southeast', 'southwest' }
 
 AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES = {
     'mining-drill',
@@ -51,7 +51,7 @@ AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
     'accumulator',
 }
 -- {2100, 3200, 4800}
-AttackGroupChunkProcessor.SCAN_RANGE = {ErmConfig.BOSS_ARTILLERY_SCAN_RANGE / 1.5, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE * 1.5}
+AttackGroupChunkProcessor.SCAN_RANGE = { ErmConfig.BOSS_ARTILLERY_SCAN_RANGE / 1.5, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE * 1.5 }
 
 AttackGroupChunkProcessor.attack_group_valid_targets = {}
 for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
@@ -82,8 +82,8 @@ end
 local get_spawn_area = function(position)
     local distance = AttackGroupChunkProcessor.CHUNK_SEARCH_AREA
     local area = {
-        {position.x - distance, position.y - distance},
-        {position.x + distance, position.y + distance}
+        { position.x - distance, position.y - distance },
+        { position.x + distance, position.y + distance }
     }
     return area
 end
@@ -92,23 +92,23 @@ local get_attack_area = function(position, multiplier)
     multiplier = multiplier or 1
     local distance = (AttackGroupChunkProcessor.CHUNK_SIZE * multiplier) / 2
     local area = {
-        {position.x - distance, position.y - distance},
-        {position.x + distance, position.y + distance}
+        { position.x - distance, position.y - distance },
+        { position.x + distance, position.y + distance }
     }
     return area
 end
 
-local insert_rotatable_directions = function(race_cursor, directions) 
+local insert_rotatable_directions = function(race_cursor, directions)
     for key, direction in pairs(directions) do
         table.insert(race_cursor.rotatable_directions, direction)
-    end        
+    end
 end
 
 local set_up_rotatable_direction = function(race_cursor, race_name, surface)
     if ErmConfig.mapgen_is_2_races_split() then
         race_cursor.rotatable_directions = {}
         if ErmConfig.positive_axis_race() == ErmConfig.negative_axis_race()
-            and ErmConfig.positive_axis_race() == race_name
+                and ErmConfig.positive_axis_race() == race_name
         then
             race_cursor.rotatable_directions = AttackGroupChunkProcessor.AREA_ALL
         elseif settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
@@ -123,7 +123,7 @@ local set_up_rotatable_direction = function(race_cursor, race_name, surface)
             elseif ErmConfig.negative_axis_race() == race_name then
                 insert_rotatable_directions(race_cursor, AttackGroupChunkProcessor.AREA_NORTH)
             end
-        end   
+        end
     elseif ErmConfig.mapgen_is_4_races_split() then
         race_cursor.rotatable_directions = {}
         local directions = {
@@ -175,11 +175,11 @@ local create_spawnable_node = function(x, y)
 end
 
 local get_location_name = function(x, y)
-    return tostring(x)..'/'..tostring(y)
+    return tostring(x) .. '/' .. tostring(y)
 end
 
 local append_chunk = function(chunk_data, x, y)
-    local node_name = get_location_name(x,y)
+    local node_name = get_location_name(x, y)
     if chunk_data.chunks[node_name] then
         return
     end
@@ -221,12 +221,10 @@ local remove_chunk_from_list = function(chunk_set, node, node_name)
         local prev_node = chunk_set.chunks[prev]
         local next_node = chunk_set.chunks[next]
         if prev_node then
-            chunk_set.chunks[prev].next =
-            get_location_name(next_node.x, next_node.y)
+            chunk_set.chunks[prev].next = get_location_name(next_node.x, next_node.y)
         end
         if next_node then
-            chunk_set.chunks[next].prev =
-            get_location_name(prev_node.x, prev_node.y)
+            chunk_set.chunks[next].prev = get_location_name(prev_node.x, prev_node.y)
         end
     end
     chunk_set.chunks[node_name] = nil
@@ -279,8 +277,7 @@ local add_spawnable_chunk = function(surface, chunk)
         x = chunk.x * AttackGroupChunkProcessor.CHUNK_SIZE,
         y = chunk.y * AttackGroupChunkProcessor.CHUNK_SIZE
     }
-    local spawner = surface.find_entities_filtered
-    ({
+    local spawner = surface.find_entities_filtered({
         area = get_spawn_area(position),
         type = 'unit-spawner',
         limit = 1
@@ -296,8 +293,7 @@ local add_spawnable_chunk = function(surface, chunk)
 end
 
 local remove_chunk_without_spawner = function(surface, position, race_name)
-    local spawner = surface.find_entities_filtered
-    ({
+    local spawner = surface.find_entities_filtered({
         area = get_spawn_area(position),
         force = ErmForceHelper.get_all_enemy_forces(),
         type = 'unit-spawner',
@@ -306,7 +302,7 @@ local remove_chunk_without_spawner = function(surface, position, race_name)
     if #spawner == 0 then
         local race_cursor = global.attack_group_spawnable_chunk[surface.name].race_cursors[race_name]
         local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
-            race_cursor.rotatable_directions[race_cursor.current_direction]
+        race_cursor                                        .rotatable_directions[race_cursor.current_direction]
         ]
         remove_spawnable_chunk(surface, current_direction, position)
     end
@@ -331,7 +327,7 @@ local find_spawn_position = function(surface, race_name)
     local rotatable_direction = race_cursor.current_direction % total_rotatable_directions + 1
     race_cursor.current_direction = rotatable_direction
     local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
-        race_cursor.rotatable_directions[race_cursor.current_direction]
+    race_cursor                                        .rotatable_directions[race_cursor.current_direction]
     ]
 
     local current_chunk_list = surface_data[current_direction]
@@ -351,7 +347,7 @@ local find_spawn_position = function(surface, race_name)
     end
 
     if position_node then
-        position = {x = position_node.x, y = position_node.y}
+        position = { x = position_node.x, y = position_node.y }
         return position
     end
 
@@ -370,8 +366,7 @@ local init_attackable_chunk = function(surface, forced_init)
 end
 
 local is_cachable_attack_position = function(surface, area)
-    local entities = surface.find_entities_filtered
-    ({
+    local entities = surface.find_entities_filtered({
         area = area,
         type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
         limit = 1
@@ -424,7 +419,7 @@ local scan_closest_chunk = function(surface_data, surface_name, init_position)
         repeat
             surface_data.current = advance_to_next_node(surface_data)
 
-            local distance =  util.distance(init_position, surface_data.chunks[surface_data.current])
+            local distance = util.distance(init_position, surface_data.chunks[surface_data.current])
 
             if distance <= range then
                 table.insert(found_nodes, surface_data.current)
@@ -519,19 +514,19 @@ function AttackGroupChunkProcessor.init_index()
     local attack_chunk = 0
     local total_surfaces = 0
     for _, surface in pairs(game.surfaces) do
-       if ErmForceHelper.can_have_enemy_on(surface) then
-           local current_spawn_chunk, current_attack_chunk =  reindex_surface(surface)
-           spawn_chunk = spawn_chunk + current_spawn_chunk
-           attack_chunk = attack_chunk + current_attack_chunk
-           total_surfaces = total_surfaces + 1
-       end
+        if ErmForceHelper.can_have_enemy_on(surface) then
+            local current_spawn_chunk, current_attack_chunk = reindex_surface(surface)
+            spawn_chunk = spawn_chunk + current_spawn_chunk
+            attack_chunk = attack_chunk + current_attack_chunk
+            total_surfaces = total_surfaces + 1
+        end
     end
 
     profiler.stop()
-    game.print('[ERM] Total Processed Surfaces: '..tostring(total_surfaces))
-    game.print('[ERM] Total Cached Spawnable Chunks: '..tostring(spawn_chunk))
-    game.print('[ERM] Total Cached Attackable Chunks: '..tostring(attack_chunk))
-    game.print({'', '[ERM] Attack Group Chunk Re-indexed: ', profiler})
+    game.print('[ERM] Total Processed Surfaces: ' .. tostring(total_surfaces))
+    game.print('[ERM] Total Cached Spawnable Chunks: ' .. tostring(spawn_chunk))
+    game.print('[ERM] Total Cached Attackable Chunks: ' .. tostring(attack_chunk))
+    game.print({ '', '[ERM] Attack Group Chunk Re-indexed: ', profiler })
 end
 
 --- on_robot_built_entity and on_built_entity
@@ -574,13 +569,12 @@ function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     repeat
         local position = find_spawn_position(surface, race_name)
         if position then
-            entities = surface.find_entities_filtered
-                ({
-                    area = get_spawn_area(position),
-                    force = force,
-                    type = 'unit-spawner',
-                    limit = 10
-                })
+            entities = surface.find_entities_filtered({
+                area = get_spawn_area(position),
+                force = force,
+                type = 'unit-spawner',
+                limit = 10
+            })
         end
 
         if position and next(entities) == nil then
@@ -602,8 +596,7 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, init_position)
         local entities = nil
         position_node = find_attack_position(surface, init_position)
         if position_node then
-            entities = surface.find_entities_filtered
-            ({
+            entities = surface.find_entities_filtered({
                 area = get_attack_area(position_node),
                 type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
                 limit = 1
@@ -621,7 +614,7 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, init_position)
     until position_node ~= nil or retry == AttackGroupChunkProcessor.RETRY
 
     if position_node then
-        return {x = position_node.x, y = position_node.y}
+        return { x = position_node.x, y = position_node.y }
     end
 
     return nil
@@ -631,17 +624,16 @@ end
 --- Pick nearby attack locations based on current requirement.
 ---
 function AttackGroupChunkProcessor.pick_nearby_attack_location(surface, init_position)
-    local entities = surface.find_entities_filtered
-        {
-            area = get_attack_area(init_position, AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS),
-            type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
-            limit = 1
-        }
+    local entities = surface.find_entities_filtered {
+        area = get_attack_area(init_position, AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS),
+        type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
+        limit = 1
+    }
 
     local next_index = next(entities)
     if next_index then
         local entity = entities[next_index]
-        return {x = entity.position.x, y = entity.position.y}
+        return { x = entity.position.x, y = entity.position.y }
     end
 
     return nil

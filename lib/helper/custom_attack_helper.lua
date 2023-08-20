@@ -41,34 +41,17 @@ local get_name_token = function(name)
     return global.force_entity_name_cache[name]
 end
 
-local register_time_to_live_unit = function(event, entity, race_name, name)
-    if global.time_to_live_units == nil then
-        global.time_to_live_units = {}
-        global.time_to_live_units_total = 0
-    end
-
-    local race_settings = global.custom_attack_race_settings[race_name]
-    if race_settings.timed_units and race_settings.timed_units[name] and entity.valid then
-        global.time_to_live_units[entity.unit_number] = {
-            entity = entity,
-            time = event.tick + entity.prototype.min_pursue_time
-        }
-        global.time_to_live_units_total = global.time_to_live_units_total + 1
-    end
-end
-
-local get_race_settings = function(race_name, force)
+local get_race_settings = function(race_name, reload)
     if global.custom_attack_race_settings == nil then
         global.custom_attack_race_settings = {}
     end
 
-    if global.custom_attack_race_settings[race_name] == nil or force then
+    if global.custom_attack_race_settings[race_name] == nil or reload then
         global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
     end
 
     return global.custom_attack_race_settings[race_name]
 end
-
 
 local drop_unit = function(event, race_name, unit_name, count, position)
     --log('dropping'..race_name..'/'..unit_name..'/'..tostring(count))
@@ -94,19 +77,18 @@ local drop_unit = function(event, race_name, unit_name, count, position)
             if entity.type == 'unit' then
                 entity.set_command({
                     type = defines.command.attack_area,
-                    destination = {x = position.x, y = position.y},
+                    destination = { x = position.x, y = position.y },
                     radius = ATTACK_CHUNK_SIZE,
                     distraction = defines.distraction.by_anything
                 })
 
                 if event.source_entity and
-                    event.source_entity.type == 'unit' and
-                    event.source_entity.unit_group and
-                    event.source_entity.unit_group.force == entity.force
+                        event.source_entity.type == 'unit' and
+                        event.source_entity.unit_group and
+                        event.source_entity.unit_group.force == entity.force
                 then
                     event.source_entity.unit_group.add_member(entity)
                 end
-                register_time_to_live_unit(event, entity, race_name, unit_name)
             end
             idx = idx + 1
         end
@@ -132,12 +114,11 @@ local drop_player_unit = function(event, race_name, unit_name, count, position)
             if entity.type == 'unit' then
                 entity.set_command({
                     type = defines.command.attack_area,
-                    destination = {x = position.x, y = position.y},
+                    destination = { x = position.x, y = position.y },
                     radius = ATTACK_CHUNK_SIZE,
                     distraction = defines.distraction.by_anything
                 })
 
-                register_time_to_live_unit(event, entity, race_name, unit_name)
             end
             idx = idx + 1
         end
@@ -180,14 +161,12 @@ function CustomAttackHelper.drop_player_unit(event, race_name, unit_name, count)
     drop_player_unit(event, race_name, unit_name, count)
 end
 
-
 ---
 --- Process single type of unit drops
 ---
 function CustomAttackHelper.drop_unit_at_target(event, race_name, unit_name, count)
     drop_unit(event, race_name, unit_name, count, event.target_position)
 end
-
 
 ---
 --- Process single type of unit drops
@@ -241,7 +220,6 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
                 if group.valid then
                     group.add_member(entity)
                 end
-                register_time_to_live_unit(event, entity, race_name, final_unit_name)
             end
         end
         i = i + 1
@@ -250,7 +228,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     if group.valid and new_group then
         group.set_command({
             type = defines.command.attack_area,
-            destination = {x = position.x, y = position.y},
+            destination = { x = position.x, y = position.y },
             radius = ATTACK_CHUNK_SIZE,
             distraction = defines.distraction.by_anything
         })
@@ -277,7 +255,7 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         position = position, force = boss_data.force
     }
     repeat
-        local final_unit_name = race_name .. '/' ..CustomAttackHelper.get_unit(race_name, 'droppable_units').. '/' .. tostring(level)
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
         if not surface.can_place_entity({ name = final_unit_name, position = position }) then
             position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
         end
@@ -299,14 +277,13 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
 
     group.set_command({
         type = defines.command.attack_area,
-        destination = {x = target_position.x, y = target_position.y},
+        destination = { x = target_position.x, y = target_position.y },
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
 
     remote.call('enemyracemanager', 'add_boss_attack_group', group)
 end
-
 
 local break_time_to_live = function(count, max_count, units_total)
     return count == max_count or units_total == 0
@@ -341,9 +318,7 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
         local entity = value.entity
         if entity.valid then
             if value.time < event.tick then
-                entity.destroy()
-                units[idx] = nil
-                unit_total = unit_total - 1
+                entity.die()
             end
         else
             units[idx] = nil
@@ -351,7 +326,7 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
         end
 
         count = count + 1
-        if break_time_to_live(count, max_count, unit_total)  then
+        if break_time_to_live(count, max_count, unit_total) then
             break
         end
     end
@@ -364,5 +339,48 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
     --log({'', 'clear_time_to_live_units...  ', profiler})
 end
 
+function CustomAttackHelper.time_to_live_unit_died(source_unit)
+    if source_unit and source_unit.unit_number and
+            global.time_to_live_units and global.time_to_live_units[source_unit.unit_number] then
+        global.time_to_live_units[source_unit.unit_number] = nil
+        global.time_to_live_units_total = global.time_to_live_units_total - 1
+    end
+end
+
+function CustomAttackHelper.process_self_destruct(event)
+    if event.source_entity then
+        event.source_entity.die()
+    end
+end
+
+function CustomAttackHelper.process_time_to_live_unit_created(event)
+    if event.source_entity == nil then
+        return
+    end
+
+    if global.time_to_live_units == nil then
+        global.time_to_live_units = {}
+        global.time_to_live_units_total = 0
+    end
+
+    local entity = event.source_entity
+    local nameTokens = get_name_token(entity.name)
+    local race_settings = get_race_settings(nameTokens[1])
+    local name = nameTokens[2]
+
+    if race_settings.timed_units and race_settings.timed_units[name] and entity.valid then
+        global.time_to_live_units[entity.unit_number] = {
+            entity = entity,
+            time = event.tick + entity.prototype.min_pursue_time
+        }
+        global.time_to_live_units_total = global.time_to_live_units_total + 1
+    end
+end
+
+function CustomAttackHelper.process_time_to_live_unit_died(event)
+    if event.source_entity then
+        CustomAttackHelper.time_to_live_unit_died(event.source_entity)
+    end
+end
 
 return CustomAttackHelper

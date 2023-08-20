@@ -22,9 +22,8 @@ local modify_race_setting = function()
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-toxic-biter')
         RaceSettingHelper.add_unit_to_tier(race_settings, 3, 'behemoth-toxic-spitter')
 
-
-        table.insert(race_settings.featured_groups, {{'behemoth-toxic-biter','behemoth-toxic-spitter'}, {5, 2}, 50})
-        table.insert(race_settings.featured_groups, {{'behemoth-toxic-spitter','behemoth-toxic-biter'}, {5, 2}, 50})
+        table.insert(race_settings.featured_groups, { { 'behemoth-toxic-biter', 'behemoth-toxic-spitter' }, { 5, 2 }, 50 })
+        table.insert(race_settings.featured_groups, { { 'behemoth-toxic-spitter', 'behemoth-toxic-biter' }, { 5, 2 }, 50 })
 
         RaceSettingHelper.process_unit_spawn_rate_cache(race_settings)
         RaceSettingHelper.refresh_current_tier(MOD_NAME)

@@ -50,7 +50,7 @@ function ERM_DetailWindow.show(player, race_setting)
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.detail_title", race_setting.race }, style = 'caption_label' }
 
-    local pusher = title_flow.add{type = "empty-widget", style = "draggable_space_header"}
+    local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.width = ERM_DetailWindow.window_width - 24 - 175
     pusher.style.height = 24
     pusher.drag_target = detail_window
@@ -59,14 +59,14 @@ function ERM_DetailWindow.show(player, race_setting)
                                           name = 'erm_detail_close_button',
                                           sprite = "utility/close_white",
                                           style = 'frame_action_button',
-                                          tooltip = {"gui.back-instruction"}
+                                          tooltip = { "gui.back-instruction" }
     }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local main_flow = detail_window.add { type = 'flow', direction = "horizontal"}
-    local left_flow = main_flow.add { type = 'flow', direction = "vertical"}
+    local main_flow = detail_window.add { type = 'flow', direction = "horizontal" }
+    local left_flow = main_flow.add { type = 'flow', direction = "vertical" }
     left_flow.style.width = ERM_DetailWindow.window_width / 2
 
     local item_table = left_flow.add { type = "table", column_count = 2, style = "bordered_table" }
@@ -109,23 +109,23 @@ function ERM_DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { 'gui.boss_kill_count' } }
     item_table.add { type = "label", caption = boss_kill_count }
 
-    local right_flow = main_flow.add { type = 'flow', direction = "vertical"}
+    local right_flow = main_flow.add { type = 'flow', direction = "vertical" }
     right_flow.style.width = ERM_DetailWindow.window_width / 2
 
     if admin then
         local setting_flow = right_flow.add { type = "flow", name = "setting_flow", direction = 'vertical' }
-        setting_flow.add { type = "label", name="setting_description", caption={"gui.setting_description"}}
+        setting_flow.add { type = "label", name = "setting_description", caption = { "gui.setting_description" } }
 
         local add_confirm_button = false
 
         --- LEVEL SLIDER ---
-        local level_slider_flow = setting_flow.add {type = "flow", name = "level_slider_flow", direction = 'horizontal'}
+        local level_slider_flow = setting_flow.add { type = "flow", name = "level_slider_flow", direction = 'horizontal' }
         local current_level = LevelManager.get_calculated_current_level(race_setting)
         local max_level = GlobalConfig.get_max_level()
 
         if current_level < max_level then
             level_slider_flow.add { type = "label",
-                                    caption = { 'gui.level_up_slider'},
+                                    caption = { 'gui.level_up_slider' },
                                     tooltip = { 'gui.level_up_slider_tooltip' }
             }
             local level_slider = level_slider_flow.add { type = "slider",
@@ -143,17 +143,17 @@ function ERM_DetailWindow.show(player, race_setting)
             add_confirm_button = true
         else
             level_slider_flow.add { type = "label",
-                                    caption = { 'gui.level_up_slider'},
+                                    caption = { 'gui.level_up_slider' },
                                     tooltip = { 'gui.level_up_slider_tooltip' }
             }
-            level_slider_flow.add{ type = "label", name="level_slider_not_settable_description", caption={"gui.not_settable_description"}}
+            level_slider_flow.add { type = "label", name = "level_slider_not_settable_description", caption = { "gui.not_settable_description" } }
         end
         --- END LEVEL UP SLIDER ---
 
         --- EVOLUTION FACTOR SLIDER ---
-        local evolution_factor_slider_flow = setting_flow.add {type = "flow", name = "evolution_factor_slider_flow", direction = 'horizontal'}
+        local evolution_factor_slider_flow = setting_flow.add { type = "flow", name = "evolution_factor_slider_flow", direction = 'horizontal' }
         evolution_factor_slider_flow.add { type = "label",
-                                           caption = { 'gui.evolution_factor_slider'},
+                                           caption = { 'gui.evolution_factor_slider' },
                                            tooltip = { 'gui.evolution_factor_slider_tooltip' }
         }
         local evolution_factor_slider = evolution_factor_slider_flow.add { type = "slider",
@@ -166,30 +166,30 @@ function ERM_DetailWindow.show(player, race_setting)
         evolution_factor_slider.slider_value = evolution_factor_value
         evolution_factor_slider.style.vertical_align = "bottom"
         evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
-        evolution_factor_slider_flow.add { type = "label", caption="%"}
+        evolution_factor_slider_flow.add { type = "label", caption = "%" }
         --- END EVOLUTION FACTOR SLIDER ---
 
-        local gap = setting_flow.add {type="empty-widget"}
+        local gap = setting_flow.add { type = "empty-widget" }
         gap.style.height = 4
-        setting_flow.add {type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = {"gui.confirm"}, style="green_button"}
+        setting_flow.add { type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = { "gui.confirm" }, style = "green_button" }
 
-        local center_gap = right_flow.add {type="empty-widget"}
+        local center_gap = right_flow.add { type = "empty-widget" }
         center_gap.style.height = 16
 
         local action_flow = right_flow.add { type = "flow", name = "action_flow", direction = 'vertical' }
-        action_flow.add { type = "label", name="action_description", caption={"gui.action_description"}}
+        action_flow.add { type = "label", name = "action_description", caption = { "gui.action_description" } }
         local pass_new_race = race_setting.race ~= MOD_NAME
         local pass_biter_race = race_setting.race == MOD_NAME and settings.startup['enemyracemanager-enable-bitters'].value == true
         if pass_new_race or pass_biter_race then
             action_flow.add { type = "button", name = race_setting.race .. "/replace_enemy", caption = { 'gui.replace_enemy' }, tooltip = { 'gui.replace_enemy_tooltip' } }
         end
 
-        local center_gap = right_flow.add {type="empty-widget"}
+        local center_gap = right_flow.add { type = "empty-widget" }
         center_gap.style.height = 16
     end
 
     local boss_flow = right_flow.add { type = "flow", name = "boss_flow", direction = 'vertical' }
-    boss_flow.add { type = "label", name="boss_flow_description", caption={"gui.boss_flow_description"}}
+    boss_flow.add { type = "label", name = "boss_flow_description", caption = { "gui.boss_flow_description" } }
     boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { 'gui.boss_details' } }
 end
 
@@ -198,14 +198,14 @@ function ERM_DetailWindow.update_slider_text(event, slider_name, slider_value)
         local nameToken = String.split(event.element.name, '/')
 
         if nameToken[2] == slider_name then
-            local name = nameToken[1]..'/'..slider_value
+            local name = nameToken[1] .. '/' .. slider_value
             event.element.parent[name].caption = event.element.slider_value
         end
     end
 end
 
 local process_level_slider = function(element, race_name)
-    local level_slider_name = race_name..'/'..ERM_DetailWindow.levelup_slider_name
+    local level_slider_name = race_name .. '/' .. ERM_DetailWindow.levelup_slider_name
     local level = tonumber(element.parent['level_slider_flow'][level_slider_name].slider_value)
     if level ~= global.race_settings[race_name].level then
         LevelManager.levelByCommand(global.race_settings, race_name, level)
@@ -213,10 +213,10 @@ local process_level_slider = function(element, race_name)
 end
 
 local process_evolution_factor_slider = function(element, race_name)
-    local evolution_slider_name = race_name..'/'..ERM_DetailWindow.evolution_factor_slider_name
+    local evolution_slider_name = race_name .. '/' .. ERM_DetailWindow.evolution_factor_slider_name
     local evolution_factor = tonumber(element.parent['evolution_factor_slider_flow'][evolution_slider_name].slider_value) / 100
     game.forces[ForceHelper.get_force_name_from(race_name)].evolution_factor = evolution_factor
-    game.print('Setting '..race_name..' evolution factor to '..tostring(evolution_factor))
+    game.print('Setting ' .. race_name .. ' evolution factor to ' .. tostring(evolution_factor))
 end
 
 function ERM_DetailWindow.confirm(owner, nameToken, element)

@@ -14,21 +14,21 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local CronProcessor = {}
 
 local process_one_job = function(cron_list)
-    if(Queue.is_empty(cron_list)) then
+    if (Queue.is_empty(cron_list)) then
         return
     end
-    
+
     local job = cron_list()
 
     if cron_switch[job[1]] then
         cron_switch[job[1]](job[2])
     else
-        log('Invalid Call: '..job[1])
+        log('Invalid Call: ' .. job[1])
     end
 end
 
 local process_all_jobs = function(cron_list)
-    if(Queue.is_empty(cron_list)) then
+    if (Queue.is_empty(cron_list)) then
         return
     end
 
@@ -42,7 +42,7 @@ local process_all_jobs = function(cron_list)
         if cron_switch[job[1]] then
             cron_switch[job[1]](job[2])
         else
-            log('Invalid Call: '..job[1])
+            log('Invalid Call: ' .. job[1])
         end
     until Queue.is_empty(cron_list_copy)
 end
@@ -81,33 +81,33 @@ function CronProcessor.rebuild_queue()
 end
 
 function CronProcessor.add_1_min_queue(request, ...)
-    local arg = {...}
-    global.one_minute_cron({request, arg})
+    local arg = { ... }
+    global.one_minute_cron({ request, arg })
 end
 
 function CronProcessor.add_15_sec_queue(request, ...)
-    local arg = {...}
-    global.fifteen_seconds_cron({request, arg})
+    local arg = { ... }
+    global.fifteen_seconds_cron({ request, arg })
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
-    local arg = {...}
-    global.ten_seconds_cron({request, arg})
+    local arg = { ... }
+    global.ten_seconds_cron({ request, arg })
 end
 
 function CronProcessor.add_2_sec_queue(request, ...)
-    local arg = {...}
-    global.two_seconds_cron({request, arg})
+    local arg = { ... }
+    global.two_seconds_cron({ request, arg })
 end
 
 function CronProcessor.add_1_sec_queue(request, ...)
-    local arg = {...}
-    global.one_second_cron({request, arg})
+    local arg = { ... }
+    global.one_second_cron({ request, arg })
 end
 
 function CronProcessor.add_quick_queue(request, ...)
-    local arg = {...}
-    global.quick_cron({request, arg})
+    local arg = { ... }
+    global.quick_cron({ request, arg })
 
     if global.quick_cron_is_running == false then
         global.quick_cron_is_running = true
@@ -116,19 +116,19 @@ function CronProcessor.add_quick_queue(request, ...)
 end
 
 function CronProcessor.add_boss_queue(request, ...)
-    local arg = {...}
-    global.boss_cron({request, arg})
+    local arg = { ... }
+    global.boss_cron({ request, arg })
 end
 
 function CronProcessor.add_teleport_queue(request, ...)
-    local args = {...}
+    local args = { ... }
     local unit = args[1]
     local force = unit.force
 
     if global.teleport_cron[force.index] == nil then
         global.teleport_cron[force.index] = Queue()
     end
-    global.teleport_cron[force.index]({request, args})
+    global.teleport_cron[force.index]({ request, args })
 end
 
 function CronProcessor.process_1_min_queue()

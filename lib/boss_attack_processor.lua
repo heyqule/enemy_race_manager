@@ -23,20 +23,20 @@ BossAttackProcessor.TYPE_BEAM = 2
 local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
 local scanRadius = ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
-local type_name = {'projectile', 'beam'}
+local type_name = { 'projectile', 'beam' }
 
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
-        return {left_top = {x - scanRadius, y - scanLength}, right_bottom = {x + scanRadius, y - scanMinLength}}
+        return { left_top = { x - scanRadius, y - scanLength }, right_bottom = { x + scanRadius, y - scanMinLength } }
     end,
     [defines.direction.east] = function(x, y)
-        return {left_top = {x + scanMinLength, y - scanRadius}, right_bottom = {x + scanLength, y + scanRadius}}
+        return { left_top = { x + scanMinLength, y - scanRadius }, right_bottom = { x + scanLength, y + scanRadius } }
     end,
     [defines.direction.south] = function(x, y)
-        return {left_top = {x - scanRadius, y + scanMinLength}, right_bottom = {x + scanRadius, y + scanLength}}
+        return { left_top = { x - scanRadius, y + scanMinLength }, right_bottom = { x + scanRadius, y + scanLength } }
     end,
     [defines.direction.west] = function(x, y)
-        return {left_top = {x - scanLength, y - scanRadius}, right_bottom = {x - scanMinLength, y + scanRadius}}
+        return { left_top = { x - scanLength, y - scanRadius }, right_bottom = { x - scanMinLength, y + scanRadius } }
     end,
 }
 
@@ -96,7 +96,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
 end
 
 local queue_attack = function(data)
-    for i=1, data['spread'] do
+    for i = 1, data['spread'] do
         local position, artillery_mode = pick_near_by_player_entity_position()
         data['artillery_mode'] = artillery_mode
         data['position'] = position
@@ -120,7 +120,7 @@ local select_attack = function(mod_name, attacks, tier)
     for i, value in pairs(attacks['projectile_name']) do
         if can_spawn(attacks['projectile_chance'][i]) then
             data = {
-                entity_name = mod_name..'/'..value..'-'..type_name[attacks['projectile_type'][i]]..'-t'..tier,
+                entity_name = mod_name .. '/' .. value .. '-' .. type_name[attacks['projectile_type'][i]] .. '-t' .. tier,
                 count = attacks['projectile_count'][i],
                 spread = attacks['projectile_spread'][i],
                 type = attacks['projectile_type'][i],
@@ -145,7 +145,7 @@ end
 
 local fetch_attack_data = function(race_name)
     if not global.boss.attack_cache then
-        global.boss.attack_cache = remote.call(race_name..'_boss_attacks','get_attack_data')
+        global.boss.attack_cache = remote.call(race_name .. '_boss_attacks', 'get_attack_data')
     end
 end
 
@@ -227,7 +227,6 @@ local process_attack = function(data, unique_position)
     end
 end
 
-
 function BossAttackProcessor.unset_attackable_entities_cache()
     global.boss.attackable_entities_cache = nil
     global.boss.attackable_entities_cache_size = 0
@@ -253,7 +252,7 @@ function BossAttackProcessor.process_despawn_attack()
     ErmDebugHelper.print('Despawn Attack...')
     BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
-    for i=1, data['spread'] do
+    for i = 1, data['spread'] do
         local position, artillery_mode = pick_near_by_player_entity_position(true)
         data['artillery_mode'] = artillery_mode
         data['position'] = position

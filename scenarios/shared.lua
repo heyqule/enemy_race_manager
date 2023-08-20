@@ -7,21 +7,21 @@
 local ScenarioHelper = {}
 
 function ScenarioHelper.build_base(surface, blueprint_string)
-    local bp_entity = surface.create_entity{name='item-on-ground',position= {10,10},stack='blueprint'}
+    local bp_entity = surface.create_entity { name = 'item-on-ground', position = { 10, 10 }, stack = 'blueprint' }
     bp_entity.stack.import_stack(blueprint_string)
     local bp_entities = bp_entity.stack.get_blueprint_entities()
     bp_entity.destroy()
-    for _,entity in pairs(util.table.deepcopy(bp_entities)) do
-        entity.position = {entity.position.x, entity.position.y}
+    for _, entity in pairs(util.table.deepcopy(bp_entities)) do
+        entity.position = { entity.position.x, entity.position.y }
         entity.force = 'player'
         surface.create_entity(entity)
     end
 
-    surface.create_entity({name="stone", amount=500000000, position={-33, -13}})
-    surface.create_entity({name="stone", amount=500000000, position={-29, -13}})
+    surface.create_entity({ name = "stone", amount = 500000000, position = { -33, -13 } })
+    surface.create_entity({ name = "stone", amount = 500000000, position = { -29, -13 } })
 end
 
-function ScenarioHelper.spawn_tile(surface,radius, tile_name)
+function ScenarioHelper.spawn_tile(surface, radius, tile_name)
     radius = radius or 128
     tile_name = tile_name or 'concrete'
     --Spawn concrete tiles
@@ -30,13 +30,13 @@ function ScenarioHelper.spawn_tile(surface,radius, tile_name)
     for x = (radius * -1), radius, 1 do
         for y = (radius * -1), radius, 1 do
             if prototypes[tile_name] then
-                table.insert(tiles,{name = tile_name, position = {x, y}})
+                table.insert(tiles, { name = tile_name, position = { x, y } })
             end
         end
     end
     surface.set_tiles(tiles, true, true, true, true)
 
-    local entities = surface.find_entities({{(radius * -1), (radius * -1)},{radius, radius}})
+    local entities = surface.find_entities({ { (radius * -1), (radius * -1) }, { radius, radius } })
     for _, entity in pairs(entities) do
         entity.destroy()
     end
@@ -44,30 +44,32 @@ end
 
 function ScenarioHelper.spawn_lab_tiles(surface, radius)
 
-    local tile_types = {"lab-dark-1", "lab-dark-2"}
+    local tile_types = { "lab-dark-1", "lab-dark-2" }
     local tiles = {}
     radius = radius or 128
     for x = (radius * -1), radius, 1 do
         for y = (radius * -1), radius, 1 do
-               local odd = ((x + y) % 2)
-                if odd <= 0 then odd = odd + 2 end
-                table.insert(tiles, {name=tile_types[odd], position={x, y}})
+            local odd = ((x + y) % 2)
+            if odd <= 0 then
+                odd = odd + 2
+            end
+            table.insert(tiles, { name = tile_types[odd], position = { x, y } })
         end
     end
     surface.set_tiles(tiles, true, true, true, true)
 
-    local entities = surface.find_entities({{(radius * -1), (radius * -1)},{radius, radius}})
+    local entities = surface.find_entities({ { (radius * -1), (radius * -1) }, { radius, radius } })
     for _, entity in pairs(entities) do
         entity.destroy()
     end
 
-    surface.destroy_decoratives{area={{(radius * -1), (radius * -1)},{radius, radius}}}
+    surface.destroy_decoratives { area = { { (radius * -1), (radius * -1) }, { radius, radius } } }
 end
 
 function ScenarioHelper.set_tech_level(force, level)
 
     for _, tech in pairs(force.technologies) do
-        tech.researched=false
+        tech.researched = false
         force.set_saved_technology_progress(tech, 0)
     end
     force.enable_all_technologies()
@@ -76,7 +78,7 @@ function ScenarioHelper.set_tech_level(force, level)
     if level >= 8 then
         level = level - 8
         force.research_all_technologies()
-        for i=1,level do
+        for i = 1, level do
             force.research_all_technologies()
         end
     else
@@ -89,9 +91,9 @@ function ScenarioHelper.set_tech_level(force, level)
             'laser-shooting-speed-',
             'weapon-shooting-speed-',
         }
-        for i=1, level do
+        for i = 1, level do
             for _, techname in pairs(techs) do
-                local tech = force.technologies[techname..tostring(i)]
+                local tech = force.technologies[techname .. tostring(i)]
                 if tech then
                     tech.researched = true
                 end
@@ -101,14 +103,14 @@ function ScenarioHelper.set_tech_level(force, level)
 end
 
 function ScenarioHelper.set_enemy_params(level, tier, factor)
-    remote.call('enemyracemanager_debug','set_evolution_factor', factor)
-    remote.call('enemyracemanager_debug','level_up', level)
+    remote.call('enemyracemanager_debug', 'set_evolution_factor', factor)
+    remote.call('enemyracemanager_debug', 'level_up', level)
     remote.call('enemyracemanager_debug', 'set_tier', tier)
     remote.call('enemyracemanager_debug', 'attack_group_chunk_index')
 end
 
 function ScenarioHelper.set_attack_points()
-    remote.call('enemyracemanager_debug','add_points_to_attack_meter', 1000000)
+    remote.call('enemyracemanager_debug', 'add_points_to_attack_meter', 1000000)
 end
 
 function ScenarioHelper.set_boss_tier(tier)

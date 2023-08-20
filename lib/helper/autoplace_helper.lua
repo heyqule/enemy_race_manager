@@ -41,9 +41,9 @@ function AutplaceHelper.volume_to_noise_expression(volume)
 
     if (volume["aux_min"] and volume["aux_max"]) then
         local aux_center = (volume["aux_min"] + volume["aux_max"]) / 2
-        local aux_range = (math.abs(volume["aux_min"] - volume["aux_max"]) / 2 ) + 0.005
+        local aux_range = (math.abs(volume["aux_min"] - volume["aux_max"]) / 2) + 0.005
         local aux_fitness = plateau_peak_to_noise_expression(noise.var("aux"), aux_center, aux_range)
-        if(result == nil) then
+        if (result == nil) then
             result = aux_fitness
         else
             result = noise.min(result, aux_fitness)
@@ -52,9 +52,9 @@ function AutplaceHelper.volume_to_noise_expression(volume)
 
     if (volume["moisture_min"] and volume["moisture_max"]) then
         local water_center = (volume["moisture_min"] + volume["moisture_max"]) / 2
-        local water_range = (math.abs(volume["moisture_min"] - volume["moisture_max"]) / 2 ) + 0.005
+        local water_range = (math.abs(volume["moisture_min"] - volume["moisture_max"]) / 2) + 0.005
         local water_fitness = plateau_peak_to_noise_expression(noise.var("moisture"), water_center, water_range)
-        if(result == nil) then
+        if (result == nil) then
             result = water_fitness
         else
             result = noise.min(result, water_fitness)
@@ -65,7 +65,7 @@ function AutplaceHelper.volume_to_noise_expression(volume)
         local temperature_center = (volume["temperature_min"] + volume["temperature_max"]) / 2
         local temperature_range = math.abs(volume["temperature_min"] - volume["temperature_max"]) / 2
         local temperature_fitness = plateau_peak_to_noise_expression(noise.var("temperature"), temperature_center, temperature_range)
-        if(result == nil) then
+        if (result == nil) then
             result = temperature_fitness
         else
             result = noise.min(result, temperature_fitness)
@@ -76,7 +76,7 @@ function AutplaceHelper.volume_to_noise_expression(volume)
         local elevation_center = (volume["elevation_min"] + volume["elevation_max"]) / 2
         local elevation_range = math.abs(volume["elevation_min"] - volume["elevation_max"]) / 2
         local elevation_fitness = plateau_peak_to_noise_expression(noise.var("elevation"), elevation_center, elevation_range)
-        if(result == nil) then
+        if (result == nil) then
             result = elevation_fitness
         else
             result = noise.min(result, elevation_fitness)
@@ -85,7 +85,6 @@ function AutplaceHelper.volume_to_noise_expression(volume)
 
     return result
 end
-
 
 return AutplaceHelper
 

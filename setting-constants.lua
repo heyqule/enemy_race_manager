@@ -3,7 +3,6 @@ MAP_GEN_2_RACES_SPLIT = '2 Races Split'
 MAP_GEN_4_RACES_SPLIT = '4 Races Split'
 MAP_GEN_1_RACE_PER_SURFACE = '1 Race / Surface'
 
-
 MAX_LEVEL_5 = "Casual - Max L5"
 MAX_LEVEL_10 = "Normal - Max L10"
 MAX_LEVEL_15 = "Advanced - Max L15"
@@ -42,5 +41,5 @@ BOSS_GODLIKE = "Godlike"
 
 BOSS_SPAWN_SQUAD = "Squad"
 BOSS_SPAWN_PATROL = "Patrol"
-BOSS_SPAWN_PLATOON  = "Platoon"
+BOSS_SPAWN_PLATOON = "Platoon"
 

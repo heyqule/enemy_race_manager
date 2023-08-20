@@ -6,7 +6,6 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
-
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
@@ -18,13 +17,13 @@ end
 local population_functions = {
     [ARMY_POPULATION_INCREASE] = function(event)
         local unit = event.source_entity
-        if unit and unit.valid and ErmArmyPopulation.can_place_unit(unit)  then
+        if unit and unit.valid and ErmArmyPopulation.can_place_unit(unit) then
             ErmArmyPopulation.add_unit_count(unit)
         else
             if unit.last_user then
                 unit.last_user.print('You need additional Follower Count Research!')
-                unit.last_user.insert {name = unit.name, count = 1}
-                unit.last_user.play_sound({path='erm-army-full-population'})
+                unit.last_user.insert { name = unit.name, count = 1 }
+                unit.last_user.play_sound({ path = 'erm-army-full-population' })
             end
             unit.destroy()
         end
@@ -33,14 +32,14 @@ local population_functions = {
         local unit = event.source_entity
         if unit and unit.valid then
             ErmArmyPopulation.remove_unit_count(unit)
-            unit.force.play_sound({path='erm-army-force-under-attack-by-chance'})
+            unit.force.play_sound({ path = 'erm-army-force-under-attack-by-chance' })
         end
     end,
 }
 
 Event.register(defines.events.on_research_finished, function(event)
     local research = event.research
-    if isFollowResearch(research)  then
+    if isFollowResearch(research) then
         ErmArmyPopulation.calculate_max_units(research.force)
         ErmArmyControlUI.update_army_stats()
     end
@@ -48,7 +47,7 @@ end)
 
 Event.register(defines.events.on_research_reversed, function(event)
     local research = event.research
-    if isFollowResearch(research)  then
+    if isFollowResearch(research) then
         ErmArmyPopulation.calculate_max_units(research.force)
     end
 end)

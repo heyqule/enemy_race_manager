@@ -31,20 +31,20 @@ function ERM_BossVictoryDialog.show(player, race_setting)
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.boss_victory_title", race_setting.race }, style = 'caption_label' }
 
-    local main_flow = dialog.add { type = 'flow', direction = "vertical"}
+    local main_flow = dialog.add { type = 'flow', direction = "vertical" }
     local description = main_flow.add { type = 'label', name = 'description', caption = { "gui.boss_victory_description" } }
 
-    local center_gap = main_flow.add {type="empty-widget"}
+    local center_gap = main_flow.add { type = "empty-widget" }
     center_gap.style.height = 16
 
     local bottom_flow = main_flow.add { type = "flow", direction = 'horizontal' }
-    bottom_flow.add {type = "button", name = race_setting.race.."/victory_dialog_tier_cancel", caption = {"gui.victory_dialog_tier_cancel"}, style="red_button"}
+    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_cancel", caption = { "gui.victory_dialog_tier_cancel" }, style = "red_button" }
 
-    local button_pusher = bottom_flow.add{type = "empty-widget", style = "draggable_space_header"}
+    local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
     button_pusher.style.width = 150
     button_pusher.style.height = 24
 
-    bottom_flow.add {type = "button", name = race_setting.race.."/victory_dialog_tier_confirm", caption = {"gui.victory_dialog_tier_confirm"}, style="green_button"}
+    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_confirm", caption = { "gui.victory_dialog_tier_confirm" }, style = "green_button" }
 end
 
 function ERM_BossVictoryDialog.hide(player)
@@ -56,7 +56,7 @@ end
 function ERM_BossVictoryDialog.confirm(race_name)
     if global.race_settings[race_name].boss_tier < GlobalConfig.BOSS_MAX_TIERS then
         global.race_settings[race_name].boss_tier = global.race_settings[race_name].boss_tier + 1
-        game.print("[color=#ff0000]"..race_name..'[/color] is now on boss tier '..tostring(global.race_settings[race_name].boss_tier))
+        game.print("[color=#ff0000]" .. race_name .. '[/color] is now on boss tier ' .. tostring(global.race_settings[race_name].boss_tier))
     end
 end
 

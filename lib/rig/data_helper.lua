@@ -24,5 +24,4 @@ ErmDataHelper.getFlyingLayerName = function()
     return air_collision_mask
 end
 
-
 return ErmDataHelper

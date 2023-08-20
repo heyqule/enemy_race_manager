@@ -7,19 +7,19 @@
 local ArmyFunctions = {}
 
 function ArmyFunctions.get_position(unit_name, spawner, origin_position)
-    local offset = {origin_position.x + 3, origin_position.y + 3}
+    local offset = { origin_position.x + 3, origin_position.y + 3 }
     local surface = spawner.surface
     local position = nil
     if surface.can_place_entity {
         name = unit_name, position = offset,
-        force = spawner.force, build_check_type=defines.build_check_type.manual, forced=true
+        force = spawner.force, build_check_type = defines.build_check_type.manual, forced = true
     } then
         position = offset
     end
 
     if position == nil then
         position = surface.find_non_colliding_position(
-            unit_name, spawner.position, 32, 2, true
+                unit_name, spawner.position, 32, 2, true
         )
     end
 

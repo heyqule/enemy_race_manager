@@ -13,8 +13,10 @@ if DEBUG_MODE then
     local autoplace_count = 0
     local prototype_count = 0
     local erm_prototype_count = 0
-    for _, entity_type in pairs(data.raw) do
-        for _, entity in pairs(entity_type) do
+    local damage_types_count = 0
+    local damage_types = {}
+    for type_name, entity_type in pairs(data.raw) do
+        for entity_name, entity in pairs(entity_type) do
             prototype_count = prototype_count + 1
 
             if entity.autoplace ~= nil then
@@ -25,9 +27,198 @@ if DEBUG_MODE then
                     erm_prototype_count = erm_prototype_count + 1
                 end
             end
+
+            if type_name == 'damage-type' then
+                damage_types_count = damage_types_count + 1
+                table.insert(damage_types, entity.name)
+            end
         end
     end
-    log('Total Prototypes:'..prototype_count)
-    log('Total Prototypes with autoplace: '..autoplace_count)
-    log('Total ERM enemy prototype with autoplace: '..erm_prototype_count)
+    log('Total Prototypes:' .. prototype_count)
+    log('Total Prototypes with autoplace: ' .. autoplace_count)
+    log('Total ERM enemy prototype with autoplace: ' .. erm_prototype_count)
+
+    log('Total Damage Types:'..damage_types_count)
+    log(serpent.block(damage_types))
+
+end
+
+if data.raw['unit']['erm_zerg/zergling/3'] then
+    local level = 3
+
+    local zergling = util.table.deepcopy(data.raw['unit']['erm_zerg/zergling/' .. level])
+    zergling['name'] = 'small-biter'
+    data.raw['unit']['small-biter'] = zergling
+    local mutalisk = util.table.deepcopy(data.raw['unit']['erm_zerg/mutalisk/' .. level])
+    mutalisk['name'] = 'small-spitter'
+    data.raw['unit']['small-spitter'] = mutalisk
+
+    local hydralisk = util.table.deepcopy(data.raw['unit']['erm_zerg/hydralisk/' .. level])
+    hydralisk['name'] = 'medium-biter'
+    data.raw['unit']['medium-biter'] = hydralisk
+    local overlord = util.table.deepcopy(data.raw['unit']['erm_zerg/ultralisk/' .. level])
+    overlord['name'] = 'medium-spitter'
+    data.raw['unit']['medium-spitter'] = overlord
+
+    local lurker = util.table.deepcopy(data.raw['unit']['erm_zerg/lurker/' .. level])
+    lurker['name'] = 'big-biter'
+    data.raw['unit']['big-biter'] = lurker
+    local devourer = util.table.deepcopy(data.raw['unit']['erm_zerg/devourer/' .. level])
+    devourer['name'] = 'big-spitter'
+    data.raw['unit']['big-spitter'] = devourer
+
+    local ultralisk = util.table.deepcopy(data.raw['unit']['erm_zerg/queen/' .. level])
+    ultralisk['name'] = 'behemoth-biter'
+    data.raw['unit']['behemoth-biter'] = ultralisk
+    local queen = util.table.deepcopy(data.raw['unit']['erm_zerg/guardian/' .. level])
+    queen['name'] = 'behemoth-spitter'
+    data.raw['unit']['behemoth-spitter'] = queen
+
+    local sunken = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken['name'] = "small-worm-turret"
+    sunken['autoplace'] = nil
+    local sunken2 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken2['name'] = "medium-worm-turret"
+    sunken2['autoplace'] = nil
+    local sunken3 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken3['name'] = "large-worm-turret"
+    sunken3['autoplace'] = nil
+    local sunken4 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken4['name'] = "behemoth-worm-turret"
+    sunken4['autoplace'] = nil
+
+    data.raw['turret']['small-worm-turret'] = sunken
+    data.raw['turret']['medium-worm-turret'] = sunken2
+    data.raw['turret']['large-worm-turret'] = sunken3
+    data.raw['turret']['behemoth-worm-turret'] = sunken4
+
+    local spawning_pool = util.table.deepcopy(data.raw['unit-spawner']['erm_zerg/spawning_pool/' .. level])
+    spawning_pool['name'] = "biter-spawner"
+    spawning_pool['autoplace'] = nil
+    local ultralisk_cavern = util.table.deepcopy(data.raw['unit-spawner']['erm_zerg/ultralisk_cavern/' .. level])
+    ultralisk_cavern['name'] = "spitter-spawner"
+    ultralisk_cavern['autoplace'] = nil
+
+    data.raw['unit-spawner']['biter-spawner'] = spawning_pool
+    data.raw['unit-spawner']['spitter-spawner'] = ultralisk_cavern
+end
+
+if data.raw['unit']['erm_zerg/zergling/3'] then
+    local level = 3
+
+    local zergling = util.table.deepcopy(data.raw['unit']['erm_zerg/zergling/' .. level])
+    zergling['name'] = 'small-biter'
+    data.raw['unit']['small-biter'] = zergling
+    local mutalisk = util.table.deepcopy(data.raw['unit']['erm_zerg/mutalisk/' .. level])
+    mutalisk['name'] = 'small-spitter'
+    data.raw['unit']['small-spitter'] = mutalisk
+
+    local hydralisk = util.table.deepcopy(data.raw['unit']['erm_zerg/hydralisk/' .. level])
+    hydralisk['name'] = 'medium-biter'
+    data.raw['unit']['medium-biter'] = hydralisk
+    local overlord = util.table.deepcopy(data.raw['unit']['erm_zerg/ultralisk/' .. level])
+    overlord['name'] = 'medium-spitter'
+    data.raw['unit']['medium-spitter'] = overlord
+
+    local lurker = util.table.deepcopy(data.raw['unit']['erm_zerg/lurker/' .. level])
+    lurker['name'] = 'big-biter'
+    data.raw['unit']['big-biter'] = lurker
+    local devourer = util.table.deepcopy(data.raw['unit']['erm_zerg/devourer/' .. level])
+    devourer['name'] = 'big-spitter'
+    data.raw['unit']['big-spitter'] = devourer
+
+    local ultralisk = util.table.deepcopy(data.raw['unit']['erm_zerg/queen/' .. level])
+    ultralisk['name'] = 'behemoth-biter'
+    data.raw['unit']['behemoth-biter'] = ultralisk
+    local queen = util.table.deepcopy(data.raw['unit']['erm_zerg/guardian/' .. level])
+    queen['name'] = 'behemoth-spitter'
+    data.raw['unit']['behemoth-spitter'] = queen
+
+    local sunken = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken['name'] = "small-worm-turret"
+    sunken['autoplace'] = nil
+    local sunken2 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken2['name'] = "medium-worm-turret"
+    sunken2['autoplace'] = nil
+    local sunken3 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken3['name'] = "large-worm-turret"
+    sunken3['autoplace'] = nil
+    local sunken4 = util.table.deepcopy(data.raw['turret']['erm_zerg/sunken_colony/' .. level])
+    sunken4['name'] = "behemoth-worm-turret"
+    sunken4['autoplace'] = nil
+
+    data.raw['turret']['small-worm-turret'] = sunken
+    data.raw['turret']['medium-worm-turret'] = sunken2
+    data.raw['turret']['large-worm-turret'] = sunken3
+    data.raw['turret']['behemoth-worm-turret'] = sunken4
+
+    local spawning_pool = util.table.deepcopy(data.raw['unit-spawner']['erm_zerg/spawning_pool/' .. level])
+    spawning_pool['name'] = "biter-spawner"
+    spawning_pool['autoplace'] = nil
+    local hive = util.table.deepcopy(data.raw['unit-spawner']['erm_zerg/hive/' .. level])
+    hive['name'] = "spitter-spawner"
+    hive['autoplace'] = nil
+
+    data.raw['unit-spawner']['biter-spawner'] = spawning_pool
+    data.raw['unit-spawner']['spitter-spawner'] = hive
+end
+
+if data.raw['unit']['erm_toss/zealot/3'] then
+    local level = 3
+
+    local zergling = util.table.deepcopy(data.raw['unit']['erm_toss/zealot/' .. level])
+    zergling['name'] = 'small-biter'
+    data.raw['unit']['small-biter'] = zergling
+    local mutalisk = util.table.deepcopy(data.raw['unit']['erm_toss/dragoon/' .. level])
+    mutalisk['name'] = 'small-spitter'
+    data.raw['unit']['small-spitter'] = mutalisk
+
+    local hydralisk = util.table.deepcopy(data.raw['unit']['erm_toss/dragoon/' .. level])
+    hydralisk['name'] = 'medium-biter'
+    data.raw['unit']['medium-biter'] = hydralisk
+    local overlord = util.table.deepcopy(data.raw['unit']['erm_toss/archon/' .. level])
+    overlord['name'] = 'medium-spitter'
+    data.raw['unit']['medium-spitter'] = overlord
+
+    local lurker = util.table.deepcopy(data.raw['unit']['erm_toss/archon/' .. level])
+    lurker['name'] = 'big-biter'
+    data.raw['unit']['big-biter'] = lurker
+    local devourer = util.table.deepcopy(data.raw['unit']['erm_toss/carrier/' .. level])
+    devourer['name'] = 'big-spitter'
+    data.raw['unit']['big-spitter'] = devourer
+
+    local ultralisk = util.table.deepcopy(data.raw['unit']['erm_toss/carrier/' .. level])
+    ultralisk['name'] = 'behemoth-biter'
+    data.raw['unit']['behemoth-biter'] = ultralisk
+    local queen = util.table.deepcopy(data.raw['unit']['erm_toss/carrier/' .. level])
+    queen['name'] = 'behemoth-spitter'
+    data.raw['unit']['behemoth-spitter'] = queen
+
+    local sunken = util.table.deepcopy(data.raw['turret']['erm_toss/cannon/' .. level])
+    sunken['name'] = "small-worm-turret"
+    sunken['autoplace'] = nil
+    local sunken2 = util.table.deepcopy(data.raw['turret']['erm_toss/cannon/' .. level])
+    sunken2['name'] = "medium-worm-turret"
+    sunken2['autoplace'] = nil
+    local sunken3 = util.table.deepcopy(data.raw['turret']['erm_toss/cannon/' .. level])
+    sunken3['name'] = "large-worm-turret"
+    sunken3['autoplace'] = nil
+    local sunken4 = util.table.deepcopy(data.raw['turret']['erm_toss/cannon/' .. level])
+    sunken4['name'] = "behemoth-worm-turret"
+    sunken4['autoplace'] = nil
+
+    data.raw['turret']['small-worm-turret'] = sunken
+    data.raw['turret']['medium-worm-turret'] = sunken2
+    data.raw['turret']['large-worm-turret'] = sunken3
+    data.raw['turret']['behemoth-worm-turret'] = sunken4
+
+    local gateway = util.table.deepcopy(data.raw['unit-spawner']['erm_toss/gateway/' .. level])
+    gateway['name'] = "biter-spawner"
+    gateway['autoplace'] = nil
+    local nexus = util.table.deepcopy(data.raw['unit-spawner']['erm_toss/nexus/' .. level])
+    nexus['name'] = "spitter-spawner"
+    nexus['autoplace'] = nil
+
+    data.raw['unit-spawner']['biter-spawner'] = gateway
+    data.raw['unit-spawner']['spitter-spawner'] = nexus
 end

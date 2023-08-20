@@ -54,21 +54,21 @@ local spawn_unit = function(data_unit)
     local surface = entity.surface
     local registered_units = global.army_registered_units
     if entity and entity.valid and
-       surface and surface.valid then
+            surface and surface.valid then
         local force = entity.force
         if entity.energy > entity.electric_buffer_size * 0.9 then
             local inventory = entity.get_inventory(defines.inventory.assembling_machine_output)
             local contents = inventory.get_contents()
             for unit_name, count in pairs(contents) do
                 if registered_units[unit_name] and count > 0 and
-                    ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force) and
-                    ErmArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
+                        ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force) and
+                        ErmArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
                 then
                     local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
                     local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
                     ErmArmyFunctions.assign_wander_command(spawned_entity)
                     if spawned_entity then
-                        inventory.remove({name=unit_name,count=1})
+                        inventory.remove({ name = unit_name, count = 1 })
                         add_statistic(entity, unit_name, count)
                         return true
                     end

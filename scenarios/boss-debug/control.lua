@@ -13,7 +13,7 @@ Event.on_init(function(event)
     mgs.autoplace_controls["enemy-base"].size = 0
     mgs.autoplace_controls["enemy-base"].richness = 0
     game.surfaces[1].map_gen_settings = mgs
-    local entities = surface.find_entities_filtered({type='unit-spawner'})
+    local entities = surface.find_entities_filtered({ type = 'unit-spawner' })
     for _, entity in pairs(entities) do
         entity.destroy()
     end
@@ -33,7 +33,7 @@ Event.register(defines.events.on_player_created, function(event)
     local tier = 5
     scenarios_helper.set_boss_tier(tier)
 
-    for i=0, ((tier - 1) * 5),1 do
+    for i = 0, ((tier - 1) * 5), 1 do
         force.technologies["follower-robot-count-7"].researched = true
     end
 
@@ -47,64 +47,64 @@ Event.register(defines.events.on_player_created, function(event)
     --player.set_controller{type = defines.controllers.character, character = character}
     --player.teleport({0, 0})
     global.rocket_silo = surface.create_entity({
-        name='rocket-silo',
-        force='player',
-        player=1,
-        position={-10, -10}
+        name = 'rocket-silo',
+        force = 'player',
+        player = 1,
+        position = { -10, -10 }
     })
     surface.create_entity({
-        name='gun-turret',
-        force='player',
-        player=1,
-        position={5, 5}
+        name = 'gun-turret',
+        force = 'player',
+        player = 1,
+        position = { 5, 5 }
     })
 end)
 
 local spawn_units = function(surface)
     local entities = {}
-    for i=1, 2 do
+    for i = 1, 2 do
         table.insert(entities, surface.create_entity({
-            name='erm_terran/battlecruiser/yamato',
-            force='player',
-            position={-15,-15}
+            name = 'erm_terran/battlecruiser/yamato',
+            force = 'player',
+            position = { -15, -15 }
         }))
         table.insert(entities, surface.create_entity({
-            name='erm_terran/battlecruiser/laser',
-            force='player',
-            position={-10,-10}
-        }))
-    end
-    for i=1, 4 do
-        table.insert(entities, surface.create_entity({
-            name='erm_terran/tank/mk2',
-            force='player',
-            position={15,15}
+            name = 'erm_terran/battlecruiser/laser',
+            force = 'player',
+            position = { -10, -10 }
         }))
     end
-    for i=1, 10 do
+    for i = 1, 4 do
         table.insert(entities, surface.create_entity({
-            name='erm_terran/wraith',
-            force='player',
-            position={-20,-20}
+            name = 'erm_terran/tank/mk2',
+            force = 'player',
+            position = { 15, 15 }
+        }))
+    end
+    for i = 1, 10 do
+        table.insert(entities, surface.create_entity({
+            name = 'erm_terran/wraith',
+            force = 'player',
+            position = { -20, -20 }
         }))
 
         table.insert(entities, surface.create_entity({
-            name='erm_terran/goliath',
-            force='player',
-            position={20,20}
+            name = 'erm_terran/goliath',
+            force = 'player',
+            position = { 20, 20 }
         }))
     end
-    for i=1, 20 do
+    for i = 1, 20 do
         table.insert(entities, surface.create_entity({
-            name='erm_terran/marine/mk3',
-            force='player',
-            position={10,10}
+            name = 'erm_terran/marine/mk3',
+            force = 'player',
+            position = { 10, 10 }
         }))
 
         table.insert(entities, surface.create_entity({
-            name='erm_terran/firebat/mk2',
-            force='player',
-            position={10,-10}
+            name = 'erm_terran/firebat/mk2',
+            force = 'player',
+            position = { 10, -10 }
         }))
     end
 
@@ -123,7 +123,7 @@ local spawn_units = function(surface)
 end
 
 Event.on_nth_tick(900, function(event)
-    if(event.tick == 0) then
+    if (event.tick == 0) then
         return
     end
 
@@ -131,10 +131,10 @@ Event.on_nth_tick(900, function(event)
 
     if global.rocket_silo == nil or not global.rocket_silo.valid then
         global.rocket_silo = surface.create_entity({
-            name='rocket-silo',
-            force='player',
-            player=1,
-            position={-10,-10}
+            name = 'rocket-silo',
+            force = 'player',
+            player = 1,
+            position = { -10, -10 }
         })
     end
 
@@ -142,7 +142,7 @@ Event.on_nth_tick(900, function(event)
     --spawn_units(surface)
 
     if not spawned then
-        remote.call('enemyracemanager_debug', 'spawn_boss', {x=100,y=0})
+        remote.call('enemyracemanager_debug', 'spawn_boss', { x = 100, y = 0 })
         spawned = true
     end
 end)

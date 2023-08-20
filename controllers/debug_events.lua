@@ -16,7 +16,7 @@ local print_chunk_tile_details = function(event)
     local tiles = {}
     for i = event.area.left_top.x, event.area.right_bottom.x do
         for j = event.area.left_top.y, event.area.right_bottom.y do
-            table.insert(tiles, {x=i,y=j})
+            table.insert(tiles, { x = i, y = j })
         end
     end
 
@@ -38,11 +38,11 @@ local print_chunk_tile_details = function(event)
                 max_min[name].max = result[index]
             end
 
-            if(result[index] < max_min[name].min) then
+            if (result[index] < max_min[name].min) then
                 max_min[name].min = result[index]
             end
 
-            if(result[index] > max_min[name].max) then
+            if (result[index] > max_min[name].max) then
                 max_min[name].max = result[index]
             end
 
@@ -56,11 +56,11 @@ local print_chunk_tile_details = function(event)
                 max_min_by_tile[tile_entity.name][name].max = result[index]
             end
 
-            if(result[index] < max_min_by_tile[tile_entity.name][name].min) then
+            if (result[index] < max_min_by_tile[tile_entity.name][name].min) then
                 max_min_by_tile[tile_entity.name][name].min = result[index]
             end
 
-            if(result[index] > max_min_by_tile[tile_entity.name][name].max) then
+            if (result[index] > max_min_by_tile[tile_entity.name][name].max) then
                 max_min_by_tile[tile_entity.name][name].max = result[index]
             end
         end
@@ -76,23 +76,23 @@ local print_chunk_tile_details = function(event)
     --end
 end
 
-local print_chunk_player_details =  function (event)
+local print_chunk_player_details = function(event)
     local player = game.players[1]
     local surface = player.surface
-    local tile_pos = {x=player.position.x, y=player.position.y}
+    local tile_pos = { x = player.position.x, y = player.position.y }
     local results = surface.calculate_tile_properties({
         'elevation',
         'temperature',
         'moisture',
         'aux',
         'enemy_base_probability'
-    }, {tile_pos})
+    }, { tile_pos })
 
     local tile_entity = surface.get_tile(tile_pos.x, tile_pos.y)
 
     print(tile_entity.name .. ' -- ' .. tile_entity.position.x .. ' -- ' .. tile_entity.position.y)
     for name, result in pairs(results) do
-        print('name: '..name..'/'..result[1])
+        print('name: ' .. name .. '/' .. result[1])
     end
 end
 

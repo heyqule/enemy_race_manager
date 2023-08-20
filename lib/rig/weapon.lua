@@ -7,7 +7,7 @@ local util = require("util")
 local ERM_WeaponRig = {}
 
 function ERM_WeaponRig.get_bullet(category)
-    local ammo_type =  util.table.deepcopy(data.raw['ammo']['firearm-magazine']['ammo_type'])
+    local ammo_type = util.table.deepcopy(data.raw['ammo']['firearm-magazine']['ammo_type'])
     if category then
         ammo_type['category'] = category
     end
@@ -15,7 +15,7 @@ function ERM_WeaponRig.get_bullet(category)
 end
 
 function ERM_WeaponRig.get_shotgun_bullet(category)
-    local ammo_type =  util.table.deepcopy(data.raw['ammo']['shotgun-shell']['ammo_type'])
+    local ammo_type = util.table.deepcopy(data.raw['ammo']['shotgun-shell']['ammo_type'])
     if category then
         ammo_type['category'] = category
     end
@@ -28,27 +28,24 @@ function ERM_WeaponRig.standardize_cannon_projectile(data, name)
     data['piercing_damage'] = 5000
     data['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
-        damage = {amount = 5, type = "physical"}
+        damage = { amount = 5, type = "physical" }
     }
     data['action']['action_delivery']['target_effects'][2] = {
         type = "damage",
-        damage = {amount = 2, type = "explosion"}
+        damage = { amount = 2, type = "explosion" }
     }
     data['final_action']['action_delivery']['target_effects'][2] = {
         type = "nested-result",
-        action =
-        {
+        action = {
             type = "area",
             force = "not-same",
             radius = 2,
-            action_delivery =
-            {
+            action_delivery = {
                 type = "instant",
-                target_effects =
-                {
+                target_effects = {
                     {
                         type = "damage",
-                        damage = {amount = 3, type = "explosion"}
+                        damage = { amount = 3, type = "explosion" }
                     }
                 }
             }
@@ -63,23 +60,20 @@ function ERM_WeaponRig.standardize_explosive_cannon_projectile(data, name)
     data['piercing_damage'] = 5000
     data['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
-        damage = {amount = 3.5, type = "explosion"}
+        damage = { amount = 3.5, type = "explosion" }
     }
     data['final_action']['action_delivery']['target_effects'][2] = {
         type = "nested-result",
-        action =
-        {
+        action = {
             type = "area",
             force = "not-same",
             radius = 4,
-            action_delivery =
-            {
+            action_delivery = {
                 type = "instant",
-                target_effects =
-                {
+                target_effects = {
                     {
                         type = "damage",
-                        damage = {amount = 6.5, type = "explosion"}
+                        damage = { amount = 6.5, type = "explosion" }
                     },
                     {
                         type = "create-entity",
@@ -97,11 +91,9 @@ function ERM_WeaponRig.standardize_rocket_damage(data, name)
     data['name'] = name
     data['action']['action_delivery']['target_effects'][2] = {
         type = "damage",
-        damage = {amount = 10, type = "explosion"}
+        damage = { amount = 10, type = "explosion" }
     }
     return data
 end
-
-
 
 return ERM_WeaponRig

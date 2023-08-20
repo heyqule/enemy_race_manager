@@ -16,7 +16,7 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 local process_attack_point_event = function(event, attack_point)
     local race_name = ErmSurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
     if race_name then
-        ErmRaceSettingHelper.add_to_attack_meter(race_name,attack_point)
+        ErmRaceSettingHelper.add_to_attack_meter(race_name, attack_point)
     end
 end
 
@@ -25,17 +25,16 @@ local process_counter_attack_event = function(event, radius)
 end
 
 local is_valid_attack_for_attack_point = function(event)
-   return ErmConfig.super_weapon_attack_points_enable() and game.surfaces[event.surface_index].valid
+    return ErmConfig.super_weapon_attack_points_enable() and game.surfaces[event.surface_index].valid
 end
 
 local is_valid_attack_for_counter_attack = function(event)
     return ErmConfig.super_weapon_counter_attack_enable() and game.surfaces[event.surface_index].valid
 end
 
-
 local attack_functions = {
     [PLAYER_SUPER_WEAPON_ATTACK] = function(event)
-        if is_valid_attack_for_attack_point(event)  then
+        if is_valid_attack_for_attack_point(event) then
             process_attack_point_event(event, ErmConfig.super_weapon_attack_points())
         end
     end,

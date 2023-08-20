@@ -18,7 +18,7 @@ local attack_functions = {
     end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
-    if  attack_functions[event.effect_id] and
+    if attack_functions[event.effect_id] and
             CustomAttacks.valid(event, MOD_NAME)
     then
         attack_functions[event.effect_id](event)

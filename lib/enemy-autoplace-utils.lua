@@ -49,7 +49,6 @@ local function enemy_autoplace(params)
 
     local richness_expression = tne(1)
 
-
     return
     {
         control = control_name,

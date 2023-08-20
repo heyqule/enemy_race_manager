@@ -118,29 +118,25 @@ local process_4_ways_unit = function(v)
     local bottomleft = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-left'].value
 
     if topleft and v.autoplace then
-        ErmDebugHelper.print('topleft:'..tostring(topleft))
-        v.autoplace.probability_expression =
-            noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
-            noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
-            v.autoplace.probability_expression
+        ErmDebugHelper.print('topleft:' .. tostring(topleft))
+        v.autoplace.probability_expression = noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
+                noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
+                v.autoplace.probability_expression
     elseif topright and v.autoplace then
-        ErmDebugHelper.print('topright:'..tostring(topright))
-        v.autoplace.probability_expression =
-            noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
-            noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
-            v.autoplace.probability_expression
+        ErmDebugHelper.print('topright:' .. tostring(topright))
+        v.autoplace.probability_expression = noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
+                noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+                v.autoplace.probability_expression
     elseif bottomright and v.autoplace then
-        ErmDebugHelper.print('bottomright:'..tostring(bottomright))
-        v.autoplace.probability_expression =
-            noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
-            noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
-            v.autoplace.probability_expression
+        ErmDebugHelper.print('bottomright:' .. tostring(bottomright))
+        v.autoplace.probability_expression = noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+                noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
+                v.autoplace.probability_expression
     elseif bottomleft and v.autoplace then
-        ErmDebugHelper.print('bottomleft:'..tostring(bottomleft))
-        v.autoplace.probability_expression =
-            noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
-            noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
-            v.autoplace.probability_expression
+        ErmDebugHelper.print('bottomleft:' .. tostring(bottomleft))
+        v.autoplace.probability_expression = noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
+                noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
+                v.autoplace.probability_expression
     else
         v.autoplace = zero_probability_expression()
     end
@@ -171,7 +167,7 @@ end
 local disable_level_spawners = function()
     disable_vanilla_force('unit-spawner')
     disable_vanilla_force('turret')
- end
+end
 
 local disable_normal_biters = function()
     ErmDebugHelper.print('Disabling Vanilla Spawners...')
@@ -208,8 +204,8 @@ end
 --- Free up the number of autoplace entities.  Large autoplace entities lags the game when exploring new chunks
 ErmDebugHelper.print('Disabling high level spawners autoplace:')
 for _, v in pairs(data.raw["unit-spawner"]) do
-    if String.find( v.name, '/', 1, true) then
-        local nameToken = String.split( v.name, '/')
+    if String.find(v.name, '/', 1, true) then
+        local nameToken = String.split(v.name, '/')
         if tonumber(nameToken[3]) > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
             data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
@@ -218,8 +214,8 @@ for _, v in pairs(data.raw["unit-spawner"]) do
 end
 
 for _, v in pairs(data.raw["turret"]) do
-    if String.find( v.name, '/', 1, true) then
-        local nameToken = String.split( v.name, '/')
+    if String.find(v.name, '/', 1, true) then
+        local nameToken = String.split(v.name, '/')
         if tonumber(nameToken[3]) > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
             data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()

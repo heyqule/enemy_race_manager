@@ -79,7 +79,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, level)
     else
         damage = (base_dmg + (incremental_dmg * get_strength_percentage(level, get_strength_multiplier())) * get_damage_multiplier())
     end
-    
+
     if settings.startup['enemyracemanager-free-for-all'].value then
         damage = damage * ErmConfig.FFA_MULTIPLIER
     end
@@ -99,7 +99,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed *  get_strength_percentage(level, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
+    return base_speed + (incremental_speed * get_strength_percentage(level, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
 end
 
 -- unit healing (full heal in 120s)
@@ -121,7 +121,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, level)
     biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
-        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 7.5)
+        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 10)
     end
 end
 
@@ -152,8 +152,8 @@ function ERM_UnitHelper.format_team_color(color, tint_strength)
     color = util.table.deepcopy(color)
 
     --- Blend Additive (Alpha 0), Alpha 25%, Alpha 50%, Alpha 66%, Alpha 75%, Alpha 90%
-    local tint_alpha_options_as_dec = {0, 0.25, 0.5, 0.66, 0.75, 0.9}
-    local tint_alpha_options_as_int = {0, 64, 128, 170, 192, 230}
+    local tint_alpha_options_as_dec = { 0, 0.25, 0.5, 0.66, 0.75, 0.9 }
+    local tint_alpha_options_as_int = { 0, 64, 128, 170, 192, 230 }
 
     if color.b > 1 or color.g > 1 or color.r > 1 then
         color.a = tint_alpha_options_as_int[tint_strength]

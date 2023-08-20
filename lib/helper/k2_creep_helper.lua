@@ -12,7 +12,7 @@ function K2CreepHelper.generate_creep(surface, entity)
     local race_name = ForceHelper.extract_race_name_from(entity.force.name)
     local k2_enable = RaceSettingsHelper.k2_creep_enabled(race_name)
     if k2_enable then
-        remote.call('kr-creep','spawn_creep_at_position', surface, entity.position)
+        remote.call('kr-creep', 'spawn_creep_at_position', surface, entity.position)
     end
 end
 

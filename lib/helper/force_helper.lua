@@ -50,7 +50,7 @@ function ForceHelper.get_force_name_from(race_name)
     if race_name == ForceHelper.default_mod_name then
         return 'enemy'
     end
-    return 'enemy_'..race_name
+    return 'enemy_' .. race_name
 end
 
 -- Checks enemy_erm_ prefix
@@ -70,8 +70,8 @@ function ForceHelper.set_friends(game, force_name, is_friend)
             force.set_friend('enemy', is_friend);
             force.set_cease_fire(force_name, is_friend);
             force.set_cease_fire('enemy', is_friend);
-            game.forces[force_name].set_friend(name,is_friend)
-            game.forces[force_name].set_cease_fire(name,is_friend)
+            game.forces[force_name].set_friend(name, is_friend)
+            game.forces[force_name].set_cease_fire(name, is_friend)
         end
     end
 end
@@ -110,15 +110,15 @@ function ForceHelper.get_name_token(name)
 end
 
 function ForceHelper.get_non_player_forces()
-    return global.non_player_forces or {'neutral'}
+    return global.non_player_forces or { 'neutral' }
 end
 
 function ForceHelper.get_player_forces()
-    return global.player_forces or {'player'}
+    return global.player_forces or { 'player' }
 end
 
 function ForceHelper.get_all_enemy_forces()
-    return global.enemy_force_cache or {'enemy'}
+    return global.enemy_force_cache or { 'enemy' }
 end
 
 function ForceHelper.refresh_all_enemy_forces()
@@ -151,35 +151,35 @@ function ForceHelper.can_have_enemy_on(surface)
     if surface.valid then
         local surface_name = surface.name
         if global.surface_inclusion_list[surface_name] == nil and
-            (
-                global.surface_exclusion_list[surface_name] == true or
+                (
+                        global.surface_exclusion_list[surface_name] == true or
 
-                string.find(surface_name, "Factory floor") or
-                string.find(surface_name, " Orbit") or
-                string.find(surface_name, "clonespace") or
-                string.find(surface_name, "BPL_TheLabplayer") or
-                string.find(surface_name, "starmap%-") or
-                string.find(surface_name, "NiceFill") or
-                string.find(surface_name, "Asteroid Belt") or
-                string.find(surface_name, "Vault ") or
-                string.find(surface_name, "spaceship") or
-                string.find(surface_name,"bpsb%-lab%-") or
+                                string.find(surface_name, "Factory floor") or
+                                string.find(surface_name, " Orbit") or
+                                string.find(surface_name, "clonespace") or
+                                string.find(surface_name, "BPL_TheLabplayer") or
+                                string.find(surface_name, "starmap%-") or
+                                string.find(surface_name, "NiceFill") or
+                                string.find(surface_name, "Asteroid Belt") or
+                                string.find(surface_name, "Vault ") or
+                                string.find(surface_name, "spaceship") or
+                                string.find(surface_name, "bpsb%-lab%-") or
 
-                (surface_name == "aai-signals") or
-                (surface_name == "RTStasisRealm") or
-                (surface_name == "minime_dummy_dungeon") or
-                (surface_name == "minime-preview-character") or
-                (surface_name == "pipelayer") or
-                (surface_name == "beltlayer")
-            )
-        then        
+                                (surface_name == "aai-signals") or
+                                (surface_name == "RTStasisRealm") or
+                                (surface_name == "minime_dummy_dungeon") or
+                                (surface_name == "minime-preview-character") or
+                                (surface_name == "pipelayer") or
+                                (surface_name == "beltlayer")
+                )
+        then
             global.surface_exclusion_list[surface_name] = true
             return false
-        end    
+        end
 
         global.surface_inclusion_list[surface_name] = true
-        return true        
-    end        
+        return true
+    end
 
     return false
 end

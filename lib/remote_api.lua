@@ -74,7 +74,7 @@ function ERM_RemoteAPI.add_points_to_attack_meter(race, value)
     if global.race_settings and
             global.race_settings[race]
     then
-            ErmRaceSettingsHelper.add_to_attack_meter(race, value)
+        ErmRaceSettingsHelper.add_to_attack_meter(race, value)
     end
 
 end
@@ -180,7 +180,7 @@ function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
     local force = game.forces[force_name]
     squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and ErmConfig.elite_squad_enable() and
-        is_valid_featured_squad(race_name, squad_id)
+            is_valid_featured_squad(race_name, squad_id)
     then
         size = size or ErmConfig.max_group_size()
         ErmAttackGroupProcessor.generate_group(
@@ -200,7 +200,7 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
     local force = game.forces[force_name]
     squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and ErmConfig.elite_squad_enable() and
-        is_valid_featured_flying_squad(race_name, squad_id)
+            is_valid_featured_flying_squad(race_name, squad_id)
     then
         size = size or (ErmConfig.max_group_size() / 2)
         ErmAttackGroupProcessor.generate_group(
@@ -214,7 +214,6 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
     end
 end
 
-
 function ERM_RemoteAPI.add_boss_attack_group(group)
     local group_data = ErmBossGroupProcessor.get_default_data()
     group_data['group'] = group
@@ -226,7 +225,7 @@ end
 function ERM_RemoteAPI.add_erm_attack_group(group)
     if group.valid and table_size(group.members) > 0 then
         global.erm_unit_groups[group.group_number] = {
-            group =  group,
+            group = group,
             start_position = group.position
         }
     end
@@ -236,13 +235,13 @@ function ERM_RemoteAPI.milestones_preset_addons()
     if settings.startup['enemyracemanager-enable-bitters'].value then
         return {
             ["enemyracemanager"] = {
-                required_mods = {"enemyracemanager"},
+                required_mods = { "enemyracemanager" },
                 milestones = {
-                    {type="group", name="Kills"},
-                    {type="kill", name="erm_vanilla/biter-spawner/5",  quantity=1},
-                    {type="kill", name="erm_vanilla/biter-spawner/10",  quantity=1},
-                    {type="kill", name="erm_vanilla/biter-spawner/15",  quantity=1},
-                    {type="kill", name="erm_vanilla/biter-spawner/20",  quantity=1, next="x10"},
+                    { type = "group", name = "Kills" },
+                    { type = "kill", name = "erm_vanilla/biter-spawner/5", quantity = 1 },
+                    { type = "kill", name = "erm_vanilla/biter-spawner/10", quantity = 1 },
+                    { type = "kill", name = "erm_vanilla/biter-spawner/15", quantity = 1 },
+                    { type = "kill", name = "erm_vanilla/biter-spawner/20", quantity = 1, next = "x10" },
                 }
             }
         }

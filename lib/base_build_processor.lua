@@ -78,7 +78,6 @@ function BaseBuildProcessor.process_on_arrival(entity)
     end
 end
 
-
 function BaseBuildProcessor.determine_build_group(entity)
     local near_by_units = entity.surface.find_entities_filtered {
         force = entity.force,
@@ -88,8 +87,8 @@ function BaseBuildProcessor.determine_build_group(entity)
     }
     for _, unit in pairs(near_by_units) do
         if unit.unit_group and
-           unit.unit_group.command and
-           unit.unit_group.command.type == defines.command.build_base
+                unit.unit_group.command and
+                unit.unit_group.command.type == defines.command.build_base
         then
             return unit.unit_group
         end
@@ -112,7 +111,7 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
 
     local formation = {}
     if ErmConfig.build_formation() == 'random' then
-        formation = {1, math.random(3,8), math.random(5,12)}
+        formation = { 1, math.random(3, 8), math.random(5, 12) }
     else
         formation = String.split(ErmConfig.build_formation(), '-')
     end
@@ -133,11 +132,11 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
         end
 
         ErmCron.add_1_sec_queue(
-            'BaseBuildProcessor.build',
-            unit.surface,
-            unit.position,
-            name,
-            force_name
+                'BaseBuildProcessor.build',
+                unit.surface,
+                unit.position,
+                name,
+                force_name
         )
         unit.destroy()
     end
@@ -164,7 +163,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     end
 end
 
-function BaseBuildProcessor.build_cron(args)    
+function BaseBuildProcessor.build_cron(args)
     local surface = args[1]
     local position = args[2]
     local name = args[3]

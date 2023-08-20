@@ -39,10 +39,10 @@ local maxRetry = 3
 
 local INCLUDE_SPAWNS = true -- Only for debug
 
-local enemy_entities = {'unit-spawner','turret','unit'}
-local enemy_buildings = {'unit-spawner','turret'}
-local turrets = {'ammo-turret','electric-turret','fluid-turret'}
-local indexable_turrets = {'ammo-turret', 'fluid-turret'}
+local enemy_entities = { 'unit-spawner', 'turret', 'unit' }
+local enemy_buildings = { 'unit-spawner', 'turret' }
+local turrets = { 'ammo-turret', 'electric-turret', 'fluid-turret' }
+local indexable_turrets = { 'ammo-turret', 'fluid-turret' }
 local beacon_name = 'erm-boss-beacon'
 
 local boss_setting_default = function()
@@ -50,9 +50,9 @@ local boss_setting_default = function()
         entity = nil,
         entity_name = '',
         entity_position = nil,
-        target_position = {x=0, y=0},
+        target_position = { x = 0, y = 0 },
         target_direction = defines.direction.north,
-        silo_position = {x=0, y=0},
+        silo_position = { x = 0, y = 0 },
         surface = nil,
         surface_name = '',
         race_name = '',
@@ -64,9 +64,9 @@ local boss_setting_default = function()
         despawn_at_tick = 0,
         pathing_entity = nil,
         pathing_entity_checks = 0,
-        attack_last_hp = {0, 0, 0, 0, 0, 0},
+        attack_last_hp = { 0, 0, 0, 0, 0, 0 },
         victory = false,
-        high_level_enemy_list = nil,  -- Track all high level enemies, they die when the base destroys.
+        high_level_enemy_list = nil, -- Track all high level enemies, they die when the base destroys.
         loading = false
     }
 end
@@ -79,15 +79,14 @@ local boss_spawnable_index_default = function()
     }
 end
 
-
 local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
     local surface = gunturret.surface
-    local spawners = surface.find_entities_filtered {type=enemy_buildings, force=global.boss.force, area=area, limit=20}
+    local spawners = surface.find_entities_filtered { type = enemy_buildings, force = global.boss.force, area = area, limit = 20 }
 
     local target_spawner
     local last = #spawners
     if gunturret.direction == defines.direction.east or
-        gunturret.direction == defines.direction.north
+            gunturret.direction == defines.direction.north
     then
         target_spawner = spawners[1]
     else
@@ -96,15 +95,15 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
 
     if target_spawner then
         -- Skip if it's too close to any of the turrets
-        local turret = surface.find_entities_filtered {position=target_spawner.position, radius=192, type=turrets, limit = 1}
+        local turret = surface.find_entities_filtered { position = target_spawner.position, radius = 192, type = turrets, limit = 1 }
         if turret[1] then
             return
         end
         local distance = util.distance(target_spawner.position, gunturret.position)
         table.insert(global.boss_spawnable_index.chunks, {
-            spawn_position=target_spawner.position,
-            turret_position=gunturret.position,
-            distance=distance
+            spawn_position = target_spawner.position,
+            turret_position = gunturret.position,
+            distance = distance
         })
         if global.boss_spawnable_index.closest_distance > distance then
             global.boss_spawnable_index.closest_distance = distance
@@ -122,7 +121,6 @@ local start_unit_spawn = function()
     end
 end
 
-
 local process_boss_queue = function(event)
     ErmCron.process_boss_queue()
 end
@@ -138,17 +136,17 @@ end
 
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
-        return {left_top = {x - scanRadius, y - scanLength}, right_bottom = {x + scanRadius, y - scanMinLength}}
+        return { left_top = { x - scanRadius, y - scanLength }, right_bottom = { x + scanRadius, y - scanMinLength } }
     end,
     [defines.direction.east] = function(x, y)
-        return {left_top = {x + scanMinLength, y - scanRadius}, right_bottom = {x + scanLength, y + scanRadius}}
+        return { left_top = { x + scanMinLength, y - scanRadius }, right_bottom = { x + scanLength, y + scanRadius } }
     end,
     [defines.direction.south] = function(x, y)
-        return {left_top = {x - scanRadius, y + scanMinLength}, right_bottom = {x + scanRadius, y + scanLength}}
+        return { left_top = { x - scanRadius, y + scanMinLength }, right_bottom = { x + scanRadius, y + scanLength } }
     end,
     [defines.direction.west] = function(x, y)
-        return {left_top = {x - scanLength, y - scanRadius}, right_bottom = {x - scanMinLength, y + scanRadius}}
-    end,    
+        return { left_top = { x - scanLength, y - scanRadius }, right_bottom = { x - scanMinLength, y + scanRadius } }
+    end,
 }
 
 local get_target_direction = function(spawn_position, target_position)
@@ -156,15 +154,15 @@ local get_target_direction = function(spawn_position, target_position)
     local direction = defines.direction.south
     if (spawn_position.x - target_position.x) > diffThreshold then
         direction = defines.direction.west
-    elseif ( (spawn_position.x - target_position.x) < (diffThreshold * -1) ) then
+    elseif ((spawn_position.x - target_position.x) < (diffThreshold * -1)) then
         direction = defines.direction.east
-    elseif ( (spawn_position.y - target_position.y) > diffThreshold ) then
+    elseif ((spawn_position.y - target_position.y) > diffThreshold) then
         direction = defines.direction.north
     end
 
     if DEBUG_MODE then
-        local directionText = {['0'] = 'North', ['2'] = 'East', ['4'] = 'South', ['6'] = 'West'}
-        ErmDebugHelper.print('BossProcessor: Targeting Direction: '..directionText[tostring(direction)])
+        local directionText = { ['0'] = 'North', ['2'] = 'East', ['4'] = 'South', ['6'] = 'West' }
+        ErmDebugHelper.print('BossProcessor: Targeting Direction: ' .. directionText[tostring(direction)])
         ErmDebugHelper.print(serpent.block(spawn_position))
         ErmDebugHelper.print(serpent.block(target_position))
     end
@@ -176,9 +174,9 @@ local can_build_spawn_building = function()
     local boss_tier = global.boss.boss_tier
     local nearby_buildings = global.boss.surface.find_entities_filtered({
         position = global.boss.entity_position,
-        radius  = spawnRadius,
-        type    = enemy_buildings,
-        force   = global.boss.force
+        radius = spawnRadius,
+        type = enemy_buildings,
+        force = global.boss.force
     })
     if #nearby_buildings >= ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
         return false
@@ -205,17 +203,17 @@ local spawn_building = function()
         end
 
         ErmBaseBuildProcessor.build(
-            boss.surface,
-            building_name,
-            boss.force_name,
-            boss.entity_position
+                boss.surface,
+                building_name,
+                boss.force_name,
+                boss.entity_position
         )
     end
 end
 
 local destroy_beacons = function()
-    local beacons = global.boss.surface.find_entities_filtered {name=beacon_name, type='radar'}
-    for i=1,#beacons do
+    local beacons = global.boss.surface.find_entities_filtered { name = beacon_name, type = 'radar' }
+    for i = 1, #beacons do
         beacons[i].destroy()
     end
 end
@@ -281,11 +279,11 @@ local draw_time = function(boss, current_tick)
     local datetime_str = ErmConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
 
     rendering.draw_text({
-        text={"description.boss-despawn-in", datetime_str},
-        surface=boss.surface_name,
-        target=boss.entity,
-        target_offset={-3.5,-8},
-        color = {r = 1, g = 0, b = 0},
+        text = { "description.boss-despawn-in", datetime_str },
+        surface = boss.surface_name,
+        target = boss.entity,
+        target_offset = { -3.5, -8 },
+        color = { r = 1, g = 0, b = 0 },
         time_to_live = ErmConfig.TWO_SECONDS_CRON,
         scale = 2,
         only_in_alt_mode = true
@@ -307,7 +305,7 @@ local initialize_result_log = function(race_name, difficulty, squad_size)
     end
 
     if not global.boss_logs[race_name].difficulty == difficulty or
-        not global.boss_logs[race_name].difficulty == squad_size then
+            not global.boss_logs[race_name].difficulty == squad_size then
         global.boss_logs[race_name]['difficulty'] = difficulty
         global.boss_logs[race_name]['squad_size'] = squad_size
         global.boss_logs[race_name].best_record = default_best_record
@@ -318,7 +316,7 @@ local has_better_record = function(current_best_record, record)
     local race_name = record.race
     return record.tier == current_best_record.tier and
             ((global.boss_logs[race_name].best_record.time == -1) or
-             (record.last_tick - record.spawn_tick) < global.boss_logs[race_name].best_record.time)
+                    (record.last_tick - record.spawn_tick) < global.boss_logs[race_name].best_record.time)
 end
 
 local update_best_time = function(record)
@@ -329,7 +327,6 @@ local update_best_time = function(record)
         global.boss_logs[race_name].best_record.time = record.last_tick - record.spawn_tick
     end
 end
-
 
 local write_result_log = function(victory)
     local boss = global.boss
@@ -377,7 +374,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         end
 
         if not ErmRaceSettingsHelper.has_boss(race_name) then
-            game.print('Unable to spawn boss on unsupported race: '..race_name)
+            game.print('Unable to spawn boss on unsupported race: ' .. race_name)
             return nil
         end
 
@@ -393,7 +390,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         global.boss.boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
         global.boss.despawn_at_tick = game.tick + (defines.time.minute * ErmConfig.BOSS_DESPAWN_TIMER[global.boss.boss_tier])
         BossProcessor.index_turrets(surface)
-        ErmDebugHelper.print('BossProcessor: Indexed positions: '..global.boss_spawnable_index.size)
+        ErmDebugHelper.print('BossProcessor: Indexed positions: ' .. global.boss_spawnable_index.size)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
             surface.print('Unable to find a boss spawner.  Please try again on a surface with enemy spawners.')
@@ -402,7 +399,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         end
 
         if not StdIs.position(spawn_position) then
-            local target_chunk_data =  global.boss_spawnable_index.chunks[math.random(1, global.boss_spawnable_index.size)]
+            local target_chunk_data = global.boss_spawnable_index.chunks[math.random(1, global.boss_spawnable_index.size)]
             spawn_position = target_chunk_data.spawn_position
             global.boss.target_position = target_chunk_data.turret_position
             global.boss.target_direction = get_target_direction(spawn_position, target_chunk_data.turret_position)
@@ -411,11 +408,11 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         local entities = surface.find_entities_filtered {
             type = enemy_entities,
             area = {
-                top_left={spawn_position.x - cleanChunkSize, spawn_position.y - cleanChunkSize},
-                bottom_right={spawn_position.x + cleanChunkSize, spawn_position.y + cleanChunkSize}
+                top_left = { spawn_position.x - cleanChunkSize, spawn_position.y - cleanChunkSize },
+                bottom_right = { spawn_position.x + cleanChunkSize, spawn_position.y + cleanChunkSize }
             }
         }
-        ErmDebugHelper.print('BossProcessor: To destroy entities: '..#entities)
+        ErmDebugHelper.print('BossProcessor: To destroy entities: ' .. #entities)
         for i = 1, #entities do
             entities[i].destroy()
         end
@@ -423,18 +420,18 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         ErmDebugHelper.print('BossProcessor: Creating Boss Base...')
         ErmDebugHelper.print(BossProcessor.get_boss_name(race_name))
         local boss_entity = surface.create_entity {
-            name=BossProcessor.get_boss_name(race_name),
-            position=spawn_position,
-            force=force,
+            name = BossProcessor.get_boss_name(race_name),
+            position = spawn_position,
+            force = force,
             spawn_decorations = true
         }
 
         for _, value in pairs(ErmForceHelper.get_player_forces()) do
-            ErmDebugHelper.print('BossProcessor: Add Beacon for '..value)
+            ErmDebugHelper.print('BossProcessor: Add Beacon for ' .. value)
             local boss_beacon_entity = surface.create_entity {
-                name=beacon_name,
-                position=spawn_position,
-                force=value
+                name = beacon_name,
+                position = spawn_position,
+                force = value
             }
             boss_beacon_entity.destructible = false
         end
@@ -455,9 +452,9 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         game.print({
             'description.boss-base-spawn-at',
             ErmSurfaceProcessor.get_gps_message(
-                spawn_position.x,
-                spawn_position.y,
-                surface.name
+                    spawn_position.x,
+                    spawn_position.y,
+                    surface.name
             )
         })
 
@@ -465,9 +462,9 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         local pathing_entity_name = BossProcessor.get_pathing_entity_name(race_name)
         local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, chunkSize, 2, true)
         local pathing_entity = surface.create_entity {
-            name=pathing_entity_name,
-            position=pathing_spawn_location,
-            force=force
+            name = pathing_entity_name,
+            position = pathing_spawn_location,
+            force = force
         }
         local command = {
             type = defines.command.attack,
@@ -501,7 +498,7 @@ function BossProcessor.check_pathing()
                 return
             end
 
-            local boss_base = pathing_entity.surface.find_entities_filtered {name=boss.entity_name, position=pathing_entity.position, radius=chunkSize/2}
+            local boss_base = pathing_entity.surface.find_entities_filtered { name = boss.entity_name, position = pathing_entity.position, radius = chunkSize / 2 }
             if boss_base and boss_base[1] then
                 ErmDebugHelper.print('BossProcessor: flying only [unit proximity]')
                 ErmDebugHelper.print(#boss_base)
@@ -611,7 +608,7 @@ function BossProcessor.heartbeat()
         local spawn_attack = false
         if last_hp - boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[index] then
             global.boss.attack_last_hp[index] = boss.entity.health
-            ErmDebugHelper.print('BossProcessor: Attack Index '..index..' @ '..boss.entity.health)
+            ErmDebugHelper.print('BossProcessor: Attack Index ' .. index .. ' @ ' .. boss.entity.health)
             direct_attack, spawn_attack = attack_functions[index]()
             performed_attacks = performed_attacks + 1
 
@@ -634,15 +631,15 @@ function BossProcessor.heartbeat()
 end
 
 function BossProcessor.index_turrets(surface)
-    local gunturrets = surface.find_entities_filtered({type=indexable_turrets})
+    local gunturrets = surface.find_entities_filtered({ type = indexable_turrets })
     local totalturrets = #gunturrets;
-    local turret_gap = math.max(4,  math.floor(totalturrets / 64))
+    local turret_gap = math.max(4, math.floor(totalturrets / 64))
     local turret_gap_pick = math.max(2, math.random(2, math.floor(turret_gap / 2)))
-    ErmDebugHelper.print('BossProcessor: Total: '..totalturrets)
-    ErmDebugHelper.print('BossProcessor: Gap: '..turret_gap..'/'..turret_gap_pick)
+    ErmDebugHelper.print('BossProcessor: Total: ' .. totalturrets)
+    ErmDebugHelper.print('BossProcessor: Gap: ' .. turret_gap .. '/' .. turret_gap_pick)
     global.boss_spawnable_index.closest_distance = 9999
-    for i=1, totalturrets do
-        if i%turret_gap == turret_gap_pick then
+    for i = 1, totalturrets do
+        if i % turret_gap == turret_gap_pick then
             local gunturret = gunturrets[i]
             index_boss_spawnable_chunk(gunturret, get_scan_area[gunturret.direction](gunturret.position.x, gunturret.position.y))
             i = i + turret_gap - 2

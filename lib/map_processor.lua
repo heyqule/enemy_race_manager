@@ -52,7 +52,6 @@ local process_one_race_per_surface_mapping = function(surface, entity, nameToken
     return nameToken
 end
 
-
 local get_surface_by_name = function(surfaces, name)
     local surface_cache = global.mapproc_surfaces_cache[name]
     if surface_cache == nil or surface_cache.valid == false then
@@ -68,9 +67,9 @@ local get_surface_by_name = function(surfaces, name)
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
-     if ErmForceHelper.is_erm_unit(entity) == false and vanilla_structures[entity.name] == nil then
-         return
-     end
+    if ErmForceHelper.is_erm_unit(entity) == false and vanilla_structures[entity.name] == nil then
+        return
+    end
 
     local nameToken = ErmForceHelper.get_name_token(entity.name)
 
@@ -106,7 +105,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 end
 
 local process_enemy_level = function(surface, area, race_settings)
-    local building = surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret'}, force = ErmForceHelper.get_all_enemy_forces()})
+    local building = surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret' }, force = ErmForceHelper.get_all_enemy_forces() })
     if Table.size(building) > 0 then
         for k, entity in pairs(building) do
             level_up_enemy_structures(surface, entity, race_settings)
@@ -116,10 +115,10 @@ local process_enemy_level = function(surface, area, race_settings)
     --- Check for potential high level units over the border of the chunk.
     local larger_radius = 8
     local larger_area = {
-        top_left = { area.left_top.x - larger_radius, area.left_top.y - larger_radius},
-        bottom_right = { area.right_bottom.x + larger_radius, area.right_bottom.y + larger_radius},
+        top_left = { area.left_top.x - larger_radius, area.left_top.y - larger_radius },
+        bottom_right = { area.right_bottom.x + larger_radius, area.right_bottom.y + larger_radius },
     }
-    local units = surface.find_entities_filtered({ area = larger_area, type = {'unit'}, force = ErmForceHelper.get_all_enemy_forces()})
+    local units = surface.find_entities_filtered({ area = larger_area, type = { 'unit' }, force = ErmForceHelper.get_all_enemy_forces() })
     if Table.size(units) > 0 then
         for _, entity in pairs(units) do
             if entity.unit_group == nil then
@@ -143,7 +142,7 @@ function MapProcessor.queue_chunks(surface, area)
         global.mapproc_chunk_queue[surface.name] = Queue()
     end
 
-    local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = {'unit-spawner','turret','unit'}, force = ErmForceHelper.get_all_enemy_forces(), limit = 1}))
+    local unit_size = Table.size(surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ErmForceHelper.get_all_enemy_forces(), limit = 1 }))
     if unit_size > 0 then
         global.mapproc_chunk_queue[surface.name](area)
     end
@@ -175,9 +174,9 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             end
 
             process_enemy_level(
-                surface,
-                area,
-                race_settings
+                    surface,
+                    area,
+                    race_settings
             )
             count = count + 1
         end
@@ -186,7 +185,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             break
         end
 
-        ::process_chunks_continue::
+        :: process_chunks_continue ::
     end
 end
 

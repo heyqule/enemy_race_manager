@@ -18,7 +18,7 @@ end
 function ERM_WeaponDataHelper.add_air_layer_to_projectile(projectile)
     local air_layer = ERMDataHelper.getFlyingLayerName()
     if projectile['hit_collision_mask'] == nil then
-        projectile['hit_collision_mask'] = { 'train-layer', 'player-layer', air_layer}
+        projectile['hit_collision_mask'] = { 'train-layer', 'player-layer', air_layer }
     else
         projectile['hit_collision_mask'] = table.insert(projectile['hit_collision_mask'], air_layer)
     end

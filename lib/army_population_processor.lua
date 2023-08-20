@@ -116,7 +116,7 @@ function ArmyPopulationProcessor.remove_unit_count(unit)
     local army_pop = global.army_populations
     if unit_force and army_registered_units[unit_name] then
         local pop = army_registered_units[unit_name]
-        local force_name =unit_force.name
+        local force_name = unit_force.name
         army_pop[force_name]['pop_count'] = army_pop[force_name]['pop_count'] - pop
         army_pop[force_name]['unit_count'] = army_pop[force_name]['unit_count'] - 1
         army_pop[force_name]['unit_types'][unit_name]['unit_count'] = army_pop[force_name]['unit_types'][unit_name]['unit_count'] - 1

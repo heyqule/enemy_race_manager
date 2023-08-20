@@ -13,7 +13,6 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 
-
 Event.on_nth_tick(ErmConfig.ATTACK_POINT_CALCULATION, function(event)
     ErmAttackMeterProcessor.exec()
 end)
@@ -28,7 +27,7 @@ local add_attackable_chunk = function(event)
 end
 
 --- Native Event Handlers
-Event.register(defines.events.script_raised_revive, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
-Event.register(defines.events.script_raised_built, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
-Event.register(defines.events.on_built_entity, add_attackable_chunk , ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.script_raised_revive, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.script_raised_built, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(defines.events.on_built_entity, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
 Event.register(defines.events.on_robot_built_entity, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)

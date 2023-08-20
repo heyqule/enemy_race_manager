@@ -9,9 +9,9 @@ local armor_change_resistance = function(percentage_value, fixed_value)
     return {
         { type = "acid", percent = percentage_value, decrease = fixed_value },
         { type = "poison", percent = percentage_value, decrease = fixed_value },
-        { type = "physical", percent = percentage_value, decrease = fixed_value},
+        { type = "physical", percent = percentage_value, decrease = fixed_value },
         { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value},
+        { type = "explosion", percent = percentage_value, decrease = fixed_value },
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value }
@@ -24,7 +24,7 @@ local vehicle_change_resistance = function(percentage_value, fixed_value)
         { type = "poison", percent = percentage_value, decrease = fixed_value },
         { type = "physical", percent = percentage_value, decrease = fixed_value },
         { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value},
+        { type = "explosion", percent = percentage_value, decrease = fixed_value },
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value },
@@ -34,14 +34,14 @@ end
 
 local rails_change_resistance = function()
     return {
-        { type = "acid", percent = 80},
-        { type = "poison", percent = 100},
-        { type = "physical", percent = 50},
-        { type = "fire", percent = 100},
-        { type = "explosion", percent = 50},
-        { type = "laser", percent = 50},
-        { type = "cold", percent = 100},
-        { type = "electric", percent = 100}
+        { type = "acid", percent = 80 },
+        { type = "poison", percent = 100 },
+        { type = "physical", percent = 50 },
+        { type = "fire", percent = 100 },
+        { type = "explosion", percent = 50 },
+        { type = "laser", percent = 50 },
+        { type = "cold", percent = 100 },
+        { type = "electric", percent = 100 }
     }
 end
 
@@ -126,7 +126,7 @@ end
 -- Construction bots are no longer repairable to preserve construction bot queue. They repair themselve in roboport
 for name, entity in pairs(data.raw['construction-robot']) do
     data.raw['construction-robot'][name]['max_health'] = entity.max_health * 2
-    table.insert(data.raw['construction-robot'][name]['flags'],'not-repairable')
+    table.insert(data.raw['construction-robot'][name]['flags'], 'not-repairable')
 end
 
 data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)

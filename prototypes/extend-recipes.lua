@@ -23,20 +23,18 @@ data:extend(
                         icon = "__base__/graphics/icons/fluid/barreling/empty-barrel.png",
                         icon_size = 64,
                         scale = 0.25,
-                        shift = {9,9}
+                        shift = { 9, 9 }
                     },
                 },
-                ingredients =
-                {
-                    {type="item", name="empty-barrel", amount=10}
+                ingredients = {
+                    { type = "item", name = "empty-barrel", amount = 10 }
                 },
-                results=
-                {
-                    {type="item", name="steel-plate", amount=8}
+                results = {
+                    { type = "item", name = "steel-plate", amount = 8 }
                 },
                 allow_decomposition = false,
             },
-})
+        })
 
 table.insert(data.raw['technology']['fluid-handling']['effects'],
         {

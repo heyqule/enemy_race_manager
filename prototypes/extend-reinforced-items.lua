@@ -14,7 +14,7 @@ local change_resistance = function(percentage_value, fixed_value, use_wall_max_r
         { type = "physical", percent = percentage_value, decrease = fixed_value },
         { type = "fire", percent = 99, decrease = fixed_value },
         { type = "impact", percent = 90, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value},
+        { type = "explosion", percent = percentage_value, decrease = fixed_value },
         { type = "laser", percent = percentage_value, decrease = fixed_value },
         { type = "electric", percent = percentage_value, decrease = fixed_value },
         { type = "cold", percent = percentage_value, decrease = fixed_value }
@@ -34,13 +34,13 @@ local change_icon = function(item)
         icon_size = 64,
         icon_mipmaps = 4,
         scale = 0.25,
-        shift = {-9,-9}
+        shift = { -9, -9 }
     }
 
     local icons = nil
 
     if item['icon'] then
-        icons =  {
+        icons = {
             {
                 icon = item.icon,
                 icon_size = item.icon_size,
@@ -56,7 +56,6 @@ local change_icon = function(item)
     return icons
 end
 
-
 local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_upgrade, recipe_multiplier, technology_name, resistance)
     recipe_multiplier = recipe_multiplier or 1
     next_upgrade = next_upgrade or nil
@@ -70,7 +69,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
 
     local entity = util.table.deepcopy(data.raw[type][item_name])
     entity.name = new_item_name
-    entity.localised_name = { 'entity-name.'..new_item_name}
+    entity.localised_name = { 'entity-name.' .. new_item_name }
     entity.max_health = entity.max_health * hp_multiplier
     entity.resistances = resistances
     entity.icons = change_icon(entity)
@@ -89,7 +88,7 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
         entity.next_upgrade = next_upgrade
     end
 
-    data:extend({entity})
+    data:extend({ entity })
 
     -- Makes turret upgradable
     if string.find(type, 'turret') or string.find(type, 'wall') then
@@ -103,10 +102,10 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     local item = util.table.deepcopy(data.raw["item"][item_name])
     item.name = new_item_name
     item.place_result = new_item_name
-    item.order = "a["..type.."]-b["..new_item_name.."]"
+    item.order = "a[" .. type .. "]-b[" .. new_item_name .. "]"
     item.icons = change_icon(item)
     item.subgroup = "erm-reinforced"
-    data:extend({item})
+    data:extend({ item })
 
     local recipe = util.table.deepcopy(data.raw["recipe"][item_name])
     local concrete_count = 5 * recipe_multiplier
@@ -114,31 +113,31 @@ local add_entity = function(type, item_name, new_item_name, hp_multiplier, next_
     if recipe.normal then
         local expansive_multiplier = 2
         recipe.normal.ingredients = {
-            {item_name, recipe_multiplier},
-            {"low-density-structure", 1},
-            {"refined-concrete", concrete_count},
+            { item_name, recipe_multiplier },
+            { "low-density-structure", 1 },
+            { "refined-concrete", concrete_count },
         }
         recipe.normal.result = new_item_name
         recipe.normal.result_count = recipe_multiplier
 
         recipe.expensive.ingredients = {
-            {item_name, recipe_multiplier * expansive_multiplier},
-            {"low-density-structure", 2},
-            {"refined-concrete", concrete_count * expansive_multiplier},
+            { item_name, recipe_multiplier * expansive_multiplier },
+            { "low-density-structure", 2 },
+            { "refined-concrete", concrete_count * expansive_multiplier },
         }
         recipe.expensive.result = new_item_name
         recipe.normal.result_count = recipe_multiplier
     else
         recipe.ingredients = {
-            {item_name, recipe_multiplier},
-            {"low-density-structure", 1},
-            {"refined-concrete", concrete_count},
+            { item_name, recipe_multiplier },
+            { "low-density-structure", 1 },
+            { "refined-concrete", concrete_count },
         }
         recipe.result = new_item_name
         recipe.result_count = recipe_multiplier
     end
 
-    data:extend({recipe})
+    data:extend({ recipe })
 
     if technology_name then
         local technology = data.raw["technology"][technology_name]
@@ -290,7 +289,6 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             "gun-turret"
     )
 
-
     add_entity(
             "electric-turret",
             "laser-turret",
@@ -313,12 +311,12 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     --- Upgrade turret techs
     for key, tech in pairs(data.raw["technology"]) do
-        if string.find(key, 'physical-projectile-damage',1, true) then
+        if string.find(key, 'physical-projectile-damage', 1, true) then
             local effect = util.table.deepcopy(tech.effects[2])
             effect.turret_id = 'erm-reinforced-gun-turret'
             tech.effects['erm-reinforced-gun-turret'] = effect
         end
-        if string.find(key, 'refined-flammables',1, true) then
+        if string.find(key, 'refined-flammables', 1, true) then
             local effect = util.table.deepcopy(tech.effects[2])
             effect.turret_id = 'erm-reinforced-flamethrower-turret'
             tech.effects['erm-reinforced-flamethrower-turret'] = effect

@@ -56,10 +56,10 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_global')
 function Debug_RemoteAPI.print_global()
-    game.write_file('enemyracemanager/erm-global.json',game.table_to_json(util.copy(global)))
+    game.write_file('enemyracemanager/erm-global.json', game.table_to_json(util.copy(global)))
 
     for interface_name, functions in pairs(remote.interfaces) do
-        if functions["print_global"] and interface_name ~= 'enemyracemanager_debug'  then
+        if functions["print_global"] and interface_name ~= 'enemyracemanager_debug' then
             remote.call(interface_name, "print_global")
         end
     end
@@ -70,19 +70,19 @@ function Debug_RemoteAPI.print_calculate_attack_points()
     local table = {}
     for name, _ in pairs(global.race_settings) do
         table[name] = {
-            current_points = ErmRaceSettingsHelper.get_attack_meter(name), 
+            current_points = ErmRaceSettingsHelper.get_attack_meter(name),
             next_threshold = ErmRaceSettingsHelper.get_next_attack_threshold(name)
         }
-    end   
-    log(game.table_to_json(table))     
+    end
+    log(game.table_to_json(table))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'exec_attack_group', 'erm_zerg')
 function Debug_RemoteAPI.exec_attack_group(race_name)
     ErmAttackGroupProcessor.exec(
-        race_name,
-        game.forces[ErmForceHelper.get_force_name_from(race_name)],
-        3000
+            race_name,
+            game.forces[ErmForceHelper.get_force_name_from(race_name)],
+            3000
     )
 end
 
@@ -226,10 +226,9 @@ end
 --- Usage: remote.call('enemyracemanager_debug', 'set_boss_tier', 1)
 function Debug_RemoteAPI.set_boss_tier(value)
     for race_name, _ in pairs(global.race_settings) do
-        global.race_settings[race_name].boss_tier = math.max(1,math.min(value, 5))
+        global.race_settings[race_name].boss_tier = math.max(1, math.min(value, 5))
     end
 end
-
 
 --- Usage: remote.call('enemyracemanager_debug', 'reset_level')
 function Debug_RemoteAPI.reset_level()
@@ -264,7 +263,7 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'spawn_boss', {x=100,y=100})
 function Debug_RemoteAPI.spawn_boss(position)
-    local rocket_silos = game.surfaces[1].find_entities_filtered {name = 'rocket-silo'}
+    local rocket_silos = game.surfaces[1].find_entities_filtered { name = 'rocket-silo' }
     if rocket_silos and rocket_silos[1] then
         ErmBossProcessor.exec(rocket_silos[1], position)
     end
@@ -289,14 +288,14 @@ function Debug_RemoteAPI.forces_relation()
     local forces = game.forces
     for key = 1, #forces do
         local forceA = forces[key]
-        print('------ '..forceA.name..' ------')
+        print('------ ' .. forceA.name .. ' ------')
         for _, forceB in pairs(forces) do
-            print('Is friend with '..forceB.name..': '..tostring(forceA.is_friend(forceB)))
-            print('Is in friend list with '..forceB.name..': '..tostring(forceA.get_friend(forceB)))
-            print('Is cease_fire with '..forceB.name..': '..tostring(forceA.get_cease_fire(forceB)))
+            print('Is friend with ' .. forceB.name .. ': ' .. tostring(forceA.is_friend(forceB)))
+            print('Is in friend list with ' .. forceB.name .. ': ' .. tostring(forceA.get_friend(forceB)))
+            print('Is cease_fire with ' .. forceB.name .. ': ' .. tostring(forceA.get_cease_fire(forceB)))
             print('--------------')
         end
-        print('------ END '..forceA.name..'------')
+        print('------ END ' .. forceA.name .. '------')
     end
 end
 

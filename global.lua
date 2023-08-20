@@ -8,7 +8,7 @@
 MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
-DEBUG_MODE = false
+DEBUG_MODE = true
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'
@@ -26,4 +26,4 @@ ARMY_POPULATION_DECREASE = 'empop-d'
 
 TRIGGER_BOSS_DIES = 'embss-die'
 
-VANILLA_MAP_COLOR = {r=224, g=35, b=33, a=255}
+VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }

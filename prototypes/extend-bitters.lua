@@ -12,10 +12,8 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 require('util')
 
-
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
-
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -43,20 +41,20 @@ function makeLevelEnemy(level, type, health_cut_ratio)
 
     biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }
     biter['name'] = MOD_NAME .. '/' .. biter['name'] .. '/' .. level
-    biter['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio,  level)
+    biter['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
     biter['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
     biter['healing_per_tick'] = 0
     biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
-    if string.find(type,'spitter') then
+    if string.find(type, 'spitter') then
         biter['attack_parameters']['damage_modifier'] = 0.75 * biter['attack_parameters']['damage_modifier']
         local attack_range = ErmConfig.get_max_attack_range()
         local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
@@ -78,7 +76,7 @@ for i = 1, max_level do
 
     data:extend({ makeLevelEnemy(i, 'small-spitter') })
 
-    data:extend({ makeLevelEnemy(i, 'medium-biter', 0.33 ) })
+    data:extend({ makeLevelEnemy(i, 'medium-biter', 0.33) })
 
     data:extend({ makeLevelEnemy(i, 'medium-spitter', 0.33) })
 

@@ -22,7 +22,7 @@ local LevelManager = {}
 local tier_map = { 0.4, 0.8 }
 
 -- Evolution point for leveling
-local evolution_points = {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+local evolution_points = { 1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000 }
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1
@@ -70,7 +70,6 @@ local has_valid_race_settings = function(race_settings, race_name)
     return race_settings and race_settings[race_name]
 end
 
-
 function LevelManager.calculateEvolutionPoints(race_settings, forces, settings)
     for _, force in pairs(forces) do
         local force_name = force.name
@@ -88,7 +87,7 @@ function LevelManager.calculateLevels()
     end
 
     local race_settings = global.race_settings
-    local forces =  game.forces
+    local forces = game.forces
     local settings = settings
 
     for _, force in pairs(forces) do
@@ -119,10 +118,9 @@ function LevelManager.calculateLevels()
     end
 end
 
-
 function LevelManager.calculateMultipleLevels()
     local race_settings = global.race_settings
-    local forces =  game.forces
+    local forces = game.forces
     local settings = settings
 
     for _, force in pairs(forces) do
@@ -234,10 +232,10 @@ end
 
 function LevelManager.print_level_curve_table()
     local string = ''
-    for i=1, ErmConfig.get_max_level() - 1 do
-        string = string .. tostring(i+1) .. " = ".. tostring(evolution_points[i] ) .. ', '
+    for i = 1, ErmConfig.get_max_level() - 1 do
+        string = string .. tostring(i + 1) .. " = " .. tostring(evolution_points[i]) .. ', '
     end
-    game.print('Level Curve: '..string)
+    game.print('Level Curve: ' .. string)
 end
 
 return LevelManager

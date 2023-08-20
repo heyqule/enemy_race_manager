@@ -46,40 +46,39 @@ local rewards_items_data = {
 --- Big Mod Compaibility rewards
 
 -- Up to 8 infinity chests on each boss defeat
-local reward_settings =
-{
+local reward_settings = {
     {
-        position_offset= {x=10, y=10},
-        chance = {100, 100, 100, 100, 100},
+        position_offset = { x = 10, y = 10 },
+        chance = { 100, 100, 100, 100, 100 },
     },
     {
-        position_offset= {x=-10, y=-10},
-        chance = {0, 50, 100, 100, 100},
+        position_offset = { x = -10, y = -10 },
+        chance = { 0, 50, 100, 100, 100 },
     },
     {
-        position_offset= {x=-10, y=10},
-        chance = {0, 0, 50, 100, 100},
+        position_offset = { x = -10, y = 10 },
+        chance = { 0, 0, 50, 100, 100 },
     },
     {
-        position_offset= {x=10, y=-10},
-        chance = {0, 0, 0, 50, 100},
+        position_offset = { x = 10, y = -10 },
+        chance = { 0, 0, 0, 50, 100 },
     },
     -- Bonus lucky draw
     {
-        position_offset= {x=32, y=32},
-        chance = {33, 36, 39, 42, 45},
+        position_offset = { x = 32, y = 32 },
+        chance = { 33, 36, 39, 42, 45 },
     },
     {
-        position_offset= {x=-32, y=-32},
-        chance = {20, 23, 26, 29, 33},
+        position_offset = { x = -32, y = -32 },
+        chance = { 20, 23, 26, 29, 33 },
     },
     {
-        position_offset= {x=-32, y=32},
-        chance = {10, 12, 15, 18, 20},
+        position_offset = { x = -32, y = 32 },
+        chance = { 10, 12, 15, 18, 20 },
     },
     {
-        position_offset= {x=32, y=-32},
-        chance = {6, 7, 8, 9, 10},
+        position_offset = { x = 32, y = -32 },
+        chance = { 6, 7, 8, 9, 10 },
     }
 }
 
@@ -88,7 +87,7 @@ local expire_at = defines.time.minute * 7 * 14
 
 local get_infinite_chest = function()
     return {
-        name  = 'infinity-chest',
+        name = 'infinity-chest',
         force = 'neutral'
     }
 end
@@ -126,13 +125,13 @@ local spawn_chest = function(reward_setting, boss_data)
 end
 
 local get_item_name = function()
-    return rewards_items_data[math.random(1,#rewards_items_data)]
+    return rewards_items_data[math.random(1, #rewards_items_data)]
 end
 
 function BossRewardProcessor.exec()
     local boss = global.boss
     for _, value in pairs(reward_settings) do
-        if(can_spawn(value['chance'][boss.boss_tier])) then
+        if (can_spawn(value['chance'][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
             if chest then
                 local infinity_item_name = get_item_name()
@@ -145,7 +144,7 @@ function BossRewardProcessor.exec()
                 chest.minable = false
                 chest.rotatable = false
                 chest.operable = false
-                ErmDebugHelper.print('Spawning Chest with '..infinity_item_name)
+                ErmDebugHelper.print('Spawning Chest with ' .. infinity_item_name)
                 table.insert(global.boss_rewards, reward_data(chest))
             end
         end
@@ -161,10 +160,10 @@ function BossRewardProcessor.clean_up()
     local removed_positions = {}
     for position, reward in pairs(rewards) do
         if game.tick > reward.expire_at and
-            reward.entity and
-            reward.entity.valid
+                reward.entity and
+                reward.entity.valid
         then
-            ErmDebugHelper.print('Destroy chest at '..reward.entity_position.x..'/'..reward.entity_position.y)
+            ErmDebugHelper.print('Destroy chest at ' .. reward.entity_position.x .. '/' .. reward.entity_position.y)
             reward.entity.destroy();
             table.insert(removed_positions, position)
         end

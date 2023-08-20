@@ -37,9 +37,9 @@ AttackGroupProcessor.GROUP_TYPE_FEATURED = 4
 AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING = 5
 
 AttackGroupProcessor.GROUP_TIERS = {
-    {1},
-    {0.7, 0.3},
-    {0.4, 0.35, 0.25}
+    { 1 },
+    { 0.7, 0.3 },
+    { 0.4, 0.35, 0.25 }
 }
 
 AttackGroupProcessor.PICK_SPAWN_RETRIES = 5
@@ -142,7 +142,6 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         i = i + 1
     until i == unit_batch
 
-
     if group_tracker.current_size >= group_tracker.size then
         --local profiler = game.create_profiler()
         local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group.position)
@@ -152,7 +151,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         if position then
             local command = {
                 type = defines.command.attack_area,
-                destination = {x = position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
+                destination = { x = position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = position.y + AttackGroupProcessor.CHUNK_CENTER_POINT },
                 radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2
             }
 
@@ -167,12 +166,12 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                                 (position.y + AttackGroupProcessor.CHUNK_CENTER_POINT),
                                 group.surface.name
                         )
-                    }, {r=1,g=0,b=0})
+                    }, { r = 1, g = 0, b = 0 })
                 end
             end
             group.set_command(command)
             global.erm_unit_groups[group.group_number] = {
-                group =  group,
+                group = group,
                 start_position = group.position,
                 always_angry = false
             }
@@ -202,7 +201,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
     if group_type == nil then
         group_type = AttackGroupProcessor.GROUP_TYPE_MIXED
     end
-    local unit_group = surface.create_unit_group({position = center_location, force = force})
+    local unit_group = surface.create_unit_group({ position = center_location, force = force })
     local queue_length = math.ceil(units_number / AttackGroupProcessor.UNIT_PER_BATCH)
     local last_queue = queue_length - 1
     local last_queue_unit = units_number % AttackGroupProcessor.UNIT_PER_BATCH
@@ -214,7 +213,7 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
     local tiers = nil
     local is_precision_attack = false
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        tiers = AttackGroupProcessor.GROUP_TIERS[ math.min(get_unit_level_for_tier(race_name), ErmConfig.MAX_TIER) ]
+        tiers = AttackGroupProcessor.GROUP_TIERS[math.min(get_unit_level_for_tier(race_name), ErmConfig.MAX_TIER)]
 
         local flying_unit_precision_enabled = ErmConfig.flying_squad_precision_enabled()
         local spawn_as_flying_unit_precision = ErmRaceSettingsHelper.can_spawn(ErmConfig.flying_squad_precision_chance())
@@ -226,11 +225,11 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
         tiers = AttackGroupProcessor.GROUP_TIERS[1]
         is_precision_attack = true
     else
-        tiers = AttackGroupProcessor.GROUP_TIERS[ ErmRaceSettingsHelper.get_tier(race_name) ]
+        tiers = AttackGroupProcessor.GROUP_TIERS[ErmRaceSettingsHelper.get_tier(race_name)]
     end
     local tiers_units = {}
     for index, tier in pairs(tiers) do
-        tiers_units[index] = math.floor((units_number * tier)+0.5)
+        tiers_units[index] = math.floor((units_number * tier) + 0.5)
     end
 
     set_group_tracker(race_name, {
@@ -253,12 +252,12 @@ local generate_unit_queue = function(surface, center_location, force, race_name,
             unit_batch = last_queue_unit
         end
         ErmCron.add_1_sec_queue(
-            'AttackGroupProcessor.add_to_group',
-            surface,
-            unit_group,
-            force,
-            race_name,
-            unit_batch
+                'AttackGroupProcessor.add_to_group',
+                surface,
+                unit_group,
+                force,
+                race_name,
+                unit_batch
         )
         i = i + 1
     until i == queue_length
@@ -308,7 +307,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             return AttackGroupProcessor.generate_group(race_name, force, units_number)
         end
     end
-end    
+end
 
 function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack)
     if get_group_tracker(race_name) then
@@ -329,7 +328,7 @@ end
 
 function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
     local target_unit = surface.find_entities_filtered({
-        type = {"unit-spawner"},
+        type = { "unit-spawner" },
         force = ErmForceHelper.get_all_enemy_forces(),
         area = {
             { position.x - radius, position.y - radius },
@@ -354,7 +353,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
     })
 
     if #units >= 50 then
-        local group = surface.create_unit_group({position = target_unit.position, force = target_unit.force})
+        local group = surface.create_unit_group({ position = target_unit.position, force = target_unit.force })
         local max_unit = ErmConfig.max_group_size()
         local i = 0
         for _, unit in pairs(units) do
@@ -368,7 +367,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
         AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
 
         global.erm_unit_groups[group.group_number] = {
-            group =  group,
+            group = group,
             start_position = group.position,
             always_angry = true
         }
@@ -382,7 +381,7 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     end
 
     if not ErmRaceSettingsHelper.has_featured_flying_squad(race_name) and
-        not ErmRaceSettingsHelper.has_featured_squad(race_name) then
+            not ErmRaceSettingsHelper.has_featured_squad(race_name) then
         return false
     end
 
@@ -419,7 +418,7 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     if attack_position then
         local command = {
             type = defines.command.attack_area,
-            destination = {x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT},
+            destination = { x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT },
             radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2,
             distraction = distraction
         }

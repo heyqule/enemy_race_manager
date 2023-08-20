@@ -12,10 +12,8 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 require('util')
 
-
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
-
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.5
 
@@ -36,7 +34,6 @@ local incremental_electric_resistance = 90
 local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
-
 local physical_modifier = 2
 local incremental_physical_modifier = 4
 
@@ -47,7 +44,6 @@ local incremental_attack_speed = 45
 
 local attack_range = 12
 
-
 local base_movement_speed = 0.2
 local incremental_movement_speed = 0.15
 
@@ -56,19 +52,16 @@ local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
 local pollution_to_join_attack = 50
 local distraction_cooldown = 300
 
-local collision_box = {{-0.5, -0.5}, {0.5, 0.5}}
-local selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
+local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
+local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
 local unit_scale = 1
 
 local robot_animations = {}
 
-robot_animations.defender =
-{
-    in_motion =
-    {
-        layers =
-        {
+robot_animations.defender = {
+    in_motion = {
+        layers = {
             {
                 filename = "__base__/graphics/entity/defender-robot/defender-robot.png",
                 priority = "high",
@@ -80,8 +73,7 @@ robot_animations.defender =
                 direction_count = 16,
                 shift = util.by_pixel(0, 0.25),
                 y = 33,
-                hr_version =
-                {
+                hr_version = {
                     filename = "__base__/graphics/entity/defender-robot/hr-defender-robot.png",
                     priority = "high",
                     line_length = 16,
@@ -105,10 +97,9 @@ robot_animations.defender =
                 animation_speed = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, -4.75),
-                tint = {r=0.5,g=0,b=1,a=1},
+                tint = { r = 0.5, g = 0, b = 1, a = 1 },
                 y = 16,
-                hr_version =
-                {
+                hr_version = {
                     filename = "__base__/graphics/entity/defender-robot/hr-defender-robot-mask.png",
                     priority = "high",
                     line_length = 16,
@@ -118,15 +109,14 @@ robot_animations.defender =
                     animation_speed = 1,
                     direction_count = 16,
                     shift = util.by_pixel(0, -4.75),
-                    tint = {r=0.5,g=0,b=1,a=1},
+                    tint = { r = 0.5, g = 0, b = 1, a = 1 },
                     y = 21,
                     scale = 0.5
                 }
             }
         }
     },
-    shadow_in_motion =
-    {
+    shadow_in_motion = {
         filename = "__base__/graphics/entity/defender-robot/defender-robot-shadow.png",
         priority = "high",
         line_length = 16,
@@ -137,8 +127,7 @@ robot_animations.defender =
         direction_count = 16,
         shift = util.by_pixel(25.5, 19),
         draw_as_shadow = true,
-        hr_version =
-        {
+        hr_version = {
             filename = "__base__/graphics/entity/defender-robot/hr-defender-robot-shadow.png",
             priority = "high",
             line_length = 16,
@@ -164,16 +153,16 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
     robot["subgroup"] = "erm-flying-enemies"
     robot['has_belt_immunity'] = true
-    robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio,  level)
+    robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
     robot['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance,  level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
     robot['healing_per_tick'] = 0
     robot['run_animation'] = {
@@ -182,14 +171,14 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
             robot_animations[type].shadow_in_motion,
         }
     }
-    robot['attack_parameters']['cooldown'] = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed,  level)
-    robot['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(physical_modifier, incremental_physical_modifier,  level)
+    robot['attack_parameters']['cooldown'] = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, level)
+    robot['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(physical_modifier, incremental_physical_modifier, level)
     robot['attack_parameters']['range'] = attack_range
     robot['attack_parameters']['min_attack_distance'] = attack_range - 4
     robot['attack_parameters']['animation'] = robot['run_animation']
     robot['attack_parameters']['ammo_type']['category'] = 'erm-biter-damage'
     robot['distance_per_frame'] = 0.17
-    robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed,  level)
+    robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
     robot['vision_distance'] = vision_distance
     robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
     robot['distraction_cooldown'] = distraction_cooldown

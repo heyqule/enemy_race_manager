@@ -8,6 +8,8 @@ if DEBUG_MODE then
     debugHelper.print(serpent.block(data.erm_spawn_specs))
 end
 
+require('prototypes/extend-ground-fire-patches.lua')
+
 require('prototypes/extend-defense.lua')
 
 require("prototypes/extend-reinforced-items")
@@ -31,7 +33,6 @@ require "prototypes/extend-recipes"
 require "prototypes/extend-freeforall"
 
 require('prototypes/compatibility/data-updates.lua')
-
 
 require('prototypes/extend-default-autoplace.lua')
 

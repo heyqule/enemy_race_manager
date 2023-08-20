@@ -14,7 +14,7 @@ if settings.startup['enemyracemanager-free-for-all'].value then
                     entity.max_health = entity.max_health * ErmConfig.FFA_MULTIPLIER * 1.25
                 end
 
-                if  entity.repair_speed_modifier then
+                if entity.repair_speed_modifier then
                     entity.repair_speed_modifier = entity.repair_speed_modifier * ErmConfig.FFA_MULTIPLIER
                 else
                     entity.repair_speed_modifier = 1 * ErmConfig.FFA_MULTIPLIER
@@ -27,15 +27,14 @@ if settings.startup['enemyracemanager-free-for-all'].value then
 
                 if entity.energy_per_shield then
                     local energy_per_shield = tonumber(string.sub(entity.energy_per_shield, 1, string.len(entity.energy_per_shield) - 2))
-                    local energy_unit = string.sub(entity.energy_per_shield,  string.len(entity.energy_per_shield) - 1)
-                    entity.energy_per_shield = (energy_per_shield / ErmConfig.FFA_MULTIPLIER)..energy_unit
+                    local energy_unit = string.sub(entity.energy_per_shield, string.len(entity.energy_per_shield) - 1)
+                    entity.energy_per_shield = (energy_per_shield / ErmConfig.FFA_MULTIPLIER) .. energy_unit
                 end
             end
 
             -- Updates medpack in SE
-            if string.find(entity_name,"medpack") ~= nil and entity['capsule_action'] then
-                entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount']
-                    = entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] * ErmConfig.FFA_MULTIPLIER
+            if string.find(entity_name, "medpack") ~= nil and entity['capsule_action'] then
+                entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] = entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] * ErmConfig.FFA_MULTIPLIER
             end
         end
     end

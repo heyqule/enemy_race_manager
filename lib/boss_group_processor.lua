@@ -33,9 +33,9 @@ end
 
 local get_colliding_unit = function(race_name)
     return ErmRaceSettingsHelper.get_race_entity_name(
-        race_name,
-        global.race_settings[race_name].colliding_unit,
-        global.race_settings[race_name].level
+            race_name,
+            global.race_settings[race_name].colliding_unit,
+            global.race_settings[race_name].level
     )
 end
 
@@ -46,15 +46,15 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
 
     default_max_group = default_max_group or true
     local boss = global.boss
-    local surface =  boss.surface
-    local force =  boss.force
-    local center_location = surface.find_non_colliding_position(get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1 , true)
+    local surface = boss.surface
+    local force = boss.force
+    local center_location = surface.find_non_colliding_position(get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1, true)
     if (center_location) then
-        local group = surface.create_unit_group({position = center_location, force = force})
+        local group = surface.create_unit_group({ position = center_location, force = force })
 
         global.boss_group_spawn.group = group
         global.boss_group_spawn.group_number = group.group_number
-        ErmDebugHelper.print('BossGroupProcessor: Create Group...'..tostring(group.group_number))
+        ErmDebugHelper.print('BossGroupProcessor: Create Group...' .. tostring(group.group_number))
         unit_per_cycle = unit_per_cycle or ErmConfig.boss_spawn_size
         global.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
         global.boss_group_spawn.unit_per_cycle = unit_per_cycle
@@ -66,9 +66,9 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
             max_units = global.boss_group_spawn.max_cycles * unit_per_cycle
         end
         global.boss_group_spawn.max_units = max_units
-        ErmDebugHelper.print('BossGroupProcessor: max_cycles:'..tostring(global.boss_group_spawn.max_cycles)
-                ..' unit_per_cycle: '..tostring(global.boss_group_spawn.unit_per_cycle)
-                ..' max_units: '..tostring(global.boss_group_spawn.max_units))
+        ErmDebugHelper.print('BossGroupProcessor: max_cycles:' .. tostring(global.boss_group_spawn.max_cycles)
+                .. ' unit_per_cycle: ' .. tostring(global.boss_group_spawn.unit_per_cycle)
+                .. ' max_units: ' .. tostring(global.boss_group_spawn.max_units))
     end
 end
 
@@ -83,18 +83,18 @@ local pick_featured_group = function()
         local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
         global.boss_group_spawn.featured_group_id = squad_id
         global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
-        ErmDebugHelper.print('BossGroupProcessor: Picked feature group...'..tostring(FEATURE_GROUP_TYPE_FLYING)..'/'..tostring(squad_id))
+        ErmDebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_FLYING) .. '/' .. tostring(squad_id))
     else
         if ErmRaceSettingsHelper.has_featured_flying_squad(race_name) and ErmRaceSettingsHelper.can_spawn(33) then
             local squad_id = ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name);
             global.boss_group_spawn.featured_group_id = squad_id
             global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
-            ErmDebugHelper.print('BossGroupProcessor: Picked feature group...'..tostring(FEATURE_GROUP_TYPE_FLYING)..'/'..tostring(squad_id))
+            ErmDebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_FLYING) .. '/' .. tostring(squad_id))
         elseif ErmRaceSettingsHelper.has_featured_squad(race_name) then
             local squad_id = ErmRaceSettingsHelper.get_featured_squad_id(race_name);
             global.boss_group_spawn.featured_group_id = squad_id
             global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_MIXED
-            ErmDebugHelper.print('BossGroupProcessor: Picked feature group...'..tostring(FEATURE_GROUP_TYPE_MIXED)..'/'..tostring(squad_id))
+            ErmDebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_MIXED) .. '/' .. tostring(squad_id))
         end
     end
 end
@@ -145,9 +145,9 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     if useCycle then
         global.boss_group_spawn.current_cycle = global.boss_group_spawn.current_cycle + 1
     end
-    ErmDebugHelper.print('BossGroupProcessor: Spawned Cycle: '..tostring(global.boss_group_spawn.current_cycle))
-    ErmDebugHelper.print('BossGroupProcessor: Spawned units:'..tostring(i))
-    ErmDebugHelper.print('BossGroupProcessor: Total units:'..tostring(spawn_data.total_units))
+    ErmDebugHelper.print('BossGroupProcessor: Spawned Cycle: ' .. tostring(global.boss_group_spawn.current_cycle))
+    ErmDebugHelper.print('BossGroupProcessor: Spawned units:' .. tostring(i))
+    ErmDebugHelper.print('BossGroupProcessor: Total units:' .. tostring(spawn_data.total_units))
     --ErmDebugHelper.print('BossGroupProcessor: TYPE: '..serpent.block(spawn_data))
 
     if global.boss_group_spawn.current_cycle == global.boss_group_spawn.max_cycles or
@@ -158,7 +158,7 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
         table.insert(global.boss_attack_groups, spawn_data)
         global.boss_group_spawn = BossGroupProcessor.get_default_data()
         ErmDebugHelper.print('BossGroupProcessor: Assigned to attack group')
-    elseif(queueCycle) then
+    elseif (queueCycle) then
         ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', useCycle, queueCycle)
     end
 end
@@ -166,7 +166,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     ErmDebugHelper.print('BossProcessor.spawn_initial_group')
     pick_featured_group()
-    create_group(default_spawn_cycles /3, ErmConfig.boss_spawn_size * 3, true)
+    create_group(default_spawn_cycles / 3, ErmConfig.boss_spawn_size * 3, true)
     ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', true, true)
 end
 
@@ -211,22 +211,22 @@ function BossGroupProcessor.process_attack_groups()
     local number_of_groups = #global.boss_attack_groups
     if number_of_groups > 0 then
         local removable_indexes = {}
-        for i=1, number_of_groups do
+        for i = 1, number_of_groups do
             local group_data = global.boss_attack_groups[i];
             local group = group_data.group
             if group and group.valid then
                 if group.command == nil or
                         group.state == defines.group_state.finished then
-                    ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: New Target for '..global.boss_attack_groups[i].group_number)
+                    ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: New Target for ' .. global.boss_attack_groups[i].group_number)
                     ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
                 end
             else
-                ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: Removing Group'..global.boss_attack_groups[i].group_number)
+                ErmDebugHelper.print('BossGroupProcessor.process_attack_groups: Removing Group' .. global.boss_attack_groups[i].group_number)
                 table.insert(removable_indexes, i)
             end
         end
 
-        for i=1, #removable_indexes do
+        for i = 1, #removable_indexes do
             table.remove(global.boss_attack_groups, removable_indexes[i])
         end
     end

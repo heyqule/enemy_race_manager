@@ -15,7 +15,6 @@ require('util')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
 
 
@@ -42,20 +41,20 @@ function makeLevelEnemy(level, type, health_cut_ratio)
 
     biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }
     biter['name'] = MOD_NAME .. '/' .. biter['name'] .. '/' .. level
-    biter['max_health'] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio,  level)
+    biter['max_health'] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, level)
     biter['resistances'] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance,  level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance,  level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance,  level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance,  level) },
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
         { type = "cold", percent = 95 }
     }
     biter['healing_per_tick'] = 0
 
-    if string.find(type,'spitter') then
+    if string.find(type, 'spitter') then
         biter['attack_parameters']['damage_modifier'] = 0.35 * biter['attack_parameters']['damage_modifier']
     end
 
@@ -94,6 +93,6 @@ for i = 1, max_level do
 
     if not settings.startup["cb-disable-mother"].value then
         -- 1, 33333 - 10, 116666 - 20, 200000 (org: 100000)
-        data:extend({ makeLevelEnemy(i, 'mother-cold-spitter',3) })
+        data:extend({ makeLevelEnemy(i, 'mother-cold-spitter', 3) })
     end
 end
