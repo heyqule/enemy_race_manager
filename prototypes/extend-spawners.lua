@@ -146,6 +146,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
     worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
+    worm['attack_parameters']['damage_modifier'] = 0.33 * worm['attack_parameters']['damage_modifier']
     ERM_UnitHelper.modify_biter_damage(worm, level)
 
     worm['attack_parameters']['range'] = ErmConfig.get_max_attack_range()

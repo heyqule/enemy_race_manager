@@ -206,7 +206,8 @@ ErmDebugHelper.print('Disabling high level spawners autoplace:')
 for _, v in pairs(data.raw["unit-spawner"]) do
     if String.find(v.name, '/', 1, true) then
         local nameToken = String.split(v.name, '/')
-        if tonumber(nameToken[3]) > 1 then
+        local level = tonumber(nameToken[3])
+        if level and level > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
             data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
         end
@@ -216,7 +217,8 @@ end
 for _, v in pairs(data.raw["turret"]) do
     if String.find(v.name, '/', 1, true) then
         local nameToken = String.split(v.name, '/')
-        if tonumber(nameToken[3]) > 1 then
+        local level = tonumber(nameToken[3])
+        if level and level > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
             data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
         end

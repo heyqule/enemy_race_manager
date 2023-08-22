@@ -16,8 +16,10 @@ Date: 2023-08-??
 
   Changes:
     - All fire/acid patches have 5s initial lifetime and 15s max lifetime.
-
-
+    - Nerfed vanilla spitter's extremely high acid dmg per second by 30%
+    - Nerfed acids lifetime to 5s, max lifetime to 15s.
+    - Changed Atomic wave damage type for atomic-rocket from explosive to radioactive.
+    - All units have a max of 75% radioactive damage cap.
 
   Bugfixes:
     - Fixed an issue that armoured spawn spec were not included.

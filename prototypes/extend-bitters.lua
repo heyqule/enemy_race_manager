@@ -55,7 +55,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     biter['healing_per_tick'] = 0
     biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
     if string.find(type, 'spitter') then
-        biter['attack_parameters']['damage_modifier'] = 0.75 * biter['attack_parameters']['damage_modifier']
+        biter['attack_parameters']['damage_modifier'] = 0.33 * biter['attack_parameters']['damage_modifier']
         local attack_range = ErmConfig.get_max_attack_range()
         local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
         biter['attack_parameters']['range'] = attack_range

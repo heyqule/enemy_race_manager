@@ -30,7 +30,23 @@ local purifier_weapon_counter_attack = {
 if data.raw["projectile"]["atomic-rocket"] then
     local entity = util.table.deepcopy(data.raw["projectile"]["atomic-rocket"])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
+
+    local target_effect_num_7 = entity.action.action_delivery.target_effects[7]
+    if target_effect_num_7 and
+            target_effect_num_7.type == "damage"
+    then
+        entity.action.action_delivery.target_effects[7]
+                      .damage.type = "radioactive"
+    end
+
     data:extend({ entity })
+
+    -- adjust radioactive damage type for atomic-wave
+    local nukeWave = util.table.deepcopy(data.raw['projectile']['atomic-bomb-wave'])
+    nukeWave.action[1].action_delivery.target_effects.damage.type = 'radioactive'
+    data:extend({
+        nukeWave,
+    })
 end
 
 -- Ion Cannon
