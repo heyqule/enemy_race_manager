@@ -20,7 +20,7 @@ require('prototypes/extend-super-weapons.lua')
 
 require('prototypes/extend-styles.lua')
 
-require "prototypes.extend-map-gen-setting"
+require "prototypes/extend-map-gen-setting"
 
 require "prototypes/extend-boss-items"
 
@@ -37,3 +37,5 @@ require('prototypes/compatibility/data-updates.lua')
 require('prototypes/extend-default-autoplace.lua')
 
 require('prototypes/map-generation.lua')
+
+require('prototypes/extend-unit-collision')

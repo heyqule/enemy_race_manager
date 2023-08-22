@@ -90,6 +90,14 @@ data:extend {
         order = "enemyracemanager-116"
     },
     {
+        type = "bool-setting",
+        name = "enemyracemanager-land-collision-only",
+        description = "enemyracemanager-land-collision-only",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-117"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",
@@ -258,6 +266,23 @@ data:extend {
         setting_type = "startup",
         default_value = false,
         order = "enemyracemanager-802",
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-menu-replacement-framework",
+        description = "enemyracemanager-menu-replacement-framework",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-1100"
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-menu-replacement-race",
+        description = "enemyracemanager-menu-replacement-race",
+        setting_type = "startup",
+        default_value = MOD_NAME,
+        allowed_values = {MOD_NAME},
+        order = "enemyracemanager-1100"
     },
     --- Range 1000 to 1100 reserve for map color changes
     {

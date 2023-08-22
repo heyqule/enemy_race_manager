@@ -3,16 +3,18 @@ Version: 1.20.0
 Date: 2023-08-??
 
   Features:
-    - ERM enemies may show up in game menu by replacing vanilla biters/spitters.
     - Improved time to live unit handling.
     - >>> BobEnemies and Natural Evolution Enemies <<<
     - Lifted incompatibility for Bobs Enemies and Natural Evolution Enemies (theSAguy's original versions).  They seems longer crash when ERM enemy levels.
     - They don't crash the game anymore. But they are not balanced with ERM level or ERM FFA.
     - They belong to "enemy" force.
     - They only work in default map mode.  Other map modes are not supported. (2 ways, 4 ways, one race / planet)
-    - >>> EMR enemies showcase on menu <<<
-    - This is done by replace default biters. Can be enable in startup setting.
-    - Added a framework to defined the showcase units in its mod code.
+    - >>> EMR enemies showcase in menu background <<<
+    - This is done by replace default biters. It can be enable/disable on startup setting.
+    - Added a framework to defined the showcase units in race mod's code. (see erm_zerg for example)
+    - >>> Air unit follow land path <<<
+    - Added an options to toggle off air unit collision.
+    - Air unit will follow land pathing, should avoids flying over the lake.
 
   Changes:
     - All fire/acid patches have 5s initial lifetime and 15s max lifetime.
