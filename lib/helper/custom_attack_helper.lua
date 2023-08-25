@@ -7,9 +7,10 @@
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/setting-constants')
 
+
 local String = require('__stdlib__/stdlib/utils/string')
 local Math = require('__stdlib__/stdlib/utils/math')
-local util = require("util")
+require("util")
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -43,18 +44,24 @@ end
 
 local get_race_settings = function(race_name, reload)
     if global.custom_attack_race_settings == nil then
-        global.custom_attack_race_settings = {}
+        global.custom_attack_race_settings = {
+            tick = 0
+        }
     end
 
-    if global.custom_attack_race_settings[race_name] == nil or reload then
-        global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
+    if global.custom_attack_race_settings[race_name] and
+        not reload and
+        game.tick > global.custom_attack_race_settings[race_name].tick
+    then
+        return global.custom_attack_race_settings[race_name]
     end
 
+    global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
+    global.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * ErmConfig.LEVEL_PROCESS_INTERVAL + 1
     return global.custom_attack_race_settings[race_name]
 end
 
 local drop_unit = function(event, race_name, unit_name, count, position)
-    --log('dropping'..race_name..'/'..unit_name..'/'..tostring(count))
     position = position or event.source_position or event.source_entity.position
     count = count or 1
     local race_settings = get_race_settings(race_name)
@@ -64,7 +71,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
 
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. tostring(level)
+    local final_unit_name = race_name .. '/' .. unit_name .. '/' .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
@@ -111,14 +118,13 @@ local drop_player_unit = function(event, race_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force })
-            if entity.type == 'unit' then
+            if entity and entity.valid and entity.type == 'unit' then
                 entity.set_command({
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },
                     radius = ATTACK_CHUNK_SIZE,
                     distraction = defines.distraction.by_anything
                 })
-
             end
             idx = idx + 1
         end
@@ -209,7 +215,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     end
 
     repeat
-        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
+        local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. level
         if not surface.can_place_entity({ name = final_unit_name, position = position }) then
             position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
         end

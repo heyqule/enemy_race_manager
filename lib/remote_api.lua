@@ -6,6 +6,8 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local Event = require('__stdlib__/stdlib/event/event')
+
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
@@ -248,6 +250,10 @@ function ERM_RemoteAPI.milestones_preset_addons()
     end
 
     return {}
+end
+
+function ERM_RemoteAPI.get_event_name(event_name)
+    return Event.get_event_name(event_name)
 end
 
 --- Internal Management remote calls

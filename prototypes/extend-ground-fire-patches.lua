@@ -9,9 +9,7 @@ require('global')
 
 for _, fire in pairs(data.raw["fire"]) do
     if DEBUG_MODE then
-        log(fire.name)
-        log(fire.initial_lifetime)
-        log(fire.maximum_lifetime)
+        log(fire.name..' init:'..tostring(fire.initial_lifetime)..' max:'..tostring(fire.maximum_lifetime))
     end
 
     if fire.initial_lifetime and fire.initial_lifetime > 300 then

@@ -24,5 +24,8 @@ end)
 Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), function(event)
     if ErmConfig.race_is_active(event.affected_race.race) then
         ErmMapProcessor.rebuild_map(game)
+        if remote.interfaces[event.affected_race.race] and remote.interfaces[event.affected_race.race]["refresh_custom_attack_cache"] then
+            remote.call(event.affected_race.race, "refresh_custom_attack_cache")
+        end
     end
 end)

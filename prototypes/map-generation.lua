@@ -201,7 +201,7 @@ end
 
 --- Disable all leveled spawners / turret autoplace which are higher than level 1.
 --- Let map processor handle the level.
---- Free up the number of autoplace entities.  Large autoplace entities lags the game when exploring new chunks
+--- Free up the number of autoplace entities.  Large number of autoplace entities lags the game when exploring new chunks
 ErmDebugHelper.print('Disabling high level spawners autoplace:')
 for _, v in pairs(data.raw["unit-spawner"]) do
     if String.find(v.name, '/', 1, true) then

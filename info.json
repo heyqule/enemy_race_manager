@@ -13,8 +13,6 @@
     "erm_libs >= 1.0.0",
     "~zerm_postprocess >= 1.0.0",
     "!hardcorio",
-    "!Nova-Natural_Evolution_Enemies",
-    "!Natural_Evolution_Enemies_Redux",
     "!biter_factions",
     "?Krastorio2",
     "?IndustrialRevolution",

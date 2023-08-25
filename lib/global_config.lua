@@ -129,6 +129,7 @@ local refreshable_settings = {
         'enemyracemanager-build-style',
         'enemyracemanager-build-formation',
         'enemyracemanager-evolution-point-multipliers',
+        'enemyracemanager-evolution-point-spawner-kills-deduction',
         'enemyracemanager-attack-meter-enable',
         'enemyracemanager-attack-meter-threshold',
         'enemyracemanager-attack-meter-threshold-deviation',
@@ -429,6 +430,10 @@ end
 
 function ErmConfig.super_weapon_counter_attack_enable()
     return get_global_setting_value('enemyracemanager-super-weapon-counter-attack-enable')
+end
+
+function ErmConfig.spawner_kills_deduct_evolution_points()
+    return get_global_setting_value('enemyracemanager-evolution-point-spawner-kills-deduction')
 end
 
 function ErmConfig.initialize_races_data()

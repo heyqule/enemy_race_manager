@@ -354,6 +354,14 @@ data:extend {
         maximum_value = 10,
         order = "enemyracemanager-201"
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-evolution-point-spawner-kills-deduction",
+        description = "enemyracemanager-evolution-point-spawner-kills-deduction",
+        setting_type = "runtime-global",
+        default_value = false,
+        order = "enemyracemanager-202"
+    },
     --- Attack Meters ---
     {
         type = "bool-setting",

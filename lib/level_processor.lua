@@ -46,11 +46,21 @@ local can_level_up_by_evolution_points = function(current_level, race_settings, 
             race_settings[race_name].evolution_point >= evolution_points[current_level]
 end
 
+local warn_user = function(current_level, race_settings, race_name)
+    if ErmConfig.spawner_kills_deduct_evolution_points() and race_settings[race_name].evolution_point >= (evolution_points[current_level] * 0.95) and not race_settings[race_name].level_warned then
+        race_settings[race_name].level_warned = true
+        game.print(race_settings[race_name].race..' has over 95% evolution points to next level!');
+    end
+end
+
 local handle_unit_level = function(race_settings, force, race_name, dispatch)
     local current_level = race_settings[race_name].level
+
+    warn_user(current_level, race_settings, race_name)
     -- Handle Evolution Level
     if can_level_up_by_evolution_points(current_level, race_settings, race_name) then
         race_settings[race_name].level = current_level + 1
+        race_settings[race_name].level_warned = false
         if dispatch then
             game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
             Event.dispatch({
