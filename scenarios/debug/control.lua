@@ -15,25 +15,25 @@ script.on_event(defines.events.on_player_created, function(event)
     local surface = game.surfaces[1]
     local player = game.players[1]
     local force = player.force
-    local level = 20
+    local level = 1
     scenarios_helper.spawn_tile(surface)
     scenarios_helper.build_base(surface, blueprint_string)
     scenarios_helper.set_tech_level(force, level)
-    scenarios_helper.set_enemy_params(level, 3, 1)
+    scenarios_helper.set_enemy_params(level, 1, 0)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(1)
 
     surface.daytime = 0.5
-    surface.daytime = 1
+    --surface.daytime = 1
     surface.freeze_daytime = true
 
     player.cheat_mode = true
 
     -- Comment out the following to start with godmode
-    if player.character then
-        player.character.destroy()
-    end
-    local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
-    player.set_controller { type = defines.controllers.character, character = character }
-    player.teleport({ 0, 0 })
+    --if player.character then
+    --    player.character.destroy()
+    --end
+    --local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
+    --player.set_controller { type = defines.controllers.character, character = character }
+    --player.teleport({ 0, 0 })
 end)

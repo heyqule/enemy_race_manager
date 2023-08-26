@@ -95,7 +95,7 @@ function SurfaceProcessor.wander_unit_clean_up()
                 if unit.valid and unit.unit_number and unit.spawner == nil and unit.command and unit.command.type == defines.command.wander then
                     unit_count = unit_count + 1
                     local race_name = ErmForceHelper.extract_race_name_from(unit.force.name)
-                    if global.race_settings[race_name].attack_meter then
+                    if race_name and global.race_settings[race_name] and global.race_settings[race_name].attack_meter then
                         global.race_settings[race_name].attack_meter = global.race_settings[race_name].attack_meter + 1
                     end
                     unit.destroy()

@@ -52,7 +52,7 @@ end
 function BaseBuildProcessor.process_on_cmd(entity)
     local nameToken = ErmForceHelper.get_name_token(entity.name)
     local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
-    if ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
+    if ErmConfig.race_is_active(race_name) and ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(entity, unit_group, true)
@@ -99,6 +99,10 @@ end
 function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
     local force_name = entity.force.name
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
+
+    if race_name == nil then
+        return
+    end
 
     local members = unit_group.members
     local cc = 0

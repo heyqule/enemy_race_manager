@@ -4,10 +4,12 @@
 --- DateTime: 8/22/2023 10:32 AM
 ---
 local collision_mask_util = require('collision-mask-util')
+local String = require('__stdlib__/stdlib/utils/string')
 
 if settings.startup['enemyracemanager-land-collision-only'].value then
-    for _, v in pairs(data.raw["unit"]) do
-        if v.collision_mask then
+    for name, v in pairs(data.raw["unit"]) do
+        local nameToken =  String.split(name, '/')
+        if v.collision_mask and data.erm_registered_race[nameToken[1]] then
             v.collision_mask = collision_mask_util.get_default_mask('unit')
         end
     end

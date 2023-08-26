@@ -102,6 +102,11 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
 
     if surface then
         local race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
+
+        if not ErmConfig.race_is_active(race_pick) then
+            return
+        end
+
         global.replacement_race_pick = race_pick
         local nameToken = ErmForceHelper.get_name_token(entity.name)
 

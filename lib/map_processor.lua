@@ -71,17 +71,17 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
         return
     end
 
+    local force_name = entity.force.name
+    local race_name = ErmForceHelper.extract_race_name_from(force_name)
+
+    if not ErmConfig.race_is_active(race_name) then
+        return
+    end
+
     local nameToken = ErmForceHelper.get_name_token(entity.name)
 
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
-
-    local force_name = entity.force.name
     local position = entity.position
-    local race_name = ErmForceHelper.extract_race_name_from(force_name)
-
-    if not race_settings[race_name] then
-        return
-    end
 
     if race_name == nameToken[1] and race_settings[nameToken[1]].level == tonumber(nameToken[3]) then
         return

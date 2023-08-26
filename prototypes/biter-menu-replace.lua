@@ -51,7 +51,9 @@ local replace_entity = function(entity_type, target_race)
     end
 
     for from, to in pairs(target_race[entity_type]) do
-        log(target_race.race.."/"..to.."/"..target_race.level)
+        if DEBUG_MODE then
+            log(target_race.race.."/"..to.."/"..target_race.level..' scale:'..scale)
+        end
         local entity = util.table.deepcopy(data.raw[entity_type][target_race.race.."/"..to.."/"..target_race.level])
         entity.name = from
         entity.autoplace = nil

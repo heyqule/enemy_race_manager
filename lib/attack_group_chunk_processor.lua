@@ -562,6 +562,9 @@ end
 
 function AttackGroupChunkProcessor.pick_spawn_location(surface, force)
     local race_name = ErmForceHelper.extract_race_name_from(force.name)
+    if race_name == nil then
+        return
+    end
 
     local i = 0
     local entities = {}

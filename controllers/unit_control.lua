@@ -71,7 +71,11 @@ local destroyMembers = function(group)
         refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
     end
 
-    ErmRaceSettingsHelper.add_to_attack_meter(ErmForceHelper.extract_race_name_from(group.force.name), refundPoints)
+    local race_name = ErmForceHelper.extract_race_name_from(group.force.name)
+
+    if ErmConfig.race_is_active(race_name) then
+        ErmRaceSettingsHelper.add_to_attack_meter(race_name, refundPoints)
+    end
     group.destroy()
 end
 

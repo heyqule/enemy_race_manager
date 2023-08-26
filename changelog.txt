@@ -26,6 +26,7 @@ Date: 2023-08-??
   Bugfixes:
     - Fixed an issue that armoured spawn spec were not included.
     - Fixed an issue where race caches in race mods are not updated when race levels up.
+    - Fixed ForceHelper.extract_race_name_from() get 'erm_vanilla' for non-enemy force.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.19.2

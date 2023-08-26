@@ -424,7 +424,7 @@ function RaceSettingHelper.boss_tier(target_race)
 end
 
 function RaceSettingHelper.k2_creep_enabled(target_race)
-    if global.race_settings[target_race]['enable_k2_creep'] == false then
+    if target_race == nil or global.race_settings[target_race] == nil or global.race_settings[target_race]['enable_k2_creep'] == false then
         return false
     end
 
