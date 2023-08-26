@@ -4,7 +4,7 @@
 
 #### Space Exploration
 
-- Supports one race per planet!
+- Supports one race per planet!  Default generator work great too with its temperature algorithm.
 - Randomly selects a race when a new planet/surface is created
 - Change race for the planet you are on from UI
 

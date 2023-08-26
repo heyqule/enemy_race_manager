@@ -14,21 +14,20 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
   Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.19 Changes
+### 1.20 Changes
 
-- Default mapping method overhaul. It's now compatible with any ERM supported race. (8 races at the moment).
-- Moisture & Temperature based autoplace function.
-- New way for race mods to register in ERM's data and control stage. It no longer depends on erm_ prefix.
-- Eliminated an ancient bug where high level may spawn at low level.
-- Custom biters(armour/cold/explosive/toxic) now supports map color change.
-- Requires erm_libs, please make sure you download it.
+- BobEnemies and Natural Evolution Enemies have removed from incompatible list.
+- BobEnemies and Natural Evolution Enemies can work under default enemy spawner generator.
+- Other unsupported enemies should no longer crash the game. But they may mess up the spawner generator.
+- EMR enemies showcase in menu background, you can select them in startup menu.
+- Added setting to disable aerial behaviour for air units.
+- Spitter acid patches nerfs. Deal lower damage / s and shorter lifetime.
 
-### Race Mods
 
-- Additional remaster graphic changes for Zerg and Protoss!  Special thanks SHlNZ0U to prepare the graphics!
-- Terran asset pack is now available. (Playable Terran will upgrade in a later date.)
-- All remaster asset files are now final. Additional assets may add in later version.
-- Turret range is now max range config(default 14) + 16, instead of fixed value 30.
+### Race Mods Changes
+
+- Playable Terran 2.0 now uses HD graphic.  It also has additional units and turrets.  Team color support!
+- Various tweaks on race mods
 
 ### Download New race demo
 
@@ -119,7 +118,7 @@ New races may have up to 3 tiers of unit-spawners, turrets and unit.
 * adjust enemy level mid-game.
 * adjust enemy evolution mid-game.
 
-#### Custom enemy base autoplace
+#### 4 Enemy Spawner Generators
 
 This defines how enemy bases are generated when a new chunk is charted.
 
@@ -253,18 +252,11 @@ ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/M
 
 #### Space Exploration
 
-* Supports one race per planet!
+* Supports one race per planet! Default generator work great too with its temperature algorithm.
 
 #### Krastorio2 (Requires 1.2+)
 
 * New races support creep generation
-
-#### Rampant AI (limited, not properly tested)
-
-* It works with default settings. However, its AI code only work for "enemy" force. It does not affect custom enemy
-  forces.
-* May have interference with ERM custom attack groups.
-* Rampant enemies override ERM enemies!  DO NOT enable them.
 
 #### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 
