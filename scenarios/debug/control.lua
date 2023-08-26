@@ -15,11 +15,11 @@ script.on_event(defines.events.on_player_created, function(event)
     local surface = game.surfaces[1]
     local player = game.players[1]
     local force = player.force
-    local level = 1
+    local level = 7
     scenarios_helper.spawn_tile(surface)
     scenarios_helper.build_base(surface, blueprint_string)
     scenarios_helper.set_tech_level(force, level)
-    scenarios_helper.set_enemy_params(level, 1, 0)
+    scenarios_helper.set_enemy_params(level, 3, 1)
     --scenarios_helper.set_attack_points()
     scenarios_helper.set_game_speed(1)
 
