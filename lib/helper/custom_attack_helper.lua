@@ -54,7 +54,7 @@ local get_race_settings = function(race_name, reload)
 
     if global.custom_attack_race_settings[race_name] and
         not reload and
-        game.tick > global.custom_attack_race_settings[race_name].tick
+        game.tick < global.custom_attack_race_settings[race_name].tick
     then
         return global.custom_attack_race_settings[race_name]
     end

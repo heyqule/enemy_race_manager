@@ -1,9 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.3
+Date: 2023-08-27
+
+  Bugfixes:
+    - Fix an incorrect comparison from custom_attack_helper.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.20.2
 Date: 2023-08-27
 
   Bugfixes:
-    - Fix __enemyracemanager__/lib/helper/custom_attack_helper.lua:54: attempt to compare nil with number
+    - Fix a crash from custom_attack_helper when tick is missing.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.1
