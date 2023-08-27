@@ -59,6 +59,7 @@ ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 ErmConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
 ErmConfig.BASE_BUILT_EVENT = 'erm_base_built'
+ErmConfig.FLUSH_GLOBAL = 'erm_flush_global'
 
 -- How to use event erm_race_setting_updated
 -- Check race exists

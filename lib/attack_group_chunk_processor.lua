@@ -39,24 +39,8 @@ AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES = {
     'artillery-turret',
 }
 
-AttackGroupChunkProcessor.HARDCORE_PRECISION_TARGET_TYPES = {
-    'lab',
-    'furnace',
-}
-
-AttackGroupChunkProcessor.EXTREME_PRECISION_TARGET_TYPES = {
-    'assembling-machine',
-    'generator',
-    'solar-panel',
-    'accumulator',
-}
 -- {2100, 3200, 4800}
 AttackGroupChunkProcessor.SCAN_RANGE = { ErmConfig.BOSS_ARTILLERY_SCAN_RANGE / 1.5, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE, ErmConfig.BOSS_ARTILLERY_SCAN_RANGE * 1.5 }
-
-AttackGroupChunkProcessor.attack_group_valid_targets = {}
-for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
-    AttackGroupChunkProcessor.attack_group_valid_targets[value] = true
-end
 
 local create_race_cursor_node = function()
     return {
@@ -365,12 +349,27 @@ local init_attackable_chunk = function(surface, forced_init)
     end
 end
 
-local is_cachable_attack_position = function(surface, area)
+local get_attackable_entity = function(surface, area)
     local entities = surface.find_entities_filtered({
         area = area,
         type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
         limit = 1
     })
+
+    if next(entities) == nil and global.attack_group_attackable_entity_names[1] then
+        entities = surface.find_entities_filtered({
+            area = area,
+            name = global.attack_group_attackable_entity_names,
+            limit = 1
+        })
+    end
+
+    return entities
+end
+
+
+local is_cachable_attack_position = function(surface, area)
+    local entities = get_attackable_entity(surface, area)
 
     if #entities > 0 then
         return true
@@ -505,6 +504,11 @@ end
 function AttackGroupChunkProcessor.init_globals()
     global.attack_group_spawnable_chunk = global.attack_group_spawnable_chunk or {}
     global.attack_group_attackable_chunk = global.attack_group_attackable_chunk or {}
+    global.attack_group_attackable_entity_names = global.attack_group_attackable_entity_names or {}
+    global.attack_group_valid_targets = {}
+    for _, value in pairs(AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES) do
+        global.attack_group_valid_targets[value] = true
+    end
 end
 
 function AttackGroupChunkProcessor.init_index()
@@ -554,7 +558,7 @@ end
 
 function AttackGroupChunkProcessor.is_valid_target(event, patterns)
     local entity = event.created_entity or event.entity
-    if entity and entity.valid and AttackGroupChunkProcessor.attack_group_valid_targets[entity.type] then
+    if entity and entity.valid and (global.attack_group_valid_targets[entity.type] or global.attack_group_valid_targets[entity.name]) then
         return true
     end
     return nil
@@ -599,11 +603,7 @@ function AttackGroupChunkProcessor.pick_attack_location(surface, init_position)
         local entities = nil
         position_node = find_attack_position(surface, init_position)
         if position_node then
-            entities = surface.find_entities_filtered({
-                area = get_attack_area(position_node),
-                type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
-                limit = 1
-            })
+            entities = get_attackable_entity(surface, get_attack_area(position_node))
         end
 
         if position_node and next(entities) == nil then
@@ -627,11 +627,7 @@ end
 --- Pick nearby attack locations based on current requirement.
 ---
 function AttackGroupChunkProcessor.pick_nearby_attack_location(surface, init_position)
-    local entities = surface.find_entities_filtered {
-        area = get_attack_area(init_position, AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS),
-        type = AttackGroupChunkProcessor.NORMAL_PRECISION_TARGET_TYPES,
-        limit = 1
-    }
+    local entities = get_attackable_entity(surface, get_attack_area(init_position, AttackGroupChunkProcessor.CHUNK_ATTACK_SEARCH_RADIUS))
 
     local next_index = next(entities)
     if next_index then

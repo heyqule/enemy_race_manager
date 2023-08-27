@@ -128,3 +128,5 @@ require('__enemyracemanager__/controllers/commands')
 
 -- Compatibility
 require('__enemyracemanager__/controllers/compatibility/k2')
+
+require('__enemyracemanager__/controllers/compatibility/mining_drone')

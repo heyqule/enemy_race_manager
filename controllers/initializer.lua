@@ -196,6 +196,9 @@ local init_globals = function()
 
     --- Wipe this cache due to cache pollution from previous version.
     global.force_race_name_cache = {}
+
+    Event.dispatch({
+        name = Event.get_event_name(ErmConfig.FLUSH_GLOBAL)})
 end
 
 --- Init events
