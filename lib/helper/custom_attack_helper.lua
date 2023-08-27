@@ -43,8 +43,11 @@ local get_name_token = function(name)
 end
 
 local get_race_settings = function(race_name, reload)
-    if global.custom_attack_race_settings == nil then
-        global.custom_attack_race_settings = {
+    if global.custom_attack_race_settings == nil or
+        global.custom_attack_race_settings[race_name] == nil or
+        global.custom_attack_race_settings[race_name].tick == nil
+    then
+        global.custom_attack_race_settings[race_name] = {
             tick = 0
         }
     end
