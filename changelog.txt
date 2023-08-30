@@ -6,7 +6,7 @@ Date: 2023-08-30
     - ERM roach world changed from 4-10 minutes per expansion to 5-15 minutes.
 
   Bugfixes:
-    - Fixed no autoplace crash when players enters Space Exploration vault. Vault enemy depends on "race on menu" in startup settings. UwU
+    - Fixed no autoplace crash when players enters Space Exploration vault. Vault enemy depends on "race on menu" in startup settings.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.5
