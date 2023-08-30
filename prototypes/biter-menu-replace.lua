@@ -4,6 +4,7 @@
 --- DateTime: 8/22/2023 12:32 AM
 ---
 local AnimationDB = require('__erm_libs__/prototypes/animation_db')
+local noise = require("noise")
 
 if data.erm_menu_replacement == nil or
    settings.startup["enemyracemanager-menu-replacement-framework"].value == false or
@@ -43,6 +44,17 @@ local scale_turret_animation = function(entity, scale)
     end
 end
 
+local zero_probability_expression = function(probability)
+    return
+    {
+        control = 'enemy-base',
+        order = 'b[enemy]-misc',
+        force = "enemy",
+        probability_expression = noise.min(probability, 0),
+        richness_expression = noise.to_noise_expression(1)
+    }
+end
+
 
 local replace_entity = function(entity_type, target_race)
     local scale = 1
@@ -56,7 +68,7 @@ local replace_entity = function(entity_type, target_race)
         end
         local entity = util.table.deepcopy(data.raw[entity_type][target_race.race.."/"..to.."/"..target_race.level])
         entity.name = from
-        entity.autoplace = nil
+        entity.autoplace = zero_probability_expression(0)
         if entity_type == "turret" then
             scale_turret_animation(entity, scale)
         elseif entity_type == "unit-spawner" then

@@ -8,7 +8,7 @@
 MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
-DEBUG_MODE = false
+DEBUG_MODE = true
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'

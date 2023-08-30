@@ -290,10 +290,10 @@ function Debug_RemoteAPI.forces_relation()
         local forceA = forces[key]
         print('------ ' .. forceA.name .. ' ------')
         for _, forceB in pairs(forces) do
-            print('Is friend with ' .. forceB.name .. ': ' .. tostring(forceA.is_friend(forceB)))
-            print('Is in friend list with ' .. forceB.name .. ': ' .. tostring(forceA.get_friend(forceB)))
-            print('Is cease_fire with ' .. forceB.name .. ': ' .. tostring(forceA.get_cease_fire(forceB)))
-            print('--------------')
+            print(forceB.name ..' is friend: : ' .. tostring(forceA.is_friend(forceB))..
+                    ', in friend-list: '..tostring(forceA.get_friend(forceB))..
+                    ', cease_fire:'..tostring(forceA.get_cease_fire(forceB))
+            )
         end
         print('------ END ' .. forceA.name .. '------')
     end

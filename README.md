@@ -102,8 +102,8 @@ Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters
 
 New races may have up to 3 tiers of unit-spawners, turrets and unit.
 
-* 0 - 0.4 evolution factor uses tier 1 units & spawns
-* 0.4 adds tier 2
+* 0 - 0.4 evolution factor uses tier 1 units & spawns, small amount of tier 2 may spawn after 0.2.
+* 0.4 adds tier 2, small amount of tier 3 may spawn after 0.6
 * 0.8 adds tier 3
 
 #### Defense Enhancement

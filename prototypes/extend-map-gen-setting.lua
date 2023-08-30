@@ -9,8 +9,8 @@ map_gen_settings['default']['erm-roach-world'] = {
     order = "h",
     advanced_settings = {
         enemy_expansion = {
-            min_expansion_cooldown = 4 * 3600,
-            max_expansion_cooldown = 10 * 3600
+            min_expansion_cooldown = 5 * 3600,
+            max_expansion_cooldown = 15 * 3600
         },
         difficulty_settings = {
             research_queue_setting = 'always'
@@ -32,8 +32,8 @@ map_gen_settings['default']['erm-roach-death-world'] = {
             pollution_factor = 0.0000012
         },
         enemy_expansion = {
-            min_expansion_cooldown = 4 * 3600,
-            max_expansion_cooldown = 10 * 3600
+            min_expansion_cooldown = 5 * 3600,
+            max_expansion_cooldown = 15 * 3600
         },
         pollution = {
             ageing = 0.5,

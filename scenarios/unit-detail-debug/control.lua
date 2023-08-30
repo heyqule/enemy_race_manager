@@ -83,7 +83,7 @@ Event.register(defines.events.on_player_created, function(event)
             })
             entity.active = false
             i = i + 1
-            if i % 20 == 0 then
+            if i % 21 == 0 then
                 x = -100
                 y = y + gap
                 i = 0

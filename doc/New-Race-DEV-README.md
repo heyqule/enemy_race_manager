@@ -297,10 +297,11 @@ min_attack_distance, a parameter to randomize attack distance
 
 * Tier 1: 5 - 50
 * Tier 2: 50 - 200
-* Tier 3: 100 - 500
-* Dropship / Drone: 200
+* Tier 3: 100 - 400
+* Dropship: 150 - 200
+* Drone: 100 - 150
 
-AOE units are in higher range. Tier 3 AOE units generally take 300-400 range.
+AOE units are in higher range. Tier 3 AOE units generally take 250-400 range.
 
 ##### vision_distance Guideline:
 

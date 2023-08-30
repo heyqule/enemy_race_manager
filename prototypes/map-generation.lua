@@ -21,8 +21,20 @@ local FOUR_WAY_X_SPLIT_POINT = settings.startup['enemyracemanager-4way-x-axis'].
 local FOUR_WAY_Y_SPLIT_POINT = settings.startup['enemyracemanager-4way-y-axis'].value
 
 -- Start Enemy Base Autoplace functions --
-local zero_probability_expression = function()
-    ErmDebugHelper.print('Using nil')
+local zero_probability_expression = function(probability)
+    ErmDebugHelper.print('Using zero_probability_expression')
+    return
+    {
+        control = 'enemy-base',
+        order = 'b[enemy]-misc',
+        force = "enemy",
+        probability_expression = noise.min(probability, 0),
+        richness_expression = noise.to_noise_expression(1)
+    }
+end
+
+local nil_expression = function()
+    ErmDebugHelper.print('Using nil_expression')
     return nil
 end
 
@@ -62,7 +74,7 @@ local process_x_axis_unit = function(v)
     elseif onNegative and v.autoplace then
         v.autoplace = x_axis_negative_probability_expression(v.autoplace)
     else
-        v.autoplace = zero_probability_expression()
+        v.autoplace = nil_expression()
     end
 end
 
@@ -92,7 +104,7 @@ local process_y_axis_unit = function(v)
     elseif onNegative and v.autoplace then
         v.autoplace = y_axis_negative_probability_expression(v.autoplace)
     else
-        v.autoplace = zero_probability_expression()
+        v.autoplace = nil_expression()
     end
 end
 
@@ -138,7 +150,7 @@ local process_4_ways_unit = function(v)
                 noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
                 v.autoplace.probability_expression
     else
-        v.autoplace = zero_probability_expression()
+        v.autoplace = nil_expression()
     end
 end
 
@@ -159,7 +171,7 @@ end
 local disable_vanilla_force = function(type)
     for name, entity in pairs(data.raw[type]) do
         if String.find(name, MOD_NAME) then
-            entity['autoplace'] = zero_probability_expression()
+            entity['autoplace'] = nil_expression()
         end
     end
 end
@@ -171,12 +183,12 @@ end
 
 local disable_normal_biters = function()
     ErmDebugHelper.print('Disabling Vanilla Spawners...')
-    data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression()
-    data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['behemoth-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression()
-    data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression()
+    data.raw['unit-spawner']['biter-spawner']['autoplace'] = zero_probability_expression(0)
+    data.raw['unit-spawner']['spitter-spawner']['autoplace'] = zero_probability_expression(0)
+    data.raw['turret']['behemoth-worm-turret']['autoplace'] = zero_probability_expression(0)
+    data.raw['turret']['big-worm-turret']['autoplace'] = zero_probability_expression(0)
+    data.raw['turret']['medium-worm-turret']['autoplace'] = zero_probability_expression(0)
+    data.raw['turret']['small-worm-turret']['autoplace'] = zero_probability_expression(0)
 end
 
 -- END Enemy Base Autoplace functions --
@@ -209,7 +221,7 @@ for _, v in pairs(data.raw["unit-spawner"]) do
         local level = tonumber(nameToken[3])
         if level and level > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
-            data.raw['unit-spawner'][v.name]['autoplace'] = zero_probability_expression()
+            data.raw['unit-spawner'][v.name]['autoplace'] = nil_expression()
         end
     end
 end
@@ -220,7 +232,7 @@ for _, v in pairs(data.raw["turret"]) do
         local level = tonumber(nameToken[3])
         if level and level > 1 then
             ErmDebugHelper.print('Disabling:' .. v.name)
-            data.raw['turret'][v.name]['autoplace'] = zero_probability_expression()
+            data.raw['turret'][v.name]['autoplace'] = nil_expression()
         end
     end
 end
