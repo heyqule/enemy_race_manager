@@ -60,6 +60,9 @@ Date: 2023-08-26
     - >>> Disable Aerial behaviour for air units <<<
     - Added an options to toggle off aerial collision layer for air units.
     - Air unit will follow land pathing, should no longer flying over the lake or other blocking objects.
+    - >>> Killing spawner / turret decrease evolution point <<<
+    - Killing spawners and turrets decrease enemy's evolution point.  Prevent them from leveling up.
+    - This feature is off by default, can be enabled in map setting tab.
 
   Changes:
     - All acid patches have 5s initial lifetime and 15s max lifetime.
@@ -69,7 +72,7 @@ Date: 2023-08-26
     - All units, turret, spawners have a max of 75% radioactive damage cap.
 
   Bugfixes:
-    - Fixed an issue that armoured spawn spec were not included.
+    - Fixed an issue that armoured biter spawn spec were not included.
     - Fixed an issue where race caches in race mods are not updated when race levels up.
     - Fixed ForceHelper.extract_race_name_from() get 'erm_vanilla' for non-enemy force.
 
