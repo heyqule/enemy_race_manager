@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.8
+Date: 2023-09-22
+
+  Changes:
+    - When enable-bitter is uncheck, enemy force is no longer consider as active_race. So it excludes from one race / planet autoplace.
+    - Increase evolution_points for each killed unit from 1% to 2% of spawner killed factor.
+
+  Bugfixes:
+    - Not default max attack range now gradually increase from level 1 - level 5. This fixes nothing in early game can hit an unit that has very high max attack range.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.20.7
 Date: 2023-09-01
 

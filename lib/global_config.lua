@@ -439,10 +439,11 @@ end
 
 function ErmConfig.initialize_races_data()
     global.installed_races = { MOD_NAME }
-    global.active_races = { [MOD_NAME] = true }
+    if settings.startup['enemyracemanager-enable-bitters'].value then
+        global.active_races = { [MOD_NAME] = true }
+    end
 
     for name, _ in pairs(game.active_mods) do
-
         if check_register_erm_race(name) then
             Table.insert(global.installed_races, name)
         end

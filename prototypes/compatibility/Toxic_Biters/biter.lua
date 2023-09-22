@@ -56,6 +56,11 @@ function makeLevelEnemy(level, type, health_cut_ratio)
 
     if string.find(type, 'spitter') then
         biter['attack_parameters']['damage_modifier'] = 0.35 * biter['attack_parameters']['damage_modifier']
+        local attack_range = ERM_UnitHelper.get_attack_range(level)
+        local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
+        biter['attack_parameters']['range'] = attack_range
+        biter['attack_parameters']['vision_distance'] = vision_distance
+        biter['attack_parameters']['min_attack_distance'] = attack_range - 4
     end
 
     ERM_UnitHelper.modify_biter_damage(biter, level)

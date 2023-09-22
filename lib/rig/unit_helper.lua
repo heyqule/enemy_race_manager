@@ -142,6 +142,16 @@ function ERM_UnitHelper.get_vision_distance(attack_range)
     return attack_range + 8
 end
 
+function ERM_UnitHelper.get_attack_range(level, ratio)
+    ratio = ratio or 1
+    local attack_range = ErmConfig.get_max_attack_range()
+    if level < 5 then
+        attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25
+    end
+
+    return math.ceil(attack_range * ratio)
+end
+
 function ERM_UnitHelper.format_map_color(color)
     color = util.table.deepcopy(color)
     return color
