@@ -131,7 +131,7 @@ function ForceHelper.refresh_all_enemy_forces()
     global.non_player_forces = {}
     global.player_forces = {}
     for _, force in pairs(game.forces) do
-        if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and game.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
+        if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and script.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
             table.insert(global.enemy_force_cache, force.name)
             table.insert(global.non_player_forces, force.name)
         end
