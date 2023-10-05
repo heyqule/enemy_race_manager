@@ -97,7 +97,7 @@ local addRaceSettings = function()
         { { 'logistic-robot', 'defender', 'distractor', 'destroyer' }, { 1, 2, 2, 1 }, 75 },
     }
 
-    if game.active_mods['Krastorio2'] then
+    if script.active_mods['Krastorio2'] then
         race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
     end
 

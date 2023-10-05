@@ -443,7 +443,7 @@ function ErmConfig.initialize_races_data()
         global.active_races = { [MOD_NAME] = true }
     end
 
-    for name, _ in pairs(game.active_mods) do
+    for name, _ in pairs(script.active_mods) do
         if check_register_erm_race(name) then
             Table.insert(global.installed_races, name)
         end
@@ -462,7 +462,7 @@ function ErmConfig.initialize_races_data()
             [ErmConfig.bottom_right_race()] = true
         }
     else
-        for name, _ in pairs(game.active_mods) do
+        for name, _ in pairs(script.active_mods) do
             if check_register_erm_race(name) then
                 global.active_races[name] = true
             end

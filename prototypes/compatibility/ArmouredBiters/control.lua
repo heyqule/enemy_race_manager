@@ -6,7 +6,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local modify_race_setting = function()
     local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
 
-    if game.active_mods['ArmouredBiters'] then
+    if script.active_mods['ArmouredBiters'] then
         ErmDebugHelper.print('ArmouredBiters is active')
         if settings.startup["ab-enable-nest"].value then
             RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'armoured-biter-spawner')

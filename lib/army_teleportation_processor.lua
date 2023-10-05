@@ -10,6 +10,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 
 local ArmyTeleportationProcessor = {}
 
@@ -284,6 +285,7 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
                 local unit_health = unit.health
                 local spawned_entity = ErmArmyFunctions.spawn_unit(exit_entity, unit.name, position)
                 if spawned_entity and spawned_entity.valid then
+                    ErmArmyPopulationProcessor.remove_unit_count(spawned_entity)
                     spawned_entity.health = unit_health
                     --- @todo render Recall effect on entrance position
                     unit.destroy()

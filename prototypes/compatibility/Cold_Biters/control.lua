@@ -6,7 +6,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local modify_race_setting = function()
     local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
 
-    if game.active_mods['Cold_biters'] then
+    if script.active_mods['Cold_biters'] then
         ErmDebugHelper.print('Cold_biters is active')
 
         RaceSettingHelper.add_structure_to_tier(race_settings, 1, 'cb-cold-spawner')
