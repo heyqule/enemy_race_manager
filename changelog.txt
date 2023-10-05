@@ -1,10 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.21.0
-Date: 2023-??-??
+Version: 1.20.9
+Date: 2023-10-04
 
   Changes:
     - Fixed tooltip of Max Auto Gathering Group changed from 15 -> 20
     - changed game.active_mods to script.active_mods
+
+  Bugfixes:
+    - Fixed army unit counter incorrectly add unit when teleport to new surface.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.8
