@@ -10,7 +10,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ArmyTeleportationProcessor = {}
 
