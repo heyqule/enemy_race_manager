@@ -126,14 +126,13 @@ function AttackMeterProcessor.calculate_points(force_name)
     ErmRaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
 
     local spawner_destroy_factor = game.map_settings.enemy_evolution.destroy_factor
-    local unit_evolution_points = unit_points * 0.02 * spawner_destroy_factor
-    local turret_evolution_points = turret_points * 0.1 * spawner_destroy_factor
+    local unit_evolution_points = unit_points * 0.025 * spawner_destroy_factor
+    local turret_evolution_points = turret_points * 0.2 * spawner_destroy_factor
     local spawner_evolution_points = 0
 
     if ErmConfig.spawner_kills_deduct_evolution_points() then
-        unit_evolution_points = unit_evolution_points * 1.03
-        turret_evolution_points = turret_evolution_points * -0.2
-        spawner_evolution_points = building_points * spawner_destroy_factor * -1.33
+        turret_evolution_points = turret_evolution_points * -0.5 * spawner_destroy_factor
+        spawner_evolution_points = building_points * -1.5 * spawner_destroy_factor
     end
 
     global.race_settings[race_name].evolution_base_point = global.race_settings[race_name].evolution_base_point + unit_evolution_points + turret_evolution_points + spawner_evolution_points

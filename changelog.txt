@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.11
+Date: 2023-12-10
+
+  Changes:
+    - ERM Roach world map presets changes:
+    - [Preset] Rename "ERM Roach World" to "ERM RTS World"
+    - [Preset] Resources spawn in very-high frequency with very-low richness setting.
+    - [Preset] Starting area is a little larger than normal.
+    - [Preset] This intended to simulate RTS map, which resource patch have low richness.
+    - Changed minimum group gathering time from 2 minutes to 3.5 minutes. (half Nauvis day)
+    - Changed Elite Squad spawn attack points' default from 60000 to 45000.
+    - Changed unit_evolution_points per kill from 2% to 2.5% of a spawner kill.
+    - Changed turret_evolution_points per kill from 10% to 20% of a spawner kill.
+    - Removed spawner_kills_deduct_evolution_points for units.  Killing units will no longer deduct enemy evolution points.
+    - Changed spawner_kills_deduct_evolution_points for turret from 20% to 50% of a spawner kill.
+    - Changed spawner_kills_deduct_evolution_points for spawner from 133% to 150% of a spawner kill.
+
+  Bugfixes:
+    - Fixed auto deploy number reset to default by army index [Issue:41]
+
+---------------------------------------------------------------------------------------------------
 Version: 1.20.10
 Date: 2023-10-05
 

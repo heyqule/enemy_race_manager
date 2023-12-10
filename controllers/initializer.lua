@@ -118,7 +118,9 @@ local prepare_world = function()
     game.map_settings.unit_group.max_member_speedup_when_behind = 2
     game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
     game.map_settings.unit_group.max_group_slowdown_factor = 1
-    game.map_settings.min_group_gathering_time = 2 * 3600
+    -- One to two nauvis day of gathering time.
+    game.map_settings.unit_group.min_group_gathering_time = 7 * 3600
+    game.map_settings.unit_group.max_group_gathering_time = 14 * 3600
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()

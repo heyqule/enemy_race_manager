@@ -500,7 +500,7 @@ data:extend {
         name = "enemyracemanager-elite-squad-attack-points",
         description = "enemyracemanager-elite-squad-attack-points",
         setting_type = "runtime-global",
-        default_value = 60000,
+        default_value = 45000,
         minimum_value = 10000,
         maximum_value = 100000,
         order = "enemyracemanager-408"

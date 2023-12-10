@@ -30,8 +30,17 @@ end
 
 local init_force_data = function(force, force_reset)
     force_reset = force_reset or false
+    local preserve_auto_deploy
+    if global.army_populations[force.name] and force_reset then
+        preserve_auto_deploy = global.army_populations[force.name]['auto_deploy']
+    end
+
     if not global.army_populations[force.name] or force_reset then
         global.army_populations[force.name] = set_default_values(force)
+    end
+
+    if preserve_auto_deploy then
+        global.army_populations[force.name]['auto_deploy'] = preserve_auto_deploy
     end
 end
 

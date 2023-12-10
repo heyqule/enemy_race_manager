@@ -194,7 +194,7 @@ It feels more balance to have both splitter acid and direct attack for base defe
 
 Unit HP:
 
-* level 1 are under 500, median none
+* level 1 are under 500, median 30-300
 * level 10 are 1000 - 5000, median 1500-2500
 * level 20 are 2500 - 10000, median 3000-5000
 
@@ -295,11 +295,19 @@ min_attack_distance, a parameter to randomize attack distance
 
 ##### pollution_to_join_attack Guideline:
 
-* Tier 1: 5 - 50
+* Tier 1: 4 - 50
 * Tier 2: 50 - 200
 * Tier 3: 100 - 400
-* Dropship: 150 - 200
-* Drone: 100 - 150
+* Dropship: 120
+* Builders: 100
+
+Small biter (melee unit) is 4.  
+
+EMR Race Tier 1 units Reference:
+Zergling = 4 (35HP), Hydralisk = 8 (80HP)
+Zealot = 10 (160HP), Dragoon = 20 (180HP)
+Human-Miner = 8(100HP), Human-Pistol = 8 (80HP)
+Mars-People = 6, MiniUfo = 12
 
 AOE units are in higher range. Tier 3 AOE units generally take 250-400 range.
 
@@ -326,10 +334,11 @@ I do unit balance in free for all mode. If a race have a fair fight with other r
 the unit balance is good enough.
 
 - Set up your race settings in startup settings.
-- Enable DEBUG_MODE flag in global.lua in ERM's core mod.
+- Enable DEBUG_MODE flag in global.lua in ERM's core mod.m
+- Use 2 races or 4 races splits
 - Load up the "Enemy race manager/General debug" scenario.
 - Load "ERM Debug" map setting (400% enemy)
 - disable water and tree
 - Start the game.
-- set "/c game.speed = 1000" to ERM work its magic.
-- Go out for a walk for half hours and view the result.
+- set "/c game.speed = 1000" for ERM to work its magic.
+- Go out for a walk for half hours and view the result when you are back.

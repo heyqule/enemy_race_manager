@@ -5,8 +5,20 @@
 require('util')
 local map_gen_settings = util.table.deepcopy(data.raw['map-gen-presets'])
 
-map_gen_settings['default']['erm-roach-world'] = {
+map_gen_settings['default']['erm-rts-world'] = {
     order = "h",
+    basic_settings = {
+        autoplace_controls =
+        {
+            ["iron-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["copper-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["stone"] = { frequency="very-high", richness = "very-poor"},
+            ["coal"] = { frequency="very-high", richness = "very-poor"},
+            ["uranium-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["crude-oil"] = { frequency="very-high", richness = "very-poor"}
+        },
+        starting_area = "big"
+    },
     advanced_settings = {
         enemy_expansion = {
             min_expansion_cooldown = 5 * 3600,
@@ -18,13 +30,20 @@ map_gen_settings['default']['erm-roach-world'] = {
     }
 }
 
-map_gen_settings['default']['erm-roach-death-world'] = {
+map_gen_settings['default']['erm-rts-death-world'] = {
     order = "i",
     basic_settings = {
         property_expression_names = {},
         autoplace_controls = {
+            ["iron-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["copper-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["stone"] = { frequency="very-high", richness = "very-poor"},
+            ["coal"] = { frequency="very-high", richness = "very-poor"},
+            ["uranium-ore"] = { frequency="very-high", richness = "very-poor"},
+            ["crude-oil"] = { frequency="very-high", richness = "very-poor"},
             ["enemy-base"] = { frequency = "very-high", size = "very-big" }
         },
+        starting_area = "big"
     },
     advanced_settings = {
         enemy_evolution = {
