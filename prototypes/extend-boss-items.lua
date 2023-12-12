@@ -60,7 +60,7 @@ data:extend({ {
                   order = "erm-boss-beacon",
                   is_military_target = false,
                   minable = nil,
-                  collision_mask = { "resource-layer" },
+                  collision_mask = nil,
                   max_health = 9999,
                   corpse = "small-remnants",
                   collision_box = { { -0.35, -0.35 }, { 0.35, 0.35 } },
