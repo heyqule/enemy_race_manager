@@ -55,7 +55,7 @@ end
 
 function ReplacementProcessor.process_chunks(surface, area, race_settings)
     local turrets = Table.filter(surface.find_entities_filtered({ area = area, type = 'turret' }), Game.VALID_FILTER)
-    local turret_size = Table.size(turrets)
+    local turret_size = table_size(turrets)
     if turret_size > 0 then
         Table.each(turrets, function(entity)
             if ErmForceHelper.is_enemy_force(entity.force) then
@@ -65,7 +65,7 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
     end
 
     local spawners = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner' }), Game.VALID_FILTER)
-    local spawners_size = Table.size(spawners)
+    local spawners_size = table_size(spawners)
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
             if ErmForceHelper.is_enemy_force(entity.force) then
@@ -126,7 +126,7 @@ end
 
 function ReplacementProcessor.resetDefault(surface)
     local spawners = Table.filter(surface.find_entities_filtered({ type = 'unit-spawner' }), Game.VALID_FILTER)
-    local spawners_size = Table.size(spawners)
+    local spawners_size = table_size(spawners)
     local spawner_names = { 'spitter-spawner', 'biter-spawner' }
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
@@ -140,7 +140,7 @@ function ReplacementProcessor.resetDefault(surface)
     end
 
     local turrets = Table.filter(surface.find_entities_filtered({ type = 'turret' }), Game.VALID_FILTER)
-    local turret_size = Table.size(turrets)
+    local turret_size = table_size(turrets)
     local turret_names = { 'big-worm-turret', 'behemoth-worm-turret' }
     if turret_size > 0 then
         Table.each(turrets, function(entity)

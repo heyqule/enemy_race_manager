@@ -11,6 +11,7 @@ require('__enemyracemanager__/global')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
 --- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
@@ -28,4 +29,12 @@ Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), functio
             remote.call(event.affected_race.race, "refresh_custom_attack_cache")
         end
     end
+end)
+
+--- Force Management
+Event.register(defines.events.on_force_created, function(event)
+    AttackGroupBeaconProcessor.add_new_force(event.force)
+end)
+Event.register(defines.events.on_forces_merged, function(event)
+    AttackGroupBeaconProcessor.remove_merged_force(event.source_name)
 end)

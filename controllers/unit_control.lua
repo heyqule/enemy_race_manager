@@ -7,13 +7,14 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
-local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmReplacementProcessor = require('lib/replacement_processor')
+local ErmBaseBuildProcessor = require('lib/base_build_processor')
+local ErmForceHelper = require('lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('lib/helper/race_settings_helper')
+local ErmAttackGroupProcessor = require('lib/attack_group_processor')
+local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
+
+local ErmConfig = require('lib/global_config')
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
@@ -25,39 +26,30 @@ local onBiterBaseBuilt = function(event)
                 ErmBaseBuildProcessor.exec(replaced_entity)
             end
         end
+
+        AttackGroupBeaconProcessor.create_spawn_beacon(entity)
+    end
+end
+
+local onUnitGroupCreated = function(event)
+    local group = event.group
+    local force = group.force
+    if ErmForceHelper.is_enemy_force(force) then
+        local surface = group.surface
+        local racename = ErmForceHelper.extract_race_name_from(force.name)
+        local scout = surface.create_entity({
+            position =  group.position,
+            surface = surface,
+            force = force,
+            name = racename..AttackGroupBeaconProcessor.LAND_SCOUT,
+            count = 1
+        })
+        group.add_member(scout);
     end
 end
 
 local onUnitFinishGathering = function(event)
-    local group = event.group
-    local max_settler = global.settings.enemy_expansion_max_settler
 
-    if max_settler == nil then
-        max_settler = math.min(ErmConfig.BUILD_GROUP_CAP, game.map_settings.enemy_expansion.settler_group_max_size)
-        global.settings.enemy_expansion_max_settler = max_settler
-    end
-
-    if group.command and group.command.type == defines.command.build_base and table_size(group.members) > max_settler then
-        local build_group = group.surface.create_unit_group {
-            position = group.position,
-            force = group.force
-        }
-        for i, unit in pairs(group.members) do
-            if i <= max_settler then
-                build_group.add_member(unit)
-            end
-        end
-        build_group.set_command {
-            type = defines.command.build_base,
-            destination = group.command.destination
-        }
-        global.erm_unit_groups[build_group.group_number] = {
-            group = build_group,
-            start_position = group.position
-        }
-        build_group.start_moving()
-        group.set_autonomous()
-    end
 end
 
 ---
@@ -147,6 +139,8 @@ end
 
 --- Unit processing events
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
+
+Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
 
 Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 

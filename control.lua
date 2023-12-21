@@ -40,8 +40,8 @@ cron_switch = {
     ['LevelProcessor.calculateMultipleLevels'] = function(args)
         ErmLevelProcessor.calculateMultipleLevels()
     end,
-    ['ForceHelper.refresh_all_enemy_forces'] = function(args)
-        ErmForceHelper.refresh_all_enemy_forces()
+    ['ForceHelper.refreshAllEnemyForces'] = function(args)
+        ErmForceHelper.refreshAllEnemyForces()
     end,
     ['AttackMeterProcessor.calculate_points'] = function(args)
         ErmAttackMeterProcessor.calculate_points(args[1])
@@ -107,6 +107,10 @@ require('__enemyracemanager__/controllers/map_management')
 
 --- Attack points & group events
 require('__enemyracemanager__/controllers/attack_group_management')
+
+require('__enemyracemanager__/controllers/attack_group_beacon')
+
+
 
 --- CRON Events
 require('__enemyracemanager__/controllers/cron')

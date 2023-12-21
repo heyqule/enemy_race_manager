@@ -329,7 +329,7 @@ end
 function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
     local target_unit = surface.find_entities_filtered({
         type = { "unit-spawner" },
-        force = ErmForceHelper.get_all_enemy_forces(),
+        force = ErmForceHelper.get_enemy_forces(),
         area = {
             { position.x - radius, position.y - radius },
             { position.x + radius, position.y + radius }

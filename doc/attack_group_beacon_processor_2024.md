@@ -13,7 +13,7 @@ MOD_NAME/attacker_target_beacon
 
 MOD_NAME/attacker_land_defense_beacon
 - govern 96 tiles wide chunk
-- only one beacon exists in one beacon chunk
+- only one land/air beacon exists in one beacon chunk
 - This beacon tracks enemy's is_military structures for advanced pathing.
 - The amount of resource tracks amount of turrets with the chunk. (max 100)
 - Deploy by land scout units
@@ -21,13 +21,13 @@ MOD_NAME/attacker_land_defense_beacon
 MOD_NAME/attacker_air_defense_beacon
 - govern 96 tiles wide chunk
 - only one beacon exists in one beacon chunk
-- This beacon tracks enemy's turret structure for advanced pathing.
+- This beacon tracks enemy's is_military structure for advanced pathing.
 - The amount of resource tracks amount of turrets with the chunk. (max 100)
 - Deploy by aerial scout units
 
 MOD_NAME/spawn_beacon
 - 320 tiles wide
-- only one beacon exists in one beacon chunk
+- only one land/air beacon exists in one beacon chunk
 - This beacon tracks enemy's spawn structure for spawner finding.
 - The amount of resource track amount of unit-spawner within the chunk. (max 100)
 
@@ -38,7 +38,13 @@ MOD_NAME/spawn_beacon
 global.spawn_beacon = {
     [force_name] = {
         [surface_name] = {
-            {x, y, ...}
+            {
+              beacon = beacon,
+              position = beacon.position,
+              created = game.tick,
+              updated = game.tick,
+              other_data = other_data
+            }
         },
     }
 }
@@ -46,7 +52,13 @@ global.spawn_beacon = {
 global.land_defense_beacon = {
     [surface_name] = {
         [target_force] = {
-            {x, y, ...}
+          {
+            beacon = beacon,
+            position = beacon.position,
+            created = game.tick,
+            updated = game.tick,
+            other_data = other_data
+          }
         }
     },
 }
@@ -54,14 +66,26 @@ global.land_defense_beacon = {
 global.aerial_defense_beacon = {
     [surface_name] = {
         [target_force] = {
-            {x, y, ...}
+          {
+            beacon = beacon,
+            position = beacon.position,
+            created = game.tick,
+            updated = game.tick,
+            other_data = other_data
+          }
         }
     },
 }
 global.attackable_entity_beacon = {
     [surface_name] = {
         [target_force] = {
-            {x, y, ...}
+          {
+            beacon = beacon,
+            position = beacon.position,
+            created = game.tick,
+            updated = game.tick,
+            other_data = other_data
+          }
         }
     },
 }
@@ -73,19 +97,33 @@ global.attackable_entity_beacon = {
 - They have 100 HP and don't attack from distraction.
 - When they die, they emit the attacker_target_beacon or attacker_defense_beacon if it meets criteria.
 
-## When you build target entity, the position point up
+## When you build mining drill entity, the perimeter of your base updates   
+
+this is used to use for picking spawn point. 
 ```lua
----Data Structure to store 8 position points and spawn point.
-global.base_diameters = {
+---Data Structure to store 4 position points and spawn point.
+global.player_base_diameters = {
     [force_name] = {
+        [spawn_point] = {
+          surface = surface_name,
+          position = {x,y},
+        },
         [surface_name] = {
-            [spawn] = {
+            [northeast] = {
                 x = 0,
                 y = 0
             },
-            [north] = {
-                x = 0,
-                y = 0
+            [northwest] = {
+              x = 0,
+              y = 0
+            },
+            [southeast] = {
+              x = 0,
+              y = 0
+            },
+            [northwest] = {
+              x = 0,
+              y = 0
             }
         }
     }
@@ -102,7 +140,7 @@ global.base_diameters = {
 
 #### When pick_spawn_location is called,
 - Pick attack location first and then use cross search to pick spawn location.
-- If spawner not found, remove beacon.
+- If spawner not found within beacon radius, remove beacon.
 
 #### When pick_attack_location is called
 

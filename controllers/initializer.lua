@@ -17,9 +17,10 @@ local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_sett
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-
 local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
@@ -136,7 +137,7 @@ local prepare_world = function()
         ErmLevelProcessor.calculateMultipleLevels()
     end
 
-    ErmAttackGroupChunkProcessor.init_index()
+    AttackGroupBeaconProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
@@ -195,6 +196,8 @@ local init_globals = function()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     ErmGui.init_globals()
+    AttackGroupBeaconProcessor.init_globals()
+
 
     --- Wipe this cache due to cache pollution from previous version.
     global.force_race_name_cache = {}

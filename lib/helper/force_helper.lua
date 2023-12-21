@@ -114,7 +114,7 @@ function ForceHelper.get_name_token(name)
     return global.force_entity_name_cache[name]
 end
 
-function ForceHelper.get_non_player_forces()
+function ForceHelper.getNonPlayerForces()
     return global.non_player_forces or { 'neutral' }
 end
 
@@ -122,11 +122,11 @@ function ForceHelper.get_player_forces()
     return global.player_forces or { 'player' }
 end
 
-function ForceHelper.get_all_enemy_forces()
+function ForceHelper.get_enemy_forces()
     return global.enemy_force_cache or { 'enemy' }
 end
 
-function ForceHelper.refresh_all_enemy_forces()
+function ForceHelper.refreshAllEnemyForces()
     global.enemy_force_cache = {}
     global.non_player_forces = {}
     global.player_forces = {}
@@ -189,7 +189,7 @@ function ForceHelper.can_have_enemy_on(surface)
     return false
 end
 
-function ForceHelper.reset_surface_lists()
+function ForceHelper.resetSurfaceLists()
     global.surface_exclusion_list = {}
     global.surface_inclusion_list = {}
 end

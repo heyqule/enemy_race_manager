@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.0
+Date: 2024-??-??
+
+  Features:
+    - >>> Reworked attack group pathing <<<
+    - Support fog of war for enemy forces.  Enemies will have to scout target entities.
+    - Enemy will scout with land and aerial units.
+    - Scout drops hidden beacons to calculate attack paths for attack groups.
+    - rocket-silo will register itself as target entity *AFTER* it launched its first rocket.
+    - When custom attack group spawns, it picks a closer spawner to reduce travel distance.
+    - >>> Reworked attack group surface selection <<<
+
+  Optimization:
+    - Various Code Refactors
+
+---------------------------------------------------------------------------------------------------
 Version: 1.20.13
 Date: 2024-03-01
 

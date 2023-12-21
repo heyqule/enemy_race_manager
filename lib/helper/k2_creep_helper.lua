@@ -20,7 +20,7 @@ function K2CreepHelper.onChunkGenerated(event)
     local nests = event.surface.find_entities_filtered({
         type = "unit-spawner",
         area = event.area,
-        force = ForceHelper.get_all_enemy_forces(),
+        force = ForceHelper.get_enemy_forces(),
     })
 
     for _, nest in pairs(nests) do

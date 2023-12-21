@@ -33,7 +33,7 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
     data.erm_land_scout[MOD_NAME] = 'small-biter'
 
     data.erm_aerial_scout = data.erm_aerial_scout or {}
-    data.erm_aerial_scout[MOD_NAME] = 'logistic-bot'
+    data.erm_aerial_scout[MOD_NAME] = 'logistic-robot'
 end
 
-require "prototypes.extend-resource-beacons"
+require "prototypes.extend-mapping-beacons"

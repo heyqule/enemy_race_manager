@@ -12,7 +12,7 @@ local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
@@ -241,9 +241,21 @@ function Debug_RemoteAPI.reset_level()
     end
 end
 
---- Usage: remote.call('enemyracemanager_debug', 'attack_group_chunk_index')
-function Debug_RemoteAPI.attack_group_chunk_index()
-    ErmAttackGroupChunkProcessor.init_index()
+--- Usage: remote.call('enemyracemanager_debug', 'attack_group_beacon_index')
+function Debug_RemoteAPI.attack_group_beacon_index()
+    AttackGroupBeaconProcessor.init_index()
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'pick_spawn_location', 'surface_name', 'force_name')
+function Debug_RemoteAPI.pick_spawn_location(surface_name, force_name)
+    local beacon = AttackGroupBeaconProcessor.pick_spawn_location(game.surfaces[surface_name], game.forces[force_name])
+    print(serpent.block(beacon))
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'pick_attack_location', 'surface_name', 'force_name')
+function Debug_RemoteAPI.pick_attack_location(surface_name, force_name)
+    local beacon = AttackGroupBeaconProcessor.pick_attack_location(game.surfaces[surface_name], game.forces[force_name])
+    print(serpent.block(beacon))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'wander_clean_up')
@@ -297,6 +309,26 @@ function Debug_RemoteAPI.forces_relation()
         end
         print('------ END ' .. forceA.name .. '------')
     end
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'create_land_scout', 'erm_vanilla', {x=100,y=100})
+function Debug_RemoteAPI.create_land_scout(mod_name, position)
+   local surface = game.player.surface
+    surface.create_entity({
+        name = mod_name..'/land-scout',
+        position = position,
+        force = ErmForceHelper.get_force_name_from(mod_name)
+    })
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'create_air_scout', 'erm_vanilla', {x=100,y=100})
+function Debug_RemoteAPI.create_air_scout(mod_name, position)
+    local surface = game.player.surface
+    surface.create_entity({
+        name = mod_name..'/aerial-scout',
+        position = position,
+        force = ErmForceHelper.get_force_name_from(mod_name)
+    })
 end
 
 return Debug_RemoteAPI

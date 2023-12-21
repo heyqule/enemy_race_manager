@@ -1,5 +1,5 @@
 # Workflow
-This replace the old group generator.
+This replaces the old group generator.
 
 Processor starts when AttackGroupProcessor.exec() is called
 

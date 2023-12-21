@@ -112,7 +112,6 @@ if DEBUG_MODE then
 end
 
 ErmConfig.FFA_MULTIPLIER = 10
-ErmConfig.BUILD_GROUP_CAP = 50
 
 ErmConfig.MAX_TIME_TO_LIVE_UNIT = 800
 ErmConfig.TIME_TO_LIVE_UNIT_BATCH = 64
@@ -469,7 +468,7 @@ function ErmConfig.initialize_races_data()
         end
     end
 
-    global.active_races_num = Table.size(global.active_races)
+    global.active_races_num = table_size(global.active_races)
 
     for key, _ in pairs(global.active_races) do
         Table.insert(global.active_races_names, key)

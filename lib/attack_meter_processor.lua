@@ -61,7 +61,7 @@ function AttackMeterProcessor.exec()
         return
     end
 
-    local force_names = ErmForceHelper.get_all_enemy_forces()
+    local force_names = ErmForceHelper.get_enemy_forces()
 
     for _, name in pairs(force_names) do
         AttackMeterProcessor.calculate_points(name)
@@ -73,7 +73,7 @@ function AttackMeterProcessor.add_form_group_cron()
         return
     end
 
-    local force_names = ErmForceHelper.get_all_enemy_forces()
+    local force_names = ErmForceHelper.get_enemy_forces()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]

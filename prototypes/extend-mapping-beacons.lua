@@ -6,14 +6,15 @@
 require('util')
 
 data:extend({
+    --- Spawn beacon marks an area with enemies' unit-spawners
     {
         type = "simple-entity-with-owner",
         name = "erm_spawn_beacon",
         subgroup = "erm_ai_beacons",
         icon = "__base__/graphics/icons/signal/signal_S.png",
         icon_size = 64,
+        max_health = 100,
         collision_box = nil,
-        selection_box = nil,
         collision_mask = nil,
         flags = {'not-on-map'},
         picture = {
@@ -23,14 +24,15 @@ data:extend({
         },
         map_color = nil
     },
+    --- Aerial beacon marks player's defense location via air
     {
         type = "simple-entity-with-owner",
         name = "erm_aerial_beacon",
         subgroup = "erm_ai_beacons",
         icon = "__base__/graphics/icons/signal/signal_A.png",
         icon_size = 64,
+        max_health = 100,
         collision_box = nil,
-        selection_box = nil,
         collision_mask = nil,
         flags = {'not-on-map'},
         picture = {
@@ -40,14 +42,15 @@ data:extend({
         },
         map_color = nil
     },
+    --- Land beacon marks player's defense location via land
     {
         type = "simple-entity-with-owner",
         name = "erm_land_beacon",
         subgroup = "erm_ai_beacons",
         icon = "__base__/graphics/icons/signal/signal_L.png",
         icon_size = 64,
+        max_health = 100,
         collision_box = nil,
-        selection_box = nil,
         collision_mask = nil,
         flags = {'not-on-map'},
         picture = {
@@ -57,18 +60,37 @@ data:extend({
         },
         map_color = nil
     },
+    --- Attackable entities beacon are an area that has entities with matching attack entity types
     {
         type = "simple-entity-with-owner",
         name = "erm_attackable_entity_beacon",
         subgroup = "erm_ai_beacons",
         icon = "__base__/graphics/icons/signal/signal_E.png",
         icon_size = 64,
+        max_health = 100,
         collision_box = nil,
-        selection_box = nil,
         collision_mask = nil,
         flags = {'not-on-map'},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_E.png",
+            width = 64,
+            height = 64,
+        },
+        map_color = nil
+    },
+    --- Resource beacons are used to track resource locations, so that scout will attempt to scout those areas.
+    {
+        type = "simple-entity-with-owner",
+        name = "erm_resource_beacon",
+        subgroup = "erm_ai_beacons",
+        icon = "__base__/graphics/icons/signal/signal_R.png",
+        icon_size = 64,
+        max_health = 100,
+        collision_box = nil,
+        collision_mask = nil,
+        flags = {'not-on-map'},
+        picture = {
+            filename = "__base__/graphics/icons/signal/signal_R.png",
             width = 64,
             height = 64,
         },
@@ -79,16 +101,20 @@ data:extend({
 
 if DEBUG_MODE then
     --- Make it placable in campaign for testing purposes
-    for _, data in pairs(data.raw['resource']) do
+    for _, data in pairs(data.raw['simple-entity-with-owner']) do
         if (data['subgroup'] == 'erm_ai_beacons') then
             data['render_layer'] = 'air-object'
             data['flags'] = { 'placeable-neutral', 'not-on-map' }
+            data['selection_box'] = { { -1, -1 }, { 1, 1 } }
         end
     end
 else
     --- Replace picture with empty spite to hide it from view.
-    for _, data in pairs(data.raw['resource']) do
-        data['selectable_in_game'] = false
-        data['pictures'] = util.empty_sprite()
+    for _, data in pairs(data.raw['simple-entity-with-owner']) do
+        if (data['subgroup'] == 'erm_ai_beacons') then
+            data['selectable_in_game'] = false
+            data['pictures'] = util.empty_sprite()
+            data['selection_box'] = nil
+        end
     end
 end

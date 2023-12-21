@@ -6,44 +6,22 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-
-local check_nearby_defense_beacon = function(entity,beacon_name, radius)
-    if entity.surface.count_entities_filtered({name=beacon_name},entity.position,radius) > 0 then
-        return true
-    end
-
-    return false
-end
-
-local check_nearby_attack_entity_beacon = function(entity,beacon_name, radius)
-    if entity.surface.count_entities_filtered({name=beacon_name},entity.position,radius) > 0 then
-        return true
-    end
-end
-
-local create_beacon = function(event, beacon_name)
-    local source_entity = event.source_entity
-    if source_entity and
-        source_entity.valid then
-        if check_nearby_defense_beacon(source_entity, 96) == false then
-            source_entity.surface.create_entity({
-                name = beacon_name,
-            })
-            source_entity.die(source_entity.force)
-        end
-
-    end
-end
-
+local Config = require('__enemyracemanager__/lib/global_config')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
 local beacon_functions = {
     [LAND_SCOUT_BEACON] = function(event)
-        create_beacon(event, 'erm_land_beacon')
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.LAND_BEACON)
+        AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
     [AERIAL_SCOUT_BEACON] = function(event)
-        create_beacon(event, 'erm_aerial_beacon')
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.AERIAL_BEACON)
+        AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
+    [SCOUT_PATHFINDING] = function(event)
+        AttackGroupBeaconProcessor.get_scout_path(event.source_entity)
+    end
 }
 
 

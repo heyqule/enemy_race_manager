@@ -279,14 +279,14 @@ end
 local remove_chunk_without_spawner = function(surface, position, race_name)
     local spawner = surface.find_entities_filtered({
         area = get_spawn_area(position),
-        force = ErmForceHelper.get_all_enemy_forces(),
+        force = ErmForceHelper.get_enemy_forces(),
         type = 'unit-spawner',
         limit = 1
     })
     if #spawner == 0 then
         local race_cursor = global.attack_group_spawnable_chunk[surface.name].race_cursors[race_name]
         local current_direction = AttackGroupChunkProcessor.DIRECTION_CURSOR[
-        race_cursor                                        .rotatable_directions[race_cursor.current_direction]
+            race_cursor.rotatable_directions[race_cursor.current_direction]
         ]
         remove_spawnable_chunk(surface, current_direction, position)
     end

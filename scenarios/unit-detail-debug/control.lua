@@ -74,7 +74,7 @@ Event.register(defines.events.on_player_created, function(event)
     }
     for _, item in pairs(prototypes) do
         x = -100 + i * gap
-        local nameToken = ForceHelper.get_name_token(item.name)
+        local nameToken = ForceHelper.getNameToken(item.name)
         if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], '%d') ~= 1 then
             local entity = surface.create_entity({
                 name = item.name,
