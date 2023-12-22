@@ -67,6 +67,42 @@ local get_race_settings = function(race_name, reload)
     return global.custom_attack_race_settings[race_name]
 end
 
+local get_low_tier_flying_unit = function(race_name)
+    local race_settings = get_race_settings(race_name)
+    if type(race_settings['flying_units'][1][1]) ~= nil then
+        return race_settings['flying_units'][1][1]
+    end
+
+    return nil
+end
+
+local get_drop_position = function(final_unit_name, surface, position, race_name, level)
+    local drop_position = position
+    if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
+        drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 16, 3, true)
+
+        if drop_position == nil then
+            local low_tier_flyer_name = get_low_tier_flying_unit(race_name)
+            if low_tier_flyer_name then
+                final_unit_name = race_name .. '/' .. low_tier_flyer_name ..'/' .. tostring(level)
+                drop_position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
+            end
+        end
+    end
+    return final_unit_name, drop_position
+end
+
+local add_member = function(final_unit_name, surface, drop_position, force_name, group)
+    if drop_position then
+        local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
+        if entity.type == 'unit' then
+            if group.valid then
+                group.add_member(entity)
+            end
+        end
+    end
+end
+
 local drop_unit = function(event, race_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
@@ -222,18 +258,9 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
 
     repeat
         local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. level
-        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
-        end
-
-        if position then
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
-            if entity.type == 'unit' then
-                if group.valid then
-                    group.add_member(entity)
-                end
-            end
-        end
+        local drop_position
+        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
+        add_member(final_unit_name, surface, drop_position, force_name, group)
         i = i + 1
     until i == count
 
@@ -268,16 +295,9 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
     }
     repeat
         local final_unit_name = race_name .. '/' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '/' .. tostring(level)
-        if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-            position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
-        end
-
-        if position then
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = boss_data.force })
-            if entity.type == 'unit' then
-                group.add_member(entity)
-            end
-        end
+        local drop_position
+        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
+        add_member(final_unit_name, surface, drop_position, boss_data.force, group)
         i = i + 1
     until i == count
 

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.20.12
+Date: 2023-12-22
+
+  Bugfixes:
+    - Fixed a crash when dropships can't find a land position to drop. It will spawn a low tier flying unit instead.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.20.11
 Date: 2023-12-10
 
