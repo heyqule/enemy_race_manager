@@ -3,8 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 10/4/2021 12:09 AM
 ---
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
 local AttackGroupSurfaceProcessor = {}
 
@@ -53,7 +52,7 @@ AttackGroupSurfaceProcessor.exec = function(race_name, retry_cron)
         surface = game.surfaces[index]
         if surface and surface.index > start_position and
                 global.enemy_surfaces[surface.name] == race_name and
-                ErmAttackGroupChunkProcessor.can_attack(surface)
+                AttackGroupBeaconProcessor.can_attack(surface)
         then
             surface_data.current_planet_pointer = surface
             surface_data.current_planet_name = surface.name

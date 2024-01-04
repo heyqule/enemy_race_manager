@@ -126,7 +126,7 @@ function ForceHelper.get_enemy_forces()
     return global.enemy_force_cache or { 'enemy' }
 end
 
-function ForceHelper.refreshAllEnemyForces()
+function ForceHelper.refresh_all_enemy_forces()
     global.enemy_force_cache = {}
     global.non_player_forces = {}
     global.player_forces = {}
@@ -189,7 +189,7 @@ function ForceHelper.can_have_enemy_on(surface)
     return false
 end
 
-function ForceHelper.resetSurfaceLists()
+function ForceHelper.reset_surface_lists()
     global.surface_exclusion_list = {}
     global.surface_inclusion_list = {}
 end

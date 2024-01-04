@@ -6,13 +6,14 @@
 
 require('util')
 local String = require('__stdlib__/stdlib/utils/string')
+local Event = require('__stdlib__/stdlib/event/event')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
@@ -28,7 +29,7 @@ AttackGroupProcessor.UNIT_PER_BATCH = 5
 AttackGroupProcessor.MAX_GROUP_SIZE = 2000
 
 AttackGroupProcessor.GROUP_AREA = 256
-AttackGroupProcessor.CHUNK_CENTER_POINT = 16
+AttackGroupProcessor.ATTACK_RADIUS = 16
 
 AttackGroupProcessor.GROUP_TYPE_MIXED = 1
 AttackGroupProcessor.GROUP_TYPE_FLYING = 2
@@ -144,15 +145,17 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
     if group_tracker.current_size >= group_tracker.size then
         --local profiler = game.create_profiler()
-        local position = ErmAttackGroupChunkProcessor.pick_attack_location(surface, group.position)
+        -- to be change to command getter
+        local entity_data = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, group.force, true)
         --profiler.stop()
         --log({'', 'Attack Path finding...  ', profiler})
 
-        if position then
+        if entity_data and entity_data.position then
+            local position = entity_data.position
             local command = {
                 type = defines.command.attack_area,
-                destination = { x = position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = position.y + AttackGroupProcessor.CHUNK_CENTER_POINT },
-                radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2
+                destination = { x = position.x, y = position.y },
+                radius = AttackGroupProcessor.ATTACK_RADIUS
             }
 
             if group_tracker.is_precision_attack then
@@ -162,8 +165,8 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                         'description.message-incoming-precision-attack',
                         race_name,
                         ErmSurfaceProcessor.get_gps_message(
-                                (position.x + AttackGroupProcessor.CHUNK_CENTER_POINT),
-                                (position.y + AttackGroupProcessor.CHUNK_CENTER_POINT),
+                                position.x,
+                                position.y,
                                 group.surface.name
                         )
                     }, { r = 1, g = 0, b = 0 })
@@ -180,21 +183,6 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         end
         set_group_tracker(race_name, nil)
     end
-end
-
-local pick_gathering_location = function(surface, force, race_name)
-    if surface == nil or not surface.valid then
-        return nil
-    end
-
-    --local profiler = game.create_profiler()
-    local target_cc = ErmAttackGroupChunkProcessor.pick_spawn_location(surface, force)
-    --profiler.stop()
-    --log({'', 'Gathering Path finding...  ', profiler})
-    if target_cc == nil then
-        return nil
-    end
-    return surface.find_non_colliding_position(target_cc.name, target_cc.position, AttackGroupProcessor.GROUP_AREA, 1)
 end
 
 local generate_unit_queue = function(surface, center_location, force, race_name, units_number, group_type, featured_group_id, is_elite_attack)
@@ -309,17 +297,50 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 end
 
-function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack)
+function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack, target_force, surface, from_cron)
     if get_group_tracker(race_name) then
         return false
     end
+    surface = surface or pick_surface(race_name)
+
+    if surface == nil or not surface.valid then
+        return false
+    end
+    from_cron = from_cron or false
+    target_force = target_force or game.forces['player']
 
     AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
-    local surface = pick_surface(race_name)
-    local center_location = pick_gathering_location(surface, force, race_name)
+    local attack_beacon_data = AttackGroupBeaconProcessor.pick_attack_beacon(surface, force, target_force)
+    local spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data.beacon, from_cron)
+
+    if spawn_beacon == nil then
+        if halt_cron == false then
+            -- Retry to find new spawn beacon
+            ErmCron.add_quick_queue('AttackGroupProcessor.generate_group',
+                    race_name, force, units_number, type, featured_group_id,
+                    is_elite_attack, target_force, surface, from_cron)
+        end
+
+        return false
+    end
+
+    local center_location = surface.find_non_colliding_position(spawn_beacon.name, spawn_beacon.position, AttackGroupProcessor.GROUP_AREA, 1)
+
     if surface and center_location then
         generate_unit_queue(surface, center_location, force, race_name, units_number, type, featured_group_id, is_elite_attack)
+
+        if is_elite_attack then
+            Event.dispatch({
+                name = Event.get_event_name(ErmConfig.ADJUST_ACCUMULATED_ATTACK_METER),
+                race_name = race_name
+            })
+        end
+        Event.dispatch({
+            name = Event.get_event_name(ErmConfig.ADJUST_ATTACK_METER),
+            race_name = race_name
+        })
+
         return true
     end
 
@@ -408,18 +429,18 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     local attack_position = nil
 
     if find_nearby then
-        attack_position = ErmAttackGroupChunkProcessor.pick_nearby_attack_location(group.surface, group.position)
+        attack_position = AttackGroupBeaconProcessor.pick_nearby_attack_location(group.surface, group.position)
     end
 
     if attack_position == nil then
-        attack_position = ErmAttackGroupChunkProcessor.pick_attack_location(group.surface, group.position)
+        attack_position = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force)
     end
 
     if attack_position then
         local command = {
             type = defines.command.attack_area,
-            destination = { x = attack_position.x + AttackGroupProcessor.CHUNK_CENTER_POINT, y = attack_position.y + AttackGroupProcessor.CHUNK_CENTER_POINT },
-            radius = AttackGroupProcessor.CHUNK_CENTER_POINT * 2,
+            destination = { x = attack_position.x, y = attack_position.y},
+            radius = AttackGroupProcessor.ATTACK_RADIUS,
             distraction = distraction
         }
         group.set_command(command)

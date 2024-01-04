@@ -53,7 +53,7 @@ function SurfaceProcessor.rebuild_race()
         return
     end
 
-    ErmForceHelper.resetSurfaceLists()
+    ErmForceHelper.reset_surface_lists()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or

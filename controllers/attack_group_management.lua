@@ -11,7 +11,6 @@ require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 
 Event.on_nth_tick(ErmConfig.ATTACK_POINT_CALCULATION, function(event)
     ErmAttackMeterProcessor.exec()
@@ -19,4 +18,12 @@ end)
 
 Event.on_nth_tick(ErmConfig.ATTACK_GROUP_GATHERING_CRON, function(event)
     ErmAttackMeterProcessor.add_form_group_cron()
+end)
+
+Event.register(Event.generate_event_name(ErmConfig.ADJUST_ATTACK_METER), function(event)
+    ErmAttackMeterProcessor.adjustAttackMeter(event.race_name)
+end)
+
+Event.register(Event.generate_event_name(ErmConfig.ADJUST_ACCUMULATED_ATTACK_METER), function(event)
+    ErmAttackMeterProcessor.adjustLastAccumulatedAttackMeter(event.race_name)
 end)

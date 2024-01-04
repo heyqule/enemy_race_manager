@@ -18,9 +18,6 @@ local beacon_functions = {
     [AERIAL_SCOUT_BEACON] = function(event)
         AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.AERIAL_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
-    end,
-    [SCOUT_PATHFINDING] = function(event)
-        AttackGroupBeaconProcessor.get_scout_path(event.source_entity)
     end
 }
 
@@ -29,5 +26,12 @@ Event.register(defines.events.on_script_trigger_effect, function(event)
     if beacon_functions[event.effect_id]
     then
         beacon_functions[event.effect_id](event)
+    end
+end)
+
+Event.on_nth_tick(Config.SPAWN_SCOUTS_INTERVAL, function(event)
+    --- Spawn scout on active race
+    for _, force in pairs(Config.get_enemy_races()) do
+
     end
 end)

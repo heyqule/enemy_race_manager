@@ -26,6 +26,7 @@ if DEBUG_MODE then
     ErmConfig.BOSS_QUEUE_CRON = 11
     ErmConfig.TELEPORT_QUEUE_CRON = 33
     ErmConfig.AUTO_DEPLOY_CRON = 311
+    ErmConfig.SPAWN_SCOUTS_INTERVAL = 25301
 
     ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
     ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
@@ -41,6 +42,7 @@ else
     ErmConfig.BOSS_QUEUE_CRON = 11
     ErmConfig.TELEPORT_QUEUE_CRON = 33
     ErmConfig.AUTO_DEPLOY_CRON = 311
+    ErmConfig.SPAWN_SCOUTS_INTERVAL = 25301
 
     -- +1 to spread the job across all ticks
     -- execute all job on designated tick
@@ -60,6 +62,9 @@ ErmConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
 ErmConfig.BASE_BUILT_EVENT = 'erm_base_built'
 ErmConfig.FLUSH_GLOBAL = 'erm_flush_global'
+
+ErmConfig.ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
+ErmConfig.ADJUST_ACCUMULATED_ATTACK_METER = 'erm_adjust_accumulated_attack_meter'
 
 -- How to use event erm_race_setting_updated
 -- Check race exists

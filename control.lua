@@ -6,27 +6,41 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+if script.active_mods["factorio-test"] then
+    local config = require('__stdlib__/stdlib/config')
+    config.skip_script_protections = true
 
-local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
-local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
-local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
-local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
-local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
-local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+    require("__factorio-test__/init")({
+        "tests/data_check",
+        "tests/attack_beacon"
+    })
+    -- the first argument is a list of test files (require paths) to run
+end
+
+
+require('__stdlib__/stdlib/utils/defines/time')
+require('global')
+
+local ErmLevelProcessor = require('lib/level_processor')
+local ErmForceHelper = require('lib/helper/force_helper')
+local ErmBaseBuildProcessor = require('lib/base_build_processor')
+local ErmAttackMeterProcessor = require('lib/attack_meter_processor')
+local ErmAttackGroupProcessor = require('lib/attack_group_processor')
+local ErmAttackGroupSurfaceProcessor = require('lib/attack_group_surface_processor')
+local ErmBossProcessor = require('lib/boss_processor')
+local ErmBossGroupProcessor = require('lib/boss_group_processor')
+local ErmBossAttackProcessor = require('lib/boss_attack_processor')
+local ErmBossRewardProcessor = require('lib/boss_reward_processor')
+local ErmArmyTeleportationProcessor = require('lib/army_teleportation_processor')
+
+local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
 
 require('prototypes/compatibility/controls')
 
-local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
+local ErmRemoteApi = require('lib/remote_api')
 remote.add_interface("enemyracemanager", ErmRemoteApi)
 
-local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
+local ErmDebugRemoteApi = require('lib/debug_remote_api')
 remote.add_interface("enemyracemanager_debug", ErmDebugRemoteApi)
 
 -- Establish Cron Switches
@@ -34,14 +48,18 @@ cron_switch = {
     ['AttackGroupProcessor.add_to_group'] = function(args)
         ErmAttackGroupProcessor.add_to_group_cron(args)
     end,
+    ['AttackGroupProcessor.generate_group'] = function(args)
+        -- When args[7] presents, it's treated as retry group
+        ErmAttackGroupProcessor.generate_group(args[1],args[2],args[3],args[4],args[5],args[6],args[7])
+    end,
     ['BaseBuildProcessor.build'] = function(args)
         ErmBaseBuildProcessor.build_cron(args)
     end,
     ['LevelProcessor.calculateMultipleLevels'] = function(args)
         ErmLevelProcessor.calculateMultipleLevels()
     end,
-    ['ForceHelper.refreshAllEnemyForces'] = function(args)
-        ErmForceHelper.refreshAllEnemyForces()
+    ['ForceHelper.refresh_all_enemy_forces'] = function(args)
+        ErmForceHelper.refresh_all_enemy_forces()
     end,
     ['AttackMeterProcessor.calculate_points'] = function(args)
         ErmAttackMeterProcessor.calculate_points(args[1])
@@ -81,7 +99,7 @@ cron_switch = {
     end,
     ['ArmyTeleportationProcessor.scan_units'] = function(args)
         ErmArmyTeleportationProcessor.scan_units()
-    end
+    end,
 }
 
 require('__enemyracemanager__/controllers/initializer')

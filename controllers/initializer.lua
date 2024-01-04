@@ -17,7 +17,6 @@ local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_sett
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
@@ -189,14 +188,13 @@ local init_globals = function()
     ErmMapProcessor.init_globals()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
-    ErmAttackGroupChunkProcessor.init_globals()
+    AttackGroupBeaconProcessor.init_globals()
     ErmAttackGroupSurfaceProcessor.init_globals()
     ErmBossProcessor.init_globals()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     ErmGui.init_globals()
-    AttackGroupBeaconProcessor.init_globals()
 
 
     --- Wipe this cache due to cache pollution from previous version.

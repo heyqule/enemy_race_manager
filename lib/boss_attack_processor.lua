@@ -9,8 +9,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
-local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -87,7 +86,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     end
 
     if return_position == nil then
-        return_position = ErmAttackGroupChunkProcessor.pick_attack_location(boss.surface, boss.position)
+        return_position = AttackGroupBeaconProcessor.pick_attack_location(boss.surface, boss.position)
         artillery_mode = true
     end
 

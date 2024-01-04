@@ -4,8 +4,6 @@ local scenarios_helper = require('__enemyracemanager__/scenarios/shared.lua')
 local Event = require('__stdlib__/stdlib/event/event')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
-local spawned
-
 Event.on_init(function(event)
     game.map_settings.enemy_expansion.enabled = false
     local surface = game.surfaces[1]
@@ -72,9 +70,10 @@ Event.register(defines.events.on_player_created, function(event)
         ['20'] = true,
         ['25'] = true,
     }
+
     for _, item in pairs(prototypes) do
         x = -100 + i * gap
-        local nameToken = ForceHelper.getNameToken(item.name)
+        local nameToken = ForceHelper.get_name_token(item.name)
         if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], '%d') ~= 1 then
             local entity = surface.create_entity({
                 name = item.name,

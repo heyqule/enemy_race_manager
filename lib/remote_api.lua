@@ -8,14 +8,16 @@
 
 local Event = require('__stdlib__/stdlib/event/event')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
-local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
+local ErmConfig = require('lib/global_config')
+local ErmForceHelper = require('lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('lib/helper/race_settings_helper')
+local ErmAttackGroupProcessor = require('lib/attack_group_processor')
+local ErmBossGroupProcessor = require('lib/boss_group_processor')
+local ErmArmyPopulationProcessor = require('lib/army_population_processor')
+local ErmArmyTeleportationProcessor = require('lib/army_teleportation_processor')
+local ErmArmyDeploymentProcessor = require('lib/army_deployment_processor')
+
+local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
 
 local ERM_RemoteAPI = {}
 
@@ -257,7 +259,7 @@ function ERM_RemoteAPI.get_event_name(event_name)
 end
 
 --- Internal Management remote calls
-ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refreshAllEnemyForces
+ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
 
 ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
 ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
@@ -265,5 +267,7 @@ ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
 ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
 
 ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
+
+ERM_RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
 
 return ERM_RemoteAPI

@@ -10,7 +10,6 @@ require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
@@ -27,15 +26,24 @@ end)
 --- Surface Management
 Event.register(defines.events.on_surface_created, function(event)
     ErmSurfaceProcessor.assign_race(game.surfaces[event.surface_index])
-    AttackGroupBeaconProcessor.init_globalsOnSurface(game.surfaces[event.surface_index])
+    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
 end)
 Event.register(defines.events.on_pre_surface_deleted, function(event)
     ErmSurfaceProcessor.remove_race(game.surfaces[event.surface_index])
-    AttackGroupBeaconProcessor.remove_beacon_on_surface(game.surfaces[event.surface_index])
+    AttackGroupBeaconProcessor.remove_beacon_on_surface(event.surface_index)
 end)
 Event.register(defines.events.on_pre_surface_cleared, function(event)
-    AttackGroupBeaconProcessor.remove_beacon_on_surface(game.surfaces[event.surface_index])
+    AttackGroupBeaconProcessor.remove_beacon_on_surface(event.surface_index)
+    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
 end)
 Event.register(defines.events.on_surface_renamed, function(event)
-    AttackGroupBeaconProcessor.remove_beacon_on_surface(game.surfaces[event.surface_index])
+    AttackGroupBeaconProcessor.remove_beacon_on_surface(event.surface_index)
+end)
+
+--- Path finding
+Event.register(defines.events.on_script_path_request_finished, function(event)
+    if global.request_path[event.id] then
+        print('Total Nodes:')
+        print(table_size(event.path))
+    end
 end)

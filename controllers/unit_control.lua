@@ -112,15 +112,26 @@ local destroyInvalidGroup = function(group, start_position)
     end
 end
 
+---
+---1 = defines.behavior_result.in_progress
+---2 = defines.behavior_result.fail
+---3 = defines.behavior_result.success
+---4 = defines.behavior_result.deleted
+---
 local onAiCompleted = function(event)
     local erm_unit_groups = global.erm_unit_groups
     local unit_number = event.unit_number
     if isErmUnitGroup(unit_number) then
         local group = erm_unit_groups[unit_number].group
+        print(event.unit_number..'/'..event.result..'/'..group.state)
 
         destroyInvalidGroup(group, erm_unit_groups[unit_number].start_position)
 
-        if group.valid and (group.command == nil or group.state == defines.group_state.finished) then
+        if group.valid and
+            (group.command == nil or
+            group.state == defines.group_state.finished or
+            event.result == defines.behavior_result.success)
+        then
             if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
                 ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
             else

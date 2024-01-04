@@ -1,0 +1,335 @@
+<mxfile host="app.diagrams.net" modified="2024-01-04T04:05:59.415Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="Sd9aW-En7f4n8OQf8bdT" version="22.1.16" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="2234" dy="1146" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-3" target="H2UR6xtQbF_XBvmq5V8B-11" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="When Attack Group starts to form" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="10" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-11" target="H2UR6xtQbF_XBvmq5V8B-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="210" as="sourcePoint" />
+            <mxPoint x="220" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-11" value="Pick elite or regular attack group, based on attack points" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-14" target="H2UR6xtQbF_XBvmq5V8B-28" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-14" value="Pick a attackable surface" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-15" target="H2UR6xtQbF_XBvmq5V8B-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-15" value="Pick spawn location" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-18" value="Add a 2 second queue to pick spawn location again, with different spawn location." style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="390" y="335" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-20" target="H2UR6xtQbF_XBvmq5V8B-22" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-20" value="Generate unit queue" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-22" value="Adjust attack meter points" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-23" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-15" target="H2UR6xtQbF_XBvmq5V8B-18" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="270" as="sourcePoint" />
+            <mxPoint x="400" y="269.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-24" value="Found&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="210" y="418" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-25" value="Not found&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="300" y="348" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cl8FKbShSoNVyvX0lUh5-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-26" target="H2UR6xtQbF_XBvmq5V8B-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-26" value="When Pick Spawn Location" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-28" value="Get attack beacon" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-30" target="H2UR6xtQbF_XBvmq5V8B-32" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-30" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-30" value="Get spawn beacon within an defined area" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-32" target="H2UR6xtQbF_XBvmq5V8B-34" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-32" value="Sort beacons by distance" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="333" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-34" target="H2UR6xtQbF_XBvmq5V8B-36" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-34" value="Pick the closest beacon" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-36" target="H2UR6xtQbF_XBvmq5V8B-38" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-36" value="Select 10 spawners with the beacon radius" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-38" target="H2UR6xtQbF_XBvmq5V8B-42" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-38" value="Randomly pick a spawner" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-42" value="Return it" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="780" y="720" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-43" value="Found" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="790" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-46" value="Not found" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="930" y="220" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-49" value="q" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-48" target="H2UR6xtQbF_XBvmq5V8B-26" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1090" y="20" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1090" y="30" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-48" value="Update tracker data, point to next area when this runs again" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1030" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-51" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-48" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="360" as="sourcePoint" />
+            <mxPoint x="1090" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-52" value="Not found after processing all areas" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1090" y="290" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-53" value="Return nil and a flag to halt addition cron job" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1030" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-54" target="H2UR6xtQbF_XBvmq5V8B-56" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-54" value="When getting attack beacon" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-56" value="Iterate to next attack beacon" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-60" target="H2UR6xtQbF_XBvmq5V8B-65" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-60" target="H2UR6xtQbF_XBvmq5V8B-67" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1560" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-60" value="Beacon is valid" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-61" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-56" target="H2UR6xtQbF_XBvmq5V8B-60" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1430" y="360" as="sourcePoint" />
+            <mxPoint x="1480" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-65" target="H2UR6xtQbF_XBvmq5V8B-69" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1580" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-65" target="H2UR6xtQbF_XBvmq5V8B-72" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-65" value="Beacon is healthy, with attackable entities" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-67" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1840" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-67" value="Remove beacon data from tracker" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1590" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-73" value="q" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-69" target="H2UR6xtQbF_XBvmq5V8B-56" edge="1">
+          <mxGeometry x="1" relative="1" as="geometry">
+            <mxPoint x="1840" y="110" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1841" y="370" />
+              <mxPoint x="1841" y="130" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-69" value="Remove beacon and its data from tracker" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1590" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-72" value="Pick attack beacon" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-75" value="When chunk genaerated or on_biter_base_built" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-76" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-75" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-340" y="160" as="sourcePoint" />
+            <mxPoint x="-120" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-77" target="H2UR6xtQbF_XBvmq5V8B-79" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-120" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-77" value="Spawn beacon does not exist within 320 radius" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-180" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-79" value="Select a spawner" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-180" y="230" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-80" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-79" target="H2UR6xtQbF_XBvmq5V8B-81" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-340" y="160" as="sourcePoint" />
+            <mxPoint x="-120" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-81" value="Place spawn beacon on target" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-180" y="333" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-84" value="&lt;h1&gt;Forming attack group&lt;/h1&gt;&lt;p&gt;This action is designed to run across multiple ticks.&amp;nbsp; If it&#39;s not able to pick a spawn beacon&amp;nbsp;or attack beacon.&amp;nbsp; It will keep trying with different beacon in a future tick.&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="160" y="-120" width="430" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-88" target="H2UR6xtQbF_XBvmq5V8B-91" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-370" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-88" value="When chunk created, there are resource patch" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-91" target="H2UR6xtQbF_XBvmq5V8B-97" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-370" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-91" value="If resource beacon does not exists with 64 radius" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-430" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="H2UR6xtQbF_XBvmq5V8B-97" value="Spawn a resource beacon for scouting" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-430" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-0" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-600" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-0" value="When scouts spawns daily." style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-600" y="200" as="targetPoint" />
+            <mxPoint x="-600" y="170" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-8" value="Pick a target race.&amp;nbsp; Player or neutral" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-9" value="Pick a surface" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-9" target="6TCvZa7t76qwlJjQ8sRG-16" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-600" y="400" as="targetPoint" />
+            <mxPoint x="-600" y="360" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-16" target="6TCvZa7t76qwlJjQ8sRG-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-600" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-16" value="Pick spawn point" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-21" target="6TCvZa7t76qwlJjQ8sRG-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-600" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-21" value="Generate scout unit" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="388" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-25" value="Assign target, either an attack entity or resource node" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-26" value="When scount reach its destination" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="620" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-27" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-26" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-360" y="750" as="sourcePoint" />
+            <mxPoint x="-600" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-28" value="- Place beacon if conditions are met&lt;br&gt;- Pick next attack entity node to scout" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="-660" y="730" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6TCvZa7t76qwlJjQ8sRG-29" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="6TCvZa7t76qwlJjQ8sRG-26" target="6TCvZa7t76qwlJjQ8sRG-25" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-360" y="510" as="sourcePoint" />
+            <mxPoint x="-310" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cl8FKbShSoNVyvX0lUh5-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="H2UR6xtQbF_XBvmq5V8B-28" target="H2UR6xtQbF_XBvmq5V8B-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
