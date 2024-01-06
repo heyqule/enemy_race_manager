@@ -132,8 +132,8 @@ local function get_an_attackable_entity(entity, radius)
     return entities[1]
 end
 
-local function get_attack_area(position)
-    local distance = BEACON_RADIUS / 2
+local function get_next_attack_area(position)
+    local distance = BEACON_RADIUS * 2
     local area = {
         { position.x - distance, position.y - distance },
         { position.x + distance, position.y + distance }
@@ -406,7 +406,7 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon = function(source_entity)
             has_nearby_attack_entity_beacon(attackable_entity) == false
     then
         local attackable_entities = count_attackable_entities(attackable_entity)
-        if attackable_entities > 1 then
+        if attackable_entities > 0 then
             local beacon = surface.create_entity({
                 name = ATTACK_ENTITIES_BEACON,
                 position = { attackable_entity.position.x, attackable_entity.position.y },
@@ -435,9 +435,8 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk = function(sur
                 limit = 1,
             })
             local entity_key = next(attackable_entities)
-            if entity_key then
-                AttackGroupBeaconProcessor.create_attack_entity_beacon(attackable_entities[entity_key])
-                return true
+            if entity_key then                
+                return AttackGroupBeaconProcessor.create_attack_entity_beacon(attackable_entities[entity_key])
             end
         end
     end
@@ -504,8 +503,7 @@ AttackGroupBeaconProcessor.create_resource_beacon_from_trunk = function(surface,
         })
         local entity_key = next(resource_entities)
         if entity_key then
-            AttackGroupBeaconProcessor.create_resource_beacon(resource_entities[entity_key])
-            return true
+            return AttackGroupBeaconProcessor.create_resource_beacon(resource_entities[entity_key])
         end
     end
 
@@ -552,7 +550,7 @@ end
 
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
     local selected_key = global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
-    if global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][selected_key] == nil then
+    if not selected_key or global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][selected_key] == nil then
         return nil
     end
 
@@ -571,6 +569,10 @@ AttackGroupBeaconProcessor.get_beacon_data = function(beacon_type, surface_index
         return global[beacon_type][surface_index][force_name]
     end
     return global[beacon_type][surface_index]
+end
+
+AttackGroupBeaconProcessor.get_max_tiers = function()
+    return MAX_TIERS
 end
 
 AttackGroupBeaconProcessor.init_globals = function()
@@ -638,10 +640,19 @@ AttackGroupBeaconProcessor.init_index = function()
     game.print({ '', '[ERM] Attack Group Beacons Re-indexed: ', profiler })
 end
 
-AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, target_force)
-    local target_beacon = AttackGroupBeaconProcessor.get_selected_attack_beacon(surface, source_force, target_force) or
-            AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
+AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, target_force, new_beacon)
+    local profiler = game.create_profiler()
+    local target_beacon 
 
+    if new_beacon then        
+        target_beacon = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
+    else
+        target_beacon = AttackGroupBeaconProcessor.get_selected_attack_beacon(surface, source_force, target_force) or 
+            AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
+    end
+
+    profiler.stop()
+    log({ '', 'pick_attack_beacon: ', profiler })
     return target_beacon
 end
 
@@ -652,7 +663,7 @@ end
 --- Once all sides are found and no position found, move to next tier.
 --- When tier and direction reach max.  Removed target_beacon since nothing matches.
 ---
-AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon, from_cron)
+AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon, from_cron, request_path)
     local profiler = game.create_profiler()
     local target_force = target_beacon.force
     from_cron = from_cron or false
@@ -678,16 +689,18 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         if next(entities) then
             local distances = get_sorted_distance(entities, target_beacon.position)
 
-            local request_id = game.surfaces[1].request_path({
-                bounding_box = { { -0.2, 0.2 }, { 0.2, 0.2 } },
-                collision_mask = { "colliding-with-tiles-only", "water-tile" },
-                start = distances[1].position,
-                goal = target_beacon.position,
-                force = source_force,
-                path_resolution_modifier = -5, ---32 tiles resolution
-            })
-
-            table.insert(global.request_path, request_id, true)
+            if request_path then
+                local request_id = game.surfaces[1].request_path({
+                    bounding_box = { { -0.2, 0.2 }, { 0.2, 0.2 } },
+                    collision_mask = { "colliding-with-tiles-only", "water-tile" },
+                    start = distances[1].position,
+                    goal = target_beacon.position,
+                    force = source_force,
+                    path_resolution_modifier = -5, ---32 tiles resolution
+                })
+    
+                table.insert(global.request_path, request_id, true)                
+            end
 
             local entities = surface.find_entities_filtered({
                 area = get_spawn_area(distances[1].position),
@@ -794,7 +807,7 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
 end
 
 AttackGroupBeaconProcessor.pick_nearby_attack_location = function(surface, init_position)
-    local entities = get_attackable_entity(surface, get_attack_area(init_position))
+    local entities = get_attackable_entity(surface, get_next_attack_area(init_position))
     local position
 
     local next_index = next(entities)
@@ -807,6 +820,8 @@ AttackGroupBeaconProcessor.pick_nearby_attack_location = function(surface, init_
 end
 
 AttackGroupBeaconProcessor.pick_resource_location = function(surface, init_position, direction, distance)
+    local profiler = game.create_profiler()
+
     distance = distance or 960
     local target_range = { 0, distance }
     local bounding_box = bounding_box_calc[direction](init_position, target_range)
@@ -817,17 +832,30 @@ AttackGroupBeaconProcessor.pick_resource_location = function(surface, init_posit
         limit = 10,
     })
 
-    local distances = get_sorted_distance(entities, init_position)
+    local distances = get_sorted_distance(entities, init_position, true)
     local rc_position
 
     for _, entity in pairs(entities) do
-        if distances[1].position == entity.position then
+        if distances[1].position.x == entity.position.x and
+           distances[1].position.y == entity.position.y  then
             rc_position = entity.position
             break
         end
     end
 
+    profiler.stop()
+    log({ '', 'pick_resource_location: ', profiler })
     return rc_position
+end
+
+AttackGroupBeaconProcessor.reset_globals = function()
+    for _, beacon in pairs(ALL_BEACONS) do
+        global[beacon] = {}
+    end
+
+    global.request_path = {}
+    global[CONTROL_DATA] = nil
+    AttackGroupBeaconProcessor.init_control_globals()
 end
 
 AttackGroupBeaconProcessor.remove_beacon_on_surface = function(surface_index)

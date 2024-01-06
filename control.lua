@@ -5,18 +5,7 @@
 -- Time: 11:29 AM
 -- To change this template use File | Settings | File Templates.
 --
-
-if script.active_mods["factorio-test"] then
-    local config = require('__stdlib__/stdlib/config')
-    config.skip_script_protections = true
-
-    require("__factorio-test__/init")({
-        "tests/data_check",
-        "tests/attack_beacon"
-    })
-    -- the first argument is a list of test files (require paths) to run
-end
-
+require('testcase')
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('global')
