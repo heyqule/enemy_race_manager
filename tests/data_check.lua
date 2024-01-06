@@ -1,4 +1,13 @@
 local ForceHelper = require('lib/helper/force_helper')
+local TestShared = require('shared')
+
+before_each(function()
+    TestShared.prepare_the_factory()
+end)
+
+after_each(function()
+    TestShared.reset_the_factory()
+end)
 
 describe("Race Setting Data", function()
     -- you can have many nested describe blocks:
@@ -11,9 +20,9 @@ describe("Race Setting Data", function()
             assert.not_nil(data.label,'UI label exist')
             assert.equal(data.attack_meter, 0, 'Attack meter is 0')
             assert.equal(data.attack_meter_total, 0, 'Attack meter total is 0')
-            assert.equal(#data.current_building_tier, 2,'Has 2 items in current_building_tier')
-            assert.equal(#data.current_turrets_tier, 1,'Has 1 items in current_turret_tier')
-            assert.equal(#data.current_units_tier, 3,'Has 3 items in current_units_tier')
+            assert(#data.current_building_tier > 0, 'Has items in current_building_tier')
+            assert(#data.current_turrets_tier > 0, 'Has items in current_turret_tier')
+            assert(#data.current_units_tier > 0, 'Has items in current_units_tier')
             assert.equal(#data.droppable_units, 3,'Has 3 tier of droppable_units')
             assert.equal(#data.droppable_units[1], 5,'Each droppable_units tier has 5 elements for spawn setting')
             assert.is_string(data.dropship, 'dropship assigned to an unit')

@@ -4,43 +4,9 @@
 --- DateTime: 12/31/2023 3:22 PM
 ---
 
-local ForceHelper = require('lib/helper/force_helper')
+
 local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
-local scenarios_helper = require('__enemyracemanager__/scenarios/shared.lua')
-
-local prepare_the_factory = function()
-    local surface = game.surfaces[1]
-    local player = game.players[1]
-    local force = player.force
-    local entities = surface.find_entities_filtered({ force = force })
-    for _, entity in pairs(entities) do
-        entity.destroy()
-    end
-
-    AttackGroupBeaconProcessor.reset_globals()
-
-end
-
-local reset_the_factory = function()
-    local surface = game.surfaces[1]
-
-    local forces = {}
-    table.insert(forces, ForceHelper.get_enemy_forces())
-    table.insert(forces, 'player')
-    -- Destroy Player and enemy entities
-    for _, force in pairs(forces) do
-        local entities = surface.find_entities_filtered({ force = force })
-        for _, entity in pairs(entities) do
-            entity.destroy()
-        end
-    end
-
-    -- Destroy Resources
-    local resources = surface.find_entities_filtered({ force = 'neutral' })
-    for _, entity in pairs(resources) do
-        entity.destroy()
-    end
-end
+local TestShared = require('shared')
 
 local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
 local NOT_SCAN_DISCTANCE = {120, 5200}
@@ -89,11 +55,11 @@ local test_locations = {
 }
 
 before_each(function()
-    prepare_the_factory()
+    TestShared.prepare_the_factory()
 end)
 
 after_each(function()
-    reset_the_factory()
+    TestShared.reset_the_factory()
 end)
 
 -- you can have many nested describe blocks:

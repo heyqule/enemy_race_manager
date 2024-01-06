@@ -7,10 +7,9 @@
 --- References:
 --- https://lua-api.factorio.com/latest/LuaForce.html
 ---
-local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
-local Math = require('__stdlib__/stdlib/utils/math')
+
 
 local ErmConfig = require('lib/global_config')
 local ErmForceHelper = require('lib/helper/force_helper')
@@ -237,7 +236,7 @@ function LevelManager.getEvolutionFactor(race_name)
         return game.forces[new_force_name].evolution_factor
     end
 
-    return 'n/a'
+    return 0
 end
 
 function LevelManager.print_level_curve_table()
@@ -246,6 +245,18 @@ function LevelManager.print_level_curve_table()
         string = string .. tostring(i + 1) .. " = " .. tostring(evolution_points[i]) .. ', '
     end
     game.print('Level Curve: ' .. string)
+end
+
+function LevelManager.reset_all_progress()
+    for _, force_name in pairs(ErmForceHelper.get_enemy_forces()) do
+        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        global.race_settings[race_name].level = 1
+        global.race_settings[race_name].tier = 1
+        global.race_settings[race_name].evolution_point = 0
+        global.race_settings[race_name].evolution_base_point = 0
+        local force = game.forces[force_name]
+        force.reset_evolution()
+    end
 end
 
 return LevelManager
