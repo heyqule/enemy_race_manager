@@ -53,8 +53,6 @@ describe("Surfaces Manager", function()
         SurfaceProcessor.rebuild_race()
         local new_list = table.deepcopy(global.enemy_surfaces)
         assert.not_equal(old_list, new_list, 'Both list should not be equal')
-        print(serpent.block(old_list))
-        print(serpent.block(new_list))
         for i = 0, surface_count, 1 do
             local new_surface_name = 'testsurface'..tostring(i)
             game.delete_surface(new_surface_name)

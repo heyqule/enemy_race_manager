@@ -25,6 +25,14 @@ function TestShared.prepare_the_factory()
 end
 
 function TestShared.reset_the_factory()
+    local surface = game.surfaces[1]
+    for key, _ in pairs(game.forces) do
+        local entities = surface.find_entities_filtered({ force = game.forces[key] })
+        for _, entity in pairs(entities) do
+            entity.destroy()
+        end
+    end
+
     LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
 end
