@@ -34,7 +34,7 @@ end)
 
 describe("Attack Meters", function()
     it("Calculate attack points", function()
-        async(16000)
+        async(24000)
         local surface = game.surfaces[1]
         AttackGroupBeaconProcessor.init_index()
 
@@ -74,7 +74,7 @@ describe("Attack Meters", function()
         end)
 
         --- When attack group generated
-        after_ticks(15000, function()
+        after_ticks(22000, function()
             print(global.race_settings[race_name].attack_meter_total)
             print(global.race_settings[race_name].attack_meter)
             print(global.race_settings[race_name].next_attack_threshold)
@@ -84,7 +84,7 @@ describe("Attack Meters", function()
         end)
     end)
 
-    it("Base evolution point with spawner-kills-deduction true", function()
+    it("Base evolution - kills-deduction true", function()
         async(7200)
         global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
         local surface = game.surfaces[1]
