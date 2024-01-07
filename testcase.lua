@@ -11,7 +11,8 @@ if script.active_mods["factorio-test"] then
     local tests = {
         "tests/data_check",
         "tests/attack_beacon",
-        "tests/level_and_tier"
+        "tests/level_and_tier",
+        "tests/surface_manager"
     }
 
     require("__factorio-test__/init")(tests)
