@@ -347,7 +347,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
     return false
 end
 
-function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
+function AttackGroupProcessor.generate_nuked_group(surface, position, radius, source_entity)
     local target_unit = surface.find_entities_filtered({
         type = { "unit-spawner" },
         force = ErmForceHelper.get_enemy_forces(),
@@ -385,7 +385,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius)
             end
         end
 
-        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, source_entity.force.name)
 
         global.erm_unit_groups[group.group_number] = {
             group = group,
@@ -422,9 +422,10 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     return false
 end
 
-function AttackGroupProcessor.process_attack_position(group, distraction, find_nearby)
+function AttackGroupProcessor.process_attack_position(group, distraction, find_nearby, target_force)
     distraction = distraction or defines.distraction.by_enemy
     find_nearby = find_nearby or false
+    target_force = target_force or game.forces['player']
 
     local attack_position = nil
 
@@ -433,7 +434,7 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 
     if attack_position == nil then
-        attack_position = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force)
+        attack_position = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force, target_force)
     end
 
     if attack_position then

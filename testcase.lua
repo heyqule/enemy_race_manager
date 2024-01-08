@@ -16,6 +16,10 @@ if script.active_mods["factorio-test"] then
         "tests/surface_manager",
     }
 
+    if script.active_mods['erm_zerg'] then
+        table.insert(tests,"tests/attack_group")
+    end
+
     require("__factorio-test__/init")(tests)
     -- the first argument is a list of test files (require paths) to run
 end

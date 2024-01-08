@@ -22,6 +22,7 @@ function TestShared.prepare_the_factory()
 
     LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
+    TestShared.reset_attack_meter()
 end
 
 function TestShared.reset_the_factory()
@@ -35,6 +36,19 @@ function TestShared.reset_the_factory()
 
     LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
+    TestShared.reset_attack_meter()
 end
+
+function TestShared.reset_attack_meter()
+    for key, force in pairs(game.forces) do
+        local force_name = force.name
+        local race_name = ForceHelper.extract_race_name_from(force_name)
+        if race_name then
+            global.race_settings[race_name].attack_meter = 0
+            global.race_settings[race_name].attack_meter_total = 0
+        end
+    end
+end
+
 
 return TestShared

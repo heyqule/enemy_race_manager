@@ -769,7 +769,6 @@ end
 
 AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_force, target_force)
     local entity_data = nil
-
     local key, value = next(global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name], global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_CURRENT_KEY])
     local i = 0
     while (key or i < RETRY) do

@@ -21,7 +21,7 @@ local process_attack_point_event = function(event, attack_point)
 end
 
 local process_counter_attack_event = function(event, radius)
-    ErmAttackGroupProcessor.generate_nuked_group(game.surfaces[event.surface_index], event.target_position, radius)
+    ErmAttackGroupProcessor.generate_nuked_group(game.surfaces[event.surface_index], event.target_position, radius, event.source_entity)
 end
 
 local is_valid_attack_for_attack_point = function(event)

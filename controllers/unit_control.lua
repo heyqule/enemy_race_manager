@@ -123,7 +123,6 @@ local onAiCompleted = function(event)
     local unit_number = event.unit_number
     if isErmUnitGroup(unit_number) then
         local group = erm_unit_groups[unit_number].group
-        print(event.unit_number..'/'..event.result..'/'..group.state)
 
         destroyInvalidGroup(group, erm_unit_groups[unit_number].start_position)
 

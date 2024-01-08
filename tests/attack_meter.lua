@@ -4,7 +4,7 @@
 --- DateTime: 1/7/2024 3:46 PM
 ---
 
-local AttackMeter = require('lib/attack_meter_processor')
+
 local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
 local TestShared = require('shared')
 
@@ -15,21 +15,12 @@ local spawner_name = 'erm_vanilla/biter-spawner/1' -- 50 points
 local force_name = 'enemy'
 local race_name = 'erm_vanilla'
 
-local function reset_attack_meter()
-    if global.race_settings[race_name] then
-        global.race_settings[race_name].attack_meter = 0
-        global.race_settings[race_name].attack_meter_total = 0
-    end
-end
-
 before_each(function()
     TestShared.prepare_the_factory()
-    reset_attack_meter()
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
-    reset_attack_meter()
 end)
 
 describe("Attack Meters", function()
@@ -59,8 +50,8 @@ describe("Attack Meters", function()
                 surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
             end
 
-            local entities = surface.find_entities_filtered({force=force_name})
-            for _, entity in pairs(entities) do
+            local entities_to_die = surface.find_entities_filtered({force=force_name})
+            for _, entity in pairs(entities_to_die) do
                 entity.die('player')
             end
 
