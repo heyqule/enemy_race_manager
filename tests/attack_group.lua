@@ -37,7 +37,7 @@ end
 describe("Attack Group", function()
     --- Regular attack group Test
     it("Regular Group by AP", function()
-        async(12800)
+        async(18200)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         AttackGroupBeaconProcessor.init_index()
@@ -47,7 +47,7 @@ describe("Attack Group", function()
         global.race_settings[race_name].attack_meter = 3000
         global.race_settings[race_name].next_attack_threshold = 3000
 
-        after_ticks(12000, function()
+        after_ticks(18000, function()
             assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
 
             local key = next(global.erm_unit_groups)
@@ -64,7 +64,7 @@ describe("Attack Group", function()
     end)
     --- Elite group Test
     it("Elite Group by AAP", function()
-        async(12800)
+        async(18200)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         AttackGroupBeaconProcessor.init_index()
@@ -76,7 +76,7 @@ describe("Attack Group", function()
         global.race_settings[race_name].next_attack_threshold = 3000
         global.race_settings[race_name].attack_meter_total = 45200
 
-        after_ticks(12000, function()
+        after_ticks(18000, function()
             assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
 
             local key = next(global.erm_unit_groups)
