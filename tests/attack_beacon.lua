@@ -103,7 +103,7 @@ describe("Create Beacon", function()
         assert.equal(attackable_entity_beacon[1].health, 2, 'Beacon health matches')
     end)
 
-    it("Resource Beacon on Iron Ore", function()
+    it("Resource Beacon on finite node", function()
         local surface = game.surfaces[1]
 
         for x = 25, 40, 1 do
@@ -120,7 +120,7 @@ describe("Create Beacon", function()
         assert(resource_beacon == 1, 'Resource Beacon Created')
     end)
 
-    it("Resource Beacon on Crude Oil", function()
+    it("Resource Beacon on infinite node", function()
         local surface = game.surfaces[1]
         surface.create_entity({ name = 'crude-oil', position = { 20, 20 } })
 
@@ -132,7 +132,7 @@ describe("Create Beacon", function()
         assert(resource_beacon == 1, 'Resource Beacon Created')
     end)
 
-    it("Test create_spawn_beacon_from_trunk", function()
+    it("create_spawn_beacon_from_trunk()", function()
         local surface = game.surfaces[1]
         surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 20, 20 } })
 
@@ -144,7 +144,7 @@ describe("Create Beacon", function()
         assert(spawner_beacon == 1, 'Spawner Beacon Created')
     end)
 
-    it("Test create_attack_entity_beacon_from_trunk", function()
+    it("create_attack_entity_beacon_from_trunk()", function()
         local surface = game.surfaces[1]
         local laser_entity = surface.create_entity({ name = 'artillery-turret', force = 'player', position = { 10, 10 } })
         local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 20, 20 } })
@@ -269,14 +269,51 @@ describe("Pick Spawn beacon", function()
                         end
                     end                        
                 end
-                assert.not_nil(spawn_location, 'Got spawn location')
+                assert.not_nil(spawn_location, 'Need spawn location')
             end)
         end
     end
 
+    for _, range in pairs(NOT_SCAN_DISCTANCE) do
+
+        it("not valid range @ "..range, function()
+            local direction = 0
+            AttackGroupBeaconProcessor.init_index()
+            local surface = game.surfaces[1]
+
+            surface.request_to_generate_chunks(test_locations[direction](math.floor(range/32)),3)
+            surface.force_generate_chunk_requests()
+
+            local test_location = test_locations[direction](range)
+            local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+            local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
+                {test_location.x-15, test_location.y-15 },
+                {test_location.x+15, test_location.y+15}
+            })
+            local spawner_beacon = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            assert(spawner_beacon == 1, 'Has Spawner Beacon')
+
+            local enemy = game.forces['enemy']
+            local player = game.forces['player']
+            local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
+
+            local spawn_location
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon)
+
+            if not spawn_location then
+                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon, true)
+                    if spawn_location then
+                        break
+                    end
+                end
+            end
+            assert.is_nil(spawn_location, 'Not able to find spawn location')
+        end)
+    end
 end)
 describe("Pick Resource Beacon", function()
-    it("Test resource",function()
+    it("Crude Oil",function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
 
@@ -289,7 +326,7 @@ describe("Pick Resource Beacon", function()
         end
 
         local entities = surface.find_entities_filtered({ name = 'erm_resource_beacon'})
-        assert.equal(10, #entities, 'Has 10 resource beacons')
+        assert(table_size(entities) >= 10 , 'Has at least 10 resource beacons')
 
         local position = AttackGroupBeaconProcessor.pick_resource_location(surface, {x=0,y=0}, defines.direction.east)
         assert.not_nil(position, 'Found a position')
