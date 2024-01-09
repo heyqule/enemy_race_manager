@@ -49,7 +49,7 @@ describe("Base Building", function()
         spawn_units(surface,name)
         BaseBuildProcessor.exec(building)
 
-        after_ticks(3500, function()
+        after_ticks(300, function()
             local count = surface.count_entities_filtered({
                 type="unit-spawner",
                 force = enemy_force
@@ -129,8 +129,8 @@ describe("Base Building", function()
                 type="turret",
                 force = enemy_force
             })
-            assert(count > 1, 'more than 1 spawner spawned')
-            assert(turret_count > 1, 'more than 1 turret spawned')
+            assert(count > 6, 'more than 6 spawner spawned')
+            assert(turret_count > 6, 'more than 6 turret spawned')
             assert.falsy(unit_group.valid, 'builder group disbanded')
         end)
     end)
