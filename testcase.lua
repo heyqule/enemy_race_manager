@@ -20,6 +20,10 @@ if script.active_mods["factorio-test"] then
         table.insert(tests,"tests/attack_group")
     end
 
+    if script.active_mods['erm_terran'] then
+        table.insert(tests,"tests/army")
+    end
+
     require("__factorio-test__/init")(tests)
     -- the first argument is a list of test files (require paths) to run
 end

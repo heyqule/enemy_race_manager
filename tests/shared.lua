@@ -16,7 +16,7 @@ function TestShared.prepare_the_factory()
     for key, _ in pairs(game.forces) do
         local entities = surface.find_entities_filtered({ force = game.forces[key] })
         for _, entity in pairs(entities) do
-            entity.destroy()
+            entity.destroy({raise_destroy=true})
         end
     end
 
@@ -30,7 +30,7 @@ function TestShared.reset_the_factory()
     for key, _ in pairs(game.forces) do
         local entities = surface.find_entities_filtered({ force = game.forces[key] })
         for _, entity in pairs(entities) do
-            entity.destroy()
+            entity.destroy({raise_destroy=true})
         end
     end
 
