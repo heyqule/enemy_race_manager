@@ -7,9 +7,9 @@
 ---
 
 local TestShared = require('shared')
-local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
-local AttackGroupProcessor = require('lib/attack_group_processor')
-local ForceHelper = require('lib/helper/force_helper')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 before_each(function()
     TestShared.prepare_the_factory()

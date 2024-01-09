@@ -7,14 +7,14 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmReplacementProcessor = require('lib/replacement_processor')
-local ErmBaseBuildProcessor = require('lib/base_build_processor')
-local ErmForceHelper = require('lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('lib/helper/race_settings_helper')
-local ErmAttackGroupProcessor = require('lib/attack_group_processor')
-local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
+local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
+local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
-local ErmConfig = require('lib/global_config')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity

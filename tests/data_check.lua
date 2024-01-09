@@ -1,4 +1,4 @@
-local ForceHelper = require('lib/helper/force_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local TestShared = require('shared')
 
 before_each(function()

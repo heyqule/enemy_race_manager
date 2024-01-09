@@ -4,9 +4,9 @@
 --- DateTime: 1/6/2024 6:34 PM
 ---
 
-local ForceHelper = require('lib/helper/force_helper')
-local LevelManager = require('lib/level_processor')
-local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local LevelManager = require('__enemyracemanager__/lib/level_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
 local TestShared = {}
 

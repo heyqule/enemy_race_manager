@@ -5,7 +5,7 @@
 ---
 
 local TestShared = require('shared')
-local BaseBuildProcessor = require('lib/base_build_processor')
+local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 
 local enemy_force = 'enemy_erm_zerg'
 local function spawn_units(surface,name)

@@ -5,7 +5,7 @@
 ---
 
 
-local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local TestShared = require('shared')
 
 

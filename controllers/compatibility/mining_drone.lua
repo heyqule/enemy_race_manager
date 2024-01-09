@@ -4,7 +4,7 @@
 --- DateTime: 8/27/2023 1:10 PM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('lib/global_config')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
 
 local add_mining_drone = function(event)
     local name = 'mining-depot'

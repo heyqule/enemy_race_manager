@@ -5,10 +5,10 @@
 ---
 
 local TestShared = require('shared')
-local AttackGroupBeaconProcessor = require('lib/attack_group_beacon_processor')
-local ArmyPop = require('lib/army_population_processor')
-local ArmyDeployment = require('lib/army_deployment_processor')
-local ArmyTeleport = require('lib/army_teleportation_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local ArmyPop = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyDeployment = require('__enemyracemanager__/lib/army_deployment_processor')
+local ArmyTeleport = require('__enemyracemanager__/lib/army_teleportation_processor')
 
 local function delete_surfaces()
     for _, surface in pairs(game.surfaces) do

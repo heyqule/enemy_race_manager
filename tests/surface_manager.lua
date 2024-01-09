@@ -4,7 +4,7 @@
 --- DateTime: 1/7/2024 2:39 PM
 ---
 
-local SurfaceProcessor = require('lib/surface_processor')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local TestShared = require('shared')
 
 

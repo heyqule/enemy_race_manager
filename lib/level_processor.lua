@@ -11,8 +11,8 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
 
 
-local ErmConfig = require('lib/global_config')
-local ErmForceHelper = require('lib/helper/force_helper')
+local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 local LevelManager = {}

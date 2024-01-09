@@ -4,7 +4,7 @@
 --- DateTime: 1/6/2024 5:02 PM
 ---
 
-local LevelManager = require('lib/level_processor')
+local LevelManager = require('__enemyracemanager__/lib/level_processor')
 local TestShared = require('shared')
 
 
