@@ -19,6 +19,7 @@ if script.active_mods["factorio-test"] then
     if script.active_mods['erm_zerg'] then
         table.insert(tests,"tests/attack_group")
         table.insert(tests,"tests/base_build")
+        table.insert(tests,"tests/custom_attack")
     end
 
     if script.active_mods['erm_terran'] then
