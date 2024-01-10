@@ -41,14 +41,13 @@ describe("Level Manager", function()
 
         after_ticks(5, function()
             assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
-            assert( Queue.size(global.mapproc_chunk_queue[surface.name]), 'Has map queue')
+            assert( Queue.size(global.mapproc_chunk_queue[surface.name]) > 0, 'Has map queue')
         end)
 
-        after_ticks(3600, function()
+        after_ticks(1800, function()
             local entities = surface.find_entities_filtered({
                 type='unit-spawner'
             })
-            print(entities[1].name)
             assert.equal('erm_vanilla/biter-spawner/10',entities[1].name, 'Correct updated unit spawner')
         end)
     end)

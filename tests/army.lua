@@ -96,7 +96,6 @@ describe("Army Count", function()
 
     end)
     it('Deployment', function()
-        async(1500)
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
@@ -131,19 +130,22 @@ describe("Army Count", function()
             assert.not_nil(deployer.entity,'Deploy Entity Valid')
         end
 
-        after_ticks(700, function()
+        local marine_size = 0
+        after_ticks(900, function()
             local marines = surface.find_entities_filtered({
                 name=unit_name
             })
-            assert(table_size(marines) == 1, 'Marine spawned')
+            marine_size = table_size(marines)
+            assert(marine_size > 1, 'Marine spawned')
             powerinterface.die('enemy')
         end)
 
-        after_ticks(1400, function()
+        after_ticks(1800, function()
             local marines = surface.find_entities_filtered({
                 name=unit_name
             })
-            assert(table_size(marines) == 1, 'Marine can not spawned while power is out')
+
+            assert( table_size(marines) == marine_size, 'Marine can not spawned while power is out')
             done()
         end)
 
