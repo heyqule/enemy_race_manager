@@ -14,7 +14,7 @@ after_each(function()
     TestShared.reset_the_factory()
 end)
 
-describe.only("Custom attacks", function()
+describe("Custom attacks", function()
     it("Dropship", function()
         local surface = game.surfaces[1]
         local enemy_force = game.forces['enemy']

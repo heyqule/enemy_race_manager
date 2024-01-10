@@ -6,8 +6,7 @@
 
 local LevelManager = require('__enemyracemanager__/lib/level_processor')
 local TestShared = require('shared')
-
-
+local Queue = require('__stdlib__/stdlib/misc/queue')
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -31,6 +30,27 @@ describe("Level Manager", function()
         global.race_settings['erm_vanilla'].evolution_base_point = 50
         LevelManager.calculateMultipleLevels()
         assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
+    end)
+
+    it("Test enemy level update", function()
+        local surface = game.surfaces[1]
+        local enemy_force = game.forces['enemy']
+        local overlord = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', force = enemy_force, position = { 10, 10 } })
+        global.race_settings['erm_vanilla'].evolution_base_point = 50
+        LevelManager.calculateMultipleLevels()
+
+        after_ticks(5, function()
+            assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
+            assert( Queue.size(global.mapproc_chunk_queue[surface.name]), 'Has map queue')
+        end)
+
+        after_ticks(3600, function()
+            local entities = surface.find_entities_filtered({
+                type='unit-spawner'
+            })
+            print(entities[1].name)
+            assert.equal('erm_vanilla/biter-spawner/10',entities[1].name, 'Correct updated unit spawner')
+        end)
     end)
 
     it("Tiers switch", function()
