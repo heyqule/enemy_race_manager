@@ -133,6 +133,16 @@ function ArmyPopulationProcessor.remove_unit_count(unit)
     end
 end
 
+function ArmyPopulationProcessor.is_army_unit(unit)
+    local unit_name = unit.name
+    local army_registered_units = global.army_registered_units
+    if army_registered_units[unit_name] then
+        return true
+    end
+
+    return false
+end
+
 function ArmyPopulationProcessor.get_army_data(force)
     if global.army_populations[force.name] == nil then
         init_force_data(force)

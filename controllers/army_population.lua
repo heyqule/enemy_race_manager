@@ -59,3 +59,11 @@ Event.register(defines.events.on_script_trigger_effect, function(event)
         ErmArmyControlUI.update_army_stats()
     end
 end)
+
+Event.register(defines.events.script_raised_destroy, function(event)
+    local entity = event.entity
+    if entity and entity.valid and ErmArmyPopulation.is_army_unit(entity)then
+        ErmArmyPopulation.remove_unit_count(entity)
+        ErmArmyControlUI.update_army_stats()
+    end
+end)
