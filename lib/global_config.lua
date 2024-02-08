@@ -66,6 +66,8 @@ ErmConfig.FLUSH_GLOBAL = 'erm_flush_global'
 ErmConfig.ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
 ErmConfig.ADJUST_ACCUMULATED_ATTACK_METER = 'erm_adjust_accumulated_attack_meter'
 
+ErmConfig.REQUEST_PATH = 'erm_request_path'
+
 -- How to use event erm_race_setting_updated
 -- Check race exists
 -- update settings
@@ -116,7 +118,7 @@ if DEBUG_MODE then
     ErmConfig.CONFIG_CACHE_SIZE = 256
 end
 
-ErmConfig.FFA_MULTIPLIER = 10
+ErmConfig.FFA_MULTIPLIER = settings.startup['enemyracemanager-free-for-all-multiplier'].value
 
 ErmConfig.MAX_TIME_TO_LIVE_UNIT = 800
 ErmConfig.TIME_TO_LIVE_UNIT_BATCH = 64
@@ -260,9 +262,9 @@ function ErmConfig.get_max_attack_range()
     return current_range
 end
 
-function ErmConfig.get_max_projectile_range(multipler)
-    multipler = multipler or 1
-    return 64 * multipler
+function ErmConfig.get_max_projectile_range(multiplier)
+    multiplier = multiplier or 1
+    return 64 * multiplier
 end
 
 function ErmConfig.get_mapping_method()

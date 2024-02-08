@@ -10,24 +10,6 @@ local Config = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
-local beacon_functions = {
-    [LAND_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.LAND_BEACON)
-        AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
-    end,
-    [AERIAL_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.AERIAL_BEACON)
-        AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
-    end
-}
-
-
-Event.register(defines.events.on_script_trigger_effect, function(event)
-    if beacon_functions[event.effect_id]
-    then
-        beacon_functions[event.effect_id](event)
-    end
-end)
 
 Event.on_nth_tick(Config.SPAWN_SCOUTS_INTERVAL, function(event)
     --- Spawn scout on active race

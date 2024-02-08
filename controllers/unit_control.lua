@@ -13,8 +13,26 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
+
+local DEBUG_BEHAVIOUR_RESULTS = {
+    [defines.behavior_result.in_progress] = 'defines.behavior_result.in_progress',
+    [defines.behavior_result.fail] = 'defines.behavior_result.fail',
+    [defines.behavior_result.success] = 'defines.behavior_result.success',
+    [defines.behavior_result.deleted] = 'defines.behavior_result.deleted'
+}
+
+local DEBUG_GROUP_STATES = {
+    [defines.group_state.gathering] = 'defines.group_state.gathering',
+    [defines.group_state.moving] = 'defines.group_state.moving',
+    [defines.group_state.attacking_distraction] = 'defines.group_state.attacking_distraction',
+    [defines.group_state.attacking_target] = 'defines.group_state.attacking_target',
+    [defines.group_state.finished] = 'defines.group_state.finished',
+    [defines.group_state.pathfinding] = 'defines.group_state.pathfinding',
+    [defines.group_state.wander_in_group] = 'defines.group_state.wander_in_group'
+}
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
@@ -37,14 +55,27 @@ local onUnitGroupCreated = function(event)
     if ErmForceHelper.is_enemy_force(force) then
         local surface = group.surface
         local racename = ErmForceHelper.extract_race_name_from(force.name)
-        local scout = surface.create_entity({
-            position =  group.position,
-            surface = surface,
-            force = force,
-            name = racename..AttackGroupBeaconProcessor.LAND_SCOUT,
-            count = 1
-        })
-        group.add_member(scout);
+        local scout_unit_name
+        if global.group_tracker and global.group_tracker[racename] then
+            if ErmAttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
+                scout_unit_name = racename..AttackGroupBeaconProcessor.AERIAL_SCOUT
+            else
+                scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
+            end
+        elseif ErmRaceSettingsHelper.can_spawn(33) then
+            scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
+        end
+
+        if scout_unit_name then
+            local scout = surface.create_entity({
+                position =  group.position,
+                surface = surface,
+                force = force,
+                name = scout_unit_name,
+                count = 1
+            })
+            group.add_member(scout);
+        end
     end
 end
 
@@ -112,30 +143,52 @@ local destroyInvalidGroup = function(group, start_position)
     end
 end
 
----
----1 = defines.behavior_result.in_progress
----2 = defines.behavior_result.fail
----3 = defines.behavior_result.success
----4 = defines.behavior_result.deleted
----
+
 local onAiCompleted = function(event)
-    local erm_unit_groups = global.erm_unit_groups
     local unit_number = event.unit_number
+
+    -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
+    print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+
+
     if isErmUnitGroup(unit_number) then
+        local erm_unit_groups = global.erm_unit_groups
         local group = erm_unit_groups[unit_number].group
+
+        if DEBUG_MODE then
+            print('AI COMPLETE:')
+            print('group_number:'..unit_number)
+            print('Group States:'..DEBUG_GROUP_STATES[group.state])
+            print('Event Beheviour Result:'..DEBUG_BEHAVIOUR_RESULTS[event.result])
+            if group.valid then
+                print('Group command:'..serpent.block(group.command))
+                print('Distraction Command:'..serpent.block(group.distraction_command))
+            end
+        end
 
         destroyInvalidGroup(group, erm_unit_groups[unit_number].start_position)
 
         if group.valid and
-            (group.command == nil or
-            group.state == defines.group_state.finished or
-            event.result == defines.behavior_result.success)
+            (group.command == nil and
+            group.state == defines.group_state.finished)
         then
             if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
                 ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
             else
                 ErmAttackGroupProcessor.process_attack_position(group, nil, true)
             end
+        end
+
+        if group.valid and
+            event.result == defines.behavior_result.success then
+
+            --group.set_command {
+            --    type = defines.command.attack_area,
+            --    destination = group.position,
+            --    radius = 32,
+            --    distraction = defines.distraction.by_anything
+            --}
+
         end
 
         if (event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
@@ -147,6 +200,16 @@ local onAiCompleted = function(event)
     end
 end
 
+--- Path finding
+Event.register(defines.events.on_script_path_request_finished, function(event)
+    AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
+end)
+
+--- Initial path finder
+Event.register(Event.generate_event_name(ErmConfig.REQUEST_PATH), function(event)
+    AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial)
+end)
+
 --- Unit processing events
 Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
 
@@ -155,3 +218,25 @@ Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
 Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 
 Event.register(defines.events.on_ai_command_completed, onAiCompleted)
+
+--- Handle when last unit in a group dies
+local function is_unit(event)
+    return event.entity.type == 'unit'
+end
+
+local function handle_last_dead_unit(event)
+    local dead_unit = event.entity
+    local dead_unit_group = dead_unit.unit_group
+    if dead_unit_group and isErmUnitGroup(dead_unit_group.group_number) then
+        local key, unit = next(dead_unit_group.members)
+        if unit.unit_number == dead_unit.unit_number and table_size(dead_unit_group.members) == 1 then
+            global.erm_unit_groups[dead_unit_group.group_number] = nil
+
+            -- if the group is within the area of final command, mark the path as valid.  Else, mark it as invalid.
+            print(serpent.block(dead_unit.unit_group.command))
+        end
+    end
+end
+
+Event.register(defines.events.on_entity_died, handle_last_dead_unit , is_unit)
+Event.register(defines.events.script_raised_destroy,  handle_last_dead_unit , is_unit)

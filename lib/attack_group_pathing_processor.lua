@@ -3,8 +3,240 @@
 --- Created by heyqule.
 --- DateTime: 1/5/2024 9:03 PM
 ---
-local AttackGroupBeaconProcessor = {}
+local Position = require('__stdlib__/stdlib/area/position')
+local ForceHelper = require('helper/force_helper')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local DebugHelper =  require('__enemyracemanager__/lib/debug_helper')
+
+local AttackGroupPathingProcessor = {}
+
+local BEACON_RADIUS = 64
+local CHUNK_SIZE = 32
+local TRANSLATE_RANGE = CHUNK_SIZE * 10
+
+--- left side
+AttackGroupPathingProcessor.STRATEGY_LT = 1
+--- right side
+AttackGroupPathingProcessor.STRATEGY_RT = 2
+--- brutal force defense
+AttackGroupPathingProcessor.STRATEGY_BF = 3
 
 
 
-return AttackGroupBeaconProcessor
+function AttackGroupPathingProcessor.init_globals()
+    global.request_path = global.request_path or {}
+    global.request_path_link = global.request_path_link or {}
+    global.request_path_strategies = global.request_path_link or {}
+end
+
+function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial)
+    DebugHelper.print('Requesting Path...')
+    local bounding_box, collision_mask
+    local race_name = ForceHelper.extract_race_name_from(source_force.name)
+    collision_mask = {"not-colliding-with-itself"}
+    if is_aerial then
+        local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.AERIAL_SCOUT]
+        bounding_box = scout_unit.collision_box
+        --table.insert(collision_mask,'water-tile')
+    else
+        local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.LAND_SCOUT]
+        bounding_box = scout_unit.collision_box
+    end
+
+    local request_id = surface.request_path({
+        bounding_box = bounding_box,
+        collision_mask = collision_mask,
+        start = start,
+        goal = goal,
+        force = source_force,
+        path_resolution_modifier = -6 ---64 tiles resolution
+    })
+
+    if request_id then
+        AttackGroupPathingProcessor.remove_node(start,goal)
+
+        global.request_path[request_id] = {
+            surface = surface,
+            source_force = source_force,
+            start = start,
+            goal = goal,
+            commands = {}
+        }
+
+        global.request_path_link[Position.to_key(start)..Position.to_key(goal)] = request_id
+    end
+end
+
+--- How the fuack does this work?
+--- Once request path is valid, pick the closest beacon in the path.
+--- If it's flier group, flier beacons get priority
+--- Try alt path A using that beacon, save to cache,
+--- Try alt path B using that beacon, save to cache,
+--- Then try using beacon with lower health.
+--- Once all options have tried and failed, unleash additional strategies or repeat existing strategies :)
+function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, path_nodes, tryagainlater)
+    DebugHelper.print("processing path ID:"..tostring(path_id))
+    DebugHelper.print(serpent.block(global.request_path[path_id]))
+    DebugHelper.print("Try again later: "..tostring(tryagainlater))
+    if global.request_path[path_id] == nil or path_nodes == nil then
+        return nil
+    end
+    local commands_chain = {
+        type = defines.command.compound,
+        structure_type = defines.compound_command.return_last,
+        commands = {
+
+        }
+    }
+    local request_path_data = global.request_path[path_id];
+    DebugHelper.print("Node Size: "..tostring(table_size(path_nodes)))
+
+    if path_nodes then
+        local profiler = game.create_profiler()
+        local source_force = request_path_data.source_force
+        local surface = request_path_data.surface
+        for key, path_node in pairs(path_nodes) do
+            if DEBUG_MODE then
+                rendering.draw_text({
+                    text={"", 'Node: '..key..' / '..path_node.position.x..' / '..path_node.position.y},
+                    time_to_live = 3600,
+                    scale=1,
+                    color={r=1,g=1,b=1},
+                    target = path_node.position,
+                    surface = request_path_data.surface,
+                    force='player'
+                })
+            end
+            local search_beacons = {AttackGroupBeaconProcessor.LAND_BEACON, AttackGroupBeaconProcessor.AERIAL_BEACON}
+            local beacons = surface.find_entities_filtered {
+                name = search_beacons,
+                force = source_force,
+                radius = BEACON_RADIUS,
+                position = path_node.position,
+                limit = 1
+            }
+            if next(beacons) then
+                if DEBUG_MODE then
+                    rendering.draw_text({
+                        text={"", 'beacon_found'},
+                        time_to_live = 3600,
+                        scale=1,
+                        color={r=1,g=1,b=1},
+                        target = {path_node.position.x, path_node.position.y - 10},
+                        surface = request_path_data.surface,
+                        force='player'
+                    })
+                end
+
+                local enemy = surface.find_nearest_enemy({
+                    position = path_node.position,
+                    max_distance = BEACON_RADIUS,
+                    force = source_force
+                })
+
+                if enemy then
+                    AttackGroupPathingProcessor.construct_side_attack_commands(
+                        path_id, path_node, enemy, search_beacons
+                    )
+                    AttackGroupPathingProcessor.construct_side_attack_commands(
+                        path_id, path_node, enemy, search_beacons, true
+                    )
+                end
+                break
+            end
+        end
+        profiler.stop()
+        log({ '', 'on_script_path_request_finished with nodes: ', profiler })
+    end
+end
+
+function AttackGroupPathingProcessor.construct_brutal_force_commands(
+        path_id, path_node, enemy, search_beacons
+)
+end
+
+
+function AttackGroupPathingProcessor.build_side_attack_commands(
+    path_id, path_node, enemy, search_beacons, is_right_side
+)
+    local profiler = game.create_profiler()
+
+    is_right_side = is_right_side or false
+
+    local request_path_data = global.request_path[path_id]
+
+    local direction = Position.direction_to(path_node.position, enemy.position)
+
+    DebugHelper.print('Direction..'..tostring(direction))
+
+    local target_direction = math.abs(direction - 10 % 8)
+    local side_key = AttackGroupPathingProcessor.STRATEGY_LT
+    if is_right_side then
+        target_direction = math.abs(direction + 10 % 8)
+        side_key = AttackGroupPathingProcessor.STRATEGY_RT
+    end
+    local new_position = Position.translate(path_node.position, target_direction, math.random(TRANSLATE_RANGE-CHUNK_SIZE, TRANSLATE_RANGE+CHUNK_SIZE))
+
+    local area = request_path_data.surface.find_entities_filtered {
+        name = search_beacons,
+        force = request_path_data.source_force,
+        radius = BEACON_RADIUS,
+        position = {new_position.x, new_position.y},
+        limit = 1
+    }
+    local area_size = table_size(area)
+    DebugHelper.print(area_size)
+
+    if area_size == 0 then
+        local commands_chain = {
+            type = defines.command.compound,
+            structure_type = defines.compound_command.return_last,
+            commands = {}
+        }
+
+        table.insert(commands_chain.commands, {
+            type = defines.command.go_to_location,
+            destination = {new_position.x, new_position.y},
+            radius = CHUNK_SIZE
+        })
+
+        table.insert(commands_chain.commands, {
+            type = defines.command.attack_area,
+            destination = request_path_data.goal,
+            radius = CHUNK_SIZE;
+        })
+
+        global.request_path[path_id].commands[side_key] = commands_chain
+        DebugHelper.print("Adding Commands: "..serpent.block(commands_chain))
+    end
+
+    profiler.stop()
+    log({ '', 'AttackGroupPathingProcessor.build_side_attack_commands: ', profiler })
+end
+
+function AttackGroupPathingProcessor.get_command(start, goal, strategy)
+    strategy = strategy or AttackGroupPathingProcessor.STRATEGY_BF
+    local request_id = global.request_path_link[Position.to_key(start)..Position.to_key(goal)]
+    local request_path_data = global.request_path[request_id]
+
+    if request_path_data then
+        DebugHelper.print("Getting Commands: "..serpent.block(request_path_data.commands[strategy]))
+        return request_path_data.commands[strategy]
+    end
+
+    return nil
+end
+
+function AttackGroupPathingProcessor.remove_node(start,goal)
+    local request_id = global.request_path_link[Position.to_key(start)..Position.to_key(goal)]
+
+    if request_id then
+        global.request_path[request_id] = nil
+        global.request_path_strategies[request_id] = nil
+    end
+
+    global.request_path_link[Position.to_key(start)..Position.to_key(goal)] = nil
+end
+
+
+return AttackGroupPathingProcessor

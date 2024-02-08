@@ -233,6 +233,15 @@ data:extend {
         order = "enemyracemanager-601",
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-free-for-all-multiplier",
+        description = "enemyracemanager-free-for-all-multiplier",
+        setting_type = "startup",
+        default_value = 10,
+        allowed_values = { 5, 8, 10, 12, 15 },
+        order = "enemyracemanager-602",
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-boss-difficulty",
         description = "enemyracemanager-boss-difficulty",

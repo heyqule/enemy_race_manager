@@ -50,5 +50,26 @@ function TestShared.reset_attack_meter()
     end
 end
 
+function TestShared.reset_lab_tile()
+    local surface = game.surfaces[1]
+    local tile_types = { "lab-dark-2","lab-dark-1" }
+    local tiles = {}
+    local radius = 200
+    for x = (radius * -1), radius, 1 do
+        for y = (radius * -1), radius, 1 do
+            local odd = ((x + y) % 2)
+            if odd <= 0 then
+                odd = odd + 2
+            end
+            table.insert(tiles, { name = tile_types[odd], position = { x, y } })
+        end
+    end
+    surface.set_tiles(tiles, true, true, true, true)
+end
+
+function TestShared.create_group(surface, position, race, group_type, unit_count)
+    
+end
+
 
 return TestShared

@@ -19,6 +19,7 @@ local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor'
 local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -169,7 +170,7 @@ local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = global.race_settings or {}
 
-    -- Track all unit group created by ERM
+    -- Track all unit groups created by ERM
     global.erm_unit_groups = global.erm_unit_groups or {}
 
     -- Move all cache to this to resolve desync issues.
@@ -189,6 +190,7 @@ local init_globals = function()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
     AttackGroupBeaconProcessor.init_globals()
+    AttackGroupPathingProcessor.init_globals()
     ErmAttackGroupSurfaceProcessor.init_globals()
     ErmBossProcessor.init_globals()
     ErmArmyPopulationProcessor.init_globals()

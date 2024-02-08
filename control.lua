@@ -5,10 +5,10 @@
 -- Time: 11:29 AM
 -- To change this template use File | Settings | File Templates.
 --
-require('testcase')
-
 require('__stdlib__/stdlib/utils/defines/time')
 require('global')
+
+require('testcase')
 
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -122,12 +122,9 @@ require('__enemyracemanager__/controllers/attack_group_beacon')
 --- CRON Events
 require('__enemyracemanager__/controllers/cron')
 
---- Script Trigger for attacks
-require('__enemyracemanager__/controllers/on_script_trigger_effects_biter')
+--- Script Trigger for all functions
+require('__enemyracemanager__/controllers/on_script_trigger_effects')
 
-require('__enemyracemanager__/controllers/on_script_trigger_effects_general')
-
-require('__enemyracemanager__/controllers/on_script_trigger_effects_player')
 
 --- On Rocket Launch Events
 require('__enemyracemanager__/controllers/on_rocket_launch')

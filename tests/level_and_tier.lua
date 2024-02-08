@@ -39,7 +39,7 @@ describe("Level Manager", function()
         global.race_settings['erm_vanilla'].evolution_base_point = 50
         LevelManager.calculateMultipleLevels()
 
-        after_ticks(5, function()
+        after_ticks(2, function()
             assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
             assert( Queue.size(global.mapproc_chunk_queue[surface.name]) > 0, 'Has map queue')
         end)

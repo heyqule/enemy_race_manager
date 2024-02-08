@@ -4,13 +4,14 @@
 --- DateTime: 1/5/2024 12:10 AM
 ---
 
-if script.active_mods["factorio-test"] then
+if DEBUG_MODE and script.active_mods["factorio-test"] then
     local config = require('__stdlib__/stdlib/config')
     config.skip_script_protections = true
 
     local tests = {
         "tests/data_check",
         "tests/attack_beacon",
+        "tests/attack_pathing",
         "tests/attack_meter",
         "tests/level_and_tier",
         "tests/surface_manager",

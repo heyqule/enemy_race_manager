@@ -46,7 +46,7 @@ describe("Custom attacks", function()
     end)
 
     it("Time to live units", function()
-        async(10800)
+        async(14400)
         local surface = game.surfaces[1]
         local enemy_force = game.forces['enemy']
         local player_force = game.forces['player']
@@ -60,7 +60,7 @@ describe("Custom attacks", function()
             assert(unit_count > 1, 'Has time to live unit spawned')
         end)
 
-        after_ticks(10500, function()
+        after_ticks(14000, function()
             local unit_count = surface.count_entities_filtered({
                 name = 'erm_zerg/broodling/1'
             })

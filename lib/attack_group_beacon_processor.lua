@@ -6,8 +6,10 @@
 require('util')
 
 local ForceHelper = require('helper/force_helper')
+local Configs = require('global_config')
 
 local Position = require('__stdlib__/stdlib/area/position')
+local Event = require('__stdlib__/stdlib/event/event')
 
 local AttackGroupBeaconProcessor = {}
 
@@ -580,7 +582,6 @@ AttackGroupBeaconProcessor.init_globals = function()
         global[beacon] = global[beacon] or {}
     end
 
-    global.request_path = global.request_path or {}
     global.attack_group_attackable_entity_names = global.attack_group_attackable_entity_names or {}
 end
 
@@ -663,7 +664,7 @@ end
 --- Once all sides are found and no position found, move to next tier.
 --- When tier and direction reach max.  Removed target_beacon since nothing matches.
 ---
-AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon, from_cron, request_path)
+AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon, from_cron)
     local profiler = game.create_profiler()
     local target_force = target_beacon.force
     from_cron = from_cron or false
@@ -688,19 +689,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
 
         if next(entities) then
             local distances = get_sorted_distance(entities, target_beacon.position)
-
-            if request_path then
-                local request_id = game.surfaces[1].request_path({
-                    bounding_box = { { -0.2, 0.2 }, { 0.2, 0.2 } },
-                    collision_mask = { "colliding-with-tiles-only", "water-tile" },
-                    start = distances[1].position,
-                    goal = target_beacon.position,
-                    force = source_force,
-                    path_resolution_modifier = -5, ---32 tiles resolution
-                })
-    
-                table.insert(global.request_path, request_id, true)                
-            end
 
             local entities = surface.find_entities_filtered({
                 area = get_spawn_area(distances[1].position),
@@ -768,7 +756,7 @@ AttackGroupBeaconProcessor.pick_current_selected_attack_beacon = function(surfac
 end
 
 AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_force, target_force)
-    local entity_data = nil
+    local entity_data
     local key, value = next(global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name], global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_CURRENT_KEY])
     local i = 0
     while (key or i < RETRY) do
@@ -852,7 +840,6 @@ AttackGroupBeaconProcessor.reset_globals = function()
         global[beacon] = {}
     end
 
-    global.request_path = {}
     global[CONTROL_DATA] = nil
     AttackGroupBeaconProcessor.init_control_globals()
 end

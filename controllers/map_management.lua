@@ -39,11 +39,3 @@ end)
 Event.register(defines.events.on_surface_renamed, function(event)
     AttackGroupBeaconProcessor.remove_beacon_on_surface(event.surface_index)
 end)
-
---- Path finding
-Event.register(defines.events.on_script_path_request_finished, function(event)
-    if global.request_path[event.id] then
-        print('Total Nodes:')
-        print(table_size(event.path))
-    end
-end)
