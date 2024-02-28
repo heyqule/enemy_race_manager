@@ -49,6 +49,7 @@ Event.register(defines.events.on_research_reversed, function(event)
     local research = event.research
     if isFollowResearch(research) then
         ErmArmyPopulation.calculate_max_units(research.force)
+        ErmArmyControlUI.update_army_stats()
     end
 end)
 

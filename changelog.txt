@@ -1,9 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.13
-Date: 2024-02-23
+Date: 2024-03-01
+
+  Changes:
+    - Added a new "Map" setting to change army supply limit. [1x - 5x]
 
   Bugfixes:
-    - Fixed army population does not decrease when they removed by AAI Vehicle's deadzone logic.
+    - Fixed army population does not decrease when they removed by AAI Vehicle's deadzone logic. [Issue #43]
+    - Default control army UI key changed from "Ctrl+A" to "Ctrl+Alt+A"
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.12

@@ -8,9 +8,13 @@ local BASE_MAX_UNIT = 150
 
 local ArmyPopulationProcessor = {}
 
+local get_max_pop = function(maximum_following_robot_count)
+    return  math.floor((BASE_MAX_UNIT + maximum_following_robot_count) * settings.global['enemyracemanager-army-limit-multiplier'].value)
+end
+
 local set_default_values = function(force)
     local default_values = {
-        max_pop = BASE_MAX_UNIT + force.maximum_following_robot_count,
+        max_pop = get_max_pop(force.maximum_following_robot_count),
         unit_count = 0,
         pop_count = 0,
         unit_types = {},
@@ -90,7 +94,7 @@ end
 
 function ArmyPopulationProcessor.calculate_max_units(force)
     init_force_data(force)
-    global.army_populations[force.name]['max_pop'] = BASE_MAX_UNIT + force.maximum_following_robot_count
+    global.army_populations[force.name]['max_pop'] = get_max_pop(force.maximum_following_robot_count)
     force.print('Max Army Population: ' .. global.army_populations[force.name]['max_pop'])
 end
 
@@ -149,6 +153,10 @@ function ArmyPopulationProcessor.get_army_data(force)
     end
 
     return global.army_populations[force.name]
+end
+
+function ArmyPopulationProcessor.has_army_data(force)
+    return global.army_populations[force.name] ~= nil
 end
 
 function ArmyPopulationProcessor.max_pop(force)

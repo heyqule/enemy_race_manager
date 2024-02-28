@@ -236,6 +236,13 @@ local setting_functions = {
     ['enemyracemanager-max-group-size'] = function(event)
         game.map_settings.unit_group.max_unit_group_size = global.settings[event.setting]
     end,
+    ['enemyracemanager-army-limit-multiplier'] = function(event)
+        for _, force in pairs(game.forces) do
+            if ErmArmyPopulationProcessor.has_army_data(force) then
+                ErmArmyPopulationProcessor.calculate_max_units(force)
+            end
+        end
+    end
 }
 Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
     if event.setting_type == 'runtime-global' and
