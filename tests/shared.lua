@@ -50,11 +50,11 @@ function TestShared.reset_attack_meter()
     end
 end
 
-function TestShared.reset_lab_tile()
+function TestShared.reset_lab_tile(radius)
     local surface = game.surfaces[1]
     local tile_types = { "lab-dark-2","lab-dark-1" }
     local tiles = {}
-    local radius = 200
+    local radius = radius or 320
     for x = (radius * -1), radius, 1 do
         for y = (radius * -1), radius, 1 do
             local odd = ((x + y) % 2)

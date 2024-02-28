@@ -93,25 +93,32 @@ local get_unit_level_for_tier = function(race_name)
     return level
 end
 
+local get_unit_name_by_group_type = {
+    [AttackGroupProcessor.GROUP_TYPE_MIXED] = function(race_name, current_tier, group_tracker)
+        return ErmRaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier), false
+    end,
+    [AttackGroupProcessor.GROUP_TYPE_FLYING] = function(race_name, current_tier, group_tracker)
+        return ErmRaceSettingsHelper.pick_a_flying_unit_from_tier(race_name, current_tier), false
+    end,
+    [AttackGroupProcessor.GROUP_TYPE_DROPSHIP] = function(race_name, current_tier, group_tracker)
+        return ErmRaceSettingsHelper.pick_dropship_unit(race_name, current_tier), false
+    end,
+    [AttackGroupProcessor.GROUP_TYPE_FEATURED] = function(race_name, current_tier, group_tracker)
+        return ErmRaceSettingsHelper.pick_featured_unit(race_name, group_tracker.featured_group_id), true
+    end,
+    [AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING] = function(race_name, current_tier, group_tracker)
+        return ErmRaceSettingsHelper.pick_featured_flying_unit(race_name, group_tracker.featured_group_id), true
+    end,
+}
+
 local pick_an_unit = function(race_name)
     local group_tracker = get_group_tracker(race_name)
     local current_tier = group_tracker.current_tier
     local unit_name = nil
     local is_featured_group = false
 
-    if group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_MIXED then
-        unit_name = ErmRaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier)
-    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        unit_name = ErmRaceSettingsHelper.pick_a_flying_unit_from_tier(race_name, current_tier)
-    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
-        unit_name = ErmRaceSettingsHelper.pick_dropship_unit(race_name)
-    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FEATURED then
-        unit_name = ErmRaceSettingsHelper.pick_featured_unit(race_name, group_tracker.featured_group_id)
-        is_featured_group = true
-    elseif group_tracker.group_type == AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING then
-        unit_name = ErmRaceSettingsHelper.pick_featured_flying_unit(race_name, group_tracker.featured_group_id)
-        is_featured_group = true
-    else
+    unit_name, is_featured_group = get_unit_name_by_group_type[group_tracker.group_type](race_name, current_tier, group_tracker)
+    if unit_name == nil then
         unit_name = ErmRaceSettingsHelper.pick_an_unit(race_name)
     end
 
@@ -161,7 +168,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         if entity_data and entity_data.position then
             local position = entity_data.position
 
-            local command = AttackGroupPathingProcessor.get_command(group_tracker.group_spawn_position, group_tracker.attack_beacon_position)
+            local command = AttackGroupPathingProcessor.get_command(surface.index, group_tracker.group_spawn_position, group_tracker.attack_beacon_position)
 
             if DEBUG_MODE and command then
                 print('has command')
@@ -169,6 +176,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             end
 
             if command == nil then
+
                 command = {
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },

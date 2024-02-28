@@ -21,12 +21,31 @@ AttackGroupPathingProcessor.STRATEGY_RT = 2
 --- brutal force defense
 AttackGroupPathingProcessor.STRATEGY_BF = 3
 
+-- Lowest health first
+local function get_sorted_beacons(entities)
+    table.sort(entities, function(a, b)
+        return a.health < b.health
+    end)
+
+    for key, entity in pairs(entities) do
+        print(serpent.block(entity.health))
+    end
+
+    return entities
+end
+
 
 
 function AttackGroupPathingProcessor.init_globals()
     global.request_path = global.request_path or {}
     global.request_path_link = global.request_path_link or {}
-    global.request_path_strategies = global.request_path_link or {}
+    global.request_path_strategies = global.request_path_strategies or {}
+end
+
+function AttackGroupPathingProcessor.reset_globals()
+    global.request_path = {}
+    global.request_path_link = {}
+    global.request_path_strategies = {}
 end
 
 function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial)
@@ -34,10 +53,10 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     local bounding_box, collision_mask
     local race_name = ForceHelper.extract_race_name_from(source_force.name)
     collision_mask = {"not-colliding-with-itself"}
+
     if is_aerial then
         local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.AERIAL_SCOUT]
         bounding_box = scout_unit.collision_box
-        --table.insert(collision_mask,'water-tile')
     else
         local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.LAND_SCOUT]
         bounding_box = scout_unit.collision_box
@@ -53,7 +72,11 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     })
 
     if request_id then
-        AttackGroupPathingProcessor.remove_node(start,goal)
+        if global.request_path_link[surface.index] == nil then
+            global.request_path_link[surface.index] = {}
+        end
+
+        AttackGroupPathingProcessor.remove_node(surface.index,start,goal)
 
         global.request_path[request_id] = {
             surface = surface,
@@ -63,7 +86,8 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
             commands = {}
         }
 
-        global.request_path_link[Position.to_key(start)..Position.to_key(goal)] = request_id
+
+        global.request_path_link[surface.index][Position.to_key(start)..Position.to_key(goal)] = request_id
     end
 end
 
@@ -128,8 +152,9 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                     })
                 end
 
+                print(source_force.name..BEACON_RADIUS..serpent.block(path_node.position))
                 local enemy = surface.find_nearest_enemy({
-                    position = path_node.position,
+                    position = beacons[1].position,
                     max_distance = BEACON_RADIUS,
                     force = source_force
                 })
@@ -141,6 +166,9 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                     AttackGroupPathingProcessor.construct_side_attack_commands(
                         path_id, path_node, enemy, search_beacons, true
                     )
+                    AttackGroupPathingProcessor.construct_brutal_force_commands(
+                        path_id, beacons[1], enemy, search_beacons
+                    )
                 end
                 break
             end
@@ -150,13 +178,79 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
     end
 end
 
+--- Brutal Force attack using defense beacon data
 function AttackGroupPathingProcessor.construct_brutal_force_commands(
         path_id, path_node, enemy, search_beacons
 )
+    local profiler = game.create_profiler()
+
+    local request_path_data = global.request_path[path_id]
+
+    local direction = Position.complex_direction_to(path_node.position, enemy.position)
+
+    local left_top = {}
+    local bottom_right = {}
+
+    if direction == defines.direction.west or
+        direction ==  defines.direction.east then
+        left_top = {path_node.position.x - CHUNK_SIZE, path_node.position.y - TRANSLATE_RANGE}
+        bottom_right = {path_node.position.x + CHUNK_SIZE, path_node.position.y + TRANSLATE_RANGE}
+    else
+        left_top = {path_node.position.x  - TRANSLATE_RANGE, path_node.position.y - CHUNK_SIZE}
+        bottom_right = {path_node.position.x + TRANSLATE_RANGE, path_node.position.y + CHUNK_SIZE}
+    end
+
+    local beacons = request_path_data.surface.find_entities_filtered {
+        name = search_beacons,
+        force = request_path_data.source_force,
+        area = {left_top, bottom_right}
+    }
+
+    if DEBUG_MODE then
+        DebugHelper.print(serpent.block(path_node.position))
+        DebugHelper.print(serpent.block(enemy.position))
+        DebugHelper.print('direction '..direction)
+        DebugHelper.print(defines.direction.north .. defines.direction.east.. defines.direction.south.. defines.direction.west)
+        DebugHelper.print('left_top '..serpent.block(left_top))
+        DebugHelper.print('bottom_right '..serpent.block(bottom_right))
+        DebugHelper.print('total'..table_size(beacons))
+    end
+
+    if table_size(beacons) > 1 then
+        beacons = get_sorted_beacons(beacons)
+    end
+
+    local target_beacon = beacons[1]
+
+    if target_beacon then
+        local commands_chain = {
+            type = defines.command.compound,
+            structure_type = defines.compound_command.return_last,
+            commands = {}
+        }
+
+        table.insert(commands_chain.commands, {
+            type = defines.command.go_to_location,
+            destination = {target_beacon.position.x, target_beacon.position.y},
+            radius = CHUNK_SIZE
+        })
+
+        table.insert(commands_chain.commands, {
+            type = defines.command.attack_area,
+            destination = request_path_data.goal,
+            radius = CHUNK_SIZE;
+        })
+
+        global.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
+        DebugHelper.print("Adding STRATEGY_BF Commands: "..serpent.block(commands_chain))
+    end
+
+    profiler.stop()
+    log({ '', 'AttackGroupPathingProcessor.construct_brutal_force_commands: ', profiler })
 end
 
-
-function AttackGroupPathingProcessor.build_side_attack_commands(
+--- Side attacks to avoid defense
+function AttackGroupPathingProcessor.construct_side_attack_commands(
     path_id, path_node, enemy, search_beacons, is_right_side
 )
     local profiler = game.create_profiler()
@@ -165,7 +259,7 @@ function AttackGroupPathingProcessor.build_side_attack_commands(
 
     local request_path_data = global.request_path[path_id]
 
-    local direction = Position.direction_to(path_node.position, enemy.position)
+    local direction = Position.complex_direction_to(path_node.position, enemy.position)
 
     DebugHelper.print('Direction..'..tostring(direction))
 
@@ -207,35 +301,52 @@ function AttackGroupPathingProcessor.build_side_attack_commands(
         })
 
         global.request_path[path_id].commands[side_key] = commands_chain
-        DebugHelper.print("Adding Commands: "..serpent.block(commands_chain))
+        DebugHelper.print("Adding LT/RT Commands: "..serpent.block(commands_chain))
     end
 
     profiler.stop()
-    log({ '', 'AttackGroupPathingProcessor.build_side_attack_commands: ', profiler })
+    log({ '', 'AttackGroupPathingProcessor.construct_side_attack_commands: ', profiler })
 end
 
-function AttackGroupPathingProcessor.get_command(start, goal, strategy)
-    strategy = strategy or AttackGroupPathingProcessor.STRATEGY_BF
-    local request_id = global.request_path_link[Position.to_key(start)..Position.to_key(goal)]
-    local request_path_data = global.request_path[request_id]
+--- Get command based on coordinate and strategy
+function AttackGroupPathingProcessor.get_command(surface_id, start, goal, strategy)
+    if global.request_path_link[surface_id] == nil then
+        return nil
+    end
 
-    if request_path_data then
-        DebugHelper.print("Getting Commands: "..serpent.block(request_path_data.commands[strategy]))
-        return request_path_data.commands[strategy]
+    strategy = strategy or AttackGroupPathingProcessor.STRATEGY_BF
+
+    if DEBUG_MODE and global.override_attack_strategy then
+        strategy = global.override_attack_strategy
+    end
+
+    local request_id = global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)]
+
+    if request_id then
+        local request_path_data = global.request_path[request_id]
+        if request_path_data then
+            DebugHelper.print("Getting Commands: "..strategy)
+            DebugHelper.print("Getting Commands Details: "..serpent.block(request_path_data.commands[strategy]))
+            return request_path_data.commands[strategy]
+        end
     end
 
     return nil
 end
 
-function AttackGroupPathingProcessor.remove_node(start,goal)
-    local request_id = global.request_path_link[Position.to_key(start)..Position.to_key(goal)]
+--- Remove node based on coorindate
+function AttackGroupPathingProcessor.remove_node(surface_id, start,goal)
+    if global.request_path_link[surface_id] == nil then
+        return
+    end
+
+    local request_id = global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)]
 
     if request_id then
         global.request_path[request_id] = nil
         global.request_path_strategies[request_id] = nil
+        global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)] = nil
     end
-
-    global.request_path_link[Position.to_key(start)..Position.to_key(goal)] = nil
 end
 
 

@@ -40,8 +40,9 @@ describe("Level Manager", function()
         LevelManager.calculateMultipleLevels()
 
         after_ticks(2, function()
+            remote.call('enemyracemanager_debug', 'print_global')
             assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
-            assert( Queue.size(global.mapproc_chunk_queue[surface.name]) > 0, 'Has map queue')
+            assert( table_size(global.mapproc_chunk_queue) > 0, 'Has map queue')
         end)
 
         after_ticks(1800, function()
