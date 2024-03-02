@@ -517,7 +517,7 @@ function Army_MainWindow.show(player)
     local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui-army.control-title" }, style = 'caption_label' }
 
     local pusher = title_flow.add { type = "empty-widget", name = "header-pusher", style = "draggable_space_header" }
-    pusher.style.width = Army_MainWindow.window_width - 24 - 220
+    pusher.style.width = Army_MainWindow.window_width - 24 - 250
     pusher.style.height = 24
     pusher.drag_target = main_window
 

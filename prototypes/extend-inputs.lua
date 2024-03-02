@@ -24,7 +24,7 @@ data:extend({
         type = "custom-input",
         name = "erm-open-army-window",
         localised_name = "Open Army Window",
-        key_sequence = "CONTROL + A",
+        key_sequence = "CONTROL + ALT + A",
         consuming = "none"
     }
 })

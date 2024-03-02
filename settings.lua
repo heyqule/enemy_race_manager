@@ -315,6 +315,17 @@ data:extend {
         order = "enemyracemanager-002"
     },
     {
+        type = "double-setting",
+        name = "enemyracemanager-army-limit-multiplier",
+        description = "enemyracemanager-army-limit-multiplier",
+        setting_type = "runtime-global",
+        default_value = 1,
+        minimum_value = 1,
+        maximum_value = 5,
+        allowed_values = { 1, 1.25, 1.33, 1.5, 2, 2.5, 3, 4, 5 },
+        order = "enemyracemanager-003"
+    },
+    {
         type = "string-setting",
         name = "enemyracemanager-build-style",
         description = "enemyracemanager-build-style",

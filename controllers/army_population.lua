@@ -49,6 +49,7 @@ Event.register(defines.events.on_research_reversed, function(event)
     local research = event.research
     if isFollowResearch(research) then
         ErmArmyPopulation.calculate_max_units(research.force)
+        ErmArmyControlUI.update_army_stats()
     end
 end)
 
@@ -56,6 +57,14 @@ Event.register(defines.events.on_script_trigger_effect, function(event)
     if population_functions[event.effect_id]
     then
         population_functions[event.effect_id](event)
+        ErmArmyControlUI.update_army_stats()
+    end
+end)
+
+Event.register(defines.events.script_raised_destroy, function(event)
+    local entity = event.entity
+    if entity and entity.valid and ErmArmyPopulation.is_army_unit(entity)then
+        ErmArmyPopulation.remove_unit_count(entity)
         ErmArmyControlUI.update_army_stats()
     end
 end)
