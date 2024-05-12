@@ -13,9 +13,11 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local Cron = require('__enemyracemanager__/lib/cron_processor')
+
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
+local ErmAttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
@@ -30,7 +32,7 @@ AttackGroupProcessor.UNIT_PER_BATCH = 5
 AttackGroupProcessor.MAX_GROUP_SIZE = 2000
 
 AttackGroupProcessor.GROUP_AREA = 128
-AttackGroupProcessor.ATTACK_RADIUS = 16
+AttackGroupProcessor.ATTACK_RADIUS = 32
 
 AttackGroupProcessor.GROUP_TYPE_MIXED = 1
 AttackGroupProcessor.GROUP_TYPE_FLYING = 2
@@ -50,19 +52,8 @@ AttackGroupProcessor.GROUP_TIERS = {
     { 0.4, 0.35, 0.25 }
 }
 
-AttackGroupProcessor.PICK_SPAWN_RETRIES = 5
-
---- Pick surface with player entity.
-local pick_surface = function(race_name)
-    if ErmConfig.mapgen_is_one_race_per_surface() then
-        return ErmAttackGroupSurfaceProcessor.exec(race_name)
-    else
-        return game.surfaces[1]
-    end
-end
-
 ---
---- Track unit group, each race should only have 1 active group.
+--- Track unit group, each race should only have 1 active group generator.
 --- Units in a group seems considered active units and they have performance penalty.
 ---
 local get_group_tracker = function(race_name)
@@ -74,10 +65,6 @@ local get_group_tracker = function(race_name)
 end
 
 local set_group_tracker = function(race_name, value, field)
-    if global.group_tracker == nil then
-        global.group_tracker = {}
-    end
-
     if field then
         global.group_tracker[race_name][field] = value
     else
@@ -137,6 +124,7 @@ end
 local add_to_group = function(surface, group, force, race_name, unit_batch)
     local group_tracker = get_group_tracker(race_name)
     if group.valid == false or group_tracker == nil then
+        set_group_tracker(race_name, nil)
         return
     end
     local i = 0
@@ -162,7 +150,6 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
     until i == unit_batch
 
     if group_tracker.current_size >= group_tracker.size then
-
         local entity_data = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, group.force, true)
 
         if entity_data and entity_data.position then
@@ -170,13 +157,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
 
             local command = AttackGroupPathingProcessor.get_command(surface.index, group_tracker.group_spawn_position, group_tracker.attack_beacon_position)
 
-            if DEBUG_MODE and command then
-                print('has command')
-                print(table_size(command.commands))
-            end
-
             if command == nil then
-
                 command = {
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },
@@ -207,6 +188,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
         else
             group.set_autonomous()
         end
+
         set_group_tracker(race_name, nil)
     end
 end
@@ -259,7 +241,8 @@ local generate_unit_queue = function(
         is_elite_attack = is_elite_attack,
         featured_group_id = featured_group_id,
         group_spawn_position = group_spawn_position,
-        attack_beacon_position = attack_beacon_position
+        attack_beacon_position = attack_beacon_position,
+        tick = game.tick
     })
 
     local unit_group = surface.create_unit_group({ position = center_location, force = force })
@@ -270,7 +253,7 @@ local generate_unit_queue = function(
     repeat
         local unit_batch = AttackGroupProcessor.UNIT_PER_BATCH
         if i == last_queue then
-            unit_batch = last_queue_unit
+            unit_batch = math.ceil(last_queue_unit)
         end
         ErmCron.add_1_sec_queue(
                 'AttackGroupProcessor.add_to_group',
@@ -282,6 +265,20 @@ local generate_unit_queue = function(
         )
         i = i + 1
     until i == queue_length
+end
+
+function AttackGroupProcessor.init_globals()
+    --- Track all custom unit groups created by ERM
+    global.erm_unit_groups = global.erm_unit_groups or {}
+    ErmConfig.clear_invalid_erm_unit_groups()
+
+    --- Track custom group spawn data, only one active group spawn per enemy race.
+    global.group_tracker = global.group_tracker or {}
+
+    --- Track active scout, only one active scout per enemy race.
+    global.scout_tracker = global.scout_tracker or {}
+    --- Toggle to run periodic scan when a scout spawns.
+    global.scout_scanner = false
 end
 
 function AttackGroupProcessor.add_to_group_cron(arg)
@@ -330,29 +327,40 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 end
 
-function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack, target_force, surface, from_cron)
-    if get_group_tracker(race_name) then
+function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack, target_force, surface, from_retry)
+    if from_retry == false and get_group_tracker(race_name) then
         return false
     end
-    surface = surface or pick_surface(race_name)
+    target_force = target_force or ErmAttackGroupHeatProcessor.pick_target(race_name)
+    surface = surface or ErmAttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
 
     if surface == nil or not surface.valid then
+        set_group_tracker(race_name, nil)
         return false
     end
-    from_cron = from_cron or false
-    target_force = target_force or game.forces['player']
+    from_retry = from_retry or false
 
     AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
-    local attack_beacon_data = AttackGroupBeaconProcessor.pick_attack_beacon(surface, force, target_force)
-    local spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data.beacon, from_cron)
+    local attack_beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
+    local spawn_beacon = nil
+    local halt_cron = false
+    if attack_beacon_data == nil then
+        halt_cron = true
+    else
+        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data.beacon, from_retry)
+    end
+
 
     if spawn_beacon == nil then
         if halt_cron == false then
-            -- Retry to find new spawn beacon
+            -- Retry to find new beacons
             ErmCron.add_quick_queue('AttackGroupProcessor.generate_group',
                     race_name, force, units_number, type, featured_group_id,
-                    is_elite_attack, target_force, surface, from_cron)
+                    is_elite_attack, target_force, surface, true)
+        else
+            -- Drop current group if retry fails
+            set_group_tracker(race_name, nil)
         end
         return false
     end
@@ -362,8 +370,6 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
             scout, spawn_beacon.position,
             AttackGroupProcessor.GROUP_AREA, 1)
 
-    print(serpent.block(spawn_beacon.position))
-    print(serpent.block(center_location))
     if surface and center_location then
         generate_unit_queue(
             surface, center_location, force,
@@ -485,7 +491,8 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 
     if attack_position == nil then
-        attack_position = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force, target_force)
+        local beacon = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force, target_force)
+        attack_position = beacon.position
     end
 
     if attack_position then
@@ -499,6 +506,58 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     else
         group.set_autonomous()
     end
+end
+
+function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, target_force)
+    if global.scout_tracker[race_name] then
+        return nil
+    end
+
+    local scout_name = AttackGroupBeaconProcessor.LAND_SCOUT
+    if ErmRaceSettingsHelper.can_spawn(25) then
+        scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
+    end
+
+    scout_name = race_name..scout_name
+
+    local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
+    local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
+
+    if spawn_beacon == nil or target_beacon == nil then
+        return nil
+    end
+
+    local spawn_location = surface.find_non_colliding_position(
+            scout_name, spawn_beacon.position,
+            AttackGroupProcessor.GROUP_AREA, 1)
+
+    local scout = surface.create_entity({
+        name=scout_name,
+        force=source_force,
+        position=spawn_location
+    })
+
+    scout.set_command({
+        type = defines.command.go_to_location,
+        destination = target_beacon.position,
+        radius = 16,
+        distraction = defines.distraction.none
+    })
+
+    global.scout_tracker[race_name] = {
+        entity = scout,
+        unit_number = scout.unit_number,
+        position = scout.position,
+        destination = target_beacon.position,
+        update_tick = game.tick
+    }
+
+    if global.scout_scanner == false then
+        global.scout_scanner = true
+        Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
+    end
+
+    return scout
 end
 
 return AttackGroupProcessor

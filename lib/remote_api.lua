@@ -235,6 +235,10 @@ function ERM_RemoteAPI.add_erm_attack_group(group)
     end
 end
 
+function ERM_RemoteAPI.override_strategy(strategy_id)
+    global.override_strategy = strategy_id
+end
+
 function ERM_RemoteAPI.milestones_preset_addons()
     if settings.startup['enemyracemanager-enable-bitters'].value then
         return {

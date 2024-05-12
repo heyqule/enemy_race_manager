@@ -1,6 +1,7 @@
 require('util')
 local scenarios_helper = require('__enemyracemanager__/scenarios/shared.lua')
 
+local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
@@ -42,9 +43,9 @@ Event.register(defines.events.on_player_created, function(event)
         { filter = "type", type = "unit", mode = 'or' }
     })
     local i = 0
-    local x = -100
-    local y = -100
-    local gap = 10
+    local x = -200
+    local y = -200
+    local gap = 20
     --for _, item in pairs(prototypes) do
     --    x = -100 + i * gap
     --    local entity = surface.create_entity({
@@ -81,6 +82,58 @@ Event.register(defines.events.on_player_created, function(event)
                 position = { x, y }
             })
             entity.active = false
+
+            local y_offset = 0
+
+            rendering.draw_text({
+                text=entity.prototype.name,
+                color = { r = 1, g = 1, b = 1, a = 1 },
+                target={ x+2, y + y_offset},
+                surface=entity.surface,
+                scale=2
+            })
+            y_offset = y_offset + 2
+
+            rendering.draw_text({
+                text='Health: '..entity.prototype.max_health,
+                color = { r = 1, g = 0, b = 0, a = 1 },
+                target={ x+2, y + y_offset},
+                surface=entity.surface,
+                scale=2
+            })
+            y_offset = y_offset + 2
+
+
+            if entity.prototype.speed then
+                rendering.draw_text({
+                    text='Speed: '..entity.prototype.speed,
+                    color = { r = 1, g = 1, b = 1, a = 1 },
+                    target={ x+2, y+y_offset },
+                    surface=entity.surface,
+                    scale=2
+                })
+                y_offset = y_offset + 2
+            end
+
+            if entity.prototype.attack_parameters then
+                rendering.draw_text({
+                    text='Attack Cooldown: '.. (entity.prototype.attack_parameters.cooldown / 60) .. 's',
+                    color = { r = 1, g = 1, b = 1, a = 1 },
+                    target={ x+2, y+y_offset },
+                    surface=entity.surface,
+                    scale=2
+                })
+                y_offset = y_offset + 2
+                rendering.draw_text({
+                    text='Attack Warmup: '.. (entity.prototype.attack_parameters.warmup / 60) ..'s',
+                    color = { r = 1, g = 1, b = 1, a = 1 },
+                    target={ x+2, y+y_offset },
+                    surface=entity.surface,
+                    scale=2
+                })
+                y_offset = y_offset + 2
+            end
+
             i = i + 1
             if i % 21 == 0 then
                 x = -100

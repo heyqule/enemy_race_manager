@@ -20,7 +20,7 @@ end)
 
 describe("Surfaces Manager", function()
     it("Add and remove surface", function()
-        local new_surface_name = 'testsurface2'
+        local new_surface_name = 'test_surface_2'
         game.create_surface(new_surface_name)
         assert.not_nil(global.enemy_surfaces[new_surface_name],'New race assigned to new surface')
 
@@ -44,7 +44,7 @@ describe("Surfaces Manager", function()
     it("Reindex Surfaces", function()
         local surface_count = 10
         for i = 0, surface_count, 1 do
-            local new_surface_name = 'testsurface'..tostring(i)
+            local new_surface_name = 'test_surface'..tostring(i)
             game.create_surface(new_surface_name)
         end
 
@@ -54,7 +54,7 @@ describe("Surfaces Manager", function()
         local new_list = table.deepcopy(global.enemy_surfaces)
         assert.not_equal(old_list, new_list, 'Both list should not be equal')
         for i = 0, surface_count, 1 do
-            local new_surface_name = 'testsurface'..tostring(i)
+            local new_surface_name = 'test_surface'..tostring(i)
             game.delete_surface(new_surface_name)
         end
 

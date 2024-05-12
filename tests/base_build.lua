@@ -13,7 +13,7 @@ local function spawn_units(surface,name)
         position={0,2},
         force = enemy_force
     }
-    for i=1,19,1 do
+    for i=1,20,1 do
         local unit = surface.create_entity({
             name=name,
             position={0,0},

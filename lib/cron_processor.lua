@@ -32,19 +32,21 @@ local process_all_jobs = function(cron_list)
         return
     end
 
-    local cron_list_copy = Queue.new()
     repeat
-        cron_list_copy(cron_list())
+        local job = cron_list()
+        CronProcessor.add_quick_queue(job[1], unpack(job[2]))
     until Queue.is_empty(cron_list)
+end
+
+local process_all_jobs_as_1s_cron = function(cron_list)
+    if (Queue.is_empty(cron_list)) then
+        return
+    end
 
     repeat
-        local job = cron_list_copy()
-        if cron_switch[job[1]] then
-            cron_switch[job[1]](job[2])
-        else
-            log('Invalid Call: ' .. job[1])
-        end
-    until Queue.is_empty(cron_list_copy)
+        local job = cron_list()
+        CronProcessor.add_1_sec_queue(job[1], unpack(job[2]))
+    until Queue.is_empty(cron_list)
 end
 
 function CronProcessor.init_globals()
@@ -81,33 +83,33 @@ function CronProcessor.rebuild_queue()
 end
 
 function CronProcessor.add_1_min_queue(request, ...)
-    local arg = { ... }
-    global.one_minute_cron({ request, arg })
+    local args = { ... }
+    global.one_minute_cron({ request, args })
 end
 
 function CronProcessor.add_15_sec_queue(request, ...)
-    local arg = { ... }
-    global.fifteen_seconds_cron({ request, arg })
+    local args = { ... }
+    global.fifteen_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
-    local arg = { ... }
-    global.ten_seconds_cron({ request, arg })
+    local args = { ... }
+    global.ten_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_2_sec_queue(request, ...)
-    local arg = { ... }
-    global.two_seconds_cron({ request, arg })
+    local args = { ... }
+    global.two_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_1_sec_queue(request, ...)
-    local arg = { ... }
-    global.one_second_cron({ request, arg })
+    local args = { ... }
+    global.one_second_cron({ request, args })
 end
 
 function CronProcessor.add_quick_queue(request, ...)
-    local arg = { ... }
-    global.quick_cron({ request, arg })
+    local args = { ... }
+    global.quick_cron({ request, args })
 
     if global.quick_cron_is_running == false then
         global.quick_cron_is_running = true
@@ -116,8 +118,8 @@ function CronProcessor.add_quick_queue(request, ...)
 end
 
 function CronProcessor.add_boss_queue(request, ...)
-    local arg = { ... }
-    global.boss_cron({ request, arg })
+    local args = { ... }
+    global.boss_cron({ request, args })
 end
 
 function CronProcessor.add_teleport_queue(request, ...)
@@ -144,7 +146,7 @@ function CronProcessor.process_2_sec_queue()
 end
 
 function CronProcessor.process_10_sec_queue()
-    process_one_job(global.ten_seconds_cron)
+    process_all_jobs_as_1s_cron(global.ten_seconds_cron)
 end
 
 function CronProcessor.process_1_sec_queue()
@@ -154,10 +156,10 @@ end
 function CronProcessor.process_quick_queue()
     process_one_job(global.quick_cron)
 
-    if global.quick_cron_is_running == true and Queue.is_empty(global.quick_cron) then
-        global.quick_cron_is_running = false
-        Event.remove(ErmConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
-    end
+     if global.quick_cron_is_running == true and Queue.is_empty(global.quick_cron) then
+         global.quick_cron_is_running = false
+         Event.remove(ErmConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
+     end
 end
 
 function CronProcessor.process_boss_queue()

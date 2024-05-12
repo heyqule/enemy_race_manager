@@ -94,7 +94,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     end
 
     spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
-    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return spawner
 end
@@ -121,7 +121,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     ERM_UnitHelper.modify_biter_damage(worm, level)
 
     worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
-    worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return worm
 end
@@ -152,7 +152,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
     worm['attack_parameters']['range'] = ErmConfig.get_max_attack_range()
     worm['prepare_range'] = 24
     worm['autoplace'] = nil
-    worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return worm
 end

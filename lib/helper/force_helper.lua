@@ -147,7 +147,12 @@ function ForceHelper.refresh_all_enemy_forces()
         if force.index ~= 1 and table_size(force.players) > 0 then
             table.insert(global.player_forces, force.name)
         end
+
+        if DEBUG_MODE and string.find(force.name, 'test') then
+            table.insert(global.player_forces, force.name)
+        end
     end
+    global.total_player_forces = #global.player_forces
 end
 
 -- Whether a surface can assign enemy

@@ -9,6 +9,8 @@ MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
 DEBUG_MODE = true
+--- Enable this flag when running tests.  It forces some chance based logics to run.
+TEST_MODE = true
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'
@@ -24,10 +26,12 @@ PLAYER_PLANET_PURIFIER_COUNTER_ATTACK = 'empck-pp'
 ARMY_POPULATION_INCREASE = 'empop-i'
 ARMY_POPULATION_DECREASE = 'empop-d'
 
+ROCKET_SILO_PLACED = 'emrs-p'
+ROCKET_SILO_REMOVED  = 'emrs-r'
+
 TRIGGER_BOSS_DIES = 'embss-die'
 
 LAND_SCOUT_BEACON = 'em-landsb'
 AERIAL_SCOUT_BEACON = 'em-airsb'
-SCOUT_PATHFINDING = 'em-pathfd'
 
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }

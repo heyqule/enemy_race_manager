@@ -237,7 +237,7 @@ describe("Army Count", function()
         async(7200)
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
-        local surface2 =game.create_surface('test_surface_2')
+        local surface2 = game.create_surface('test_surface_2')
 
         local force = game.forces['player']
         local building = "erm_terran/command-center"
@@ -314,6 +314,8 @@ describe("Army Count", function()
             })
 
             assert(table_size(marines) == 5, 'Units not teleported without power')
+
+            game.delete_surface(surface2)
             done()
         end)
     end)

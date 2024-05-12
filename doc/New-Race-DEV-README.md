@@ -2,6 +2,14 @@ New Race developer guide line
 --------------------
 This readme should be gives you a general start to create your new race.
 
+#### settings.lua
+
+Use this to add your race's map color.
+
+The setting name format is {race_name}-map-color.
+
+Example: [settings.lua](https://github.com/heyqule/erm_zerg/blob/main/settings.lua)
+
 #### global.lua
 
 defines mod constants. Many constants are used as function proxy keys.

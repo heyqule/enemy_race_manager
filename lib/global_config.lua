@@ -18,43 +18,27 @@ ErmConfig.MAP_PROCESS_CHUNK_BATCH = 20
 -- Processing Event Interval
 ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
 
-if DEBUG_MODE then
-    ErmConfig.LEVEL_PROCESS_INTERVAL = defines.time.minute
-    ErmConfig.ATTACK_GROUP_GATHERING_CRON = defines.time.minute + 1
-    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
-    --- Boss Queue only last while boss is live.  Clean up jobs need to be done in other queue.
-    ErmConfig.BOSS_QUEUE_CRON = 11
-    ErmConfig.TELEPORT_QUEUE_CRON = 33
-    ErmConfig.AUTO_DEPLOY_CRON = 311
-    ErmConfig.SPAWN_SCOUTS_INTERVAL = 25301
+ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
+ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
+ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
+ErmConfig.BOSS_QUEUE_CRON = 11
+ErmConfig.TELEPORT_QUEUE_CRON = 33
+ErmConfig.AUTO_DEPLOY_CRON = 311
+ErmConfig.SPAWN_SCOUTS_INTERVAL = 25301
 
-    ErmConfig.ONE_MINUTE_CRON = 30 * defines.time.second + 1
-    ErmConfig.FIFTEEN_SECONDS_CRON = 10 * defines.time.second + 1
-    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
+-- +1 to spread the job across all ticks
+-- execute all job on designated tick
+ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
+ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
+ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
 
-    ErmConfig.TEN_SECONDS_CRON = 5 * defines.time.second + 1
-    ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
-    ErmConfig.QUICK_CRON = 21
-else
-    ErmConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
-    ErmConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
-    ErmConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
-    ErmConfig.BOSS_QUEUE_CRON = 11
-    ErmConfig.TELEPORT_QUEUE_CRON = 33
-    ErmConfig.AUTO_DEPLOY_CRON = 311
-    ErmConfig.SPAWN_SCOUTS_INTERVAL = 25301
+-- execute one job on designated tick
+ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
+ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
+ErmConfig.QUICK_CRON = 19
 
-    -- +1 to spread the job across all ticks
-    -- execute all job on designated tick
-    ErmConfig.ONE_MINUTE_CRON = defines.time.minute + 1
-    ErmConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
-    ErmConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
-
-    -- execute one job on designated tick
-    ErmConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
-    ErmConfig.ONE_SECOND_CRON = defines.time.second + 1
-    ErmConfig.QUICK_CRON = 21
-end
+-- Run garbage collection and statistics on each nauvis day
+ErmConfig.GC_AND_STATS = 25000
 
 -- EVENTS
 ErmConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
@@ -79,7 +63,7 @@ ErmConfig.MAX_ELITE_LEVELS = 5
 
 ErmConfig.BOSS_MAX_TIERS = 5
 -- 5 Tiers of boss and their properties
-ErmConfig.BOSS_DESPAWN_TIMER = { 45, 45, 60, 75, 99 }
+ErmConfig.BOSS_DESPAWN_TIMER = { 60, 75, 90, 105, 120 }
 
 local boss_difficulty = {
     [BOSS_NORMAL] = { 25, 30, 36, 42, 50 },
@@ -111,13 +95,8 @@ ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
 ErmConfig.BOSS_ARTILLERY_SCAN_RANGE = 3200
 ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
 
-ErmConfig.CONFIG_CACHE_LENGTH = 5 * defines.time.minute
-ErmConfig.CONFIG_CACHE_SIZE = 1000
-if DEBUG_MODE then
-    ErmConfig.CONFIG_CACHE_LENGTH = 1 * defines.time.minute
-    ErmConfig.CONFIG_CACHE_SIZE = 256
-end
 
+ErmConfig.IS_FFA = settings.startup['enemyracemanager-free-for-all'].value
 ErmConfig.FFA_MULTIPLIER = settings.startup['enemyracemanager-free-for-all-multiplier'].value
 
 ErmConfig.MAX_TIME_TO_LIVE_UNIT = 800
@@ -520,6 +499,15 @@ function ErmConfig.format_daytime_string(start_tick, end_tick)
     datetime_str = datetime_str .. string.format('%02d:%02d:%02d', hour, minute, second)
 
     return datetime_str;
+end
+
+function ErmConfig.clear_invalid_erm_unit_groups()
+    -- Clear up invalid erm groups
+    for id, content in pairs(global.erm_unit_groups) do
+        if content.group == nil or content.group.valid == false then
+            global.erm_unit_groups[id] = nil
+        end
+    end
 end
 
 return ErmConfig

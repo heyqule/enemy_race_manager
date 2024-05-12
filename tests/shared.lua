@@ -7,6 +7,7 @@
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local LevelManager = require('__enemyracemanager__/lib/level_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
 local TestShared = {}
 
@@ -22,6 +23,7 @@ function TestShared.prepare_the_factory()
 
     LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
+    AttackGroupHeatProcessor.reset_globals()
     TestShared.reset_attack_meter()
 end
 
@@ -36,6 +38,7 @@ function TestShared.reset_the_factory()
 
     LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
+    AttackGroupHeatProcessor.reset_globals()
     TestShared.reset_attack_meter()
 end
 
@@ -46,6 +49,22 @@ function TestShared.reset_attack_meter()
         if race_name then
             global.race_settings[race_name].attack_meter = 0
             global.race_settings[race_name].attack_meter_total = 0
+        end
+    end
+end
+
+function TestShared.reset_surfaces()
+    for key, surface in pairs(game.surfaces) do
+        if string.find(surface.name,'test') then
+            game.delete_surface(surface)
+        end
+    end
+end
+
+function TestShared.reset_forces()
+    for key, force in pairs(game.forces) do
+        if string.find(force.name,'test') then
+            game.merge_forces(force, game.forces[1])
         end
     end
 end
@@ -67,9 +86,12 @@ function TestShared.reset_lab_tile(radius)
     surface.set_tiles(tiles, true, true, true, true)
 end
 
-function TestShared.create_group(surface, position, race, group_type, unit_count)
-    
+function TestShared.get_command_chain()
+    return {
+        type = defines.command.compound,
+        structure_type = defines.compound_command.return_last,
+        commands = {}
+    }
 end
-
 
 return TestShared

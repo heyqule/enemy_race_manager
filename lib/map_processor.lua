@@ -142,7 +142,7 @@ function MapProcessor.queue_chunks(surface, area)
         global.mapproc_chunk_queue[surface.name] = Queue()
     end
 
-    local unit_size = table_size(surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ErmForceHelper.get_enemy_forces(), limit = 1 }))
+    local unit_size = surface.count_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ErmForceHelper.get_enemy_forces(), limit = 1 })
     if unit_size > 0 then
         global.mapproc_chunk_queue[surface.name](area)
     end

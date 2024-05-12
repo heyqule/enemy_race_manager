@@ -332,4 +332,11 @@ function Debug_RemoteAPI.create_air_scout(mod_name, position)
     })
 end
 
+--- remote.call('enemyracemanager_debug', 'validate_erm_groups')
+function Debug_RemoteAPI.validate_erm_groups()
+    for id, content in pairs(global.erm_unit_groups) do
+        print(id..' = '.. tostring(content.group.valid))
+    end
+end
+
 return Debug_RemoteAPI

@@ -7,15 +7,17 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
-local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
+local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local Config = require('__enemyracemanager__/lib/global_config')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
 local DEBUG_BEHAVIOUR_RESULTS = {
     [defines.behavior_result.in_progress] = 'defines.behavior_result.in_progress',
@@ -37,11 +39,11 @@ local DEBUG_GROUP_STATES = {
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
     if entity and entity.valid then
-        local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
-        if ErmConfig.race_is_active(race_name) then
-            local replaced_entity = ErmReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
+        local race_name = ForceHelper.extract_race_name_from(entity.force.name)
+        if Config.race_is_active(race_name) then
+            local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
             if replaced_entity and replaced_entity.valid then
-                ErmBaseBuildProcessor.exec(replaced_entity)
+                BaseBuildProcessor.exec(replaced_entity)
             end
         end
 
@@ -52,17 +54,17 @@ end
 local onUnitGroupCreated = function(event)
     local group = event.group
     local force = group.force
-    if ErmForceHelper.is_enemy_force(force) then
+    if ForceHelper.is_enemy_force(force) then
         local surface = group.surface
-        local racename = ErmForceHelper.extract_race_name_from(force.name)
+        local racename = ForceHelper.extract_race_name_from(force.name)
         local scout_unit_name
         if global.group_tracker and global.group_tracker[racename] then
-            if ErmAttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
+            if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
                 scout_unit_name = racename..AttackGroupBeaconProcessor.AERIAL_SCOUT
             else
                 scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
             end
-        elseif ErmRaceSettingsHelper.can_spawn(33) then
+        elseif RaceSettingsHelper.can_spawn(33) then
             scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
         end
 
@@ -91,37 +93,11 @@ local destroyMembers = function(group)
     local refundPoints = 0
     for _, member in pairs(members) do
         member.destroy()
-        refundPoints = refundPoints + ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+        refundPoints = refundPoints + AttackGroupProcessor.MIXED_UNIT_POINTS
     end
 
-    local race_name = ErmForceHelper.extract_race_name_from(group.force.name)
-
-    if ErmConfig.race_is_active(race_name) then
-        ErmRaceSettingsHelper.add_to_attack_meter(race_name, refundPoints)
-    end
     group.destroy()
-end
-
----
---- Clean up cache table, destroy groups that has less than 5 units.
----
-local ermGroupCacheTableCleanup = function(target_table)
-    local tmp = {}
-    for _, group_data in pairs(target_table) do
-        if group_data and group_data.valid
-                and group_data.group and group_data.group.valid
-        then
-            local group = group_data.group
-            if #group.members >= 5 then
-                tmp[group.group_number] = group_data
-            else
-                destroyMembers(group)
-            end
-        end
-    end
-    target_table = tmp
-
-    return target_table
+    return refundPoints
 end
 
 local isErmUnitGroup = function(unit_number)
@@ -132,70 +108,68 @@ end
 ---
 --- Destroy group if the group doesn't have a valid path
 ---
-local destroyInvalidGroup = function(group, start_position)
+local destroyInvalidGroup = function(erm_unit_groups, unit_number)
+    local erm_group = erm_unit_groups[unit_number]
+    local group = erm_group.group
+    local start_position = erm_unit_groups[unit_number].start_position
+
     if group.valid and
             group.is_script_driven and
             group.command == nil and
             (start_position.x == group.position.x and start_position.y == group.position.y) and
-            ErmForceHelper.is_enemy_force(group.force)
+            ForceHelper.is_enemy_force(group.force)
     then
-        destroyMembers(group)
+        local group_size = table_size(group.members)
+        local group_force = group.force
+        local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        local refund_points = destroyMembers(group)
+
+        --- Hardcoded chance to spawn flyer group
+        if (RaceSettingsHelper.can_spawn(25) and group_size >= 50) or TEST_MODE then
+            local race_name = ForceHelper.extract_race_name_from(group_force.name)
+            local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
+            local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
+            local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
+
+            Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
+                    race_name, group_force, (group_size / 2), group_type, nil,
+                    false, target_force, surface)
+        elseif Config.race_is_active(race_name) then
+                RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
+        end
     end
 end
-
 
 local onAiCompleted = function(event)
     local unit_number = event.unit_number
 
     -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
-    print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+    -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
 
 
     if isErmUnitGroup(unit_number) then
         local erm_unit_groups = global.erm_unit_groups
         local group = erm_unit_groups[unit_number].group
 
-        if DEBUG_MODE then
-            print('AI COMPLETE:')
-            print('group_number:'..unit_number)
-            print('Group States:'..DEBUG_GROUP_STATES[group.state])
-            print('Event Beheviour Result:'..DEBUG_BEHAVIOUR_RESULTS[event.result])
-            if group.valid then
-                print('Group command:'..serpent.block(group.command))
-                print('Distraction Command:'..serpent.block(group.distraction_command))
-            end
+        destroyInvalidGroup(erm_unit_groups, unit_number)
+
+        if group.valid == false then
+            erm_unit_groups[unit_number] = nil
+            return
         end
 
-        destroyInvalidGroup(group, erm_unit_groups[unit_number].start_position)
-
-        if group.valid and
-            (group.command == nil and
-            group.state == defines.group_state.finished)
+        if group.command == nil and
+            group.state == defines.group_state.finished
         then
             if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
-                ErmAttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
             else
-                ErmAttackGroupProcessor.process_attack_position(group, nil, true)
+                AttackGroupProcessor.process_attack_position(group, nil, true)
             end
         end
 
-        if group.valid and
-            event.result == defines.behavior_result.success then
-
-            --group.set_command {
-            --    type = defines.command.attack_area,
-            --    destination = group.position,
-            --    radius = 32,
-            --    distraction = defines.distraction.by_anything
-            --}
-
-        end
-
-        if (event.tick - global.tick >= ErmConfig.CONFIG_CACHE_LENGTH) then
-            local group_count = table_size(erm_unit_groups)
-            if group_count > ErmConfig.CONFIG_CACHE_SIZE then
-                global.erm_unit_groups = ermGroupCacheTableCleanup(erm_unit_groups)
-            end
+        if event.result == defines.behavior_result.success then
+            AttackGroupProcessor.process_attack_position(group, nil)
         end
     end
 end
@@ -206,7 +180,7 @@ Event.register(defines.events.on_script_path_request_finished, function(event)
 end)
 
 --- Initial path finder
-Event.register(Event.generate_event_name(ErmConfig.REQUEST_PATH), function(event)
+Event.register(Event.generate_event_name(Config.REQUEST_PATH), function(event)
     AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial)
 end)
 
@@ -219,24 +193,16 @@ Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGath
 
 Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 
---- Handle when last unit in a group dies
-local function is_unit(event)
-    return event.entity.type == 'unit'
+--- @TODO 2.0 handle this with per planet statistic?
+local function is_unit_spawner(event)
+    return event.entity.type == 'unit-spawner'
 end
 
-local function handle_last_dead_unit(event)
-    local dead_unit = event.entity
-    local dead_unit_group = dead_unit.unit_group
-    if dead_unit_group and isErmUnitGroup(dead_unit_group.group_number) then
-        local key, unit = next(dead_unit_group.members)
-        if unit.unit_number == dead_unit.unit_number and table_size(dead_unit_group.members) == 1 then
-            global.erm_unit_groups[dead_unit_group.group_number] = nil
-
-            -- if the group is within the area of final command, mark the path as valid.  Else, mark it as invalid.
-            print(serpent.block(dead_unit.unit_group.command))
-        end
-    end
+local function handle_unit_spawner(event)
+    local dead_spawner = event.entity
+    local surface = dead_spawner.surface.index
+    local target_force = event.force.index
+    AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), surface, target_force)
 end
 
-Event.register(defines.events.on_entity_died, handle_last_dead_unit , is_unit)
-Event.register(defines.events.script_raised_destroy,  handle_last_dead_unit , is_unit)
+Event.register(defines.events.on_entity_died, handle_unit_spawner , is_unit_spawner)

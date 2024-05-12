@@ -90,14 +90,6 @@ data:extend {
         order = "enemyracemanager-116"
     },
     {
-        type = "bool-setting",
-        name = "enemyracemanager-land-collision-only",
-        description = "enemyracemanager-land-collision-only",
-        setting_type = "startup",
-        default_value = false,
-        order = "enemyracemanager-117"
-    },
-    {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
         description = "enemyracemanager-mapping-method",
@@ -296,8 +288,8 @@ data:extend {
     --- Range 1000 to 1100 reserve for map color changes
     {
         type = "color-setting",
-        name = "enemyracemanager-vanilla_map_color",
-        description = "enemyracemanager-vanilla_map_color",
+        name = "erm_vanilla-map-color",
+        description = "erm_vanilla-map-color",
         setting_type = "startup",
         default_value = VANILLA_MAP_COLOR,
         order = "enemyracemanager-1001"
@@ -531,8 +523,7 @@ data:extend {
         description = "enemyracemanager-elite-squad-level",
         setting_type = "runtime-global",
         default_value = 2,
-        minimum_value = 1,
-        maximum_value = 5,
+        allowed_values = {1,2,3,4,5},
         order = "enemyracemanager-409"
     },
     {

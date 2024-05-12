@@ -12,6 +12,8 @@ local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 --- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
@@ -33,8 +35,15 @@ end)
 
 --- Force Management
 Event.register(defines.events.on_force_created, function(event)
+    ForceHelper.refresh_all_enemy_forces()
     AttackGroupBeaconProcessor.add_new_force(event.force)
 end)
 Event.register(defines.events.on_forces_merged, function(event)
+    ForceHelper.refresh_all_enemy_forces()
     AttackGroupBeaconProcessor.remove_merged_force(event.source_name)
+    AttackGroupHeatProcessor.remove_force(event.source_index)
+end)
+
+Event.register(defines.events.on_player_changed_force, function(event)
+    ForceHelper.refresh_all_enemy_forces()
 end)

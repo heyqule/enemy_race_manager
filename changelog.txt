@@ -3,24 +3,37 @@ Version: 1.21.0
 Date: 2024-??-??
 
   Features:
-    - >>> Reworked attack group pathing <<<
-    - Added fog of war for enemy forces.  Enemies will have to scout their targets
-    - Enemy will scout with land and aerial units.
-    - Scouts drop hidden beacons.  They are used calculate attack paths for custom attack groups.
-    - When custom attack group spawns, it picks a closer spawner to reduce travel distance.
-    - Attack-able types: rocket-silo, mining-drill, artillery-turret and labs
-    - Enemy tracks which player force attacked their spawners and act accordingly.
-    - >>> Reworked attack group surface selection <<<
+    - >>> Reworked path finder (only for custom attack groups) <<<
+    - The group picks a closer spawner to reduce travel distance.
+    - They may use different pathing strategies to avoid defense or poke weakpoints.
+    - They have a chance to call air strikes when land attacks are fully blocked. e.g having moat or on island.
+    -
+    - >>> Scouting Subsystem <<<
+    - Introduce fog of war for enemy's custom attack groups.  They will have to scout their attack targets.
+    - Rocket-silo and artillery entities are automatically registered as attack target.
+    - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!
+    - Enemy sends scout with either land or aerial units.
+    - They start to send out scouts on a daily basis on the 7th nauvis days of your landing.
+    -
+    - >>> Reworked attack group surface / target force selection <<<
+    - Introduce enemy revenge heat map.  Enemies tracks which surface and by whom their spawners are killed.
+    - Enemies prioritize the attacker that killed most spawners.
+    - Enemies prioritize the surface get attacked the most.
+    - Enemies may ask their allies to help, if they are not able to attack.
 
   Changes:
-    - Free for all multiplier for damage and HP is now configurable in startup tab.
+    - Free for all multiplier is now configurable in startup tab.  It affects damage and HP.
+    - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
+    - Removed "Disable Aerial Collision" setting for units as 2.0 will have aerial units and it's incompatible with new path finder.
+    - Fixed some UI incorrect descriptions.
 
   Bugfixes:
-    - Fixed army population does not decrease when they removed by AAI Vehicle's deadzone logic.
-    - Fixed calculateMultipleLevel function not calling level up event.
+    - Fixed calculateMultipleLevel function did not call level up event.
+    - Fixed a crash when player attack boss under certain condition. [Issue: 45]
 
   Optimization:
     - Various Code Refactors
+    - Cron processor changes
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.13

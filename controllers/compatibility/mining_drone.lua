@@ -10,9 +10,7 @@ local add_mining_drone = function(event)
     local name = 'mining-depot'
     if game.entity_prototypes[name] then
         table.insert(global.attack_group_attackable_entity_names, name)
-        global.attack_group_valid_targets[name] = true
     end
-
 end
 
 Event.register(Event.generate_event_name(ErmConfig.FLUSH_GLOBAL), function(event)

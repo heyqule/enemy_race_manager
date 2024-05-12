@@ -270,4 +270,27 @@ describe("Attack Group", function()
             done()
         end)
     end)
+
+    it("Group Killed during generation", function()
+        async(1900)
+        global.race_settings[race_name].level = 20
+        global.race_settings[race_name].tier = 1
+
+        local surface = game.surfaces[1]
+        local entity = spawn_cc(surface)
+        AttackGroupBeaconProcessor.init_index()
+        AttackGroupProcessor.generate_group(
+                race_name,
+                game.forces[force_name],
+                200
+        )
+        after_ticks(600, function()
+            local group = global.group_tracker.erm_zerg.group
+            group.destroy()
+        end)
+        after_ticks(1800, function()
+            assert.equal(global.group_tracker.erm_zerg, nil, 'Remove record from group tracker')
+            done()
+        end)
+    end)
 end)

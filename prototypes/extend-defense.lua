@@ -91,15 +91,15 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     local walls = data.raw['wall']
     for _, entity in pairs(walls) do
         entity['resistances'] = {
-            { type = "acid", percent = 50, decrease = 0 },
+            { type = "acid", percent = 33, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
+            { type = "physical", percent = 33, decrease = 0 },
             { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
+            { type = "explosion", percent = 33, decrease = 0 },
             { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = "laser", percent = 33, decrease = 0 },
+            { type = "electric", percent = 33, decrease = 0 },
+            { type = "cold", percent = 33, decrease = 0 }
         }
     end
 
@@ -110,7 +110,7 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
             { type = "poison", percent = 100, decrease = 0 },
             { type = "physical", percent = 50, decrease = 0 },
             { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
+            { type = "explosion", percent = 50, decrease = 0 },
             { type = "impact", percent = 50, decrease = 45 },
             { type = "laser", percent = 50, decrease = 0 },
             { type = "electric", percent = 50, decrease = 0 },

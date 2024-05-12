@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 1/13/2024 12:19 PM
 ---
-
+require('global')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
@@ -543,8 +543,7 @@ describe("Attack Pathing", function()
 
         buildBaseWithWestDefense()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -573,8 +572,7 @@ describe("Attack Pathing", function()
         surface.force_generate_chunk_requests()
         buildBaseNoOpen()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -601,8 +599,7 @@ describe("Attack Pathing", function()
 
         buildBaseWithWestDefenseNorthOpen()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -634,8 +631,7 @@ describe("Attack Pathing", function()
 
         buildBaseWithWestDefense()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -667,8 +663,7 @@ describe("Attack Pathing", function()
 
         buildBaseWithWestDefenseSouthOpen()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -700,8 +695,7 @@ describe("Attack Pathing", function()
 
         buildBaseWithWestDefense()
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -738,8 +732,7 @@ describe("Attack Pathing", function()
             gatewidth = 320
         })
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-720,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -758,13 +751,14 @@ describe("Attack Pathing", function()
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+            global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         end)
 
         after_ticks(3600, function()
             local enemies = surface.find_entities_filtered {
                 force = 'enemy',
                 type = 'unit',
-                position = { x = -485, y = -200 },
+                position = { x = -500, y = -200 },
                 radius = 48,
             }
 
@@ -779,7 +773,7 @@ describe("Attack Pathing", function()
     end)
 
     it("Picking area with lowest defense score from North", function()
-        async(4200)
+        async(3600)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
@@ -794,8 +788,7 @@ describe("Attack Pathing", function()
             gatewidth = 320
         })
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={0,-720}})
         AttackGroupBeaconProcessor.init_index()
@@ -814,6 +807,7 @@ describe("Attack Pathing", function()
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+            global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         end)
 
         after_ticks(3600, function()
@@ -834,7 +828,7 @@ describe("Attack Pathing", function()
     end)
 
     it("Picking aerial area with lowest defense score from West", function()
-        async(4800)
+        async(3600)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
@@ -848,8 +842,7 @@ describe("Attack Pathing", function()
             dimension = 480,
         })
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-620,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -868,9 +861,10 @@ describe("Attack Pathing", function()
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
+            global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         end)
 
-        after_ticks(4800, function()
+        after_ticks(3600, function()
             local enemies = surface.find_entities_filtered {
                 force = 'enemy',
                 type = 'unit',
@@ -903,8 +897,7 @@ describe("Attack Pathing", function()
             dimension = 480,
         })
 
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 } })
-        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -20, -20 }, { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-620,0}})
         AttackGroupBeaconProcessor.init_index()
@@ -934,7 +927,89 @@ describe("Attack Pathing", function()
             }
 
             assert(enemies[1] ~= nil, 'There are enemies near target beacon')
-            remote.call('enemyracemanager_debug', 'print_global')
+            done()
+        end)
+
+        after_test(function()
+            TestShared.reset_lab_tile(500)
+        end)
+    end)
+
+    it('Attack beacon couldnt reach a spawn beacon on first try', function()
+        async(1500)
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+
+        -- Require generated chunks
+        --surface.request_to_generate_chunks({ 0, 0 }, 30)
+        --surface.force_generate_chunk_requests()
+        player.chart(surface, {{x = -650, y = -600}, {x = 600, y = 600}})
+
+        buildBaseWithBackdoorOpen({
+            dimension = 480,
+        })
+
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+
+        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-520,520}})
+        AttackGroupBeaconProcessor.init_index()
+
+        after_ticks(300, function()
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        end)
+
+        after_ticks(600, function()
+            assert(global.group_tracker.erm_vanilla == nil, "Shouldn't able to spawn units")
+        end)
+
+        after_ticks(900, function()
+            local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -500, 0 } })
+            local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        end)
+
+        after_ticks(1200, function()
+            assert(global.group_tracker.erm_vanilla.current_size > 0, "Able to spawn units")
+            done()
+        end)
+
+        after_test(function()
+            TestShared.reset_lab_tile(500)
+        end)
+    end)
+
+
+    it('Land attack group cant find a valid path, switch to aerial group instead', function()
+        async(7200)
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+
+        -- Require generated chunks
+        surface.request_to_generate_chunks({ 0, 0 }, 20)
+        surface.force_generate_chunk_requests()
+
+        buildBaseNoOpen()
+
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+
+        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-350,350}})
+        AttackGroupBeaconProcessor.init_index()
+
+        after_ticks(300, function()
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        end)
+
+        after_ticks(7200, function()
+            local enemies = surface.find_entities_filtered {
+                force = 'enemy',
+                type = 'unit',
+                position = { x = 0, y = 0},
+                radius = 48,
+            }
+
+            assert(enemies[1] ~= nil, 'There are enemies near target beacon')
             done()
         end)
 

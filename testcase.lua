@@ -13,12 +13,14 @@ if DEBUG_MODE and script.active_mods["factorio-test"] then
         "tests/attack_beacon",
         "tests/attack_pathing",
         "tests/attack_meter",
+        "tests/scouts",
         "tests/level_and_tier",
         "tests/surface_manager",
     }
 
     if script.active_mods['erm_zerg'] then
         table.insert(tests,"tests/attack_group")
+        table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
     end

@@ -9,8 +9,10 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local TestShared = require('shared')
 
 local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
-local NOT_SCAN_DISCTANCE = {120, 5200}
+local NOT_SCAN_DISCTANCE = {5200, 6400}
+local RADIUS_SCAN_DISCTANCE = {512, 1200}
 local SCAN_HALF_WIDTH = 160
+local directions = {0,2,4,6}
 
 local bounding_box_calc = {
     [defines.direction.north] = function(target_position, range)
@@ -159,7 +161,7 @@ end)
 describe("Surfaces and Forces", function()
 
     it("Test surface create/clear/delete", function()
-        local surface_name = 'TestSurface2'
+        local surface_name = 'test_surface_2'
         local surface = game.create_surface(surface_name)
         local surface_index = surface.index
         assert(#game.surfaces == 2, 'Surface Number Match')
@@ -237,7 +239,7 @@ describe("Pick Attack Entity Beacon", function()
 end)
 
 describe("Pick Spawn beacon", function()
-    local directions = {0,2,4,6}
+
     for _, direction in pairs(directions) do
         for tier, range in pairs(SCAN_DISTANCE) do
             it("Spawn beacon @ D:"..tostring(direction)..'/T:'..tostring(tier)..'/R:'..tostring(range),function()
@@ -302,16 +304,61 @@ describe("Pick Spawn beacon", function()
 
             if not spawn_location then
                 for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                    --- Disable fallback to test this.
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon, true, false)
+                    if spawn_location then
+                        break
+                    end
+                end
+            end
+
+            assert.is_nil(spawn_location, 'Should not able to find spawn location')
+        end)
+    end
+
+    for _, radius in pairs(RADIUS_SCAN_DISCTANCE) do
+        it("fallback radius @ "..radius, function()
+            local direction = 0
+            AttackGroupBeaconProcessor.init_index()
+            local surface = game.surfaces[1]
+
+            surface.request_to_generate_chunks(test_locations[direction](math.floor(radius/32)),3)
+            surface.force_generate_chunk_requests()
+
+            local test_location = {x=radius, y=radius}
+            local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+            local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
+                {test_location.x-15, test_location.y-15 },
+                {test_location.x+15, test_location.y+15}
+            })
+            local spawner_beacon = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            assert(spawner_beacon == 1, 'Has Spawner Beacon')
+
+            local enemy = game.forces['enemy']
+            local player = game.forces['player']
+            local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
+
+            local spawn_location
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon)
+
+            if not spawn_location then
+                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
                     spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon, true)
                     if spawn_location then
                         break
                     end
                 end
             end
-            assert.is_nil(spawn_location, 'Not able to find spawn location')
+
+            if radius < 1024 then
+                assert.not_nil(spawn_location, 'Need spawn location')
+            else
+                assert.is_nil(spawn_location, 'Should not able to find spawn location')
+            end
         end)
     end
 end)
+
 describe("Pick Resource Beacon", function()
     it("Crude Oil",function()
         AttackGroupBeaconProcessor.init_index()
@@ -331,5 +378,137 @@ describe("Pick Resource Beacon", function()
         local position = AttackGroupBeaconProcessor.pick_resource_location(surface, {x=0,y=0}, defines.direction.east)
         assert.not_nil(position, 'Found a position')
         assert.is_true(position.x == 801, 'Picking the furthest position')
+    end)
+end)
+
+describe("Modify", function()
+    it("Delete Defense Beacon",function()
+        async(30)
+        local surface = game.surfaces[1]
+        local player_force = game.forces[1]
+        local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
+
+        local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout', position = { 0, 0 } })
+        land_scout.die('player')
+
+        local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
+        local beacon = land_beacons[1]
+        local beacon_number = beacon.unit_number
+
+        assert.is_true(beacon.valid, 'Beacon is valid')
+        assert(type(global['erm_land_beacon'][1]['enemy'][beacon_number]) == 'table', "beacon data exist")
+        laser_entity.die('player')
+
+        after_ticks(30, function()
+            local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout', position = { 0, 0 } })
+            land_scout.die('player')
+
+            assert.is_false(beacon.valid, 'Beacon is invalid after killed')
+            assert(global['erm_land_beacon'][1]['enemy'][beacon_number] == nil, "global is nil")
+            done()
+        end)
+    end)
+
+    it("Update Defense Beacon",function()
+        async(30)
+        local surface = game.surfaces[1]
+        local force = game.forces['enemy']
+        local player_force = game.forces['player']
+        local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
+        local second_laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 15, 15 } })
+        local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout', position = { 0, 0 } })
+        land_scout.die('player')
+        local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
+        assert(land_beacons[1].health == 2, 'Beacon health not match, should be 2')
+
+        second_laser_entity.die('player')
+
+        after_ticks(30, function()
+            local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout', position = { 0, 0 } })
+            land_scout.die('player')
+            local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
+
+            assert(land_beacons[1].health == 1, 'Beacon health not match, should be 1')
+
+            done()
+        end)
+    end)
+
+    it.only("Update Spawner Beacon",function()
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+        local spawner1 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 190, 0 } })
+        local spawner2 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 200, 0 } })
+        local spawner3 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 210, 0 } })
+        local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
+            {180, 0 },
+            {200, 0}
+        })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = player, position = { 0, 0 }, raise_built = true })
+
+        after_ticks(300, function()
+            local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            game.print(spawn_beacons)
+            assert(spawn_beacons == 1, 'Spawner beach exists')
+            spawner3.die(player)
+
+            local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
+            local spawn_location
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon)
+
+            if not spawn_location then
+                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon, true)
+                    if spawn_location then
+                        break
+                    end
+                end
+            end
+        end)
+
+        after_ticks(600, function()
+            local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            assert(spawn_beacons == 1, 'Spawner beacon still exists')
+            done()
+        end)
+    end)
+
+    it.only("Delete Spawner Beacon",function()
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+        local spawner2 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 0, 200 }})
+        local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
+            {-10, 180 },
+            {10, 200}
+        })
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built = true  })
+
+        after_ticks(300, function()
+            local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            assert(spawn_beacons == 1, 'Spawner beacon exists')
+            spawner2.die(player)
+
+            local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
+            local spawn_location
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon)
+
+            if not spawn_location then
+                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon.beacon, true)
+                    if spawn_location then
+                        break
+                    end
+                end
+            end
+        end)
+
+        after_ticks(600, function()
+
+            local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
+            assert(spawn_beacons == 0, 'Spawner beacon should not exists')
+            done()
+        end)
     end)
 end)

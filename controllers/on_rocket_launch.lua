@@ -32,6 +32,4 @@ Event.register(defines.events.on_rocket_launched, function(event)
         ErmBossProcessor.exec(event.rocket_silo)
     end
 
-
-
 end)

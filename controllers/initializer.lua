@@ -16,8 +16,9 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
-local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
+local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 
@@ -170,14 +171,10 @@ local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = global.race_settings or {}
 
-    -- Track all unit groups created by ERM
-    global.erm_unit_groups = global.erm_unit_groups or {}
-
     -- Move all cache to this to resolve desync issues.
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     global.settings = global.settings or {}
-    global.tick = global.tick or 0
 
     global.installed_races = {}
     global.active_races = {}
@@ -185,13 +182,14 @@ local init_globals = function()
     global.active_races_num = 1
 
     ErmSurfaceProcessor.init_globals()
-    ErmAttackMeterProcessor.init_globals()
+    AttackMeterProcessor.init_globals()
     ErmMapProcessor.init_globals()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
+    AttackGroupProcessor.init_globals()
     AttackGroupBeaconProcessor.init_globals()
     AttackGroupPathingProcessor.init_globals()
-    ErmAttackGroupSurfaceProcessor.init_globals()
+    AttackGroupHeatProcessor.init_globals()
     ErmBossProcessor.init_globals()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()

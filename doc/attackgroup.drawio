@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-01-30T05:05:01.456Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="ScPRsAgD5viiwmoXZXje" version="22.1.18" type="device">
+<mxfile host="app.diagrams.net" modified="2024-03-17T16:21:00.190Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="CV8g7fuEHyBNMM5tja-a" version="24.0.7" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="2234" dy="1146" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -468,14 +468,32 @@
             <mxPoint x="2310" y="110" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="hzXAh4xyQzO_g9tGqDS--2" value="Try Left Route" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="hzXAh4xyQzO_g9tGqDS--2" value="Try Left Route&lt;br&gt;@ 320 tiles away&lt;br&gt;25%" style="rhombus;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="2220" y="470" width="150" height="112" as="geometry" />
         </mxCell>
-        <mxCell id="hzXAh4xyQzO_g9tGqDS--3" value="Try Right Route" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="hzXAh4xyQzO_g9tGqDS--3" value="Try Right Route&lt;br&gt;@ 320 tiles away&lt;br&gt;25%" style="rhombus;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="2490" y="464" width="140" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="hzXAh4xyQzO_g9tGqDS--4" value="Try Beacon Health Route" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="2750" y="469" width="170" height="110" as="geometry" />
+        <mxCell id="hzXAh4xyQzO_g9tGqDS--4" value="Try &lt;br&gt;Beacon Health Route&lt;br&gt;base on lowest score&lt;br&gt;50%" style="rhombus;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="2740" y="468" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tt4OIUBM9t60d69l0jD4-0" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XqgsmhrSzL_DvYhuzCrN-53" target="hzXAh4xyQzO_g9tGqDS--2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2580" y="260" as="sourcePoint" />
+            <mxPoint x="2630" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tt4OIUBM9t60d69l0jD4-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XqgsmhrSzL_DvYhuzCrN-53" target="hzXAh4xyQzO_g9tGqDS--3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2580" y="260" as="sourcePoint" />
+            <mxPoint x="2630" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tt4OIUBM9t60d69l0jD4-2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XqgsmhrSzL_DvYhuzCrN-53" target="hzXAh4xyQzO_g9tGqDS--4" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2580" y="260" as="sourcePoint" />
+            <mxPoint x="2630" y="210" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

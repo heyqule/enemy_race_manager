@@ -8,12 +8,58 @@ require('__stdlib__/stdlib/utils/defines/time')
 
 local Config = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
+local SCOUT_ACTIVE_TICK = 25000 * 14 --- 14 nauvis days
+if DEBUG_MODE then
+    SCOUT_ACTIVE_TICK = 25000
+end
 
 Event.on_nth_tick(Config.SPAWN_SCOUTS_INTERVAL, function(event)
-    --- Spawn scout on active race
-    for _, force in pairs(Config.get_enemy_races()) do
+    if game.tick < SCOUT_ACTIVE_TICK then
+        return
+    end
+    --- Scout command chain, go to up to all resource patches and then go to its attackable entity.
+    local force_names = ForceHelper.get_enemy_forces()
 
+    for _, force_name in pairs(force_names) do
+        local source_force = game.forces[force_name]
+        local race_name = ForceHelper.extract_race_name_from(force_name)
+        if Config.race_is_active(race_name) then
+            local target_force = AttackGroupHeatProcessor.pick_target(race_name)
+            local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force)
+            if target_force and surface then
+                Cron.add_10_sec_queue('AttackGroupProcessor.spawn_scout', race_name, source_force, surface, target_force)
+            end
+        end
     end
 end)
+
+local add_attack_beacon = function(event)
+    local entity = event.created_entity or event.entity
+    if entity.valid then
+        AttackGroupBeaconProcessor.create_attack_entity_beacon(entity)
+    end
+end
+
+local is_valid_target = function(event)
+    local entity = event.created_entity or event.entity
+    if entity and entity.valid and (entity.type == 'rocket-silo' or entity.type == 'artillery-turret')then
+        return true
+    end
+    return false
+end
+
+Event.register(defines.events.script_raised_revive, add_attack_beacon, is_valid_target)
+Event.register(defines.events.script_raised_built, add_attack_beacon, is_valid_target)
+Event.register(defines.events.on_built_entity, add_attack_beacon, is_valid_target)
+Event.register(defines.events.on_robot_built_entity, add_attack_beacon, is_valid_target)
+
+--- To remove beacon or not. Na.. leave it for discovery and pathing variation. <(=w=)>
+--Event.register(defines.events.on_entity_died, remove_attack_beacon, is_valid_rocket_silo)
+--Event.register(defines.events.script_raised_destroy, remove_attack_beacon, is_valid_rocket_silo)
+--Event.register(defines.events.on_player_mined_entity, remove_attack_beacon, is_valid_rocket_silo)
+--Event.register(defines.events.on_robot_mined_entity, remove_attack_beacon, is_valid_rocket_silo)

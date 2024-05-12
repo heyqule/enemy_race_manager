@@ -392,7 +392,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         ErmDebugHelper.print('BossProcessor: Indexed positions: ' .. global.boss_spawnable_index.size)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
-            surface.print('Unable to find a boss spawner.  Please try again on a surface with enemy spawners.')
+            surface.print('Unable to find a boss spawner.  Please try again.')
             BossProcessor.unset()
             return
         end
