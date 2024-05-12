@@ -434,7 +434,7 @@ describe("Modify", function()
         end)
     end)
 
-    it.only("Update Spawner Beacon",function()
+    it("Update Spawner Beacon",function()
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
@@ -449,7 +449,6 @@ describe("Modify", function()
 
         after_ticks(300, function()
             local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
-            game.print(spawn_beacons)
             assert(spawn_beacons == 1, 'Spawner beach exists')
             spawner3.die(player)
 
@@ -474,7 +473,7 @@ describe("Modify", function()
         end)
     end)
 
-    it.only("Delete Spawner Beacon",function()
+    it("Delete Spawner Beacon",function()
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']

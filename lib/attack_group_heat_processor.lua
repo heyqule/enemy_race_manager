@@ -179,11 +179,14 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
 end
 
 AttackGroupHeatProcessor.pick_target = function(race_name)
-    --- If free for all or has multiple player forces, pick from heat list
-    if (Config.IS_FFA or global.total_player_forces > 1) and
-        global.attack_heat_by_forces[race_name]
-    then
-        return game.forces[global.attack_heat_by_forces[race_name][1].attacker_index]
+    --- If the game has multiple player forces, pick from heat list
+    local attack_heat_by_forces = global.attack_heat_by_forces[race_name]
+    local total_player_forces = global.total_player_forces
+
+    if total_player_forces > 1 and
+       attack_heat_by_forces and
+       attack_heat_by_forces[1] then
+        return game.forces[attack_heat_by_forces[1].attacker_index]
     end
 
     return game.forces[PLAYER]

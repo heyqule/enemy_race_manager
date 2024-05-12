@@ -191,7 +191,6 @@ describe("Attack Heat", function()
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
         local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_vanilla', game.forces['player'])
 
-        print(picked_surface.name)
         assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface')
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
     end)

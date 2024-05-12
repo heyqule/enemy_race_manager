@@ -26,6 +26,7 @@ Date: 2024-??-??
     - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
     - Removed "Disable Aerial Collision" setting for units as 2.0 will have aerial units and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
+    - Max Automatic Group's Max groups changed from 50 to 100.
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.

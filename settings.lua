@@ -302,7 +302,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 20,
         minimum_value = 5,
-        maximum_value = 50,
+        maximum_value = 100,
         order = "enemyracemanager-001"
     },
     {

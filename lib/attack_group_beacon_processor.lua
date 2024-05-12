@@ -182,11 +182,13 @@ local function get_sorted_distance(entities, target_position, desc)
     desc = desc or false
     local distances = {}
     for _, entity in pairs(entities) do
-        table.insert(distances, {
-            entity = entity,
-            position = entity.position,
-            distance = Position.manhattan_distance(entity.position, target_position)
-        })
+        if entity.valid then
+            table.insert(distances, {
+                entity = entity,
+                position = entity.position,
+                distance = Position.manhattan_distance(entity.position, target_position)
+            })
+        end
     end
 
     if desc then
@@ -710,7 +712,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     local halt_cron = false
 
     if target_beacon then
-        print('has target beacon')
         local entities
         local bounding_box = get_bounding_box_by_direction(target_beacon.position, tier, scan_direction)
         scan_direction = ((scan_direction + 2) % 8)
@@ -720,10 +721,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             force = source_force,
             limit = 10,
         })
-        print(serpent.block(bounding_box))
 
         if next(entities) then
-            print('has spawn beacon')
             local distances = get_sorted_distance(entities, target_beacon.position)
 
             local spawners = surface.find_entities_filtered({
@@ -734,14 +733,12 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             })
 
             if next(spawners) then
-                print('Has pawner?')
                 rc_entity = spawners[math.random(1, #spawners)]
             else
                 -- Destroy spawn beacon if spawner is not found within it.
                 global[SPAWN_BEACON][surface.index][source_force.name][distances[1].entity.unit_number] = nil
                 distances[1].entity.destructible = true
                 distances[1].entity.destroy()
-                print('Delete spawner?')
             end
         end
 

@@ -195,7 +195,7 @@ Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 
 --- @TODO 2.0 handle this with per planet statistic?
 local function is_unit_spawner(event)
-    return event.entity.type == 'unit-spawner'
+    return event.entity.type == 'unit-spawner' and not ForceHelper.is_enemy_force(event.force)
 end
 
 local function handle_unit_spawner(event)
