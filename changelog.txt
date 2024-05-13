@@ -5,8 +5,8 @@ Date: 2024-??-??
   Features:
     - >>> Reworked path finder (only for custom attack groups) <<<
     - The group picks a closer spawner to reduce travel distance.
-    - They may use different pathing strategies to avoid defense or poke weakpoints.
-    - They have a chance to call air strikes when land attacks are fully blocked. e.g having moat or on island.
+    - They may use different pathing strategies to avoid defense or poke weak points.
+    - They have a chance to call aerial attacks when land attacks are fully blocked. e.g having moat or on island.
     -
     - >>> Scouting Subsystem <<<
     - Introduce fog of war for enemy's custom attack groups.  They will have to scout their attack targets.
