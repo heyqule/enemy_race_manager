@@ -587,11 +587,12 @@ end
 
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
     local selected_key = global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
-    if not selected_key or global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][selected_key] == nil then
+    local attack_beacons = global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name]
+    if not selected_key or attack_beacons[selected_key] == nil then
         return nil
     end
 
-    return global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][selected_key];
+    return attack_beacons[selected_key];
 end
 
 AttackGroupBeaconProcessor.get_control_data = function(surface_index, force_name)
@@ -684,7 +685,7 @@ AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, 
         target_beacon = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
     else
         target_beacon = AttackGroupBeaconProcessor.get_selected_attack_beacon(surface, source_force, target_force) or
-            AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
+                AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
     end
 
     return target_beacon
@@ -703,11 +704,12 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         use_fallback = true
     end
     from_cron = from_cron or false
-    local scan_direction = global[CONTROL_DATA][surface.index][target_force.name][SPAWN_BEACON_SCAN_DIRECTION] or 0
+    local control_data = global[CONTROL_DATA][surface.index][target_force.name]
+    local scan_direction = control_data[SPAWN_BEACON_SCAN_DIRECTION] or 0
     if from_cron == false then
-        global[CONTROL_DATA][surface.index][target_force.name][INIT_SPAWN_BEACON_SCAN_DIRECTION] = scan_direction
+        control_data[INIT_SPAWN_BEACON_SCAN_DIRECTION] = scan_direction
     end
-    local tier = global[CONTROL_DATA][surface.index][target_force.name][SPAWN_BEACON_SCAN_TIER] or 1
+    local tier = control_data[SPAWN_BEACON_SCAN_TIER] or 1
     local rc_entity
     local halt_cron = false
 
@@ -743,7 +745,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         end
 
         if rc_entity == nil then
-            if scan_direction == global[CONTROL_DATA][surface.index][target_force.name][INIT_SPAWN_BEACON_SCAN_DIRECTION]
+            if scan_direction == control_data[INIT_SPAWN_BEACON_SCAN_DIRECTION]
             then
                 tier = tier + 1
             end
@@ -754,8 +756,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                 halt_cron = true
             end
         end
-        global[CONTROL_DATA][surface.index][target_force.name][SPAWN_BEACON_SCAN_TIER] = tier
-        global[CONTROL_DATA][surface.index][target_force.name][SPAWN_BEACON_SCAN_DIRECTION] = scan_direction
+        control_data[SPAWN_BEACON_SCAN_TIER] = tier
+        control_data[SPAWN_BEACON_SCAN_DIRECTION] = scan_direction
     end
 
     -- Last resort
@@ -779,7 +781,8 @@ end
 AttackGroupBeaconProcessor.pick_current_selected_attack_beacon = function(surface, source_force, clean_selected_key)
     clean_selected_key = clean_selected_key or false
 
-    local target_force_name = global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_TARGET_FORCE]
+    local control_data = global[CONTROL_DATA][surface.index][source_force.name]
+    local target_force_name = control_data[ATTACK_ENTITIES_TARGET_FORCE]
     local force
     if target_force_name then
         force = game.forces[target_force_name]
@@ -789,16 +792,16 @@ AttackGroupBeaconProcessor.pick_current_selected_attack_beacon = function(surfac
         return nil
     end
 
-    if global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY] == nil then
+    if control_data[ATTACK_ENTITIES_SELECTED_KEY] == nil then
         AttackGroupBeaconProcessor.pick_attack_beacon(surface, source_force, force)
     end
 
-    local selected_key = global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
+    local selected_key = control_data[ATTACK_ENTITIES_SELECTED_KEY]
     if selected_key then
         local entity_data = global[ATTACK_ENTITIES_BEACON][surface.index][force.name][selected_key]
         if entity_data then
             if clean_selected_key then
-                global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY] = nil
+                control_data[ATTACK_ENTITIES_SELECTED_KEY] = nil
             end
             return entity_data
         end
@@ -808,46 +811,50 @@ AttackGroupBeaconProcessor.pick_current_selected_attack_beacon = function(surfac
 end
 
 AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_force, target_force)
-    if global[ATTACK_ENTITIES_BEACON][surface.index] == nil or
-        global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name] == nil
+    local surface_data = global[ATTACK_ENTITIES_BEACON][surface.index]
+    if surface_data == nil or
+        surface_data[target_force.name] == nil
     then
         return nil
     end
 
+    local control_data = global[CONTROL_DATA][surface.index][source_force.name]
+    local beacon_data = surface_data[target_force.name]
+
     local entity_data
-    local key, value = next(global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name], global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_CURRENT_KEY])
+    local key, value = next(beacon_data, control_data[ATTACK_ENTITIES_CURRENT_KEY])
     local i = 0
     while i < RETRY do
         if value and
-           is_valid_beacon(value.beacon)
+                is_valid_beacon(value.beacon)
         then
             if value.beacon.health > REMOVE_ATTACK_ENTITY_BEACON_COUNTS then
                 entity_data = value
-                global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_TARGET_FORCE] = target_force.name
-                global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_CURRENT_KEY] = key
-                global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY] = key
+                control_data[ATTACK_ENTITIES_TARGET_FORCE] = target_force.name
+                control_data[ATTACK_ENTITIES_CURRENT_KEY] = key
+                control_data[ATTACK_ENTITIES_SELECTED_KEY] = key
                 break
             elseif value.beacon.health == REMOVE_ATTACK_ENTITY_BEACON_COUNTS and
                     value.is_spawn ~= true
             then
                 value.beacon.destructible = true
                 value.beacon.destroy()
-                global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][key] = nil
+                beacon_data[key] = nil
             end
         elseif value then
-            global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name][key] = nil
+            beacon_data[key] = nil
         end
         i = i + 1
-        key, value = next(global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name], key)
+        key, value = next(beacon_data, key)
     end
 
     if entity_data then
         return entity_data
     end
 
-    global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_TARGET_FORCE] = nil
-    global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY] = nil
-    global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_CURRENT_KEY] = nil
+    control_data[ATTACK_ENTITIES_TARGET_FORCE] = nil
+    control_data[ATTACK_ENTITIES_SELECTED_KEY] = nil
+    control_data[ATTACK_ENTITIES_CURRENT_KEY] = nil
     return nil
 end
 
@@ -880,7 +887,7 @@ AttackGroupBeaconProcessor.pick_resource_location = function(surface, init_posit
 
     for _, entity in pairs(entities) do
         if distances[1].position.x == entity.position.x and
-           distances[1].position.y == entity.position.y  then
+                distances[1].position.y == entity.position.y  then
             rc_position = entity.position
             break
         end
@@ -923,8 +930,9 @@ AttackGroupBeaconProcessor.remove_merged_force = function(force_name)
 end
 
 AttackGroupBeaconProcessor.has_attack_entity_beacon = function(surface)
-    if global[ATTACK_ENTITIES_BEACON][surface.index] then
-        for _, data in pairs(global[ATTACK_ENTITIES_BEACON][surface.index]) do
+    local surface_data = global[ATTACK_ENTITIES_BEACON][surface.index]
+    if surface_data then
+        for _, data in pairs(surface_data) do
             if type(data) == 'table' and next(data) then
                 return true
             end
@@ -934,26 +942,30 @@ AttackGroupBeaconProcessor.has_attack_entity_beacon = function(surface)
 end
 
 AttackGroupBeaconProcessor.get_attackable_spawn_beacon = function(surface, force)
-    if global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] then
-        return global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name]
+    local beacon = global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name]
+    if beacon then
+        return beacon
     end
 
     return nil
 end
 
 AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
-    if global[SPAWN_BEACON][surface.index] == nil or
-        global[SPAWN_BEACON][surface.index][force.name] == nil
+    local beacon_surface = global[SPAWN_BEACON][surface.index]
+    if beacon_surface == nil or
+            beacon_surface[force.name] == nil
     then
         return nil
     end
 
     local i = 0
     local new_key, node
+    local control_data = global[CONTROL_DATA][surface.index][force.name]
+    local beacon_data = beacon_surface[force.name]
     repeat
-        local control_key = global[CONTROL_DATA][surface.index][force.name][SCOUT_SPAWN_KEY] or nil
-        new_key, node = next(global[SPAWN_BEACON][surface.index][force.name], control_key)
-        global[CONTROL_DATA][surface.index][force.name][SCOUT_SPAWN_KEY] = new_key
+        local control_key = control_data[SCOUT_SPAWN_KEY] or nil
+        new_key, node = next(beacon_data, control_key)
+        control_data[SCOUT_SPAWN_KEY] = new_key
         i = i + 1
     until node ~= nil or i < RETRY
 
@@ -974,8 +986,8 @@ AttackGroupBeaconProcessor.start_scout_scan = function()
     end
 
     if should_repeat and
-      global.scout_scanner and
-      table_size(global.scout_tracker) > 0 then
+            global.scout_scanner and
+            table_size(global.scout_tracker) > 0 then
         Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
     else
         global.scout_scanner = false
@@ -1002,11 +1014,12 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
             })
         end
 
-        local distance = util.distance(global.scout_tracker[race_name].position, entity.position)
+        local tracker = global.scout_tracker[race_name]
+        local distance = util.distance(tracker.position, entity.position)
         if distance > BEACON_RADIUS then
-            global.scout_tracker[race_name].position = entity.position
-            global.scout_tracker[race_name].update_tick = game.tick
-        elseif game.tick > global.scout_tracker[race_name].update_tick + SCOUT_KEEP_ALIVE and distance < BEACON_RADIUS then
+            tracker.position = entity.position
+            tracker.update_tick = game.tick
+        elseif game.tick > tracker.update_tick + SCOUT_KEEP_ALIVE and distance < BEACON_RADIUS then
             entity.die('neutral')
             global.scout_tracker[race_name] = nil
         end

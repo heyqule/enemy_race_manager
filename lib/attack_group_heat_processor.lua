@@ -74,18 +74,19 @@ AttackGroupHeatProcessor.calculate_heat = function(race_name, surface_index, att
 end
 
 AttackGroupHeatProcessor.cooldown_heat = function(race_name)
-    if global.attack_heat[race_name] == nil then
+    local attack_heat = global.attack_heat[race_name]
+    if attack_heat == nil then
         return nil
     end
 
-    for surface_index, surface_data in pairs(global.attack_heat[race_name]) do
+    for surface_index, surface_data in pairs(attack_heat) do
         for attacker_index, points in pairs(surface_data) do
             points = points - AttackGroupHeatProcessor.COOLDOWN_VALUE
             if points > 0 then
-                global.attack_heat[race_name][surface_index][attacker_index] = points
+                attack_heat[surface_index][attacker_index] = points
             else
                 --- Remove itself from calculation
-                global.attack_heat[race_name][surface_index][attacker_index] = nil
+                attack_heat[surface_index][attacker_index] = nil
             end
         end
     end
@@ -139,13 +140,13 @@ end
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
     local is_space_ex_game = TEST_MODE or script.active_mods['space-exploration']
-    if is_space_ex_game and
-        global.attack_heat_by_surfaces[race_name]
+    local surface_data = global.attack_heat_by_surfaces[race_name]
+    if is_space_ex_game and surface_data
     then
-        if global.attack_heat_by_surfaces[race_name][1].has_attack_beacon then
-            return game.surfaces[global.attack_heat_by_surfaces[race_name][1].surface_index]
+        if surface_data[1].has_attack_beacon then
+            return game.surfaces[surface_data[1].surface_index]
         else
-            for _, surface in pairs(global.attack_heat_by_surfaces[race_name]) do
+            for _, surface in pairs(surface_data) do
                 if surface.has_attack_beacon then
                     return game.surfaces[surface.surface_index]
                 end
@@ -153,8 +154,8 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
 
             -- Transfer all attack points to a friend that can attack.
             if ask_friend then
-                for friend_race_name, surface_data in pairs(global.attack_heat_by_surfaces) do
-                    for surface_index, surface in pairs(surface_data) do
+                for friend_race_name, race_surface_data in pairs(global.attack_heat_by_surfaces) do
+                    for surface_index, surface in pairs(race_surface_data) do
                         if surface.has_attack_beacon and
                             global.attack_heat[friend_race_name][surface_index] ~= nil
                         then
