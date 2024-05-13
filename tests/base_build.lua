@@ -89,7 +89,7 @@ describe("Base Building", function()
         local name = 'erm_zerg/zergling/1'
         local building = surface.create_entity({
             name='erm_zerg/hatchery/1',
-            position={0,0},
+            position={20,20},
             force = enemy_force
         })
         local unit_group = spawn_units(surface,name)

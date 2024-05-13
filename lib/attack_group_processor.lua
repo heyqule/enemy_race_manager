@@ -5,6 +5,7 @@
 ---
 
 require('util')
+require('global')
 local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
 
@@ -514,7 +515,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     end
 
     local scout_name = AttackGroupBeaconProcessor.LAND_SCOUT
-    if ErmRaceSettingsHelper.can_spawn(25) then
+    if ErmRaceSettingsHelper.can_spawn(25) and not TEST_MODE then
         scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
     end
 

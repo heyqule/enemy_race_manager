@@ -973,7 +973,9 @@ AttackGroupBeaconProcessor.start_scout_scan = function()
         end
     end
 
-    if should_repeat and global.scout_scanner then
+    if should_repeat and
+      global.scout_scanner and
+      table_size(global.scout_tracker) > 0 then
         Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
     else
         global.scout_scanner = false
