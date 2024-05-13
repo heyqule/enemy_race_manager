@@ -27,10 +27,13 @@ Date: 2024-??-??
     - Removed "Disable Aerial Collision" setting for units as 2.0 will have aerial units and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
     - Max Automatic Group's Max groups changed from 50 to 100.
+    - Changed "[Time based attack] add point by %" setting max value from 90 to 80.
+    - Added {6,7} minute options to "attack group forming interval".
+    - Changed "Max auto gather groups" default from 20 to 25.
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.
-    - Fixed a crash when player attack boss under certain condition. [Issue: 45]
+    - Fixed a crash when player attacks the boss under certain conditions. [Issue: 45]
 
   Optimization:
     - Various Code Refactors

@@ -214,7 +214,7 @@ data:extend {
         setting_type = "startup",
         default_value = 3,
         order = "enemyracemanager-500",
-        allowed_values = { 1, 2, 3, 4, 5, 10 }
+        allowed_values = { 1, 2, 3, 4, 5, 6, 7, 10 }
     },
     {
         type = "bool-setting",
@@ -301,7 +301,7 @@ data:extend {
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "runtime-global",
         default_value = 20,
-        minimum_value = 5,
+        minimum_value = 10,
         maximum_value = 100,
         order = "enemyracemanager-001"
     },
@@ -565,7 +565,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90 },
+        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 80 },
         order = "enemyracemanager-451"
     },
 }

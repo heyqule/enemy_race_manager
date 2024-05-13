@@ -106,7 +106,7 @@ local isErmUnitGroup = function(unit_number)
 end
 
 ---
---- Destroy group if the group doesn't have a valid path
+--- Destroy group if the group doesn't have a valid path, respawn as aerial group or refund points
 ---
 local destroyInvalidGroup = function(erm_unit_groups, unit_number)
     local erm_group = erm_unit_groups[unit_number]
@@ -124,9 +124,8 @@ local destroyInvalidGroup = function(erm_unit_groups, unit_number)
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
         local refund_points = destroyMembers(group)
 
-        --- Hardcoded chance to spawn flyer group
-        if (RaceSettingsHelper.can_spawn(25) and group_size >= 50) or TEST_MODE then
-            local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        --- Hardcoded chance to spawn half size aerial group
+        if (RaceSettingsHelper.can_spawn(33) and group_size >= 30) or TEST_MODE then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
             local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)

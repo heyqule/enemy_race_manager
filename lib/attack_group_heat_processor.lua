@@ -115,26 +115,26 @@ AttackGroupHeatProcessor.aggregate_heat = function(race_name)
     end
 
     --- Sort
-    local sortedSurfaces = {}
-    local sortedForces = {}
+    local sorted_surfaces = {}
+    local sorted_forces = {}
     for _, surface_data in pairs(attack_heat_by_surfaces) do
         --- Check whether surface has attackable entity
         local surface = game.get_surface(surface_data.surface_index)
         if surface and AttackGroupBeaconProcessor.has_attack_entity_beacon(surface) then
             surface_data.has_attack_beacon = true
         end
-        table.insert(sortedSurfaces, surface_data)
+        table.insert(sorted_surfaces, surface_data)
     end
     for _, attacker_data in pairs(attack_heat_by_forces) do
-        table.insert(sortedForces, attacker_data)
+        table.insert(sorted_forces, attacker_data)
     end
 
-    table.sort(sortedSurfaces, function(a, b) return a.heat > b.heat  end)
-    table.sort(sortedForces, function(a, b) return a.heat > b.heat  end)
+    table.sort(sorted_surfaces, function(a, b) return a.heat > b.heat  end)
+    table.sort(sorted_forces, function(a, b) return a.heat > b.heat  end)
 
     --- Assign global
-    global.attack_heat_by_surfaces[race_name] = sortedSurfaces
-    global.attack_heat_by_forces[race_name] = sortedForces
+    global.attack_heat_by_surfaces[race_name] = sorted_surfaces
+    global.attack_heat_by_forces[race_name] = sorted_forces
 end
 
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
