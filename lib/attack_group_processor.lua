@@ -371,7 +371,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
             scout, spawn_beacon.position,
             AttackGroupProcessor.GROUP_AREA, 1)
 
-    if surface and center_location then
+    if center_location then
         generate_unit_queue(
             surface, center_location, force,
             race_name, units_number, type,
@@ -549,7 +549,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         entity = scout,
         unit_number = scout.unit_number,
         position = scout.position,
-        destination = target_beacon.position,
+        final_destination = target_beacon.position,
         update_tick = game.tick
     }
 

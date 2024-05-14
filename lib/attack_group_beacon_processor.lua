@@ -18,6 +18,10 @@ local AttackGroupBeaconProcessor = {}
 local BEACON_RADIUS = 64
 --- Beacon Radius for spawner beacon
 local SPAWNER_BEACON_RADIUS = 160
+
+local RESOURCE_SCAN_RADIUS = 128
+local PREVENT_RESOURCE_SCAN_RADIUS = RESOURCE_SCAN_RADIUS * 2
+
 local BEACON_HEALTH_LIMIT = 200
 --- Beacon Names
 local AERIAL_BEACON = 'erm_aerial_beacon'
@@ -56,7 +60,7 @@ local NEUTRAL_FORCE = 'neutral'
 
 local RETRY = 5
 local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
-local SCOUT_KEEP_ALIVE = 3600
+local SCOUT_KEEP_ALIVE = 3600 -- Keep 15 seconds when idle
 local LAST_RESORT_RADIUS = 1024
 
 --- Scan up to 5KM from each side. Min distance 5 chunk
@@ -214,12 +218,13 @@ local function get_spawn_area(position)
     return area
 end
 
-local function has_nearby_beacon(names, entity, radius)
+local function has_nearby_beacon(names, entity, radius, override_force)
+    local force = override_force or entity.force.name
     if entity.surface.count_entities_filtered({
         name = names,
         position = entity.position,
         radius = radius,
-        force = entity.force,
+        force = force,
         limit = 1,
     }) > 0 then
         return true
@@ -240,12 +245,26 @@ end
 
 local function has_nearby_resource_beacon(entity, radius)
     radius = radius or BEACON_RADIUS
-    return has_nearby_beacon({ RESOURCE_BEACON }, entity, radius)
+    return has_nearby_beacon({ RESOURCE_BEACON }, entity, radius, NEUTRAL_FORCE)
 end
 
 local function has_nearby_spawn_entity_beacon(entity, radius)
     radius = radius or SPAWNER_BEACON_RADIUS
     return has_nearby_beacon({ SPAWN_BEACON }, entity, radius)
+end
+
+local function get_nearby_resource_beacon(entity, radius)
+    local entities =  entity.surface.find_entities_filtered {
+        name = RESOURCE_BEACON,
+        position = entity.position,
+        radius = radius,
+        force = NEUTRAL_FORCE,
+        limit = 1,
+    }
+    local key, node = next(entities)
+    if key then
+        return node
+    end
 end
 
 local function is_valid_beacon(beacon)
@@ -942,9 +961,12 @@ AttackGroupBeaconProcessor.has_attack_entity_beacon = function(surface)
 end
 
 AttackGroupBeaconProcessor.get_attackable_spawn_beacon = function(surface, force)
-    local beacon = global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name]
-    if beacon then
-        return beacon
+    local surface = global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index]
+    if surface then
+        local beacon = surface[force.name]
+        if beacon then
+            return beacon
+        end
     end
 
     return nil
@@ -1015,13 +1037,58 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
         end
 
         local tracker = global.scout_tracker[race_name]
-        local distance = util.distance(tracker.position, entity.position)
-        if distance > BEACON_RADIUS then
-            tracker.position = entity.position
-            tracker.update_tick = game.tick
-        elseif game.tick > tracker.update_tick + SCOUT_KEEP_ALIVE and distance < BEACON_RADIUS then
+        if game.tick > tracker.update_tick + SCOUT_KEEP_ALIVE and
+            (entity.command.type == defines.command.wander or
+            entity.command.type == defines.command.stop)
+        then
             entity.die('neutral')
             global.scout_tracker[race_name] = nil
+        elseif entity.command.type == defines.command.go_to_location then
+            tracker.position = entity.position
+            tracker.update_tick = game.tick
+        end
+
+
+        if entity.valid and
+           tracker.last_resource_position == nil and
+           has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
+        then
+            local command = entity.command
+            --- Switch to resource path only if it's heading to final_destination
+            if command and command.type == defines.command.go_to_location and
+                command.destination.x == tracker.final_destination.x and
+                command.destination.y == tracker.final_destination.y then
+                local beacon = get_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
+                local last_resource_distance = 0
+                if tracker.last_resource_position then
+                    last_resource_distance = util.distance(beacon.position, tracker.last_resource_position)
+                end
+
+                if tracker.last_resource_position == nil or
+                    last_resource_distance >= PREVENT_RESOURCE_SCAN_RADIUS
+                then
+                    entity.set_command({
+                        type = defines.command.go_to_location,
+                        destination = beacon.position,
+                        radius = 16,
+                        distraction = defines.distraction.none
+                    })
+
+                    tracker.last_resource_position = beacon.position
+                end
+            end
+        elseif entity.valid and
+            entity.command.type == defines.command.wander
+        then
+            local final_distance = util.distance(tracker.final_destination, entity.position)
+            if final_distance > (BEACON_RADIUS / 2) then
+                entity.set_command({
+                    type = defines.command.go_to_location,
+                    destination = tracker.final_destination,
+                    radius = 16,
+                    distraction = defines.distraction.none
+                })
+            end
         end
     else
         global.scout_tracker[race_name] = nil

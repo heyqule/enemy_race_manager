@@ -6,14 +6,14 @@ Date: 2024-??-??
     - >>> Reworked path finder (only for custom attack groups) <<<
     - The group picks a closer spawner to reduce travel distance.
     - They may use different pathing strategies to avoid defense or poke weak points.
-    - They have a chance to call aerial attacks when land attacks are fully blocked. e.g having moat or on island.
+    - They have a chance to call aerial attacks when ground attacks are fully blocked. e.g having moat or on island.
     -
     - >>> Scouting Subsystem <<<
     - Introduce fog of war for enemy's custom attack groups.  They will have to scout their attack targets.
-    - Rocket-silo and artillery entities are automatically registered as attack target.
     - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!
-    - Enemy sends scout with either land or aerial units.
-    - They start to send out scouts on a daily basis on the 7th nauvis days of your landing.
+    - Rocket-silo and artillery entities are automatically registered as attack target.
+    - Enemy sends scout with either ground or aerial units.
+    - They start to send out scouts on a daily (nauvis time) basis on the 7th nauvis days of your landing.
     -
     - >>> Reworked attack group surface / target force selection <<<
     - Introduce enemy revenge heat map.  Enemies tracks which surface and by whom their spawners are killed.
@@ -24,7 +24,7 @@ Date: 2024-??-??
   Changes:
     - Free for all multiplier is now configurable in startup tab.  It affects damage and HP.
     - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
-    - Removed "Disable Aerial Collision" setting for units as 2.0 will have aerial units and it's incompatible with new path finder.
+    - Removed "Disable Aerial Collision" setting as 2.0 will have aerial units, and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
     - Max Automatic Group's Max groups changed from 50 to 100.
     - Changed "[Time based attack] add point by %" setting max value from 90 to 80.

@@ -75,7 +75,7 @@ describe("Scouts", function()
         AttackGroupBeaconProcessor.init_index()
 
         local resource = surface.create_entity({ name = 'iron-ore', amount=10000, position = { -200, -200 } })
-        local miniing_drill = surface.create_entity({ name = 'electric-mining-drill', force = 'player', amount=10000, position = { -200, -200 } })
+        local mining_drill = surface.create_entity({ name = 'electric-mining-drill', force = 'player', amount=10000, position = { -200, -200 } })
         local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 200, 0 } })
         local gun_turret = surface.create_entity({ name = 'gun-turret', force = 'player', position = { 200, 100 } })
         local furnace = surface.create_entity({ name = 'electric-furnace', force = 'player', position = { 200, -200 } })
@@ -104,6 +104,31 @@ describe("Scouts", function()
                 name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
             })
             assert(count > 1, 'Saw '..count..' enemy buildings. Assume pass if final count is between 2 to 5')
+            done()
+        end)
+    end)
+
+    it("Detour to a resource node, then go to final_destination", function()
+        local surface = game.surfaces[1]
+
+        local spawner = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
+
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 130 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 130 } })
+        AttackGroupBeaconProcessor.init_index()
+
+        local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
+        after_ticks(3000, function()
+            local scout_count = surface.count_entities_filtered({
+                name=MOD_NAME..AttackGroupBeaconProcessor.LAND_SCOUT,
+                position={0,0},
+                radius=32,
+            })
+            assert(scout_count == 1, 'Must see a scout near final destination.')
+            local count = surface.count_entities_filtered({
+                name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
+            })
+            assert(count == 2, 'See 2 attack beacons.')
             done()
         end)
     end)
