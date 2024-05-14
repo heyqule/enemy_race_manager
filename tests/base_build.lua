@@ -23,7 +23,7 @@ local function spawn_units(surface,name)
     end
     unit_group.set_command {
         type = defines.command.build_base,
-        destination={0,3},
+        destination={3,3},
     }
     return unit_group
 end

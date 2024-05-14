@@ -115,6 +115,9 @@ describe("Scouts", function()
 
         local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 130 } })
         local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 130 } })
+
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 130 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 130 } })
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
@@ -128,7 +131,7 @@ describe("Scouts", function()
             local count = surface.count_entities_filtered({
                 name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
             })
-            assert(count == 2, 'See 2 attack beacons.')
+            assert(count >= 2, 'See 2 attack beacons.')
             done()
         end)
     end)

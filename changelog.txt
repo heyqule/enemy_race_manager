@@ -9,7 +9,7 @@ Date: 2024-??-??
     - They have a chance to call aerial attacks when ground attacks are fully blocked. e.g having moat or on island.
     -
     - >>> Scouting Subsystem <<<
-    - Introduce fog of war for enemy's custom attack groups.  They will have to scout their attack targets.
+    - Introduce fog of war for the custom attack groups.  They will have to scout their attack targets.
     - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!
     - Rocket-silo and artillery entities are automatically registered as attack target.
     - Enemy sends scout with either ground or aerial units.
@@ -17,9 +17,9 @@ Date: 2024-??-??
     -
     - >>> Reworked attack group surface / target force selection <<<
     - Introduce enemy revenge heat map.  Enemies tracks which surface and by whom their spawners are killed.
-    - Enemies prioritize the attacker that killed most spawners.
+    - Enemies prioritize the attacker force that killed most spawners.
     - Enemies prioritize the surface get attacked the most.
-    - Enemies may ask their allies to help, if they are not able to attack.
+    - Enemies may ask their allies to take revenge, if they are not able to attack.
 
   Changes:
     - Free for all multiplier is now configurable in startup tab.  It affects damage and HP.

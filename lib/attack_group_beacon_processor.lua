@@ -724,6 +724,10 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     end
     from_cron = from_cron or false
     local control_data = global[CONTROL_DATA][surface.index][target_force.name]
+    if control_data == nil then
+        return nil, true
+    end
+
     local scan_direction = control_data[SPAWN_BEACON_SCAN_DIRECTION] or 0
     if from_cron == false then
         control_data[INIT_SPAWN_BEACON_SCAN_DIRECTION] = scan_direction
@@ -1021,6 +1025,11 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
     if entity.valid then
         AttackGroupBeaconProcessor.create_attack_entity_beacon(entity)
 
+        local tracker = global.scout_tracker[race_name]
+        if tracker == nil then
+            return
+        end
+
         --- @TODO comment out for production
         if DEBUG_MODE then
             local color = settings.startup[race_name..'-map-color'].value
@@ -1031,12 +1040,11 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
                 target=entity.position,
                 surface=entity.surface,
                 filled=true,
-                time_to_live=3600,
+                time_to_live=3600*5,
                 color=color
             })
         end
 
-        local tracker = global.scout_tracker[race_name]
         if game.tick > tracker.update_tick + SCOUT_KEEP_ALIVE and
             (entity.command.type == defines.command.wander or
             entity.command.type == defines.command.stop)
