@@ -197,7 +197,7 @@ end
 local generate_unit_queue = function(
         surface, center_location, force, race_name,
         units_number, group_type, featured_group_id, is_elite_attack,
-        group_spawn_position, attack_beacon_position
+        group_spawn_position, attack_beacon
 )
     group_type = group_type or AttackGroupProcessor.GROUP_TYPE_MIXED
 
@@ -242,7 +242,8 @@ local generate_unit_queue = function(
         is_elite_attack = is_elite_attack,
         featured_group_id = featured_group_id,
         group_spawn_position = group_spawn_position,
-        attack_beacon_position = attack_beacon_position,
+        attack_beacon_position = attack_beacon.position,
+        attack_beacon_force = attack_beacon.force,
         tick = game.tick
     })
 
@@ -376,7 +377,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
             surface, center_location, force,
             race_name, units_number, type,
             featured_group_id, is_elite_attack,
-            center_location, attack_beacon_data.beacon.position
+            center_location, attack_beacon_data.beacon
         )
 
         if is_elite_attack then

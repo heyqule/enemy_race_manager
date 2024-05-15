@@ -22,10 +22,10 @@ end
 --- wipe queue due to function param order changes
 global.one_second_cron = Queue()
 
---- When wiping an existing cron job, purge related trackers to prevent the function being stuck
+--- When wiping an existing cron job, purge related trackers to prevent the feature being stuck.
 global.group_tracker = {}
 
---- Reindex all attackable entities on existing game, since the base is likely wall off.
+--- Reindex all attack-able entities on existing game, since the base is likely walled off.
 global.attack_beacon_index_all = true
 
 --- Fix duplicated names

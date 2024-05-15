@@ -131,7 +131,7 @@ local destroyInvalidGroup = function(erm_unit_groups, unit_number)
             local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
 
             Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
-                    race_name, group_force, (group_size / 2), group_type, nil,
+                    race_name, group_force, math.ceil(group_size / 1.5), group_type, nil,
                     false, target_force, surface)
         elseif Config.race_is_active(race_name) then
                 RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
@@ -161,14 +161,14 @@ local onAiCompleted = function(event)
             group.state == defines.group_state.finished
         then
             if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true)
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_groups['attack_beacon_force'])
             else
-                AttackGroupProcessor.process_attack_position(group, nil, true)
+                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_groups['attack_beacon_force'])
             end
         end
 
         if event.result == defines.behavior_result.success then
-            AttackGroupProcessor.process_attack_position(group, nil)
+            AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_groups['attack_beacon_force'])
         end
     end
 end
