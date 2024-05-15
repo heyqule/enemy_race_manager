@@ -14,20 +14,17 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
   Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.20 Changes
+### 1.21 Changes
 
-- BobEnemies and Natural Evolution Enemies have removed from incompatible list.
-- BobEnemies and Natural Evolution Enemies can work under default enemy spawner generator.
-- Other unsupported enemies should no longer crash the game. But they may mess up the spawner generator.
-- EMR enemies showcase in menu background, you can select them in startup menu.
-- Added setting to disable aerial behaviour for air units.
-- Spitter acid patches nerfs. Deal lower damage / s and shorter lifetime.
+- Rework custom attack group's pathfinder. They may deploy different pathing strategies.
+- Rework custom attack group's target force and surface selection.
+- Scout subsystem.  Custom attack groups need to find their targets with aerial and ground scouts.
+- Various changes and bugfixes, see changelog for details.
 
 
 ### Race Mods Changes
 
-- Playable Terran 2.0 now uses HD graphic.  It also has additional units and turrets.  Team color support!
-- Various tweaks on race mods
+- Changes to support the scout subsystem and new pathfinder.
 
 ### Download New race demo
 

@@ -18,8 +18,9 @@ local AttackGroupBeaconProcessor = {}
 local BEACON_RADIUS = 64
 --- Beacon Radius for spawner beacon
 local SPAWNER_BEACON_RADIUS = 160
+local ATTACK_ENTITIES_SCAN_RADIUS = BEACON_RADIUS * 2
 
-local RESOURCE_SCAN_RADIUS = 128
+local RESOURCE_SCAN_RADIUS = BEACON_RADIUS * 2
 local PREVENT_RESOURCE_SCAN_RADIUS = RESOURCE_SCAN_RADIUS * 2
 
 local BEACON_HEALTH_LIMIT = 200
@@ -66,7 +67,7 @@ local LAST_RESORT_RADIUS = 1024
 --- Scan up to 5KM from each side. Min distance 5 chunk
 local SCAN_DISTANCE = { { 160, 800 }, { 800, 1600 }, { 1600, 2400 }, { 2400, 3200 }, { 3200, 4000 }, { 4000, 5000 } }
 local MAX_TIERS = #SCAN_DISTANCE
-local SCAN_HALF_WIDTH = 160
+local SCAN_HALF_WIDTH = 320
 
 
 local bounding_box_calc = {
@@ -436,12 +437,14 @@ end
 
 AttackGroupBeaconProcessor.create_attack_entity_beacon = function(source_entity)
     local surface = source_entity.surface
-    local attackable_entity = get_an_attackable_entity(source_entity)
+    local attackable_entity = get_an_attackable_entity(source_entity, ATTACK_ENTITIES_SCAN_RADIUS)
+
     if attackable_entity and
             attackable_entity.valid and
             has_nearby_attack_entity_beacon(attackable_entity) == false
     then
-        local attackable_entities = count_attackable_entities(attackable_entity)
+        --- 128 tile scan radius
+        local attackable_entities = count_attackable_entities(attackable_entity, ATTACK_ENTITIES_SCAN_RADIUS)
         if attackable_entities > 0 then
             local beacon = surface.create_entity({
                 name = ATTACK_ENTITIES_BEACON,
@@ -463,9 +466,15 @@ end
 
 AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk = function(surface, area)
     if surface and surface.valid then
+        local types = INDEXABLE_ATTACKABLE_ENTITY_TYPES
+        if global.attack_beacon_index_all then
+            types = ATTACKABLE_ENTITY_TYPES
+            global.attack_beacon_index_all = nil
+        end
+
         for _, force in pairs(ForceHelper.get_player_forces()) do
             local attackable_entities = surface.find_entities_filtered({
-                type = INDEXABLE_ATTACKABLE_ENTITY_TYPES,
+                type = types,
                 force = force,
                 area = area,
                 limit = 1,
@@ -739,6 +748,22 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     if target_beacon then
         local entities
         local bounding_box = get_bounding_box_by_direction(target_beacon.position, tier, scan_direction)
+        --- @TODO comment out for production
+        if DEBUG_MODE then
+            local race_name = ForceHelper.extract_race_name_from(source_force.name)
+            local color = settings.startup[race_name..'-map-color'].value
+            color.a = 0.1
+            rendering.draw_rectangle({
+                force='player',
+                left_top=bounding_box[1],
+                right_bottom=bounding_box[2],
+                surface=target_beacon.surface,
+                filled=true,
+                time_to_live=3600,
+                draw_on_ground=true,
+                color=color
+            })
+        end
         scan_direction = ((scan_direction + 2) % 8)
         entities = surface.find_entities_filtered({
             name = SPAWN_BEACON,
@@ -1033,7 +1058,7 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
         --- @TODO comment out for production
         if DEBUG_MODE then
             local color = settings.startup[race_name..'-map-color'].value
-            color.a = 0.5
+            color.a = 0.25
             rendering.draw_circle({
                 force='player',
                 radius=1,
@@ -1041,7 +1066,8 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
                 surface=entity.surface,
                 filled=true,
                 time_to_live=3600*5,
-                color=color
+                color=color,
+                draw_on_ground=true
             })
         end
 

@@ -113,11 +113,17 @@ describe("Scouts", function()
 
         local spawner = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
 
-        local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 130 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 130 } })
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 150 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 150 } })
 
-        local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 130 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 130 } })
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 150 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 150 } })
+
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 90 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 90 } })
+
+        local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 90 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 90 } })
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
@@ -131,7 +137,7 @@ describe("Scouts", function()
             local count = surface.count_entities_filtered({
                 name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
             })
-            assert(count >= 2, 'See 2 attack beacons.')
+            assert(count >= 2, 'See '..count..' attack beacons. Expect at least 2.')
             done()
         end)
     end)

@@ -7,14 +7,12 @@ Date: 2024-??-??
     - The group picks a closer spawner to reduce travel distance.
     - They may use different pathing strategies to avoid defense or poke weak points.
     - They have a chance to call aerial attacks when ground attacks are fully blocked. e.g having moat or on island.
-    -
     - >>> Scouting Subsystem <<<
     - Introduce fog of war for the custom attack groups.  They will have to scout their attack targets.
     - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!
     - Rocket-silo and artillery entities are automatically registered as attack target.
     - Enemy sends scout with either ground or aerial units.
-    - They start to send out scouts on a daily (nauvis time) basis on the 7th nauvis days of your landing.
-    -
+    - They begin to send out scouts on a daily (nauvis day) basis after the 7th nauvis day of your landing.
     - >>> Reworked attack group surface / target force selection <<<
     - Introduce enemy revenge heat map.  Enemies tracks which surface and by whom their spawners are killed.
     - Enemies prioritize the attacker force that killed most spawners.
@@ -26,14 +24,15 @@ Date: 2024-??-??
     - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
     - Removed "Disable Aerial Collision" setting as 2.0 will have aerial units, and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
-    - Max Automatic Group's Max groups changed from 50 to 100.
-    - Changed "[Time based attack] add point by %" setting max value from 90 to 80.
+    - Changed "[Time based attack] add point by %" setting max value to 75. (Please reset your setting to 75, if you were using 80 or 90.)
     - Added {6,7} minute options to "attack group forming interval".
-    - Changed "Max auto gather groups" default from 20 to 25.
+    - Max Automatic Group's max value changed from 50 to 100.
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.
     - Fixed a crash when player attacks the boss under certain conditions. [Issue: 45]
+    - Fixed duplicated names in global.attack_group_attackable_entity_names.
+    - Added test cases for automatic regression tests.
 
   Optimization:
     - Various Code Refactors

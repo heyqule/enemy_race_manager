@@ -510,4 +510,20 @@ function ErmConfig.clear_invalid_erm_unit_groups()
     end
 end
 
+function ErmConfig.add_attack_group_attackable_entity(name)
+    if game.entity_prototypes[name] then
+        local name_exists = false
+        for _, value in pairs(global.attack_group_attackable_entity_names) do
+            if value == name then
+                name_exists = true
+                break;
+            end
+        end
+
+        if not name_exists then
+            table.insert(global.attack_group_attackable_entity_names, name)
+        end
+    end
+end
+
 return ErmConfig

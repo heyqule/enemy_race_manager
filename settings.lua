@@ -565,7 +565,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 80 },
+        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75 },
         order = "enemyracemanager-451"
     },
 }
