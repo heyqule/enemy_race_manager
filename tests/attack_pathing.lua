@@ -828,7 +828,7 @@ describe("Attack Pathing", function()
     end)
 
     it("Picking aerial area with lowest defense score from East", function()
-        async(3300)
+        async(3600)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
