@@ -46,7 +46,7 @@ function TestShared.reset_the_factory()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
 end
-
+--- Clear cron and its trackers
 function TestShared.CleanCron()
     global.one_minute_cron = Queue()
     global.fifteen_seconds_cron = Queue()
@@ -56,9 +56,14 @@ function TestShared.CleanCron()
 
     -- Conditional Crons
     global.quick_cron = Queue()  -- Spawn
+    global.teleport_cron = {}
 
     global.erm_unit_group = {}
     global.group_tracker = {}
+    global.scout_tracker = {}
+    global.scout_scanner = false
+    global.quick_cron_is_running = false
+    global.army_teleporter_event_running = false
 end
 
 function TestShared.reset_attack_meter()

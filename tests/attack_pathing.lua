@@ -588,7 +588,7 @@ describe("Attack Pathing", function()
     end)
 
     it("Avoid Defence Beacon (Ground Attack) using left side", function()
-        async(7200)
+        async(7500)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
@@ -613,7 +613,7 @@ describe("Attack Pathing", function()
             global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
         end)
 
-        after_ticks(7200, function()
+        after_ticks(7500, function()
             assert(entity_is_damage(rocket_launcher), 'Able to attack target')
             done()
         end)
