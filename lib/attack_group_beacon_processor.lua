@@ -718,7 +718,7 @@ AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, 
     end
 
     profiler.stop()
-    log{"",'[ERM] AttackGroupBeaconProcessor.pick_attack_beacon: __1__ ', profiler}
+    log{"",'[ERM] AttackGroupBeaconProcessor.pick_attack_beacon: ', profiler}
 
     return target_beacon
 end
@@ -742,7 +742,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     local control_data = global[CONTROL_DATA][surface.index][target_force.name]
     if control_data == nil then
         profiler.stop()
-        log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location nil control data: __1__ ', profiler}
+        log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location nil control data: ', profiler}
 
 
         return nil, true
@@ -835,7 +835,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     end
 
     profiler.stop()
-    log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location: __1__ ', profiler}
+    log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location: ', profiler}
 
     return rc_entity, halt_cron
 end
