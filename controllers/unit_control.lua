@@ -160,9 +160,9 @@ local onAiCompleted = function(event)
            erm_unit_group.nearby_retry >= 3
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_beacon_force, true)
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_force, true)
             else
-                AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_group.attack_beacon_force, true)
+                AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_group.attack_force, true)
             end
             erm_unit_group.nearby_retry = 0
         elseif
@@ -171,9 +171,9 @@ local onAiCompleted = function(event)
            event.result == defines.behavior_result.success
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_beacon_force)
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_force)
             else
-                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_group.attack_beacon_force)
+                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_group.attack_force)
             end
             erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end

@@ -55,13 +55,13 @@ local compute_beacon_buffer_position = {
         return {x=x,y=y + CHUNK_SIZE * BUFFER_MULTIPLIER}
     end,
     [defines.direction.east] = function(x, y)
-        return {x=x + CHUNK_SIZE * BUFFER_MULTIPLIER,y=y}
+        return {x=x - CHUNK_SIZE * BUFFER_MULTIPLIER,y=y}
     end,
     [defines.direction.south] = function(x, y)
         return {x=x, y=y - CHUNK_SIZE * BUFFER_MULTIPLIER}
     end,
     [defines.direction.west] = function(x, y)
-        return {x=x - CHUNK_SIZE * BUFFER_MULTIPLIER, y=y}
+        return {x=x + CHUNK_SIZE * BUFFER_MULTIPLIER, y=y}
     end,
 }
 
@@ -211,7 +211,9 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
     if scout_beacon then
         local commands_chain = get_command_chain()
-
+        print(direction)
+        print(serpent.block(scout_beacon.position))
+        print(serpent.block(buffer_zone))
         table.insert(commands_chain.commands, {
             type = defines.command.go_to_location,
             destination = buffer_zone,
