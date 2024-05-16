@@ -64,7 +64,7 @@ local onUnitGroupCreated = function(event)
             else
                 scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
             end
-        elseif RaceSettingsHelper.can_spawn(33) then
+        elseif RaceSettingsHelper.can_spawn(50) then
             scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
         end
 
@@ -108,10 +108,9 @@ end
 ---
 --- Destroy group if the group doesn't have a valid path, respawn as aerial group or refund points
 ---
-local destroyInvalidGroup = function(erm_unit_groups, unit_number)
-    local erm_group = erm_unit_groups[unit_number]
+local destroyInvalidGroup = function(erm_group)
     local group = erm_group.group
-    local start_position = erm_unit_groups[unit_number].start_position
+    local start_position = erm_group.start_position
 
     if group.valid and
             group.is_script_driven and
@@ -125,13 +124,13 @@ local destroyInvalidGroup = function(erm_unit_groups, unit_number)
         local refund_points = destroyMembers(group)
 
         --- Hardcoded chance to spawn half size aerial group
-        if (RaceSettingsHelper.can_spawn(33) and group_size >= 30) or TEST_MODE then
+        if (RaceSettingsHelper.can_spawn(66) and group_size >= 30) or TEST_MODE then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
             local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
 
             Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
-                    race_name, group_force, math.ceil(group_size / 1.5), group_type, nil,
+                    race_name, group_force, math.ceil(group_size / 2), group_type, nil,
                     false, target_force, surface)
         elseif Config.race_is_active(race_name) then
                 RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
@@ -145,30 +144,38 @@ local onAiCompleted = function(event)
     -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
     -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
 
-
     if isErmUnitGroup(unit_number) then
-        local erm_unit_groups = global.erm_unit_groups
-        local group = erm_unit_groups[unit_number].group
+        --print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+        local erm_unit_group = global.erm_unit_groups[unit_number]
+        local group = erm_unit_group.group
 
-        destroyInvalidGroup(erm_unit_groups, unit_number)
+        destroyInvalidGroup(erm_unit_group)
 
         if group.valid == false then
-            erm_unit_groups[unit_number] = nil
+            global.erm_unit_groups[unit_number] = nil
             return
         end
 
-        if group.command == nil and
-            group.state == defines.group_state.finished
+        if event.result == defines.behavior_result.failure or
+           erm_unit_group.nearby_retry >= 3
         then
-            if erm_unit_groups.always_angry and erm_unit_groups.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_groups['attack_beacon_force'])
+            if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_beacon_force, true)
             else
-                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_groups['attack_beacon_force'])
+                AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_group.attack_beacon_force, true)
             end
-        end
-
-        if event.result == defines.behavior_result.success then
-            AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_groups['attack_beacon_force'])
+            erm_unit_group.nearby_retry = 0
+        elseif
+           group.command == nil or
+           group.state == defines.group_state.finished or
+           event.result == defines.behavior_result.success
+        then
+            if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
+                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_beacon_force)
+            else
+                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_group.attack_beacon_force)
+            end
+            erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end
     end
 end

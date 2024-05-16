@@ -184,7 +184,9 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             global.erm_unit_groups[group.group_number] = {
                 group = group,
                 start_position = group.position,
-                always_angry = false
+                always_angry = false,
+                nearby_retry = 0,
+                attack_beacon_force = group_tracker.attack_beacon_force
             }
         else
             group.set_autonomous()
@@ -244,7 +246,7 @@ local generate_unit_queue = function(
         group_spawn_position = group_spawn_position,
         attack_beacon_position = attack_beacon.position,
         attack_beacon_force = attack_beacon.force,
-        tick = game.tick
+        tick = game.tick,
     })
 
     local unit_group = surface.create_unit_group({ position = center_location, force = force })
@@ -353,7 +355,6 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
         spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data.beacon, from_retry)
     end
 
-
     if spawn_beacon == nil then
         if halt_cron == false then
             -- Retry to find new beacons
@@ -367,17 +368,17 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
         return false
     end
 
-    local scout  = race_name..AttackGroupBeaconProcessor.LAND_SCOUT
+    local scout = race_name .. AttackGroupBeaconProcessor.LAND_SCOUT
     local center_location = surface.find_non_colliding_position(
             scout, spawn_beacon.position,
             AttackGroupProcessor.GROUP_AREA, 1)
 
     if center_location then
         generate_unit_queue(
-            surface, center_location, force,
-            race_name, units_number, type,
-            featured_group_id, is_elite_attack,
-            center_location, attack_beacon_data.beacon
+                surface, center_location, force,
+                race_name, units_number, type,
+                featured_group_id, is_elite_attack,
+                center_location, attack_beacon_data.beacon
         )
 
         if is_elite_attack then
@@ -481,9 +482,10 @@ function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
     return false
 end
 
-function AttackGroupProcessor.process_attack_position(group, distraction, find_nearby, target_force)
+function AttackGroupProcessor.process_attack_position(group, distraction, find_nearby, target_force, new_beacon)
     distraction = distraction or defines.distraction.by_enemy
     find_nearby = find_nearby or false
+    new_beacon = new_beacon or false
     target_force = target_force or game.forces['player']
 
     local attack_position = nil
@@ -493,14 +495,14 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 
     if attack_position == nil then
-        local beacon = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force, target_force)
+        local beacon = AttackGroupBeaconProcessor.pick_attack_beacon(group.surface, group.force, target_force, new_beacon)
         attack_position = beacon.position
     end
 
     if attack_position then
         local command = {
             type = defines.command.attack_area,
-            destination = { x = attack_position.x, y = attack_position.y},
+            destination = { x = attack_position.x, y = attack_position.y },
             radius = AttackGroupProcessor.ATTACK_RADIUS,
             distraction = distraction
         }
@@ -520,7 +522,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
     end
 
-    scout_name = race_name..scout_name
+    scout_name = race_name .. scout_name
 
     local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
@@ -534,9 +536,9 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
             AttackGroupProcessor.GROUP_AREA, 1)
 
     local scout = surface.create_entity({
-        name=scout_name,
-        force=source_force,
-        position=spawn_location
+        name = scout_name,
+        force = source_force,
+        position = spawn_location
     })
 
     scout.set_command({

@@ -16,6 +16,8 @@ global.attack_group_valid_targets = nil
 for id, content in pairs(global.erm_unit_groups) do
     if content.group_number or content.group == nil or content.group.valid == false then
         global.erm_unit_groups[id] = nil
+    else
+        global.erm_unit_groups[id].nearby_retry = 0
     end
 end
 

@@ -24,14 +24,15 @@ Date: 2024-??-??
     - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
     - Removed "Disable Aerial Collision" setting as 2.0 will have aerial units, and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
-    - Changed "[Time based attack] add point by %" setting max value to 75. (Please reset your setting to 75, if you were using 80 or 90.)
+    - Max Automatic Group's Max groups changed from 50 to 100.
+    - Changed "[Time based attack] add point by %" setting max value from 90 to 75. (Please reset your setting to 75, if you were using 90)
     - Added {6,7} minute options to "attack group forming interval".
     - Max Automatic Group's max value changed from 50 to 100.
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.
     - Fixed a crash when player attacks the boss under certain conditions. [Issue: 45]
-    - Fixed duplicated names in global.attack_group_attackable_entity_names.
+    - Fixed duplicated names in global.attack_group_attackable_entity_names
     - Added test cases for automatic regression tests.
 
   Optimization:

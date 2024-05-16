@@ -157,7 +157,7 @@ end
 local function get_attackable_entity(surface, area)
     local entities = surface.find_entities_filtered({
         area = area,
-        type = ATTACKABLE_ENTITY_TYPES.NORMAL_PRECISION_TARGET_TYPES,
+        type = ATTACKABLE_ENTITY_TYPES,
         limit = 1
     })
 

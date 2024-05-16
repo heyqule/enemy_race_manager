@@ -49,6 +49,23 @@ local function get_command_chain()
     }
 end
 
+local BUFFER_MULTIPLIER = 2
+local compute_beacon_buffer_position = {
+    [defines.direction.north] = function(x, y)
+        return {x=x,y=y + CHUNK_SIZE * BUFFER_MULTIPLIER}
+    end,
+    [defines.direction.east] = function(x, y)
+        return {x=x + CHUNK_SIZE * BUFFER_MULTIPLIER,y=y}
+    end,
+    [defines.direction.south] = function(x, y)
+        return {x=x, y=y - CHUNK_SIZE * BUFFER_MULTIPLIER}
+    end,
+    [defines.direction.west] = function(x, y)
+        return {x=x - CHUNK_SIZE * BUFFER_MULTIPLIER, y=y}
+    end,
+}
+
+
 
 function AttackGroupPathingProcessor.init_globals()
     global.request_path = global.request_path or {}
@@ -189,14 +206,15 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
         beacons = get_sorted_beacons(beacons)
     end
 
-    local target_beacon = beacons[1]
+    local scout_beacon = beacons[1]
+    local buffer_zone = compute_beacon_buffer_position[direction](scout_beacon.position.x,scout_beacon.position.y)
 
-    if target_beacon then
+    if scout_beacon then
         local commands_chain = get_command_chain()
 
         table.insert(commands_chain.commands, {
             type = defines.command.go_to_location,
-            destination = {target_beacon.position.x, target_beacon.position.y},
+            destination = buffer_zone,
             radius = CHUNK_SIZE
         })
 
