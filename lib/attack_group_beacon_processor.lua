@@ -65,9 +65,9 @@ local SCOUT_KEEP_ALIVE = 3600 -- Keep 15 seconds when idle
 local LAST_RESORT_RADIUS = 1024
 
 --- Scan up to 5KM from each side. Min distance 5 chunk
-local SCAN_DISTANCE = { { 160, 800 }, { 800, 1600 }, { 1600, 2400 }, { 2400, 3200 }, { 3200, 4000 }, { 4000, 5000 } }
+local SCAN_DISTANCE = { { 160, 800 }, { 800, 1600 }, { 1600, 2400 }, { 2400, 3200 }, { 3200, 4000 }, { 4000, 5000 }}
 local MAX_TIERS = #SCAN_DISTANCE
-local SCAN_HALF_WIDTH = 320
+local SCAN_HALF_WIDTH = 256
 
 
 local bounding_box_calc = {
