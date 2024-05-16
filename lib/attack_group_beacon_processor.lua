@@ -706,6 +706,7 @@ AttackGroupBeaconProcessor.init_index = function()
 end
 
 AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, target_force, new_beacon)
+    local profiler = game.create_profiler()
 
     local target_beacon
 
@@ -715,6 +716,9 @@ AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, 
         target_beacon = AttackGroupBeaconProcessor.get_selected_attack_beacon(surface, source_force, target_force) or
                 AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
     end
+
+    profiler.stop()
+    log{"",'[ERM] AttackGroupBeaconProcessor.pick_attack_beacon: __1__ ', profiler}
 
     return target_beacon
 end
@@ -727,6 +731,9 @@ end
 --- When tier and direction reach max.  Removed target_beacon since nothing matches.
 ---
 AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon, from_cron, use_fallback)
+
+    local profiler = game.create_profiler()
+
     local target_force = target_beacon.force
     if use_fallback == nil then
         use_fallback = true
@@ -734,6 +741,10 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     from_cron = from_cron or false
     local control_data = global[CONTROL_DATA][surface.index][target_force.name]
     if control_data == nil then
+        profiler.stop()
+        log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location nil control data: __1__ ', profiler}
+
+
         return nil, true
     end
 
@@ -822,6 +833,9 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             rc_entity = spawners[next(spawners)]
         end
     end
+
+    profiler.stop()
+    log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location: __1__ ', profiler}
 
     return rc_entity, halt_cron
 end

@@ -211,9 +211,6 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
     if scout_beacon then
         local commands_chain = get_command_chain()
-        print(direction)
-        print(serpent.block(scout_beacon.position))
-        print(serpent.block(buffer_zone))
         table.insert(commands_chain.commands, {
             type = defines.command.go_to_location,
             destination = buffer_zone,
