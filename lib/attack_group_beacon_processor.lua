@@ -835,7 +835,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     end
 
     profiler.stop()
-    log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location Tier:'..tier..' Direction:'..scan_direction..' > ', profiler}
+    log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_location Tier:'..tier..' Direction:'..scan_direction..' Target: '..target_beacon.position.x..', '..target_beacon.position.y..' > ', profiler}
 
     return rc_entity, halt_cron
 end
