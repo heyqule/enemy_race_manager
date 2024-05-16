@@ -9,8 +9,8 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local TestShared = require('shared')
 
 local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
-local NOT_SCAN_DISCTANCE = {5200, 6400}
-local RADIUS_SCAN_DISCTANCE = {512, 1200}
+local NOT_SCAN_DISTANCE = {5200, 6400}
+local RADIUS_SCAN_DISTANCE = {512, 1200}
 local SCAN_HALF_WIDTH = 160
 local directions = {0,2,4,6}
 
@@ -276,7 +276,7 @@ describe("Pick Spawn beacon", function()
         end
     end
 
-    for _, range in pairs(NOT_SCAN_DISCTANCE) do
+    for _, range in pairs(NOT_SCAN_DISTANCE) do
 
         it("not valid range @ "..range, function()
             local direction = 0
@@ -316,7 +316,7 @@ describe("Pick Spawn beacon", function()
         end)
     end
 
-    for _, radius in pairs(RADIUS_SCAN_DISCTANCE) do
+    for _, radius in pairs(RADIUS_SCAN_DISTANCE) do
         it("fallback radius @ "..radius, function()
             local direction = 0
             AttackGroupBeaconProcessor.init_index()
