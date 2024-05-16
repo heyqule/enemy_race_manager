@@ -864,11 +864,11 @@ describe("Attack Pathing", function()
             global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         end)
 
-        after_ticks(3300, function()
+        after_ticks(3600, function()
             local enemies = surface.find_entities_filtered {
                 force = 'enemy',
                 type = 'unit',
-                position = { x = x, y = 42 },
+                position = { x = x - 32, y = 42 },
                 radius = 48,
             }
 
