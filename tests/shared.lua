@@ -4,8 +4,11 @@
 --- DateTime: 1/6/2024 6:34 PM
 ---
 
+local Queue = require('__stdlib__/stdlib/misc/queue')
+
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local LevelManager = require('__enemyracemanager__/lib/level_processor')
+
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
@@ -25,6 +28,7 @@ function TestShared.prepare_the_factory()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     TestShared.reset_attack_meter()
+    TestShared.CleanCron()
 end
 
 function TestShared.reset_the_factory()
@@ -40,6 +44,21 @@ function TestShared.reset_the_factory()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     TestShared.reset_attack_meter()
+    TestShared.CleanCron()
+end
+
+function TestShared.CleanCron()
+    global.one_minute_cron = Queue()
+    global.fifteen_seconds_cron = Queue()
+    global.ten_seconds_cron = Queue()
+    global.two_seconds_cron = Queue()
+    global.one_second_cron = Queue()
+
+    -- Conditional Crons
+    global.quick_cron = Queue()  -- Spawn
+
+    global.erm_unit_group = {}
+    global.group_tracker = {}
 end
 
 function TestShared.reset_attack_meter()

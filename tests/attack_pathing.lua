@@ -716,7 +716,7 @@ describe("Attack Pathing", function()
     end)
 
 
-    it.only("Picking area with lowest defense score from East", function()
+    it("Picking area with lowest defense score from East", function()
         async(3300)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
@@ -772,7 +772,7 @@ describe("Attack Pathing", function()
         end)
     end)
 
-    it.only("Picking area with lowest defense score from North", function()
+    it("Picking area with lowest defense score from North", function()
         async(3300)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
@@ -827,11 +827,12 @@ describe("Attack Pathing", function()
         end)
     end)
 
-    it("Picking aerial area with lowest defense score from West", function()
+    it("Picking aerial area with lowest defense score from east", function()
         async(3600)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
+        game.speed = 3
 
         -- Require generated chunks
         --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -868,7 +869,7 @@ describe("Attack Pathing", function()
             local enemies = surface.find_entities_filtered {
                 force = 'enemy',
                 type = 'unit',
-                position = { x = x, y = 42 },
+                position = { x = x - 32, y = 42 },
                 radius = 48,
             }
 
