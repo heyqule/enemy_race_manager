@@ -46,9 +46,9 @@ for level = 1, 20 ,1 do
     end
 
     for mod_name, unit_name in pairs(data.erm_aerial_scout) do
-        local target_unit = mod_name .. '/' .. unit_name .. '/level'
+        local target_unit = mod_name .. '/' .. unit_name .. '/1'
         local unit = util.table.deepcopy(data.raw['unit'][target_unit])
-        unit['name'] = mod_name .. AERIAL_SCOUT .. i
+        unit['name'] = mod_name .. AERIAL_SCOUT .. level
         unit['localised_name'] = { 'entity-name.' .. mod_name .. AERIAL_SCOUT }
         unit['max_health'] = ERM_UnitHelper.get_health(aerial_original_health, aerial_original_health * max_hitpoint_multiplier, level)
         unit['resistances'] = {}

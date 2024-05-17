@@ -85,7 +85,7 @@ describe("Create Beacon", function()
         local player_force = game.forces['player']
         local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
         local second_laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 15, 15 } })
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 12, 12 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout/1', force = 'enemy', position = { 12, 12 } })
         entity.die(player_force)
         local aerial_beacons = surface.find_entities_filtered({ name = 'erm_aerial_beacon' })
         assert.not_nil(aerial_beacons, 'Beacon created')

@@ -1177,7 +1177,10 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
     end
 end
 
-AttackGroupBeaconProcessor.scout_scan = function(race_name, type)
+AttackGroupBeaconProcessor.get_scout_name = function(race_name, type)
+    print('...')
+    print(race_name)
+    print(type)
     return race_name..type..RaceSettingsHelper.get_level(race_name)
 end
 return AttackGroupBeaconProcessor

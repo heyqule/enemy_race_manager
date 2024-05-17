@@ -60,12 +60,12 @@ local onUnitGroupCreated = function(event)
         local scout_unit_name
         if global.group_tracker and global.group_tracker[racename] then
             if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
-                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.AERIAL_SCOUT)
             else
-                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.LAND_SCOUT)
+                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
             end
         elseif RaceSettingsHelper.can_spawn(50) then
-            scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.LAND_SCOUT)
+            scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
         end
 
         if scout_unit_name then
