@@ -50,7 +50,10 @@ describe("Scouts", function()
             assert(scout.valid == true, 'Scout spawned')
             local player_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, game.forces[player])
             local count = surface.count_entities_filtered({
-                name = {race_name..AttackGroupBeaconProcessor.LAND_SCOUT,race_name..AttackGroupBeaconProcessor.AERIAL_SCOUT},
+                name = {
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                },
                 force = game.forces[enemy],
                 position = player_beacon.position,
                 radius = 32
@@ -59,7 +62,10 @@ describe("Scouts", function()
 
 
             local count = surface.count_entities_filtered({
-                name = {race_name..AttackGroupBeaconProcessor.LAND_SCOUT,race_name..AttackGroupBeaconProcessor.AERIAL_SCOUT},
+                name = {
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                },
             })
             assert(count == 1, 'It should not spawn additional scout, while one is active')
 
@@ -129,7 +135,7 @@ describe("Scouts", function()
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
         after_ticks(3000, function()
             local scout_count = surface.count_entities_filtered({
-                name=MOD_NAME..AttackGroupBeaconProcessor.LAND_SCOUT,
+                name=AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconProcessor.LAND_SCOUT),
                 position={0,0},
                 radius=32,
             })

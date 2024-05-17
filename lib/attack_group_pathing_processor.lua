@@ -84,10 +84,10 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     collision_mask = {"not-colliding-with-itself"}
 
     if is_aerial then
-        local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.AERIAL_SCOUT]
+        local scout_unit = game.entity_prototypes[AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.AERIAL_SCOUT)]
         bounding_box = scout_unit.collision_box
     else
-        local scout_unit = game.entity_prototypes[race_name..AttackGroupBeaconProcessor.LAND_SCOUT]
+        local scout_unit = game.entity_prototypes[AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.LAND_SCOUT)]
         bounding_box = scout_unit.collision_box
     end
 

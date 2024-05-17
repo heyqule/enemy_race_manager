@@ -352,7 +352,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
     if attack_beacon_data == nil then
         halt_cron = true
     else
-        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data.beacon, from_retry)
+        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data, from_retry)
     end
 
     if spawn_beacon == nil then
@@ -368,7 +368,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
         return false
     end
 
-    local scout = race_name .. AttackGroupBeaconProcessor.LAND_SCOUT
+    local scout = AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT)
     local center_location = surface.find_non_colliding_position(
             scout, spawn_beacon.position,
             AttackGroupProcessor.GROUP_AREA, 1)
@@ -524,7 +524,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
     end
 
-    scout_name = race_name .. scout_name
+    scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_name)
 
     local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)

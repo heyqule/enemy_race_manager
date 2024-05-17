@@ -5,8 +5,8 @@ Date: 2024-??-??
   Features:
     - >>> Reworked path finder (only for custom attack groups) <<<
     - The group picks a closer spawner to reduce travel distance.
-    - They may use different pathing strategies to avoid defense or poke weak points.
-    - They have a chance to call aerial attacks when ground attacks are fully blocked. e.g having moat or on island.
+    - Enemies may use different pathing strategies to avoid existing defense or poke weak points.
+    - Enemies have 75% chance to call aerial attacks when ground attacks are fully blocked by having moat or being on an island.
     - >>> Scouting Subsystem <<<
     - Introduce fog of war for the custom attack groups.  They will have to scout their attack targets.
     - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!

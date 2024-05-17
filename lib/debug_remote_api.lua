@@ -316,7 +316,7 @@ end
 function Debug_RemoteAPI.create_land_scout(mod_name, position)
    local surface = game.player.surface
     surface.create_entity({
-        name = mod_name..'/land-scout',
+        name = mod_name..'/land-scout/1',
         position = position,
         force = ErmForceHelper.get_force_name_from(mod_name)
     })
@@ -326,7 +326,7 @@ end
 function Debug_RemoteAPI.create_air_scout(mod_name, position)
     local surface = game.player.surface
     surface.create_entity({
-        name = mod_name..'/aerial-scout',
+        name = mod_name..'/aerial-scout/1',
         position = position,
         force = ErmForceHelper.get_force_name_from(mod_name)
     })

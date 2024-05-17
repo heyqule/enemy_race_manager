@@ -548,9 +548,9 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
@@ -604,9 +604,9 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
@@ -636,9 +636,9 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { -200, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { -200, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
@@ -668,9 +668,9 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
@@ -700,9 +700,9 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { -200, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { -200, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
@@ -737,17 +737,17 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-720,0}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, -200 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, -200 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, -120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, -120 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, 40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, 120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, 120 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -485, 200 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, 200 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
@@ -793,17 +793,17 @@ describe("Attack Pathing", function()
         surface.create_entity({name='erm_vanilla/biter-spawner/10', position={0,-720}})
         AttackGroupBeaconProcessor.init_index()
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -200,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200,-485 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -120,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -120,-485 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { -40,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -40,-485 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { 40,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 40,-485 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { 120,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 120,-485 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { 200,-485 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 200,-485 } })
 
         after_ticks(300, function()
             AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
@@ -848,15 +848,15 @@ describe("Attack Pathing", function()
         AttackGroupBeaconProcessor.init_index()
 
         local x = -175
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { x, -200 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -200 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { x, -120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -120 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { x, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { x, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, 40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout', force = 'enemy', position = { x, 120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, 120 } })
 
 
         after_ticks(300, function()
@@ -903,15 +903,15 @@ describe("Attack Pathing", function()
         AttackGroupBeaconProcessor.init_index()
 
         local x = -170
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { x, -200 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -200 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { x, -120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -120 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { x, -40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, -40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { x, 40 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, 40 } })
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout', force = 'enemy', position = { x, 120 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { x, 120 } })
 
 
         after_ticks(300, function()

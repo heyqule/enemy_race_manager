@@ -60,12 +60,12 @@ local onUnitGroupCreated = function(event)
         local scout_unit_name
         if global.group_tracker and global.group_tracker[racename] then
             if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
-                scout_unit_name = racename..AttackGroupBeaconProcessor.AERIAL_SCOUT
+                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.AERIAL_SCOUT)
             else
-                scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
+                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.LAND_SCOUT)
             end
         elseif RaceSettingsHelper.can_spawn(50) then
-            scout_unit_name = racename..AttackGroupBeaconProcessor.LAND_SCOUT
+            scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(AttackGroupBeaconProcessor.LAND_SCOUT)
         end
 
         if scout_unit_name then
@@ -124,7 +124,7 @@ local destroyInvalidGroup = function(erm_group)
         local refund_points = destroyMembers(group)
 
         --- Hardcoded chance to spawn half size aerial group
-        if (RaceSettingsHelper.can_spawn(66) and group_size >= 30) or TEST_MODE then
+        if (RaceSettingsHelper.can_spawn(75) and group_size >= 30) or TEST_MODE then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
             local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
