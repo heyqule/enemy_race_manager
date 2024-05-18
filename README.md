@@ -200,7 +200,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 
 * Time based attack wave starts after enemy level reach 3. Default to ON
     * It adds points to attack meter every minute.
-    * The points to add can be adjusted 1% to 90% of next attack threshold. It takes about 1.5hr to 5 minutes
+    * The points to add can be adjusted 1% to 75% of next attack threshold. It takes about 1.5hr to 5 minutes
       respectively to reach next wave.
     * Default setting is 2% of the threshold per minute.
 

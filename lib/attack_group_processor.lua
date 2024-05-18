@@ -151,6 +151,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
     until i == unit_batch
 
     if group_tracker.current_size >= group_tracker.size then
+        print('add_to_group is full')
         local entity_data = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, group.force, true)
 
         if entity_data and entity_data.position then
@@ -346,13 +347,18 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
 
     AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(ErmConfig.max_group_size() * ErmConfig.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
-    local attack_beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
+    local attack_beacon_data
+    if from_retry then
+        attack_beacon_data  = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, force)
+    else
+        attack_beacon_data  = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
+    end
     local spawn_beacon = nil
     local halt_cron = false
     if attack_beacon_data == nil then
         halt_cron = true
     else
-        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data, from_retry)
+        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, force, attack_beacon_data, from_retry)
     end
 
     if spawn_beacon == nil then

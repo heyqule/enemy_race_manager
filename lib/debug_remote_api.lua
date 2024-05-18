@@ -246,10 +246,10 @@ function Debug_RemoteAPI.attack_group_beacon_index()
     AttackGroupBeaconProcessor.init_index()
 end
 
---- Usage: remote.call('enemyracemanager_debug', 'pick_spawn_location', 'nauvis', 'erm_marspeople', 'player')
-function Debug_RemoteAPI.pick_spawn_location(surface_name, force_name, target_force_name)
+--- Usage: remote.call('enemyracemanager_debug', 'pick_spawn_beacon', 'nauvis', 'erm_marspeople', 'player')
+function Debug_RemoteAPI.pick_spawn_beacon(surface_name, force_name, target_force_name)
     local attack_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(game.surfaces[surface_name], game.forces[force_name], game.forces[target_force_name])
-    local beacon = AttackGroupBeaconProcessor.pick_spawn_location(game.surfaces[surface_name], game.forces[force_name], attack_beacon)
+    local beacon = AttackGroupBeaconProcessor.pick_spawn_beacon(game.surfaces[surface_name], game.forces[force_name], attack_beacon)
     print(serpent.block(beacon))
 end
 

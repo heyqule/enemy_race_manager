@@ -112,6 +112,9 @@ if DEBUG_MODE then
         if (data['subgroup'] == 'erm_ai_beacons') then
             data['render_layer'] = 'air-object'
             data['selection_box'] = { { -1, -1 }, { 1, 1 } }
+            data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}
+            data.map_color = {b=0,g=1,r=0,a=1}
+            data.order = 'aaaaa'
         end
     end
 else

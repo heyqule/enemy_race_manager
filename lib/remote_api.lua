@@ -227,7 +227,7 @@ function ERM_RemoteAPI.add_boss_attack_group(group)
 end
 
 function ERM_RemoteAPI.add_erm_attack_group(group)
-    if group.valid and table_size(group.members) > 0 then
+    if group.valid and next(group.members) then
         global.erm_unit_groups[group.group_number] = {
             group = group,
             start_position = group.position
