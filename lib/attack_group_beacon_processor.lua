@@ -66,8 +66,8 @@ local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
 local SCOUT_KEEP_ALIVE = 3600 -- Keep 15 seconds when idle
 local LAST_RESORT_RADIUS = 512
 
---- Scan up to 5KM from each side. Min distance 5 chunk, 7 tiers to scan.
-local SCAN_DISTANCE = { { 160, 500 }, { 500, 1000 }, { 1000, 1600 }, { 1600, 2300 }, { 2300, 3100 }, { 3100, 4000 }, { 4000, 5000 }}
+--- Scan up to 5KM from each side. Min distance 5 chunk, 6 tiers to scan.
+local SCAN_DISTANCE = { { 160, 700 }, { 700, 1300 }, { 1300, 2100 }, { 2100, 2900 }, { 2900, 3800 }, { 3800, 5000 }}
 local MAX_TIERS = #SCAN_DISTANCE
 local SCAN_HALF_WIDTH = 256
 
@@ -645,11 +645,7 @@ AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk = function(surface, ar
 end
 
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
-    print('selected beacon')
     local selected_key = global[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
-    print(source_force.name)
-    print(target_force.name)
-    print(selected_key)
     local attack_beacons = global[ATTACK_ENTITIES_BEACON][surface.index][target_force.name]
     if not selected_key or attack_beacons[selected_key] == nil then
         return nil
@@ -788,8 +784,7 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
 
         return nil, true
     end
-
-    print(serpent.block(target_beacon_data))
+    
     if target_beacon_data.cache[source_force.name] == nil then
         target_beacon_data.cache[source_force.name] = get_cache_block()
     end
