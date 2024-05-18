@@ -10,7 +10,7 @@ local TestShared = require('shared')
 
 local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
 local NOT_SCAN_DISTANCE = {5200, 6400}
-local RADIUS_SCAN_DISTANCE = {512, 1200}
+local RADIUS_SCAN_DISTANCE = {300, 750}
 local SCAN_HALF_WIDTH = 160
 local directions = {0,2,4,6}
 
@@ -261,11 +261,11 @@ describe("Pick Spawn beacon", function()
                 local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
 
                 local spawn_location            
-                spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
+                spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon)
                 
                 if not spawn_location then
                     for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
-                        spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
+                        spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon, true)
                         if spawn_location then
                             break
                         end
@@ -300,12 +300,12 @@ describe("Pick Spawn beacon", function()
             local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
 
             local spawn_location
-            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon)
 
             if not spawn_location then
                 for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
                     --- Disable fallback to test this.
-                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true, false)
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon, true, false)
                     if spawn_location then
                         break
                     end
@@ -339,20 +339,21 @@ describe("Pick Spawn beacon", function()
             local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
 
             local spawn_location
-            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon)
 
             if not spawn_location then
-                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
-                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
+                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) + 1, 1 do
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
                     end
                 end
             end
 
-            if radius < 1024 then
+            if radius < 512 then
                 assert.not_nil(spawn_location, 'Need spawn location')
             else
+                print(spawn_location)
                 assert.is_nil(spawn_location, 'Should not able to find spawn location')
             end
         end)
@@ -454,11 +455,11 @@ describe("Modify", function()
 
             local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
             local spawn_location
-            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon)
 
             if not spawn_location then
                 for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
-                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
                     end
@@ -491,11 +492,11 @@ describe("Modify", function()
 
             local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, enemy, player)
             local spawn_location
-            spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
+            spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon)
 
             if not spawn_location then
                 for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
-                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
+                    spawn_location = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
                     end

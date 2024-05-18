@@ -108,7 +108,7 @@ local function get_cache_block()
         --- Cache searched spawners in each directions.
         cached_spawner_matrix = {},
         --- last resort spawner matrix, if this fails, attack beacon removes itself.
-        last_resort_spawner = {},
+        last_resort_spawner = nil,
         --- Tier only changes when all directions can't match a spawner.
         tier = 1,
         direction = 0,
@@ -911,7 +911,7 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 tier = tier + 1
                 cache.cached_beacon_matrix = {}
                 cache.cached_spawner_matrix = {}
-                cache.last_resort_spawner = {}
+                cache.last_resort_spawner = nil
             end
 
             if tier > MAX_TIERS then

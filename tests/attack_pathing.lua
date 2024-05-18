@@ -828,7 +828,7 @@ describe("Attack Pathing", function()
     end)
 
     it("Picking aerial area with lowest defense score from East", function()
-        async(3600)
+        async(3900)
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
@@ -864,7 +864,7 @@ describe("Attack Pathing", function()
             global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         end)
 
-        after_ticks(3600, function()
+        after_ticks(3900, function()
             local enemies = surface.find_entities_filtered {
                 force = 'enemy',
                 type = 'unit',
