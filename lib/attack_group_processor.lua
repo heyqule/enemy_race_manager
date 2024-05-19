@@ -477,7 +477,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius, so
             end
         end
 
-        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, source_entity.force.name)
+        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, source_entity.force)
 
         global.erm_unit_groups[group.group_number] = {
             group = group,
