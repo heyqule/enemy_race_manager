@@ -38,6 +38,7 @@ Date: 2024-??-??
   Optimization:
     - Various Code Refactors
     - Cron processor changes
+    - ERM Attack Groups disband after 14 nauvis days or under certain size to prevent idle units.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.13

@@ -18,6 +18,8 @@ for id, content in pairs(global.erm_unit_groups) do
         global.erm_unit_groups[id] = nil
     else
         global.erm_unit_groups[id].nearby_retry = 0
+        global.erm_unit_groups[id].created = game.tick
+        global.erm_unit_groups[id].is_aerial = false
     end
 end
 

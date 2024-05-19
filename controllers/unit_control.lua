@@ -16,6 +16,7 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
+
 local Config = require('__enemyracemanager__/lib/global_config')
 local Cron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -81,60 +82,32 @@ local onUnitGroupCreated = function(event)
     end
 end
 
+local checking_state = {
+    [defines.group_state.gathering] = true,
+    [defines.group_state.wander_in_group] = true,
+    [defines.group_state.finished] = true
+}
+
 local onUnitFinishGathering = function(event)
-
-end
-
----
---- Destroy group members and refund them as attack points.
----
-local destroyMembers = function(group)
-    local members = group.members
-    local refundPoints = 0
-    for _, member in pairs(members) do
-        member.destroy()
-        refundPoints = refundPoints + AttackGroupProcessor.MIXED_UNIT_POINTS
-    end
-
-    group.destroy()
-    return refundPoints
-end
-
-local isErmUnitGroup = function(unit_number)
-    local erm_unit_groups = global.erm_unit_groups
-    return erm_unit_groups[unit_number] and erm_unit_groups[unit_number].group and erm_unit_groups[unit_number].group.valid
-end
-
----
---- Destroy group if the group doesn't have a valid path, respawn as aerial group or refund points
----
-local destroyInvalidGroup = function(erm_group)
-    local group = erm_group.group
-    local start_position = erm_group.start_position
-
+    local group = event.group
     if group.valid and
-            group.is_script_driven and
-            group.command == nil and
-            (start_position.x == group.position.x and start_position.y == group.position.y) and
-            ForceHelper.is_enemy_force(group.force)
+       group.is_script_driven and
+       group.command == nil and
+       checking_state[group.state] and
+       not AttackGroupProcessor.is_erm_unit_group(group.group_number)
     then
-        local group_size = table_size(group.members)
-        local group_force = group.force
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
-        local refund_points = destroyMembers(group)
-
-        --- Hardcoded chance to spawn half size aerial group
-        if (RaceSettingsHelper.can_spawn(75) and group_size >= 30) or TEST_MODE then
-            local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
-            local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
-            local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
-
-            Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
-                    race_name, group_force, math.ceil(group_size / 2), group_type, nil,
-                    false, target_force, surface)
-        elseif Config.race_is_active(race_name) then
-                RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
-        end
+        local race_name = ForceHelper.extract_race_name_from(group.force.name)
+        local target = AttackGroupHeatProcessor.pick_target(race_name)
+        AttackGroupProcessor.process_attack_position(group, nil, nil, target)
+        global.erm_unit_groups[group.group_number] = {
+            group = group,
+            start_position = group.position,
+            always_angry = false,
+            nearby_retry = 0,
+            attack_force = target,
+            created = game.tick,
+            is_aerial = false
+        }
     end
 end
 
@@ -144,12 +117,12 @@ local onAiCompleted = function(event)
     -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
     -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
 
-    if isErmUnitGroup(unit_number) then
+    if AttackGroupProcessor.is_erm_unit_group(unit_number) then
         --print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
         local erm_unit_group = global.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
-        destroyInvalidGroup(erm_unit_group)
+        AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
 
         if group.valid == false then
             global.erm_unit_groups[unit_number] = nil
@@ -187,7 +160,7 @@ end)
 
 --- Initial path finder
 Event.register(Event.generate_event_name(Config.REQUEST_PATH), function(event)
-    AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial)
+    AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
 end)
 
 --- Unit processing events

@@ -17,7 +17,7 @@ local AttackGroupPathingProcessor = {}
 local BEACON_RADIUS = 64
 local CHUNK_SIZE = 32
 local TRANSLATE_RANGE = CHUNK_SIZE * 10
-local GC_TICK = 24000
+local GC_TICK = 25000 * 4
 
 --- lowest defense beacon score
 AttackGroupPathingProcessor.STRATEGY_BF = 1
@@ -77,7 +77,7 @@ function AttackGroupPathingProcessor.reset_globals()
     global.request_path_link = {}
 end
 
-function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial)
+function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial, group_number)
 
     local bounding_box, collision_mask
     local race_name = ForceHelper.extract_race_name_from(source_force.name)
@@ -101,11 +101,7 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     })
 
     if request_id then
-        if global.request_path_link[surface.index] == nil then
-            global.request_path_link[surface.index] = {}
-        end
-
-        AttackGroupPathingProcessor.remove_node(surface.index,start,goal)
+        AttackGroupPathingProcessor.remove_node(surface.index,group_number)
 
         global.request_path[request_id] = {
             surface = surface,
@@ -118,7 +114,7 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
         }
 
 
-        global.request_path_link[surface.index][Position.to_key(start)..Position.to_key(goal)] = request_id
+        global.request_path_link[group_number] = request_id
     end
 end
 
@@ -179,10 +175,13 @@ end
 function AttackGroupPathingProcessor.construct_brutal_force_commands(
         path_id, path_node, enemy_position, search_beacons
 )
-
     local profiler = game.create_profiler()
 
     local request_path_data = global.request_path[path_id]
+
+    if request_path_data == nil then
+        return
+    end
 
     local direction = Position.complex_direction_to(path_node.position, enemy_position)
 
@@ -242,6 +241,10 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 
     local request_path_data = global.request_path[path_id]
 
+    if request_path_data == nil then
+        return
+    end
+
     local direction = Position.complex_direction_to(path_node.position, enemy_position)
 
 
@@ -294,11 +297,7 @@ local can_reroll = function(strategy, chance)
 end
 
 --- Get command based on coordinate and strategy
-function AttackGroupPathingProcessor.get_command(surface_id, start, goal, strategy)
-    if global.request_path_link[surface_id] == nil then
-        return nil
-    end
-
+function AttackGroupPathingProcessor.get_command(group_number, strategy)
     strategy = strategy or AttackGroupPathingProcessor.STRATEGY_BF
 
     if global.override_attack_strategy then
@@ -313,7 +312,7 @@ function AttackGroupPathingProcessor.get_command(surface_id, start, goal, strate
         end
     end
 
-    local request_id = global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)]
+    local request_id = global.request_path_link[group_number]
 
     if request_id then
         local request_path_data = global.request_path[request_id]
@@ -321,7 +320,7 @@ function AttackGroupPathingProcessor.get_command(surface_id, start, goal, strate
            request_path_data.commands[strategy]
         then
             local rc_command = request_path_data.commands[strategy]
-            AttackGroupPathingProcessor.remove_node(surface_id, start,goal)
+            AttackGroupPathingProcessor.remove_node(group_number)
 
             return rc_command
         end
@@ -330,43 +329,35 @@ function AttackGroupPathingProcessor.get_command(surface_id, start, goal, strate
     return nil
 end
 
---- Remove node based on coorindate
-function AttackGroupPathingProcessor.remove_node(surface_id, start,goal)
-    if global.request_path_link[surface_id] == nil then
-        return
-    end
-
-    local request_id = global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)]
+function AttackGroupPathingProcessor.relink_request(old_group_number, new_group_number)
+    local request_id = global.request_path_link[old_group_number]
 
     if request_id then
-        global.request_path[request_id] = nil
-        global.request_path_link[surface_id][Position.to_key(start)..Position.to_key(goal)] = nil
+        global.request_path_link[new_group_number] = request_id
+        global.request_path_link[old_group_number] = nil
     end
 end
 
-function AttackGroupPathingProcessor.remove_all_nodes(surface_id)
-    if global.request_path_link[surface_id] == nil then
-        return
-    end
+--- Remove node based on coorindate
+function AttackGroupPathingProcessor.remove_node(group_number)
 
-    for id, _ in pairs(global.request_path_link[surface_id]) do
-        local request_id = global.request_path_link[surface_id][id]
+    local request_id = global.request_path_link[group_number]
+
+    if request_id then
         global.request_path[request_id] = nil
-        global.request_path_link[surface_id][id] = nil
+        global.request_path_link[group_number] = nil
     end
 end
 
 
 function AttackGroupPathingProcessor.remove_old_nodes()
-    for surface_id, _ in pairs(global.request_path_link) do
-        for id, _ in pairs(global.request_path_link[surface_id]) do
-            local request_id = global.request_path_link[surface_id][id]
-            if request_id and
-                game.tick > global.request_path[request_id].tick + GC_TICK
-            then
-                global.request_path[request_id] = nil
-                global.request_path_link[surface_id][id] = nil
-            end
+    for id, _ in pairs(global.request_path_link) do
+        local request_id = global.request_path_link[id]
+        if request_id and
+            game.tick > global.request_path[request_id].tick + GC_TICK
+        then
+            global.request_path[request_id] = nil
+            global.request_path_link[id] = nil
         end
     end
 end

@@ -501,14 +501,7 @@ function ErmConfig.format_daytime_string(start_tick, end_tick)
     return datetime_str;
 end
 
-function ErmConfig.clear_invalid_erm_unit_groups()
-    -- Clear up invalid erm groups
-    for id, content in pairs(global.erm_unit_groups) do
-        if content.group == nil or content.group.valid == false then
-            global.erm_unit_groups[id] = nil
-        end
-    end
-end
+
 
 function ErmConfig.add_attack_group_attackable_entity(name)
     if game.entity_prototypes[name] then

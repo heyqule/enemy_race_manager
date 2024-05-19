@@ -12,10 +12,13 @@ local Cron = require('__enemyracemanager__/lib/cron_processor')
 local Config = require('__enemyracemanager__/lib/global_config')
 local BossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+
+
 
 --- Garbage Collection and Statistic aggregations, heavy task should run by quick cron
 Event.on_nth_tick(Config.GC_AND_STATS, function(event)
-    Config.clear_invalid_erm_unit_groups()
+    AttackGroupProcessor.clear_invalid_erm_unit_groups()
 
     BossRewardProcessor.clean_up()
 

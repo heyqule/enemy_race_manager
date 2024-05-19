@@ -34,7 +34,6 @@ end)
 Event.register(defines.events.on_pre_surface_deleted, function(event)
     ErmSurfaceProcessor.remove_race(game.surfaces[event.surface_index])
     AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
-    AttackGroupPathingProcessor.remove_all_nodes(event.surface_index)
     AttackGroupHeatProcessor.remove_surface(event.surface_index)
 end)
 
