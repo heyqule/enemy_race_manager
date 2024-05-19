@@ -62,14 +62,19 @@ local SCOUT_SPAWN_KEY = 'ssk'
 local NEUTRAL_FORCE = 'neutral'
 
 local RETRY = 5
+local BYPASS_RETRY = 532000
+if TEST_MODE then
+    BYPASS_RETRY = 120
+end
 local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
 local SCOUT_KEEP_ALIVE = 3600 -- Keep 15 seconds when idle
-local LAST_RESORT_RADIUS = 512
+local LAST_RESORT_RADIUS = 384 -- 12 chunks
 
 --- Scan up to 5KM from each side. Min distance 5 chunk, 6 tiers to scan.
 local SCAN_DISTANCE = { { 160, 700 }, { 700, 1300 }, { 1300, 2100 }, { 2100, 2900 }, { 2900, 3800 }, { 3800, 5000 }}
 local MAX_TIERS = #SCAN_DISTANCE
 local SCAN_HALF_WIDTH = 256
+local TOTAL_DIRECTIONS = 4
 
 
 local bounding_box_calc = {
@@ -102,7 +107,7 @@ local bounding_box_calc = {
 local function get_cache_block()
     return {
         --- For refreshing cache, probably once every hour.
-        update_tick = game.tick,
+        updated = game.tick,
         --- Cache closest beacon in each directions {beacon=nil, skip=false}
         cached_beacon_matrix = {},
         --- Cache searched spawners in each directions.
@@ -758,38 +763,41 @@ AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, 
 end
 
 ---
+--- Pick spawn location, based on spawn beacons
+---
 --- Starts from north with tier 1 distance.
 --- If something found, return the position.
 --- When no position found, move to next direction (N,E,S,W)
 --- Once all sides are found and no position found, move to next tier.
 --- When tier and direction reach max.  Removed target_beacon since nothing matches.
 ---
-AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, target_beacon_data, from_cron, use_fallback)
+AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon_data, from_cron, use_fallback)
     local target_beacon = target_beacon_data.beacon
 
     --- @TODO GOLIVE Profiler
     local profiler = game.create_profiler()
 
-    local target_force = target_beacon.force
     if use_fallback == nil then
         use_fallback = true
     end
     from_cron = from_cron or false
-    local control_data = global[CONTROL_DATA][surface.index][target_force.name]
-    if control_data == nil then
 
-        --- @TODO GOLIVE Profiler
-        profiler.stop()
-        log{"",'[ERM] AttackGroupBeaconProcessor.pick_spawn_beacon nil data: ', profiler}
-
-        return nil, true
-    end
-    
     if target_beacon_data.cache[source_force.name] == nil then
         target_beacon_data.cache[source_force.name] = get_cache_block()
     end
 
     local cache = target_beacon_data.cache[source_force.name];
+
+    if cache.bypass then
+        if game.tick >= cache.updated + BYPASS_RETRY then
+            cache.bypass = nil
+            cache.bypass_scanner = nil
+        end
+
+        profiler.stop()
+        log{"",'Bypassing Node > ', profiler}
+        return nil, false
+    end
 
     local scan_direction = cache.direction or 0
     if from_cron == false then
@@ -798,10 +806,9 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
     local tier = cache.tier or 1
     local rc_entity
     local halt_cron = false
-    local bounding_box
+    local bounding_box = get_bounding_box_by_direction(target_beacon.position, tier, scan_direction)
 
-    if target_beacon then
-        bounding_box = get_bounding_box_by_direction(target_beacon.position, tier, scan_direction)
+    if target_beacon and cache.bypass_scanner == nil then
         --- @TODO comment out for production
         if DEBUG_MODE then
             local race_name = ForceHelper.extract_race_name_from(source_force.name)
@@ -818,10 +825,9 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 color=color
             })
         end
-        scan_direction = ((scan_direction + 2) % 8)
         local beacons = cache.cached_beacon_matrix[scan_direction]
         if beacons == nil or
-           beacons.skip == nil
+                beacons.skip == nil
         then
             --- @TODO GOLIVE Profiler
             local profiler_fef = game.create_profiler()
@@ -832,7 +838,7 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 force = source_force,
                 limit = 3,
             })
-
+            cache.updated = game.tick
             if next(beacons) then
                 cache.cached_beacon_matrix[scan_direction] = beacons
             else
@@ -841,7 +847,6 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
             --- @TODO GOLIVE Profiler
             profiler_fef.stop()
             log{"",'[ERM] profiler_fef > ', profiler}
-
         end
 
         if next(beacons) and beacons.skip == nil then
@@ -874,12 +879,19 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 end
 
                 repeat
-                    local index = math.random(1, #spawners)
-                    rc_entity = spawners[index]
-                    if rc_entity.valid == false then
+                    local spawners_size = #spawners
+                    local index = nil
+                    if spawners_size > 1 then
+                        index = math.random(1, spawners_size)
+                        rc_entity = spawners[index]
+                    else
+                        index, rc_entity = next(spawners)
+                    end
+
+                    if index and (rc_entity == nil or rc_entity.valid == false) then
                         spawners[index] = nil
                     end
-                until spawners == nil or rc_entity.valid
+                until next(spawners) == nil or (rc_entity and rc_entity.valid)
             else
                 -- Destroy spawn beacon if spawner is not found within it.
                 global[SPAWN_BEACON][surface.index][source_force.name][distances[1].entity.unit_number] = nil
@@ -888,6 +900,7 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
             end
         end
 
+        scan_direction = ((scan_direction + 2) % 8)
 
         if rc_entity then
             global[ATTACK_ENTITIES_BEACON][surface.index][target_beacon.force.name][target_beacon.unit_number] = target_beacon_data
@@ -900,10 +913,10 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 end
             end
 
-            if scan_direction == cache.initial_direction and
-               skip_count == table_size(cache.cached_beacon_matrix)
+            if skip_count == TOTAL_DIRECTIONS
             then
                 tier = tier + 1
+                scan_direction = 0
                 cache.cached_beacon_matrix = {}
                 cache.cached_spawner_matrix = {}
                 cache.last_resort_spawner = nil
@@ -918,6 +931,8 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
 
         cache.tier = tier
         cache.direction = scan_direction
+    else
+        halt_cron = true
     end
 
     -- Last resort
@@ -928,6 +943,7 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
 
         rc_entity = cache.last_resort_spawner
         if rc_entity == nil or rc_entity.valid == false then
+            cache.bypass_scanner = true
             local spawners = surface.find_entities_filtered({
                 position = target_beacon.position,
                 radius = LAST_RESORT_RADIUS,
@@ -936,9 +952,12 @@ AttackGroupBeaconProcessor.pick_spawn_beacon = function(surface, source_force, t
                 limit = 1
             })
 
-            if next(spawners) then
-                rc_entity = spawners[next(spawners)]
+            local _, spawner = next(spawners)
+            if spawner and spawner.valid then
+                rc_entity = spawner
                 cache.last_resort_spawner = rc_entity
+            else
+                cache.bypass = true
             end
         end
 
@@ -1265,6 +1284,10 @@ end
 
 AttackGroupBeaconProcessor.get_scout_name = function(race_name, type)
     return race_name..type..RaceSettingsHelper.get_level(race_name)
+end
+
+AttackGroupBeaconProcessor.get_max_tiers = function()
+    return MAX_TIERS
 end
 
 return AttackGroupBeaconProcessor

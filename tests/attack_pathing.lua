@@ -994,7 +994,7 @@ describe("Attack Pathing", function()
 
         local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
 
-        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-350,350}})
+        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-250,-250}})
         AttackGroupBeaconProcessor.init_index()
 
         after_ticks(300, function()

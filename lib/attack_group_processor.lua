@@ -358,7 +358,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
     if attack_beacon_data == nil then
         halt_cron = true
     else
-        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_beacon(surface, force, attack_beacon_data, from_retry)
+        spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data, from_retry)
     end
 
     if spawn_beacon == nil then

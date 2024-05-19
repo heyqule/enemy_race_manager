@@ -357,7 +357,6 @@ describe("Attack Heat", function()
 
             global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
             local target_force = AttackGroupHeatProcessor.pick_target('erm_zerg')
-            remote.call('enemyracemanager_debug', 'print_global')
             local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_zerg', target_force, true)
             assert( picked_surface == nil, 'Couldnt pick surface, asking for friend')
             --- Check friend's attack points.
