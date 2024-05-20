@@ -39,43 +39,43 @@ cron_switch = {
     end,
     ['AttackGroupProcessor.generate_group'] = function(args)
         -- When args[9] presents, it's treated as retry group
-        AttackGroupProcessor.generate_group(args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],args[9])
+        AttackGroupProcessor.generate_group(unpack(args))
     end,
     ['AttackGroupProcessor.spawn_scout'] = function(args)
-        AttackGroupProcessor.spawn_scout(args[1],args[2],args[3],args[4])
+        AttackGroupProcessor.spawn_scout(unpack(args))
     end,
     ['AttackMeterProcessor.calculate_points'] = function(args)
-        AttackMeterProcessor.calculate_points(args[1])
+        AttackMeterProcessor.calculate_points(unpack(args))
     end,
     ['AttackMeterProcessor.form_group'] = function(args)
-        AttackMeterProcessor.form_group(args[1], args[2])
+        AttackMeterProcessor.form_group(unpack(args))
     end,
     ['AttackGroupPathingProcessor.construct_side_attack_commands'] = function(args)
-        AttackGroupPathingProcessor.construct_side_attack_commands(args[1], args[2], args[3], args[4], args[5])
+        AttackGroupPathingProcessor.construct_side_attack_commands(unpack(args))
     end,
     ['AttackGroupPathingProcessor.construct_brutal_force_commands'] = function(args)
-        AttackGroupPathingProcessor.construct_brutal_force_commands(args[1], args[2], args[3], args[4])
+        AttackGroupPathingProcessor.construct_brutal_force_commands(unpack(args))
     end,
     ['AttackGroupHeatProcessor.aggregate_heat'] = function(args)
-        AttackGroupHeatProcessor.aggregate_heat(args[1])
+        AttackGroupHeatProcessor.aggregate_heat(unpack(args))
     end,
     ['AttackGroupHeatProcessor.cooldown_heat'] = function(args)
-        AttackGroupHeatProcessor.cooldown_heat(args[1])
+        AttackGroupHeatProcessor.cooldown_heat(unpack(args))
     end,
     ['AttackGroupBeaconProcessor.start_scout_scan'] = function(args)
         AttackGroupBeaconProcessor.start_scout_scan()
     end,
     ['AttackGroupBeaconProcessor.scout_scan'] = function(args)
-        AttackGroupBeaconProcessor.scout_scan(args[1], args[2])
+        AttackGroupBeaconProcessor.scout_scan(unpack(args))
     end,
     ['ArmyTeleportationProcessor.teleport'] = function(args)
-        ArmyTeleportationProcessor.teleport(args[1], args[2], args[3])
+        ArmyTeleportationProcessor.teleport(unpack(args))
     end,
     ['ArmyTeleportationProcessor.scan_units'] = function(args)
         ArmyTeleportationProcessor.scan_units()
     end,
     ['BaseBuildProcessor.build'] = function(args)
-        BaseBuildProcessor.build(args[1], args[2], args[3], args[4])
+        BaseBuildProcessor.build(unpack(args))
     end,
     ['BossProcessor.check_pathing'] = function(args)
         BossProcessor.check_pathing()
@@ -90,16 +90,16 @@ cron_switch = {
         BossProcessor.support_structures_spawn()
     end,
     ['BossProcessor.remove_boss_groups'] = function(args)
-        BossProcessor.remove_boss_groups(args[1])
+        BossProcessor.remove_boss_groups(unpack(args))
     end,
     ['BossGroupProcessor.generate_units'] = function(args)
-        BossGroupProcessor.generate_units(args[1], args[2])
+        BossGroupProcessor.generate_units(unpack(args))
     end,
     ['BossGroupProcessor.process_attack_groups'] = function(args)
         BossGroupProcessor.process_attack_groups()
     end,
     ['BossAttackProcessor.process_attack'] = function(args)
-        BossAttackProcessor.process_attack(args[1], args[2])
+        BossAttackProcessor.process_attack(unpack(args))
     end,
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ForceHelper.refresh_all_enemy_forces()

@@ -364,7 +364,18 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
     end
 end
 
-function AttackGroupProcessor.generate_group(race_name, force, units_number, type, featured_group_id, is_elite_attack, target_force, surface, from_retry)
+function AttackGroupProcessor.generate_group(
+        race_name,
+        force,
+        units_number,
+        type,
+        featured_group_id,
+        is_elite_attack,
+        target_force,
+        surface,
+        from_retry,
+        bypass_attack_meter
+)
     if from_retry == false and get_group_tracker(race_name) then
         return false
     end
@@ -376,6 +387,7 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
         return false
     end
     from_retry = from_retry or false
+    bypass_attack_meter = bypass_attack_meter or false
 
     AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(Config.max_group_size() * Config.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
@@ -419,16 +431,18 @@ function AttackGroupProcessor.generate_group(race_name, force, units_number, typ
                 center_location, attack_beacon_data.beacon
         )
 
-        if is_elite_attack then
+        if bypass_attack_meter == false then
+            if is_elite_attack then
+                Event.dispatch({
+                    name = Event.get_event_name(Config.ADJUST_ACCUMULATED_ATTACK_METER),
+                    race_name = race_name
+                })
+            end
             Event.dispatch({
-                name = Event.get_event_name(Config.ADJUST_ACCUMULATED_ATTACK_METER),
+                name = Event.get_event_name(Config.ADJUST_ATTACK_METER),
                 race_name = race_name
             })
         end
-        Event.dispatch({
-            name = Event.get_event_name(Config.ADJUST_ATTACK_METER),
-            race_name = race_name
-        })
 
         return true
     end
@@ -630,9 +644,10 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
             local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
 
             AttackGroupPathingProcessor.remove_node(group_number)
+            --- This call needs to bypass attack meters calculations
             Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
                     race_name, group_force, math.max(math.ceil(group_size / 2), 10), group_type, nil,
-                    false, target_force, surface)
+                    false, target_force, surface, nil, true)
         elseif Config.race_is_active(race_name) then
             RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
         end
