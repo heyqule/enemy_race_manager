@@ -366,11 +366,13 @@ local function create_attack_entity_beacon_from_spawn(surface)
             beacon.health = 1;
 
             init_beacon_struct(ATTACK_ENTITIES_BEACON, surface.index, force.name)
-            global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number] = init_beacon_data(beacon)
-            global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number]['is_spawn'] = true
+            local beacon_data = init_beacon_data(beacon)
+            beacon_data.is_spawn = true
+            beacon_data.cache = { }
+            global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number] = beacon_data
 
             init_beacon_struct(ATTACK_ENTITIES_SPAWN_BEACON, surface.index, force.name)
-            global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] = init_beacon_data(beacon)
+            global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] = beacon_data
         end
     end
 
