@@ -820,7 +820,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             })
         end
         local beacons = cache.cached_beacon_matrix[scan_direction]
-        if beacons == nil
+        if beacons == nil or beacons.skip == nil
         then
             --- @TODO GOLIVE Profiler
             local profiler_fef = game.create_profiler()
