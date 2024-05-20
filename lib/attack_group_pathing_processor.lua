@@ -175,7 +175,6 @@ end
 function AttackGroupPathingProcessor.construct_brutal_force_commands(
         path_id, path_node, enemy_position, search_beacons
 )
-    local profiler = game.create_profiler()
 
     local request_path_data = global.request_path[path_id]
 
@@ -226,17 +225,12 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
         global.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
     end
-
-    profiler.stop()
-    log{"",'[ERM] AttackGroupPathingProcessor.construct_brutal_force_commands', profiler}
 end
 
 --- Side attacks to avoid defense
 function AttackGroupPathingProcessor.construct_side_attack_commands(
     path_id, path_node, enemy_position, search_beacons, is_right_side
 )
-    local profiler = game.create_profiler()
-
     is_right_side = is_right_side or false
 
     local request_path_data = global.request_path[path_id]
@@ -287,9 +281,6 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 
         global.request_path[path_id].commands[side_key] = commands_chain
     end
-
-    profiler.stop()
-    log{"",'[ERM] AttackGroupPathingProcessor.construct_side_attack_commands', profiler}
 end
 
 local can_reroll = function(strategy, chance)

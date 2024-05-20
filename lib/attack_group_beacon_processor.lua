@@ -61,7 +61,7 @@ local SCOUT_SPAWN_KEY = 'ssk'
 
 local NEUTRAL_FORCE = 'neutral'
 
-local RETRY = 8
+local RETRY = 5
 local BYPASS_RETRY = 350000 -- two nauvis week. (1.5hr RLT)
 if TEST_MODE then
     BYPASS_RETRY = 120
@@ -348,23 +348,30 @@ local function create_attack_entity_beacon_from_spawn(surface)
         local force = game.forces[force_name]
         local position = force.get_spawn_position(surface)
 
-        local beacon = surface.create_entity({
+        local beacons = surface.count_entities_filtered({
             name = ATTACK_ENTITIES_BEACON,
             position = { position.x, position.y },
-            force = force.name
+            force = force.name,
+            radius = BEACON_RADIUS
         })
-        beacon.destructible = false;
-        beacon.health = 1;
 
-        init_beacon_struct(ATTACK_ENTITIES_BEACON, surface.index, force.name)
-        local beacon_data = init_beacon_data(beacon)
-        beacon_data.cache = {}
-        global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number] = beacon_data
-        global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number]['is_spawn'] = true
+        if beacons == 0 then
+            beacon_count = beacon_count + 1
+            local beacon = surface.create_entity({
+                name = ATTACK_ENTITIES_BEACON,
+                position = { position.x, position.y },
+                force = force.name
+            })
+            beacon.destructible = false;
+            beacon.health = 1;
 
-        init_beacon_struct(ATTACK_ENTITIES_SPAWN_BEACON, surface.index, force.name)
-        global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] = beacon_data
-        beacon_count = beacon_count + 1
+            init_beacon_struct(ATTACK_ENTITIES_BEACON, surface.index, force.name)
+            global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number] = init_beacon_data(beacon)
+            global[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number]['is_spawn'] = true
+
+            init_beacon_struct(ATTACK_ENTITIES_SPAWN_BEACON, surface.index, force.name)
+            global[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] = init_beacon_data(beacon)
+        end
     end
 
     return beacon_count
@@ -407,6 +414,8 @@ local function reindex_surface(surface)
         end
     end
 
+    attack_chunk = attack_chunk + create_attack_entity_beacon_from_spawn(surface)
+
     for chunk in surface.get_chunks() do
         if need_spawn_beacon_index and AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, chunk.area) then
             spawn_chunk = spawn_chunk + 1
@@ -420,8 +429,6 @@ local function reindex_surface(surface)
             resource_chunk = resource_chunk + 1
         end
     end
-
-    attack_chunk = attack_chunk + create_attack_entity_beacon_from_spawn(surface)
 
     return spawn_chunk, attack_chunk, resource_chunk
 end
@@ -736,9 +743,6 @@ AttackGroupBeaconProcessor.init_index = function()
 end
 
 AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, target_force, new_beacon)
-    --- @TODO GOLIVE Profiler
-    local profiler = game.create_profiler()
-
     local target_beacon
     if new_beacon then
         target_beacon = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
@@ -746,10 +750,6 @@ AttackGroupBeaconProcessor.pick_attack_beacon = function(surface, source_force, 
         target_beacon = AttackGroupBeaconProcessor.get_selected_attack_beacon(surface, source_force, target_force) or
                 AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
     end
-
-    --- @TODO GOLIVE Profiler
-    profiler.stop()
-    log{"",'[ERM] AttackGroupBeaconProcessor.pick_attack_beacon: ', profiler}
 
     return target_beacon
 end
@@ -765,9 +765,6 @@ end
 ---
 AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force, target_beacon_data, from_cron, use_fallback)
     local target_beacon = target_beacon_data.beacon
-
-    --- @TODO GOLIVE Profiler
-    local profiler = game.create_profiler()
 
     if use_fallback == nil then
         use_fallback = true
@@ -788,8 +785,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     end
 
     if cache.bypass then
-        profiler.stop()
-        log{"",'Bypassing Node > ', profiler}
         return nil, false
     end
 
@@ -822,8 +817,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         local beacons = cache.cached_beacon_matrix[scan_direction]
         if beacons == nil or beacons.skip == nil
         then
-            --- @TODO GOLIVE Profiler
-            local profiler_fef = game.create_profiler()
             beacons = surface.find_entities_filtered({
                 name = SPAWN_BEACON,
                 type = BEACON_TYPE,
@@ -837,9 +830,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             else
                 cache.cached_beacon_matrix[scan_direction] = { skip = true }
             end
-            --- @TODO GOLIVE Profiler
-            profiler_fef.stop()
-            log{"",'[ERM] profiler_fef > ', profiler_fef}
         end
 
         if beacons and
@@ -853,20 +843,12 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
 
             local spawners = cache.cached_spawner_matrix[scan_direction]
             if spawners == nil then
-                --- @TODO GOLIVE Profiler
-                local profiler_spa = game.create_profiler()
-
                 spawners = surface.find_entities_filtered({
                     area = get_spawn_area(distances[1].position),
                     force = source_force,
                     type = 'unit-spawner',
                     limit = 3
                 })
-
-                --- @TODO GOLIVE Profiler
-                profiler_spa.stop()
-                log{"",'[ERM] profiler_spa > ', profiler_spa}
-
             end
 
             if next(spawners) then
@@ -933,10 +915,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
 
     -- Last resort
     if rc_entity == nil and use_fallback == true and halt_cron == true then
-
-        --- @TODO GOLIVE Profiler
-        local profiler_last = game.create_profiler()
-
         rc_entity = cache.last_resort_spawner
         if rc_entity == nil or rc_entity.valid == false then
             cache.bypass_scanner = true
@@ -957,19 +935,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
             end
         end
         cache.updated = game.tick
-        --- @TODO GOLIVE Profiler
-        profiler_last.stop()
-        log{"",'[ERM] profiler_last > ', profiler}
     end
-
-    --- @TODO GOLIVE Profiler
-    profiler.stop()
-    local boundx = bounding_box[2][1] - bounding_box[1][1]
-    local boundy = bounding_box[2][2] - bounding_box[1][2]
-    log("Bounding Box Size: "..boundx..' X '..boundy..' = '..(boundx * boundy))
-    log('Bounding Box: '..bounding_box[1][1]..', '..bounding_box[1][2]..' / '..bounding_box[2][1]..', '..bounding_box[2][2])
-    log(source_force.name..' << Source / Target >> '..target_beacon.force.name)
-    log{"",'Tier:'..tier..' Direction:'..scan_direction..' Target: '..target_beacon.unit_number..' > ', profiler}
 
     return rc_entity, halt_cron
 end
