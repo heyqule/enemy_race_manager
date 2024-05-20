@@ -199,11 +199,8 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                     }, { r = 1, g = 0, b = 0 })
                 end
             end
-            print('Assign command...')
-            print(serpent.block(command))
             group.set_command(command)
         else
-            print('Assign auto command...')
             group.set_autonomous()
         end
 
@@ -660,20 +657,17 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
     for id, content in pairs(erm_groups) do
         local group = content.group
         if group == nil or group.valid == false then
-            print('clear invalid group: '..id)
             erm_groups[id] = nil
         elseif group.valid == true then
             local member_size = #group.members
             local created_tick = content.created or 0
 
             if member_size < MIN_GROUP_SIZE then
-                print('clear valid group by size: '..id..'/'..member_size)
                 AttackGroupProcessor.destroy_members(group)
                 erm_groups[id] = nil
             end
 
             if game.tick >= created_tick + ERM_GROUP_TIME_TO_LIVE then
-                print('clear valid group by timeout: '..id..'/'..member_size)
                 AttackGroupProcessor.destroy_members(group)
                 erm_groups[id] = nil
             end
@@ -681,19 +675,12 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
             if game.tick >= created_tick + IDLE_TIME_OUT and
                group.state == defines.group_state.gathering
             then
-                print('start_moving '..id)
-                print('group command: '..serpent.block(group.command))
                 if group.command then
                     group.start_moving()
                 else
                     AttackGroupProcessor.process_attack_position(group, nil, nil, erm_groups.attack_force)
                     group.start_moving()
                 end
-            end
-
-            if group.valid == true then
-                print(string.format('Group: %s Member: %s Tick %s',id,member_size,DEBUG_GROUP_STATES[group.state]))
-                print(game.tick .. '/' .. created_tick + IDLE_TIME_OUT .. '/' .. created_tick + ERM_GROUP_TIME_TO_LIVE )
             end
         end
     end
