@@ -21,13 +21,14 @@ Date: 2024-??-??
 
   Changes:
     - Free for all multiplier is now configurable in startup tab.  It affects damage and HP.
-    - Changed regular stone-wall from 50 resistances to 33 resistances.  Reinforced wall remain unchanged.
+    - Changed regular stone-wall from 50 resistances to 35 resistances.  Reinforced wall remain unchanged.
     - Removed "Disable Aerial Collision" setting as 2.0 will have aerial units, and it's incompatible with new path finder.
     - Fixed some UI incorrect descriptions.
     - Max Automatic Group's Max groups changed from 50 to 100.
     - Changed "[Time based attack] add point by %" setting max value from 90 to 75. (Please reset your setting to 75, if you were using 90)
     - Added {6,7} minute options to "attack group forming interval".
     - Max Automatic Group's max value changed from 50 to 100.
+    - Changed enemy radioactive resist from 75 to 70
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.

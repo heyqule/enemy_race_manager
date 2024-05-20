@@ -405,7 +405,7 @@ function AttackGroupProcessor.generate_group(
         spawn_beacon, halt_cron = AttackGroupBeaconProcessor.pick_spawn_location(surface, force, attack_beacon_data, from_retry)
     end
 
-    if spawn_beacon == nil then
+    if spawn_beacon == nil or spawn_beacon.valid == false then
         if halt_cron == false then
             -- Retry to find new beacons
             Cron.add_quick_queue('AttackGroupProcessor.generate_group',

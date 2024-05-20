@@ -65,7 +65,7 @@ local onUnitGroupCreated = function(event)
             else
                 scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
             end
-        elseif RaceSettingsHelper.can_spawn(50) then
+        elseif RaceSettingsHelper.can_spawn(75) then
             scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
         end
 
