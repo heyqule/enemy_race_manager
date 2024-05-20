@@ -935,6 +935,50 @@ describe("Attack Pathing", function()
         end)
     end)
 
+    it('Attack beacon couldnt reach a spawn beacon on first try', function()
+        async(1500)
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+
+        -- Require generated chunks
+        --surface.request_to_generate_chunks({ 0, 0 }, 30)
+        --surface.force_generate_chunk_requests()
+        player.chart(surface, {{x = -650, y = -600}, {x = 600, y = 600}})
+
+        buildBaseWithBackdoorOpen({
+            dimension = 480,
+        })
+
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+
+        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-350,350}})
+        AttackGroupBeaconProcessor.init_index()
+
+        after_ticks(300, function()
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        end)
+
+        after_ticks(600, function()
+            assert(global.group_tracker.erm_vanilla == nil, "Shouldn't able to spawn units")
+        end)
+
+        after_ticks(900, function()
+            local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -500, 0 } })
+            local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        end)
+
+        after_ticks(1200, function()
+            assert(global.group_tracker.erm_vanilla.current_size > 0, "Able to spawn units")
+            done()
+        end)
+
+        after_test(function()
+            TestShared.reset_lab_tile(500)
+        end)
+    end)
+
     it('Land attack group cant find a valid path, switch to aerial group instead', function()
         async(7200)
         local surface = game.surfaces[1]
