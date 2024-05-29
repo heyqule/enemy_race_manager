@@ -357,6 +357,34 @@ describe("Pick Spawn beacon", function()
             end
         end)
     end
+
+    it('Spawn Key links to an invalid node. It should pick another one.', function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+
+        local control_key = 5
+        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
+
+        global['erm_spawn_beacon'][surface.index] = {}
+        global['erm_spawn_beacon'][surface.index][enemy.name] = {}
+        for i = 1, 10, 1 do
+            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = i }
+        end
+
+        assert.not_nil( global['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is not nil")
+
+        local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
+        assert.equal(node, global['erm_spawn_beacon'][surface.index][enemy.name][6].beacon, "It picks the 6th beacon")
+
+        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
+        global['erm_spawn_beacon'][surface.index][enemy.name][5] = nil
+
+        assert.is_nil( global['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is nil")
+
+        local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
+        assert.not_nil(node, "It picks another beacon")
+    end)
 end)
 
 describe("Pick Resource Beacon", function()
@@ -962,7 +990,7 @@ describe("Pick Spawn Cache", function()
         end
 
         local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
-        assert.is_nil(data_check.cache['enemy'].last_resort_spawner, 'Has last resort spawner')
+        assert.is_nil(data_check.cache['enemy'].last_resort_spawner, 'Dont have last resort spawner')
         assert.not_nil(data_check.cache['enemy'].bypass, 'Not by passed')
         assert.not_nil(data_check.cache['enemy'].bypass_scanner, 'Has by passed scanner')
 

@@ -19,7 +19,8 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Rework custom attack group's pathfinder. They may deploy different pathing strategies.
 - Rework custom attack group's target force and surface selection.
 - Scout subsystem.  Custom attack groups need to find their targets with aerial and ground scouts.
-- Various changes and bugfixes, see changelog for details.
+- Added 2 new sets of enemy level up progressions. (see Enemy Unit Leveling section for details)
+- Various changes and bugfixes, please see changelog for details.
 
 
 ### Race Mods Changes
@@ -41,8 +42,7 @@ New Enemy Races:
 * [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 * [Mars People](https://mods.factorio.com/mod/erm_marspeople)
 
-The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the
-remaster graphics!
+The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the remaster graphics!
 They have different spawn table and unit properties. They can play together with my version, e.g Zerg vs Zerg FFA :)
 
 * [Zerg - Jormungand Brood](https://mods.factorio.com/mod/erm_zerg_exp)
@@ -88,10 +88,12 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 
 #### Enemy Unit Leveling
 
-The evolution points is tied to force's hidden evolution factors (time, pollution and enemy kills).
+The evolution points is tied to force's hidden evolution factors (time, pollution and enemy spawner kills).  Killing units and turrets also contribute to these points.  
 
-* {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-* killing unit and turret also contribute to these points
+* Regular:    {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+* Express:    {1, 2, 4, 7, 12, 18, 26, 36, 48, 66, 94, 140, 190, 255, 330, 420, 530, 666, 900}
+* Shinkansen: {1, 2, 3, 5, 10, 16, 23, 31, 42, 55, 69, 105, 160, 225, 320, 420, 530, 666, 800}
+* Reference: When the enemy is at 0.7 evolution factor under **Regular** mode in death world., they usually reach level 3 (the 2nd value in the above list).
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters and all ERM races.
 
@@ -271,11 +273,11 @@ Otherwise, your map won't have any enemies on generated chucks as the ERM enemie
 
 ### SPECIAL THANKS TO ALL CROWDIN TRANSLATORS
 
-- UK: Yuriy
-- DE: PatrickBlack
+- UK: Yuriy, Met_en_Bouldry, ExexDiablo
+- DE: PatrickBlack, Spiti6910, Batrick
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
-- RU: SeptiSe7en, Misha Mitchell
+- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race
 Manager":

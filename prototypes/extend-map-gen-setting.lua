@@ -17,12 +17,12 @@ map_gen_settings['default']['erm-rts-world'] = {
             ["uranium-ore"] = { frequency="very-high", richness = "very-poor"},
             ["crude-oil"] = { frequency="very-high", richness = "very-poor"}
         },
-        starting_area = "big"
+        starting_area = 1.5
     },
     advanced_settings = {
         enemy_expansion = {
             min_expansion_cooldown = 5 * 3600,
-            max_expansion_cooldown = 15 * 3600
+            max_expansion_cooldown = 20 * 3600
         },
         difficulty_settings = {
             research_queue_setting = 'always'
@@ -43,7 +43,7 @@ map_gen_settings['default']['erm-rts-death-world'] = {
             ["crude-oil"] = { frequency="very-high", richness = "very-poor"},
             ["enemy-base"] = { frequency = "very-high", size = "very-big" }
         },
-        starting_area = "big"
+        starting_area = 1.5
     },
     advanced_settings = {
         enemy_evolution = {
@@ -52,7 +52,7 @@ map_gen_settings['default']['erm-rts-death-world'] = {
         },
         enemy_expansion = {
             min_expansion_cooldown = 5 * 3600,
-            max_expansion_cooldown = 15 * 3600
+            max_expansion_cooldown = 20 * 3600
         },
         pollution = {
             ageing = 0.5,

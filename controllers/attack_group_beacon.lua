@@ -13,10 +13,7 @@ local Cron = require('__enemyracemanager__/lib/cron_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
-local SCOUT_ACTIVE_TICK = 25000 * 14 --- 14 nauvis days
-if DEBUG_MODE then
-    SCOUT_ACTIVE_TICK = 25000
-end
+local SCOUT_ACTIVE_TICK = 25000 * 7 --- 7 nauvis days
 
 Event.on_nth_tick(Config.SPAWN_SCOUTS_INTERVAL, function(event)
     if game.tick < SCOUT_ACTIVE_TICK then

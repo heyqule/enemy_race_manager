@@ -7,6 +7,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
 
 local valid_erm_left_click = {
     ['radar'] = function(event)
@@ -65,6 +66,12 @@ end)
 Event.register('erm-open-army-window', function(event)
     if game.players[event.player_index] then
         ErmArmyControlUI.toggle_main_window(game.players[event.player_index])
+    end
+end)
+
+Event.register('erm-open-stat-window', function(event)
+    if game.players[event.player_index] then
+        ErmMainWindow.toggle_main_window(game.players[event.player_index])
     end
 end)
 

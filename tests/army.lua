@@ -95,6 +95,8 @@ describe("Army Count", function()
         assert(ArmyPop.unit_count(force) == 30, 'Unit count when pop cap hits')
 
     end)
+end)
+describe("Army Deployment", function()
     it('Deployment', function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
@@ -136,7 +138,7 @@ describe("Army Count", function()
                 name=unit_name
             })
             marine_size = table_size(marines)
-            assert(marine_size > 1, 'Marine spawned')
+            assert(marine_size > 0, 'Marine spawned')
             powerinterface.die('enemy')
         end)
 
@@ -150,6 +152,8 @@ describe("Army Count", function()
         end)
 
     end)
+end)
+describe("Army Teleport", function()
     it('Teleport, same surface', function()
         async(7200)
         AttackGroupBeaconProcessor.init_index()

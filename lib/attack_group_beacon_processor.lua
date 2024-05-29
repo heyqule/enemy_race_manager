@@ -67,7 +67,7 @@ if TEST_MODE then
     BYPASS_RETRY = 120
 end
 local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
-local SCOUT_KEEP_ALIVE = 3600 -- Keep 15 seconds when idle
+local SCOUT_KEEP_ALIVE = 3600 -- Keep 1 minutes when idle
 local LAST_RESORT_RADIUS = 384 -- 12 chunks
 
 --- Scan up to 5KM from each side. Min distance 5 chunk, 6 tiers to scan.
@@ -433,6 +433,34 @@ local function reindex_surface(surface)
     end
 
     return spawn_chunk, attack_chunk, resource_chunk
+end
+
+
+local get_beacon_node = function(beacon_data, control_key)
+    local new_key, node
+    if control_key and beacon_data[control_key] then
+        new_key, node = next(beacon_data, control_key)
+    else
+        -- Reset key to a random position
+        local table_size = table_size(beacon_data)
+        if table_size > 5 then
+            local random_position = math.floor(math.random(2,table_size-2))
+            local start_pos = 1
+            for key, value in pairs(beacon_data) do
+                if start_pos == random_position then
+                    new_key = key
+                    node = value
+                    break
+                else
+                    start_pos = start_pos + 1
+                end
+            end
+        else
+            new_key, node = next(beacon_data)
+        end
+    end
+
+    return new_key, node
 end
 
 AttackGroupBeaconProcessor.LAND_BEACON = LAND_BEACON
@@ -986,7 +1014,7 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
     local beacon_data = surface_data[target_force.name]
 
     local entity_data
-    local key, value = next(beacon_data, control_data[ATTACK_ENTITIES_CURRENT_KEY])
+    local key, value = get_beacon_node(beacon_data, control_data[ATTACK_ENTITIES_CURRENT_KEY])
     local i = 0
     while i < RETRY and entity_data == nil do
         if value and
@@ -1009,7 +1037,7 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
             beacon_data[key] = nil
         end
         i = i + 1
-        key, value = next(beacon_data, key)
+        key, value = get_beacon_node(beacon_data, key)
     end
 
     if entity_data then
@@ -1132,7 +1160,7 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     local beacon_data = beacon_surface[force.name]
     repeat
         local control_key = control_data[SCOUT_SPAWN_KEY] or nil
-        new_key, node = next(beacon_data, control_key)
+        new_key, node = get_beacon_node(beacon_data, control_key)
         control_data[SCOUT_SPAWN_KEY] = new_key
         i = i + 1
     until node ~= nil or i < RETRY

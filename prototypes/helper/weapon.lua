@@ -28,21 +28,37 @@ function ERM_WeaponDataHelper.change_piercing_damage(projectile, value)
     projectile['piercing_damage'] = value
 end
 
-function ERM_WeaponDataHelper.remove_friendly_fire(projectile)
-    projectile['force_condition'] = 'not-same'
-    for _, effect in pairs(projectile['action']['action_delivery']['target_effects']) do
-        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
-            effect['action']['force'] = 'not-same'
-        end
-    end
-
-    if projectile['final_action'] then
-        for _, effect in pairs(projectile['final_action']['action_delivery']['target_effects']) do
+local disable_friendly_fire = function(projectile, action_type)
+    -- Single action
+    if projectile[action_type] and projectile[action_type]['action_delivery'] then
+        for _, effect in pairs(projectile[action_type]['action_delivery']['target_effects']) do
             if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
                 effect['action']['force'] = 'not-same'
             end
         end
     end
+
+    -- Multiple action
+    if projectile[action_type] and #projectile[action_type] > 1 then
+        for _, action in pairs(projectile[action_type]) do
+            if action['type'] == 'area' then
+                action['force'] = 'not-same'
+            end
+
+            for _, effect in pairs(action['action_delivery']['target_effects']) do
+                if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+                    effect['action']['force'] = 'not-same'
+                end
+            end
+        end
+    end
+end
+
+
+function ERM_WeaponDataHelper.remove_friendly_fire(projectile)
+    projectile['force_condition'] = 'not-same'
+    disable_friendly_fire(projectile, 'action')
+    disable_friendly_fire(projectile, 'final_action')
 end
 
 return ERM_WeaponDataHelper

@@ -14,6 +14,7 @@ local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_setting
 local AttackGroupHeatProcessor = {}
 
 AttackGroupHeatProcessor.COOLDOWN_VALUE = 10
+AttackGroupHeatProcessor.DEFAULT_VALUE = 5
 
 local PLAYER = 1
 local NAUVIS = 1
@@ -68,7 +69,7 @@ end
 AttackGroupHeatProcessor.calculate_heat = function(race_name, surface_index, attacker_index, heat_points)
     init_data(race_name, surface_index, attacker_index)
     local points = global.attack_heat[race_name][surface_index][attacker_index] or 0
-    heat_points = heat_points or 1
+    heat_points = heat_points or AttackGroupHeatProcessor.DEFAULT_VALUE
     points = points + heat_points
     global.attack_heat[race_name][surface_index][attacker_index] = points
 end

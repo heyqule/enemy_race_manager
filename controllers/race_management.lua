@@ -17,7 +17,7 @@ local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 --- Level Processing Events
 Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
-    ErmLevelProcessor.calculateLevels()
+    ErmLevelProcessor.calculate_levels()
 end)
 
 --- ERM Events

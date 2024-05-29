@@ -201,7 +201,7 @@ end
 --- Usage: remote.call('enemyracemanager_debug', 'level_up', 20)
 function Debug_RemoteAPI.level_up(level)
     for race_name, _ in pairs(global.race_settings) do
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
+        ErmLevelProcessor.level_by_command(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
     end
 end
 
@@ -236,7 +236,7 @@ function Debug_RemoteAPI.reset_level()
         global.race_settings[race_name].evolution_base_point = 0
         global.race_settings[race_name].evolution_point = 0
         global.race_settings[race_name].tier = 1
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, 1)
+        ErmLevelProcessor.level_by_command(global.race_settings, race_name, 1)
         game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 0
     end
 end

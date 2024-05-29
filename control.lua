@@ -104,8 +104,8 @@ cron_switch = {
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ForceHelper.refresh_all_enemy_forces()
     end,
-    ['LevelProcessor.calculateMultipleLevels'] = function(args)
-        LevelProcessor.calculateMultipleLevels()
+    ['LevelProcessor.calculate_multiple_levels'] = function(args)
+        LevelProcessor.calculate_multiple_levels()
     end,
 }
 

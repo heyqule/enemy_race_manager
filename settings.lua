@@ -50,6 +50,15 @@ data:extend {
         order = "enemyracemanager-112"
     },
     {
+        type = "string-setting",
+        name = "enemyracemanager-evolution-point-ll-express",
+        description = "enemyracemanager-evolution-point-ll-express",
+        setting_type = "startup",
+        order = "enemyracemanager-113",
+        default_value = LEVEL_MODE_REGULAR,
+        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
+    },
+    {
         type = "int-setting",
         name = "enemyracemanager-max-hitpoint-multipliers",
         description = "enemyracemanager-max-hitpoint-multipliers",
@@ -57,7 +66,7 @@ data:extend {
         default_value = 10,
         minimum_value = 5,
         maximum_value = 100,
-        order = "enemyracemanager-113"
+        order = "enemyracemanager-114"
     },
     {
         type = "int-setting",
@@ -67,7 +76,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-114"
+        order = "enemyracemanager-115"
     },
     {
         type = "double-setting",
@@ -78,7 +87,7 @@ data:extend {
         minimum_value = 1,
         maximum_value = 3,
         allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3 },
-        order = "enemyracemanager-115"
+        order = "enemyracemanager-116"
     },
     {
         type = "double-setting",
@@ -87,7 +96,7 @@ data:extend {
         setting_type = "startup",
         default_value = 0.025,
         allowed_values = { 0, 0.01, 0.025, 0.05 },
-        order = "enemyracemanager-116"
+        order = "enemyracemanager-117"
     },
     {
         type = "string-setting",
@@ -203,6 +212,14 @@ data:extend {
         type = "bool-setting",
         name = "enemyracemanager-enhance-defense",
         description = "enemyracemanager-enhance-defense",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-300"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-disable-friendly-fire",
+        description = "enemyracemanager-disable-friendly-fire",
         setting_type = "startup",
         default_value = true,
         order = "enemyracemanager-300"

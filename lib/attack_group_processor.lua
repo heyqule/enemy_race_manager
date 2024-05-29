@@ -169,8 +169,8 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
     until i == unit_batch
 
     if group_tracker.current_size >= group_tracker.size then
-        print('add_to_group is full: '..group.group_number)
         local entity_data = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, group.force, true)
+        local pollution_deduction = group_tracker.current_size * AttackGroupProcessor.MIXED_UNIT_POINTS * -2
 
         if entity_data and entity_data.position then
             local position = entity_data.position
@@ -200,8 +200,10 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 end
             end
             group.set_command(command)
+            surface.pollute(position, pollution_deduction)
         else
             group.set_autonomous()
+            surface.pollute({0, 0}, pollution_deduction)
         end
 
         set_group_tracker(race_name, nil)
@@ -571,7 +573,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     end
 
     local scout_name = AttackGroupBeaconProcessor.LAND_SCOUT
-    if RaceSettingsHelper.can_spawn(25) and not TEST_MODE then
+    if RaceSettingsHelper.can_spawn(33) and not TEST_MODE then
         scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
     end
 

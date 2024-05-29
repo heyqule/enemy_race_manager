@@ -50,8 +50,8 @@ local addRaceSettings = function()
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
 
     race_settings.units = {
-        { 'medium-spitter', 'medium-biter', 'defender' },
-        { 'big-spitter', 'big-biter', 'distractor', 'logistic-robot' },
+        { 'small-spitter', 'small-biter', 'medium-biter', 'defender' },
+        { 'medium-spitter', 'big-biter', 'big-spitter', 'distractor', 'logistic-robot' },
         { 'behemoth-spitter', 'behemoth-biter', 'destroyer', 'construction-robot' },
     }
     race_settings.turrets = {
@@ -76,7 +76,7 @@ local addRaceSettings = function()
     }
     race_settings.dropship = 'logistic-robot'
     race_settings.droppable_units = {
-        { { 'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
+        { {  'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
         { { 'big-spitter', 'big-biter', 'defender', 'distractor' }, { 2, 3, 1, 1 } },
         { { 'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer' }, { 2, 3, 1, 1 } },
     }
@@ -135,7 +135,7 @@ local prepare_world = function()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmLevelProcessor.calculateMultipleLevels()
+        ErmLevelProcessor.calculate_multiple_levels()
     end
 
     AttackGroupBeaconProcessor.init_index()

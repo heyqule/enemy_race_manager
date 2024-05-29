@@ -26,5 +26,12 @@ data:extend({
         localised_name = "Open Army Window",
         key_sequence = "CONTROL + ALT + A",
         consuming = "none"
+    },
+    {
+        type = "custom-input",
+        name = "erm-open-stat-window",
+        localised_name = "Open Stats Window",
+        key_sequence = "CONTROL + ALT + S",
+        consuming = "none"
     }
 })

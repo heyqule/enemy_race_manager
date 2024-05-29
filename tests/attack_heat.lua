@@ -36,8 +36,8 @@ describe("Attack Heat", function()
         })
         ling.die('player')
 
-        assert(global.attack_heat['erm_vanilla'][1][1] == 1, 'Vanilla calculated heat incorrect')
-        assert(global.attack_heat['erm_zerg'][1][1] == 1, 'Zerg calculated heat incorrect')
+        assert(global.attack_heat['erm_vanilla'][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, 'Vanilla calculated heat incorrect')
+        assert(global.attack_heat['erm_zerg'][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, 'Zerg calculated heat incorrect')
     end)
 
     it("Heat aggregation with 2 races", function()
@@ -61,10 +61,10 @@ describe("Attack Heat", function()
             AttackGroupHeatProcessor.cooldown_heat(active_race)
         end
 
-        assert(global.attack_heat_by_surfaces['erm_vanilla'][1].heat == 20, 'Vanilla aggregated surface value incorrect')
-        assert(global.attack_heat_by_surfaces['erm_zerg'][1].heat == 30, 'Zerg aggregated surface value incorrect')
-        assert(global.attack_heat_by_forces['erm_vanilla'][1].heat == 20, 'Vanilla aggregated forces value incorrect')
-        assert(global.attack_heat_by_forces['erm_zerg'][1].heat == 30, 'Zerg aggregated forces value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_vanilla'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, 'Vanilla aggregated surface value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Zerg aggregated surface value incorrect')
+        assert(global.attack_heat_by_forces['erm_vanilla'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, 'Vanilla aggregated forces value incorrect')
+        assert(global.attack_heat_by_forces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Zerg aggregated forces value incorrect')
     end)
 
     it("Heat aggregation with 2 races, 3 surfaces", function()
@@ -107,15 +107,15 @@ describe("Attack Heat", function()
             AttackGroupHeatProcessor.cooldown_heat(active_race)
         end
 
-        assert(global.attack_heat_by_surfaces['erm_vanilla'][1].heat == 20, 'Vanilla aggregated surface 1 value incorrect')
-        assert(global.attack_heat_by_surfaces['erm_vanilla'][2].heat == 10, 'Vanilla aggregated surface 2 value incorrect')
-        assert(global.attack_heat_by_surfaces['erm_zerg'][1].heat == 30, 'Zerg aggregated surface 1 value incorrect')
-        assert(global.attack_heat_by_surfaces['erm_zerg'][2].heat == 10, 'Zerg aggregated surface 3 value incorrect')
-        assert(global.attack_heat_by_forces['erm_vanilla'][1].heat == 30, 'Vanilla aggregated forces value incorrect')
-        assert(global.attack_heat_by_forces['erm_zerg'][1].heat == 40, 'Zerg aggregated forces value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_vanilla'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, 'Vanilla aggregated surface 1 value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_vanilla'][2].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 10, 'Vanilla aggregated surface 2 value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Zerg aggregated surface 1 value incorrect')
+        assert(global.attack_heat_by_surfaces['erm_zerg'][2].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 10, 'Zerg aggregated surface 3 value incorrect')
+        assert(global.attack_heat_by_forces['erm_vanilla'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Vanilla aggregated forces value incorrect')
+        assert(global.attack_heat_by_forces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 40, 'Zerg aggregated forces value incorrect')
 
-        assert(global.attack_heat['erm_vanilla'][1][1] == nil, "Cooldown is working" )
-        assert(global.attack_heat['erm_vanilla'][2][1] == 10, "Cooldown is working" )
+        assert(global.attack_heat['erm_vanilla'][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 1 Cooldown is working: "..global.attack_heat['erm_vanilla'][1][1]..'/'.. AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
+        assert(global.attack_heat['erm_vanilla'][2][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 2 Cooldown is working" .. global.attack_heat['erm_vanilla'][2][1]..'/'.. AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
     end)
 
     it("Select a default surface and force", function()
@@ -191,7 +191,7 @@ describe("Attack Heat", function()
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
         local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_vanilla', game.forces['player'])
 
-        assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface')
+        assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface'..picked_surface.name)
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
     end)
 

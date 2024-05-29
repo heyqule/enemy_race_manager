@@ -18,17 +18,17 @@ end)
 
 
 describe("Level Manager", function()
-    it("calculateLevels and calculateMutlipleLevels", function()
+    it("calculate_levels and calculateMutlipleLevels", function()
         global.race_settings['erm_vanilla'].evolution_base_point = 2
-        LevelManager.calculateLevels()
+        LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].level == 2, 'Level == 2')
 
         global.race_settings['erm_vanilla'].evolution_base_point = 10
-        LevelManager.calculateLevels()
+        LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].level == 3, 'Level == 3')
 
         global.race_settings['erm_vanilla'].evolution_base_point = 50
-        LevelManager.calculateMultipleLevels()
+        LevelManager.calculate_multiple_levels()
         assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
     end)
 
@@ -37,7 +37,7 @@ describe("Level Manager", function()
         local enemy_force = game.forces['enemy']
         local overlord = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', force = enemy_force, position = { 10, 10 } })
         global.race_settings['erm_vanilla'].evolution_base_point = 50
-        LevelManager.calculateMultipleLevels()
+        LevelManager.calculate_multiple_levels()
 
         after_ticks(2, function()
             assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
@@ -55,11 +55,11 @@ describe("Level Manager", function()
     it("Tiers switch", function()
         local force = game.forces['enemy']
         force.evolution_factor = 0.41
-        LevelManager.calculateLevels()
+        LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].tier == 2, 'Tier == 2')
 
         force.evolution_factor = 0.81
-        LevelManager.calculateLevels()
+        LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].tier == 3, 'Tier == 3')
     end)
 end)

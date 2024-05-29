@@ -93,7 +93,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_masks = {},
+        collision_mask = {},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_R.png",
@@ -111,7 +111,7 @@ if DEBUG_MODE then
     for _, data in pairs(data.raw['simple-entity-with-owner']) do
         if (data['subgroup'] == 'erm_ai_beacons') then
             data['render_layer'] = 'air-object'
-            data['selection_box'] = { { -1, -1 }, { 1, 1 } }
+            --data['selection_box'] = { { -1, -1 }, { 1, 1 } }
             data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}
             data.map_color = {b=0,g=1,r=0,a=1}
             data.order = 'aaaaa'

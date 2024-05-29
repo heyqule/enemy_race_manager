@@ -118,7 +118,7 @@ local onAiCompleted = function(event)
     -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
 
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
-        --print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+    --    print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
         local erm_unit_group = global.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
