@@ -67,10 +67,10 @@ if TEST_MODE then
     BYPASS_RETRY = 120
 end
 local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
-local SCOUT_KEEP_ALIVE = 3600 -- Keep 1 minutes when idle
+local SCOUT_KEEP_ALIVE = 1800 -- Keep alive 30s when idle
 local LAST_RESORT_RADIUS = 384 -- 12 chunks
 
---- Scan up to 5KM from each side. Min distance 5 chunk, 6 tiers to scan.
+--- Scan up to 5KM from each side. Min distance 5 chunks, 6 tiers to scan.
 local SCAN_DISTANCE = { { 160, 700 }, { 700, 1300 }, { 1300, 2100 }, { 2100, 2900 }, { 2900, 3800 }, { 3800, 5000 }}
 local MAX_TIERS = #SCAN_DISTANCE
 local SCAN_HALF_WIDTH = 256

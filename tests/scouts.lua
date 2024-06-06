@@ -133,13 +133,18 @@ describe("Scouts", function()
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
-        after_ticks(3000, function()
+        after_ticks(2500, function()
             local scout_count = surface.count_entities_filtered({
-                name=AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconProcessor.LAND_SCOUT),
+                name={AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconProcessor.LAND_SCOUT)},
                 position={0,0},
                 radius=32,
             })
-            assert(scout_count == 1, 'Must see a scout near final destination.')
+            local corpse_count = surface.count_entities_filtered({
+                type="corpse",
+                position={0,0},
+                radius=32,
+            })
+            assert(scout_count == 1 or corpse_count == 1, 'Must see a scout or a corpse near final destination.')
             local count = surface.count_entities_filtered({
                 name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
             })

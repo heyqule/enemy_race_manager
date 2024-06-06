@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.0
-Date: 2024-??-??
+Date: 2024-06-07
 
   Features:
     - >>> Reworked path finder (only for custom attack groups) <<<
@@ -10,49 +10,48 @@ Date: 2024-??-??
     - >>> Scouting Subsystem <<<
     - Introduce fog of war for the custom attack groups.  They will have to scout their attack targets.
     - Attack target types: rocket-silo, mining-drill, furnace, artillery-turret and labs.  Defend them!
-    - Rocket-silo and artillery entities are automatically registered as attack target.
+    - Rocket-silo and artillery type entities are automatically registered as attack target.
     - Enemy sends scout with either ground or aerial units.
-    - They begin to send out scouts on a daily (nauvis day) basis after the 7th nauvis day of your landing.
+    - Enemy starts to send out scouts on a daily basis (nauvis day) after the 7th day of your landing.
     - >>> Reworked attack group surface / target force selection <<<
     - Introduce enemy revenge heat map.  Enemies tracks which surface and by whom their spawners are killed.
     - Enemies prioritize the attacker force that killed most spawners.
     - Enemies prioritize the surface get attacked the most.
-    - Enemies may ask their allies to take revenge, if they are not able to attack.
+    - Enemies may ask their allies to take revenge, if they are not able to attack on a surface.
     - >>> Others <<<
     - When enemy successfully spawns a custom attack groups, pollution is deducted from attack target chunk.
 
   Changes:
-    - Free for all "multiplier" is configurable in startup tab.  It affects damage and HP.
-    - Removed "Disable Aerial Collision" setting as it's incompatible with new path finder and 2.0 will likely have aerial units.
-    - Fixed some UI incorrect descriptions.
+    - Free for all "multiplier" is configurable in startup tab.  It affects damage and health.
+    - Removed "Disable Aerial Collision" setting as it's incompatible with new path finder.
     - Changed enemy's max radioactive resist from 75 to 70
+    - Ctrl + Alt + S to open stats window.
+    - Precision strike warning now ping the attack group spawn position, instead of target position.
     - >>> Settings changes <<<
-    - Max Automatic Group's maximum value changed from 50 to 100.
+    - Max Automatic Group's maximum value changed from 50 to 100, default from 20 to 25.
     - Changed "[Time based attack] add point by %" setting maximum value from 90 to 75. (Please reset your setting to 75, if you were using higher value)
     - Added {6,7} minute options to "attack group forming interval".
-    - Added Enemy "Level Up Express" in startup setting. "Express" and "Shinkansen" option lower the required evolution points for each level up.
-    - Ctrl + Alt + S to open stats window.
+    - Added Enemy "Level Up Express" in startup setting. "Express" and "Shinkansen" options lower the required evolution points for each level.
     - >>> Enhanced Defense <<<
     - Changed Car's fixed value resist from 0 -> 5
     - Changed Tank resistance from 75% -> 70%, fixed value resist 10 -> 15
     - Changed Tank health increase from x2.5 to x3
     - Changed Spidertron resistance from 75% -> 70%, fixed value resist 5 -> 10
-    - "Disable friendly fire" is now under its own startup setting. Default: ON
-    - Removed friendly fire for grenade when "disable friendly fire" is active.
+    - "Disable friendly fire" is now under its own startup setting. Explosive cannon projectiles, Explosive rockets and grenades do not do friendly fire when this option is on. Default: ON
     - >>> RTS Map setting <<<
     - Changed Starting area from 133% to 150%
     - Changed max enemy expansion time from 15 minutes to 20 minutes
-
 
   Bugfixes:
     - Fixed calculateMultipleLevel function did not call level up event.
     - Fixed a crash when player attacks the boss under certain conditions. [Issue: 45]
     - Fixed duplicated names in global.attack_group_attackable_entity_names
+    - Fixed some UI incorrect descriptions.
 
   Optimization:
     - Cron processor changes
     - ERM Attack Groups disband after 14 nauvis days or under certain size to reduce idle units.
-    - [Internal] Added test cases for automatic regression tests.
+    - [Internal] Added regression tests.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.20.13

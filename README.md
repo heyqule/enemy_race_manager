@@ -20,6 +20,9 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Rework custom attack group's target force and surface selection.
 - Scout subsystem.  Custom attack groups need to find their targets with aerial and ground scouts.
 - Added 2 new sets of enemy level up progressions. (see Enemy Unit Leveling section for details)
+- Ctrl + Alt + S to open stats window.
+- Precision strike warning now ping the attack group spawn position, instead of target position.
+- "Disable friendly fire" is in startup setting. When it's on, Explosive cannon projectiles, Explosive rockets and grenades do not do friendly fire to same force. Default: ON
 - Various changes and bugfixes, please see changelog for details.
 
 
@@ -87,7 +90,6 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 * New 26, 32, 40 range
 
 #### Enemy Unit Leveling
-
 The evolution points is tied to force's hidden evolution factors (time, pollution and enemy spawner kills).  Killing units and turrets also contribute to these points.  
 
 * Regular:    {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}

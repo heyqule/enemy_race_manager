@@ -30,7 +30,7 @@ local SPAWN_CHANCE = 75
 local MIN_GROUP_SIZE = 5
 local DAY_TICK = 25000
 local IDLE_TIME_OUT = 25000 * 2
-local ERM_GROUP_TIME_TO_LIVE = 25000 * 14 --- 4 Weeks
+local ERM_GROUP_TIME_TO_LIVE = 25000 * 14 --- 2 Weeks
 
 AttackGroupProcessor.MIXED_UNIT_POINTS = 25
 AttackGroupProcessor.FLYING_UNIT_POINTS = 75
@@ -188,12 +188,13 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             if group_tracker.is_precision_attack then
                 command['distraction'] = defines.distraction.none
                 if Config.precision_strike_warning() then
+                    local group_position = group.position
                     group.surface.print({
                         'description.message-incoming-precision-attack',
                         race_name,
                         SurfaceProcessor.get_gps_message(
-                                position.x,
-                                position.y,
+                                group_position.x,
+                                group_position.y,
                                 group.surface.name
                         )
                     }, { r = 1, g = 0, b = 0 })
@@ -205,7 +206,6 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             group.set_autonomous()
             surface.pollute({0, 0}, pollution_deduction)
         end
-
         set_group_tracker(race_name, nil)
     end
 end

@@ -557,7 +557,7 @@ describe("Attack Pathing", function()
         end)
 
         after_ticks(7200, function()
-            assert(rocket_launcher.get_health_ratio() == 1, 'Enemy should not able to attack target')
+            assert(rocket_launcher.get_health_ratio() == 1, 'Enemy should not able to arrive attack target')
             done()
         end)
     end)
@@ -1014,6 +1014,57 @@ describe("Attack Pathing", function()
 
         after_test(function()
             TestShared.reset_lab_tile(500)
+        end)
+    end)
+
+    it("Unable to find enemy near scout beacon during path finding, removing scout beacon", function()
+        async(3600)
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+        local player = game.forces['player']
+        -- Require generated chunks
+        surface.request_to_generate_chunks({ 0, 0 }, 20)
+        surface.force_generate_chunk_requests()
+        buildBaseWithBackdoorOpen({
+            dimension = 480,
+        })
+
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+
+        local gun_turret = surface.create_entity({ name = 'gun-turret', force = 'player', position = { 200, 10 }, raise_built=true })
+        local landing_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = {200, 0} })
+
+        surface.create_entity({name='erm_vanilla/biter-spawner/10', position={500,0}})
+        AttackGroupBeaconProcessor.init_index()
+
+        landing_scout.die('player')
+
+        local beacons, beacon_number
+
+        after_ticks(180, function()
+            gun_turret.die('player')
+        end)
+
+        after_ticks(300, function()
+            beacons = surface.find_entities_filtered {
+                name = AttackGroupBeaconProcessor.LAND_BEACON,
+                force = 'enemy',
+                limit = 1
+            }
+            beacon_number = beacons[1].unit_number
+            global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
+            AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 50)
+        end)
+
+        after_ticks(3600, function()
+            local final_check_beacons = surface.find_entities_filtered {
+                name = AttackGroupBeaconProcessor.LAND_BEACON,
+                force = 'enemy',
+                limit = 1
+            }
+            assert(next(final_check_beacons) == nil, 'Enemy landing beacon entity should not exist')
+            assert(global[AttackGroupBeaconProcessor.LAND_BEACON][1]['enemy'][beacon_number] == nil, 'Enemy landing beacon global should not exist')
+            done()
         end)
     end)
 end)

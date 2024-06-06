@@ -146,23 +146,30 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                 position = path_node.position,
                 limit = 1
             }
-            if next(beacons) then
-
+            local beacon_idx, beacon = next(beacons)
+            if beacon then
                 local enemy = surface.find_nearest_enemy({
-                    position = beacons[1].position,
+                    position = beacon.position,
                     max_distance = BEACON_RADIUS,
                     force = source_force
                 })
 
                 if enemy then
                     Cron.add_quick_queue('AttackGroupPathingProcessor.construct_brutal_force_commands',
-                            path_id, beacons[1], enemy.position, search_beacons)
+                            path_id, beacon, enemy.position, search_beacons)
 
                     Cron.add_quick_queue('AttackGroupPathingProcessor.construct_side_attack_commands',
                             path_id, path_node, enemy.position, search_beacons)
 
                     Cron.add_quick_queue('AttackGroupPathingProcessor.construct_side_attack_commands',
                             path_id, path_node, enemy.position, search_beacons, true)
+                else
+                    if beacon.name == AttackGroupBeaconProcessor.LAND_BEACON then
+                        global[AttackGroupBeaconProcessor.LAND_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                    else
+                        global[AttackGroupBeaconProcessor.AERIAL_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                    end
+                    beacon.destroy()
                 end
                 break
             end
