@@ -25,8 +25,8 @@ local get_strength_multiplier = function()
     return settings.startup['enemyracemanager-level-multipliers'].value
 end
 
-local get_strength_percentage = function(level, multiplier, proper)
-    if proper then
+local get_strength_percentage = function(level, multiplier, not_overflow)
+    if not_overflow then
         return Math.min(100, level * multiplier) / 100
     end
     return level * multiplier / 100
@@ -94,12 +94,12 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, level)
     return Math.max(base_speed - (incremental_speed * get_strength_percentage(level, get_strength_multiplier(), true)), max_attack_speed)
 end
 
--- Movement Speed
+-- Movement Speed, reach max at level 5
 function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * get_strength_percentage(level, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
+    return base_speed + (incremental_speed * get_strength_percentage(math.min(level-1,5)*4, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
 end
 
 -- unit healing (full heal in 120s)
