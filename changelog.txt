@@ -30,7 +30,7 @@ Date: 2024-06-07
     - Unit movement speed reach max speed at level 5 by default.
     - Unit attack speed reach max speed at level 5 by default.
     - >>> Settings changes <<<
-    - Max Automatic Group's maximum value changed from 50 to 100, default from 20 to 25.
+    - Max Automatic Group's maximum value changed from 50 to 100, default from 20 to 30, same as vanilla default.
     - Changed "[Time based attack] add point by %" setting maximum value from 90 to 75. (Please reset your setting to 75, if you were using higher value)
     - Added {6,7} minute options to "attack group forming interval".
     - Added Enemy "Level Up Express" in startup setting. "Express" and "Shinkansen" options lower the required evolution points for each level.

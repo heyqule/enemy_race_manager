@@ -317,7 +317,7 @@ data:extend {
         name = "enemyracemanager-max-gathering-groups",
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "runtime-global",
-        default_value = 25,
+        default_value = 30,
         minimum_value = 10,
         maximum_value = 100,
         order = "enemyracemanager-001"
