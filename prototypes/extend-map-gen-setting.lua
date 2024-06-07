@@ -73,7 +73,6 @@ if DEBUG_MODE then
                 ["enemy-base"] = { frequency = 5, size = 5 },
             },
             starting_area = "very-big",
-            water = 'none',
         },
         advanced_settings = {
             enemy_evolution = {

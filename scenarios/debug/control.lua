@@ -9,7 +9,10 @@ local blueprint_string = '0eNrUvd2SXTeONPouuladWPwn51W+cDhku9qtGFlyqEoz30xHv/vZu
 
 
 script.on_init(function()
-
+    local path_finder = game.map_settings.path_finder
+    local work_multiplier = 2
+    path_finder.max_steps_worked_per_tick = path_finder.max_steps_worked_per_tick * work_multiplier
+    path_finder.max_work_done_per_tick = path_finder.max_work_done_per_tick * work_multiplier
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
