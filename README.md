@@ -23,7 +23,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Ctrl + Alt + S to open stats window.
 - Precision strike warning now ping the attack group spawn position, instead of target position.
 - "Disable friendly fire" is in startup setting. When it's on, Explosive cannon projectiles, Explosive rockets and grenades do not do friendly fire to same force. Default: ON
-- Enemy unit reaches max movement and attack speed at level 5 by default.
+- Enemy units reach max movement and attack speed at level 5 by default.
 - Various changes and bugfixes, please see changelog for details.
 
 
