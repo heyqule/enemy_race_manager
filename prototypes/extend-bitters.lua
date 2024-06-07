@@ -64,7 +64,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     end
     ERM_UnitHelper.modify_biter_damage(biter, level)
     biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
-    biter['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+    biter['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return biter
 end

@@ -14,20 +14,21 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
   Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.20 Changes
+### 1.21 Changes
 
-- BobEnemies and Natural Evolution Enemies have removed from incompatible list.
-- BobEnemies and Natural Evolution Enemies can work under default enemy spawner generator.
-- Other unsupported enemies should no longer crash the game. But they may mess up the spawner generator.
-- EMR enemies showcase in menu background, you can select them in startup menu.
-- Added setting to disable aerial behaviour for air units.
-- Spitter acid patches nerfs. Deal lower damage / s and shorter lifetime.
+- Rework custom attack group's pathfinder. They may deploy different pathing strategies.
+- Rework custom attack group's target force and surface selection.
+- Scout subsystem.  Custom attack groups need to find their targets with aerial and ground scouts.
+- Added 2 new sets of enemy level up progressions. (see Enemy Unit Leveling section for details)
+- Ctrl + Alt + S to open stats window.
+- Precision strike warning now ping the attack group spawn position, instead of target position.
+- "Disable friendly fire" is in startup setting. When it's on, Explosive cannon projectiles, Explosive rockets and grenades do not do friendly fire to same force. Default: ON
+- Various changes and bugfixes, please see changelog for details.
 
 
 ### Race Mods Changes
 
-- Playable Terran 2.0 now uses HD graphic.  It also has additional units and turrets.  Team color support!
-- Various tweaks on race mods
+- Changes to support the scout subsystem and new pathfinder.
 
 ### Download New race demo
 
@@ -44,8 +45,7 @@ New Enemy Races:
 * [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 * [Mars People](https://mods.factorio.com/mod/erm_marspeople)
 
-The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the
-remaster graphics!
+The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the remaster graphics!
 They have different spawn table and unit properties. They can play together with my version, e.g Zerg vs Zerg FFA :)
 
 * [Zerg - Jormungand Brood](https://mods.factorio.com/mod/erm_zerg_exp)
@@ -90,11 +90,12 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=78](https://youtu.be/phLRReAjxHA?t=78)
 * New 26, 32, 40 range
 
 #### Enemy Unit Leveling
+The evolution points is tied to force's hidden evolution factors (time, pollution and enemy spawner kills).  Killing units and turrets also contribute to these points.  
 
-The evolution points is tied to force's hidden evolution factors (time, pollution and enemy kills).
-
-* {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
-* killing unit and turret also contribute to these points
+* Regular:    {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
+* Express:    {1, 2, 4, 7, 12, 18, 26, 36, 48, 66, 94, 140, 190, 255, 330, 420, 530, 666, 900}
+* Shinkansen: {1, 2, 3, 5, 10, 16, 23, 31, 42, 55, 69, 105, 160, 225, 320, 420, 530, 666, 800}
+* Reference: When the enemy is at 0.7 evolution factor under **Regular** mode in death world., they usually reach level 3 (the 2nd value in the above list).
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters and all ERM races.
 
@@ -203,7 +204,7 @@ Youtube: [https://youtu.be/phLRReAjxHA?t=102](https://youtu.be/phLRReAjxHA?t=102
 
 * Time based attack wave starts after enemy level reach 3. Default to ON
     * It adds points to attack meter every minute.
-    * The points to add can be adjusted 1% to 90% of next attack threshold. It takes about 1.5hr to 5 minutes
+    * The points to add can be adjusted 1% to 75% of next attack threshold. It takes about 1.5hr to 5 minutes
       respectively to reach next wave.
     * Default setting is 2% of the threshold per minute.
 
@@ -274,11 +275,11 @@ Otherwise, your map won't have any enemies on generated chucks as the ERM enemie
 
 ### SPECIAL THANKS TO ALL CROWDIN TRANSLATORS
 
-- UK: Yuriy
-- DE: PatrickBlack
+- UK: Yuriy, Met_en_Bouldry, ExexDiablo
+- DE: PatrickBlack, Spiti6910, Batrick
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
-- RU: SeptiSe7en, Misha Mitchell
+- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race
 Manager":

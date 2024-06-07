@@ -229,7 +229,7 @@ function make_roboport(level)
             autoplace = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
-            map_color = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-vanilla_map_color'].value)
+            map_color = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
         }
     })
 end

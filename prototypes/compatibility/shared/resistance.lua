@@ -9,7 +9,7 @@ local ErmUnitHelper = require('lib.rig.unit_helper')
 local damage_types = {
     -- K2
     { 'kr-explosion', 10, 80 },
-    { 'radioactive', 5, 70 },
+    { 'radioactive', 5, 65 },
     -- Bob Warfare
     { 'bob-pierce', 10, 80 },
     { 'plasma', 5, 85 }

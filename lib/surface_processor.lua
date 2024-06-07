@@ -22,7 +22,7 @@ function SurfaceProcessor.assign_race(surface, race_name)
     end
 
     local races = ErmConfig.get_enemy_races()
-    local max_num = Table.size(races)
+    local max_num = table_size(races)
     if max_num == 0 then
         return
     end
@@ -66,7 +66,7 @@ function SurfaceProcessor.rebuild_race()
     end
 
     for _, surface in pairs(game.surfaces) do
-        if global.enemy_surfaces[surface.name] == nil then
+        if global.enemy_surfaces[surface.name] == nil and ErmForceHelper.can_have_enemy_on(surface) then
             SurfaceProcessor.assign_race(game.surfaces[surface.index])
         end
     end
@@ -88,7 +88,7 @@ function SurfaceProcessor.wander_unit_clean_up()
         if surface.valid then
             local units = surface.find_entities_filtered({
                 type = "unit",
-                force = ErmForceHelper.get_all_enemy_forces(),
+                force = ErmForceHelper.get_enemy_forces(),
             })
             for _, unit in pairs(units) do
                 checked_count = checked_count + 1

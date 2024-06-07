@@ -336,10 +336,6 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
         return
     end
 
-    --log("Before Time to live unit total: "..tostring(unit_total))
-    --log("Before Time to live unit: "..tostring(table_size(units)))
-    --local profiler = game.create_profiler()
-
     local count = 0
     local max_count = regular_batch
     if unit_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
@@ -364,11 +360,6 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
     end
 
     global.time_to_live_units_total = unit_total
-
-    --profiler.stop()
-    --log("After Time to live unit total: "..tostring(global.time_to_live_units_total))
-    --log("After Time to live unit: "..tostring(table_size(global.time_to_live_units)))
-    --log({'', 'clear_time_to_live_units...  ', profiler})
 end
 
 function CustomAttackHelper.time_to_live_unit_died(source_unit)

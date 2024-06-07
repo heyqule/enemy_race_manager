@@ -4,18 +4,13 @@
 --- DateTime: 8/27/2023 1:10 PM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('lib/global_config')
+local Config = require('__enemyracemanager__/lib/global_config')
 
 local add_mining_drone = function(event)
-    local name = 'mining-depot'
-    if game.entity_prototypes[name] then
-        table.insert(global.attack_group_attackable_entity_names, name)
-        global.attack_group_valid_targets[name] = true
-    end
-
+    Config.add_attack_group_attackable_entity('mining-depot')
 end
 
-Event.register(Event.generate_event_name(ErmConfig.FLUSH_GLOBAL), function(event)
+Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
     add_mining_drone(event)
 end)
 

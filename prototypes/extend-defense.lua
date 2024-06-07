@@ -34,14 +34,14 @@ end
 
 local rails_change_resistance = function()
     return {
-        { type = "acid", percent = 80 },
+        { type = "acid", percent = 90 },
         { type = "poison", percent = 100 },
-        { type = "physical", percent = 50 },
+        { type = "physical", percent = 75 },
         { type = "fire", percent = 100 },
-        { type = "explosion", percent = 50 },
-        { type = "laser", percent = 50 },
-        { type = "cold", percent = 100 },
-        { type = "electric", percent = 100 }
+        { type = "explosion", percent = 75 },
+        { type = "laser", percent = 75 },
+        { type = "cold", percent = 90 },
+        { type = "electric", percent = 90 }
     }
 end
 
@@ -60,11 +60,11 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
 
     -- Buff vehicles
     data.raw['car']['car']['max_health'] = data.raw['car']['car']['max_health'] * 5
-    data.raw['car']['car']['resistances'] = vehicle_change_resistance(50, 0)
-    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 2.5
-    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(75, 10)
+    data.raw['car']['car']['resistances'] = vehicle_change_resistance(50, 5)
+    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 3
+    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(70, 15)
     data.raw['spider-vehicle']['spidertron']['max_health'] = data.raw['spider-vehicle']['spidertron']['max_health'] * 2
-    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(75, 5)
+    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(70, 10)
 
 
     -- Buff vehicle gun

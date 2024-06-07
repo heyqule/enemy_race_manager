@@ -7,11 +7,8 @@
 require('__stdlib__/stdlib/utils/defines/time')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 

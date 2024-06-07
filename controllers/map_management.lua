@@ -10,8 +10,10 @@ require('__enemyracemanager__/global')
 
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 
 Event.on_nth_tick(ErmConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
     ErmMapProcessor.process_chunks(game.surfaces, global.race_settings)
@@ -19,15 +21,27 @@ end)
 
 Event.register(defines.events.on_chunk_generated, function(event)
     ErmMapProcessor.queue_chunks(event.surface, event.area)
-    ErmAttackGroupChunkProcessor.add_spawnable_chunk(event.surface, event.position)
+    AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(event.surface, event.area)
+    AttackGroupBeaconProcessor.create_resource_beacon_from_trunk(event.surface, event.area)
 end)
 
 --- Surface Management
 Event.register(defines.events.on_surface_created, function(event)
     ErmSurfaceProcessor.assign_race(game.surfaces[event.surface_index])
-
+    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
 end)
+
 Event.register(defines.events.on_pre_surface_deleted, function(event)
     ErmSurfaceProcessor.remove_race(game.surfaces[event.surface_index])
-    ErmAttackGroupChunkProcessor.remove_surface(game.surfaces[event.surface_index].name)
+    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
+    AttackGroupHeatProcessor.remove_surface(event.surface_index)
 end)
+
+Event.register(defines.events.on_pre_surface_cleared, function(event)
+    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
+    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
+end)
+
+--Event.register(defines.events.on_surface_renamed, function(event)
+--    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
+--end)

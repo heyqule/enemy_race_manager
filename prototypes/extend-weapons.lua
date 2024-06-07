@@ -16,10 +16,11 @@ Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         }
 )
 
-if settings.startup['enemyracemanager-enhance-defense'].value == true then
+if settings.startup['enemyracemanager-disable-friendly-fire'].value == true then
     WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-rocket'])
     WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-cannon-projectile'])
     WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-uranium-cannon-projectile'])
+    WeaponHelper.remove_friendly_fire(data.raw['projectile']['grenade'])
 end
 
 -- Allow rocket explosion to hit air

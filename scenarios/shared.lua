@@ -6,19 +6,19 @@
 
 local ScenarioHelper = {}
 
-function ScenarioHelper.build_base(surface, blueprint_string)
+function ScenarioHelper.build_base(surface, blueprint_string, x_offset, y_offset)
+    x_offset = x_offset or 0
+    y_offset = y_offset or 0
     local bp_entity = surface.create_entity { name = 'item-on-ground', position = { 10, 10 }, stack = 'blueprint' }
     bp_entity.stack.import_stack(blueprint_string)
     local bp_entities = bp_entity.stack.get_blueprint_entities()
     bp_entity.destroy()
     for _, entity in pairs(util.table.deepcopy(bp_entities)) do
-        entity.position = { entity.position.x, entity.position.y }
+        entity.position = { entity.position.x + x_offset, entity.position.y + y_offset }
         entity.force = 'player'
+        entity.raise_built = true
         surface.create_entity(entity)
     end
-
-    surface.create_entity({ name = "stone", amount = 500000000, position = { -33, -13 } })
-    surface.create_entity({ name = "stone", amount = 500000000, position = { -29, -13 } })
 end
 
 function ScenarioHelper.spawn_tile(surface, radius, tile_name)
@@ -106,7 +106,7 @@ function ScenarioHelper.set_enemy_params(level, tier, factor)
     remote.call('enemyracemanager_debug', 'set_evolution_factor', factor)
     remote.call('enemyracemanager_debug', 'level_up', level)
     remote.call('enemyracemanager_debug', 'set_tier', tier)
-    remote.call('enemyracemanager_debug', 'attack_group_chunk_index')
+    remote.call('enemyracemanager_debug', 'attack_group_beacon_index')
 end
 
 function ScenarioHelper.set_attack_points()

@@ -9,8 +9,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
-local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -78,7 +77,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     if global.boss.attackable_entities_cache_size > 0 then
         local retry = 0
         repeat
-            entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
+            local entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
             if entity.valid then
                 return_position = entity.position
             end
@@ -87,7 +86,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     end
 
     if return_position == nil then
-        return_position = ErmAttackGroupChunkProcessor.pick_attack_location(boss.surface, boss.position)
+        return_position = AttackGroupBeaconProcessor.pick_attack_location(boss.surface, boss.entity_position)
         artillery_mode = true
     end
 
@@ -175,7 +174,10 @@ local process_attack = function(data, unique_position)
         ErmDebugHelper.print('not valid surface / force / position')
         return
     end
-    local start_position = data['entity_position']
+    local start_position = {
+        data['entity_position']['x']  + math.random(-8, 8),
+        data['entity_position']['y'] + math.random(-8, 8)
+    }
     local entity_name = data['entity_name']
 
     if data['artillery_mode'] then

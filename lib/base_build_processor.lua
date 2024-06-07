@@ -138,9 +138,9 @@ function BaseBuildProcessor.build_formation(entity, unit_group, has_cc)
         ErmCron.add_1_sec_queue(
                 'BaseBuildProcessor.build',
                 unit.surface,
-                unit.position,
                 name,
-                force_name
+                force_name,
+                unit.position
         )
         unit.destroy()
     end
@@ -165,14 +165,6 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
             name = Event.get_event_name(ErmConfig.BASE_BUILT_EVENT),
             entity = built_entity })
     end
-end
-
-function BaseBuildProcessor.build_cron(args)
-    local surface = args[1]
-    local position = args[2]
-    local name = args[3]
-    local force_name = args[4]
-    BaseBuildProcessor.build(surface, name, force_name, position)
 end
 
 return BaseBuildProcessor

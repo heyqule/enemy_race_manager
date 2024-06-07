@@ -28,4 +28,12 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
 
     require('prototypes/compatibility/BobsEnemies/spawn_spec')
     require('prototypes/compatibility/NaturalEvolutionEnemies/spawn_spec')
+
+    data.erm_land_scout = data.erm_land_scout or {}
+    data.erm_land_scout[MOD_NAME] = 'small-biter'
+
+    data.erm_aerial_scout = data.erm_aerial_scout or {}
+    data.erm_aerial_scout[MOD_NAME] = 'defender'
 end
+
+require "prototypes.extend-mapping-beacons"

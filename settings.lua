@@ -50,6 +50,15 @@ data:extend {
         order = "enemyracemanager-112"
     },
     {
+        type = "string-setting",
+        name = "enemyracemanager-evolution-point-ll-express",
+        description = "enemyracemanager-evolution-point-ll-express",
+        setting_type = "startup",
+        order = "enemyracemanager-113",
+        default_value = LEVEL_MODE_REGULAR,
+        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
+    },
+    {
         type = "int-setting",
         name = "enemyracemanager-max-hitpoint-multipliers",
         description = "enemyracemanager-max-hitpoint-multipliers",
@@ -57,7 +66,7 @@ data:extend {
         default_value = 10,
         minimum_value = 5,
         maximum_value = 100,
-        order = "enemyracemanager-113"
+        order = "enemyracemanager-114"
     },
     {
         type = "int-setting",
@@ -67,7 +76,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-114"
+        order = "enemyracemanager-115"
     },
     {
         type = "double-setting",
@@ -78,7 +87,7 @@ data:extend {
         minimum_value = 1,
         maximum_value = 3,
         allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3 },
-        order = "enemyracemanager-115"
+        order = "enemyracemanager-116"
     },
     {
         type = "double-setting",
@@ -87,14 +96,6 @@ data:extend {
         setting_type = "startup",
         default_value = 0.025,
         allowed_values = { 0, 0.01, 0.025, 0.05 },
-        order = "enemyracemanager-116"
-    },
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-land-collision-only",
-        description = "enemyracemanager-land-collision-only",
-        setting_type = "startup",
-        default_value = false,
         order = "enemyracemanager-117"
     },
     {
@@ -216,13 +217,21 @@ data:extend {
         order = "enemyracemanager-300"
     },
     {
+        type = "bool-setting",
+        name = "enemyracemanager-disable-friendly-fire",
+        description = "enemyracemanager-disable-friendly-fire",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-300"
+    },
+    {
         type = "int-setting",
         name = "enemyracemanager-attack-meter-group-interval",
         description = "enemyracemanager-attack-meter-group-interval",
         setting_type = "startup",
         default_value = 3,
         order = "enemyracemanager-500",
-        allowed_values = { 1, 2, 3, 4, 5, 10 }
+        allowed_values = { 1, 2, 3, 4, 5, 6, 7, 10 }
     },
     {
         type = "bool-setting",
@@ -231,6 +240,15 @@ data:extend {
         setting_type = "startup",
         default_value = false,
         order = "enemyracemanager-601",
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-free-for-all-multiplier",
+        description = "enemyracemanager-free-for-all-multiplier",
+        setting_type = "startup",
+        default_value = 10,
+        allowed_values = { 5, 8, 10, 12, 15 },
+        order = "enemyracemanager-602",
     },
     {
         type = "string-setting",
@@ -287,8 +305,8 @@ data:extend {
     --- Range 1000 to 1100 reserve for map color changes
     {
         type = "color-setting",
-        name = "enemyracemanager-vanilla_map_color",
-        description = "enemyracemanager-vanilla_map_color",
+        name = "erm_vanilla-map-color",
+        description = "erm_vanilla-map-color",
         setting_type = "startup",
         default_value = VANILLA_MAP_COLOR,
         order = "enemyracemanager-1001"
@@ -299,9 +317,9 @@ data:extend {
         name = "enemyracemanager-max-gathering-groups",
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "runtime-global",
-        default_value = 20,
-        minimum_value = 5,
-        maximum_value = 50,
+        default_value = 25,
+        minimum_value = 10,
+        maximum_value = 100,
         order = "enemyracemanager-001"
     },
     {
@@ -522,8 +540,7 @@ data:extend {
         description = "enemyracemanager-elite-squad-level",
         setting_type = "runtime-global",
         default_value = 2,
-        minimum_value = 1,
-        maximum_value = 5,
+        allowed_values = {1,2,3,4,5},
         order = "enemyracemanager-409"
     },
     {
@@ -565,7 +582,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75, 90 },
+        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75 },
         order = "enemyracemanager-451"
     },
 }

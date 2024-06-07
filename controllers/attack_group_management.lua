@@ -9,25 +9,21 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local Config = require('__enemyracemanager__/lib/global_config')
+local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 
-Event.on_nth_tick(ErmConfig.ATTACK_POINT_CALCULATION, function(event)
-    ErmAttackMeterProcessor.exec()
+Event.on_nth_tick(Config.ATTACK_POINT_CALCULATION, function(event)
+    AttackMeterProcessor.exec()
 end)
 
-Event.on_nth_tick(ErmConfig.ATTACK_GROUP_GATHERING_CRON, function(event)
-    ErmAttackMeterProcessor.add_form_group_cron()
+Event.on_nth_tick(Config.ATTACK_GROUP_GATHERING_CRON, function(event)
+    AttackMeterProcessor.add_form_group_cron()
 end)
 
-local add_attackable_chunk = function(event)
-    local entity = event.created_entity or event.entity
-    ErmAttackGroupChunkProcessor.add_attackable_chunk_by_entity(entity)
-end
+Event.register(Event.generate_event_name(Config.ADJUST_ATTACK_METER), function(event)
+    AttackMeterProcessor.adjustAttackMeter(event.race_name)
+end)
 
---- Native Event Handlers
-Event.register(defines.events.script_raised_revive, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
-Event.register(defines.events.script_raised_built, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
-Event.register(defines.events.on_built_entity, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
-Event.register(defines.events.on_robot_built_entity, add_attackable_chunk, ErmAttackGroupChunkProcessor.is_valid_target)
+Event.register(Event.generate_event_name(Config.ADJUST_ACCUMULATED_ATTACK_METER), function(event)
+    AttackMeterProcessor.adjustLastAccumulatedAttackMeter(event.race_name)
+end)

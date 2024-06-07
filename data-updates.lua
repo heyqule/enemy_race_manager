@@ -38,4 +38,4 @@ require('prototypes/extend-default-autoplace.lua')
 
 require('prototypes/map-generation.lua')
 
-require('prototypes/extend-unit-collision')
+require('prototypes/extend-scout-units')

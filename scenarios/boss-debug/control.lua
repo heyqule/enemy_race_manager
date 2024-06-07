@@ -76,7 +76,7 @@ local spawn_units = function(surface)
     end
     for i = 1, 4 do
         table.insert(entities, surface.create_entity({
-            name = 'erm_terran/tank/mk2',
+            name = 'erm_terran/siege_tank/mk2',
             force = 'player',
             position = { 15, 15 }
         }))

@@ -61,7 +61,7 @@ function AttackMeterProcessor.exec()
         return
     end
 
-    local force_names = ErmForceHelper.get_all_enemy_forces()
+    local force_names = ErmForceHelper.get_enemy_forces()
 
     for _, name in pairs(force_names) do
         AttackMeterProcessor.calculate_points(name)
@@ -73,7 +73,7 @@ function AttackMeterProcessor.add_form_group_cron()
         return
     end
 
-    local force_names = ErmForceHelper.get_all_enemy_forces()
+    local force_names = ErmForceHelper.get_enemy_forces()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
@@ -131,6 +131,7 @@ function AttackMeterProcessor.calculate_points(force_name)
     local spawner_evolution_points = 0
 
     if ErmConfig.spawner_kills_deduct_evolution_points() then
+        unit_evolution_points = unit_points * 0.05 * spawner_destroy_factor
         turret_evolution_points = turret_evolution_points * -0.5 * spawner_destroy_factor
         spawner_evolution_points = building_points * -1.5 * spawner_destroy_factor
     end
@@ -153,24 +154,24 @@ function AttackMeterProcessor.form_group(race_name, force)
     local current_attack_value = ErmRaceSettingsHelper.get_attack_meter(race_name)
     -- Process attack point group
     if current_attack_value > next_attack_threshold then
-        local group_created = false
         local elite_attack_point_threshold = ErmConfig.elite_squad_attack_points()
         local accumulated_attack_meter = ErmRaceSettingsHelper.get_accumulated_attack_meter(race_name)
         local last_accumulated_attack_meter = ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
         if ErmConfig.elite_squad_enable() and ErmRaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
-            group_created = ErmAttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
-            if group_created then
-                ErmRaceSettingsHelper.set_last_accumulated_attack_meter(race_name, accumulated_attack_meter)
-            end
+            ErmAttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
         else
-            group_created = ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)
-        end
-
-        if group_created then
-            ErmRaceSettingsHelper.add_to_attack_meter(race_name, next_attack_threshold * -1)
-            calculateNextThreshold(race_name)
+            ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)
         end
     end
+end
+
+function AttackMeterProcessor.adjustAttackMeter(race_name)
+    ErmRaceSettingsHelper.add_to_attack_meter(race_name, ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
+    calculateNextThreshold(race_name)
+end
+
+function AttackMeterProcessor.adjustLastAccumulatedAttackMeter(race_name)
+    ErmRaceSettingsHelper.set_last_accumulated_attack_meter(race_name, ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
 end
 
 return AttackMeterProcessor

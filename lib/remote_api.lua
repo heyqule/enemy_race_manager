@@ -17,6 +17,8 @@ local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_popula
 local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+
 local ERM_RemoteAPI = {}
 
 --- Create or update race setting
@@ -224,13 +226,20 @@ function ERM_RemoteAPI.add_boss_attack_group(group)
     table.insert(global.boss_attack_groups, group_data)
 end
 
-function ERM_RemoteAPI.add_erm_attack_group(group)
-    if group.valid and table_size(group.members) > 0 then
+function ERM_RemoteAPI.add_erm_attack_group(group, target_force)
+    if group.valid and next(group.members) then
         global.erm_unit_groups[group.group_number] = {
             group = group,
-            start_position = group.position
+            start_position = group.position,
+            nearby_retry = 0,
+            attack_force = target_force,
+            created = game.tick
         }
     end
+end
+
+function ERM_RemoteAPI.override_strategy(strategy_id)
+    global.override_strategy = strategy_id
 end
 
 function ERM_RemoteAPI.milestones_preset_addons()
@@ -265,5 +274,7 @@ ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
 ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
 
 ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
+
+ERM_RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
 
 return ERM_RemoteAPI

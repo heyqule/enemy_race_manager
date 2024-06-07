@@ -11,7 +11,6 @@ local StdIs = require('__stdlib__/stdlib/utils/is')
 local ErmConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
@@ -393,7 +392,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         ErmDebugHelper.print('BossProcessor: Indexed positions: ' .. global.boss_spawnable_index.size)
 
         if global.boss_spawnable_index.size == 0 and spawn_position == nil then
-            surface.print('Unable to find a boss spawner.  Please try again on a surface with enemy spawners.')
+            surface.print('Unable to find a boss spawner.  Please try again.')
             BossProcessor.unset()
             return
         end

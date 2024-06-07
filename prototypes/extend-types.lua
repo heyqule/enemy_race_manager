@@ -60,6 +60,12 @@ data:extend(
                 group = "combat",
                 order = "z-erm_controllable_buildings"
             },
+            {
+                type = "item-subgroup",
+                name = "erm_ai_beacons",
+                group = "combat",
+                order = "z-erm_attack_beacons"
+            }
         })
 -- Recipe Category
 data:extend({

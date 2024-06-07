@@ -114,7 +114,7 @@ function ForceHelper.get_name_token(name)
     return global.force_entity_name_cache[name]
 end
 
-function ForceHelper.get_non_player_forces()
+function ForceHelper.getNonPlayerForces()
     return global.non_player_forces or { 'neutral' }
 end
 
@@ -122,7 +122,7 @@ function ForceHelper.get_player_forces()
     return global.player_forces or { 'player' }
 end
 
-function ForceHelper.get_all_enemy_forces()
+function ForceHelper.get_enemy_forces()
     return global.enemy_force_cache or { 'enemy' }
 end
 
@@ -147,7 +147,12 @@ function ForceHelper.refresh_all_enemy_forces()
         if force.index ~= 1 and table_size(force.players) > 0 then
             table.insert(global.player_forces, force.name)
         end
+
+        if DEBUG_MODE and string.find(force.name, 'test') then
+            table.insert(global.player_forces, force.name)
+        end
     end
+    global.total_player_forces = #global.player_forces
 end
 
 -- Whether a surface can assign enemy

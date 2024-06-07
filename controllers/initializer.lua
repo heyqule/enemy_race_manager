@@ -16,10 +16,12 @@ local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
-local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
-local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 
 local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
@@ -48,8 +50,8 @@ local addRaceSettings = function()
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
 
     race_settings.units = {
-        { 'medium-spitter', 'medium-biter', 'defender' },
-        { 'big-spitter', 'big-biter', 'distractor', 'logistic-robot' },
+        { 'small-spitter', 'small-biter', 'medium-biter', 'defender' },
+        { 'medium-spitter', 'big-biter', 'big-spitter', 'distractor', 'logistic-robot' },
         { 'behemoth-spitter', 'behemoth-biter', 'destroyer', 'construction-robot' },
     }
     race_settings.turrets = {
@@ -74,7 +76,7 @@ local addRaceSettings = function()
     }
     race_settings.dropship = 'logistic-robot'
     race_settings.droppable_units = {
-        { { 'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
+        { {  'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
         { { 'big-spitter', 'big-biter', 'defender', 'distractor' }, { 2, 3, 1, 1 } },
         { { 'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer' }, { 2, 3, 1, 1 } },
     }
@@ -133,10 +135,10 @@ local prepare_world = function()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmLevelProcessor.calculateMultipleLevels()
+        ErmLevelProcessor.calculate_multiple_levels()
     end
 
-    ErmAttackGroupChunkProcessor.init_index()
+    AttackGroupBeaconProcessor.init_index()
     ErmSurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 end
@@ -169,14 +171,10 @@ local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
     global.race_settings = global.race_settings or {}
 
-    -- Track all unit group created by ERM
-    global.erm_unit_groups = global.erm_unit_groups or {}
-
     -- Move all cache to this to resolve desync issues.
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     global.settings = global.settings or {}
-    global.tick = global.tick or 0
 
     global.installed_races = {}
     global.active_races = {}
@@ -184,17 +182,20 @@ local init_globals = function()
     global.active_races_num = 1
 
     ErmSurfaceProcessor.init_globals()
-    ErmAttackMeterProcessor.init_globals()
+    AttackMeterProcessor.init_globals()
     ErmMapProcessor.init_globals()
     ErmForceHelper.init_globals()
     ErmCron.init_globals()
-    ErmAttackGroupChunkProcessor.init_globals()
-    ErmAttackGroupSurfaceProcessor.init_globals()
+    AttackGroupProcessor.init_globals()
+    AttackGroupBeaconProcessor.init_globals()
+    AttackGroupPathingProcessor.init_globals()
+    AttackGroupHeatProcessor.init_globals()
     ErmBossProcessor.init_globals()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     ErmGui.init_globals()
+
 
     --- Wipe this cache due to cache pollution from previous version.
     global.force_race_name_cache = {}

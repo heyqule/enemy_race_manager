@@ -5,83 +5,108 @@
 -- Time: 11:29 AM
 -- To change this template use File | Settings | File Templates.
 --
-
 require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+require('util')
+require('global')
 
-local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ErmAttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmAttackGroupSurfaceProcessor = require('__enemyracemanager__/lib/attack_group_surface_processor')
-local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
-local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
-local ErmBossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
-local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
-local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+require('testcase')
+
+local LevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local BossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local BossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
 
 require('prototypes/compatibility/controls')
 
-local ErmRemoteApi = require('__enemyracemanager__/lib/remote_api')
-remote.add_interface("enemyracemanager", ErmRemoteApi)
+local RemoteApi = require('__enemyracemanager__/lib/remote_api')
+remote.add_interface("enemyracemanager", RemoteApi)
 
-local ErmDebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
-remote.add_interface("enemyracemanager_debug", ErmDebugRemoteApi)
+local DebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
+remote.add_interface("enemyracemanager_debug", DebugRemoteApi)
 
--- Establish Cron Switches
+-- Register Cron Functions
 cron_switch = {
     ['AttackGroupProcessor.add_to_group'] = function(args)
-        ErmAttackGroupProcessor.add_to_group_cron(args)
+        AttackGroupProcessor.add_to_group_cron(args)
     end,
-    ['BaseBuildProcessor.build'] = function(args)
-        ErmBaseBuildProcessor.build_cron(args)
+    ['AttackGroupProcessor.generate_group'] = function(args)
+        -- When args[9] presents, it's treated as retry group
+        AttackGroupProcessor.generate_group(unpack(args))
     end,
-    ['LevelProcessor.calculateMultipleLevels'] = function(args)
-        ErmLevelProcessor.calculateMultipleLevels()
-    end,
-    ['ForceHelper.refresh_all_enemy_forces'] = function(args)
-        ErmForceHelper.refresh_all_enemy_forces()
+    ['AttackGroupProcessor.spawn_scout'] = function(args)
+        AttackGroupProcessor.spawn_scout(unpack(args))
     end,
     ['AttackMeterProcessor.calculate_points'] = function(args)
-        ErmAttackMeterProcessor.calculate_points(args[1])
+        AttackMeterProcessor.calculate_points(unpack(args))
     end,
     ['AttackMeterProcessor.form_group'] = function(args)
-        ErmAttackMeterProcessor.form_group(args[1], args[2])
+        AttackMeterProcessor.form_group(unpack(args))
     end,
-    ['AttackGroupSurfaceProcessor.exec'] = function(args)
-        ErmAttackGroupSurfaceProcessor.exec(args[1])
+    ['AttackGroupPathingProcessor.construct_side_attack_commands'] = function(args)
+        AttackGroupPathingProcessor.construct_side_attack_commands(unpack(args))
     end,
-    ['BossProcessor.check_pathing'] = function(args)
-        ErmBossProcessor.check_pathing()
+    ['AttackGroupPathingProcessor.construct_brutal_force_commands'] = function(args)
+        AttackGroupPathingProcessor.construct_brutal_force_commands(unpack(args))
     end,
-    ['BossProcessor.heartbeat'] = function(args)
-        ErmBossProcessor.heartbeat()
+    ['AttackGroupHeatProcessor.aggregate_heat'] = function(args)
+        AttackGroupHeatProcessor.aggregate_heat(unpack(args))
     end,
-    ['BossProcessor.units_spawn'] = function(args)
-        ErmBossProcessor.units_spawn()
+    ['AttackGroupHeatProcessor.cooldown_heat'] = function(args)
+        AttackGroupHeatProcessor.cooldown_heat(unpack(args))
     end,
-    ['BossProcessor.support_structures_spawn'] = function(args)
-        ErmBossProcessor.support_structures_spawn()
+    ['AttackGroupBeaconProcessor.start_scout_scan'] = function(args)
+        AttackGroupBeaconProcessor.start_scout_scan()
     end,
-    ['BossProcessor.remove_boss_groups'] = function(args)
-        ErmBossProcessor.remove_boss_groups(args[1])
-    end,
-    ['BossGroupProcessor.generate_units'] = function(args)
-        ErmBossGroupProcessor.generate_units(args[1], args[2])
-    end,
-    ['BossGroupProcessor.process_attack_groups'] = function(args)
-        ErmBossGroupProcessor.process_attack_groups()
-    end,
-    ['BossAttackProcessor.process_attack'] = function(args)
-        ErmBossAttackProcessor.process_attack(args[1], args[2])
+    ['AttackGroupBeaconProcessor.scout_scan'] = function(args)
+        AttackGroupBeaconProcessor.scout_scan(unpack(args))
     end,
     ['ArmyTeleportationProcessor.teleport'] = function(args)
-        ErmArmyTeleportationProcessor.teleport(args[1], args[2], args[3])
+        ArmyTeleportationProcessor.teleport(unpack(args))
     end,
     ['ArmyTeleportationProcessor.scan_units'] = function(args)
-        ErmArmyTeleportationProcessor.scan_units()
-    end
+        ArmyTeleportationProcessor.scan_units()
+    end,
+    ['BaseBuildProcessor.build'] = function(args)
+        BaseBuildProcessor.build(unpack(args))
+    end,
+    ['BossProcessor.check_pathing'] = function(args)
+        BossProcessor.check_pathing()
+    end,
+    ['BossProcessor.heartbeat'] = function(args)
+        BossProcessor.heartbeat()
+    end,
+    ['BossProcessor.units_spawn'] = function(args)
+        BossProcessor.units_spawn()
+    end,
+    ['BossProcessor.support_structures_spawn'] = function(args)
+        BossProcessor.support_structures_spawn()
+    end,
+    ['BossProcessor.remove_boss_groups'] = function(args)
+        BossProcessor.remove_boss_groups(unpack(args))
+    end,
+    ['BossGroupProcessor.generate_units'] = function(args)
+        BossGroupProcessor.generate_units(unpack(args))
+    end,
+    ['BossGroupProcessor.process_attack_groups'] = function(args)
+        BossGroupProcessor.process_attack_groups()
+    end,
+    ['BossAttackProcessor.process_attack'] = function(args)
+        BossAttackProcessor.process_attack(unpack(args))
+    end,
+    ['ForceHelper.refresh_all_enemy_forces'] = function(args)
+        ForceHelper.refresh_all_enemy_forces()
+    end,
+    ['LevelProcessor.calculate_multiple_levels'] = function(args)
+        LevelProcessor.calculate_multiple_levels()
+    end,
 }
 
 require('__enemyracemanager__/controllers/initializer')
@@ -108,15 +133,16 @@ require('__enemyracemanager__/controllers/map_management')
 --- Attack points & group events
 require('__enemyracemanager__/controllers/attack_group_management')
 
+require('__enemyracemanager__/controllers/attack_group_beacon')
+
+
+
 --- CRON Events
 require('__enemyracemanager__/controllers/cron')
 
---- Script Trigger for attacks
-require('__enemyracemanager__/controllers/on_script_trigger_effects_biter')
+--- Script Trigger for all functions
+require('__enemyracemanager__/controllers/on_script_trigger_effects')
 
-require('__enemyracemanager__/controllers/on_script_trigger_effects_general')
-
-require('__enemyracemanager__/controllers/on_script_trigger_effects_player')
 
 --- On Rocket Launch Events
 require('__enemyracemanager__/controllers/on_rocket_launch')

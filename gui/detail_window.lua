@@ -85,7 +85,7 @@ function ERM_DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
 
     item_table.add { type = "label", caption = { 'gui.evolution_factor_column' } }
-    item_table.add { type = "label", caption = string.format("%.4f", LevelManager.getEvolutionFactor(race_setting.race)) }
+    item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(race_setting.race)) }
 
     item_table.add { type = "label", caption = { 'gui.attack_column' } }
     item_table.add { type = "label", caption = race_setting.attack_meter .. ' / ' .. race_setting.next_attack_threshold }
@@ -162,7 +162,7 @@ function ERM_DetailWindow.show(player, race_setting)
                                                                            minimum_value = 0,
                                                                            maximum_value = 100
         }
-        local evolution_factor_value = math.floor(LevelManager.getEvolutionFactor(race_setting.race) * 100)
+        local evolution_factor_value = math.floor(LevelManager.get_evolution_factor(race_setting.race) * 100)
         evolution_factor_slider.slider_value = evolution_factor_value
         evolution_factor_slider.style.vertical_align = "bottom"
         evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
@@ -208,7 +208,7 @@ local process_level_slider = function(element, race_name)
     local level_slider_name = race_name .. '/' .. ERM_DetailWindow.levelup_slider_name
     local level = tonumber(element.parent['level_slider_flow'][level_slider_name].slider_value)
     if level ~= global.race_settings[race_name].level then
-        LevelManager.levelByCommand(global.race_settings, race_name, level)
+        LevelManager.level_by_command(global.race_settings, race_name, level)
     end
 end
 

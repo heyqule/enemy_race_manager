@@ -270,7 +270,10 @@ function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
 end
 
 function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
-    if not (unit and unit.valid) then
+    if not (unit and unit.valid) or
+      not (from_entity and from_entity.valid) or
+      not (exit_entity and exit_entity.valid)
+    then
         return
     end
 

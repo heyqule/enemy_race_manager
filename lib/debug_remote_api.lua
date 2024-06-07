@@ -12,7 +12,7 @@ local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
-local ErmAttackGroupChunkProcessor = require('__enemyracemanager__/lib/attack_group_chunk_processor')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
@@ -201,7 +201,7 @@ end
 --- Usage: remote.call('enemyracemanager_debug', 'level_up', 20)
 function Debug_RemoteAPI.level_up(level)
     for race_name, _ in pairs(global.race_settings) do
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
+        ErmLevelProcessor.level_by_command(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
     end
 end
 
@@ -236,14 +236,27 @@ function Debug_RemoteAPI.reset_level()
         global.race_settings[race_name].evolution_base_point = 0
         global.race_settings[race_name].evolution_point = 0
         global.race_settings[race_name].tier = 1
-        ErmLevelProcessor.levelByCommand(global.race_settings, race_name, 1)
+        ErmLevelProcessor.level_by_command(global.race_settings, race_name, 1)
         game.forces[ErmForceHelper.get_force_name_from(race_name)].evolution_factor = 0
     end
 end
 
---- Usage: remote.call('enemyracemanager_debug', 'attack_group_chunk_index')
-function Debug_RemoteAPI.attack_group_chunk_index()
-    ErmAttackGroupChunkProcessor.init_index()
+--- Usage: remote.call('enemyracemanager_debug', 'attack_group_beacon_index')
+function Debug_RemoteAPI.attack_group_beacon_index()
+    AttackGroupBeaconProcessor.init_index()
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'pick_spawn_location', 'nauvis', 'erm_marspeople', 'player')
+function Debug_RemoteAPI.pick_spawn_location(surface_name, force_name, target_force_name)
+    local attack_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(game.surfaces[surface_name], game.forces[force_name], game.forces[target_force_name])
+    local beacon = AttackGroupBeaconProcessor.pick_spawn_location(game.surfaces[surface_name], game.forces[force_name], attack_beacon)
+    print(serpent.block(beacon))
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'pick_attack_beacon', 'nauvis', 'erm_marspeople', 'player')
+function Debug_RemoteAPI.pick_attack_location(surface_name, source_force_name, target_force_name)
+    local beacon = AttackGroupBeaconProcessor.pick_attack_beacon(game.surfaces[surface_name], game.forces[source_force_name] ,game.forces[target_force_name])
+    print(serpent.block(beacon))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'wander_clean_up')
@@ -296,6 +309,33 @@ function Debug_RemoteAPI.forces_relation()
             )
         end
         print('------ END ' .. forceA.name .. '------')
+    end
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'create_land_scout', 'erm_vanilla', {x=100,y=100})
+function Debug_RemoteAPI.create_land_scout(mod_name, position)
+   local surface = game.player.surface
+    surface.create_entity({
+        name = mod_name..'/land-scout/1',
+        position = position,
+        force = ErmForceHelper.get_force_name_from(mod_name)
+    })
+end
+
+--- Usage: remote.call('enemyracemanager_debug', 'create_air_scout', 'erm_vanilla', {x=100,y=100})
+function Debug_RemoteAPI.create_air_scout(mod_name, position)
+    local surface = game.player.surface
+    surface.create_entity({
+        name = mod_name..'/aerial-scout/1',
+        position = position,
+        force = ErmForceHelper.get_force_name_from(mod_name)
+    })
+end
+
+--- remote.call('enemyracemanager_debug', 'validate_erm_groups')
+function Debug_RemoteAPI.validate_erm_groups()
+    for id, content in pairs(global.erm_unit_groups) do
+        print(id..' = '.. tostring(content.group.valid))
     end
 end
 
