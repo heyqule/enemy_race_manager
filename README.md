@@ -94,7 +94,7 @@ The evolution points is tied to force's hidden evolution factors (time, pollutio
 * Regular:    {1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000}
 * Express:    {1, 2, 4, 7, 12, 18, 26, 36, 48, 66, 94, 140, 190, 255, 330, 420, 530, 666, 900}
 * Shinkansen: {1, 2, 3, 5, 10, 16, 23, 31, 42, 55, 69, 105, 160, 225, 320, 420, 530, 666, 800}
-* Reference: When the enemy is at 0.7 evolution factor under **Regular** mode in death world., they usually reach level 3 (the 2nd value in the above list).
+* Reference: When the enemy is at 0.8 evolution factor under **Regular** mode in **death world**. they usually reach level 3 (the 2nd value in the above list).  They may reach level 3 or 4 in Express and level 4 or 5 in Shinkansen.
 
 Leveling support for base game biter/spitters, Armoured Biters, Explosive Biters & Cold Biters and all ERM races.
 
