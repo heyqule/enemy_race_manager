@@ -61,17 +61,25 @@ local onUnitGroupCreated = function(event)
         local scout_unit_name
         if is_erm_group then
             if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
-                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                scout_unit_name = 2
             else
-                scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
+                scout_unit_name = 1
             end
         elseif (RaceSettingsHelper.can_spawn(75) or TEST_MODE) then
-            scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
+            scout_unit_name = 1
         end
 
-        global.scout_unit_name[group.group_number] = scout_unit_name
+        global.scout_unit_name[group.group_number] = {
+            entity = group,
+            scout_type = scout_unit_name
+        }
     end
 end
+
+local scout_type = {
+    AttackGroupBeaconProcessor.LAND_SCOUT,
+    AttackGroupBeaconProcessor.AERIAL_SCOUT
+}
 
 local checking_state = {
     [defines.group_state.gathering] = true,
@@ -85,6 +93,7 @@ local onUnitFinishGathering = function(event)
         return
     end
     local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
+
     if group.is_script_driven and
         group.command == nil and
         checking_state[group.state] and
@@ -108,11 +117,12 @@ local onUnitFinishGathering = function(event)
 
     if (group.is_script_driven == false or is_erm_group) and global.scout_unit_name[group.group_number] then
         local surface = group.surface
+        local race_name = ForceHelper.extract_race_name_from(group.force.name)
         local scout = surface.create_entity({
             position =  group.position,
             surface = surface,
             force = group.force,
-            name = global.scout_unit_name[group.group_number],
+            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[global.scout_unit_name[group.group_number].scout_type]),
             count = 1
         })
         group.add_member(scout);

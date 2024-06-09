@@ -707,7 +707,7 @@ end
 
 AttackGroupProcessor.clear_invalid_scout_unit_name = function()
     for group_number, group in pairs(global.scout_unit_name) do
-        if group == nil or not group.valid then
+        if not group.entity.valid then
             global.scout_unit_name[group_number] = nil
         end
     end
