@@ -23,6 +23,7 @@ local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_telepo
 local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local BossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local BossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
+local BossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 
 require('prototypes/compatibility/controls')
 
@@ -34,49 +35,65 @@ remote.add_interface("enemyracemanager_debug", DebugRemoteApi)
 
 -- Register Cron Functions
 cron_switch = {
+    -- AttackGroupProcessor
     ['AttackGroupProcessor.add_to_group'] = function(args)
         AttackGroupProcessor.add_to_group_cron(args)
     end,
     ['AttackGroupProcessor.generate_group'] = function(args)
-        -- When args[9] presents, it's treated as retry group
         AttackGroupProcessor.generate_group(unpack(args))
     end,
     ['AttackGroupProcessor.spawn_scout'] = function(args)
         AttackGroupProcessor.spawn_scout(unpack(args))
     end,
+    ['AttackGroupProcessor.clear_invalid_erm_unit_groups'] = function(args)
+        AttackGroupProcessor.clear_invalid_erm_unit_groups()
+    end,
+    ['AttackGroupProcessor.clear_invalid_scout_unit_name'] = function(args)
+        AttackGroupProcessor.clear_invalid_scout_unit_name()
+    end,
+    -- AttackMeterProcessor
     ['AttackMeterProcessor.calculate_points'] = function(args)
         AttackMeterProcessor.calculate_points(unpack(args))
     end,
     ['AttackMeterProcessor.form_group'] = function(args)
         AttackMeterProcessor.form_group(unpack(args))
     end,
+    -- AttackGroupPathingProcessor
     ['AttackGroupPathingProcessor.construct_side_attack_commands'] = function(args)
         AttackGroupPathingProcessor.construct_side_attack_commands(unpack(args))
     end,
     ['AttackGroupPathingProcessor.construct_brutal_force_commands'] = function(args)
         AttackGroupPathingProcessor.construct_brutal_force_commands(unpack(args))
     end,
+    ['AttackGroupPathingProcessor.remove_old_nodes'] = function(args)
+        AttackGroupPathingProcessor.remove_old_nodes()
+    end,
+    --AttackGroupHeatProcessor
     ['AttackGroupHeatProcessor.aggregate_heat'] = function(args)
         AttackGroupHeatProcessor.aggregate_heat(unpack(args))
     end,
     ['AttackGroupHeatProcessor.cooldown_heat'] = function(args)
         AttackGroupHeatProcessor.cooldown_heat(unpack(args))
     end,
+    --AttackGroupBeaconProcessor
     ['AttackGroupBeaconProcessor.start_scout_scan'] = function(args)
         AttackGroupBeaconProcessor.start_scout_scan()
     end,
     ['AttackGroupBeaconProcessor.scout_scan'] = function(args)
         AttackGroupBeaconProcessor.scout_scan(unpack(args))
     end,
+    --ArmyTeleportationProcessor
     ['ArmyTeleportationProcessor.teleport'] = function(args)
         ArmyTeleportationProcessor.teleport(unpack(args))
     end,
     ['ArmyTeleportationProcessor.scan_units'] = function(args)
         ArmyTeleportationProcessor.scan_units()
     end,
+    --BaseBuildProcessor
     ['BaseBuildProcessor.build'] = function(args)
         BaseBuildProcessor.build(unpack(args))
     end,
+    -- BossProcessor
     ['BossProcessor.check_pathing'] = function(args)
         BossProcessor.check_pathing()
     end,
@@ -92,18 +109,26 @@ cron_switch = {
     ['BossProcessor.remove_boss_groups'] = function(args)
         BossProcessor.remove_boss_groups(unpack(args))
     end,
+    --BossAttackProcessor
+    ['BossAttackProcessor.process_attack'] = function(args)
+        BossAttackProcessor.process_attack(unpack(args))
+    end,
+    --BossGroupProcessor
     ['BossGroupProcessor.generate_units'] = function(args)
         BossGroupProcessor.generate_units(unpack(args))
     end,
     ['BossGroupProcessor.process_attack_groups'] = function(args)
         BossGroupProcessor.process_attack_groups()
     end,
-    ['BossAttackProcessor.process_attack'] = function(args)
-        BossAttackProcessor.process_attack(unpack(args))
+    -- BossRewardProcessor
+    ['BossRewardProcessor.clean_up'] = function(args)
+        BossRewardProcessor.clean_up()
     end,
+    --ForceHelper
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ForceHelper.refresh_all_enemy_forces()
     end,
+    --LevelProcessor
     ['LevelProcessor.calculate_multiple_levels'] = function(args)
         LevelProcessor.calculate_multiple_levels()
     end,

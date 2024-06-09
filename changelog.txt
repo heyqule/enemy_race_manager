@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.1
+Date: 2024-06-09
+
+  Changes:
+    - Scout units only spawn for ERM custom attack groups and autonomous groups.
+
+  Bugfixes:
+    - Fixed new game crash under certain load order with 3rd party mods.
+    - Fixed Rampant compatibility issue, which scout unit spawns unexpectedly when it created unit group for its internal process.
+
+  Optimization:
+    - Changed all garbage collection calls to handle in cron jobs.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.0
 Date: 2024-06-07
 

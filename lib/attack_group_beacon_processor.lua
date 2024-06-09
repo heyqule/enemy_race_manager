@@ -481,6 +481,7 @@ AttackGroupBeaconProcessor.add_new_force = function(force)
             end
 
             if global[CONTROL_DATA] then
+                global[CONTROL_DATA][surface.index] = global[CONTROL_DATA][surface.index] or {}
                 global[CONTROL_DATA][surface.index][force.name] = global[CONTROL_DATA][surface.index][force.name] or {}
             end
         end
@@ -712,11 +713,11 @@ AttackGroupBeaconProcessor.init_globals = function()
     end
     global[ATTACK_ENTITIES_SPAWN_BEACON] = global[ATTACK_ENTITIES_SPAWN_BEACON] or {}
     global.attack_group_attackable_entity_names = global.attack_group_attackable_entity_names or {}
+    global[CONTROL_DATA] = global[CONTROL_DATA] or {}
 end
 
 --- This is run in ERM post processor.
 AttackGroupBeaconProcessor.init_control_globals = function()
-    global[CONTROL_DATA] = global[CONTROL_DATA] or {}
     for _, surface in pairs(game.surfaces) do
         if ForceHelper.can_have_enemy_on(surface) then
             global[CONTROL_DATA][surface.index] = global[CONTROL_DATA][surface.index] or {}
@@ -1095,7 +1096,7 @@ AttackGroupBeaconProcessor.reset_globals = function()
         global[beacon] = {}
     end
 
-    global[CONTROL_DATA] = nil
+    global[CONTROL_DATA] = {}
     AttackGroupBeaconProcessor.init_control_globals()
 end
 
