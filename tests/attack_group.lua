@@ -321,7 +321,6 @@ describe("Attack Group", function()
 
         local has_scout = false
         for _, unit in pairs(group.members) do
-            print(unit.name)
             if string.find(unit.name, SCOUT_NAME_PATTERN) ~= nil then
                 has_scout = true
                 break;

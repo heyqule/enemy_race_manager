@@ -69,10 +69,12 @@ local onUnitGroupCreated = function(event)
             scout_unit_name = 1
         end
 
-        global.scout_unit_name[group.group_number] = {
-            entity = group,
-            scout_type = scout_unit_name
-        }
+        if scout_unit_name then
+            global.scout_unit_name[group.group_number] = {
+                entity = group,
+                scout_type = scout_unit_name
+            }
+        end
     end
 end
 

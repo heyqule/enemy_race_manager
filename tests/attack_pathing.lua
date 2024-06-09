@@ -582,6 +582,20 @@ describe("Attack Pathing", function()
         end)
 
         after_ticks(7200, function()
+            local enemies = surface.find_entities_filtered {
+                force = 'enemy',
+                type = 'unit',
+                position = { 0, 0 },
+                radius = 64,
+            }
+            local air_scout = false
+            for _, unit in pairs(enemies) do
+                if string.find(unit.name, AttackGroupBeaconProcessor.AERIAL_SCOUT) then
+                    air_scout = true
+                    break;
+                end
+            end
+            assert.equal(air_scout, true, 'Has air scout')
             assert(entity_is_damage(rocket_launcher), 'Enemy can attack target')
             done()
         end)
@@ -614,6 +628,20 @@ describe("Attack Pathing", function()
         end)
 
         after_ticks(7500, function()
+            local enemies = surface.find_entities_filtered {
+                force = 'enemy',
+                type = 'unit',
+                position = { 0, 0 },
+                radius = 64,
+            }
+            local land_scout = false
+            for _, unit in pairs(enemies) do
+                if string.find(unit.name, AttackGroupBeaconProcessor.LAND_SCOUT) then
+                    land_scout = true
+                    break;
+                end
+            end
+            assert.equal(land_scout, true, 'Has land scout')
             assert(entity_is_damage(rocket_launcher), 'Able to attack target')
             done()
         end)
