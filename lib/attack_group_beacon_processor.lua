@@ -1096,7 +1096,7 @@ AttackGroupBeaconProcessor.reset_globals = function()
         global[beacon] = {}
     end
 
-    global[CONTROL_DATA] = nil
+    global[CONTROL_DATA] = {}
     AttackGroupBeaconProcessor.init_control_globals()
 end
 

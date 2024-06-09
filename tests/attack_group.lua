@@ -26,12 +26,28 @@ local ultralisk = 'erm_zerg/ultralisk/20'
 local force_name = 'enemy_erm_zerg'
 local race_name = 'erm_zerg'
 local PLAYER = 'player'
+local SCOUT_NAME_PATTERN = '_scout/'
 
 local function spawn_cc(surface)
     local position = {x=0,y=320}
     surface.request_to_generate_chunks({ position.x/32, position.y/32}, 2)
     surface.force_generate_chunk_requests()
     return surface.create_entity({name=command_center,force=force_name,position=position})
+end
+
+local function spawn_regular_unit_group(surface, position, is_auto)
+    local group = surface.create_unit_group {position = position, force = 'enemy'}
+    for i = 0, 50, 1 do
+        local entity = surface.create_entity({
+            name = 'erm_vanilla/small-biter/1',
+            position = position
+        })
+        group.add_member(entity)
+    end
+    if is_auto then
+        group.set_autonomous()
+    end
+    return group
 end
 
 describe("Attack Group", function()
@@ -292,5 +308,56 @@ describe("Attack Group", function()
             assert.equal(global.group_tracker.erm_zerg, nil, 'Remove record from group tracker')
             done()
         end)
+    end)
+
+    it("Autonomous Group should have an scout", function()
+        local surface = game.surfaces[1]
+        local entity = spawn_cc(surface)
+        AttackGroupBeaconProcessor.init_index()
+
+        local group = spawn_regular_unit_group(surface, entity.position, true)
+        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        group.start_moving()
+
+        local has_scout = false
+        for _, unit in pairs(group.members) do
+            print(unit.name)
+            if string.find(unit.name, SCOUT_NAME_PATTERN) ~= nil then
+                has_scout = true
+                break;
+            end
+        end
+        assert.equal(has_scout, true, 'Scout is in the team')
+        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
+    end)
+
+    it("Non-ERM Manual group should NOT have a scout", function()
+        local surface = game.surfaces[1]
+        local entity = spawn_cc(surface)
+        AttackGroupBeaconProcessor.init_index()
+
+        local group = spawn_regular_unit_group(surface, entity.position, false)
+        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        group.start_moving()
+
+        local has_scout = false
+        for _, unit in pairs(group.members) do
+            if string.find(unit.name, SCOUT_NAME_PATTERN) ~= nil then
+                has_scout = true
+                break;
+            end
+        end
+        assert.equal(has_scout, false, 'Scout is not in the team')
+        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
+    end)
+
+    it("Empty unit group should not include in ERM group tracker", function()
+        local surface = game.surfaces[1]
+        local entity = spawn_cc(surface)
+        AttackGroupBeaconProcessor.init_index()
+        local group = surface.create_unit_group {position = entity.position, force = 'enemy'}
+        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        group.start_moving()
+        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
     end)
 end)

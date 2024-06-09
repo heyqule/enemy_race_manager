@@ -55,30 +55,21 @@ end
 local onUnitGroupCreated = function(event)
     local group = event.group
     local force = group.force
+    local racename = ForceHelper.extract_race_name_from(force.name)
+    local is_erm_group = global.group_tracker and global.group_tracker[racename]
     if ForceHelper.is_enemy_force(force) then
-        local surface = group.surface
-        local racename = ForceHelper.extract_race_name_from(force.name)
         local scout_unit_name
-        if global.group_tracker and global.group_tracker[racename] then
+        if is_erm_group then
             if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
                 scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.AERIAL_SCOUT)
             else
                 scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
             end
-        elseif RaceSettingsHelper.can_spawn(75) then
+        elseif (RaceSettingsHelper.can_spawn(75) or TEST_MODE) then
             scout_unit_name = AttackGroupBeaconProcessor.get_scout_name(racename,AttackGroupBeaconProcessor.LAND_SCOUT)
         end
 
-        if scout_unit_name then
-            local scout = surface.create_entity({
-                position =  group.position,
-                surface = surface,
-                force = force,
-                name = scout_unit_name,
-                count = 1
-            })
-            group.add_member(scout);
-        end
+        global.scout_unit_name[group.group_number] = scout_unit_name
     end
 end
 
@@ -90,11 +81,15 @@ local checking_state = {
 
 local onUnitFinishGathering = function(event)
     local group = event.group
-    if group.valid and
-       group.is_script_driven and
-       group.command == nil and
-       checking_state[group.state] and
-       not AttackGroupProcessor.is_erm_unit_group(group.group_number)
+    if not group.valid then
+        return
+    end
+    local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
+    if group.is_script_driven and
+        group.command == nil and
+        checking_state[group.state] and
+        not is_erm_group and
+        #group.members > 10
     then
         local race_name = ForceHelper.extract_race_name_from(group.force.name)
         local target = AttackGroupHeatProcessor.pick_target(race_name)
@@ -109,6 +104,23 @@ local onUnitFinishGathering = function(event)
             is_aerial = false
         }
     end
+
+
+    if (group.is_script_driven == false or is_erm_group) and global.scout_unit_name[group.group_number] then
+        local surface = group.surface
+        local scout = surface.create_entity({
+            position =  group.position,
+            surface = surface,
+            force = group.force,
+            name = global.scout_unit_name[group.group_number],
+            count = 1
+        })
+        group.add_member(scout);
+    end
+
+    if global.scout_unit_name[group.group_number] then
+        global.scout_unit_name[group.group_number] = nil
+    end
 end
 
 local onAiCompleted = function(event)
@@ -118,7 +130,7 @@ local onAiCompleted = function(event)
     -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
 
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
-    --    print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+        --    print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
         local erm_unit_group = global.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
@@ -130,7 +142,7 @@ local onAiCompleted = function(event)
         end
 
         if event.result == defines.behavior_result.failure or
-           erm_unit_group.nearby_retry >= 3
+                erm_unit_group.nearby_retry >= 3
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
                 AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_force, true)
@@ -139,9 +151,9 @@ local onAiCompleted = function(event)
             end
             erm_unit_group.nearby_retry = 0
         elseif
-           group.command == nil or
-           group.state == defines.group_state.finished or
-           event.result == defines.behavior_result.success
+        group.command == nil or
+                group.state == defines.group_state.finished or
+                event.result == defines.behavior_result.success
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
                 AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_force)

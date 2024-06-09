@@ -318,6 +318,8 @@ function AttackGroupProcessor.init_globals()
     global.scout_tracker = global.scout_tracker or {}
     --- Toggle to run periodic scan when a scout spawns.
     global.scout_scanner = false
+    global.scout_unit_name = global.scout_unit_name or {}
+    AttackGroupProcessor.clear_invalid_scout_unit_name()
 end
 
 function AttackGroupProcessor.add_to_group_cron(arg)
@@ -702,5 +704,14 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
         end
     end
 end
+
+AttackGroupProcessor.clear_invalid_scout_unit_name = function()
+    for group_number, group in pairs(global.scout_unit_name) do
+        if group == nil or not group.valid then
+            global.scout_unit_name[group_number] = nil
+        end
+    end
+end
+
 
 return AttackGroupProcessor
