@@ -61,9 +61,8 @@ ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/M
 
 **Tips on defense:**
 
-- A LOT OF construction robots and repair kits. Automate repair network ASAP. Mix all turrets. Uranium bullets are OP.
-- Build multiple layers of turrets in early game. Repairing can be tedious without automated bot repairs.
-- You may add "Robot World Continued" or "Nanobots: Early Bots" to automate repairs in early game.
+- A LOT OF construction robots and repair kits. Automate repair network ASAP. Mix all turrets. Uranium bullets and flamethrowers are OP.
+- Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the damage turret with new one and build wall after it destroyed.
 
 Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/New-Race-DEV-README.md) and join my discord for additional help.
 

@@ -677,21 +677,19 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
         local group = content.group
         if group == nil or group.valid == false then
             erm_groups[id] = nil
-        elseif group.valid == true then
+        elseif group.valid then
             local member_size = #group.members
             local created_tick = content.created or 0
+            local skip = false
 
-            if member_size < MIN_GROUP_SIZE then
+            if member_size < MIN_GROUP_SIZE or game.tick >= created_tick + ERM_GROUP_TIME_TO_LIVE then
                 AttackGroupProcessor.destroy_members(group)
                 erm_groups[id] = nil
+                skip = true
             end
 
-            if game.tick >= created_tick + ERM_GROUP_TIME_TO_LIVE then
-                AttackGroupProcessor.destroy_members(group)
-                erm_groups[id] = nil
-            end
-
-            if game.tick >= created_tick + IDLE_TIME_OUT and
+            if not skip and
+               game.tick >= created_tick + IDLE_TIME_OUT and
                group.state == defines.group_state.gathering
             then
                 if group.command then
