@@ -3,7 +3,7 @@ Version: 1.21.2
 Date: 2024-06-11
 
   Bugfixes:
-    - Fixed a crash when clear_invalid_erm_unit_groups tried to execute group move on an deleted ERM group.
+    - Fixed a crash when clear_invalid_erm_unit_groups tried to execute group move on a deleted ERM group.
 
 
 ---------------------------------------------------------------------------------------------------
