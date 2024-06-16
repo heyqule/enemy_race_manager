@@ -3,9 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 11/25/2022 11:37 PM
 ---
-local util = require("util")
-local color = util.color
-require('__core__/prototypes/style')
 
 data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
     type = "frame_style",

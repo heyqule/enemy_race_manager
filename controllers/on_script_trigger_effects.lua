@@ -122,8 +122,9 @@ local script_functions = {
             local player = event.source_entity.last_user
             local ui = player.gui.relative[RallyPointUI.root_name]
             if ui then
-                ArmyDeployer.add_rallypoint(rallypoint, player, ui.tags.unit_number)
+                ArmyDeployer.add_rallypoint(rallypoint, ui.tags.unit_number)
                 rallypoint.destroy()
+                player.game_view_settings.show_entity_info = true
                 RallyPointUI.show(player, ui.tags.unit_number)
             end
         end
