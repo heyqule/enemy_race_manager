@@ -285,11 +285,9 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
                 unit.teleport(position)
                 ErmArmyFunctions.assign_wander_command(unit)
             else
-                local unit_health = unit.health
-                local spawned_entity = ErmArmyFunctions.spawn_unit(exit_entity, unit.name, position)
+                local spawned_entity = unit.clone({position=position,surface=exit_entity.surface})
                 if spawned_entity and spawned_entity.valid then
                     ErmArmyPopulationProcessor.remove_unit_count(spawned_entity)
-                    spawned_entity.health = unit_health
                     --- @todo render Recall effect on entrance position
                     unit.destroy()
                     ErmArmyFunctions.assign_wander_command(spawned_entity)

@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.0
+Date: 2024-??-??
+
+  Features:
+    - Added rally point support to unit deployers
+
+  Changes:
+    - Added surface and type filter to Deployer UI
+    - Added surface filter to Teleport UI
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.12
 Date: 2024-07-10
 

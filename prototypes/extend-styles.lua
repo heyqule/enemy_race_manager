@@ -3,6 +3,9 @@
 --- Created by heyqule.
 --- DateTime: 11/25/2022 11:37 PM
 ---
+local util = require("util")
+local color = util.color
+require('__core__/prototypes/style')
 
 data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
     type = "frame_style",
@@ -20,4 +23,34 @@ data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
         type = "vertical_flow_style",
         vertical_spacing = 0
     }
+}
+
+
+
+data.raw['gui-style']['default']['green_button_no_confirm'] =
+{
+    type = "button_style",
+    parent = "button",
+    default_graphical_set =
+    {
+        base = {position = {68, 17}, corner_size = 8},
+        shadow = default_dirt
+    },
+    hovered_graphical_set =
+    {
+        base = {position = {102, 17}, corner_size = 8},
+        shadow = default_dirt,
+        glow = default_glow(green_button_glow_color, 0.5)
+    },
+    clicked_graphical_set =
+    {
+        base = {position = {119, 17}, corner_size = 8},
+        shadow = default_dirt
+    },
+    disabled_graphical_set =
+    {
+        base = {position = {85, 17}, corner_size = 8},
+        shadow = default_dirt
+    },
+    left_click_sound = {{ filename = "__core__/sound/gui-green-confirm.ogg", volume = 1 }},
 }

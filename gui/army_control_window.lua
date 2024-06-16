@@ -6,6 +6,7 @@
 local mod_gui = require('mod-gui')
 local String = require('__stdlib__/stdlib/utils/string')
 
+local SharedGuiFunctions = require('__enemyracemanager__/gui/shared')
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
@@ -105,22 +106,6 @@ local get_selected_index = function(commandcenters, player, type)
     return nil
 end
 
-local add_mini_map = function(pane, name, player, entity, zoom, style)
-    zoom = zoom or 0.75
-    local map = pane.add {
-        type = 'minimap',
-        name = name,
-        force = entity.force.name,
-        chart_player_index = player.index,
-        surface_index = entity.surface.index,
-        position = entity.position,
-        zoom = zoom
-    }
-    for key, value in pairs(style) do
-        map.style[key] = value
-    end
-end
-
 local get_cc_name = function(entity)
     local rc = 'N/A'
     if entity and entity.valid then
@@ -201,8 +186,8 @@ local update_deployer = function(player)
         cell.style.margin = 5
 
         if entity and entity.valid then
-            add_mini_map(cell, entity.name .. '/' .. entity.unit_number,
-                    player, entity, 1, { width = 175, height = 135 })
+            SharedGuiFunctions.add_mini_map(cell, entity.name .. '/' .. entity.unit_number,
+                    player, entity, nil, 1, { width = 175, height = 135 })
             local switch = cell.add {
                 type = "switch",
                 name = "army_deployer/build_only/" .. entity.unit_number,
@@ -298,11 +283,12 @@ local update_cc_screen = function(player)
 
     local selected_from_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.from)
     if selected_from_entity and selected_from_entity.valid then
-        add_mini_map(
+        SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,
                 "army_cc/from_map",
                 player,
                 selected_from_entity,
+                nil,
                 nil,
                 { width = 150, height = 150 }
         )
@@ -318,11 +304,12 @@ local update_cc_screen = function(player)
 
     local selected_to_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.to)
     if selected_to_entity and selected_to_entity.valid then
-        add_mini_map(
+        SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,
                 "army_cc/to_map",
                 player,
                 selected_to_entity,
+                nil,
                 nil,
                 { width = 150, height = 150, left_margin = 85 }
         )
@@ -413,11 +400,12 @@ local update_cc_screen = function(player)
     }
 
     if entrance and entrance.valid then
-        add_mini_map(
+        SharedGuiFunctions.add_mini_map(
                 center_pane_row_link_map,
                 "army_cc/from_map",
                 player,
                 entrance,
+                nil,
                 nil,
                 { width = 150, height = 150 }
         )
@@ -432,11 +420,12 @@ local update_cc_screen = function(player)
     end
 
     if exit and exit.valid then
-        add_mini_map(
+        SharedGuiFunctions.add_mini_map(
                 center_pane_row_link_map,
                 "army_cc/to_map",
                 player,
                 exit,
+                nil,
                 nil,
                 { width = 150, height = 150, left_margin = 85 }
         )
@@ -747,10 +736,10 @@ function Army_MainWindow.deployer_turn_all_off(player)
     Army_MainWindow.update_deployers()
 end
 
-function Army_MainWindow.deployer_turn_on(player, unit_number)
+function Army_MainWindow.deployer_turn_on(player, deployer_unit_number)
     local force = player.force
     if global.army_built_deployers[force.index] then
-        local deployer = global.army_built_deployers[force.index][tonumber(unit_number)]
+        local deployer = global.army_built_deployers[force.index][tonumber(deployer_unit_number)]
         if deployer and deployer.entity.valid then
             ArmyDeploymentProcessor.add_to_active(deployer.entity)
         end
@@ -758,17 +747,17 @@ function Army_MainWindow.deployer_turn_on(player, unit_number)
     Army_MainWindow.update_deployers()
 end
 
-function Army_MainWindow.deployer_turn_off(player, unit_number)
+function Army_MainWindow.deployer_turn_off(player, deployer_unit_number)
     local force = player.force
-    ArmyDeploymentProcessor.remove_from_active(force.index, tonumber(unit_number))
+    ArmyDeploymentProcessor.remove_from_active(force.index, tonumber(deployer_unit_number))
     Army_MainWindow.update_deployers()
 end
 
-function Army_MainWindow.scroll_to_deployer(player, unit_number)
+function Army_MainWindow.scroll_to_deployer(player, deployer_unit_number)
     local main_tab = get_main_tab(player)
     if main_tab then
         local scroll_pan = main_tab[Army_MainWindow.tab_names[2]]
-        local target_cell = main_tab[Army_MainWindow.tab_names[2]]['deployer_table']['deployer_cell_' .. unit_number]
+        local target_cell = main_tab[Army_MainWindow.tab_names[2]]['deployer_table']['deployer_cell_' .. deployer_unit_number]
         target_cell.style = 'erm_deep_frame_in_highlight_frame'
         scroll_pan.scroll_to_element(target_cell)
     end

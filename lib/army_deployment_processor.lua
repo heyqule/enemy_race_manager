@@ -49,8 +49,8 @@ local add_statistic = function(entity, item_name, count)
     end
 end
 
-local spawn_unit = function(data_unit)
-    local entity = data_unit.entity
+local spawn_unit = function(deployer_data)
+    local entity = deployer_data.entity
     local surface = entity.surface
     local registered_units = global.army_registered_units
     if entity and entity.valid and
@@ -66,7 +66,11 @@ local spawn_unit = function(data_unit)
                 then
                     local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
                     local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
-                    ErmArmyFunctions.assign_wander_command(spawned_entity)
+                    if deployer_data.rally_point then
+                        ErmArmyFunctions.assign_goto_command(spawned_entity, deployer_data.rally_point)
+                    else
+                        ErmArmyFunctions.assign_wander_command(spawned_entity)
+                    end
                     if spawned_entity then
                         inventory.remove({ name = unit_name, count = 1 })
                         add_statistic(entity, unit_name, count)
@@ -93,6 +97,43 @@ local init_active_data = function(force)
             total = 0
         }
     end
+end
+
+local remove_rallypoint_drawing = function(data)
+    if data.rally_draw_link and rendering.is_valid(data.rally_draw_link) then
+        rendering.destroy(data.rally_draw_link)
+        data.rally_draw_link = nil
+    end
+    if data.rally_draw_flag and rendering.is_valid(data.rally_draw_flag) then
+        rendering.destroy(data.rally_draw_flag)
+        data.rally_draw_flag = nil
+    end
+end
+
+local draw_link = function(rallypoint, deployer)
+    return rendering.draw_line({
+        color = {r=0,g=1,b=0,a=0.5},
+        from = deployer.position,
+        to = rallypoint.position,
+        width = 2,
+        gap_length = 3,
+        dash_length = 3,
+        surface = deployer.surface,
+        forces = {deployer.force},
+        only_in_alt_mode = true,
+        draw_on_ground = true
+    })
+end
+
+local draw_flag = function(rallypoint)
+    return rendering.draw_sprite({
+        sprite = 'utility/spawn_flag',
+        target = rallypoint.position,
+        surface = rallypoint.surface,
+        forces = {rallypoint.force},
+        only_in_alt_mode = true,
+        draw_on_ground = true
+    })
 end
 
 function ArmyDeploymentProcessor.init_globals()
@@ -134,8 +175,12 @@ function ArmyDeploymentProcessor.add_entity(entity)
     global.army_built_deployers[force.index][unit_number] = {
         entity = entity,
         build_only = false,
-        -- @Todo support rally points
-        rally_point = {}
+        -- hold position
+        rally_point = nil,
+        -- holds draw_line ID, remove when unset
+        rally_draw_link = nil,
+        -- holds draw_sprite ID, remove when unset
+        rally_draw_flag = nil
     }
 
     if start_with_auto_deploy then
@@ -143,6 +188,43 @@ function ArmyDeploymentProcessor.add_entity(entity)
     end
 
     ArmyDeploymentProcessor.start_event()
+end
+
+
+function ArmyDeploymentProcessor.add_rallypoint(rallypoint, player, deployer_number)
+    local force_id = player.force.index
+    local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
+    if deployer_data == nil or deployer_data.entity.valid == false then
+        ArmyDeploymentProcessor.remove_entity(force_id, deployer_number)
+        return nil
+    end
+
+    if deployer_data.rally_point then
+        remove_rallypoint_drawing(deployer_data)
+    end
+    local link_id = draw_link(rallypoint, deployer_data.entity, player)
+    local flag_id = draw_flag(rallypoint)
+    player.game_view_settings.show_entity_info = true
+    deployer_data.rally_point = rallypoint.position
+    deployer_data.rally_draw_link = link_id
+    deployer_data.rally_draw_flag = flag_id
+end
+
+function ArmyDeploymentProcessor.remove_rallypoint(player, deployer_number)
+    local force_id = player.force.index
+    local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
+    remove_rallypoint_drawing(deployer_data)
+    deployer_data.rally_point = nil
+end
+
+
+
+function ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
+    if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        return global.army_built_deployers[force_index][unit_number]
+    end
+
+    return nil
 end
 
 function ArmyDeploymentProcessor.add_to_active(entity)
@@ -165,6 +247,7 @@ end
 
 function ArmyDeploymentProcessor.remove_entity(force_index, unit_number)
     if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        remove_rallypoint_drawing(global.army_built_deployers[force_index][unit_number])
         global.army_built_deployers[force_index][unit_number] = nil
         ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
     end

@@ -29,7 +29,7 @@ local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_popula
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
-local ErmGui = require('__enemyracemanager__/gui/main')
+local GuiContainer = require('__enemyracemanager__/gui/main')
 
 local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
 
@@ -200,7 +200,7 @@ local init_globals = function()
     ErmArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
-    ErmGui.init_globals()
+    GuiContainer.init_globals()
 
 
     --- Wipe this cache due to cache pollution from previous version.
@@ -231,7 +231,7 @@ Event.on_configuration_changed(function(event)
     addRaceSettings()
     prepare_world()
     for _, player in pairs(game.connected_players) do
-        ErmGui.main_window.update_overhead_button(player.index)
+        GuiContainer.main_window.update_overhead_button(player.index)
     end
 end)
 

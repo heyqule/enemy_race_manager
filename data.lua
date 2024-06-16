@@ -12,6 +12,7 @@ require "prototypes.base-units.logistic"
 
 require "prototypes.base-spawner.roboport"
 
+
 if settings.startup['enemyracemanager-enable-bitters'].value then
     -- This set of data is used for set up default autoplace calculation.
     data.erm_registered_race = data.erm_registered_race or {}
@@ -37,3 +38,4 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
 end
 
 require "prototypes.extend-mapping-beacons"
+require "prototypes.extend-rallypoint"
