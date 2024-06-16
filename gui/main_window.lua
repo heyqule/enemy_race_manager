@@ -14,7 +14,7 @@ local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 ---- Main Window
-local ERM_MainWindow = {
+local MainWindow = {
     require_update_all = false,
     root_name = 'erm_races_manager',
     window_width = 680,
@@ -24,32 +24,32 @@ local ERM_MainWindow = {
 }
 
 --- Main Windows functions
-function ERM_MainWindow.show(player)
+function MainWindow.show(player)
     local gui = player.gui.screen
-    if gui[ERM_MainWindow.root_name] then
+    if gui[MainWindow.root_name] then
         return
     end
     local main_window = gui.add {
         type = "frame",
-        name = ERM_MainWindow.root_name,
+        name = MainWindow.root_name,
         direction = "vertical",
     }
     main_window.force_auto_center()
     player.opened = main_window
 
     local admin = player.admin
-    main_window.style.maximal_width = ERM_MainWindow.maximal_width
-    main_window.style.minimal_width = ERM_MainWindow.window_width
-    main_window.style.maximal_height = ERM_MainWindow.window_height * 2
-    main_window.style.minimal_height = ERM_MainWindow.maximal_height
+    main_window.style.maximal_width = MainWindow.maximal_width
+    main_window.style.minimal_width = MainWindow.window_width
+    main_window.style.maximal_height = MainWindow.window_height * 2
+    main_window.style.minimal_height = MainWindow.maximal_height
     -- Race Manager Title
     local title_flow = main_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
-    title_flow.style.minimal_width = ERM_MainWindow.window_width
+    title_flow.style.minimal_width = MainWindow.window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = ERM_MainWindow.window_width - 24 - 160
+    pusher.style.width = MainWindow.window_width - 24 - 160
     pusher.style.height = 24
     pusher.drag_target = main_window
 
@@ -65,7 +65,7 @@ function ERM_MainWindow.show(player)
 
     local scroll = main_window.add { type = "scroll-pane", style = "scroll_pane_in_shallow_frame" }
     scroll.style.margin = 5
-    main_window.style.minimal_height = ERM_MainWindow.window_height / 1.25
+    main_window.style.minimal_height = MainWindow.window_height / 1.25
 
     scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet', player.surface.name }, style = 'caption_label' }
     if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.name] then
@@ -112,72 +112,72 @@ function ERM_MainWindow.show(player)
     end
 end
 
-function ERM_MainWindow.hide(player)
-    if player.gui.screen[ERM_MainWindow.root_name] then
-        player.gui.screen[ERM_MainWindow.root_name].destroy()
+function MainWindow.hide(player)
+    if player.gui.screen[MainWindow.root_name] then
+        player.gui.screen[MainWindow.root_name].destroy()
     end
 end
 
-function ERM_MainWindow.update(player)
-    if ERM_MainWindow.is_showing(player) then
-        ERM_MainWindow.hide(player)
-        ERM_MainWindow.show(player)
+function MainWindow.update(player)
+    if MainWindow.is_showing(player) then
+        MainWindow.hide(player)
+        MainWindow.show(player)
     end
 end
 
-function ERM_MainWindow.update_all()
+function MainWindow.update_all()
     for k, player in pairs(game.players) do
         if player then
-            ERM_MainWindow.update(player)
+            MainWindow.update(player)
         end
     end
 end
 
-function ERM_MainWindow.is_hidden(player)
-    return player.gui.screen[ERM_MainWindow.root_name] == nil
+function MainWindow.is_hidden(player)
+    return player.gui.screen[MainWindow.root_name] == nil
 end
 
-function ERM_MainWindow.is_showing(player)
-    return not ERM_MainWindow.is_hidden(player)
+function MainWindow.is_showing(player)
+    return not MainWindow.is_hidden(player)
 end
 
-function ERM_MainWindow.toggle_main_window(owner)
+function MainWindow.toggle_main_window(owner)
     if owner then
         local button_flow = mod_gui.get_button_flow(owner)
 
-        if ERM_MainWindow.is_hidden(owner) then
+        if MainWindow.is_hidden(owner) then
             button_flow.erm_toggle.tooltip = { 'gui.hide-enemy-stats' }
-            ERM_MainWindow.show(owner)
+            MainWindow.show(owner)
         else
             button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
-            ERM_MainWindow.hide(owner)
+            MainWindow.hide(owner)
         end
     end
 end
 
-function ERM_MainWindow.toggle_close(owner)
+function MainWindow.toggle_close(owner)
     if owner then
         local button_flow = mod_gui.get_button_flow(owner)
         button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
-        ERM_MainWindow.hide(owner)
+        MainWindow.hide(owner)
     end
 end
 
-function ERM_MainWindow.reset_default(event)
+function MainWindow.reset_default(event)
     local profiler = game.create_profiler()
     for _, surface in pairs(game.surfaces) do
         ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
-        ERM_MainWindow.update_all()
+        MainWindow.update_all()
     end
     profiler.stop()
     game.print({ '', 'Reset enemies to default: ', profiler })
 end
 
-function ERM_MainWindow.kill_idle_units(event)
+function MainWindow.kill_idle_units(event)
     SurfaceProcessor.wander_unit_clean_up()
 end
 
-function ERM_MainWindow.update_overhead_button(player_index)
+function MainWindow.update_overhead_button(player_index)
     local owner = game.players[player_index]
     local button_flow = mod_gui.get_button_flow(owner)
 
@@ -186,4 +186,4 @@ function ERM_MainWindow.update_overhead_button(player_index)
     end
 end
 
-return ERM_MainWindow
+return MainWindow

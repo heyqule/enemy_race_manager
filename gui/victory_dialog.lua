@@ -7,27 +7,27 @@
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 
 --- Boss victory upgrade dialog
-local ERM_BossVictoryDialog = {
+local BossVictoryDialog = {
     root_name = 'erm_races_manager_boss_victory_dialog',
     window_width = 340
 }
 
-function ERM_BossVictoryDialog.show(player, race_setting)
+function BossVictoryDialog.show(player, race_setting)
     local gui = player.gui.screen
-    if gui[ERM_BossVictoryDialog.root_name] then
+    if gui[BossVictoryDialog.root_name] then
         return
     end
     local dialog = gui.add {
         type = "frame",
-        name = ERM_BossVictoryDialog.root_name,
+        name = BossVictoryDialog.root_name,
         direction = "vertical",
     }
     dialog.force_auto_center()
-    ERM_BossVictoryDialog.parent_window = player.opened
+    BossVictoryDialog.parent_window = player.opened
     player.opened = dialog
 
     local title_flow = dialog.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
-    title_flow.style.minimal_width = ERM_BossVictoryDialog.window_width
+    title_flow.style.minimal_width = BossVictoryDialog.window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.boss_victory_title", race_setting.race }, style = 'caption_label' }
 
@@ -47,17 +47,17 @@ function ERM_BossVictoryDialog.show(player, race_setting)
     bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_confirm", caption = { "gui.victory_dialog_tier_confirm" }, style = "green_button" }
 end
 
-function ERM_BossVictoryDialog.hide(player)
-    if player.gui.screen[ERM_BossVictoryDialog.root_name] then
-        player.gui.screen[ERM_BossVictoryDialog.root_name].destroy()
+function BossVictoryDialog.hide(player)
+    if player.gui.screen[BossVictoryDialog.root_name] then
+        player.gui.screen[BossVictoryDialog.root_name].destroy()
     end
 end
 
-function ERM_BossVictoryDialog.confirm(race_name)
+function BossVictoryDialog.confirm(race_name)
     if global.race_settings[race_name].boss_tier < GlobalConfig.BOSS_MAX_TIERS then
         global.race_settings[race_name].boss_tier = global.race_settings[race_name].boss_tier + 1
         game.print("[color=#ff0000]" .. race_name .. '[/color] is now on boss tier ' .. tostring(global.race_settings[race_name].boss_tier))
     end
 end
 
-return ERM_BossVictoryDialog
+return BossVictoryDialog

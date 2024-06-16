@@ -36,6 +36,16 @@ function ArmyFunctions.assign_wander_command(unit)
     end
 end
 
+function ArmyFunctions.assign_goto_command(unit, position)
+    if unit and unit.valid then
+        unit.set_command {
+            type = defines.command.go_to_location,
+            destination = position,
+            radius = 32
+        }
+    end
+end
+
 function ArmyFunctions.spawn_unit(entity, unit_name, position)
     return entity.surface.create_entity({
         name = unit_name,

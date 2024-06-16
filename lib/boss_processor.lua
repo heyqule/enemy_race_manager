@@ -19,7 +19,7 @@ local ErmBaseBuildProcessor = require('__enemyracemanager__/lib/base_build_proce
 local ErmBossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
 local ErmBossDespawnProcessor = require('__enemyracemanager__/lib/boss_despawn_processor')
 
-local ErmGui = require('__enemyracemanager__/gui/main')
+local GuiContainer = require('__enemyracemanager__/gui/main')
 
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -562,7 +562,7 @@ local display_victory_dialog = function(boss)
     end
 
     if targetPlayer then
-        ErmGui.victory_dialog.show(targetPlayer, global.race_settings[boss.race_name])
+        GuiContainer.victory_dialog.show(targetPlayer, global.race_settings[boss.race_name])
     end
 end
 

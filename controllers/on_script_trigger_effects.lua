@@ -17,6 +17,9 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
+local ArmyDeployer = require('__enemyracemanager__/lib/army_deployment_processor')
+local RallyPointUI = require('__enemyracemanager__/gui/rallypoint_attachment')
+
 -- Player super weapon attacks functions
 local process_attack_point_event = function(event, attack_point)
     local race_name = ErmSurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
@@ -111,6 +114,20 @@ local script_functions = {
             ErmArmyControlUI.update_army_stats()
         end
     end,
+
+    [ARMY_RALLYPOINT_DEPLOY] = function(event)
+        local rallypoint = event.source_entity
+        if rallypoint and rallypoint.valid then
+            rallypoint.destructible = false
+            local player = event.source_entity.last_user
+            local ui = player.gui.relative[RallyPointUI.root_name]
+            if ui then
+                ArmyDeployer.add_rallypoint(rallypoint, player, ui.tags.unit_number)
+                rallypoint.destroy()
+                RallyPointUI.show(player, ui.tags.unit_number)
+            end
+        end
+    end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
     if script_functions[event.effect_id] then

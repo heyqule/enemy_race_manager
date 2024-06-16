@@ -8,12 +8,12 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmGui = require('__enemyracemanager__/gui/main')
+local GuiContainer = require('__enemyracemanager__/gui/main')
 local EventGui = require('__stdlib__/stdlib/event/gui')
 
 --- Enemy Main window events ---
 Event.register(defines.events.on_player_created, function(event)
-    ErmGui.main_window.update_overhead_button(event.player_index)
+    GuiContainer.main_window.update_overhead_button(event.player_index)
 end)
 
 EventGui.on_click('erm_toggle', function(event)
@@ -23,7 +23,7 @@ EventGui.on_click('erm_toggle', function(event)
     end
 
     local owner = game.players[element.player_index]
-    ErmGui.main_window.toggle_main_window(owner)
+    GuiContainer.main_window.toggle_main_window(owner)
 end)
 
 EventGui.on_click('erm_close_button', function(event)
@@ -33,7 +33,7 @@ EventGui.on_click('erm_close_button', function(event)
     end
 
     local owner = game.players[element.player_index]
-    ErmGui.main_window.toggle_close(owner)
+    GuiContainer.main_window.toggle_close(owner)
 end)
 
 EventGui.on_click('.*/more_action', function(event)
@@ -45,16 +45,16 @@ EventGui.on_click('.*/more_action', function(event)
     local owner = game.players[element.player_index]
     if owner then
         local nameToken = String.split(event.element.name, '/')
-        ErmGui.detail_window.show(owner, global.race_settings[nameToken[1]])
+        GuiContainer.detail_window.show(owner, global.race_settings[nameToken[1]])
     end
 end)
 
 EventGui.on_click('erm_clean_idle_biter', function(event)
-    ErmGui.main_window.kill_idle_units(event)
+    GuiContainer.main_window.kill_idle_units(event)
 end)
 
 EventGui.on_click('erm_reset_default_bitter', function(event)
-    ErmGui.main_window.reset_default(event)
+    GuiContainer.main_window.reset_default(event)
 end)
 
 --- Enemy Details window events ---
@@ -66,12 +66,12 @@ EventGui.on_click('erm_detail_close_button', function(event)
 
     local owner = game.players[element.player_index]
     if owner then
-        ErmGui.detail_window.toggle_close(owner)
-        ErmGui.main_window.show(owner)
+        GuiContainer.detail_window.toggle_close(owner)
+        GuiContainer.main_window.show(owner)
     end
 end)
 
-EventGui.on_click(".*/" .. ErmGui.detail_window.confirm_name, function(event)
+EventGui.on_click(".*/" .. GuiContainer.detail_window.confirm_name, function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -80,9 +80,9 @@ EventGui.on_click(".*/" .. ErmGui.detail_window.confirm_name, function(event)
     local owner = game.players[element.player_index]
     if owner then
         local nameToken = String.split(element.name, '/')
-        ErmGui.detail_window.confirm(owner, nameToken, element)
-        ErmGui.main_window.show(owner)
-        ErmGui.main_window.update_all()
+        GuiContainer.detail_window.confirm(owner, nameToken, element)
+        GuiContainer.main_window.show(owner)
+        GuiContainer.main_window.update_all()
     end
 end)
 
@@ -95,8 +95,8 @@ EventGui.on_click('.*/replace_enemy', function(event)
     local nameToken = String.split(element.name, '/')
     if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
         local owner = game.players[element.player_index]
-        ErmGui.detail_window.replace_enemy(owner, nameToken)
-        ErmGui.main_window.update_all()
+        GuiContainer.detail_window.replace_enemy(owner, nameToken)
+        GuiContainer.main_window.update_all()
     end
 end)
 
@@ -108,7 +108,7 @@ EventGui.on_click('.*/boss_details', function(event)
 
     local nameToken = String.split(element.name, '/')
     local owner = game.players[element.player_index]
-    ErmGui.boss_detail_window.show(owner, nameToken[1], global.boss_logs[nameToken[1]])
+    GuiContainer.boss_detail_window.show(owner, nameToken[1], global.boss_logs[nameToken[1]])
 end)
 
 --- Victory Dialog events ---
@@ -119,7 +119,7 @@ EventGui.on_click('.*/victory_dialog_tier_cancel', function(event)
     end
 
     local owner = game.players[element.player_index]
-    ErmGui.victory_dialog.hide(owner)
+    GuiContainer.victory_dialog.hide(owner)
 end)
 
 EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
@@ -130,8 +130,8 @@ EventGui.on_click('.*/victory_dialog_tier_confirm', function(event)
 
     local nameToken = String.split(element.name, '/')
     local owner = game.players[element.player_index]
-    ErmGui.victory_dialog.confirm(nameToken[1])
-    ErmGui.victory_dialog.hide(owner)
+    GuiContainer.victory_dialog.confirm(nameToken[1])
+    GuiContainer.victory_dialog.hide(owner)
 end)
 
 --- Boss Detail events ---
@@ -143,8 +143,8 @@ EventGui.on_click('erm_boss_detail_close_button', function(event)
 
     local owner = game.players[element.player_index]
     if owner then
-        ErmGui.boss_detail_window.toggle_close(owner)
-        ErmGui.main_window.show(owner)
+        GuiContainer.boss_detail_window.toggle_close(owner)
+        GuiContainer.main_window.show(owner)
     end
 end)
 
@@ -155,7 +155,7 @@ EventGui.on_selection_state_changed('.*/erm_boss_detail_list_box', function(even
     end
 
     local owner = game.players[element.player_index]
-    ErmGui.boss_detail_window.update_data_box(element, owner)
+    GuiContainer.boss_detail_window.update_data_box(element, owner)
 end)
 
 --- Army Control Window events ---
@@ -166,29 +166,29 @@ EventGui.on_click('erm_army_control_toggle', function(event)
     end
 
     local owner = game.players[element.player_index]
-    ErmGui.army_control_window.toggle_main_window(owner)
+    GuiContainer.army_control_window.toggle_main_window(owner)
 end)
 
 EventGui.on_click('erm_army_close_button', function(event)
     local owner = game.players[event.element.player_index]
     if owner then
-        ErmGui.army_control_window.toggle_close(owner)
+        GuiContainer.army_control_window.toggle_close(owner)
     end
 end)
 
 --- on_gui_closed events
 local gui_close_switch = {
-    [ErmGui.main_window.root_name] = function(owner)
-        ErmGui.main_window.hide(owner)
+    [GuiContainer.main_window.root_name] = function(owner)
+        GuiContainer.main_window.hide(owner)
     end,
-    [ErmGui.detail_window.root_name] = function(owner)
-        ErmGui.detail_window.hide(owner)
+    [GuiContainer.detail_window.root_name] = function(owner)
+        GuiContainer.detail_window.hide(owner)
     end,
-    [ErmGui.boss_detail_window.root_name] = function(owner)
-        ErmGui.boss_detail_window.hide(owner)
+    [GuiContainer.boss_detail_window.root_name] = function(owner)
+        GuiContainer.boss_detail_window.hide(owner)
     end,
-    [ErmGui.army_control_window.root_name] = function(owner)
-        ErmGui.army_control_window.hide(owner)
+    [GuiContainer.army_control_window.root_name] = function(owner)
+        GuiContainer.army_control_window.hide(owner)
     end
 }
 
@@ -209,23 +209,46 @@ end
 
 Event.register(defines.events.on_gui_closed, onGuiClose)
 
+local gui_open_switch = {
+    [GuiContainer.main_window.root_name] = function(owner)
+        GuiContainer.main_window.hide(owner)
+    end,
+}
+
+local onGuiOpen = function(event)
+    local owner = game.players[event.player_index]
+    local element = event.element
+    local entity = event.entity
+    local registered_deployer = global.army_registered_deployers
+    local registered_cc = global.army_registered_command_centers
+
+    if event.gui_type == defines.gui_type.entity and
+       entity and entity.valid and
+       (registered_deployer[entity.name])
+    then
+        GuiContainer.rallypoint_attachment.show(owner, entity.unit_number)
+    end
+end
+
+Event.register(defines.events.on_gui_opened, onGuiOpen)
+
 --- On Value Change Events
-EventGui.on_value_changed(ErmGui.detail_window.levelup_slider_name, function(event)
-    ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.levelup_slider_name, ErmGui.detail_window.levelup_value_name)
+EventGui.on_value_changed(GuiContainer.detail_window.levelup_slider_name, function(event)
+    GuiContainer.detail_window.update_slider_text(event, GuiContainer.detail_window.levelup_slider_name, GuiContainer.detail_window.levelup_value_name)
 end)
 
-EventGui.on_value_changed(ErmGui.detail_window.evolution_factor_slider_name, function(event)
-    ErmGui.detail_window.update_slider_text(event, ErmGui.detail_window.evolution_factor_slider_name, ErmGui.detail_window.evolution_factor_value_name)
+EventGui.on_value_changed(GuiContainer.detail_window.evolution_factor_slider_name, function(event)
+    GuiContainer.detail_window.update_slider_text(event, GuiContainer.detail_window.evolution_factor_slider_name, GuiContainer.detail_window.evolution_factor_value_name)
 end)
 
 --- Army GUI
 local gui_tab_handlers = {
-    [ErmGui.army_control_window.root_name] = function(event)
+    [GuiContainer.army_control_window.root_name] = function(event)
         local element = event.element
         local player = game.players[event.player_index]
         if player and player.valid then
             global.army_windows_tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
-            ErmGui.army_control_window.update(player, element.selected_tab_index)
+            GuiContainer.army_control_window.update(player, element.selected_tab_index)
         end
     end
 }
@@ -245,13 +268,13 @@ Event.register(defines.events.on_gui_selected_tab_changed, gui_tab_changed)
 Event.register(defines.events.on_gui_confirmed, function(event)
     local element = event.element
     local player = game.players[event.player_index]
-    ErmGui.army_control_window.update_army_planner(player, element)
+    GuiContainer.army_control_window.update_army_planner(player, element)
 end, Event.Filters.gui, 'army_deployer/planner/.*')
 
 EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
     local element = event.element
     local player = game.players[element.player_index]
-    ErmGui.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
+    GuiContainer.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
 end)
 
 EventGui.on_click('army_cc/.*_link', function(event)
@@ -262,10 +285,11 @@ EventGui.on_click('army_cc/.*_link', function(event)
 
     local player = game.players[event.element.player_index]
     if player and player.valid then
-        if element.name == ErmGui.army_control_window.start_link_button then
-            ErmGui.army_control_window.start_link(player)
-        elseif element.name == ErmGui.army_control_window.stop_link_button then
-            ErmGui.army_control_window.stop_link(player)
+        local army_control_window = GuiContainer.army_control_window
+        if element.name == army_control_window.start_link_button then
+            army_control_window.start_link(player)
+        elseif element.name == army_control_window.stop_link_button then
+            army_control_window.stop_link(player)
         end
     end
 end)
@@ -279,18 +303,19 @@ local deployer_switch = function(event)
     local player = game.players[element.player_index]
     if player and player.valid then
         local nameToken = String.split(element.name, '/')
+        local army_control_window = GuiContainer.army_control_window
         if nameToken[2] == 'auto_deploy' then
             if element.switch_state == 'left' then
-                ErmGui.army_control_window.deployer_turn_off(player, nameToken[3])
+                army_control_window.deployer_turn_off(player, nameToken[3])
             else
-                ErmGui.army_control_window.deployer_turn_on(player, nameToken[3])
+                army_control_window.deployer_turn_on(player, nameToken[3])
             end
         elseif nameToken[2] == 'build_only' then
             local build_only = true
             if element.switch_state == 'left' then
                 build_only = false
             end
-            ErmGui.army_control_window.set_build_only(player, nameToken[3], build_only)
+            army_control_window.set_build_only(player, nameToken[3], build_only)
         end
     end
 end
@@ -305,10 +330,32 @@ EventGui.on_click('army_deployer/all/.*', function(event)
     local player = game.players[element.player_index]
     if player and player.valid then
         local nameToken = String.split(element.name, '/')
+        local army_window = GuiContainer.army_control_window
         if nameToken[3] == 'on' then
-            ErmGui.army_control_window.deployer_turn_all_on(player)
+            army_window.deployer_turn_all_on(player)
         else
-            ErmGui.army_control_window.deployer_turn_all_off(player)
+            army_window.deployer_turn_all_off(player)
         end
+    end
+end)
+
+EventGui.on_click('erm_rally_point_set', function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.rallypoint_attachment.set_cursor(player)
+    end
+end)
+
+EventGui.on_click('erm_rallypoint_map', function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.rallypoint_attachment.go_to(player)
+    end
+end)
+
+EventGui.on_click('erm_rally_point_unset', function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.rallypoint_attachment.remove_rallypoint(player)
     end
 end)

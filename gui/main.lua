@@ -4,23 +4,24 @@
 --- DateTime: 1/2/2021 4:48 PM
 ---
 
-local ERM_MainWindow = require('__enemyracemanager__/gui/main_window')
-local ERM_DetailWindow = require('__enemyracemanager__/gui/detail_window')
-local ERM_BossVictoryDialog = require('__enemyracemanager__/gui/victory_dialog')
-local ERM_BossDetailWindow = require('__enemyracemanager__/gui/boss_detail_window')
-local ERM_ArmyControlWindow = require('__enemyracemanager__/gui/army_control_window')
+local MainWindow = require('__enemyracemanager__/gui/main_window')
+local DetailWindow = require('__enemyracemanager__/gui/detail_window')
+local BossVictoryDialog = require('__enemyracemanager__/gui/victory_dialog')
+local BossDetailWindow = require('__enemyracemanager__/gui/boss_detail_window')
+local ArmyControlWindow = require('__enemyracemanager__/gui/army_control_window')
+local RallypointAttachment = require('__enemyracemanager__/gui/rallypoint_attachment')
 
-local ERM_GUI = {
-    main_window = ERM_MainWindow,
-    detail_window = ERM_DetailWindow,
-    victory_dialog = ERM_BossVictoryDialog,
-    boss_detail_window = ERM_BossDetailWindow,
-
-    army_control_window = ERM_ArmyControlWindow
+local GUI = {
+    main_window = MainWindow,
+    detail_window = DetailWindow,
+    victory_dialog = BossVictoryDialog,
+    boss_detail_window = BossDetailWindow,
+    army_control_window = ArmyControlWindow,
+    rallypoint_attachment = RallypointAttachment
 }
 
-function ERM_GUI.init_globals()
+function GUI.init_globals()
     global.army_windows_tab_player_data = global.army_windows_tab_player_data or {}
 end
 
-return ERM_GUI
+return GUI

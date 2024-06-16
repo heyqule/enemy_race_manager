@@ -9,7 +9,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 --- Boss Details Windows
-local ERM_BossDetailsWindow = {
+local BossDetailsWindow = {
     root_name = 'erm_races_manager_boss_details',
     window_width = 680,
     window_height = 400,
@@ -50,28 +50,28 @@ local add_data_entry = function(data_box, entry)
     data_box.add { type = "label", caption = entry.squad_size }
 end
 
-function ERM_BossDetailsWindow.show(player, race_name, boss_log)
+function BossDetailsWindow.show(player, race_name, boss_log)
     local gui = player.gui.screen
-    if gui[ERM_BossDetailsWindow.root_name] then
+    if gui[BossDetailsWindow.root_name] then
         return
     end
     local detail_window = gui.add {
         type = "frame",
-        name = ERM_BossDetailsWindow.root_name,
+        name = BossDetailsWindow.root_name,
         direction = "vertical",
     }
     detail_window.force_auto_center()
-    ERM_BossDetailsWindow.parent_window = player.opened
+    BossDetailsWindow.parent_window = player.opened
     player.opened = detail_window
 
     -- Race Manager Title
     local title_flow = detail_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
-    title_flow.style.minimal_width = ERM_BossDetailsWindow.window_width
+    title_flow.style.minimal_width = BossDetailsWindow.window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.boss_detail_title", race_name }, style = 'caption_label' }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = ERM_BossDetailsWindow.window_width - 24 - 175
+    pusher.style.width = BossDetailsWindow.window_width - 24 - 175
     pusher.style.height = 24
     pusher.drag_target = detail_window
 
@@ -99,8 +99,8 @@ function ERM_BossDetailsWindow.show(player, race_name, boss_log)
         type = "list-box",
         name = race_name .. "/erm_boss_detail_list_box"
     }
-    list_box.style.width = ERM_BossDetailsWindow.window_width * 0.35
-    list_box.style.height = ERM_BossDetailsWindow.window_height - 80
+    list_box.style.width = BossDetailsWindow.window_width * 0.35
+    list_box.style.height = BossDetailsWindow.window_height - 80
 
     local data_box = entries_horizontal_flow.add {
         type = 'table',
@@ -108,8 +108,8 @@ function ERM_BossDetailsWindow.show(player, race_name, boss_log)
         column_count = 2,
         style = 'bordered_table'
     }
-    data_box.style.width = ERM_BossDetailsWindow.window_width * 0.6
-    data_box.style.height = ERM_BossDetailsWindow.window_height - 80
+    data_box.style.width = BossDetailsWindow.window_width * 0.6
+    data_box.style.height = BossDetailsWindow.window_height - 80
     data_box.style.horizontally_stretchable = true
 
     if boss_log and boss_log.entries[1] then
@@ -127,17 +127,17 @@ function ERM_BossDetailsWindow.show(player, race_name, boss_log)
 
 end
 
-function ERM_BossDetailsWindow.hide(player)
-    player.gui.screen[ERM_BossDetailsWindow.root_name].destroy()
+function BossDetailsWindow.hide(player)
+    player.gui.screen[BossDetailsWindow.root_name].destroy()
 end
 
-function ERM_BossDetailsWindow.toggle_close(owner)
+function BossDetailsWindow.toggle_close(owner)
     if owner then
-        ERM_BossDetailsWindow.hide(owner)
+        BossDetailsWindow.hide(owner)
     end
 end
 
-function ERM_BossDetailsWindow.update_data_box(element, owner)
+function BossDetailsWindow.update_data_box(element, owner)
     if owner and element then
         local nameToken = String.split(element.name, '/')
         local boss_log = global.boss_logs[nameToken[1]]
@@ -149,4 +149,4 @@ function ERM_BossDetailsWindow.update_data_box(element, owner)
     end
 end
 
-return ERM_BossDetailsWindow
+return BossDetailsWindow
