@@ -152,6 +152,10 @@ describe("Army Deployment", function()
         end)
 
     end)
+
+    it('Deployment with rally point', function()
+
+    end)
 end)
 describe("Army Teleport", function()
     it('Teleport, same surface', function()

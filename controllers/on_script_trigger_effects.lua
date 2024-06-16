@@ -18,7 +18,7 @@ local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_proc
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
 local ArmyDeployer = require('__enemyracemanager__/lib/army_deployment_processor')
-local RallyPointUI = require('__enemyracemanager__/gui/rallypoint_attachment')
+local RallyPointUI = require('__enemyracemanager__/gui/deployer_attachment')
 
 -- Player super weapon attacks functions
 local process_attack_point_event = function(event, attack_point)

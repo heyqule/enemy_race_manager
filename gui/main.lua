@@ -9,7 +9,7 @@ local DetailWindow = require('__enemyracemanager__/gui/detail_window')
 local BossVictoryDialog = require('__enemyracemanager__/gui/victory_dialog')
 local BossDetailWindow = require('__enemyracemanager__/gui/boss_detail_window')
 local ArmyControlWindow = require('__enemyracemanager__/gui/army_control_window')
-local RallypointAttachment = require('__enemyracemanager__/gui/rallypoint_attachment')
+local DeployerAttachment = require('__enemyracemanager__/gui/deployer_attachment')
 
 local GUI = {
     main_window = MainWindow,
@@ -17,7 +17,7 @@ local GUI = {
     victory_dialog = BossVictoryDialog,
     boss_detail_window = BossDetailWindow,
     army_control_window = ArmyControlWindow,
-    rallypoint_attachment = RallypointAttachment
+    deployer_attachment = DeployerAttachment
 }
 
 function GUI.init_globals()
