@@ -191,8 +191,8 @@ function ArmyDeploymentProcessor.add_entity(entity)
 end
 
 
-function ArmyDeploymentProcessor.add_rallypoint(rallypoint, player, deployer_number)
-    local force_id = player.force.index
+function ArmyDeploymentProcessor.add_rallypoint(rallypoint, deployer_number)
+    local force_id = rallypoint.force.index
     local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
     if deployer_data == nil or deployer_data.entity.valid == false then
         ArmyDeploymentProcessor.remove_entity(force_id, deployer_number)
@@ -202,16 +202,14 @@ function ArmyDeploymentProcessor.add_rallypoint(rallypoint, player, deployer_num
     if deployer_data.rally_point then
         remove_rallypoint_drawing(deployer_data)
     end
-    local link_id = draw_link(rallypoint, deployer_data.entity, player)
+    local link_id = draw_link(rallypoint, deployer_data.entity)
     local flag_id = draw_flag(rallypoint)
-    player.game_view_settings.show_entity_info = true
     deployer_data.rally_point = rallypoint.position
     deployer_data.rally_draw_link = link_id
     deployer_data.rally_draw_flag = flag_id
 end
 
-function ArmyDeploymentProcessor.remove_rallypoint(player, deployer_number)
-    local force_id = player.force.index
+function ArmyDeploymentProcessor.remove_rallypoint(force_id, deployer_number)
     local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
     remove_rallypoint_drawing(deployer_data)
     deployer_data.rally_point = nil

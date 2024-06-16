@@ -75,7 +75,7 @@ end
 function DeployerAttachement.remove_rallypoint(player)
     local ui = player.gui.relative[DeployerAttachement.root_name]
     if ui then
-        ArmyDeploymentProcessor.remove_rallypoint(player, ui.tags.unit_number)
+        ArmyDeploymentProcessor.remove_rallypoint(player.force.index, ui.tags.unit_number)
         DeployerAttachement.show(player, ui.tags.unit_number)
     end
 end
