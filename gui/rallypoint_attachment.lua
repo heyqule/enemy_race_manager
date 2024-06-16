@@ -68,7 +68,9 @@ function RallypointAttachement.go_to(player)
     local ui = player.gui.relative[RallypointAttachement.root_name]
     if ui then
         local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
-        if deployer_data.rally_point then
+        if player.render_mode == defines.render_mode.chart_zoomed_in then
+            player.close_map()
+        elseif deployer_data.rally_point then
             player.zoom_to_world(deployer_data.rally_point)
         end
     end
