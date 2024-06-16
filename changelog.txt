@@ -3,7 +3,8 @@ Version: 1.22.0
 Date: 2024-??-??
 
   Features:
-    - Added rally point support to unit deployers
+    - Added rally point support to army unit deployers
+    - Added custom UI to handle rally point and deploy active toggle when you open army unit deployers UI.
 
   Changes:
     - Added surface and type filter to Deployer UI
@@ -108,7 +109,7 @@ Date: 2024-06-09
     - Fixed new game crash under certain load order with 3rd party mods.
     - Fixed Rampant compatibility issue, which scout unit spawns unexpectedly when it created unit group for its internal process.
 
-  Optimization:
+  Optimizations:
     - Changed all garbage collection calls to handle in cron jobs.
 
 
@@ -164,7 +165,7 @@ Date: 2024-06-07
     - Fixed duplicated names in global.attack_group_attackable_entity_names
     - Fixed some UI incorrect descriptions.
 
-  Optimization:
+  Optimizations:
     - Cron processor changes
     - ERM Attack Groups disband after 14 nauvis days or under certain size to reduce idle units.
     - [Internal] Added regression tests.

@@ -226,7 +226,7 @@ local onGuiOpen = function(event)
        entity and entity.valid and
        (registered_deployer[entity.name])
     then
-        GuiContainer.rallypoint_attachment.show(owner, entity.unit_number)
+        GuiContainer.deployer_attachment.show(owner, entity.unit_number)
     end
 end
 
@@ -342,20 +342,20 @@ end)
 EventGui.on_click('erm_rally_point_set', function(event)
     local player = game.players[event.player_index]
     if player and player.valid then
-        GuiContainer.rallypoint_attachment.set_cursor(player)
+        GuiContainer.deployer_attachment.set_cursor(player)
     end
 end)
 
 EventGui.on_click('erm_rallypoint_map', function(event)
     local player = game.players[event.player_index]
     if player and player.valid then
-        GuiContainer.rallypoint_attachment.go_to(player)
+        GuiContainer.deployer_attachment.go_to(player)
     end
 end)
 
 EventGui.on_click('erm_rally_point_unset', function(event)
     local player = game.players[event.player_index]
     if player and player.valid then
-        GuiContainer.rallypoint_attachment.remove_rallypoint(player)
+        GuiContainer.deployer_attachment.remove_rallypoint(player)
     end
 end)
