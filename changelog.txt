@@ -9,6 +9,10 @@ Date: 2024-??-??
   Changes:
     - Added surface and type filter to Deployer UI
     - Added surface filter to Teleport UI
+    - Fixed incorrect tooltip
+
+  Bugfixes:
+    - Fixed army stats panel overflow.
 
 
 ---------------------------------------------------------------------------------------------------

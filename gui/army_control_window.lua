@@ -57,7 +57,8 @@ local update_unit_screen = function(player)
     pane.add { type = 'label', name = 'army_pop_general_info', caption = { "gui-army.pop_general_info", army_data['max_pop'], army_data['pop_count'], army_data['unit_count'] } }
 
     if table_size(army_data['unit_types']) > 0 then
-        local item_table = pane.add { type = "table", column_count = 5, style = "bordered_table" }
+        local scroll_pane = pane.add { type = "scroll-pane"}
+        local item_table = scroll_pane.add { type = "table", column_count = 5, style = "bordered_table" }
         item_table.style.horizontally_stretchable = false
 
         item_table.add { type = "label", caption = { 'gui-army.control_unit_type' } }
@@ -658,9 +659,9 @@ function Army_MainWindow.update_overhead_button(player_index)
 
     if owner and button_flow and not button_flow['erm_army_control_toggle'] then
         if game.item_prototypes['erm_terran/command-center'] then
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui.show-army-control' }, sprite = 'item/erm_terran/command-center' }
+            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui-army.show-control' }, sprite = 'item/erm_terran/command-center' }
         else
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui.show-army-control' }, sprite = 'item/submachine-gun' }
+            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui-army.show-control' }, sprite = 'item/submachine-gun' }
         end
     end
 end
