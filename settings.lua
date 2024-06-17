@@ -21,13 +21,22 @@ data:extend {
         order = "enemyracemanager-102"
     },
     {
+        type = "string-setting",
+        name = "enemyracemanager-evolution-point-ll-express",
+        description = "enemyracemanager-evolution-point-ll-express",
+        setting_type = "startup",
+        order = "enemyracemanager-103",
+        default_value = LEVEL_MODE_REGULAR,
+        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
+    },
+    {
         type = "int-setting",
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
         default_value = ATTACK_RANGE_14,
         allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20, ATTACK_RANGE_26, ATTACK_RANGE_32, ATTACK_RANGE_40 },
-        order = "enemyracemanager-103"
+        order = "enemyracemanager-104"
     },
     {
         type = "int-setting",
@@ -37,7 +46,7 @@ data:extend {
         default_value = 15,
         minimum_value = 1,
         maximum_value = 60,
-        order = "enemyracemanager-104"
+        order = "enemyracemanager-105"
     },
     {
         type = "int-setting",
@@ -48,15 +57,6 @@ data:extend {
         minimum_value = 3,
         maximum_value = 20,
         order = "enemyracemanager-112"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-evolution-point-ll-express",
-        description = "enemyracemanager-evolution-point-ll-express",
-        setting_type = "startup",
-        order = "enemyracemanager-113",
-        default_value = LEVEL_MODE_REGULAR,
-        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
     },
     {
         type = "int-setting",

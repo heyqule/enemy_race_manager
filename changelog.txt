@@ -138,7 +138,7 @@ Date: 2024-06-07
     - Enemies prioritize the surface get attacked the most.
     - Enemies may ask their allies to take revenge, if they are not able to attack on a surface.
     - >>> Others <<<
-    - When enemy successfully spawns a custom attack groups, pollution is deducted from attack target chunk.
+    - When enemy successfully spawns a custom attack group, pollution is deducted from attack target chunk.
 
   Changes:
     - Free for all "multiplier" is configurable in startup tab.  It affects damage and health.
