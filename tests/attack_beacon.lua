@@ -369,7 +369,8 @@ describe("Pick Spawn beacon", function()
         global['erm_spawn_beacon'][surface.index] = {}
         global['erm_spawn_beacon'][surface.index][enemy.name] = {}
         for i = 1, 10, 1 do
-            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = i }
+            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
+            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
         end
 
         assert.not_nil( global['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is not nil")

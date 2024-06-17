@@ -1162,8 +1162,14 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     repeat
         local control_key = control_data[SCOUT_SPAWN_KEY] or nil
         new_key, node = get_beacon_node(beacon_data, control_key)
-        control_data[SCOUT_SPAWN_KEY] = new_key
         i = i + 1
+        if node ~= nil and (node.beacon == nil or node.beacon.valid == false) then
+            -- Wipe data node if beacon is no longer exists
+            beacon_data[control_key] = nil
+            node = nil
+        else
+            control_data[SCOUT_SPAWN_KEY] = new_key
+        end
     until node ~= nil or i < RETRY
 
     if node ~= nil then

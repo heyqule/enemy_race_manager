@@ -584,7 +584,8 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
 
-    if spawn_beacon == nil or target_beacon == nil then
+    if spawn_beacon == nil or spawn_beacon.valid == false
+        or target_beacon == nil or target_beacon.beacon.valid == false then
         return nil
     end
 

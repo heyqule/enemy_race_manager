@@ -152,4 +152,34 @@ describe("Scouts", function()
             done()
         end)
     end)
+
+
+    it("Spawn beacon data is still in the data tree while spawn beacon is invalid", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local enemy = game.forces['enemy']
+
+        local control_key = 5
+        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
+
+        global['erm_spawn_beacon'][surface.index] = {}
+        global['erm_spawn_beacon'][surface.index][enemy.name] = {}
+        for i = 1, 10, 1 do
+            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
+            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
+        end
+
+        local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 50,50 } })
+
+        global['erm_spawn_beacon'][surface.index][enemy.name][6].beacon.destroy()
+
+        after_ticks(30, function()
+            AttackGroupProcessor.spawn_scout(race_name, game.forces['enemy'], surface, game.forces['player'])
+        end)
+
+        after_ticks(60, function()
+            -- it should not crash
+            done()
+        end)
+    end)
 end)
