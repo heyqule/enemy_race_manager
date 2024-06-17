@@ -92,7 +92,7 @@ Date: 2024-06-16
 
   Bugfixes:
     - Fixed a crash when spawn beacon was somehow removed outside of ERM.
-    - When picked spawn location has an invalid beacon, it will removed the data tracking list.
+    - When picked spawn location has an invalid beacon, it will removed from the data tracking list.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.2
