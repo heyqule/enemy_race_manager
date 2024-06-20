@@ -24,8 +24,10 @@ end
 
 local is_valid_deployer = function(event)
     local entity = event.created_entity or event.entity
-    if entity and entity.valid and global.army_registered_deployers then
-        return global.army_registered_deployers[entity.name]
+    -- 0.01
+    local army_deployers = global.army_registered_deployers
+    if entity and entity.valid and army_deployers then
+        return army_deployers[entity.name]
     end
     return nil
 end

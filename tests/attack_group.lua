@@ -141,7 +141,7 @@ describe("Attack Group", function()
             })
         end)
 
-        after_ticks(7200, function()
+        after_ticks(3600, function()
             assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
 
             local key = next(global.erm_unit_groups)

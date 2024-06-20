@@ -6,6 +6,7 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
+require('util')
 
 local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
@@ -36,6 +37,8 @@ local DEBUG_GROUP_STATES = {
     [defines.group_state.pathfinding] = 'defines.group_state.pathfinding',
     [defines.group_state.wander_in_group] = 'defines.group_state.wander_in_group'
 }
+
+local CHUNK_SIZE = 32
 
 local onBiterBaseBuilt = function(event)
     local entity = event.entity
@@ -135,14 +138,46 @@ local onUnitFinishGathering = function(event)
     end
 end
 
-local onAiCompleted = function(event)
-    local unit_number = event.unit_number
+--- handle scouts under ai complete
+local handle_scouts = function(scout_unit_data)
+    if scout_unit_data and
+        scout_unit_data.can_repath and
+        scout_unit_data.entity.valid then
+        local tracker = global.scout_tracker[scout_unit_data.race_name]
+        if tracker then
+            local entity = tracker.entity
+            if util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
+                AttackGroupBeaconProcessor.create_attack_entity_beacon(entity)
+                local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(
+                        entity.surface,
+                        entity.force,
+                        tracker.target_force,
+                        true
+                )
 
-    -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
-    -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+                if target_beacon then
+                    if util.distance(tracker.final_destination, target_beacon.position) < CHUNK_SIZE then
+                        scout_unit_data.can_repath = false
+                        return
+                    end
 
+                    global.scout_tracker[scout_unit_data.race_name]['final_destination'] = target_beacon.position
+                    global.scout_tracker[scout_unit_data.race_name]['update_tick'] = game.tick
+                    scout_unit_data.entity.set_command({
+                        type = defines.command.go_to_location,
+                        destination = target_beacon.position,
+                        radius = 16,
+                        distraction = defines.distraction.none
+                    })
+                end
+            end
+        end
+    end
+end
+
+--- handle ERM groups under ai complete
+local handle_erm_groups = function(unit_number, event_result)
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
-        --    print(event.unit_number..' is ERM group '..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
         local erm_unit_group = global.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
@@ -153,7 +188,7 @@ local onAiCompleted = function(event)
             return
         end
 
-        if event.result == defines.behavior_result.failure or
+        if event_result == defines.behavior_result.failure or
                 erm_unit_group.nearby_retry >= 3
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
@@ -175,6 +210,18 @@ local onAiCompleted = function(event)
             erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end
     end
+end
+
+local onAiCompleted = function(event)
+    local unit_number = event.unit_number
+    local event_result = event.result
+
+    -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
+    -- print('onAiCompleted '..event.unit_number..'/'..DEBUG_BEHAVIOUR_RESULTS[event.result]..'/'..tostring(event.was_distracted))
+    handle_erm_groups(unit_number, event_result)
+
+    local scout_unit_data = global.scout_by_unit_number[unit_number]
+    handle_scouts(scout_unit_data)
 end
 
 --- Path finding

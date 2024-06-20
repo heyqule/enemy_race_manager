@@ -12,6 +12,7 @@ local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_proc
 
 local reset_scout_global = function()
     global.scout_tracker = {}
+    global.scout_by_unit_number = {}
     global.scout_scanner = false
 end
 
@@ -68,7 +69,8 @@ describe("Scouts", function()
                 },
             })
             assert(count == 1, 'It should not spawn additional scout, while one is active')
-
+            assert.not_nil(global.scout_tracker[race_name],'scout_tracker data exists')
+            assert.not_nil(global.scout_by_unit_number[scout.unit_number],'scout_by_unit_number data exists')
             done()
         end)
     end)
@@ -120,19 +122,21 @@ describe("Scouts", function()
         local spawner = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
 
         local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 150 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 150 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', position = { 75, 150 } })
 
         local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 150 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 150 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', position = { 150, 150 } })
 
         local entity = surface.create_entity({ name = 'crude-oil', position = { 75, 90 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 75, 90 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', position = { 75, 90 } })
 
         local entity = surface.create_entity({ name = 'crude-oil', position = { 150, 90 } })
-        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', amount=10000, position = { 150, 90 } })
+        local oil_drill = surface.create_entity({ name = 'pumpjack', force = 'player', position = { 150, 90 } })
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
+        global.scout_by_unit_number[scout.unit_number].can_repath = false
+
         after_ticks(2500, function()
             local scout_count = surface.count_entities_filtered({
                 name={AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconProcessor.LAND_SCOUT)},
@@ -179,6 +183,34 @@ describe("Scouts", function()
 
         after_ticks(60, function()
             -- it should not crash
+            done()
+        end)
+    end)
+
+    it("When scout is done first location, it should scout second location", function()
+        async(1800)
+
+        local surface = game.surfaces[1]
+        local entity = surface.create_entity({name=biter_spawner, force=enemy, position={100, 100}})
+        AttackGroupBeaconProcessor.init_index()
+
+        local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
+        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -100, -100 } })
+        local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -110, -110 }, { -90, -90 } })
+
+        after_ticks(1440, function()
+            assert(scout.valid == true, 'Scout spawned')
+            local count = surface.count_entities_filtered({
+                name = {
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                },
+                force = game.forces[enemy],
+                position = rocket_launcher.position,
+                radius = 48
+            })
+            assert(count == 1, 'Scout is near attack beacon')
+
             done()
         end)
     end)

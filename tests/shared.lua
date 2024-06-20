@@ -61,6 +61,7 @@ function TestShared.CleanCron()
     global.erm_unit_group = {}
     global.group_tracker = {}
     global.scout_tracker = {}
+    global.scout_by_unit_number = {}
     global.scout_scanner = false
     global.quick_cron_is_running = false
     global.army_teleporter_event_running = false

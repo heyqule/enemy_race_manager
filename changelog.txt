@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.4
+Date: 2024-06-20
+
+  Changes:
+    - Scout targets different attack beacons, rather than the target force's spawn location.
+    - When a scout reach its destination, it picks a new attack beacon to scout.
+
+  Bugfixes:
+    - Fixed an issue where the scout cron job stopped prematurely.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.3
 Date: 2024-06-16
 

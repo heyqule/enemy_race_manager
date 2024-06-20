@@ -1185,6 +1185,7 @@ AttackGroupBeaconProcessor.start_scout_scan = function()
             Cron.add_quick_queue('AttackGroupBeaconProcessor.scout_scan', race_name, entity_data)
         else
             global.scout_tracker[race_name] = nil
+            global.scout_by_unit_number[entity_data.unit_number] = nil
         end
     end
 
@@ -1228,6 +1229,7 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
             entity.command.type == defines.command.stop)
         then
             entity.die('neutral')
+            global.scout_by_unit_number[tracker.unit_number] = nil
             global.scout_tracker[race_name] = nil
         elseif entity.command.type == defines.command.go_to_location then
             tracker.position = entity.position
@@ -1277,6 +1279,7 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
             end
         end
     else
+        global.scout_by_unit_number[entity_data.unit_number] = nil
         global.scout_tracker[race_name] = nil
     end
 end

@@ -316,10 +316,16 @@ function AttackGroupProcessor.init_globals()
 
     --- Track active scout, only one active scout per enemy race.
     global.scout_tracker = global.scout_tracker or {}
+    --- Track active scout by unit_number, used on_ai_command_completed event
+    global.scout_by_unit_number = global.scout_by_unit_number or {}
     --- Toggle to run periodic scan when a scout spawns.
-    global.scout_scanner = false
+    global.scout_scanner = global.scout_scanner or false
     global.scout_unit_name = global.scout_unit_name or {}
     AttackGroupProcessor.clear_invalid_scout_unit_name()
+    if next(global.scout_tracker) then
+        global.scout_scanner = true
+        Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
+    end
 end
 
 function AttackGroupProcessor.add_to_group_cron(arg)
@@ -581,7 +587,8 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
 
     scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_name)
 
-    local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
+    --local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
+    local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, source_force, target_force, true)
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
 
     if spawn_beacon == nil or spawn_beacon.valid == false
@@ -611,7 +618,13 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         unit_number = scout.unit_number,
         position = scout.position,
         final_destination = target_beacon.position,
+        target_force = target_force,
         update_tick = game.tick
+    }
+    global.scout_by_unit_number[scout.unit_number] = {
+        entity = scout,
+        race_name = race_name,
+        can_repath = true
     }
 
     if global.scout_scanner == false then
