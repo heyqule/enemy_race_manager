@@ -98,14 +98,16 @@ local onUnitFinishGathering = function(event)
         return
     end
     local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
+    local group_force = group.force
 
     if group.is_script_driven and
-        group.command == nil and
-        checking_state[group.state] and
-        not is_erm_group and
-        #group.members > 10
+            group.command == nil and
+            checking_state[group.state] and
+            not is_erm_group and
+            ForceHelper.is_enemy_force(group_force) and
+            #group.members > 10
     then
-        local race_name = ForceHelper.extract_race_name_from(group.force.name)
+        local race_name = ForceHelper.extract_race_name_from(group_force.name)
         local target = AttackGroupHeatProcessor.pick_target(race_name)
         AttackGroupProcessor.process_attack_position(group, nil, nil, target)
         global.erm_unit_groups[group.group_number] = {
@@ -120,13 +122,16 @@ local onUnitFinishGathering = function(event)
     end
 
 
-    if (group.is_script_driven == false or is_erm_group) and global.scout_unit_name[group.group_number] then
+    if (group.is_script_driven == false or is_erm_group) and
+            ForceHelper.is_enemy_force(group_force) and
+            global.scout_unit_name[group.group_number]
+    then
         local surface = group.surface
-        local race_name = ForceHelper.extract_race_name_from(group.force.name)
+        local race_name = ForceHelper.extract_race_name_from(group_force.name)
         local scout = surface.create_entity({
             position =  group.position,
             surface = surface,
-            force = group.force,
+            force = group_force,
             name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[global.scout_unit_name[group.group_number].scout_type]),
             count = 1
         })
@@ -141,8 +146,8 @@ end
 --- handle scouts under ai complete
 local handle_scouts = function(scout_unit_data)
     if scout_unit_data and
-        scout_unit_data.can_repath and
-        scout_unit_data.entity.valid then
+            scout_unit_data.can_repath and
+            scout_unit_data.entity.valid then
         local tracker = global.scout_tracker[scout_unit_data.race_name]
         if tracker then
             local entity = tracker.entity
