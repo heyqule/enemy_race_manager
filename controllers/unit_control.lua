@@ -203,9 +203,9 @@ local handle_erm_groups = function(unit_number, event_result)
             end
             erm_unit_group.nearby_retry = 0
         elseif
-        group.command == nil or
-                group.state == defines.group_state.finished or
-                event.result == defines.behavior_result.success
+            group.command == nil or
+            group.state == defines.group_state.finished or
+            event_result == defines.behavior_result.success
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
                 AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_force)
