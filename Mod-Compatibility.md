@@ -68,5 +68,6 @@
 - Kastorio2: Atomic Bomb, Atomic Artillery Shell, Antimatter Bomb, Antimatter Artillery Shell
 - Industrial Revolution: Atomic Artillery Shell
 
-### Team Competitions
-ERM does not affect on Team Competitions‘ custom enemy forces.  Therefore, it's recommended to play without its "Multiple Alien Forces" option
+### Team Competitions or any mod that adds new enemy forces
+ERM logics do not affect on custom enemy forces which created by other mods.
+In Team Competitions', I recommended to turn off its "Multiple Alien Forces" option. Otherwise, the enemy stays at level 1 and none of the advance logic work.
