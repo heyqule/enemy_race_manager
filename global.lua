@@ -37,4 +37,6 @@ TRIGGER_BOSS_DIES = 'embss-die'
 LAND_SCOUT_BEACON = 'em-landsb'
 AERIAL_SCOUT_BEACON = 'em-airsb'
 
+ALL_PLANETS = 'All Planets'
+
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }

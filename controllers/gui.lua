@@ -209,24 +209,27 @@ end
 
 Event.register(defines.events.on_gui_closed, onGuiClose)
 
+-- Register functions by gui_type
 local gui_open_switch = {
-    [GuiContainer.main_window.root_name] = function(owner)
-        GuiContainer.main_window.hide(owner)
+    [defines.gui_type.entity] = function(event)
+        local owner = game.players[event.player_index]
+        --local element = event.element
+        local entity = event.entity
+        local registered_deployer = global.army_registered_deployers
+        --local registered_cc = global.army_registered_command_centers
+
+        if event.gui_type == defines.gui_type.entity and
+                entity and entity.valid and
+                (registered_deployer[entity.name])
+        then
+            GuiContainer.deployer_attachment.show(owner, entity.unit_number)
+        end
     end,
 }
 
 local onGuiOpen = function(event)
-    local owner = game.players[event.player_index]
-    local element = event.element
-    local entity = event.entity
-    local registered_deployer = global.army_registered_deployers
-    local registered_cc = global.army_registered_command_centers
-
-    if event.gui_type == defines.gui_type.entity and
-       entity and entity.valid and
-       (registered_deployer[entity.name])
-    then
-        GuiContainer.deployer_attachment.show(owner, entity.unit_number)
+    if gui_open_switch[event.gui_type] then
+        gui_open_switch[event.gui_type](event)
     end
 end
 
@@ -339,6 +342,69 @@ EventGui.on_click('army_deployer/all/.*', function(event)
     end
 end)
 
+EventGui.on_click('army_deployer/filter_type/.*', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local nameToken = String.split(element.name, '/')
+        local army_window = GuiContainer.army_control_window
+        local filter = global.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]]
+        if filter then
+            filter = false
+        else
+            filter = true
+        end
+        global.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]] = filter
+        army_window.update_deployers()
+    end
+end)
+
+EventGui.on_click('army_deployer/open_map/.*', function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local nameToken = String.split(element.name, '/')
+        local deployers = global.army_built_deployers[player.force.index]
+        local unit_number = tonumber(nameToken[3])
+        if deployers and deployers[unit_number] and deployers[unit_number].entity.valid then
+            player.zoom_to_world(deployers[unit_number].entity.position)
+        end
+    end
+end)
+
+
+local deployer_surface_dropdown = function(event)
+    local element = event.element
+    if not (element and element.valid) then
+        return
+    end
+
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local index = element.selected_index
+        local surface_name = element.get_item(index)
+        if surface_name == ALL_PLANETS then
+            global.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
+        else
+            global.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name
+        end
+
+        GuiContainer.army_control_window.update_deployers()
+    end
+end
+
+Event.register(defines.events.on_gui_selection_state_changed, deployer_surface_dropdown, Event.Filters.gui, 'army_deployer/filter_surface')
+
+
+-- Rally point handling
 EventGui.on_click('erm_rally_point_set', function(event)
     local player = game.players[event.player_index]
     if player and player.valid then

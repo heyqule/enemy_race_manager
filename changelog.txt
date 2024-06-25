@@ -8,8 +8,11 @@ Date: 2024-??-??
 
   Changes:
     - Added surface and type filter to Deployer UI
+    - Added zoom to entity on Deployer UI when the player and entity is on same planet.
+    - Changed Deployer UI layout.
+    - Removed alt left click action on deployers.
     - Added surface filter to Teleport UI
-    - Fixed incorrect tooltip
+    - Fixed incorrect tooltips
 
   Bugfixes:
     - Fixed army stats panel overflow.
