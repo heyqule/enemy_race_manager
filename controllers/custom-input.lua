@@ -43,17 +43,6 @@ local valid_erm_alt_left_click = {
                 ErmArmyControlUI.set_selected_cc(player, element, entity.backer_name)
             end
         end
-    end,
-    ['assembling-machine'] = function(event)
-        --@TODO scroll_to_element
-        local player = game.players[event.player_index]
-        if player and player.valid and global.army_registered_deployers[event.selected_prototype.name] then
-            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            if entity and entity.valid then
-                ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[2])
-                ErmArmyControlUI.scroll_to_deployer(player, entity.unit_number)
-            end
-        end
     end
 }
 

@@ -94,7 +94,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     global.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
         -- @Todo support rally points
-        rally_point = {}
+        rally_point = nil
     }
     global.army_teleporters_name_mapping[name] = {
         force_id = force.index,
