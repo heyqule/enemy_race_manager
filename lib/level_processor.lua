@@ -106,7 +106,7 @@ function LevelManager.calculate_levels()
     local settings = settings
 
     for _, force in pairs(forces) do
-        if not String.find(force.name, 'enemy', 1, true) then
+        if not ErmForceHelper.is_enemy_force(force) then
             goto skip_calculate_level_for_force
         end
 
@@ -139,7 +139,7 @@ function LevelManager.calculate_multiple_levels()
     local settings = settings
 
     for _, force in pairs(forces) do
-        if not String.find(force.name, 'enemy', 1, true) then
+        if not ErmForceHelper.is_enemy_force(force) then
             goto skip_calculate_multiple_level_for_force
         end
 

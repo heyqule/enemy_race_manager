@@ -94,7 +94,7 @@ describe("Base Building", function()
         })
         local unit_group = spawn_units(surface,name)
         BaseBuildProcessor.exec(building)
-        after_ticks(1800, function()
+        after_ticks(900, function()
             local count = surface.count_entities_filtered({
                 type="unit-spawner",
                 force = enemy_force

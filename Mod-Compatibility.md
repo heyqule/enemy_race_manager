@@ -67,3 +67,6 @@
 - Ion Cannon SE
 - Kastorio2: Atomic Bomb, Atomic Artillery Shell, Antimatter Bomb, Antimatter Artillery Shell
 - Industrial Revolution: Atomic Artillery Shell
+
+### Team Competitions
+ERM does not affect on Team Competitions‘ custom enemy forces.  Therefore, it's recommended to play without its "Multiple Alien Forces" option

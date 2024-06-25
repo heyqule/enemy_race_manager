@@ -9,9 +9,9 @@ MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
 --- Enable this flag to enable debug features
-DEBUG_MODE = false
+DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
-TEST_MODE = false
+TEST_MODE = true
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'

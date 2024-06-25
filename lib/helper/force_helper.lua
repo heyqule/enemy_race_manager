@@ -23,6 +23,7 @@ function ForceHelper.init_globals()
     global.enemy_force_cache = global.enemy_force_cache or {}
     global.surface_exclusion_list = global.surface_exclusion_list or {}
     global.surface_inclusion_list = global.surface_inclusion_list or {}
+    global.enemy_force_check = global.enemy_force_check or {}
 end
 
 ---
@@ -65,7 +66,7 @@ function ForceHelper.is_erm_unit(entity)
 end
 
 function ForceHelper.is_enemy_force(force)
-    return String.find(force.name, 'enemy', 1, true)
+    return global.enemy_force_check[force.name]
 end
 
 function ForceHelper.set_friends(game, force_name, is_friend)
@@ -130,9 +131,11 @@ function ForceHelper.refresh_all_enemy_forces()
     global.enemy_force_cache = {}
     global.non_player_forces = {}
     global.player_forces = {}
+    global.enemy_force_check = {}
     for _, force in pairs(game.forces) do
         if force.name == 'enemy' or (String.find(force.name, 'enemy', 1, true) and script.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
             table.insert(global.enemy_force_cache, force.name)
+            global.enemy_force_check[force.name] = true
             table.insert(global.non_player_forces, force.name)
         end
     end
