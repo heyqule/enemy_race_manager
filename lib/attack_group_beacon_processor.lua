@@ -1150,7 +1150,7 @@ end
 AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     local beacon_surface = global[SPAWN_BEACON][surface.index]
     if beacon_surface == nil or
-            beacon_surface[force.name] == nil
+        beacon_surface[force.name] == nil
     then
         return nil
     end
@@ -1163,7 +1163,10 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
         local control_key = control_data[SCOUT_SPAWN_KEY] or nil
         new_key, node = get_beacon_node(beacon_data, control_key)
         i = i + 1
-        if node ~= nil and (node.beacon == nil or node.beacon.valid == false) then
+        if control_key and
+            node ~= nil and
+            (node.beacon == nil or node.beacon.valid == false)
+        then
             -- Wipe data node if beacon is no longer exists
             beacon_data[control_key] = nil
             node = nil
