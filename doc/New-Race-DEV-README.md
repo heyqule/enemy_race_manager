@@ -337,17 +337,18 @@ call ERM_Config.get_max_projectile_range(). Default is 64 without multiplier. Th
   }
 ```
 
-##### How to balance between other races?
+##### How to balance between other races in free for all?
 
 I do unit balance in free for all mode. If a race have a fair fight with other races in 2 or 4 race split setting, then
 the unit balance is good enough.
 
 - Set up your race settings in startup settings.
 - Enable DEBUG_MODE flag in global.lua in ERM's core mod.m
-- Use 2 races or 4 races splits
+- Use 2 races or 4 races splits.
+- assign the races you want to test.
 - Load up the "Enemy race manager/General debug" scenario.
 - Load "ERM Debug" map setting (400% enemy)
-- disable water and tree
+- disable water and tree?
 - Start the game.
 - set "/c game.speed = 1000" for ERM to work its magic.
 - Go out for a walk for half hours and view the result when you are back.
