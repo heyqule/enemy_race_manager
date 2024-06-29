@@ -202,7 +202,8 @@ It feels more balance to have both splitter acid and direct attack for base defe
 
 Unit HP:
 
-* level 1 are under 500, median 30-300
+* level 1 are under 100, median 30-80
+* level 5 are 300 - 1000, median 400-800
 * level 10 are 1000 - 5000, median 1500-2500
 * level 20 are 2500 - 10000, median 3000-5000
 
@@ -217,7 +218,7 @@ Spawner/Turret HP @ L20:
 
 Unit Resistance:
 
-* Max Physical: 95%
+* Physical: 95%
 * Elemental: 90%
 * Weak Elemental: 85%
 
@@ -229,16 +230,16 @@ Spawner/Turret Resistance:
 
 ##### Damage Guideline:
 
-* level 1: 10 - 50 DPS (damage per second)
-* level 10: 30 - 100 DPS
-* level 20:  80 - 200 DPS
+* level 1: 5 - 20 DPS (damage per second)
+* level 5: 20 - 70 DPS
+* level 10: 40 - 120 DPS
+* level 20: 100 - 200+ DPS
 
 AOE units usually use a lower value than above damage guideline. But you take the cooldown interval into consideration
 as well.
 
 When designing top damage dealer, an attack is likely too powerful if it does 1000 damage, but only attack once every
-5s. That's still 200 DPS range.  
-When there are a few of these units in the group, they can one shot reinforced turrets.
+5s. That's still 200 DPS range.  When there are a few of these units in the group, they can one shot reinforced turrets.
 
 A reinforced gun turret (1600HP with 33% resistances) should be able to survive about 10 shots from top damage dealers.
 

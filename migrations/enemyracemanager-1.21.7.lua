@@ -5,8 +5,6 @@
 --- Clear old infinite generate group data under SE.
 ---
 
-local Queue = require('__stdlib__/stdlib/misc/queue')
-
 local new_cron = {}
 
 for _, cron in pairs(global.quick_cron.objects) do
