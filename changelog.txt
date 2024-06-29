@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.7
+Date: 2024-06-28
+
+  Bugfixes:
+    - Fixed a crash that caused by calculating heat on unsupported force, resulting a nil race_name.
+    - Fixed an infinite attack group queue when a Space Exploration planet is fully cleared.  It stops after 12 retries.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.6
 Date: 2024-06-27
 

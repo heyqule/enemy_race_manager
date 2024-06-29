@@ -31,6 +31,7 @@ local MIN_GROUP_SIZE = 5
 local DAY_TICK = 25000
 local IDLE_TIME_OUT = 25000 * 2
 local ERM_GROUP_TIME_TO_LIVE = 25000 * 14 --- 2 Weeks
+local RETRY = 12
 
 AttackGroupProcessor.MIXED_UNIT_POINTS = 25
 AttackGroupProcessor.FLYING_UNIT_POINTS = 75
@@ -386,7 +387,10 @@ function AttackGroupProcessor.generate_group(
         from_retry,
         bypass_attack_meter
 )
-    if from_retry == false and get_group_tracker(race_name) then
+    from_retry = tonumber(from_retry) or 0
+    bypass_attack_meter = bypass_attack_meter or false
+
+    if from_retry == 0 and get_group_tracker(race_name) then
         return false
     end
     target_force = target_force or AttackGroupHeatProcessor.pick_target(race_name)
@@ -396,13 +400,11 @@ function AttackGroupProcessor.generate_group(
         set_group_tracker(race_name, nil)
         return false
     end
-    from_retry = from_retry or false
-    bypass_attack_meter = bypass_attack_meter or false
 
     AttackGroupProcessor.UNIT_PER_BATCH = math.ceil(Config.max_group_size() * Config.attack_meter_threshold() / AttackGroupProcessor.MIXED_UNIT_POINTS)
 
     local attack_beacon_data
-    if from_retry then
+    if from_retry > 0 then
         attack_beacon_data  = AttackGroupBeaconProcessor.pick_current_selected_attack_beacon(surface, force)
     else
         attack_beacon_data  = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
@@ -416,11 +418,11 @@ function AttackGroupProcessor.generate_group(
     end
 
     if spawn_beacon == nil or spawn_beacon.valid == false then
-        if halt_cron == false then
+        if halt_cron == false and from_retry < RETRY then
             -- Retry to find new beacons
             Cron.add_quick_queue('AttackGroupProcessor.generate_group',
                     race_name, force, units_number, type, featured_group_id,
-                    is_elite_attack, target_force, surface, true)
+                    is_elite_attack, target_force, surface, from_retry + 1)
         else
             -- Drop current group if retry fails
             set_group_tracker(race_name, nil)
@@ -592,7 +594,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
 
     if spawn_beacon == nil or spawn_beacon.valid == false
-        or target_beacon == nil or target_beacon.beacon.valid == false then
+            or target_beacon == nil or target_beacon.beacon.valid == false then
         return nil
     end
 
@@ -703,8 +705,8 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
             end
 
             if not skip and
-               game.tick >= created_tick + IDLE_TIME_OUT and
-               group.state == defines.group_state.gathering
+                game.tick >= created_tick + IDLE_TIME_OUT and
+                group.state == defines.group_state.gathering
             then
                 if group.command then
                     group.start_moving()

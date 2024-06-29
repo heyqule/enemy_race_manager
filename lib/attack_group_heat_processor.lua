@@ -19,7 +19,7 @@ AttackGroupHeatProcessor.DEFAULT_VALUE = 5
 local PLAYER = 1
 local NAUVIS = 1
 
-local init_data = function(race_name, surface_index, attacker_index)
+local init_data = function(race_name, surface_index)
     if  global.attack_heat[race_name] == nil or
         global.attack_heat[race_name][surface_index] == nil
     then
@@ -67,7 +67,10 @@ AttackGroupHeatProcessor.remove_force = function(attacker_index)
 end
 
 AttackGroupHeatProcessor.calculate_heat = function(race_name, surface_index, attacker_index, heat_points)
-    init_data(race_name, surface_index, attacker_index)
+    if race_name == nil then
+        return
+    end
+    init_data(race_name, surface_index)
     local points = global.attack_heat[race_name][surface_index][attacker_index] or 0
     heat_points = heat_points or AttackGroupHeatProcessor.DEFAULT_VALUE
     points = points + heat_points
