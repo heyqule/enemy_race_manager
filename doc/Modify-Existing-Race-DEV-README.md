@@ -4,11 +4,17 @@ This doc provide basic guideline on modify the existing race's data and adding n
 
 ### Change attack parameters.
 
+
 ### Introducing new attacks
+
 
 ### Changing Spawn Table
 
-### Changing reciepe data
+
+### Changing reciep data
+
+
+### Changing Race Settings
 
 
 

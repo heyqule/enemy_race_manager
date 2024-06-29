@@ -284,17 +284,21 @@ L20 attack speed range from 3s / attack to 4 attacks/s depending on unit design.
 
 Meele: 1
 
-* Dropship: ERM_Config.get_max_attack_range()
+* Dropship: Any range depending on design.
+* Builders: usually long range.
 * Short Range: ERM_Config.get_max_attack_range() * 0.25
 * Medium Range: ERM_Config.get_max_attack_range() * 0.5
 * Long Range: ERM_Config.get_max_attack_range() * 0.75
 * Max Range: ERM_Config.get_max_attack_range()
 
-get_max_attack_range() is depends on the startup setting. Gun turret may not able to attack range 20 enemy.
+get_max_attack_range() is depends on the startup setting. Unmodded gun turret only have 18 range. It may not able to attack range 16+ enemy when those ranged enemies attack your wall.
 
 The max range of a unit should not be further than the longest range of player turret.
 
-Otherwise, it will just annoy players and break the flow of the game.
+Tier 1 units should not have max range, because unmodded gun turret may not able to shoot them.
+
+Otherwise, these issues will just annoy players and break the flow of the game.
+
 
 min_attack_distance, a parameter to randomize attack distance
 
