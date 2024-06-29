@@ -4,7 +4,7 @@ Date: 2024-??-??
 
   Modding:
     - Simplified compatibility control.lua workflow for 3rd party integration.
-    - add_*_to_tier() and remove_*_from_tier() are deprecated and they will be removed in 1.22 release.
+    - add_*_to_tier() and remove_*_from_tier() in race_settings_helper are deprecated.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.7
