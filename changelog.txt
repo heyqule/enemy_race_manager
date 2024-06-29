@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.8
-Date: 2024-??-??
+Date: 2024-06-29
 
   Modding:
     - Simplified compatibility control.lua workflow for 3rd party integration.
