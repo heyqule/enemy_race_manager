@@ -23,10 +23,11 @@ local ERM_RemoteAPI = {}
 
 --- Create or update race setting
 --- Usage: remote.call('enemyracemanager', 'register_race', {settings...})
-function ERM_RemoteAPI.register_race(race_setting)
+function ERM_RemoteAPI.register_race(race_settings)
     if global and global.race_settings then
-        global.race_settings[race_setting.race] = race_setting
-        ErmRaceSettingsHelper.refresh_current_tier(race_setting.race)
+        global.race_settings[race_settings.race] = race_settings
+        ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
+        ErmRaceSettingsHelper.refresh_current_tier(race_settings.race)
     end
 end
 

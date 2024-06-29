@@ -10,7 +10,7 @@ local FEATURE_RACE_SPAWN_DATA = 2
 local FEATURE_RACE_SPAWN_COST = 3
 local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
-
+--- @deprecated
 local find_unit_from_current_table = function(race_settings, unit_type, unit_name)
     local key = 'current_' .. unit_type .. '_tier'
     for index, value in pairs(race_settings[key]) do
@@ -20,7 +20,7 @@ local find_unit_from_current_table = function(race_settings, unit_type, unit_nam
     end
     return nil
 end
-
+--- @deprecated
 local add_to_current_entity_table = function(race_settings, unit_type, unit_name)
     local key = 'current_' .. unit_type .. '_tier'
     local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
@@ -28,11 +28,11 @@ local add_to_current_entity_table = function(race_settings, unit_type, unit_name
         race_settings[key][#race_settings[key] + 1] = unit_name
     end
 end
-
+--- @deprecated
 local has_unit_tier = function(race_settings, unit_type, unit_tier)
     return race_settings and race_settings[unit_type] and race_settings[unit_type][unit_tier]
 end
-
+--- @deprecated
 local remove_from_current_entity_table = function(race_settings, unit_type, unit_name)
     local key = 'current_' .. unit_type .. '_tier'
     local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
@@ -40,7 +40,7 @@ local remove_from_current_entity_table = function(race_settings, unit_type, unit
         table.remove(race_settings[key], target_index)
     end
 end
-
+--- @deprecated
 local add_to_entity_table = function(race_settings, unit_type, unit_tier, unit_name)
     if has_unit_tier(race_settings, unit_type, unit_tier) then
         local target_index
@@ -60,6 +60,7 @@ local add_to_entity_table = function(race_settings, unit_type, unit_tier, unit_n
     end
 end
 
+--- @deprecated
 local remove_from_entity_table = function(race_settings, unit_type, unit_tier, unit_name)
     if has_unit_tier(race_settings, unit_type, unit_tier) then
         local target_index
@@ -76,34 +77,42 @@ local remove_from_entity_table = function(race_settings, unit_type, unit_tier, u
     end
 end
 
+--- @deprecated
 function RaceSettingHelper.add_structure_to_tier(race_settings, tier, structure)
     add_to_entity_table(race_settings, 'support_structures', tier, structure)
 end
 
+--- @deprecated
 function RaceSettingHelper.remove_structure_from_tier(race_settings, tier, structure)
     remove_from_entity_table(race_settings, 'support_structures', tier, structure)
 end
 
+--- @deprecated
 function RaceSettingHelper.add_command_center_from_tier(race_settings, tier, structure)
     add_to_entity_table(race_settings, 'command_centers', tier, structure)
 end
 
+--- @deprecated
 function RaceSettingHelper.remove_command_center_to_tier(race_settings, tier, structure)
     remove_from_entity_table(race_settings, 'command_centers', tier, structure)
 end
 
-function RaceSettingHelper.add_unit_to_tier(race_settings, tier, structure)
-    add_to_entity_table(race_settings, 'units', tier, structure)
+--- @deprecated
+function RaceSettingHelper.add_unit_to_tier(race_settings, tier, unit)
+    add_to_entity_table(race_settings, 'units', tier, unit)
 end
 
-function RaceSettingHelper.remove_unit_from_tier(race_settings, tier, structure)
-    remove_from_entity_table(race_settings, 'units', tier, structure)
+--- @deprecated
+function RaceSettingHelper.remove_unit_from_tier(race_settings, tier, unit)
+    remove_from_entity_table(race_settings, 'flying_units', tier, unit)
 end
 
+--- @deprecated
 function RaceSettingHelper.add_turret_to_tier(race_settings, tier, structure)
     add_to_entity_table(race_settings, 'turrets', tier, structure)
 end
 
+--- @deprecated
 function RaceSettingHelper.remove_turret_from_tier(race_settings, tier, structure)
     remove_from_entity_table(race_settings, 'turrets', tier, structure)
 end
