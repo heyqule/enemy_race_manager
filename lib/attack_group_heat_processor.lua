@@ -143,9 +143,8 @@ end
 
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
-    local is_space_ex_game = TEST_MODE or script.active_mods['space-exploration']
     local surface_data = global.attack_heat_by_surfaces[race_name]
-    if is_space_ex_game and surface_data
+    if global.is_multi_planets_game and surface_data
     then
         local next, surface = next(surface_data)
         if surface and surface.has_attack_beacon then
