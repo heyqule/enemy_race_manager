@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.21.9
+Date: 2024-06-30
+
+  Bugfixes:
+    - Fixed a crash that caused by heat processor picked up a null surface on a recently deleted planet in Space Exploration.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.8
 Date: 2024-06-29
 

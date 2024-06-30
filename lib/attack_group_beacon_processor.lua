@@ -864,8 +864,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         end
 
         if beacons and
-           beacons.skip == nil and
-           next(beacons)
+            beacons.skip == nil and
+            next(beacons)
         then
             local distances, has_invalid_beacon = get_sorted_distance(beacons, target_beacon.position)
             if has_invalid_beacon then
@@ -1104,8 +1104,9 @@ end
 AttackGroupBeaconProcessor.remove_beacons_on_surface = function(surface_index)
     for _, beacon in pairs(ALL_BEACONS) do
         global[beacon][surface_index] = nil
-        global[CONTROL_DATA][surface_index] = nil
     end
+    global[ATTACK_ENTITIES_SPAWN_BEACON][surface_index] = nil
+    global[CONTROL_DATA][surface_index] = nil
 end
 
 --- Remove beacon tracker and control data by force
@@ -1241,14 +1242,15 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
 
 
         if entity.valid and
-           tracker.last_resource_position == nil and
-           has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
+            tracker.last_resource_position == nil and
+            has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
         then
             local command = entity.command
             --- Switch to resource path only if it's heading to final_destination
             if command and command.type == defines.command.go_to_location and
                 command.destination.x == tracker.final_destination.x and
-                command.destination.y == tracker.final_destination.y then
+                command.destination.y == tracker.final_destination.y
+            then
                 local beacon = get_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
                 local last_resource_distance = 0
                 if tracker.last_resource_position then

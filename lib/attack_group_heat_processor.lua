@@ -147,8 +147,9 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
     local surface_data = global.attack_heat_by_surfaces[race_name]
     if is_space_ex_game and surface_data
     then
-        if surface_data[1].has_attack_beacon then
-            return game.surfaces[surface_data[1].surface_index]
+        local next, surface = next(surface_data)
+        if surface and surface.has_attack_beacon then
+            return game.surfaces[surface.surface_index]
         else
             for _, surface in pairs(surface_data) do
                 if surface.has_attack_beacon then
@@ -160,20 +161,19 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             if ask_friend then
                 for friend_race_name, race_surface_data in pairs(global.attack_heat_by_surfaces) do
                     for surface_index, surface in pairs(race_surface_data) do
-                        if surface.has_attack_beacon and
+                        if surface and surface.has_attack_beacon and
                             global.attack_heat[friend_race_name][surface_index] ~= nil
                         then
                             RaceSettingsHelper.add_to_attack_meter(friend_race_name,
-                                     RaceSettingsHelper.get_attack_meter(race_name)
+                                RaceSettingsHelper.get_attack_meter(race_name)
                             )
                             RaceSettingsHelper.add_to_attack_meter(race_name,
-                                    RaceSettingsHelper.get_attack_meter(race_name) * -1
+                                RaceSettingsHelper.get_attack_meter(race_name) * -1
                             )
                             break;
                         end
                     end
                 end
-
                 return nil
             end
         end
@@ -189,8 +189,9 @@ AttackGroupHeatProcessor.pick_target = function(race_name)
     local total_player_forces = global.total_player_forces
 
     if total_player_forces > 1 and
-       attack_heat_by_forces and
-       attack_heat_by_forces[1] then
+        attack_heat_by_forces and
+        attack_heat_by_forces[1]
+    then
         return game.forces[attack_heat_by_forces[1].attacker_index]
     end
 
