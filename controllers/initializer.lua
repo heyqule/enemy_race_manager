@@ -186,6 +186,7 @@ local init_globals = function()
     global.active_races = {}
     global.active_races_names = {}
     global.active_races_num = 1
+    global.is_multi_planets_game = TEST_MODE or script.active_mods['space-exploration']
 
     ErmSurfaceProcessor.init_globals()
     AttackMeterProcessor.init_globals()
