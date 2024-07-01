@@ -646,10 +646,10 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
     start_position = start_position or group.position
 
     if group.valid and
-            group.is_script_driven and
-            group.command == nil and
-            (start_position.x == group.position.x and start_position.y == group.position.y) and
-            ForceHelper.is_enemy_force(group.force)
+        ForceHelper.is_enemy_force(group.force) and
+        group.is_script_driven and
+        group.command == nil and
+        (start_position.x == group.position.x and start_position.y == group.position.y)
     then
         local group_size = table_size(group.members)
         local group_force = group.force

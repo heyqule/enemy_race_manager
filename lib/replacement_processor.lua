@@ -96,7 +96,7 @@ end
 function ReplacementProcessor.replace_entity(surface, entity, race_settings, target_force_name)
     local returned_entity = entity
 
-    if ErmForceHelper.is_enemy_force(entity.force) == false then
+    if not ErmForceHelper.is_enemy_force(entity.force) then
         return
     end
 

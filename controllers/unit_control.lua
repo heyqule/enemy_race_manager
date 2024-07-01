@@ -100,12 +100,12 @@ local onUnitFinishGathering = function(event)
     local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
     local group_force = group.force
 
-    if group.is_script_driven and
-            group.command == nil and
-            checking_state[group.state] and
-            not is_erm_group and
-            ForceHelper.is_enemy_force(group_force) and
-            #group.members > 10
+    if ForceHelper.is_enemy_force(group_force) and
+        not is_erm_group and
+        group.is_script_driven and
+        group.command == nil and
+        checking_state[group.state] and
+        #group.members > 10
     then
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
         local target = AttackGroupHeatProcessor.pick_target(race_name)
@@ -122,8 +122,8 @@ local onUnitFinishGathering = function(event)
     end
 
 
-    if (group.is_script_driven == false or is_erm_group) and
-            ForceHelper.is_enemy_force(group_force) and
+    if  ForceHelper.is_enemy_force(group_force) and
+            (group.is_script_driven == false or is_erm_group) and
             global.scout_unit_name[group.group_number]
     then
         local surface = group.surface
