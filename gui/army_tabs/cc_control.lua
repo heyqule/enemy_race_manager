@@ -32,17 +32,35 @@ local get_cc_name = function(entity)
     return rc
 end
 
-local get_command_centers = function(player, select_surface)
-    local name_list = {}
+local get_command_centers = function(player, windows_tab_data)
+    local left_name_list = {}
+    local right_name_list = {}
+    local left_selected_surface = windows_tab_data.cc_surfaces_select_from
+    local right_selected_surface = windows_tab_data.cc_surfaces_select_to
     local force_list = global.army_built_teleporters[player.force.index];
+    local left_surface, right_surface
+
+    if left_selected_surface and left_selected_surface ~= ALL_PLANETS then
+        left_surface = game.surfaces[left_selected_surface]
+    end
+
+    if right_selected_surface and right_selected_surface ~= ALL_PLANETS then
+        right_surface = game.surfaces[right_selected_surface]
+    end
 
     local surface_selection = {ALL_PLANETS}
 
     if force_list then
-        for _, surface_items in pairs(force_list) do
-            for _, item in pairs(surface_items) do
-                table.insert(name_list, item.entity.backer_name)
-            end
+        for surface_id, surface_items in pairs(force_list) do
+                for _, item in pairs(surface_items) do
+                    if left_surface == nil or (left_surface and surface_id == left_surface.index) then
+                        table.insert(left_name_list, item.entity.backer_name)
+                    end
+
+                    if right_surface == nil or (right_surface and surface_id == right_surface.index) then
+                        table.insert(right_name_list, item.entity.backer_name)
+                    end
+                end
             local _, item = next(surface_items)
             table.insert(surface_selection, item.entity.surface.name)
         end
@@ -50,7 +68,7 @@ local get_command_centers = function(player, select_surface)
 
     global.army_windows_tab_player_data[player.index].cc_surfaces_selection = surface_selection
 
-    return name_list
+    return left_name_list, right_name_list
 end
 
 local CommandCenterControlGUI = {
@@ -67,11 +85,11 @@ function CommandCenterControlGUI.update(player)
     local main_tab = SharedTabFunctions.get_main_tab(player)
     SharedTabFunctions.clear_tab(main_tab, CommandCenterControlGUI.name)
 
-    local commandcenters = get_command_centers(player)
-    local from_selected = get_selected_index(commandcenters, player, 'from') or 0
-    local to_selected = get_selected_index(commandcenters, player, 'to') or 0
-    local entrance, exit = ArmyTeleportationProcessor.get_linked_entities(player.force)
     local windows_tab_data = global.army_windows_tab_player_data[player.index]
+    local from_commandcenters, to_commandcenters = get_command_centers(player, windows_tab_data)
+    local from_selected = get_selected_index(from_commandcenters, player, 'from') or 0
+    local to_selected = get_selected_index(to_commandcenters, player, 'to') or 0
+    local entrance, exit = ArmyTeleportationProcessor.get_linked_entities(player.force)
 
     local pane = main_tab[CommandCenterControlGUI.name]
     local horizontal = pane.add {
@@ -89,7 +107,7 @@ function CommandCenterControlGUI.update(player)
         type = "drop-down",
         name="army_cc/filter_from_surface",
         items = windows_tab_data.cc_surfaces_selection,
-        selected_index = windows_tab_data.cc_surfaces_select_from or 1,
+        selected_index = windows_tab_data.cc_surfaces_select_from_index or 1,
     }
     left_surface_filter.style.width = 175
 
@@ -98,7 +116,7 @@ function CommandCenterControlGUI.update(player)
         name = 'army_cc/cc_select_from'
     }
     cc_from.style.width = 175
-    cc_from.items = commandcenters
+    cc_from.items = from_commandcenters
     cc_from.selected_index = from_selected
 
     -- CENTER CC
@@ -289,7 +307,7 @@ function CommandCenterControlGUI.update(player)
         type = "drop-down",
         name="army_cc/filter_to_surface",
         items = windows_tab_data.cc_surfaces_selection,
-        selected_index = windows_tab_data.cc_surfaces_select_to or 1,
+        selected_index = windows_tab_data.cc_surfaces_select_to_index or 1,
     }
     right_surface_filter.style.width = 175
 
@@ -298,7 +316,7 @@ function CommandCenterControlGUI.update(player)
         name = CommandCenterControlGUI.cc_to_selector
     }
     cc_to.style.width = 175
-    cc_to.items = get_command_centers(player)
+    cc_to.items = to_commandcenters
     cc_to.selected_index = to_selected
 end
 

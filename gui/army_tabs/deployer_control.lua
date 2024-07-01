@@ -36,6 +36,8 @@ function DeployerControlGUI.update(player)
     local filtered_deployers = {}
     local match_all_filter = (deployer_type_filters and deployer_surface_filter)
 
+    local surfaces = {}
+
     for unit_number, deployer in pairs(deployers) do
         local entity = deployer.entity
         local pass = false
@@ -50,13 +52,9 @@ function DeployerControlGUI.update(player)
 
         if pass then
             filtered_deployers[unit_number] = deployer
+            local surface = deployer.entity.surface
+            surfaces[surface.index] = surface.name
         end
-    end
-
-    local surfaces = {}
-    for name, deployer in pairs(deployers) do
-        local surface = deployer.entity.surface
-        surfaces[surface.index] = surface.name
     end
 
     local filtered_surface = {ALL_PLANETS}

@@ -274,10 +274,33 @@ Event.register(defines.events.on_gui_confirmed, function(event)
     GuiContainer.army_control_window.update_army_planner(player, element)
 end, Event.Filters.gui, 'army_deployer/planner/.*')
 
+--- CC Selection
 EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
     local element = event.element
     local player = game.players[element.player_index]
     GuiContainer.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
+end)
+
+--- Filter from/to surface
+EventGui.on_selection_state_changed('army_cc/filter_.*_surface', function(event)
+    local element = event.element
+    local player = game.players[element.player_index]
+    local window_tab_data = global.army_windows_tab_player_data[player.index]
+
+    local surface_name = element.get_item(element.selected_index)
+    if surface_name == ALL_PLANETS then
+        surface_name = nil
+    end
+
+    if string.find(element.name, "from") then
+        window_tab_data.cc_surfaces_select_from = surface_name
+        window_tab_data.cc_surfaces_select_from_index = element.selected_index
+    elseif string.find(element.name, "to") then
+        window_tab_data.cc_surfaces_select_to = surface_name
+        window_tab_data.cc_surfaces_select_to_index = element.selected_index
+    end
+
+    GuiContainer.army_control_window.update_command_centers()
 end)
 
 EventGui.on_click('army_cc/.*_link', function(event)
