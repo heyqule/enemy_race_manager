@@ -212,12 +212,4 @@ function DeployerControlGUI.update(player)
     turn_all_off.style.width = 80
 end
 
-function DeployerControlGUI.update_type_filter(player)
-
-end
-
-function DeployerControlGUI.update_surface_filter(player)
-
-end
-
 return DeployerControlGUI
