@@ -209,14 +209,12 @@ end
 
 Event.register(defines.events.on_gui_closed, onGuiClose)
 
--- Register functions by gui_type
+-- Register functions by gui_type for relative window functionality
 local gui_open_switch = {
     [defines.gui_type.entity] = function(event)
         local owner = game.players[event.player_index]
-        --local element = event.element
         local entity = event.entity
         local registered_deployer = global.army_registered_deployers
-        --local registered_cc = global.army_registered_command_centers
 
         if event.gui_type == defines.gui_type.entity and
                 entity and entity.valid and
@@ -274,14 +272,14 @@ Event.register(defines.events.on_gui_confirmed, function(event)
     GuiContainer.army_control_window.update_army_planner(player, element)
 end, Event.Filters.gui, 'army_deployer/planner/.*')
 
---- CC Selection
+--- army_cc: CC Selection
 EventGui.on_selection_state_changed('army_cc/cc_select_.*', function(event)
     local element = event.element
     local player = game.players[element.player_index]
     GuiContainer.army_control_window.set_selected_cc(player, element, element.get_item(element.selected_index))
 end)
 
---- Filter from/to surface
+--- army_cc: Filter from/to surface
 EventGui.on_selection_state_changed('army_cc/filter_.*_surface', function(event)
     local element = event.element
     local player = game.players[element.player_index]
@@ -303,6 +301,7 @@ EventGui.on_selection_state_changed('army_cc/filter_.*_surface', function(event)
     GuiContainer.army_control_window.update_command_centers()
 end)
 
+--- army_cc: Link/unlink handler
 EventGui.on_click('army_cc/.*_link', function(event)
     local element = event.element
     if not (element and element.valid) then
@@ -320,6 +319,7 @@ EventGui.on_click('army_cc/.*_link', function(event)
     end
 end)
 
+--- army_deployer: deployer_switch
 local deployer_switch = function(event)
     local element = event.element
     if not (element and element.valid) then
@@ -347,6 +347,7 @@ local deployer_switch = function(event)
 end
 Event.register(defines.events.on_gui_switch_state_changed, deployer_switch, Event.Filters.gui, 'army_deployer/.*')
 
+--- army_deployer: all buttons
 EventGui.on_click('army_deployer/all/.*', function(event)
     local element = event.element
     if not (element and element.valid) then
@@ -365,6 +366,7 @@ EventGui.on_click('army_deployer/all/.*', function(event)
     end
 end)
 
+--- army_deployer: filter
 EventGui.on_click('army_deployer/filter_type/.*', function(event)
     local element = event.element
     if not (element and element.valid) then
@@ -386,6 +388,7 @@ EventGui.on_click('army_deployer/filter_type/.*', function(event)
     end
 end)
 
+--- army_deployer: open map
 EventGui.on_click('army_deployer/open_map/.*', function(event)
     local element = event.element
     if not (element and element.valid) then
@@ -403,7 +406,7 @@ EventGui.on_click('army_deployer/open_map/.*', function(event)
     end
 end)
 
-
+--- army_deployer: surface dropdown
 local deployer_surface_dropdown = function(event)
     local element = event.element
     if not (element and element.valid) then

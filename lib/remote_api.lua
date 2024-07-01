@@ -262,6 +262,8 @@ function ERM_RemoteAPI.milestones_preset_addons()
     return {}
 end
 
+--- remote.call('enemyracemanager', 'get_event_name', ERMCONFIG.EVENT_TIER_WENT_UP)
+--- script.on_event(remote.call('enemyracemanager', 'get_event_name', ERMCONFIG.EVENT_TIER_WENT_UP), function(event) { ... })
 function ERM_RemoteAPI.get_event_name(event_name)
     return Event.get_event_name(event_name)
 end
