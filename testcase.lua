@@ -4,7 +4,7 @@
 --- DateTime: 1/5/2024 12:10 AM
 ---
 
-if DEBUG_MODE and script.active_mods["factorio-test"] then
+if TEST_MODE and script.active_mods["factorio-test"] then
     local config = require('__stdlib__/stdlib/config')
     config.skip_script_protections = true
 
@@ -18,15 +18,19 @@ if DEBUG_MODE and script.active_mods["factorio-test"] then
         "tests/surface_manager",
     }
 
-    if script.active_mods['erm_zerg'] then
+    if script.active_mods['erm_zerg'] and script.active_mods['erm_toss'] then
         table.insert(tests,"tests/attack_group")
         table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
+    else
+        error('Required erm_zerg and erm_protoss to test attack functions')
     end
 
     if script.active_mods['erm_terran'] then
         table.insert(tests,"tests/army")
+    else
+        error('Required ERM_TERRAN to test army functions')
     end
 
     require("__factorio-test__/init")(tests)
