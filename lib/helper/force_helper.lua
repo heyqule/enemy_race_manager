@@ -156,6 +156,10 @@ function ForceHelper.refresh_all_enemy_forces()
         end
     end
     global.total_player_forces = #global.player_forces
+
+    if settings.startup['enemyracemanager-enable-bitters'].value == false then
+        global.enemy_force_check['enemy'] = nil
+    end
 end
 
 -- Whether a surface can assign enemy
