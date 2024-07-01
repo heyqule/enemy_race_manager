@@ -343,16 +343,28 @@ local try_kill_a_tree_or_rock = function(units)
                     command and (command.type == nil or command.type == defines.command.wander)
             then
                 local surface = entity.surface
+                local idx, target_entity
+
                 local entities = surface.find_entities_filtered({
                     position=entity.position,
                     radius=32,
-                    -- tree and rocks
-                    type={"tree", "simple-entity"},
-                    force="neutral",
+                    name={"rock-big","sandy-rock-big","rock-huge"},
                     limit=1,
                 })
 
-                local _, target_entity = next(entities)
+                idx, target_entity = next(entities)
+
+                if not target_entity then
+                    local entities = surface.find_entities_filtered({
+                        position=entity.position,
+                        radius=32,
+                        type={"tree"},
+                        limit=1,
+                    })
+
+                    idx, target_entity = next(entities)
+                end
+
                 if target_entity then
                     entity.set_command({
                         type = defines.command.attack,
