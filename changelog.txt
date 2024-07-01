@@ -16,6 +16,7 @@ Date: 2024-??-??
 
   Bugfixes:
     - Fixed army stats panel overflow.
+    - Attempted to fix timed unit spawner unit may stuck on a path because the timed unit are not attacking the tree/rock.
 
 
 ---------------------------------------------------------------------------------------------------

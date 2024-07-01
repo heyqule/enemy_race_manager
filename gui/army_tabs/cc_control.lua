@@ -32,24 +32,23 @@ local get_cc_name = function(entity)
     return rc
 end
 
-local get_command_centers = function(player)
+local get_command_centers = function(player, select_surface)
     local name_list = {}
     local force_list = global.army_built_teleporters[player.force.index];
-    local surface = player.surface
 
-    if force_list and force_list[surface.index] then
-        for _, item in pairs(force_list[surface.index]) do
-            table.insert(name_list, item.entity.backer_name)
-        end
+    local surface_selection = {ALL_PLANETS}
 
-        for surface_index, surface_items in pairs(force_list) do
-            if surface_index ~= surface.index then
-                for _, item in pairs(surface_items) do
-                    table.insert(name_list, item.entity.backer_name)
-                end
+    if force_list then
+        for _, surface_items in pairs(force_list) do
+            for _, item in pairs(surface_items) do
+                table.insert(name_list, item.entity.backer_name)
             end
+            local _, item = next(surface_items)
+            table.insert(surface_selection, item.entity.surface.name)
         end
     end
+
+    global.army_windows_tab_player_data[player.index].cc_surfaces_selection = surface_selection
 
     return name_list
 end
@@ -72,6 +71,7 @@ function CommandCenterControlGUI.update(player)
     local from_selected = get_selected_index(commandcenters, player, 'from') or 0
     local to_selected = get_selected_index(commandcenters, player, 'to') or 0
     local entrance, exit = ArmyTeleportationProcessor.get_linked_entities(player.force)
+    local windows_tab_data = global.army_windows_tab_player_data[player.index]
 
     local pane = main_tab[CommandCenterControlGUI.name]
     local horizontal = pane.add {
@@ -80,7 +80,20 @@ function CommandCenterControlGUI.update(player)
         name = 'main-pane'
     }
     -- LEFT CC LISTBOX
-    local cc_from = horizontal.add {
+    local left_listing = horizontal.add {
+        type = 'flow',
+        direction = 'vertical',
+        name = 'left-listing'
+    }
+    local left_surface_filter = left_listing.add {
+        type = "drop-down",
+        name="army_cc/filter_from_surface",
+        items = windows_tab_data.cc_surfaces_selection,
+        selected_index = windows_tab_data.cc_surfaces_select_from or 1,
+    }
+    left_surface_filter.style.width = 175
+
+    local cc_from = left_listing.add {
         type = 'list-box',
         name = 'army_cc/cc_select_from'
     }
@@ -266,13 +279,26 @@ function CommandCenterControlGUI.update(player)
     end
 
     -- Right CC LISTBOX
-    local cc_to = horizontal.add {
+    local right_listing = horizontal.add {
+        type = 'flow',
+        direction = 'vertical',
+        name = 'right-listing'
+    }
+
+    local right_surface_filter = right_listing.add {
+        type = "drop-down",
+        name="army_cc/filter_to_surface",
+        items = windows_tab_data.cc_surfaces_selection,
+        selected_index = windows_tab_data.cc_surfaces_select_to or 1,
+    }
+    right_surface_filter.style.width = 175
+
+    local cc_to = right_listing.add {
         type = 'list-box',
         name = CommandCenterControlGUI.cc_to_selector
     }
     cc_to.style.width = 175
     cc_to.items = get_command_centers(player)
-    cc_to.items = commandcenters
     cc_to.selected_index = to_selected
 end
 
