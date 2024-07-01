@@ -266,16 +266,22 @@ function ERM_RemoteAPI.get_event_name(event_name)
     return Event.get_event_name(event_name)
 end
 
---- Internal Management remote calls
+--- ErmForceHelper
 ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
 
+ERM_RemoteAPI.is_enemy_force = ErmForceHelper.is_enemy_force
+
+--- ErmArmyPopulationProcessor
 ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
 ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
 
+--- ErmArmyTeleportationProcessor
 ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
 
+--- ErmArmyDeploymentProcessor
 ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
 
+--- AttackGroupBeaconProcessor
 ERM_RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
 
 return ERM_RemoteAPI

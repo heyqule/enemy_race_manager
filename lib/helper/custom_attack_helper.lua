@@ -321,6 +321,49 @@ local break_time_to_live = function(count, max_count, units_total)
     return count == max_count or units_total == 0
 end
 
+--- Try target trees and rocks when the parent unit is stuck on pathing and timed unit don't have targets.
+local try_kill_a_tree_or_rock = function(units)
+    local is_enemy_force = false
+    local next_idx, value
+    for i = 1, 5, 1 do
+        next_idx, value = next(units, next_idx)
+
+        local entity
+        if value and value.entity then
+            entity = value.entity
+        end
+
+        if entity and entity.valid then
+            if not is_enemy_force then
+                is_enemy_force = remote.call('enemyracemanager', 'is_enemy_force', entity.force)
+            end
+
+            local command = entity.command
+            if is_enemy_force and
+                    command and (command.type == nil or command.type == defines.command.wander)
+            then
+                local surface = entity.surface
+                local entities = surface.find_entities_filtered({
+                    position=entity.position,
+                    radius=32,
+                    -- tree and rocks
+                    type={"tree", "simple-entity"},
+                    force="neutral",
+                    limit=1,
+                })
+
+                local _, target_entity = next(entities)
+                if target_entity then
+                    entity.set_command({
+                        type = defines.command.attack,
+                        target = target_entity,
+                    })
+                end
+            end
+        end
+    end
+end
+
 ---
 --- Clean up time to live units
 ---
@@ -330,7 +373,6 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
 
     local unit_total = global.time_to_live_units_total
     local units = global.time_to_live_units
-    local is_overflow = false
 
     if unit_total == nil or unit_total == 0 then
         return
@@ -340,7 +382,6 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
     local max_count = regular_batch
     if unit_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
         max_count = overflow_batch
-        is_overflow = true
     end
     for idx, value in pairs(units) do
         local entity = value.entity
@@ -358,6 +399,8 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
             break
         end
     end
+
+    try_kill_a_tree_or_rock(units)
 
     global.time_to_live_units_total = unit_total
 end
