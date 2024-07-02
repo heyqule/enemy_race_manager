@@ -10,36 +10,25 @@ local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 
-local is_valid = function(event)
-    if (Config.environmental_attack_enable() and
-        RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())) and
-        event.surface_index and
-        event.target_position
-    then
+local is_valid = function(surface, target_position, force_spawn)
+    local valid = Config.environmental_attack_enable() and surface and surface.valid and target_position
+    local can_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
+
+    if force_spawn ~= nil then
+        can_spawn = force_spawn
+    end
+
+    if valid and can_spawn then
         return true
     end
-
-    if TEST_MODE then
-        local can_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
-        if global.test_environmental_attack_can_spawn == 1 then
-            can_spawn = true
-        elseif global.test_environmental_attack_can_spawn == -1 then
-            can_spawn = false
-        end
-        return can_spawn
-    end
-
     return false
 end
 
 local EnvironmentalAttacks = {}
 
-function EnvironmentalAttacks.exec(event)
-    local surface = game.surfaces[event.surface_index]
-    local target_position = event.target_position
-
-    if is_valid(event) and
-       surface and target_position and
+function EnvironmentalAttacks.exec(surface, target_position,
+                                   force_spawn, force_spawn_base)
+    if is_valid(surface, target_position, force_spawn) and
        ForceHelper.can_have_enemy_on(surface)
     then
         local spawn_count = Config.environmental_attack_units_count()
@@ -48,12 +37,8 @@ function EnvironmentalAttacks.exec(event)
 
         local can_spawn_home = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
 
-        if TEST_MODE then
-            if global.test_environmental_attack_spawn_home == 1 then
-                can_spawn_home = true
-            elseif global.test_environmental_attack_spawn_home == -1 then
-                can_spawn_home = false
-            end
+        if force_spawn_base ~= nil then
+            can_spawn_home = force_spawn_base
         end
 
         if can_spawn_home then

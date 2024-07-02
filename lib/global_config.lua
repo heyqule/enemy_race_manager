@@ -430,7 +430,7 @@ function ErmConfig.spawner_kills_deduct_evolution_points()
 end
 
 function ErmConfig.environmental_attack_enable()
-    return get_global_setting_value('enemyracemanager-evolution-point-spawner-kills-deduction')
+    return get_global_setting_value('enemyracemanager-environmental-raids')
 end
 
 function ErmConfig.environmental_attack_units_count()
