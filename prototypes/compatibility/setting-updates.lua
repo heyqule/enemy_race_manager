@@ -7,66 +7,22 @@ local version = require('__stdlib__/stdlib/vendor/version')
 require('global')
 
 if mods['Krastorio2'] then
-    data:extend {
-        {
-            type = "bool-setting",
-            name = "enemyracemanager-vanilla-k2-creep",
-            description = "enemyracemanager-vanilla-k2-creep",
-            setting_type = "startup",
-            default_value = true,
-            order = "enemyracemanager-1000",
-        }
-    }
+    require "K2/settings"
 end
 
 if mods['ArmouredBiters'] then
-    data:extend {
-        {
-            type = "color-setting",
-            name = "enemyracemanager-armoured_biter_map_color",
-            description = "enemyracemanager-armoured_biter_map_color",
-            setting_type = "startup",
-            default_value = { r = 20, g = 61, b = 46, a = 255 },
-            order = "enemyracemanager-1002"
-        },
-    }
+    require "ArmouredBiters/settings"
+
 end
 
 if mods['Cold_biters'] then
-    data:extend {
-        {
-            type = "color-setting",
-            name = "enemyracemanager-cold_biter_map_color",
-            description = "enemyracemanager-cold_biter_map_color",
-            setting_type = "startup",
-            default_value = { r = 56, g = 140, b = 204, a = 255 },
-            order = "enemyracemanager-1003"
-        },
-    }
+    require "Cold_biters/settings"
 end
 
 if mods['Explosive_biters'] then
-    data:extend {
-        {
-            type = "color-setting",
-            name = "enemyracemanager-explosive_biter_map_color",
-            description = "enemyracemanager-explosive_biter_map_color",
-            setting_type = "startup",
-            default_value = { r = 205, g = 171, b = 13, a = 255 },
-            order = "enemyracemanager-1004"
-        },
-    }
+    require "Explosive_Biters/settings"
 end
 
 if mods['Toxic_biters'] then
-    data:extend {
-        {
-            type = "color-setting",
-            name = "enemyracemanager-toxic_biter_map_color",
-            description = "enemyracemanager-toxic_biter_map_color",
-            setting_type = "startup",
-            default_value = { r = 199, g = 136, b = 186, a = 255 },
-            order = "enemyracemanager-1005"
-        },
-    }
+    require "Toxic_Biters/settings"
 end

@@ -39,3 +39,7 @@ require('prototypes/extend-default-autoplace.lua')
 require('prototypes/map-generation.lua')
 
 require('prototypes/extend-scout-units')
+
+if TEST_MODE then
+    require('prototypes/test-prototypes')
+end

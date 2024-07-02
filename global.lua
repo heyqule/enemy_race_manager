@@ -39,4 +39,6 @@ AERIAL_SCOUT_BEACON = 'em-airsb'
 
 ALL_PLANETS = 'All Planets'
 
+ENVIRONMENTAL_ATTACK = 'emev-atk'
+
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }

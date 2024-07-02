@@ -14,6 +14,7 @@ local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_p
 
 local CustomAttacks = require('__enemyracemanager__/prototypes/base-units/custom_attacks')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local EnvironmentalAttacks = require('__enemyracemanager__/lib/environmental_attacks')
 local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
@@ -62,7 +63,7 @@ local script_functions = {
     end,
     [PLAYER_PLANET_PURIFIER_ATTACK] = function(event)
         if is_valid_attack_for_attack_point(event) then
-            process_attack_point_event(event, ErmConfig.super_weapon_attack_points() * 10)
+            process_attack_point_event(event, ErmConfig.super_weapon_attack_points() * 200)
         end
     end,
     [PLAYER_SUPER_WEAPON_COUNTER_ATTACK] = function(event)
@@ -128,6 +129,10 @@ local script_functions = {
                 RallyPointUI.show(player, ui.tags.unit_number)
             end
         end
+    end,
+
+    [ENVIRONMENTAL_ATTACK] = function(event)
+        EnvironmentalAttacks.exec(event)
     end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
