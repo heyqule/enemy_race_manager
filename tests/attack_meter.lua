@@ -23,100 +23,99 @@ after_each(function()
     TestShared.reset_the_factory()
 end)
 
-describe("Attack Meters", function()
-    it("Calculate attack points", function()
-        async(24000)
-        local surface = game.surfaces[1]
-        AttackGroupBeaconProcessor.init_index()
 
-        for i = 1, 20, 1 do
+it("Calculate attack points", function()
+    async(24000)
+    local surface = game.surfaces[1]
+    AttackGroupBeaconProcessor.init_index()
+
+    for i = 1, 20, 1 do
+        surface.create_entity({name=biter_name,position={0,i * 10}}) -- 20
+        surface.create_entity({name=turret_name,position={10,i * 10}}) -- 200
+        surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
+    end
+
+    local entities = surface.find_entities_filtered({force=force_name})
+    for _, entity in pairs(entities) do
+        entity.die('player')
+    end
+
+    after_ticks(4200, function()
+        assert(1220 <= global.race_settings[race_name].attack_meter ,'Round: Attack Meter Number')
+        assert(1220 <= global.race_settings[race_name].attack_meter_total, 'Round: Accumulated Attack Meter Number')
+
+        for i = 1, 70, 1 do
             surface.create_entity({name=biter_name,position={0,i * 10}}) -- 20
             surface.create_entity({name=turret_name,position={10,i * 10}}) -- 200
             surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
         end
 
-        local entities = surface.find_entities_filtered({force=force_name})
-        for _, entity in pairs(entities) do
+        local entities_to_die = surface.find_entities_filtered({force=force_name})
+        for _, entity in pairs(entities_to_die) do
             entity.die('player')
         end
 
-        after_ticks(4200, function()
-            assert(1220 <= global.race_settings[race_name].attack_meter ,'Round: Attack Meter Number')
-            assert(1220 <= global.race_settings[race_name].attack_meter_total, 'Round: Accumulated Attack Meter Number')
-
-            for i = 1, 70, 1 do
-                surface.create_entity({name=biter_name,position={0,i * 10}}) -- 20
-                surface.create_entity({name=turret_name,position={10,i * 10}}) -- 200
-                surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
-            end
-
-            local entities_to_die = surface.find_entities_filtered({force=force_name})
-            for _, entity in pairs(entities_to_die) do
-                entity.die('player')
-            end
-
-            surface.create_entity({name=spawner_name,position={0,300}})
-            AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, { { -10, 295 }, { 10, 305 } })
-        end)
-
-        --- When attack group generated
-        after_ticks(22000, function()
-            assert(global.race_settings[race_name].attack_meter <= 5490,'Round2: Attack Meter Number')
-            assert(5490 <= global.race_settings[race_name].attack_meter_total,'Round2: Accumulated Attack Meter Number')
-            done()
-        end)
+        surface.create_entity({name=spawner_name,position={0,300}})
+        AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, { { -10, 295 }, { 10, 305 } })
     end)
 
-    it("Base evolution - kills-deduction true", function()
-        async(7200)
-        global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
-        local surface = game.surfaces[1]
-        AttackGroupBeaconProcessor.init_index()
+    --- When attack group generated
+    after_ticks(22000, function()
+        assert(global.race_settings[race_name].attack_meter <= 5490,'Round2: Attack Meter Number')
+        assert(5490 <= global.race_settings[race_name].attack_meter_total,'Round2: Accumulated Attack Meter Number')
+        done()
+    end)
+end)
 
-        for i = 1, 20, 1 do
-            surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
-        end
+it("Base evolution - kills-deduction true", function()
+    async(7200)
+    global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
+    local surface = game.surfaces[1]
+    AttackGroupBeaconProcessor.init_index()
 
-        local entities = surface.find_entities_filtered({force=force_name})
-        for _, entity in pairs(entities) do
-            entity.die('player')
-        end
+    for i = 1, 20, 1 do
+        surface.create_entity({name=spawner_name,position={20,i * 10}}) -- 1000
+    end
 
-        after_ticks(4000, function()
-            assert(global.race_settings[race_name].evolution_base_point < 0,'spawner-kills-deduction true')
-            global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = false
-            done()
-        end)
+    local entities = surface.find_entities_filtered({force=force_name})
+    for _, entity in pairs(entities) do
+        entity.die('player')
+    end
+
+    after_ticks(4000, function()
+        assert(global.race_settings[race_name].evolution_base_point < 0,'spawner-kills-deduction true')
+        global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = false
+        done()
+    end)
+end)
+
+it("Time base attack", function()
+    async(10800)
+    global.race_settings[race_name].level = 3
+    AttackGroupBeaconProcessor.init_index()
+    local last_minute = 0
+
+    after_ticks(4000, function()
+        assert(global.race_settings[race_name].attack_meter > 0,'time base attack - 1st minute')
+        last_minute = global.race_settings[race_name].attack_meter
     end)
 
-    it("Time base attack", function()
-        async(10800)
-        global.race_settings[race_name].level = 3
-        AttackGroupBeaconProcessor.init_index()
-        local last_minute = 0
+    after_ticks(7600, function()
+        assert(global.race_settings[race_name].attack_meter > last_minute,'time base attack - 2st minute')
+        done()
+    end)
+end)
 
-        after_ticks(4000, function()
-            assert(global.race_settings[race_name].attack_meter > 0,'time base attack - 1st minute')
-            last_minute = global.race_settings[race_name].attack_meter
-        end)
+it("Time base attack - level req not met", function()
+    async(10800)
+    AttackGroupBeaconProcessor.init_index()
 
-        after_ticks(7600, function()
-            assert(global.race_settings[race_name].attack_meter > last_minute,'time base attack - 2st minute')
-            done()
-        end)
+    after_ticks(4000, function()
+        assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 1st minute')
     end)
 
-    it("Time base attack - level req not met", function()
-        async(10800)
-        AttackGroupBeaconProcessor.init_index()
-
-        after_ticks(4000, function()
-            assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 1st minute')
-        end)
-
-        after_ticks(7600, function()
-            assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 2st minute')
-            done()
-        end)
+    after_ticks(7600, function()
+        assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 2st minute')
+        done()
     end)
 end)

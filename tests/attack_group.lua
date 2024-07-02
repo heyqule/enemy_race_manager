@@ -50,7 +50,6 @@ local function spawn_regular_unit_group(surface, position, is_auto)
     return group
 end
 
-describe("Attack Group", function()
     --- Regular attack group Test
     it("Regular Group by AP", function()
         async(18200)
@@ -359,4 +358,3 @@ describe("Attack Group", function()
         group.start_moving()
         assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
     end)
-end)

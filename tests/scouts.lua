@@ -33,7 +33,6 @@ local player = 'player'
 local enemy = 'enemy'
 local biter_spawner = 'erm_vanilla/biter-spawner/1'
 
-describe("Scouts", function()
     it("Spawn Scout", function()
         async(900)
 
@@ -214,4 +213,3 @@ describe("Scouts", function()
             done()
         end)
     end)
-end)

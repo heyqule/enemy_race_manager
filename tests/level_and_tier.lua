@@ -17,7 +17,6 @@ after_each(function()
 end)
 
 
-describe("Level Manager", function()
     it("calculate_levels and calculateMutlipleLevels", function()
         global.race_settings['erm_vanilla'].evolution_base_point = 2
         LevelManager.calculate_levels()
@@ -62,4 +61,3 @@ describe("Level Manager", function()
         LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].tier == 3, 'Tier == 3')
     end)
-end)

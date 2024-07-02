@@ -18,7 +18,6 @@ after_each(function()
 end)
 
 
-describe("Surfaces Manager", function()
     it("Add and remove surface", function()
         local new_surface_name = 'test_surface_2'
         game.create_surface(new_surface_name)
@@ -59,4 +58,3 @@ describe("Surfaces Manager", function()
         end
 
     end)
-end)
