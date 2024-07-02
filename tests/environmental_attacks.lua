@@ -16,7 +16,7 @@ after_each(function()
     EnvironmentalAttacks.reset_global()
 end)
 
-describe.only("Environmental Attack", function()
+describe("Environmental Attack", function()
     --- Regular attack group Test
     it("Environmental Attack: Attack Target", function()
         async(900)

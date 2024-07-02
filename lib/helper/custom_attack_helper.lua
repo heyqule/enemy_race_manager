@@ -346,20 +346,20 @@ local try_kill_a_tree_or_rock = function(units)
                 local idx, target_entity
 
                 local entities = surface.find_entities_filtered({
-                    position=entity.position,
-                    radius=32,
-                    name={"rock-big","sandy-rock-big","rock-huge"},
-                    limit=1,
+                    position = entity.position,
+                    radius = 32,
+                    name = {"rock-big","sand-rock-big","rock-huge"},
+                    limit = 1,
                 })
 
                 idx, target_entity = next(entities)
 
                 if not target_entity then
                     local entities = surface.find_entities_filtered({
-                        position=entity.position,
-                        radius=32,
-                        type={"tree"},
-                        limit=1,
+                        position = entity.position,
+                        radius = 32,
+                        type = {"tree"},
+                        limit = 1,
                     })
 
                     idx, target_entity = next(entities)
