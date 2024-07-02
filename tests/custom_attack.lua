@@ -69,7 +69,7 @@ describe("Custom attacks", function()
         end)
     end)
 
-    it.only("Protoss: Time Unit Tree/Stone blockage test", function()
+    it("Protoss: Time Unit Tree/Stone blockage test", function()
         async(7200)
         local surface = game.surfaces[1]
         local enemy_force = game.forces['enemy_erm_protoss']

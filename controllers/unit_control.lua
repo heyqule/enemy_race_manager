@@ -75,7 +75,8 @@ local onUnitGroupCreated = function(event)
         if scout_unit_name then
             global.scout_unit_name[group.group_number] = {
                 entity = group,
-                scout_type = scout_unit_name
+                scout_type = scout_unit_name,
+                tick = game.tick
             }
         end
     end
@@ -123,8 +124,8 @@ local onUnitFinishGathering = function(event)
 
 
     if  ForceHelper.is_enemy_force(group_force) and
-            (group.is_script_driven == false or is_erm_group) and
-            global.scout_unit_name[group.group_number]
+        (group.is_script_driven == false or is_erm_group) and
+        global.scout_unit_name[group.group_number]
     then
         local surface = group.surface
         local race_name = ForceHelper.extract_race_name_from(group_force.name)

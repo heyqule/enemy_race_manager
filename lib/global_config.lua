@@ -108,6 +108,7 @@ local refreshable_settings = {
         'enemyracemanager-max-attack-range',
         'enemyracemanager-max-level',
         'enemyracemanager-mapping-method',
+        'enemyracemanager-environmental-raids',
     },
     global = {
         'enemyracemanager-max-gathering-groups',
@@ -137,7 +138,13 @@ local refreshable_settings = {
         'enemyracemanager-precision-strike-flying-unit-chance',
         'enemyracemanager-precision-strike-warning',
         'enemyracemanager-time-based-enable',
-        'enemyracemanager-time-based-points'
+        'enemyracemanager-time-based-points',
+        'enemyracemanager-environmental-raids-units',
+        'enemyracemanager-environmental-raids-chance',
+        'enemyracemanager-environmental-raids-build-base-chance',
+        'enemyracemanager-interplanetary-raids',
+        'enemyracemanager-interplanetary-raids-chance',
+        'enemyracemanager-interplanetary-raids-build-base-chance'
     }
 }
 
@@ -422,6 +429,22 @@ function ErmConfig.spawner_kills_deduct_evolution_points()
     return get_global_setting_value('enemyracemanager-evolution-point-spawner-kills-deduction')
 end
 
+function ErmConfig.environmental_attack_enable()
+    return get_global_setting_value('enemyracemanager-evolution-point-spawner-kills-deduction')
+end
+
+function ErmConfig.environmental_attack_units_count()
+    return get_global_setting_value('enemyracemanager-environmental-raids-units')
+end
+
+function ErmConfig.environmental_attack_raid_chance()
+    return get_global_setting_value('enemyracemanager-environmental-raids-chance')
+end
+
+function ErmConfig.environmental_attack_raid_build_base_chance()
+    return get_global_setting_value('enemyracemanager-environmental-raids-build-base-chance')
+end
+
 function ErmConfig.initialize_races_data()
     global.installed_races = { MOD_NAME }
     if settings.startup['enemyracemanager-enable-bitters'].value then
@@ -500,8 +523,6 @@ function ErmConfig.format_daytime_string(start_tick, end_tick)
 
     return datetime_str;
 end
-
-
 
 function ErmConfig.add_attack_group_attackable_entity(name)
     if game.entity_prototypes[name] then

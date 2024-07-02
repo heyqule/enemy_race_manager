@@ -42,4 +42,8 @@ if mods['Krastorio2'] and version(mods['Krastorio2']) >= version("1.2.0") then
     require "K2/projectile"
 end
 
+if mods['space-exploration'] then
+    require "SpaceExploration/meteorites.lua"
+end
+
 require "shared/resistance"

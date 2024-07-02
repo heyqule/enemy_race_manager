@@ -5,18 +5,29 @@ Date: 2024-??-??
   Features:
     - Added rally point support to army unit deployers
     - Added custom UI to handle rally point and deploy active toggle when you open army unit deployers UI.
+    - >>> Optional Environmental Raids for SE <<<
+    - Meteorites have a chance to spawn units.  They may attack your base or build base on its landing site.
+    - They can be intercept with meteorite defense.
+    - >>> Optional Interplanetary Raids for SE <<<
+    - When a race is unable to perform attack with its custom attack groups, they will try to raid a planet that has your buildings.
+    - This usually happens when you extincted them on a planet.
+    - This ignores the threat meter in SE.  They can drop on your 0% threat planet.
+    - WARNING: Above raid features should be off for existing SE save, unless your defenses are prepared for this.
 
   Changes:
-    - Added surface and type filter to Deployer UI
-    - Added zoom to entity on Deployer UI when the player and entity is on same planet.
     - Changed Deployer UI layout.
+    - Added surface and type filter to Deployer UI
+    - Added zoom to entity button on Deployer UI when the player and entity is on same planet.
     - Removed alt left click action on deployers.
     - Added surface filter to Teleport UI
     - Fixed incorrect tooltips
+    - Increased multiplier for genocidal weapon from x10 to x200. (base setting, 300 AP, gives 60K AP, appox 20 attack groups)
+    - Changed super-weapon-attack-point setting max value from 10000 to 1000.  If you are using max value, you will get 500K AP for using genocidal weapon.
+    - Regroup settings.
 
   Bugfixes:
     - Fixed army stats panel overflow.
-    - Attempted to fix timed unit spawner unit may stuck on a path because the timed unit are not attacking the tree/rock.
+    - Attempted to fix timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
 
 
 ---------------------------------------------------------------------------------------------------

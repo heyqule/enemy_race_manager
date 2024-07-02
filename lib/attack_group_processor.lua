@@ -577,6 +577,33 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 end
 
+function AttackGroupProcessor.generate_simple_group(surface, target_position, spawn_count)
+    local race_name = SurfaceProcessor.get_enemy_on(surface.name)
+
+    local force_name = ForceHelper.get_force_name_from(race_name)
+    local group = surface.create_unit_group { position = target_position, force = force_name}
+
+    local i = 0
+    repeat
+        local unit_name =  RaceSettingsHelper.get_race_entity_name(race_name, RaceSettingsHelper.pick_an_unit(race_name), RaceSettingsHelper.get_level(race_name))
+        local spawn_position = surface.find_non_colliding_position(unit_name, group.position,
+                AttackGroupProcessor.GROUP_AREA, 2)
+        local entity = surface.create_entity {
+            position = spawn_position,
+            force = force_name,
+            name = unit_name
+        }
+        if entity then
+            group.add_member(entity)
+        end
+        i = i + 1
+    until i == spawn_count
+
+
+
+    return group
+end
+
 function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, target_force)
     if global.scout_tracker[race_name] then
         return nil
@@ -719,9 +746,10 @@ function AttackGroupProcessor.clear_invalid_erm_unit_groups()
     end
 end
 
-AttackGroupProcessor.clear_invalid_scout_unit_name = function()
+function AttackGroupProcessor.clear_invalid_scout_unit_name()
     for group_number, group in pairs(global.scout_unit_name) do
-        if not group.entity.valid then
+        local group_created = tonumber(group.tick) or 0
+        if not group.entity.valid and game.tick > group_created + DAY_TICK then
             global.scout_unit_name[group_number] = nil
         end
     end

@@ -2,7 +2,7 @@ require 'global'
 require('setting-constants')
 
 data:extend {
-    --- Startup Tab
+    --- Biter related
     {
         type = "bool-setting",
         name = "enemyracemanager-enable-bitters",
@@ -10,24 +10,6 @@ data:extend {
         setting_type = "startup",
         default_value = true,
         order = "enemyracemanager-100"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-max-level",
-        description = "enemyracemanager-max-level",
-        setting_type = "startup",
-        default_value = MAX_LEVEL_10,
-        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-        order = "enemyracemanager-102"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-evolution-point-ll-express",
-        description = "enemyracemanager-evolution-point-ll-express",
-        setting_type = "startup",
-        order = "enemyracemanager-103",
-        default_value = LEVEL_MODE_REGULAR,
-        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
     },
     {
         type = "int-setting",
@@ -47,6 +29,52 @@ data:extend {
         minimum_value = 1,
         maximum_value = 60,
         order = "enemyracemanager-105"
+    },
+    --- Range 1000 to 1019 reserve for map color changes
+    {
+        type = "color-setting",
+        name = "erm_vanilla-map-color",
+        description = "erm_vanilla-map-color",
+        setting_type = "startup",
+        default_value = VANILLA_MAP_COLOR,
+        order = "enemyracemanager-1001"
+    },
+    --- startup: Menu unit replacement
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-menu-replacement-framework",
+        description = "enemyracemanager-menu-replacement-framework",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-1060"
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-menu-replacement-race",
+        description = "enemyracemanager-menu-replacement-race",
+        setting_type = "startup",
+        default_value = MOD_NAME,
+        allowed_values = {MOD_NAME},
+        order = "enemyracemanager-1061"
+    },
+    --- Startup: Leveling
+    {
+        type = "string-setting",
+        name = "enemyracemanager-max-level",
+        description = "enemyracemanager-max-level",
+        setting_type = "startup",
+        default_value = MAX_LEVEL_10,
+        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
+        order = "enemyracemanager-110"
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-evolution-point-ll-express",
+        description = "enemyracemanager-evolution-point-ll-express",
+        setting_type = "startup",
+        order = "enemyracemanager-111",
+        default_value = LEVEL_MODE_REGULAR,
+        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
     },
     {
         type = "int-setting",
@@ -98,6 +126,7 @@ data:extend {
         allowed_values = { 0, 0.01, 0.025, 0.05 },
         order = "enemyracemanager-117"
     },
+    --- Startup: Map Generation
     {
         type = "string-setting",
         name = "enemyracemanager-mapping-method",
@@ -208,6 +237,8 @@ data:extend {
         order = "enemyracemanager-225",
         allowed_values = { RACE_EMPTY, MOD_NAME }
     },
+
+    --- Startup: Defense
     {
         type = "bool-setting",
         name = "enemyracemanager-enhance-defense",
@@ -233,6 +264,7 @@ data:extend {
         order = "enemyracemanager-500",
         allowed_values = { 1, 2, 3, 4, 5, 6, 7, 10 }
     },
+    --- Startup: Free for All
     {
         type = "bool-setting",
         name = "enemyracemanager-free-for-all",
@@ -250,6 +282,7 @@ data:extend {
         allowed_values = { 5, 8, 10, 12, 15 },
         order = "enemyracemanager-602",
     },
+    --- Startup: Boss
     {
         type = "string-setting",
         name = "enemyracemanager-boss-difficulty",
@@ -268,6 +301,7 @@ data:extend {
         allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },
         order = "enemyracemanager-701",
     },
+    --- Startup: RTS Unit framework
     {
         type = "int-setting",
         name = "enemyracemanager-unit-framework-timeout",
@@ -284,32 +318,6 @@ data:extend {
         setting_type = "startup",
         default_value = false,
         order = "enemyracemanager-802",
-    },
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-menu-replacement-framework",
-        description = "enemyracemanager-menu-replacement-framework",
-        setting_type = "startup",
-        default_value = true,
-        order = "enemyracemanager-1100"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-menu-replacement-race",
-        description = "enemyracemanager-menu-replacement-race",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        allowed_values = {MOD_NAME},
-        order = "enemyracemanager-1100"
-    },
-    --- Range 1000 to 1100 reserve for map color changes
-    {
-        type = "color-setting",
-        name = "erm_vanilla-map-color",
-        description = "erm_vanilla-map-color",
-        setting_type = "startup",
-        default_value = VANILLA_MAP_COLOR,
-        order = "enemyracemanager-1001"
     },
     --- Map Settings Tab ---
     {
@@ -332,6 +340,7 @@ data:extend {
         maximum_value = 1000,
         order = "enemyracemanager-002"
     },
+    --- Army related
     {
         type = "double-setting",
         name = "enemyracemanager-army-limit-multiplier",
@@ -343,6 +352,7 @@ data:extend {
         allowed_values = { 1, 1.25, 1.33, 1.5, 2, 2.5, 3, 4, 5 },
         order = "enemyracemanager-003"
     },
+    --- Custom base style
     {
         type = "string-setting",
         name = "enemyracemanager-build-style",
@@ -391,7 +401,7 @@ data:extend {
         default_value = false,
         order = "enemyracemanager-202"
     },
-    --- Attack Meters ---
+    --- Attack Meters and custom attack groups ---
     {
         type = "bool-setting",
         name = "enemyracemanager-attack-meter-enable",
@@ -462,7 +472,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 300,
         minimum_value = 100,
-        maximum_value = 10000,
+        maximum_value = 1000,
         order = "enemyracemanager-313"
     },
     {
@@ -584,6 +594,72 @@ data:extend {
         default_value = 2,
         allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75 },
         order = "enemyracemanager-451"
+    },
+
+
+    --- Environmental Raids
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-environmental-raids",
+        description = "enemyracemanager-environmental-raids",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-900",
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-environmental-raids-units",
+        description = "enemyracemanager-environmental-raids-units",
+        setting_type = "runtime-global",
+        default_value = 5,
+        allowed_values = { 5, 6, 8, 10, 12, 15, 20},
+        order = "enemyracemanager-900"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-environmental-raids-chance",
+        description = "enemyracemanager-environmental-raids-chance",
+        setting_type = "runtime-global",
+        default_value = 33,
+        allowed_values = { 5, 10, 20, 25, 33, 50, 66, 75, 80},
+        order = "enemyracemanager-901"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-environmental-raids-build-base-chance",
+        description = "enemyracemanager-environmental-raid-build-base-chance",
+        setting_type = "runtime-global",
+        default_value = 25,
+        allowed_values = {0, 10, 20, 25, 33, 50, 66, 75},
+        order = "enemyracemanager-902"
+    },
+
+    --- Interplanetary Raids
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-interplanetary-raids",
+        description = "enemyracemanager-interplanetary-raids",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "enemyracemanager-901",
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-interplanetary-raids-chance",
+        description = "enemyracemanager-interplanetary-raids-chance",
+        setting_type = "runtime-global",
+        default_value = 33,
+        allowed_values = { 20, 25, 33, 50, 66, 75, 80},
+        order = "enemyracemanager-901"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-interplanetary-raids-build-base-chance",
+        description = "enemyracemanager-interplanetary-raid-build-base-chance",
+        setting_type = "runtime-global",
+        default_value = 25,
+        allowed_values = {0, 10, 20, 25, 33, 50, 66, 75},
+        order = "enemyracemanager-902"
     },
 }
 

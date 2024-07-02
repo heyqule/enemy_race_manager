@@ -52,9 +52,10 @@ function DeployerControlGUI.update(player)
 
         if pass then
             filtered_deployers[unit_number] = deployer
-            local surface = deployer.entity.surface
-            surfaces[surface.index] = surface.name
         end
+
+        local surface = deployer.entity.surface
+        surfaces[surface.index] = surface.name
     end
 
     local filtered_surface = {ALL_PLANETS}
