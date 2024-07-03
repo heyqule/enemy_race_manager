@@ -5,7 +5,7 @@
 ---
 
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
 local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
@@ -33,7 +33,7 @@ end
 
 local stop_event = function()
     if global.army_deployer_event_running == true and can_stop_event() then
-        Event.remove(ErmConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
+        Event.remove(GlobalConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
         global.army_deployer_event_running = false
     end
 end
@@ -155,7 +155,7 @@ function ArmyDeploymentProcessor.start_event(reload)
         if not reload then
             global.army_deployer_event_running = true
         end
-        Event.on_nth_tick(ErmConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
+        Event.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
     end
 end
 
@@ -275,7 +275,7 @@ function ArmyDeploymentProcessor.process_retry(force_index, unit_number)
 end
 
 local stop_event_check = 2 * defines.time.minute
-local stop_event_check_modular = stop_event_check - ErmConfig.AUTO_DEPLOY_CRON
+local stop_event_check_modular = stop_event_check - GlobalConfig.AUTO_DEPLOY_CRON
 
 function ArmyDeploymentProcessor.deploy()
     local current_tick = game.tick

@@ -6,7 +6,7 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
 local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 

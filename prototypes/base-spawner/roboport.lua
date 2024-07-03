@@ -14,7 +14,7 @@
 require('__stdlib__/stdlib/utils/defines/time')
 require("util")
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_Sound = require('__base__/prototypes/entity/sounds')
@@ -234,7 +234,7 @@ function make_roboport(level)
     })
 end
 
-local max_level = ErmConfig.MAX_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     make_roboport(i)

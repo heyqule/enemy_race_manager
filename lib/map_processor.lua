@@ -13,7 +13,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Queue = require('__stdlib__/stdlib/misc/queue')
 local Game = require('__stdlib__/stdlib/game')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -37,7 +37,7 @@ local vanilla_structures = {
 }
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
-    if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
+    if GlobalConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         local enemy_surface = global.enemy_surfaces[surface.name]
         if enemy_surface and nameToken[1] ~= enemy_surface then
             nameToken[1] = enemy_surface
@@ -74,7 +74,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     local force_name = entity.force.name
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
 
-    if not ErmConfig.race_is_active(race_name) then
+    if not GlobalConfig.race_is_active(race_name) then
         return
     end
 
@@ -161,7 +161,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             goto process_chunks_continue
         end
 
-        for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
+        for i = 1, GlobalConfig.MAP_PROCESS_CHUNK_BATCH do
             local area = queue()
             if area == nil then
                 break
@@ -181,7 +181,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             count = count + 1
         end
 
-        if count > ErmConfig.MAP_PROCESS_CHUNK_BATCH then
+        if count > GlobalConfig.MAP_PROCESS_CHUNK_BATCH then
             break
         end
 

@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 1:22 AM
 ---
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ERM_DataHelper = require('__enemyracemanager__/lib/rig/data_helper')
@@ -179,7 +179,7 @@ function makeLogisticRobot(level)
     return robot
 end
 
-local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLogisticRobot(i) })

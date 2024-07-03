@@ -8,7 +8,7 @@ require('__stdlib__/stdlib/utils/defines/time')
 
 local Event = require('__stdlib__/stdlib/event/event')
 local StdIs = require('__stdlib__/stdlib/utils/is')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
@@ -26,7 +26,7 @@ local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local BossProcessor = {}
 
 -- beam scan up to 100 chunks
-local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
+local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
 -- 7 chunks
 local scanMinLength = 224
 local scanRadius = 16
@@ -125,11 +125,11 @@ local process_boss_queue = function(event)
 end
 
 local start_boss_event = function()
-    Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, process_boss_queue)
+    Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, process_boss_queue)
 end
 
 local remove_boss_event = function()
-    Event.remove(ErmConfig.BOSS_QUEUE_CRON * -1, process_boss_queue)
+    Event.remove(GlobalConfig.BOSS_QUEUE_CRON * -1, process_boss_queue)
     ErmCron.empty_boss_queue()
 end
 
@@ -177,7 +177,7 @@ local can_build_spawn_building = function()
         type = enemy_buildings,
         force = global.boss.force
     })
-    if #nearby_buildings >= ErmConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
+    if #nearby_buildings >= GlobalConfig.BOSS_MAX_SUPPORT_STRUCTURES[boss_tier] then
         return false
     end
 
@@ -191,7 +191,7 @@ local spawn_building = function()
 
     local boss = global.boss
     local boss_tier = boss.boss_tier
-    for i = 1, ErmConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
+    for i = 1, GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
         local building_name
         if ErmRaceSettingsHelper.can_spawn(7) then
             building_name = ErmBaseBuildProcessor.getBuildingName(boss.race_name, 'cc')
@@ -275,7 +275,7 @@ local attack_functions = {
 }
 
 local draw_time = function(boss, current_tick)
-    local datetime_str = ErmConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
+    local datetime_str = GlobalConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
 
     rendering.draw_text({
         text = { "description.boss-despawn-in", datetime_str },
@@ -283,7 +283,7 @@ local draw_time = function(boss, current_tick)
         target = boss.entity,
         target_offset = { -3.5, -8 },
         color = { r = 1, g = 0, b = 0 },
-        time_to_live = ErmConfig.TWO_SECONDS_CRON,
+        time_to_live = GlobalConfig.TWO_SECONDS_CRON,
         scale = 2,
         only_in_alt_mode = true
     })
@@ -387,7 +387,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         global.boss.silo_position = rocket_silo.position
         global.boss.spawned_tick = game.tick
         global.boss.boss_tier = ErmRaceSettingsHelper.boss_tier(global.boss.race_name)
-        global.boss.despawn_at_tick = game.tick + (defines.time.minute * ErmConfig.BOSS_DESPAWN_TIMER[global.boss.boss_tier])
+        global.boss.despawn_at_tick = game.tick + (defines.time.minute * GlobalConfig.BOSS_DESPAWN_TIMER[global.boss.boss_tier])
         BossProcessor.index_turrets(surface)
         ErmDebugHelper.print('BossProcessor: Indexed positions: ' .. global.boss_spawnable_index.size)
 
@@ -524,7 +524,7 @@ function BossProcessor.get_boss_name(race_name)
         return ErmRaceSettingsHelper.get_race_entity_name(
                 race_name,
                 global.race_settings[race_name].boss_building,
-                ErmConfig.BOSS_LEVELS[global.boss.boss_tier]
+                GlobalConfig.BOSS_LEVELS[global.boss.boss_tier]
         )
     end
 
@@ -540,7 +540,7 @@ function BossProcessor.get_pathing_entity_name(race_name)
 end
 
 local display_victory_dialog = function(boss)
-    if global.race_settings[boss.race_name].boss_tier >= ErmConfig.BOSS_MAX_TIERS then
+    if global.race_settings[boss.race_name].boss_tier >= GlobalConfig.BOSS_MAX_TIERS then
         return
     end
 
@@ -569,7 +569,7 @@ end
 function BossProcessor.heartbeat()
     local boss = global.boss
     local current_tick = game.tick
-    local max_attacks = ErmConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT[boss.boss_tier]
+    local max_attacks = GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT[boss.boss_tier]
     if boss.victory then
         -- start reward process
         global.race_settings[boss.race_name].boss_kill_count = global.race_settings[boss.race_name].boss_kill_count + 1
@@ -605,7 +605,7 @@ function BossProcessor.heartbeat()
     for index, last_hp in pairs(boss.attack_last_hp) do
         local direct_attack = false
         local spawn_attack = false
-        if last_hp - boss.entity.health > ErmConfig.BOSS_DEFENSE_ATTACKS[index] then
+        if last_hp - boss.entity.health > GlobalConfig.BOSS_DEFENSE_ATTACKS[index] then
             global.boss.attack_last_hp[index] = boss.entity.health
             ErmDebugHelper.print('BossProcessor: Attack Index ' .. index .. ' @ ' .. boss.entity.health)
             direct_attack, spawn_attack = attack_functions[index]()

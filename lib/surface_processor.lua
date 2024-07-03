@@ -6,7 +6,7 @@
 
 local Table = require('__stdlib__/stdlib/utils/table')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local SurfaceProcessor = {}
@@ -21,7 +21,7 @@ function SurfaceProcessor.assign_race(surface, race_name)
         return
     end
 
-    local races = ErmConfig.get_enemy_races()
+    local races = GlobalConfig.get_enemy_races()
     local max_num = table_size(races)
     if max_num == 0 then
         return
@@ -109,12 +109,12 @@ function SurfaceProcessor.wander_unit_clean_up()
 end
 
 function SurfaceProcessor.get_enemy_on(surface_name)
-    if (ErmConfig.mapgen_is_one_race_per_surface()) then
+    if (GlobalConfig.mapgen_is_one_race_per_surface()) then
         return global.enemy_surfaces[surface_name]
     end
 
-    local races = ErmConfig.get_enemy_races()
-    return races[math.random(1, ErmConfig.get_enemy_races_total())]
+    local races = GlobalConfig.get_enemy_races()
+    return races[math.random(1, GlobalConfig.get_enemy_races_total())]
 end
 
 function SurfaceProcessor.get_gps_message(x, y, surface_name)

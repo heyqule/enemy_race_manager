@@ -577,8 +577,8 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 end
 
-function AttackGroupProcessor.generate_simple_group(surface, target_position, spawn_count)
-    local race_name = SurfaceProcessor.get_enemy_on(surface.name)
+function AttackGroupProcessor.generate_simple_group(surface, target_position, spawn_count, race_name)
+    local race_name = race_name or SurfaceProcessor.get_enemy_on(surface.name)
 
     local force_name = ForceHelper.get_force_name_from(race_name)
     local group = surface.create_unit_group { position = target_position, force = force_name}

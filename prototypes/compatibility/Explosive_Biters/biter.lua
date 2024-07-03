@@ -4,7 +4,7 @@
 --- DateTime: 12/31/2020 1:56 PM
 ---
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -67,7 +67,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     return biter
 end
 
-local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
 
 for i = 1, max_level do
     -- (org: 15)

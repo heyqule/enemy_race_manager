@@ -8,7 +8,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 
@@ -108,11 +108,11 @@ local addRaceSettings = function()
     remote.call('enemyracemanager', 'register_race', race_settings)
 
     Event.dispatch({
-        name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
+        name = Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
 end
 
 local prepare_world = function()
-    ErmConfig.initialize_races_data()
+    GlobalConfig.initialize_races_data()
 
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
@@ -165,11 +165,11 @@ local conditional_events = function()
     end
 
     if global.quick_cron_is_running then
-        Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
+        Event.on_nth_tick(GlobalConfig.QUICK_CRON, ErmCron.process_quick_queue)
     end
 
     if global.boss and global.boss.entity then
-        Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
+        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
     end
 end
 
@@ -208,13 +208,13 @@ local init_globals = function()
     global.force_race_name_cache = {}
 
     Event.dispatch({
-        name = Event.get_event_name(ErmConfig.FLUSH_GLOBAL)})
+        name = Event.get_event_name(GlobalConfig.FLUSH_GLOBAL)})
 end
 
 --- Init events
 Event.on_init(function(event)
     init_globals()
-    ErmConfig.refresh_config()
+    GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     conditional_events()
@@ -228,7 +228,7 @@ end)
 
 Event.on_configuration_changed(function(event)
     init_globals()
-    ErmConfig.refresh_config()
+    GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     for _, player in pairs(game.connected_players) do

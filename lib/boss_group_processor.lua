@@ -6,7 +6,7 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 
@@ -52,13 +52,13 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
         global.boss_group_spawn.group = group
         global.boss_group_spawn.group_number = group.group_number
         ErmDebugHelper.print('BossGroupProcessor: Create Group...' .. tostring(group.group_number))
-        unit_per_cycle = unit_per_cycle or ErmConfig.boss_spawn_size
+        unit_per_cycle = unit_per_cycle or GlobalConfig.boss_spawn_size
         global.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
         global.boss_group_spawn.unit_per_cycle = unit_per_cycle
 
         local max_units
         if default_max_group then
-            max_units = (global.boss_group_spawn.max_cycles * ErmConfig.boss_spawn_size)
+            max_units = (global.boss_group_spawn.max_cycles * GlobalConfig.boss_spawn_size)
         else
             max_units = global.boss_group_spawn.max_cycles * unit_per_cycle
         end
@@ -121,7 +121,7 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
         local unit_full_name = ErmRaceSettingsHelper.get_race_entity_name(
                 boss_data.race_name,
                 unit_name,
-                ErmConfig.BOSS_LEVELS[global.race_settings[boss_data.race_name].boss_tier]
+                GlobalConfig.BOSS_LEVELS[global.race_settings[boss_data.race_name].boss_tier]
         )
 
         local position = surface.find_non_colliding_position(unit_full_name, group.position,
@@ -163,7 +163,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     ErmDebugHelper.print('BossProcessor.spawn_initial_group')
     pick_featured_group()
-    create_group(default_spawn_cycles / 3, ErmConfig.boss_spawn_size * 3, true)
+    create_group(default_spawn_cycles / 3, GlobalConfig.boss_spawn_size * 3, true)
     ErmCron.add_2_sec_queue('BossGroupProcessor.generate_units', true, true)
 end
 
@@ -177,7 +177,7 @@ end
 function BossGroupProcessor.spawn_defense_group()
     ErmDebugHelper.print('BossProcessor.spawn_defense_group')
     pick_featured_group()
-    create_group(nil, ErmConfig.boss_spawn_size)
+    create_group(nil, GlobalConfig.boss_spawn_size)
     BossGroupProcessor.generate_units(false, false)
 end
 
@@ -196,7 +196,7 @@ function BossGroupProcessor.get_default_data()
 end
 
 function BossGroupProcessor.get_group_size()
-    return ErmConfig.boss_spawn_size * default_spawn_cycles
+    return GlobalConfig.boss_spawn_size * default_spawn_cycles
 end
 
 -- Clean up attack group automatically

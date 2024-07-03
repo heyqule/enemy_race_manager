@@ -357,7 +357,9 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
 
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
         local target_force = AttackGroupHeatProcessor.pick_target('erm_zerg')
+        global.override_ask_friend = true
         local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_zerg', target_force, true)
+        global.override_ask_friend = false
         assert( picked_surface == nil, 'Couldnt pick surface, asking for friend')
         --- Check friend's attack points.
         assert(RaceSettingsHelper.get_attack_meter('erm_vanilla') >= 1000, 'Friends needs attack point')

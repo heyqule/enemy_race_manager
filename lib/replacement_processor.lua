@@ -12,7 +12,7 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 local Game = require('__stdlib__/stdlib/game')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib//debug_helper')
@@ -103,7 +103,7 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
     if surface then
         local race_pick = ErmForceHelper.extract_race_name_from(target_force_name)
 
-        if not ErmConfig.race_is_active(race_pick) then
+        if not GlobalConfig.race_is_active(race_pick) then
             return
         end
 

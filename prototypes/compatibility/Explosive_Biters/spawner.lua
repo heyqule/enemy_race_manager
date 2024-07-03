@@ -4,7 +4,7 @@
 --- DateTime: 03/16/2020 1:56 PM
 ---
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
@@ -77,7 +77,7 @@ function makeLevelSpawners(level, type)
     return spawner
 end
 
-local max_level = ErmConfig.MAX_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, 'explosive-biter-spawner') })

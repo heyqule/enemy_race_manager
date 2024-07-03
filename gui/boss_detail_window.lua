@@ -4,7 +4,7 @@
 --- DateTime: 11/5/2022 11:19 AM
 ---
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local String = require('__stdlib__/stdlib/utils/string')
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
@@ -38,10 +38,10 @@ local add_data_entry = function(data_box, entry)
     position_label.style.rich_text_setting = defines.rich_text_setting.highlight
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_spawned_at' } }
-    data_box.add { type = "label", caption = ErmConfig.format_daytime_string(0, entry.spawn_tick) }
+    data_box.add { type = "label", caption = GlobalConfig.format_daytime_string(0, entry.spawn_tick) }
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_fight_duration' } }
-    data_box.add { type = "label", caption = ErmConfig.format_daytime_string(entry.spawn_tick, entry.last_tick) }
+    data_box.add { type = "label", caption = GlobalConfig.format_daytime_string(entry.spawn_tick, entry.last_tick) }
 
     data_box.add { type = "label", caption = { 'gui.boss_detail_data_difficulty' } }
     data_box.add { type = "label", caption = entry.difficulty }
@@ -89,7 +89,7 @@ function BossDetailsWindow.show(player, race_name, boss_log)
     if boss_log == nil or boss_log.best_record.time == -1 then
         best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { "gui.boss_detail_best_record_na" }, style = 'caption_label' }
     else
-        local datetime_str = ErmConfig.format_daytime_string(0, boss_log.best_record.time)
+        local datetime_str = GlobalConfig.format_daytime_string(0, boss_log.best_record.time)
         best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { "gui.boss_detail_best_record", datetime_str, boss_log.best_record.tier, boss_log.difficulty, boss_log.squad_size }, style = 'caption_label' }
     end
 
@@ -118,7 +118,7 @@ function BossDetailsWindow.show(player, race_name, boss_log)
         for i = total_entries, 1, -1 do
             local entry = boss_log.entries[i]
             table.insert(descending_entries,
-                    get_victory_label(entry.victory) .. ErmConfig.format_daytime_string(0, entry.spawn_tick) .. ' T' .. entry.tier)
+                    get_victory_label(entry.victory) .. GlobalConfig.format_daytime_string(0, entry.spawn_tick) .. ' T' .. entry.tier)
         end
         list_box.items = descending_entries
 

@@ -23,13 +23,13 @@
 local noise = require("noise")
 local String = require('__stdlib__/stdlib/utils/string')
 local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 require('global')
 
-if ErmConfig.mapgen_is_mixed() == false then
+if GlobalConfig.mapgen_is_mixed() == false then
     return false
 end
 

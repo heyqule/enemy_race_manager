@@ -8,7 +8,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
 local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
@@ -16,16 +16,16 @@ local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 --- Level Processing Events
-Event.on_nth_tick(ErmConfig.LEVEL_PROCESS_INTERVAL, function(event)
+Event.on_nth_tick(GlobalConfig.LEVEL_PROCESS_INTERVAL, function(event)
     ErmLevelProcessor.calculate_levels()
 end)
 
 --- ERM Events
-Event.register(Event.generate_event_name(ErmConfig.EVENT_TIER_WENT_UP), function(event)
+Event.register(Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP), function(event)
 end)
 
-Event.register(Event.generate_event_name(ErmConfig.EVENT_LEVEL_WENT_UP), function(event)
-    if ErmConfig.race_is_active(event.affected_race.race) then
+Event.register(Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP), function(event)
+    if GlobalConfig.race_is_active(event.affected_race.race) then
         ErmMapProcessor.rebuild_map(game)
         if remote.interfaces[event.affected_race.race] and remote.interfaces[event.affected_race.race]["refresh_custom_attack_cache"] then
             remote.call(event.affected_race.race, "refresh_custom_attack_cache")

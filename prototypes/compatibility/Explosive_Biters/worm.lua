@@ -4,7 +4,7 @@
 --- DateTime: 03/16/2020 1:56 PM
 ---
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
@@ -66,7 +66,7 @@ if settings.startup['eb-disable-worms'].value then
     return
 end
 
-local max_level = ErmConfig.MAX_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelTurrets(i, 'small-explosive-worm-turret', 0) })

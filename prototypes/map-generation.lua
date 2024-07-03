@@ -5,7 +5,7 @@
 ---
 local noise = require("noise")
 local String = require('__stdlib__/stdlib/utils/string')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 require('__enemyracemanager__/global')
@@ -64,8 +64,8 @@ end
 
 local process_x_axis_unit = function(v)
     local nameToken = String.split(v.name, '/')
-    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
-    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
+    local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
+    local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -94,8 +94,8 @@ end
 
 local process_y_axis_unit = function(v)
     local nameToken = String.split(v.name, '/')
-    local onPositive = nameToken[1] == ErmConfig.positive_axis_race()
-    local onNegative = nameToken[1] == ErmConfig.negative_axis_race()
+    local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
+    local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
 
     if onPositive and onNegative and v.autoplace then
         ErmDebugHelper.print('Do nothing')
@@ -201,13 +201,13 @@ if settings.startup['enemyracemanager-enable-bitters'].value == false then
 end
 
 -- 2 Ways Race handler
-if ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
+if GlobalConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == X_AXIS then
     process_x_axis()
-elseif ErmConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
+elseif GlobalConfig.mapgen_is_2_races_split() and settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
     process_y_axis()
 end
 
-if ErmConfig.mapgen_is_4_races_split() then
+if GlobalConfig.mapgen_is_4_races_split() then
     process_4_ways()
 end
 

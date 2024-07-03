@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 11/1/2021 8:29 PM
 ---
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local PlayerUnitHelper = {}
 
 local RATIO = 0.5
@@ -23,7 +23,7 @@ end
 function PlayerUnitHelper.get_attack_range(ratio, value)
     ratio = ratio or 1
     value = value or 0
-    return math.floor(ErmConfig.get_max_attack_range() * ratio) + value
+    return math.floor(GlobalConfig.get_max_attack_range() * ratio) + value
 end
 
 function PlayerUnitHelper.get_vision_distance(attack_range)

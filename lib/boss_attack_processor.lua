@@ -6,7 +6,7 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
@@ -19,8 +19,8 @@ local BossAttackProcessor = {}
 BossAttackProcessor.TYPE_PROJECTILE = 1
 BossAttackProcessor.TYPE_BEAM = 2
 
-local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
-local scanRadius = ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS
+local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
+local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
 local type_name = { 'projectile', 'beam' }
 
@@ -65,7 +65,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
         attackable_entities_cache = surface.find_entities_filtered {
             force = ErmForceHelper.get_player_forces(),
             area = get_scan_area[boss.target_direction](global.boss.entity_position.x, global.boss.entity_position.y),
-            limit = ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
+            limit = GlobalConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
@@ -182,7 +182,7 @@ local process_attack = function(data, unique_position)
 
     if data['artillery_mode'] then
         data['speed'] = 1
-        data['range'] = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
+        data['range'] = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
     end
 
     for i = 1, data['count'] do

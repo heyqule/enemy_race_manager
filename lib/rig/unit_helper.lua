@@ -10,7 +10,7 @@ local ERM_UnitHelper = {}
 local Math = require('__stdlib__/stdlib/utils/math')
 require('__stdlib__/stdlib/utils/defines/time')
 local String = require('__stdlib__/stdlib/utils/string')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
 local max_resistance_percentage = 95
@@ -81,7 +81,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, level)
     end
 
     if settings.startup['enemyracemanager-free-for-all'].value then
-        damage = damage * ErmConfig.FFA_MULTIPLIER
+        damage = damage * GlobalConfig.FFA_MULTIPLIER
     end
     return damage
 end
@@ -121,7 +121,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, level)
     biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
 
     if settings.startup['enemyracemanager-free-for-all'].value then
-        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (ErmConfig.FFA_MULTIPLIER / 10)
+        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (GlobalConfig.FFA_MULTIPLIER / 10)
     end
 end
 
@@ -144,7 +144,7 @@ end
 
 function ERM_UnitHelper.get_attack_range(level, ratio)
     ratio = ratio or 1
-    local attack_range = ErmConfig.get_max_attack_range()
+    local attack_range = GlobalConfig.get_max_attack_range()
     if level < 5 then
         attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25
     end

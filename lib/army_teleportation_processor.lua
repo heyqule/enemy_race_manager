@@ -7,7 +7,7 @@
 --- It can teleport registered army units and base-game character
 local util = require('util')
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmCron = require('__enemyracemanager__/lib/cron_processor')
 local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
 local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
@@ -37,7 +37,7 @@ function ArmyTeleportationProcessor.start_event(reload)
             ArmyTeleportationProcessor.scan_units()
             global.army_teleporter_event_running = true
         end
-        Event.on_nth_tick(ErmConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
+        Event.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
 end
 
@@ -54,7 +54,7 @@ end
 
 local stop_event = function()
     if global.army_teleporter_event_running == true then
-        Event.remove(ErmConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
+        Event.remove(GlobalConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
         global.army_teleporter_event_running = false
     end
 end

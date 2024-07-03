@@ -6,4 +6,13 @@
 
 local InterplanetaryAttacks = {}
 
+function InterplanetaryAttacks.exec(race_name, target_force)
+
+end
+
+--- Scan planets for player entities on a daily basis, mark it attack-able if entity found.
+function InterplanetaryAttacks.scan()
+
+end
+
 return InterplanetaryAttacks

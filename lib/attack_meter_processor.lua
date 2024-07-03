@@ -6,7 +6,7 @@
 
 local String = require('__stdlib__/stdlib/utils/string')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -44,8 +44,8 @@ local calculatePoints = function(race_name, statistic,
 end
 
 local calculateNextThreshold = function(race_name)
-    local threshold = ErmConfig.attack_meter_threshold() * ErmConfig.max_group_size() * ErmAttackGroupProcessor.MIXED_UNIT_POINTS
-    local derivative = ErmConfig.attack_meter_deviation()
+    local threshold = GlobalConfig.attack_meter_threshold() * GlobalConfig.max_group_size() * ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+    local derivative = GlobalConfig.attack_meter_deviation()
     ErmRaceSettingsHelper.set_next_attack_threshold(
             race_name,
             threshold + threshold * (math.random(derivative * -1, derivative) / 100)
@@ -57,7 +57,7 @@ function AttackMeterProcessor.init_globals()
 end
 
 function AttackMeterProcessor.exec()
-    if ErmConfig.attack_meter_enabled() == false then
+    if GlobalConfig.attack_meter_enabled() == false then
         return
     end
 
@@ -69,7 +69,7 @@ function AttackMeterProcessor.exec()
 end
 
 function AttackMeterProcessor.add_form_group_cron()
-    if ErmConfig.attack_meter_enabled() == false then
+    if GlobalConfig.attack_meter_enabled() == false then
         return
     end
 
@@ -78,7 +78,7 @@ function AttackMeterProcessor.add_form_group_cron()
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
         local race_name = ErmForceHelper.extract_race_name_from(force_name)
-        if ErmConfig.race_is_active(race_name) then
+        if GlobalConfig.race_is_active(race_name) then
             ErmCron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
         end
     end
@@ -89,7 +89,7 @@ function AttackMeterProcessor.calculate_points(force_name)
 
     local force = game.forces[force_name]
     local race_name = ErmForceHelper.extract_race_name_from(force_name)
-    if not ErmConfig.race_is_active(race_name) then
+    if not GlobalConfig.race_is_active(race_name) then
         return
     end
 
@@ -116,10 +116,10 @@ function AttackMeterProcessor.calculate_points(force_name)
     ErmRaceSettingsHelper.add_killed_units_count(race_name, unit_points)
     ErmRaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
 
-    attack_meter_points = attack_meter_points * ErmConfig.attack_meter_collector_multiplier()
+    attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
 
-    if ErmConfig.time_base_attack_enabled() and level > 2 then
-        local extra_points = ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * (ErmConfig.time_base_attack_points() / 100)
+    if GlobalConfig.time_base_attack_enabled() and level > 2 then
+        local extra_points = ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * (GlobalConfig.time_base_attack_points() / 100)
         attack_meter_points = attack_meter_points + extra_points
     end
 
@@ -130,7 +130,7 @@ function AttackMeterProcessor.calculate_points(force_name)
     local turret_evolution_points = turret_points * 0.2 * spawner_destroy_factor
     local spawner_evolution_points = 0
 
-    if ErmConfig.spawner_kills_deduct_evolution_points() then
+    if GlobalConfig.spawner_kills_deduct_evolution_points() then
         unit_evolution_points = unit_points * 0.05 * spawner_destroy_factor
         turret_evolution_points = turret_evolution_points * -0.5 * spawner_destroy_factor
         spawner_evolution_points = building_points * -1.5 * spawner_destroy_factor
@@ -141,7 +141,7 @@ function AttackMeterProcessor.calculate_points(force_name)
 end
 
 function AttackMeterProcessor.form_group(race_name, force)
-    if not ErmConfig.race_is_active(race_name) then
+    if not GlobalConfig.race_is_active(race_name) then
         return
     end
 
@@ -154,10 +154,10 @@ function AttackMeterProcessor.form_group(race_name, force)
     local current_attack_value = ErmRaceSettingsHelper.get_attack_meter(race_name)
     -- Process attack point group
     if current_attack_value > next_attack_threshold then
-        local elite_attack_point_threshold = ErmConfig.elite_squad_attack_points()
+        local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
         local accumulated_attack_meter = ErmRaceSettingsHelper.get_accumulated_attack_meter(race_name)
         local last_accumulated_attack_meter = ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
-        if ErmConfig.elite_squad_enable() and ErmRaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
+        if GlobalConfig.elite_squad_enable() and ErmRaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
             ErmAttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
         else
             ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)

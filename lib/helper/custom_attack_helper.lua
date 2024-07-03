@@ -12,7 +12,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Math = require('__stdlib__/stdlib/utils/math')
 require("util")
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local ATTACK_CHUNK_SIZE = 32
@@ -63,7 +63,7 @@ local get_race_settings = function(race_name, reload)
     end
 
     global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
-    global.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * ErmConfig.LEVEL_PROCESS_INTERVAL + 1
+    global.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * GlobalConfig.LEVEL_PROCESS_INTERVAL + 1
     return global.custom_attack_race_settings[race_name]
 end
 
@@ -380,8 +380,8 @@ end
 --- Clean up time to live units
 ---
 function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overflow_batch)
-    regular_batch = regular_batch or ErmConfig.TIME_TO_LIVE_UNIT_BATCH
-    overflow_batch = overflow_batch or ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
+    regular_batch = regular_batch or GlobalConfig.TIME_TO_LIVE_UNIT_BATCH
+    overflow_batch = overflow_batch or GlobalConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
 
     local unit_total = global.time_to_live_units_total
     local units = global.time_to_live_units
@@ -392,7 +392,7 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
 
     local count = 0
     local max_count = regular_batch
-    if unit_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
+    if unit_total > GlobalConfig.MAX_TIME_TO_LIVE_UNIT then
         max_count = overflow_batch
     end
     for idx, value in pairs(units) do

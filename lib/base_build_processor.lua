@@ -7,7 +7,7 @@
 local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -42,7 +42,7 @@ local expansion_switch = {
 
 function BaseBuildProcessor.exec(entity)
     if entity and entity.valid and ErmForceHelper.is_erm_unit(entity) then
-        local func = expansion_switch[ErmConfig.build_style()]
+        local func = expansion_switch[GlobalConfig.build_style()]
         if func then
             func(entity)
         end
@@ -52,7 +52,7 @@ end
 function BaseBuildProcessor.process_on_cmd(entity)
     local nameToken = ErmForceHelper.get_name_token(entity.name)
     local race_name = ErmForceHelper.extract_race_name_from(entity.force.name)
-    if ErmConfig.race_is_active(race_name) and ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
+    if GlobalConfig.race_is_active(race_name) and ErmRaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(unit_group, true)
@@ -114,10 +114,10 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 
     local formation = {}
-    if ErmConfig.build_formation() == 'random' then
+    if GlobalConfig.build_formation() == 'random' then
         formation = { 1, math.random(3, 8), math.random(5, 12) }
     else
-        formation = String.split(ErmConfig.build_formation(), '-')
+        formation = String.split(GlobalConfig.build_formation(), '-')
     end
 
     for _, unit in pairs(members) do
@@ -162,7 +162,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
         local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
 
         Event.dispatch({
-            name = Event.get_event_name(ErmConfig.BASE_BUILT_EVENT),
+            name = Event.get_event_name(GlobalConfig.BASE_BUILT_EVENT),
             entity = built_entity })
     end
 end
