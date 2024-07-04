@@ -12,8 +12,8 @@ local Event = require('__stdlib__/stdlib/event/event')
 
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
 local LevelManager = {}
 
@@ -31,7 +31,7 @@ end
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1
-    ErmRaceSettingsHelper.refresh_current_tier(race_name)
+    RaceSettingsHelper.refresh_current_tier(race_name)
 end
 
 local handle_unit_tier = function(race_settings, force, race_name, dispatch)
@@ -88,7 +88,7 @@ end
 function LevelManager.calculate_evolution_points(race_settings, forces, settings)
     for _, force in pairs(forces) do
         local force_name = force.name
-        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        local race_name = ForceHelper.extract_race_name_from(force_name)
         if GlobalConfig.race_is_active(race_name) then
             -- Handle Score Level
             calculate_evolution_points(race_settings, settings, force, race_name)
@@ -97,7 +97,7 @@ function LevelManager.calculate_evolution_points(race_settings, forces, settings
 end
 
 function LevelManager.calculate_levels()
-    if ErmRaceSettingsHelper.is_in_boss_mode() then
+    if RaceSettingsHelper.is_in_boss_mode() then
         return
     end
 
@@ -106,12 +106,12 @@ function LevelManager.calculate_levels()
     local settings = settings
 
     for _, force in pairs(forces) do
-        if not ErmForceHelper.is_enemy_force(force) then
+        if not ForceHelper.is_enemy_force(force) then
             goto skip_calculate_level_for_force
         end
 
         local force_name = force.name
-        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        local race_name = ForceHelper.extract_race_name_from(force_name)
 
         if GlobalConfig.race_is_active(race_name) and has_valid_race_settings(race_settings, race_name) then
             local current_race_setting = race_settings[race_name]
@@ -139,12 +139,12 @@ function LevelManager.calculate_multiple_levels()
     local settings = settings
 
     for _, force in pairs(forces) do
-        if not ErmForceHelper.is_enemy_force(force) then
+        if not ForceHelper.is_enemy_force(force) then
             goto skip_calculate_multiple_level_for_force
         end
 
         local force_name = force.name
-        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        local race_name = ForceHelper.extract_race_name_from(force_name)
 
         if GlobalConfig.race_is_active(race_name) and has_valid_race_settings(race_settings, race_name) and race_settings[race_name].level > GlobalConfig.get_max_level() then
             race_settings[race_name].level = GlobalConfig.get_max_level()
@@ -226,7 +226,7 @@ function LevelManager.level_by_command(race_settings, race_name, target_level)
 end
 
 function LevelManager.get_evolution_factor(race_name)
-    local new_force_name = ErmForceHelper.get_force_name_from(race_name)
+    local new_force_name = ForceHelper.get_force_name_from(race_name)
 
     if game.forces[new_force_name] then
         return game.forces[new_force_name].evolution_factor
@@ -244,8 +244,8 @@ function LevelManager.print_level_curve_table()
 end
 
 function LevelManager.reset_all_progress()
-    for _, force_name in pairs(ErmForceHelper.get_enemy_forces()) do
-        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+    for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
+        local race_name = ForceHelper.extract_race_name_from(force_name)
         global.race_settings[race_name].level = 1
         global.race_settings[race_name].tier = 1
         global.race_settings[race_name].evolution_point = 0

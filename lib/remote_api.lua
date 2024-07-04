@@ -9,13 +9,13 @@
 local Event = require('__stdlib__/stdlib/event/event')
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local ErmBossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
-local ErmArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ErmArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local BossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 
@@ -26,8 +26,8 @@ local ERM_RemoteAPI = {}
 function ERM_RemoteAPI.register_race(race_settings)
     if global and global.race_settings then
         global.race_settings[race_settings.race] = race_settings
-        ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
-        ErmRaceSettingsHelper.refresh_current_tier(race_settings.race)
+        RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
+        RaceSettingsHelper.refresh_current_tier(race_settings.race)
     end
 end
 
@@ -79,7 +79,7 @@ function ERM_RemoteAPI.add_points_to_attack_meter(race, value)
     if global.race_settings and
             global.race_settings[race]
     then
-        ErmRaceSettingsHelper.add_to_attack_meter(race, value)
+        RaceSettingsHelper.add_to_attack_meter(race, value)
     end
 
 end
@@ -91,72 +91,72 @@ end
 function ERM_RemoteAPI.update_race_setting(race_setting)
     if global and global.race_settings and global.race_settings[race_setting.race] then
         global.race_settings[race_setting.race] = race_setting
-        ErmRaceSettingsHelper.refresh_current_tier(race_setting.race)
+        RaceSettingsHelper.refresh_current_tier(race_setting.race)
     end
 end
 
 --- Generate a mixed attack group
 --- Usage: remote.call('enemyracemanager', 'generate_attack_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name] or GlobalConfig.max_group_size()
     units_number = tonumber(units_number)
 
     if force and units_number > 0 then
-        ErmAttackGroupProcessor.generate_group(race_name, force, units_number)
+        AttackGroupProcessor.generate_group(race_name, force, units_number)
     end
 end
 
 --- Generate a flying attack group
 --- Usage: remote.call('enemyracemanager', 'generate_flying_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    local flying_enabled = GlobalConfig.flying_squad_enabled() and ErmRaceSettingsHelper.has_flying_unit(race_name)
+    local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 2)
 
     if force and flying_enabled and units_number > 0 then
-        ErmAttackGroupProcessor.generate_group(race_name, force, units_number, ErmAttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
     end
 end
 
 --- Generate a dropship attack group
 --- Usage: remote.call('enemyracemanager', 'generate_dropship_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_dropship_group(race_name, units_number)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    local dropship_enabled = GlobalConfig.dropship_enabled() and ErmRaceSettingsHelper.has_dropship_unit(race_name)
+    local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(race_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 5)
 
     if force and dropship_enabled and units_number > 0 then
-        ErmAttackGroupProcessor.generate_group(race_name, force, units_number, ErmAttackGroupProcessor.GROUP_TYPE_DROPSHIP)
+        AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
     end
 end
 
 local is_valid_featured_squad = function(race_name, squad_id)
-    return ErmRaceSettingsHelper.has_featured_squad(race_name) and
-            ErmRaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
-            squad_id < ErmRaceSettingsHelper.get_total_featured_squads(race_name)
+    return RaceSettingsHelper.has_featured_squad(race_name) and
+            RaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
+            squad_id < RaceSettingsHelper.get_total_featured_squads(race_name)
 end
 
 local is_valid_featured_flying_squad = function(race_name, squad_id)
-    return ErmRaceSettingsHelper.has_featured_squad(race_name) and
-            ErmRaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
-            squad_id < ErmRaceSettingsHelper.get_total_featured_squads(race_name)
+    return RaceSettingsHelper.has_featured_squad(race_name) and
+            RaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
+            squad_id < RaceSettingsHelper.get_total_featured_squads(race_name)
 end
 
 --- Usage: remote.call('enemyracemanager', 'generate_featured_group', 'erm_zerg', 100, 1)
 function ERM_RemoteAPI.generate_featured_group(race_name, size, squad_id)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and is_valid_featured_squad(race_name, squad_id) then
         size = size or GlobalConfig.max_group_size()
-        ErmAttackGroupProcessor.generate_group(
+        AttackGroupProcessor.generate_group(
                 race_name,
-                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED,
+                AttackGroupProcessor.GROUP_TYPE_FEATURED,
                 squad_id
         )
     end
@@ -164,16 +164,16 @@ end
 
 --- Usage: remote.call('enemyracemanager', 'generate_featured_flying_group', 'erm_zerg', 50, 1)
 function ERM_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and is_valid_featured_flying_squad(race_name, squad_id) then
         size = size or (GlobalConfig.max_group_size() / 2)
-        ErmAttackGroupProcessor.generate_group(
+        AttackGroupProcessor.generate_group(
                 race_name,
-                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
                 squad_id
         )
     end
@@ -181,18 +181,18 @@ end
 
 --- Usage: remote.call('enemyracemanager', 'generate_elite_featured_group', 'erm_zerg', 100, 1)
 function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and GlobalConfig.elite_squad_enable() and
             is_valid_featured_squad(race_name, squad_id)
     then
         size = size or GlobalConfig.max_group_size()
-        ErmAttackGroupProcessor.generate_group(
+        AttackGroupProcessor.generate_group(
                 race_name,
-                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED,
+                AttackGroupProcessor.GROUP_TYPE_FEATURED,
                 squad_id,
                 true
         )
@@ -201,18 +201,18 @@ end
 
 --- Usage: remote.call('enemyracemanager', 'generate_elite_featured_flying_group', 'erm_zerg', 50, 1)
 function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squad_id)
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
-    squad_id = squad_id or ErmRaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
     if force and GlobalConfig.elite_squad_enable() and
             is_valid_featured_flying_squad(race_name, squad_id)
     then
         size = size or (GlobalConfig.max_group_size() / 2)
-        ErmAttackGroupProcessor.generate_group(
+        AttackGroupProcessor.generate_group(
                 race_name,
-                game.forces[ErmForceHelper.get_force_name_from(race_name)],
+                game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                ErmAttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
                 squad_id,
                 true
         )
@@ -220,7 +220,7 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
 end
 
 function ERM_RemoteAPI.add_boss_attack_group(group)
-    local group_data = ErmBossGroupProcessor.get_default_data()
+    local group_data = BossGroupProcessor.get_default_data()
     group_data['group'] = group
     group_data['group_number'] = group.group_number
     group_data['total_units'] = table_size(group.members)
@@ -268,20 +268,20 @@ function ERM_RemoteAPI.get_event_name(event_name)
     return Event.get_event_name(event_name)
 end
 
---- ErmForceHelper
-ERM_RemoteAPI.force_data_reindex = ErmForceHelper.refresh_all_enemy_forces
+--- ForceHelper
+ERM_RemoteAPI.force_data_reindex = ForceHelper.refresh_all_enemy_forces
 
-ERM_RemoteAPI.is_enemy_force = ErmForceHelper.is_enemy_force
+ERM_RemoteAPI.is_enemy_force = ForceHelper.is_enemy_force
 
---- ErmArmyPopulationProcessor
-ERM_RemoteAPI.army_units_register = ErmArmyPopulationProcessor.register_unit
-ERM_RemoteAPI.army_reindex = ErmArmyPopulationProcessor.index
+--- ArmyPopulationProcessor
+ERM_RemoteAPI.army_units_register = ArmyPopulationProcessor.register_unit
+ERM_RemoteAPI.army_reindex = ArmyPopulationProcessor.index
 
---- ErmArmyTeleportationProcessor
-ERM_RemoteAPI.army_command_center_register = ErmArmyTeleportationProcessor.register_building
+--- ArmyTeleportationProcessor
+ERM_RemoteAPI.army_command_center_register = ArmyTeleportationProcessor.register_building
 
---- ErmArmyDeploymentProcessor
-ERM_RemoteAPI.army_deployer_register = ErmArmyDeploymentProcessor.register_building
+--- ArmyDeploymentProcessor
+ERM_RemoteAPI.army_deployer_register = ArmyDeploymentProcessor.register_building
 
 --- AttackGroupBeaconProcessor
 ERM_RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals

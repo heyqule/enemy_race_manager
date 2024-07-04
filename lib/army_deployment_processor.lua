@@ -6,8 +6,8 @@
 
 local Event = require('__stdlib__/stdlib/event/event')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ArmyDeploymentProcessor = {}
 --- Internal unit spawn cooldown for each deployer (in tick)
@@ -61,15 +61,15 @@ local spawn_unit = function(deployer_data)
             local contents = inventory.get_contents()
             for unit_name, count in pairs(contents) do
                 if registered_units[unit_name] and count > 0 and
-                        ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force) and
-                        ErmArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
+                        ArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ArmyPopulationProcessor.max_pop(force) and
+                        ArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
                 then
-                    local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
-                    local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
+                    local position = ArmyFunctions.get_position(unit_name, entity, entity.position)
+                    local spawned_entity = ArmyFunctions.spawn_unit(entity, unit_name, position)
                     if deployer_data.rally_point then
-                        ErmArmyFunctions.assign_goto_command(spawned_entity, deployer_data.rally_point)
+                        ArmyFunctions.assign_goto_command(spawned_entity, deployer_data.rally_point)
                     else
-                        ErmArmyFunctions.assign_wander_command(spawned_entity)
+                        ArmyFunctions.assign_wander_command(spawned_entity)
                     end
                     if spawned_entity then
                         inventory.remove({ name = unit_name, count = 1 })
@@ -283,7 +283,7 @@ function ArmyDeploymentProcessor.deploy()
         if force_data.total > 0 then
             local force = game.forces[force_index]
             if force and force.valid then
-                if ErmArmyPopulationProcessor.is_under_max_pop(force) then
+                if ArmyPopulationProcessor.is_under_max_pop(force) then
                     for unit_number, deployer_data in pairs(force_data['deployers']) do
                         if deployer_data.entity and deployer_data.entity.valid then
                             if current_tick > deployer_data.next_tick then

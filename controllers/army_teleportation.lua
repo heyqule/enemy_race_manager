@@ -7,18 +7,18 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
 local add_command_center = function(event)
     local entity = event.created_entity or event.entity
     ArmyTeleportationProcessor.add_entity(entity)
-    ErmArmyControlUI.update_command_centers()
+    ArmyControlUI.update_command_centers()
 end
 
 local remove_command_center = function(event)
     local entity = event.created_entity or event.entity
     ArmyTeleportationProcessor.remove_entity(entity)
-    ErmArmyControlUI.update_command_centers()
+    ArmyControlUI.update_command_centers()
 end
 
 local is_valid_command_center = function(event)

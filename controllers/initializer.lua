@@ -9,12 +9,12 @@ require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
-local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local MapProcessor = require('__enemyracemanager__/lib/map_processor')
+local LevelProcessor = require('__enemyracemanager__/lib/level_processor')
 
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
@@ -22,16 +22,16 @@ local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
-local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
 local GuiContainer = require('__enemyracemanager__/gui/main')
 
-local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
+local Compat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
 
 local addRaceSettings = function()
     local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
@@ -103,7 +103,7 @@ local addRaceSettings = function()
         race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
     end
 
-    ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
+    RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
     remote.call('enemyracemanager', 'register_race', race_settings)
 
@@ -129,17 +129,17 @@ local prepare_world = function()
     end
 
     -- Race Cleanup
-    ErmRaceSettingsHelper.clean_up_race()
-    ErmSurfaceProcessor.numeric_to_name_conversion()
-    ErmSurfaceProcessor.rebuild_race(global.race_settings)
+    RaceSettingsHelper.clean_up_race()
+    SurfaceProcessor.numeric_to_name_conversion()
+    SurfaceProcessor.rebuild_race(global.race_settings)
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmLevelProcessor.calculate_multiple_levels()
+        LevelProcessor.calculate_multiple_levels()
     end
 
     AttackGroupBeaconProcessor.init_index()
-    ErmSurfaceProcessor.wander_unit_clean_up()
+    SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
     if script.active_mods["erm_easier_terran"] then
@@ -152,7 +152,7 @@ end
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
-            ErmCompat_NewGamePlus.exec(event)
+            Compat_NewGamePlus.exec(event)
         end)
     end
 
@@ -165,11 +165,11 @@ local conditional_events = function()
     end
 
     if global.quick_cron_is_running then
-        Event.on_nth_tick(GlobalConfig.QUICK_CRON, ErmCron.process_quick_queue)
+        Event.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
     if global.boss and global.boss.entity then
-        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
+        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
     end
 end
 
@@ -186,19 +186,19 @@ local init_globals = function()
     global.active_races = {}
     global.active_races_names = {}
     global.active_races_num = 1
-    global.is_multi_planets_game = TEST_MODE or script.active_mods['space-exploration']
+    global.is_multi_planets_game = script.active_mods['space-exploration']
 
-    ErmSurfaceProcessor.init_globals()
+    SurfaceProcessor.init_globals()
     AttackMeterProcessor.init_globals()
-    ErmMapProcessor.init_globals()
-    ErmForceHelper.init_globals()
-    ErmCron.init_globals()
+    MapProcessor.init_globals()
+    ForceHelper.init_globals()
+    Cron.init_globals()
     AttackGroupProcessor.init_globals()
     AttackGroupBeaconProcessor.init_globals()
     AttackGroupPathingProcessor.init_globals()
     AttackGroupHeatProcessor.init_globals()
-    ErmBossProcessor.init_globals()
-    ErmArmyPopulationProcessor.init_globals()
+    BossProcessor.init_globals()
+    ArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     GuiContainer.init_globals()
@@ -221,8 +221,8 @@ Event.on_init(function(event)
 end)
 
 Event.on_load(function(event)
-    ErmMapProcessor.rebuild_queue()
-    ErmCron.rebuild_queue()
+    MapProcessor.rebuild_queue()
+    Cron.rebuild_queue()
     conditional_events()
 end)
 
@@ -246,8 +246,8 @@ local setting_functions = {
     end,
     ['enemyracemanager-army-limit-multiplier'] = function(event)
         for _, force in pairs(game.forces) do
-            if ErmArmyPopulationProcessor.has_army_data(force) then
-                ErmArmyPopulationProcessor.calculate_max_units(force)
+            if ArmyPopulationProcessor.has_army_data(force) then
+                ArmyPopulationProcessor.calculate_max_units(force)
             end
         end
     end

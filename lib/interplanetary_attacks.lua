@@ -6,8 +6,10 @@
 
 local InterplanetaryAttacks = {}
 
-function InterplanetaryAttacks.exec(race_name, target_force)
+local NAUVIS = 1
 
+function InterplanetaryAttacks.exec(race_name, target_force)
+    return game.surfaces[NAUVIS]
 end
 
 --- Scan planets for player entities on a daily basis, mark it attack-able if entity found.

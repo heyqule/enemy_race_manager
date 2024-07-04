@@ -8,18 +8,18 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
-local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
 local add_deployer = function(event)
     local entity = event.created_entity or event.entity
     ArmyDeploymentProcessor.add_entity(entity)
-    ErmArmyControlUI.update_deployers()
+    ArmyControlUI.update_deployers()
 end
 
 local remove_deployer = function(event)
     local entity = event.created_entity or event.entity
     ArmyDeploymentProcessor.remove_entity(entity.force.index, entity.unit_number)
-    ErmArmyControlUI.update_deployers()
+    ArmyControlUI.update_deployers()
 end
 
 local is_valid_deployer = function(event)

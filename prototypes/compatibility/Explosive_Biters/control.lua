@@ -1,11 +1,11 @@
 local Event = require('__stdlib__/stdlib/event/event')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local modify_race_setting = function()
     if script.active_mods['Explosive_biters'] then
         local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
-        ErmDebugHelper.print('Explosive_biters is active')
+        DebugHelper.print('Explosive_biters is active')
 
         table.insert(race_settings.support_structures[1], 'explosive-biter-spawner')
 

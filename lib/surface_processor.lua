@@ -5,9 +5,9 @@
 ---
 
 local Table = require('__stdlib__/stdlib/utils/table')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local SurfaceProcessor = {}
 
@@ -17,7 +17,7 @@ end
 
 function SurfaceProcessor.assign_race(surface, race_name)
 
-    if not ErmForceHelper.can_have_enemy_on(surface) then
+    if not ForceHelper.can_have_enemy_on(surface) then
         return
     end
 
@@ -53,20 +53,20 @@ function SurfaceProcessor.rebuild_race()
         return
     end
 
-    ErmForceHelper.reset_surface_lists()
+    ForceHelper.reset_surface_lists()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
                 (race ~= MOD_NAME and script.active_mods[race] == nil) or
                 global.active_races[race] == nil or
-                not ErmForceHelper.can_have_enemy_on(game.surfaces[surface_index])
+                not ForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
             SurfaceProcessor.remove_race(game.surfaces[surface_index])
         end
     end
 
     for _, surface in pairs(game.surfaces) do
-        if global.enemy_surfaces[surface.name] == nil and ErmForceHelper.can_have_enemy_on(surface) then
+        if global.enemy_surfaces[surface.name] == nil and ForceHelper.can_have_enemy_on(surface) then
             SurfaceProcessor.assign_race(game.surfaces[surface.index])
         end
     end
@@ -88,13 +88,13 @@ function SurfaceProcessor.wander_unit_clean_up()
         if surface.valid then
             local units = surface.find_entities_filtered({
                 type = "unit",
-                force = ErmForceHelper.get_enemy_forces(),
+                force = ForceHelper.get_enemy_forces(),
             })
             for _, unit in pairs(units) do
                 checked_count = checked_count + 1
                 if unit.valid and unit.unit_number and unit.spawner == nil and unit.command and unit.command.type == defines.command.wander then
                     unit_count = unit_count + 1
-                    local race_name = ErmForceHelper.extract_race_name_from(unit.force.name)
+                    local race_name = ForceHelper.extract_race_name_from(unit.force.name)
                     if race_name and global.race_settings[race_name] and global.race_settings[race_name].attack_meter then
                         global.race_settings[race_name].attack_meter = global.race_settings[race_name].attack_meter + 1
                     end

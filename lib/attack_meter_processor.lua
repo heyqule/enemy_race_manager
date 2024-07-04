@@ -7,13 +7,13 @@
 local String = require('__stdlib__/stdlib/utils/string')
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local ErmAttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
 local AttackMeterProcessor = {}
 
@@ -44,9 +44,9 @@ local calculatePoints = function(race_name, statistic,
 end
 
 local calculateNextThreshold = function(race_name)
-    local threshold = GlobalConfig.attack_meter_threshold() * GlobalConfig.max_group_size() * ErmAttackGroupProcessor.MIXED_UNIT_POINTS
+    local threshold = GlobalConfig.attack_meter_threshold() * GlobalConfig.max_group_size() * AttackGroupProcessor.MIXED_UNIT_POINTS
     local derivative = GlobalConfig.attack_meter_deviation()
-    ErmRaceSettingsHelper.set_next_attack_threshold(
+    RaceSettingsHelper.set_next_attack_threshold(
             race_name,
             threshold + threshold * (math.random(derivative * -1, derivative) / 100)
     )
@@ -61,7 +61,7 @@ function AttackMeterProcessor.exec()
         return
     end
 
-    local force_names = ErmForceHelper.get_enemy_forces()
+    local force_names = ForceHelper.get_enemy_forces()
 
     for _, name in pairs(force_names) do
         AttackMeterProcessor.calculate_points(name)
@@ -73,13 +73,13 @@ function AttackMeterProcessor.add_form_group_cron()
         return
     end
 
-    local force_names = ErmForceHelper.get_enemy_forces()
+    local force_names = ForceHelper.get_enemy_forces()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
-        local race_name = ErmForceHelper.extract_race_name_from(force_name)
+        local race_name = ForceHelper.extract_race_name_from(force_name)
         if GlobalConfig.race_is_active(race_name) then
-            ErmCron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
+            Cron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
         end
     end
 end
@@ -88,7 +88,7 @@ function AttackMeterProcessor.calculate_points(force_name)
     local interval = defines.flow_precision_index.one_minute
 
     local force = game.forces[force_name]
-    local race_name = ErmForceHelper.extract_race_name_from(force_name)
+    local race_name = ForceHelper.extract_race_name_from(force_name)
     if not GlobalConfig.race_is_active(race_name) then
         return
     end
@@ -98,32 +98,32 @@ function AttackMeterProcessor.calculate_points(force_name)
         return
     end
 
-    local level = ErmRaceSettingsHelper.get_level(race_name)
+    local level = RaceSettingsHelper.get_level(race_name)
 
-    local units = ErmRaceSettingsHelper.get_current_unit_tier(race_name)
+    local units = RaceSettingsHelper.get_current_unit_tier(race_name)
     local unit_points = calculatePoints(race_name, statistic_cache, units, level, interval)
 
-    local buildings = ErmRaceSettingsHelper.get_current_building_tier(race_name)
+    local buildings = RaceSettingsHelper.get_current_building_tier(race_name)
     local building_points = calculatePoints(race_name, statistic_cache, buildings, level, interval)
 
-    local turrets = ErmRaceSettingsHelper.get_current_turret_tier(race_name)
+    local turrets = RaceSettingsHelper.get_current_turret_tier(race_name)
     local turret_points = calculatePoints(race_name, statistic_cache, turrets, level, interval)
 
     local attack_meter_points = unit_points * AttackMeterProcessor.UNIT_POINTS +
             building_points * AttackMeterProcessor.SPAWNER_POINTS +
             turret_points * AttackMeterProcessor.TURRET_POINTS
 
-    ErmRaceSettingsHelper.add_killed_units_count(race_name, unit_points)
-    ErmRaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
+    RaceSettingsHelper.add_killed_units_count(race_name, unit_points)
+    RaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
 
     attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
 
     if GlobalConfig.time_base_attack_enabled() and level > 2 then
-        local extra_points = ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * (GlobalConfig.time_base_attack_points() / 100)
+        local extra_points = RaceSettingsHelper.get_next_attack_threshold(race_name) * (GlobalConfig.time_base_attack_points() / 100)
         attack_meter_points = attack_meter_points + extra_points
     end
 
-    ErmRaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
+    RaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
 
     local spawner_destroy_factor = game.map_settings.enemy_evolution.destroy_factor
     local unit_evolution_points = unit_points * 0.025 * spawner_destroy_factor
@@ -145,33 +145,33 @@ function AttackMeterProcessor.form_group(race_name, force)
         return
     end
 
-    local next_attack_threshold = ErmRaceSettingsHelper.get_next_attack_threshold(race_name)
+    local next_attack_threshold = RaceSettingsHelper.get_next_attack_threshold(race_name)
     if next_attack_threshold == 0 then
         calculateNextThreshold(race_name)
         return
     end
 
-    local current_attack_value = ErmRaceSettingsHelper.get_attack_meter(race_name)
+    local current_attack_value = RaceSettingsHelper.get_attack_meter(race_name)
     -- Process attack point group
     if current_attack_value > next_attack_threshold then
         local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
-        local accumulated_attack_meter = ErmRaceSettingsHelper.get_accumulated_attack_meter(race_name)
-        local last_accumulated_attack_meter = ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
-        if GlobalConfig.elite_squad_enable() and ErmRaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
-            ErmAttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
+        local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
+        local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
+        if GlobalConfig.elite_squad_enable() and RaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
+            AttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
         else
-            ErmAttackGroupProcessor.exec(race_name, force, next_attack_threshold)
+            AttackGroupProcessor.exec(race_name, force, next_attack_threshold)
         end
     end
 end
 
 function AttackMeterProcessor.adjustAttackMeter(race_name)
-    ErmRaceSettingsHelper.add_to_attack_meter(race_name, ErmRaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
+    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
     calculateNextThreshold(race_name)
 end
 
 function AttackMeterProcessor.adjustLastAccumulatedAttackMeter(race_name)
-    ErmRaceSettingsHelper.set_last_accumulated_attack_meter(race_name, ErmRaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
+    RaceSettingsHelper.set_last_accumulated_attack_meter(race_name, RaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
 end
 
 return AttackMeterProcessor

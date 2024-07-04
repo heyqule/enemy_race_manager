@@ -13,7 +13,7 @@ local Math = require('__stdlib__/stdlib/utils/math')
 require("util")
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -109,7 +109,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
     local race_settings = get_race_settings(race_name)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
 
     position.x = position.x + 2
 
@@ -237,7 +237,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
     local source_entity = event.source_entity
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
 
     local position = event.target_position or event.target_entity.position
     position.x = position.x + 2

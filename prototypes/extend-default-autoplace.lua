@@ -25,7 +25,7 @@ local String = require('__stdlib__/stdlib/utils/string')
 local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 require('global')
 
@@ -153,8 +153,8 @@ local rearrange_specs = function()
         table.insert(statistic['elevation_' .. race_data['elevation']], dataset)
     end
 
-    ErmDebugHelper.print('Autoplace - statistic:')
-    ErmDebugHelper.print(serpent.block(statistic))
+    DebugHelper.print('Autoplace - statistic:')
+    DebugHelper.print(serpent.block(statistic))
 
     statistic.moisture_1, statistic.moisture_2 = rebalanceTables(statistic.moisture_1, statistic.moisture_2)
     statistic.aux_1, statistic.aux_2 = rebalanceTables(statistic.aux_1, statistic.aux_2)
@@ -162,8 +162,8 @@ local rearrange_specs = function()
     --    rebalanceTables(statistic.temperature_1, statistic.temperature_2, statistic.temperature_3)
     statistic.elevation_1, statistic.elevation_2, statistic.elevation_3 = rebalanceTables(statistic.elevation_1, statistic.elevation_2, statistic.elevation_3)
 
-    ErmDebugHelper.print('Autoplace - After rebalanced statistic:')
-    ErmDebugHelper.print(serpent.block(statistic))
+    DebugHelper.print('Autoplace - After rebalanced statistic:')
+    DebugHelper.print(serpent.block(statistic))
 
     local updated_specs = data.erm_spawn_specs
 
@@ -183,8 +183,8 @@ local rearrange_specs = function()
         end
     end
 
-    ErmDebugHelper.print('Autoplace - Updated Specs')
-    ErmDebugHelper.print(serpent.block(updated_specs))
+    DebugHelper.print('Autoplace - Updated Specs')
+    DebugHelper.print(serpent.block(updated_specs))
 
     return updated_specs, statistic
 end
@@ -215,8 +215,8 @@ local balance_volumes_by_aux = function(data)
         end
     end
 
-    ErmDebugHelper.print('Autoplace - uniqueMoisturePairs:')
-    ErmDebugHelper.print(serpent.block(uniqueMoisturePairs))
+    DebugHelper.print('Autoplace - uniqueMoisturePairs:')
+    DebugHelper.print(serpent.block(uniqueMoisturePairs))
 
     for uniqueIndex, element in pairs(uniqueMoisturePairs) do
         for key, dataItem in pairs(data) do
@@ -261,8 +261,8 @@ local balance_volumes_by_temperature = function(data)
         end
     end
 
-    ErmDebugHelper.print('Autoplace - uniqueTempPairs:')
-    ErmDebugHelper.print(serpent.block(uniqueTempPairs))
+    DebugHelper.print('Autoplace - uniqueTempPairs:')
+    DebugHelper.print(serpent.block(uniqueTempPairs))
 
     for uniqueIndex, element in pairs(uniqueTempPairs) do
         for key, dataItem in pairs(data) do
@@ -323,7 +323,7 @@ local aux_ranges = { { 0, 0.505 }, { 0.495, 1 } }
 local temperature_ranges = { { 12, 14.01 }, { 13.99, 16.01 }, { 15.99, 18 } }
 local elevation_ranges = { { -1, 25.5 }, { 24.5, 48.5 }, { 47.5, 70 } }
 if mods['alien-biomes'] then
-    ErmDebugHelper.print('Autoplace - Using Alien Biomes')
+    DebugHelper.print('Autoplace - Using Alien Biomes')
     temperature_ranges = { { -21, 34.75 }, { 33.25, 96.75 }, { 95.25, 151 } }
 end
 
@@ -344,8 +344,8 @@ end
 local total_active_specs = table_size(erm_race_data)
 local active_races = {}
 
-ErmDebugHelper.print('Autoplace - Specs: ' .. tonumber(table_size(erm_race_data)))
-ErmDebugHelper.print(serpent.block(erm_race_data))
+DebugHelper.print('Autoplace - Specs: ' .. tonumber(table_size(erm_race_data)))
+DebugHelper.print(serpent.block(erm_race_data))
 
 for _, race in pairs(erm_race_data) do
     active_races[race.mod_name] = true
@@ -353,8 +353,8 @@ end
 
 local total_active_races = table_size(active_races)
 
-ErmDebugHelper.print('Autoplace - Active Races:' .. tonumber(table_size(active_races)))
-ErmDebugHelper.print(serpent.block(active_races))
+DebugHelper.print('Autoplace - Active Races:' .. tonumber(table_size(active_races)))
+DebugHelper.print(serpent.block(active_races))
 
 if total_active_races < 2 then
     return
@@ -402,8 +402,8 @@ for key, race_data in pairs(updated_specs) do
     volumes[key] = volume
 end
 
-ErmDebugHelper.print('Autoplace - Volumes:')
-ErmDebugHelper.print(serpent.block(volumes))
+DebugHelper.print('Autoplace - Volumes:')
+DebugHelper.print(serpent.block(volumes))
 
 if balance_by_temperature and all_spec_have_temperature(volumes) then
     volumes = balance_volumes_by_temperature(volumes)
@@ -411,8 +411,8 @@ else
     volumes = balance_volumes_by_aux(volumes)
 end
 
-ErmDebugHelper.print('Autoplace - After Balancing Volumes:')
-ErmDebugHelper.print(serpent.block(volumes))
+DebugHelper.print('Autoplace - After Balancing Volumes:')
+DebugHelper.print(serpent.block(volumes))
 
 --- Fixed 3 race conditions with 3 autoplace specs
 if table_size(volumes) == 3 and total_active_races == 3 then
@@ -438,19 +438,19 @@ else
     end
 end
 
-ErmDebugHelper.print('Autoplace - After Fine Tuned Volumes:')
-ErmDebugHelper.print(serpent.block(volumes))
+DebugHelper.print('Autoplace - After Fine Tuned Volumes:')
+DebugHelper.print(serpent.block(volumes))
 
 for key, race_data in pairs(updated_specs) do
     local volume = volumes[key]
     if volume then
         if race_data.entity_filter then
-            ErmDebugHelper.print('Autoplace - ' .. race_data.mod_name .. '/' .. race_data.entity_filter .. ' Volume:')
+            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. '/' .. race_data.entity_filter .. ' Volume:')
         else
-            ErmDebugHelper.print('Autoplace - ' .. race_data.mod_name .. ' Volume:')
+            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. ' Volume:')
         end
 
-        ErmDebugHelper.print(serpent.block(volume))
+        DebugHelper.print(serpent.block(volume))
         for _, v in pairs(data.raw["unit-spawner"]) do
             tune_autoplace(
                     v, false, volume,

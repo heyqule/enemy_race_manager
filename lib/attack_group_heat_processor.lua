@@ -158,8 +158,8 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
 
             local ask_friend_roll = true
 
-            if Config.interplanetary_attacks_enabled() then
-                ask_friend_roll = global.override_ask_friend or RaceSettingsHelper.can_spawn(50)
+            if Config.interplanetary_attack_enable() then
+                ask_friend_roll = global.force_ask_friend or RaceSettingsHelper.can_spawn(50)
             end
 
             -- Transfer all attack points to a friend that can attack.
@@ -181,10 +181,9 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                 end
 
                 return nil
-            else
-                InterplanetaryAttacks.exec(race_name, target_force)
-                return nil
             end
+
+            return InterplanetaryAttacks.exec(race_name, target_force)
         end
 
     end

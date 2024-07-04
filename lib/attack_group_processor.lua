@@ -12,7 +12,7 @@ local Event = require('__stdlib__/stdlib/event/event')
 local Config = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local Cron = require('__enemyracemanager__/lib/cron_processor')
 

@@ -13,9 +13,9 @@ BossAttacksData.default_speed = 1
 --{
 --    projectile_name = {'blood-cloud','acid-cloud','blood-fire'},
 --    projectile_type = {
---        ErmBossAttackProcessor.TYPE_PROJECTILE,
---        ErmBossAttackProcessor.TYPE_PROJECTILE,
---        ErmBossAttackProcessor.TYPE_PROJECTILE
+--        BossAttackProcessor.TYPE_PROJECTILE,
+--        BossAttackProcessor.TYPE_PROJECTILE,
+--        BossAttackProcessor.TYPE_PROJECTILE
 --    },
 --    projectile_chance = {25, 25, 100},
 --    projectile_count = {1, 1, 1},
