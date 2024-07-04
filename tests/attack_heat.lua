@@ -26,7 +26,7 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
 local zerg_spawner = 'erm_zerg/hatchery/1'
 
 
-it.only("When a unit killed, point adds to heat", function()
+it("When a unit killed, point adds to heat", function()
     local surface = game.surfaces[1]
     local biter = surface.create_entity({
             name=biter_spawner,position={0, 0}, force = 'enemy'
@@ -42,7 +42,7 @@ it.only("When a unit killed, point adds to heat", function()
     assert(global.attack_heat['erm_zerg'][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, 'Zerg calculated heat incorrect')
 end)
 
-it.only("Heat aggregation with 2 races", function()
+it("Heat aggregation with 2 races", function()
     local surface = game.surfaces[1]
     for i=1, 20, 1 do
         local biter = surface.create_entity({
@@ -69,7 +69,7 @@ it.only("Heat aggregation with 2 races", function()
     assert(global.attack_heat_by_forces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Zerg aggregated forces value incorrect')
 end)
 
-it.only("Heat aggregation with 2 races, 3 surfaces", function()
+it("Heat aggregation with 2 races, 3 surfaces", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -120,12 +120,12 @@ it.only("Heat aggregation with 2 races, 3 surfaces", function()
     assert(global.attack_heat['erm_vanilla'][2][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 2 Cooldown is working" .. global.attack_heat['erm_vanilla'][2][1]..'/'.. AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
 end)
 
-it.only("Select a default surface and force", function()
+it("Select a default surface and force", function()
     assert(AttackGroupHeatProcessor.pick_surface('erm_vanilla') == game.surfaces[1], 'Pick default surface')
     assert(AttackGroupHeatProcessor.pick_target('erm_vanilla') == game.forces[1], 'Pick default target')
 end)
 
-it.only("Select a hottest force with multiple heat on a surface", function()
+it("Select a hottest force with multiple heat on a surface", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -157,7 +157,7 @@ it.only("Select a hottest force with multiple heat on a surface", function()
     assert( picked_force.name == game.forces['test_player_3'].name, 'Pick test_player_3 target')
 end)
 
-it.only("Select a hottest surface with multiple surface", function()
+it("Select a hottest surface with multiple surface", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -197,7 +197,7 @@ it.only("Select a hottest surface with multiple surface", function()
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it.only("Select a hottest surface and force combo", function()
+it("Select a hottest surface and force combo", function()
     game.create_force('test_player_2')
     game.create_force('test_player_3')
 
@@ -253,7 +253,7 @@ it.only("Select a hottest surface and force combo", function()
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it.only("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. But attackable on planet 2", function()
+it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. But attackable on planet 2", function()
     game.create_force('test_player_2')
     game.create_force('test_player_3')
 
@@ -309,7 +309,7 @@ it.only("Dude wiped planet 3, but his force doesn't have attack beacon on planet
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it.only("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
+it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
     async(900)
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
@@ -373,7 +373,7 @@ it.only("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", func
     end)
 end)
 
-it.only("Remove Surface", function()
+it("Remove Surface", function()
     async(900)
     game.create_force('test_player_2')
     game.create_force('test_player_3')
@@ -430,7 +430,7 @@ it.only("Remove Surface", function()
     end)
 end)
 
-it.only("Remove Player Force", function()
+it("Remove Player Force", function()
     async(900)
     local force2 = game.create_force('test_player_2')
     local force3 = game.create_force('test_player_3')
