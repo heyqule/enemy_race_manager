@@ -45,7 +45,8 @@ end)
 
         after_ticks(1800, function()
             local entities = surface.find_entities_filtered({
-                type='unit-spawner'
+                type='unit-spawner',
+                force='enemy'
             })
             assert.equal('erm_vanilla/biter-spawner/10',entities[1].name, 'Correct updated unit spawner')
         end)

@@ -158,7 +158,7 @@ end
                 race_name,
                 game.forces[force_name],
                 20,
-                AttackGroupProcessor.GROUP_TYPE_FLYING
+                {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
         )
 
         after_ticks(7200, function()
@@ -190,7 +190,7 @@ end
                 race_name,
                 game.forces[force_name],
                 20,
-                AttackGroupProcessor.GROUP_TYPE_DROPSHIP
+                {group_type =AttackGroupProcessor.GROUP_TYPE_DROPSHIP}
         )
 
         after_ticks(7200, function()
@@ -224,8 +224,8 @@ end
                 race_name,
                 game.forces[force_name],
                 20,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED,
-                1
+                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
+                featured_group_id = 1}
         )
 
         after_ticks(7200, function()
@@ -261,8 +261,8 @@ end
                 race_name,
                 game.forces[force_name],
                 20,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
-                2
+                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                 featured_group_id = 2}
         )
 
         after_ticks(7200, function()

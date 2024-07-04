@@ -22,3 +22,33 @@ end
 for _, player in pairs(game.players) do
     global.army_windows_tab_player_data[player.index] = nil
 end
+
+
+local new_cron = {}
+
+for _, cron in pairs(global.quick_cron.objects) do
+    local data = unpack(cron[2])
+    local new_data = {}
+    print(serpent.block(data))
+    new_data = {
+        data[1],
+        data[2],
+        data[3],
+        {
+            group_type = data[4],
+            featured_group_id = data[5],
+            is_elite_attack = data[6],
+            target_force = data[7],
+            surface = data[8],
+            from_retry = data[9],
+            bypass_attack_meter = data[10],
+        }
+    }
+    if cron[1] ~= 'AttackGroupProcessor.generate_group' then
+        table.insert(new_cron, cron)
+    end
+end
+
+global.quick_cron.first = 1
+global.quick_cron.last = #new_cron
+global.quick_cron.objects = new_cron

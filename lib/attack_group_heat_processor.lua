@@ -147,6 +147,7 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
     if global.is_multi_planets_game and surface_data
     then
         local next, surface = next(surface_data)
+        print('Top Surface: '..serpent.block(surface))
         if surface and surface.has_attack_beacon then
             return game.surfaces[surface.surface_index]
         else

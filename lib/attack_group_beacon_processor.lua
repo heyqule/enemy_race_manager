@@ -1127,11 +1127,9 @@ end
 AttackGroupBeaconProcessor.has_attack_entity_beacon = function(surface)
     local surface_data = global[ATTACK_ENTITIES_BEACON][surface.index]
     if surface_data then
-        for force_key, force_data in pairs(surface_data) do
-            for node_key, node in pairs(force_data) do
-                if node.is_spawn == nil then
-                    return true
-                end
+        for _, data in pairs(surface_data) do
+            if type(data) == 'table' and next(data) then
+                return true
             end
         end
     end

@@ -553,7 +553,7 @@ it("Can't avoid land Beacon, all enemies killed by turrets", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
 
     after_ticks(7200, function()
@@ -578,7 +578,7 @@ it("Aerial Attack", function()
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 50, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
     after_ticks(7200, function()
@@ -623,7 +623,7 @@ it("Avoid Defence Beacon (Ground Attack) using left side", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
     end)
 
@@ -669,7 +669,7 @@ it("Avoid Defence Beacon (Aerial Attack) using left side", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
     end)
 
@@ -701,7 +701,7 @@ it("Avoid Defence Beacon (Ground Attack) using right side", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
     end)
 
@@ -733,7 +733,7 @@ it("Avoid Defence Beacon (Aerial Attack) using right side", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
     end)
 
@@ -778,7 +778,7 @@ it("Picking area with lowest defense score from East", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { -485, 200 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
@@ -834,7 +834,7 @@ it("Picking area with lowest defense score from North", function()
     local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 200,-485 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
@@ -888,7 +888,7 @@ it("Picking aerial area with lowest defense score from East", function()
 
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         global.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
@@ -943,7 +943,7 @@ it("When inserted waypoint is unreachable, enemies should still able to route to
 
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
 
     after_ticks(9600, function()
@@ -984,7 +984,7 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
 
     after_ticks(600, function()
@@ -994,7 +994,7 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
     after_ticks(900, function()
         local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -500, 0 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
 
     after_ticks(1200, function()
@@ -1025,7 +1025,7 @@ it('Land attack group cant find a valid path, switch to aerial group instead', f
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, AttackGroupProcessor.GROUP_TYPE_MIXED)
+        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
 
     after_ticks(7200, function()

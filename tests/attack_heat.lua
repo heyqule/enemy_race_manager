@@ -11,6 +11,7 @@ local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_setting
 
 before_each(function()
     TestShared.prepare_the_factory()
+    global.is_multi_planets_game = true
 end)
 
 after_each(function()
@@ -18,13 +19,14 @@ after_each(function()
     TestShared.reset_surfaces()
     TestShared.reset_forces()
     AttackGroupHeatProcessor.reset_globals()
+    global.is_multi_planets_game = false
 end)
 
 local biter_spawner = 'erm_vanilla/biter-spawner/1'
 local zerg_spawner = 'erm_zerg/hatchery/1'
 
 
-it("When a unit killed, point adds to heat", function()
+it.only("When a unit killed, point adds to heat", function()
     local surface = game.surfaces[1]
     local biter = surface.create_entity({
             name=biter_spawner,position={0, 0}, force = 'enemy'
@@ -40,7 +42,7 @@ it("When a unit killed, point adds to heat", function()
     assert(global.attack_heat['erm_zerg'][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, 'Zerg calculated heat incorrect')
 end)
 
-it("Heat aggregation with 2 races", function()
+it.only("Heat aggregation with 2 races", function()
     local surface = game.surfaces[1]
     for i=1, 20, 1 do
         local biter = surface.create_entity({
@@ -67,7 +69,7 @@ it("Heat aggregation with 2 races", function()
     assert(global.attack_heat_by_forces['erm_zerg'][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, 'Zerg aggregated forces value incorrect')
 end)
 
-it("Heat aggregation with 2 races, 3 surfaces", function()
+it.only("Heat aggregation with 2 races, 3 surfaces", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -118,12 +120,12 @@ it("Heat aggregation with 2 races, 3 surfaces", function()
     assert(global.attack_heat['erm_vanilla'][2][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 2 Cooldown is working" .. global.attack_heat['erm_vanilla'][2][1]..'/'.. AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
 end)
 
-it("Select a default surface and force", function()
+it.only("Select a default surface and force", function()
     assert(AttackGroupHeatProcessor.pick_surface('erm_vanilla') == game.surfaces[1], 'Pick default surface')
     assert(AttackGroupHeatProcessor.pick_target('erm_vanilla') == game.forces[1], 'Pick default target')
 end)
 
-it("Select a hottest force with multiple heat on a surface", function()
+it.only("Select a hottest force with multiple heat on a surface", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -155,7 +157,7 @@ it("Select a hottest force with multiple heat on a surface", function()
     assert( picked_force.name == game.forces['test_player_3'].name, 'Pick test_player_3 target')
 end)
 
-it("Select a hottest surface with multiple surface", function()
+it.only("Select a hottest surface with multiple surface", function()
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
         local biter = surface.create_entity({
@@ -182,20 +184,20 @@ it("Select a hottest surface with multiple surface", function()
         ling.die('player')
     end
     local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
-
     for active_race, _ in pairs(global.active_races) do
         AttackGroupHeatProcessor.aggregate_heat(active_race)
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
+    remote.call('enemyracemanager_debug', 'print_global')
+
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_vanilla', game.forces['player'])
-
     assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface'..picked_surface.name)
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it("Select a hottest surface and force combo", function()
+it.only("Select a hottest surface and force combo", function()
     game.create_force('test_player_2')
     game.create_force('test_player_3')
 
@@ -251,7 +253,7 @@ it("Select a hottest surface and force combo", function()
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. But attackable on planet 2", function()
+it.only("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. But attackable on planet 2", function()
     game.create_force('test_player_2')
     game.create_force('test_player_3')
 
@@ -307,7 +309,7 @@ it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. B
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
-it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
+it.only("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
     async(900)
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
@@ -371,7 +373,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
     end)
 end)
 
-it("Remove Surface", function()
+it.only("Remove Surface", function()
     async(900)
     game.create_force('test_player_2')
     game.create_force('test_player_3')
@@ -428,7 +430,7 @@ it("Remove Surface", function()
     end)
 end)
 
-it("Remove Player Force", function()
+it.only("Remove Player Force", function()
     async(900)
     local force2 = game.create_force('test_player_2')
     local force3 = game.create_force('test_player_3')

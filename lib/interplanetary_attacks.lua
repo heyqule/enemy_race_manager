@@ -8,7 +8,12 @@ local InterplanetaryAttacks = {}
 
 local NAUVIS = 1
 
+function InterplanetaryAttacks.init_global()
+    global.interplanetary_intel = global.interplanetary_intel or {}
+end
+
 function InterplanetaryAttacks.exec(race_name, target_force)
+    InterplanetaryAttacks.scan()
     return game.surfaces[NAUVIS]
 end
 

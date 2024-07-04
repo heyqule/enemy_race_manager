@@ -116,7 +116,10 @@ function ERM_RemoteAPI.generate_flying_group(race_name, units_number)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 2)
 
     if force and flying_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_FLYING)
+        AttackGroupProcessor.generate_group(
+            race_name, force, units_number,
+            {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
+        )
     end
 end
 
@@ -129,7 +132,10 @@ function ERM_RemoteAPI.generate_dropship_group(race_name, units_number)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 5)
 
     if force and dropship_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(race_name, force, units_number, AttackGroupProcessor.GROUP_TYPE_DROPSHIP)
+        AttackGroupProcessor.generate_group(
+                race_name, force, units_number,
+                {group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP}
+        )
     end
 end
 
@@ -156,8 +162,10 @@ function ERM_RemoteAPI.generate_featured_group(race_name, size, squad_id)
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED,
-                squad_id
+                {
+                    group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
+                    featured_group_id = squad_id
+                }
         )
     end
 end
@@ -173,8 +181,8 @@ function ERM_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
-                squad_id
+                { group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                  featured_group_id = squad_id}
         )
     end
 end
@@ -192,9 +200,10 @@ function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED,
-                squad_id,
-                true
+                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
+                 featured_group_id = squad_id,
+                 is_elite_attack = true
+                }
         )
     end
 end
@@ -212,9 +221,9 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
-                squad_id,
-                true
+                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                 featured_group_id = squad_id,
+                 is_elite_attack = true}
         )
     end
 end
