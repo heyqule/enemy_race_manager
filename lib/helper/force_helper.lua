@@ -115,7 +115,7 @@ function ForceHelper.get_name_token(name)
     return global.force_entity_name_cache[name]
 end
 
-function ForceHelper.getNonPlayerForces()
+function ForceHelper.get_non_player_forces()
     return global.non_player_forces or { 'neutral' }
 end
 
@@ -168,38 +168,47 @@ function ForceHelper.can_have_enemy_on(surface)
     if surface.valid then
         local surface_name = surface.name
         if global.surface_inclusion_list[surface_name] == nil and
-                (
-                        global.surface_exclusion_list[surface_name] == true or
+            (global.surface_exclusion_list[surface_name] == true or
 
-                                string.find(surface_name, "Factory floor") or
-                                string.find(surface_name, " Orbit") or
-                                string.find(surface_name, "clonespace") or
-                                string.find(surface_name, "BPL_TheLabplayer") or
-                                string.find(surface_name, "starmap%-") or
-                                string.find(surface_name, "NiceFill") or
-                                string.find(surface_name, "Asteroid Belt") or
-                                string.find(surface_name, "Vault ") or
-                                string.find(surface_name, "spaceship") or
-                                string.find(surface_name, "bpsb%-lab%-") or
+            string.find(surface_name, "Factory floor") or
+            string.find(surface_name, " Orbit") or
+            string.find(surface_name, "clonespace") or
+            string.find(surface_name, "BPL_TheLabplayer") or
+            string.find(surface_name, "starmap%-") or
+            string.find(surface_name, "NiceFill") or
+            string.find(surface_name, "Asteroid Belt") or
+            string.find(surface_name, "Vault ") or
+            string.find(surface_name, "spaceship") or
+            string.find(surface_name, "bpsb%-lab%-") or
 
-                                (surface_name == "aai-signals") or
-                                (surface_name == "RTStasisRealm") or
-                                (surface_name == "minime_dummy_dungeon") or
-                                (surface_name == "minime-preview-character") or
-                                (surface_name == "pipelayer") or
-                                (surface_name == "beltlayer")
-                )
+            (surface_name == "aai-signals") or
+            (surface_name == "RTStasisRealm") or
+            (surface_name == "minime_dummy_dungeon") or
+            (surface_name == "minime-preview-character") or
+            (surface_name == "pipelayer") or
+            (surface_name == "beltlayer")
+        )
         then
             global.surface_exclusion_list[surface_name] = true
+            global.enemy_surfaces[surface_name] = nil
+            global.surface_inclusion_list[surface_name] = nil
             return false
         end
 
         global.surface_inclusion_list[surface_name] = true
+        global.surface_exclusion_list[surface_name] = nil
         return true
     end
 
     return false
 end
+
+function ForceHelper.add_surface_to_exclusion_list(surface_name)
+    global.surface_exclusion_list[surface_name] = true
+    global.surface_inclusion_list[surface_name] = nil
+    global.enemy_surfaces[surface_name] = nil
+end
+
 
 function ForceHelper.reset_surface_lists()
     global.surface_exclusion_list = {}

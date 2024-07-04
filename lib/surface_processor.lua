@@ -4,8 +4,6 @@
 --- require('__enemyracemanager__/lib/global_config')
 ---
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
@@ -52,8 +50,6 @@ function SurfaceProcessor.rebuild_race()
     if global.enemy_surfaces == nil then
         return
     end
-
-    ForceHelper.reset_surface_lists()
 
     for surface_index, race in pairs(global.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
@@ -119,6 +115,10 @@ end
 
 function SurfaceProcessor.get_gps_message(x, y, surface_name)
     return '[gps=' .. x .. ',' .. y .. ',' .. surface_name .. ']'
+end
+
+function SurfaceProcessor.get_attackable_surfaces()
+    return global.enemy_surfaces
 end
 
 return SurfaceProcessor

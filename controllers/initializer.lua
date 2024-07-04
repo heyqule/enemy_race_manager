@@ -21,6 +21,7 @@ local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_proc
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 local Cron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -131,7 +132,7 @@ local prepare_world = function()
     -- Race Cleanup
     RaceSettingsHelper.clean_up_race()
     SurfaceProcessor.numeric_to_name_conversion()
-    SurfaceProcessor.rebuild_race(global.race_settings)
+    SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
@@ -186,7 +187,11 @@ local init_globals = function()
     global.active_races = {}
     global.active_races_names = {}
     global.active_races_num = 1
-    global.is_multi_planets_game = script.active_mods['space-exploration']
+    global.is_multi_planets_game = false
+    --- SE or DLC
+    if script.active_mods['space-exploration'] then
+        global.is_multi_planets_game = true
+    end
 
     SurfaceProcessor.init_globals()
     AttackMeterProcessor.init_globals()
@@ -202,6 +207,7 @@ local init_globals = function()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     GuiContainer.init_globals()
+    InterplanetaryAttacks.init_globals()
 
 
     --- Wipe this cache due to cache pollution from previous version.

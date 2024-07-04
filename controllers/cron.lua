@@ -10,13 +10,10 @@ require('__enemyracemanager__/global')
 
 local Cron = require('__enemyracemanager__/lib/cron_processor')
 local Config = require('__enemyracemanager__/lib/global_config')
-local BossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 
 
 
---- Garbage Collection and Statistic aggregations, heavy task should run by quick cron
+--- Garbage Collection and Statistic aggregations, all calls are run by quick cron
 Event.on_nth_tick(Config.GC_AND_STATS, function(event)
     Cron.add_quick_queue('AttackGroupProcessor.clear_invalid_erm_unit_groups')
     Cron.add_quick_queue('AttackGroupProcessor.clear_invalid_scout_unit_name')
@@ -24,6 +21,8 @@ Event.on_nth_tick(Config.GC_AND_STATS, function(event)
     Cron.add_quick_queue('AttackGroupPathingProcessor.remove_old_nodes')
 
     Cron.add_quick_queue('BossRewardProcessor.clean_up')
+
+    Cron.add_quick_queue('InterplanetaryAttacks.scan')
 
     for active_race, _ in pairs(global.active_races) do
         Cron.add_quick_queue('AttackGroupHeatProcessor.aggregate_heat',active_race)

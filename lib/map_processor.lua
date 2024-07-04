@@ -8,15 +8,12 @@
 --- https://lua-api.factorio.com/latest/Concepts.html#ChunkPositionAndArea
 ---
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local String = require('__stdlib__/stdlib/utils/string')
 local Queue = require('__stdlib__/stdlib/misc/queue')
-local Game = require('__stdlib__/stdlib/game')
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+
 
 require('__enemyracemanager__/setting-constants')
 

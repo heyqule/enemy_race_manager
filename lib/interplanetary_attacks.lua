@@ -3,23 +3,68 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 5:42 PM
 ---
-
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local InterplanetaryAttacks = {}
 
 local NAUVIS = 1
 
-function InterplanetaryAttacks.init_global()
+function InterplanetaryAttacks.init_globals()
     global.interplanetary_intel = global.interplanetary_intel or {}
 end
 
 function InterplanetaryAttacks.exec(race_name, target_force)
-    InterplanetaryAttacks.scan()
+    if not global.is_multi_planets_game then
+        return
+    end
+
     return game.surfaces[NAUVIS]
 end
 
 --- Scan planets for player entities on a daily basis, mark it attack-able if entity found.
 function InterplanetaryAttacks.scan()
+    if not global.is_multi_planets_game then
+        return
+    end
 
+    local top_profiler = game.create_profiler()
+    for surface_name, race_name in pairs(SurfaceProcessor.get_attackable_surfaces()) do
+        local surface_profiler = game.create_profiler()
+        local surface = game.surfaces[surface_name]
+        if ForceHelper.can_have_enemy_on(surface) then
+            local spawners = surface.find_entities_filtered {
+                type = "unit-spawner",
+                force = ForceHelper.get_enemy_forces(),
+                limit = 1
+            }
+
+            local unclaim = false
+            if not next(spawners) then
+                unclaim = true
+            end
+
+            local has_player_entity = false
+            local player_entities = surface.find_entities_filtered {
+                type = AttackGroupBeaconProcessor.ATTACKABLE_ENTITY_TYPES,
+                force = ForceHelper.get_player_forces(),
+                limit = 1
+            }
+
+            if next(player_entities) then
+                has_player_entity = true
+            end
+
+            global.interplanetary_intel[surface.index] = {
+                unclaim = true,
+                has_player_entity = true,
+            }
+        end
+        surface_profiler.stop()
+        log({ '', 'InterplanetaryAttacks.scan: '..surface_name, top_profiler })
+    end
+    top_profiler.stop()
+    log({ '', 'InterplanetaryAttacks.scan: ', top_profiler })
 end
 
 return InterplanetaryAttacks
