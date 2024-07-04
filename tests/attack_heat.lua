@@ -189,8 +189,6 @@ it("Select a hottest surface with multiple surface", function()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    remote.call('enemyracemanager_debug', 'print_global')
-
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_vanilla', game.forces['player'])
     assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface'..picked_surface.name)

@@ -29,7 +29,6 @@ local new_cron = {}
 for _, cron in pairs(global.quick_cron.objects) do
     local data = unpack(cron[2])
     local new_data = {}
-    print(serpent.block(data))
     new_data = {
         data[1],
         data[2],
