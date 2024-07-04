@@ -11,6 +11,8 @@ local Event = require('__stdlib__/stdlib/event/event')
 local Config = require('__enemyracemanager__/lib/global_config')
 local UniverseRaw = require("__space-exploration__/scripts/universe-raw")
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 local add_exclusion_surfaces = function(event)
     for _, node in pairs(UniverseRaw.universe.space_zones) do
@@ -19,7 +21,46 @@ local add_exclusion_surfaces = function(event)
     ForceHelper.add_surface_to_exclusion_list(UniverseRaw.universe.anomaly.name)
 end
 
+local update_attackable_zone_data = function(event)
+    for surface_name, race_name in pairs(SurfaceProcessor.get_attackable_surfaces()) do
+        local surface = game.surfaces[surface_name]
+        local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
+        if surface and zone_data then
+            local data = {}
+            data.radius = zone_data.radius
+            data.type = zone_data.type
+
+            if zone_data.inhabited_chunks and next(zone_data) then
+                data.has_player_entities = true
+            end
+
+            InterplanetaryAttacks.set_intel(data, surface)
+        end
+    end
+end
+
 Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
     add_exclusion_surfaces(event)
+
+    update_attackable_zone_data()
+end)
+
+--/c remote.call("space-exploration", "get_zone_from_name", {zone_name = "Nauvis"})
+Event.register(Event.generate_event_name(Config.INTERPLANETARY_ATTACK_SCAN), function(event)
+    local intel = event.intel
+    local surface = event.surface
+
+    local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
+    print('------ separator -----')
+    print('surface:'..surface.name)
+    if zone_data then
+        for name, node in pairs(zone_data) do
+            if type(node) ~= 'table' then
+                print(name..': '..tostring(node))
+            else
+                print(name..' Table Size: '..table_size(node))
+            end
+        end
+    end
 end)
 

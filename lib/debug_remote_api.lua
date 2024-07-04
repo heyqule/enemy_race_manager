@@ -17,6 +17,7 @@ local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_proc
 local LevelProcessor = require('__enemyracemanager__/lib/level_processor')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 local Debug_RemoteAPI = {}
 
@@ -243,6 +244,11 @@ function Debug_RemoteAPI.validate_erm_groups()
     for id, content in pairs(global.erm_unit_groups) do
         print(id..' = '.. tostring(content.group.valid))
     end
+end
+
+--- remote.call('enemyracemanager_debug', 'interplanetary_attacks_scan')
+function Debug_RemoteAPI.interplanetary_attacks_scan()
+    InterplanetaryAttacks.scan()
 end
 
 return Debug_RemoteAPI

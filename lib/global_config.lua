@@ -42,6 +42,7 @@ GlobalConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 GlobalConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
 GlobalConfig.BASE_BUILT_EVENT = 'erm_base_built'
+GlobalConfig.INTERPLANETARY_ATTACK_SCAN = 'erm_interplanetary_attack_scan'
 GlobalConfig.FLUSH_GLOBAL = 'erm_flush_global'
 
 GlobalConfig.ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
