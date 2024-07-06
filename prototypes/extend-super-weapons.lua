@@ -31,7 +31,7 @@ if data.raw["projectile"]["atomic-rocket"] then
     local entity = util.table.deepcopy(data.raw["projectile"]["atomic-rocket"])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     --- only for running tests, base game is able to call an unit group to attack.
-    if DEBUG_MODE then
+    if TEST_MODE then
         table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     end
 
@@ -158,6 +158,12 @@ if mods['Krastorio2'] then
     data:extend({ entity })
 end
 
+if mods['PlutoniumEnergy'] then
+    local entity = util.table.deepcopy(data.raw["projectile"]["plutonium-atomic-rocket"])
+    table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
+    table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
+    data:extend({ entity })
+end
 
 
 

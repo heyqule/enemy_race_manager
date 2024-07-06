@@ -649,7 +649,7 @@ data:extend {
         description = "enemyracemanager-interplanetary-raids-chance",
         setting_type = "runtime-global",
         default_value = 33,
-        allowed_values = { 20, 25, 33, 50, 66, 75, 80},
+        allowed_values = {25, 33, 50, 66, 75},
         order = "enemyracemanager-901"
     },
     {

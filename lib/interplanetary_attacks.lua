@@ -5,7 +5,7 @@
 ---
 local Event = require('__stdlib__/stdlib/event/event')
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 local Config = require('__enemyracemanager__/lib/global_config')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -26,37 +26,36 @@ function InterplanetaryAttacks.exec(race_name, target_force)
         return nil
     end
 
-    return game.surfaces[NAUVIS]
+    return nil
+end
+
+function InterplanetaryAttacks.queue_scan()
+    for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
+        local surface = game.surfaces[surface_name]
+        Cron.add_quick_queue('InterplanetaryAttacks.scan', surface)
+    end
 end
 
 --- Scan planets for player entities on a daily basis, mark it attack-able if entity found.
-function InterplanetaryAttacks.scan()
+function InterplanetaryAttacks.scan(surface)
     if not can_perform_attack() then
         return
     end
 
-    local top_profiler = game.create_profiler()
-    for surface_name, race_name in pairs(SurfaceProcessor.get_attackable_surfaces()) do
-        local surface_profiler = game.create_profiler()
-        local surface = game.surfaces[surface_name]
-        if surface and ForceHelper.can_have_enemy_on(surface) then
-            --- Event to manipulate global.interplanetary_intel
-            Event.dispatch({
-                name = Event.get_event_name(Config.INTERPLANETARY_ATTACK_SCAN),
-                intel = global.interplanetary_intel[surface.index],
-                surface = surface
-            })
-        end
-        surface_profiler.stop()
-        log({ '', 'InterplanetaryAttacks.scan: '..surface_name, surface_profiler })
+    if surface and ForceHelper.can_have_enemy_on(surface) then
+        --- Event to manipulate global.interplanetary_intel
+        Event.dispatch({
+            name = Event.get_event_name(Config.INTERPLANETARY_ATTACK_SCAN),
+            intel = global.interplanetary_intel[surface.index],
+            surface = surface
+        })
     end
-    top_profiler.stop()
-    log({ '', 'InterplanetaryAttacks.scan: ', top_profiler })
+
 end
 
 function InterplanetaryAttacks.set_intel(data, surface_index)
-    if not type(data) == 'table' or not type(data) == nil then
-        error("surface_index must be an int")
+    if not type(data) == 'table' or not type(data) == 'nil' then
+        error("data must be a table or nil")
         return
     end
 
@@ -75,6 +74,10 @@ function InterplanetaryAttacks.get_intel(surface_index)
     end
 
     return global.interplanetary_intel[surface_index]
+end
+
+function InterplanetaryAttacks.remove_surface(surface_index)
+    global.interplanetary_intel[surface_index] = nil
 end
 
 return InterplanetaryAttacks

@@ -246,9 +246,9 @@ function Debug_RemoteAPI.validate_erm_groups()
     end
 end
 
---- remote.call('enemyracemanager_debug', 'interplanetary_attacks_scan')
+--- remote.call('enemyracemanager_debug', 'interplanetary_attacks_queue_scan')
 function Debug_RemoteAPI.interplanetary_attacks_scan()
-    InterplanetaryAttacks.scan()
+    InterplanetaryAttacks.queue_scan()
 end
 
 return Debug_RemoteAPI

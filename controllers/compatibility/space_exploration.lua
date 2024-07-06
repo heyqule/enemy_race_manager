@@ -21,46 +21,52 @@ local add_exclusion_surfaces = function(event)
     ForceHelper.add_surface_to_exclusion_list(UniverseRaw.universe.anomaly.name)
 end
 
-local update_attackable_zone_data = function(event)
-    for surface_name, race_name in pairs(SurfaceProcessor.get_attackable_surfaces()) do
-        local surface = game.surfaces[surface_name]
-        local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
-        if surface and zone_data then
-            local data = {}
-            data.radius = zone_data.radius
-            data.type = zone_data.type
+local update_attackable_zone_data = function(surface_name)
+    local surface_profiler = game.create_profiler()
 
-            if zone_data.inhabited_chunks and next(zone_data) then
-                data.has_player_entities = true
-            end
+    local surface = game.surfaces[surface_name]
+    local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
+    if surface and zone_data then
+        local data = {}
+        data.radius = math.floor(zone_data.radius)
+        data.type = zone_data.type
 
-            InterplanetaryAttacks.set_intel(data, surface)
+        if zone_data.inhabited_chunks and next(zone_data.inhabited_chunks) then
+            data.has_player_entities = true
         end
+
+        local defense = 0
+
+        if zone_data.meteor_defences then
+            defense = table_size(zone_data.meteor_defences) * 2
+        end
+
+        if zone_data.meteor_point_defences then
+            defense = defense + table_size(zone_data.meteor_point_defences)
+        end
+
+        --- Lower spawn chance by up to 10%
+        data.defense = math.ceil(math.min(math.pow(math.log(defense),2), 10))
+
+        InterplanetaryAttacks.set_intel(data, surface.index)
     end
+
+    surface_profiler.stop()
+    log({ '', 'InterplanetaryAttacks.scan: '..surface_name, surface_profiler })
 end
 
 Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
     add_exclusion_surfaces(event)
 
-    update_attackable_zone_data()
+    for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
+        update_attackable_zone_data(surface_name)
+    end
 end)
 
---/c remote.call("space-exploration", "get_zone_from_name", {zone_name = "Nauvis"})
 Event.register(Event.generate_event_name(Config.INTERPLANETARY_ATTACK_SCAN), function(event)
-    local intel = event.intel
     local surface = event.surface
-
-    local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
-    print('------ separator -----')
-    print('surface:'..surface.name)
-    if zone_data then
-        for name, node in pairs(zone_data) do
-            if type(node) ~= 'table' then
-                print(name..': '..tostring(node))
-            else
-                print(name..' Table Size: '..table_size(node))
-            end
-        end
+    if surface then
+        update_attackable_zone_data(surface.name)
     end
 end)
 

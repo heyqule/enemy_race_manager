@@ -24,6 +24,7 @@ Date: 2024-??-??
     - Increased multiplier for genocidal weapon from x10 to x200. (base setting, 300 AP, gives 60K AP, appox 20 attack groups)
     - Changed super-weapon-attack-point setting max value from 10000 to 1000.  If you are using max value, you will get 500K AP for using genocidal weapon.
     - Regroup settings.
+    - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack point.
 
   Bugfixes:
     - Fixed army stats panel overflow.

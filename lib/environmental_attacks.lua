@@ -33,7 +33,7 @@ function EnvironmentalAttacks.exec(surface, target_position,
     then
         local spawn_count = Config.environmental_attack_units_count()
 
-        local group = AttackGroupProcessor.generate_simple_group(surface, target_position, spawn_count)
+        local group = AttackGroupProcessor.generate_immediate_group(surface, target_position, spawn_count)
 
         local can_spawn_home = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
 

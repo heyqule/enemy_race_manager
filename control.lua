@@ -129,8 +129,11 @@ cron_switch = {
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ForceHelper.refresh_all_enemy_forces()
     end,
-    ['InterplanetaryAttacks.scan'] = function(arg)
-        InterplanetaryAttacks.scan()
+    ['InterplanetaryAttacks.queue_scan'] = function(args)
+        InterplanetaryAttacks.queue_scan()
+    end,
+    ['InterplanetaryAttacks.scan'] = function(args)
+        InterplanetaryAttacks.scan(unpack(args))
     end,
     --LevelProcessor
     ['LevelProcessor.calculate_multiple_levels'] = function(args)

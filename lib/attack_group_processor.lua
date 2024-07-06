@@ -607,11 +607,14 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     end
 end
 
-function AttackGroupProcessor.generate_simple_group(surface, target_position, spawn_count, race_name)
+---
+--- Generate a group immediately without queue, without pathing.  Targets small groups, < 50 units
+---
+function AttackGroupProcessor.generate_immediate_group(surface, group_position, spawn_count, race_name)
     local race_name = race_name or SurfaceProcessor.get_enemy_on(surface.name)
 
     local force_name = ForceHelper.get_force_name_from(race_name)
-    local group = surface.create_unit_group { position = target_position, force = force_name}
+    local group = surface.create_unit_group { position = group_position, force = force_name}
 
     local i = 0
     repeat
@@ -630,6 +633,13 @@ function AttackGroupProcessor.generate_simple_group(surface, target_position, sp
     until i == spawn_count
 
     return group
+end
+
+---
+--- Generate an unit via queue, without pathing.  Targets custom pathing via 3rd party conditions
+---
+function AttackGroupProcessor.generate_group_via_quick_queue()
+
 end
 
 function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, target_force)
