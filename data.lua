@@ -1,7 +1,7 @@
 require "prototypes.extend-collision"
 require "prototypes.extend-types"
 
-require "prototypes.extend-bitters"
+require "prototypes.extend-biters"
 require "prototypes.extend-spawners"
 
 require "prototypes.base-units.defender"

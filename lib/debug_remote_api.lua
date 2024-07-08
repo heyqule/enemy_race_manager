@@ -251,4 +251,9 @@ function Debug_RemoteAPI.interplanetary_attacks_scan()
     InterplanetaryAttacks.queue_scan()
 end
 
+--- remote.call('enemyracemanager_debug', 'interplanetary_attacks_exec','erm_vanilla','players')
+function Debug_RemoteAPI.interplanetary_attacks_exec(race_name, target_force, drop_location)
+    InterplanetaryAttacks.exec(race_name, target_force, drop_location)
+end
+
 return Debug_RemoteAPI

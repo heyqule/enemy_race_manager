@@ -15,6 +15,7 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
 
 Event.on_nth_tick(GlobalConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
     MapProcessor.process_chunks(game.surfaces, global.race_settings)
@@ -38,12 +39,14 @@ Event.register(defines.events.on_pre_surface_deleted, function(event)
     AttackGroupHeatProcessor.remove_surface(event.surface_index)
     AttackGroupHeatProcessor.remove_surface(event.surface_index)
     InterplanetaryAttacks.remove_surface(event.surface_index)
+    SpawnLocationScanner.remove_surface(event.surface_index)
 end)
 
 Event.register(defines.events.on_pre_surface_cleared, function(event)
     AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
     AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
     InterplanetaryAttacks.remove_surface(event.surface_index)
+    SpawnLocationScanner.remove_surface(event.surface_index)
 end)
 
 --Event.register(defines.events.on_surface_renamed, function(event)

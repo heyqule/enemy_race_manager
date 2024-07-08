@@ -183,7 +183,9 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                 return nil
             end
 
-            return InterplanetaryAttacks.exec(race_name, target_force)
+            if not InterplanetaryAttacks.exec(race_name, target_force) then
+                return game.surfaces[NAUVIS]
+            end
         end
 
     end

@@ -22,6 +22,7 @@ local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
 local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
 
 local Cron = require('__enemyracemanager__/lib/cron_processor')
 
@@ -207,6 +208,7 @@ local init_globals = function()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
     GuiContainer.init_globals()
+    SpawnLocationScanner.init_globals()
     InterplanetaryAttacks.init_globals()
 
 

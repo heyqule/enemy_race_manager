@@ -151,7 +151,7 @@ function ForceHelper.refresh_all_enemy_forces()
             table.insert(global.player_forces, force.name)
         end
 
-        if DEBUG_MODE and string.find(force.name, 'test') then
+        if TEST_MODE and string.find(force.name, 'test') then
             table.insert(global.player_forces, force.name)
         end
     end

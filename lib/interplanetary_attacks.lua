@@ -9,24 +9,67 @@ local Cron = require('__enemyracemanager__/lib/cron_processor')
 local Config = require('__enemyracemanager__/lib/global_config')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
+
 local InterplanetaryAttacks = {}
 
 local NAUVIS = 1
+
+local base_spawn_rate = 50
 
 local can_perform_attack = function()
     return global.is_multi_planets_game and Config.interplanetary_attack_enable()
 end
 
 function InterplanetaryAttacks.init_globals()
+    --- global.interplanetary_intel[surface_index] = {
+    ---     radius, type={"moon","planet",etc}, has_player_entities=true, defense=0
+    --- }
     global.interplanetary_intel = global.interplanetary_intel or {}
+    global.interplanetary_tracker = global.interplanetary_tracker or {}
 end
 
-function InterplanetaryAttacks.exec(race_name, target_force)
+function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     if not can_perform_attack() then
-        return nil
+        return false
     end
 
-    return nil
+    local surface_id, intel = next(global.interplanetary_intel, global.interplanetary_tracker.surface_id)
+    if not surface_id or not intel then
+        print('no intel')
+        global.interplanetary_tracker.surface_id = nil
+        return false
+    end
+    local surface = game.surfaces[surface_id]
+
+    global.interplanetary_tracker.surface_id = surface_id
+    -- roll attack chance, 50 % - defenses
+    local defense = intel.defense or 0
+
+    --if RaceSettingHelper.can_spawn(base_spawn_rate - defense) == false then
+    --    print('can not spawn')
+    --    return false
+    --end
+
+    if not drop_location then
+        drop_location = SpawnLocationScanner.get_spawn_location(surface)
+    end
+
+    if not drop_location then
+        return false
+    end
+
+    --- If it's a build group, 20 units use for building on spot, the rest will attack.
+    if RaceSettingHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) then
+
+    end
+
+    --- call event dispatcher
+
+
+
+    return false
 end
 
 function InterplanetaryAttacks.queue_scan()
@@ -44,11 +87,26 @@ function InterplanetaryAttacks.scan(surface)
 
     if surface and ForceHelper.can_have_enemy_on(surface) then
         --- Event to manipulate global.interplanetary_intel
+        local intel =  global.interplanetary_intel[surface.index]
         Event.dispatch({
             name = Event.get_event_name(Config.INTERPLANETARY_ATTACK_SCAN),
-            intel = global.interplanetary_intel[surface.index],
+            intel = intel,
             surface = surface
         })
+
+        --- Scan planet for dropzone only if it's occupied
+        if intel.has_player_entities then
+            --- Lower spawn chance by up to 20%
+            if intel.defense and intel.defense > 0 then
+                intel.defense = math.ceil(math.min(math.pow(math.log(intel.defense),2) * 5, 20))
+            end
+
+            local max_planet_radius
+            if intel.radius then
+                max_planet_radius = intel.radius
+            end
+            SpawnLocationScanner.scan(surface, max_planet_radius)
+        end
     end
 
 end

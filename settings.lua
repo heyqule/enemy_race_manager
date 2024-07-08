@@ -645,15 +645,6 @@ data:extend {
     },
     {
         type = "int-setting",
-        name = "enemyracemanager-interplanetary-raids-chance",
-        description = "enemyracemanager-interplanetary-raids-chance",
-        setting_type = "runtime-global",
-        default_value = 33,
-        allowed_values = {25, 33, 50, 66, 75},
-        order = "enemyracemanager-901"
-    },
-    {
-        type = "int-setting",
         name = "enemyracemanager-interplanetary-raids-build-base-chance",
         description = "enemyracemanager-interplanetary-raid-build-base-chance",
         setting_type = "runtime-global",

@@ -18,7 +18,7 @@ local valid_erm_left_click = {
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then
-                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_from']
+                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['left-listing']['army_cc/cc_select_from']
                 ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
             end
         end
@@ -39,7 +39,7 @@ local valid_erm_alt_left_click = {
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then
-                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_to']
+                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['right-listing']['army_cc/cc_select_to']
                 ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
             end
         end

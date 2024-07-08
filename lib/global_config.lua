@@ -32,7 +32,7 @@ GlobalConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
 -- execute one job on designated tick
 GlobalConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
 GlobalConfig.ONE_SECOND_CRON = defines.time.second + 1
-GlobalConfig.QUICK_CRON = 19
+GlobalConfig.QUICK_CRON = 11
 
 -- Run garbage collection and statistics on each nauvis day
 GlobalConfig.GC_AND_STATS = 25000
@@ -141,7 +141,6 @@ local refreshable_settings = {
         'enemyracemanager-environmental-raids-chance',
         'enemyracemanager-environmental-raids-build-base-chance',
         'enemyracemanager-interplanetary-raids',
-        'enemyracemanager-interplanetary-raids-chance',
         'enemyracemanager-interplanetary-raids-build-base-chance'
     }
 }
@@ -447,12 +446,8 @@ function GlobalConfig.interplanetary_attack_enable()
     return get_global_setting_value('enemyracemanager-interplanetary-raids')
 end
 
-function GlobalConfig.interplanetary_attack_raid_chance()
-    return get_global_setting_value('enemyracemanager-interplanetary-raids')
-end
-
 function GlobalConfig.interplanetary_attack_raid_build_base_chance()
-    return get_global_setting_value('enemyracemanager-interplanetary-raids')
+    return get_global_setting_value('enemyracemanager-interplanetary-raids-build-base-chance')
 end
 
 function GlobalConfig.initialize_races_data()

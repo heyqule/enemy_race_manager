@@ -14,6 +14,9 @@ local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
+--- Pull from SE once every hour
+local cache_time = defines.time.hour
+
 local add_exclusion_surfaces = function(event)
     for _, node in pairs(UniverseRaw.universe.space_zones) do
         ForceHelper.add_surface_to_exclusion_list(node.name)
@@ -23,7 +26,6 @@ end
 
 local update_attackable_zone_data = function(surface_name)
     local surface_profiler = game.create_profiler()
-
     local surface = game.surfaces[surface_name]
     local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
     if surface and zone_data then
@@ -45,14 +47,19 @@ local update_attackable_zone_data = function(surface_name)
             defense = defense + table_size(zone_data.meteor_point_defences)
         end
 
-        --- Lower spawn chance by up to 10%
-        data.defense = math.ceil(math.min(math.pow(math.log(defense),2), 10))
+        if defense == 0 then
+            data.defense = data.defense or 0
+        elseif data.defense == nil then
+            data.defense = defense
+        else
+            data.defense = data.defense + defense
+        end
 
+        data.se_fetch_on = game.tick
         InterplanetaryAttacks.set_intel(data, surface.index)
     end
-
     surface_profiler.stop()
-    log({ '', 'InterplanetaryAttacks.scan: '..surface_name, surface_profiler })
+    log({ '', 'CTRL.COMP.SE.update_attackable_zone_data: '..surface_name, surface_profiler })
 end
 
 Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
@@ -65,8 +72,10 @@ end)
 
 Event.register(Event.generate_event_name(Config.INTERPLANETARY_ATTACK_SCAN), function(event)
     local surface = event.surface
-    if surface then
+    local intel = event.intel
+    if surface and tonumber(intel.se_fetch_on) + cache_time < event.tick then
         update_attackable_zone_data(surface.name)
+        intel.se_fetch_on = event.tick
     end
 end)
 
