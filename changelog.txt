@@ -2,7 +2,7 @@
 Version: 1.21.11
 Date: 2024-07-08
 
-  Compatibility:
+  Modding:
     - Added warning message that "ERM - Terran Units for Players - but easier" will become incompatible in 1.22.
     - The improper fork has caused multiple instances of game crashes.
 
