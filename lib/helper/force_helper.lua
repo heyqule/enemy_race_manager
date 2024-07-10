@@ -7,7 +7,6 @@
 ---
 
 local String = require('__stdlib__/stdlib/utils/string')
-local Table = require('__stdlib__/stdlib/utils/table')
 
 local ForceHelper = {
     default_mod_name = 'erm_vanilla'

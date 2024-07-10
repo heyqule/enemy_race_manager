@@ -99,7 +99,7 @@ end
 --- Usage: remote.call('enemyracemanager', 'generate_attack_group', 'erm_zerg', 100)
 function ERM_RemoteAPI.generate_attack_group(race_name, units_number)
     local force_name = ForceHelper.get_force_name_from(race_name)
-    local force = game.forces[force_name] or GlobalConfig.max_group_size()
+    local force = game.forces[force_name]
     units_number = tonumber(units_number)
 
     if force and units_number > 0 then

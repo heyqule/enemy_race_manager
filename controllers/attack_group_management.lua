@@ -20,10 +20,10 @@ Event.on_nth_tick(Config.ATTACK_GROUP_GATHERING_CRON, function(event)
     AttackMeterProcessor.add_form_group_cron()
 end)
 
-Event.register(Event.generate_event_name(Config.ADJUST_ATTACK_METER), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_ADJUST_ATTACK_METER), function(event)
     AttackMeterProcessor.adjustAttackMeter(event.race_name)
 end)
 
-Event.register(Event.generate_event_name(Config.ADJUST_ACCUMULATED_ATTACK_METER), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER), function(event)
     AttackMeterProcessor.adjustLastAccumulatedAttackMeter(event.race_name)
 end)

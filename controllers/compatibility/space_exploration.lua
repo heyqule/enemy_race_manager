@@ -56,13 +56,13 @@ local update_attackable_zone_data = function(surface_name)
         end
 
         data.se_fetch_on = game.tick
-        InterplanetaryAttacks.set_intel(data, surface.index)
+        InterplanetaryAttacks.set_intel(surface.index, data)
     end
     surface_profiler.stop()
     log({ '', 'CTRL.COMP.SE.update_attackable_zone_data: '..surface_name, surface_profiler })
 end
 
-Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_FLUSH_GLOBAL), function(event)
     add_exclusion_surfaces(event)
 
     for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
@@ -70,7 +70,7 @@ Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
     end
 end)
 
-Event.register(Event.generate_event_name(Config.INTERPLANETARY_ATTACK_SCAN), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN), function(event)
     local surface = event.surface
     local intel = event.intel
     if surface and tonumber(intel.se_fetch_on) + cache_time < event.tick then

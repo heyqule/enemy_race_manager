@@ -1,5 +1,5 @@
-local String = require('__stdlib__/stdlib/utils/string')
 local Table = require('__stdlib__/stdlib/utils/table')
+local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 
 local RaceSettingsHelper = {
     default_mod_name = 'erm_vanilla'
@@ -10,112 +10,8 @@ local FEATURE_RACE_SPAWN_DATA = 2
 local FEATURE_RACE_SPAWN_COST = 3
 local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
---- @deprecated
-local find_unit_from_current_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_' .. unit_type .. '_tier'
-    for index, value in pairs(race_settings[key]) do
-        if value == unit_name then
-            return index
-        end
-    end
-    return nil
-end
---- @deprecated
-local add_to_current_entity_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_' .. unit_type .. '_tier'
-    local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
-    if target_index == nil then
-        race_settings[key][#race_settings[key] + 1] = unit_name
-    end
-end
---- @deprecated
-local has_unit_tier = function(race_settings, unit_type, unit_tier)
-    return race_settings and race_settings[unit_type] and race_settings[unit_type][unit_tier]
-end
---- @deprecated
-local remove_from_current_entity_table = function(race_settings, unit_type, unit_name)
-    local key = 'current_' .. unit_type .. '_tier'
-    local target_index = find_unit_from_current_table(race_settings, unit_type, unit_name)
-    if target_index then
-        table.remove(race_settings[key], target_index)
-    end
-end
---- @deprecated
-local add_to_entity_table = function(race_settings, unit_type, unit_tier, unit_name)
-    if has_unit_tier(race_settings, unit_type, unit_tier) then
-        local target_index
-        for index, value in pairs(race_settings[unit_type][unit_tier]) do
-            if value == unit_name then
-                target_index = index
-            end
-        end
 
-        if target_index == nil then
-            race_settings[unit_type][unit_tier][#race_settings[unit_type][unit_tier] + 1] = unit_name
-
-            if race_settings['tier'] >= unit_tier then
-                add_to_current_entity_table(race_settings, unit_type, unit_name)
-            end
-        end
-    end
-end
-
---- @deprecated
-local remove_from_entity_table = function(race_settings, unit_type, unit_tier, unit_name)
-    if has_unit_tier(race_settings, unit_type, unit_tier) then
-        local target_index
-        for index, value in pairs(race_settings[unit_type][unit_tier]) do
-            if value == unit_name then
-                target_index = index
-            end
-        end
-
-        if target_index then
-            table.remove(race_settings[unit_type][unit_tier], target_index)
-            remove_from_current_entity_table(race_settings, unit_type, unit_name)
-        end
-    end
-end
-
---- @deprecated
-function RaceSettingsHelper.add_structure_to_tier(race_settings, tier, structure)
-    add_to_entity_table(race_settings, 'support_structures', tier, structure)
-end
-
---- @deprecated
-function RaceSettingsHelper.remove_structure_from_tier(race_settings, tier, structure)
-    remove_from_entity_table(race_settings, 'support_structures', tier, structure)
-end
-
---- @deprecated
-function RaceSettingsHelper.add_command_center_from_tier(race_settings, tier, structure)
-    add_to_entity_table(race_settings, 'command_centers', tier, structure)
-end
-
---- @deprecated
-function RaceSettingsHelper.remove_command_center_to_tier(race_settings, tier, structure)
-    remove_from_entity_table(race_settings, 'command_centers', tier, structure)
-end
-
---- @deprecated
-function RaceSettingsHelper.add_unit_to_tier(race_settings, tier, unit)
-    add_to_entity_table(race_settings, 'units', tier, unit)
-end
-
---- @deprecated
-function RaceSettingsHelper.remove_unit_from_tier(race_settings, tier, unit)
-    remove_from_entity_table(race_settings, 'flying_units', tier, unit)
-end
-
---- @deprecated
-function RaceSettingsHelper.add_turret_to_tier(race_settings, tier, structure)
-    add_to_entity_table(race_settings, 'turrets', tier, structure)
-end
-
---- @deprecated
-function RaceSettingsHelper.remove_turret_from_tier(race_settings, tier, structure)
-    remove_from_entity_table(race_settings, 'turrets', tier, structure)
-end
+RaceSettingsHelper.can_spawn = UtilHelper.can_spawn
 
 function RaceSettingsHelper.clean_up_race()
     if global.race_settings == nil then
@@ -414,10 +310,6 @@ end
 
 function RaceSettingsHelper.get_total_featured_flying_squads(target_race)
     return global.race_settings[target_race]['featured_flying_groups_total'] or 0
-end
-
-function RaceSettingsHelper.can_spawn(chance_value)
-    return math.random(1, 100) > (100 - chance_value)
 end
 
 function RaceSettingsHelper.is_in_boss_mode()

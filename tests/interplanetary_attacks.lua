@@ -21,7 +21,11 @@ describe("Interplanetary Attack", function()
 
     end)
 
-    it("Interplanetary Attack: Partially Build Home", function()
+    it("Interplanetary Attack: Partially Build Home and attack target", function()
+
+    end)
+
+    it("Interplanetary Attack: No friends, have to launch attack", function()
 
     end)
 end)

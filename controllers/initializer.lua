@@ -143,12 +143,6 @@ local prepare_world = function()
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
-
-    if script.active_mods["erm_easier_terran"] then
-        game.print('[color=red]Warning: You have "ERM - Terran Units for Players - but easier" installed.[/color]')
-        game.print('[color=red]The mod may cause game crash. Please install swap it with "ERM - Terran Units for Players" instead. "ERM - Terran Units for Players" now have a cheap mode to reduce construction cost.[/color]')
-        game.print('[color=red]"ERM - Terran Units for Players - but easier" will become incompatible in 1.22 release.[/color]')
-    end
 end
 
 local conditional_events = function()
@@ -216,7 +210,7 @@ local init_globals = function()
     global.force_race_name_cache = {}
 
     Event.dispatch({
-        name = Event.get_event_name(GlobalConfig.FLUSH_GLOBAL)})
+        name = Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)})
 end
 
 --- Init events

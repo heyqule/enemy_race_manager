@@ -4,7 +4,6 @@
 --- DateTime: 7/21/2021 5:34 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
 local Type = require('__stdlib__/stdlib/utils/type')
 local Queue = require('__stdlib__/stdlib/misc/queue')
 

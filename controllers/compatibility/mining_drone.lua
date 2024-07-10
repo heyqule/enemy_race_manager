@@ -10,7 +10,7 @@ local add_mining_drone = function(event)
     Config.add_attack_group_attackable_entity('mining-depot')
 end
 
-Event.register(Event.generate_event_name(Config.FLUSH_GLOBAL), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_FLUSH_GLOBAL), function(event)
     add_mining_drone(event)
 end)
 

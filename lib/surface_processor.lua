@@ -11,6 +11,7 @@ local SurfaceProcessor = {}
 
 function SurfaceProcessor.init_globals()
     global.enemy_surfaces = global.enemy_surfaces or {}
+    global.total_enemy_surfaces = global.total_enemy_surfaces or 0
 end
 
 function SurfaceProcessor.assign_race(surface, race_name)
@@ -36,13 +37,14 @@ function SurfaceProcessor.assign_race(surface, race_name)
     else
         race = races[math.random(1, max_num)]
     end
-
+    global.total_enemy_surfaces = global.total_enemy_surfaces + 1
     global.enemy_surfaces[surface.name] = race
 end
 
 function SurfaceProcessor.remove_race(surface)
     if global.enemy_surfaces[surface.name] ~= nil then
         global.enemy_surfaces[surface.name] = nil
+        global.total_enemy_surfaces = global.total_enemy_surfaces - 1
     end
 end
 
@@ -66,6 +68,8 @@ function SurfaceProcessor.rebuild_race()
             SurfaceProcessor.assign_race(game.surfaces[surface.index])
         end
     end
+
+    global.total_enemy_surfaces = table_size(global.enemy_surfaces)
 end
 
 function SurfaceProcessor.numeric_to_name_conversion()

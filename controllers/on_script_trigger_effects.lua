@@ -138,15 +138,15 @@ local script_functions = {
         local force_spawn, force_spawn_home
         if TEST_MODE then
             force_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
-            if global.test_environmental_attack_can_spawn == 1 then
+            if global.override_environmental_attack_can_spawn == 1 then
                 force_spawn = true
-            elseif global.test_environmental_attack_can_spawn == -1 then
+            elseif global.override_environmental_attack_can_spawn == -1 then
                 force_spawn = false
             end
 
-            if global.test_environmental_attack_spawn_home == 1 then
+            if global.override_environmental_attack_spawn_home == 1 then
                 force_spawn_home = true
-            elseif global.test_environmental_attack_spawn_home == -1 then
+            elseif global.override_environmental_attack_spawn_home == -1 then
                 force_spawn_home = false
             end
         end

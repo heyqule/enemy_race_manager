@@ -52,9 +52,9 @@ it("Reindex Surfaces", function()
     SurfaceProcessor.rebuild_race()
     local new_list = table.deepcopy(global.enemy_surfaces)
     assert.not_equal(old_list, new_list, 'Both list should not be equal')
+    assert.equal(#new_list,global.total_enemy_surfaces, 'Total enemy surface and new list must be equal')
     for i = 0, surface_count, 1 do
         local new_surface_name = 'test_surface'..tostring(i)
         game.delete_surface(new_surface_name)
     end
-
 end)

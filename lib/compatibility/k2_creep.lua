@@ -6,9 +6,9 @@
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 
-local K2CreepHelper = {}
+local K2Creep = {}
 
-function K2CreepHelper.generate_creep(surface, entity)
+function K2Creep.generate_creep(surface, entity)
     local race_name = ForceHelper.extract_race_name_from(entity.force.name)
     local k2_enable = RaceSettingsHelper.k2_creep_enabled(race_name)
     if k2_enable then
@@ -16,7 +16,7 @@ function K2CreepHelper.generate_creep(surface, entity)
     end
 end
 
-function K2CreepHelper.on_chunk_generated(event)
+function K2Creep.on_chunk_generated(event)
     local nests = event.surface.find_entities_filtered({
         type = "unit-spawner",
         area = event.area,
@@ -24,16 +24,16 @@ function K2CreepHelper.on_chunk_generated(event)
     })
 
     for _, nest in pairs(nests) do
-        K2CreepHelper.generate_creep(event.surface, nest)
+        K2Creep.generate_creep(event.surface, nest)
     end
 end
 
-function K2CreepHelper.on_spawner_built(event)
+function K2Creep.on_spawner_built(event)
     local entity = event.entity
 
     if entity and entity.valid and entity.type == "unit-spawner" then
-        K2CreepHelper.generate_creep(event.entity.surface, event.entity)
+        K2Creep.generate_creep(event.entity.surface, event.entity)
     end
 end
 
-return K2CreepHelper
+return K2Creep

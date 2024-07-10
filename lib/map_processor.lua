@@ -198,7 +198,7 @@ function MapProcessor.rebuild_queue()
     end
 end
 
-function MapProcessor.rebuild_map(game)
+function MapProcessor.rebuild_map()
     MapProcessor.clean_queue()
     for i, surface in pairs(game.surfaces) do
         for chunk in surface.get_chunks() do

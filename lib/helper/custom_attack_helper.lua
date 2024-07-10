@@ -14,6 +14,7 @@ require("util")
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -175,13 +176,11 @@ end
 
 local CustomAttackHelper = {}
 
+CustomAttackHelper.can_spawn = UtilHelper.can_spawn
+
 function CustomAttackHelper.get_race_settings(race_name, force)
     local settings = get_race_settings(race_name, force)
     return settings
-end
-
-function CustomAttackHelper.can_spawn(chance_value)
-    return math.random(1, 100) > (100 - chance_value)
 end
 
 function CustomAttackHelper.valid(event, race_name)

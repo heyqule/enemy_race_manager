@@ -27,8 +27,8 @@ it("Attack Target", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.test_environmental_attack_can_spawn = 1
-    global.test_environmental_attack_spawn_home = -1
+    global.override_environmental_attack_can_spawn = 1
+    global.override_environmental_attack_spawn_home = -1
 
     local meteor = surface.create_entity(
 { name = 'erm-test-meteor',
@@ -58,8 +58,8 @@ it("Build Base", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.test_environmental_attack_can_spawn = 1
-    global.test_environmental_attack_spawn_home = 1
+    global.override_environmental_attack_can_spawn = 1
+    global.override_environmental_attack_spawn_home = 1
 
     local meteor = surface.create_entity(
             { name = 'erm-test-meteor',
@@ -89,8 +89,8 @@ it("Can't spawn", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.test_environmental_attack_can_spawn = -1
-    global.test_environmental_attack_spawn_home = -1
+    global.override_environmental_attack_can_spawn = -1
+    global.override_environmental_attack_spawn_home = -1
 
     local meteor = surface.create_entity(
             { name = 'erm-test-meteor',

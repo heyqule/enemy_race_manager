@@ -9,8 +9,9 @@ local Cron = require('__enemyracemanager__/lib/cron_processor')
 local Config = require('__enemyracemanager__/lib/global_config')
 local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
+local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 
 local InterplanetaryAttacks = {}
 
@@ -18,13 +19,19 @@ local NAUVIS = 1
 
 local base_spawn_rate = 50
 
+local group_variance = 20
+local home_group_size = 20
+
 local can_perform_attack = function()
     return global.is_multi_planets_game and Config.interplanetary_attack_enable()
 end
 
 function InterplanetaryAttacks.init_globals()
     --- global.interplanetary_intel[surface_index] = {
-    ---     radius, type={"moon","planet",etc}, has_player_entities=true, defense=0
+    ---     radius,
+    ---     type={"moon","planet",etc},
+    ---     has_player_entities=true,
+    ---     defense=0
     --- }
     global.interplanetary_intel = global.interplanetary_intel or {}
     global.interplanetary_tracker = global.interplanetary_tracker or {}
@@ -37,20 +44,26 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
 
     local surface_id, intel = next(global.interplanetary_intel, global.interplanetary_tracker.surface_id)
     if not surface_id or not intel then
-        print('no intel')
         global.interplanetary_tracker.surface_id = nil
         return false
     end
     local surface = game.surfaces[surface_id]
 
     global.interplanetary_tracker.surface_id = surface_id
-    -- roll attack chance, 50 % - defenses
-    local defense = intel.defense or 0
+    -- roll attack chance, 50 % - calculated_defense
+    --- call event dispatcher
 
-    --if RaceSettingHelper.can_spawn(base_spawn_rate - defense) == false then
-    --    print('can not spawn')
-    --    return false
-    --end
+    --- Lower spawn chance by up to 20%
+    if intel.defense and intel.defense > 0 then
+        intel.calculated_defense = math.ceil(math.min(math.pow(math.log(intel.defense),2) * 5, 20))
+    else
+        intel.calculated_defense = 0
+    end
+
+    global.override_interplanetary_attack_can_spawn = true
+    if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false or global.override_interplanetary_attack_can_spawn then
+        return false
+    end
 
     if not drop_location then
         drop_location = SpawnLocationScanner.get_spawn_location(surface)
@@ -60,14 +73,49 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
         return false
     end
 
-    --- If it's a build group, 20 units use for building on spot, the rest will attack.
-    if RaceSettingHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) then
+    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
+    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and RaceSettingsHelper.get_level(race_name) > 1
+    local max_unit_number = Config.max_group_size()
+    local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
+    --- If it's a build group, 20 units use for building on spot, the rest will attack.
+    if RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or global.override_interplanetary_attack_build_base then
+        group_unit_number = group_unit_number - home_group_size
     end
 
-    --- call event dispatcher
 
+    local group_type
+    if (flying_enabled and spawn_as_flying_squad) or global.override_interplanetary_attack_spawn_flyers then
+        group_unit_number = math.ceil(group_unit_number / 2)
+        group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
+    end
 
+   if home_group_size then
+        local group = AttackGroupProcessor.generate_immediate_group(
+                game.surfaces[global.interplanetary_tracker.surface_id],
+                drop_location,
+                home_group_size,
+                race_name
+        )
+        if group then
+            Event.dispatch({
+                name = Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
+                group = group
+            })
+        end
+    end
+
+    local options = {
+        group_type = group_type
+    }
+    AttackGroupProcessor.generate_group_via_quick_queue(
+            race_name,
+            target_force,
+            group_unit_number,
+            surface,
+            drop_location,
+            options
+    )
 
     return false
 end
@@ -89,18 +137,13 @@ function InterplanetaryAttacks.scan(surface)
         --- Event to manipulate global.interplanetary_intel
         local intel =  global.interplanetary_intel[surface.index]
         Event.dispatch({
-            name = Event.get_event_name(Config.INTERPLANETARY_ATTACK_SCAN),
+            name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN),
             intel = intel,
             surface = surface
         })
 
         --- Scan planet for dropzone only if it's occupied
         if intel.has_player_entities then
-            --- Lower spawn chance by up to 20%
-            if intel.defense and intel.defense > 0 then
-                intel.defense = math.ceil(math.min(math.pow(math.log(intel.defense),2) * 5, 20))
-            end
-
             local max_planet_radius
             if intel.radius then
                 max_planet_radius = intel.radius
@@ -111,14 +154,9 @@ function InterplanetaryAttacks.scan(surface)
 
 end
 
-function InterplanetaryAttacks.set_intel(data, surface_index)
-    if not type(data) == 'table' or not type(data) == 'nil' then
-        error("data must be a table or nil")
-        return
-    end
-
-    if not type(surface_index) == 'number' then
-        error("surface_index must be an int")
+function InterplanetaryAttacks.set_intel(surface_index, data)
+    if data and not type(data) == 'table' then
+        error("data must be a table")
         return
     end
 
@@ -126,11 +164,6 @@ function InterplanetaryAttacks.set_intel(data, surface_index)
 end
 
 function InterplanetaryAttacks.get_intel(surface_index)
-    if not type(surface_index) == 'number' then
-        error("surface_index must be an int")
-        return
-    end
-
     return global.interplanetary_intel[surface_index]
 end
 

@@ -5,7 +5,7 @@
 ---
 --- Spawn location scanner, pick an area far from player entity.
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local Position = require('__stdlib__/stdlib/area/position')
+local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 
 local SpawnLocationScanner = {}
 
@@ -15,6 +15,9 @@ local radius = distance * chunk_size
 local angle_division = 15
 
 local reference_unit_name = 'erm_vanilla/behemoth-biter/1'
+
+local floor = math.floor
+local rad = math.rad
 
 local directions =
 {
@@ -53,8 +56,8 @@ local init_surface_globals = function(surface_index)
 end
 
 local random_point_on_circumference = function (radius, angle_start, angle_end)
-    local angle_start_rad = math.rad(angle_start)
-    local angle_end_rad = math.rad(angle_end)
+    local angle_start_rad = rad(angle_start)
+    local angle_end_rad = rad(angle_end)
 
     if angle_end < angle_start then
         angle_end_rad = angle_end_rad + 2 * math.pi
@@ -127,7 +130,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
         y = chunk_position.y + direction_multipler[2] * distance
     }
 
-    local tile_position = Position.from_chunk_position(new_chunk)
+    local tile_position = UtilHelper.from_chunk_position(new_chunk)
     local has_valid_chunk = false
     local using_max_radius = false
 
@@ -136,7 +139,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
        new_chunk_is_generated and
        SpawnLocationScanner.is_valid_position(surface, tile_position)
     then
-        global.spawn_locations[surface_index][current_direction] = {x=tile_position.x,y=tile_position.y}
+        global.spawn_locations[surface_index][current_direction] = tile_position
         has_valid_chunk = true
     end
 
@@ -155,9 +158,9 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
             local start_deg = directions_degree[1] + angle_division * i % 360
             local end_deg = directions_degree[2] - angle_division * r % 360
             cir_tile_position = random_point_on_circumference(max_planet_radius - chunk_size, start_deg, end_deg)
-            cir_tile_position.x = math.floor(cir_tile_position.x)
-            cir_tile_position.y = math.floor(cir_tile_position.y)
-            if surface.is_chunk_generated(Position.to_chunk_position(cir_tile_position)) then
+            cir_tile_position.x = floor(cir_tile_position.x)
+            cir_tile_position.y = floor(cir_tile_position.y)
+            if surface.is_chunk_generated(UtilHelper.to_chunk_position(cir_tile_position)) then
                 valid_position = SpawnLocationScanner.is_valid_position(surface, cir_tile_position)
             end
             i = i + 1
@@ -214,7 +217,6 @@ end
 
 function SpawnLocationScanner.get_spawn_location(surface)
     if not surface then
-        print('no surface')
         return
     end
 
@@ -223,7 +225,6 @@ function SpawnLocationScanner.get_spawn_location(surface)
     local spawn_tracker = global.spawn_locations_tracker[surface_index]
 
     if not spawn_data then
-        print('no spawn_data @ '..surface.name)
         return
     end
 
@@ -238,11 +239,9 @@ function SpawnLocationScanner.get_spawn_location(surface)
     repeat
         position = spawn_data[direction]
         if position and SpawnLocationScanner.is_valid_position(surface,position) then
-            print('valid position')
             stop = true
         elseif position then
             -- invalid old node
-            print('invalidate old position')
             global.spawn_locations[surface_index][direction] = nil
         end
         i = i + 1

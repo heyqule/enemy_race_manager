@@ -6,11 +6,13 @@
 ---
 
 require('util')
+local Event = require('__stdlib__/stdlib/event/event')
+
 local Config = require('__enemyracemanager__/lib/global_config')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+
 local AttackGroupHeatProcessor = {}
 
 AttackGroupHeatProcessor.COOLDOWN_VALUE = 10
@@ -144,7 +146,9 @@ end
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
     local surface_data = global.attack_heat_by_surfaces[race_name]
-    if global.is_multi_planets_game and surface_data
+    if global.is_multi_planets_game and
+        surface_data and
+        global.total_enemy_surfaces > 1
     then
         local next, surface = next(surface_data)
         if surface and surface.has_attack_beacon then
@@ -157,8 +161,9 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             end
 
             local ask_friend_roll = true
+            local interplanetary_attack_enable = Config.interplanetary_attack_enable()
 
-            if Config.interplanetary_attack_enable() then
+            if interplanetary_attack_enable then
                 ask_friend_roll = global.force_ask_friend or RaceSettingsHelper.can_spawn(50)
             end
 
@@ -175,19 +180,24 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                             RaceSettingsHelper.add_to_attack_meter(race_name,
                                     RaceSettingsHelper.get_attack_meter(race_name) * -1
                             )
-                            break;
+                            return nil
                         end
                     end
                 end
+            end
+
+            if interplanetary_attack_enable or global.override_interplanetary_attack_enabled then
+
+                Event.dispatch({
+                    name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
+                    race_name = race_name,
+                    target_force = target_force,
+                    surface = surface
+                })
 
                 return nil
             end
-
-            if not InterplanetaryAttacks.exec(race_name, target_force) then
-                return game.surfaces[NAUVIS]
-            end
         end
-
     end
 
     return game.surfaces[NAUVIS]

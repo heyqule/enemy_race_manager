@@ -59,8 +59,8 @@ function EnvironmentalAttacks.exec(surface, target_position,
 end
 
 function EnvironmentalAttacks.reset_global()
-    global.test_environmental_attack_spawn_home = nil
-    global.test_environmental_attack_can_spawn = nil
+    global.override_environmental_attack_spawn_home = nil
+    global.override_environmental_attack_can_spawn = nil
 end
 
 return EnvironmentalAttacks

@@ -41,14 +41,17 @@ GlobalConfig.GC_AND_STATS = 25000
 GlobalConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
 GlobalConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
 
-GlobalConfig.BASE_BUILT_EVENT = 'erm_base_built'
-GlobalConfig.INTERPLANETARY_ATTACK_SCAN = 'erm_interplanetary_attack_scan'
-GlobalConfig.FLUSH_GLOBAL = 'erm_flush_global'
+GlobalConfig.EVENT_FLUSH_GLOBAL = 'erm_flush_global'
 
-GlobalConfig.ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
-GlobalConfig.ADJUST_ACCUMULATED_ATTACK_METER = 'erm_adjust_accumulated_attack_meter'
+GlobalConfig.EVENT_ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
+GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER = 'erm_adjust_accumulated_attack_meter'
 
-GlobalConfig.REQUEST_PATH = 'erm_request_path'
+--- Group command management
+GlobalConfig.EVENT_BASE_BUILT = 'erm_base_built'
+GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN = 'erm_interplanetary_attack_scan'
+GlobalConfig.EVENT_REQUEST_PATH = 'erm_request_path'
+GlobalConfig.EVENT_REQUEST_BASE_BUILD = 'erm_request_base_build'
+GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = 'erm_interplanatary_attack_exec'
 
 -- How to use event erm_race_setting_updated
 -- Check race exists

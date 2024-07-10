@@ -138,6 +138,31 @@ local pick_an_unit = function(race_name)
     return unit_name
 end
 
+local add_an_unit_to_group = function(surface, group, force, race_name, unit_name, is_elite)
+    local unit_full_name
+    if is_elite then
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name) + Config.elite_squad_level())
+    else
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
+    end
+
+    local position = surface.find_non_colliding_position(unit_full_name, group.position,
+            AttackGroupProcessor.GROUP_AREA, 2)
+
+    local entity = surface.create_entity({
+        name = unit_full_name,
+        position = position,
+        force = force
+    })
+
+    if entity then
+        group.add_member(entity)
+        return true
+    end
+
+    return false
+end
+
 local add_to_group = function(surface, group, force, race_name, unit_batch)
     local group_tracker = get_group_tracker(race_name)
     if group.valid == false or group_tracker == nil then
@@ -147,22 +172,16 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
     local i = 0
     repeat
         local unit_name = pick_an_unit(race_name)
-        local unit_full_name = nil
+
+        local is_elite = false
         if group_tracker.is_elite_attack then
-            unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name) + Config.elite_squad_level())
-        else
-            unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
+            is_elite = true
         end
 
-        local position = surface.find_non_colliding_position(unit_full_name, group.position,
-                AttackGroupProcessor.GROUP_AREA, 2)
-        local entity = surface.create_entity({
-            name = unit_full_name,
-            position = position,
-            force = force
-        })
-        group.add_member(entity)
-        group_tracker.current_size = group_tracker.current_size + 1
+        if add_an_unit_to_group(surface, group, force, race_name, unit_name, is_elite) then
+            group_tracker.current_size = group_tracker.current_size + 1
+        end
+
         i = i + 1
     until i == unit_batch
 
@@ -211,8 +230,9 @@ end
 local generate_unit_queue = function(
         surface, center_location, force, race_name,
         units_number, group_type, featured_group_id, is_elite_attack,
-        group_spawn_position, attack_beacon
+        attack_beacon, as_quick_queue
 )
+    as_quick_queue = as_quick_queue or false
     group_type = group_type or AttackGroupProcessor.GROUP_TYPE_MIXED
 
     local queue_length = math.ceil(units_number / AttackGroupProcessor.UNIT_PER_BATCH)
@@ -255,7 +275,7 @@ local generate_unit_queue = function(
         is_precision_attack = is_precision_attack,
         is_elite_attack = is_elite_attack,
         featured_group_id = featured_group_id,
-        group_spawn_position = group_spawn_position,
+        group_spawn_position = center_location,
         attack_beacon_position = attack_beacon.position,
         attack_force = attack_beacon.force,
         tick = game.tick,
@@ -271,17 +291,29 @@ local generate_unit_queue = function(
         if i == last_queue then
             unit_batch = math.ceil(last_queue_unit)
         end
-        Cron.add_1_sec_queue(
-                'AttackGroupProcessor.add_to_group',
-                surface,
-                unit_group,
-                force,
-                race_name,
-                unit_batch
-        )
+        if as_quick_queue then
+            Cron.add_quick_queue(
+                    'AttackGroupProcessor.add_to_group',
+                    surface,
+                    unit_group,
+                    force,
+                    race_name,
+                    unit_batch
+            )
+        else
+            Cron.add_1_sec_queue(
+                    'AttackGroupProcessor.add_to_group',
+                    surface,
+                    unit_group,
+                    force,
+                    race_name,
+                    unit_batch
+            )
+        end
         i = i + 1
     until i == queue_length
 
+    local is_aerial = AttackGroupProcessor.FLYING_GROUPS[group_type] or false
     global.erm_unit_groups[unit_group.group_number] = {
         group = unit_group,
         start_position = unit_group.position,
@@ -289,12 +321,11 @@ local generate_unit_queue = function(
         nearby_retry = 0,
         attack_force = attack_beacon.force,
         created = game.tick,
-        is_aerial = AttackGroupProcessor.FLYING_GROUPS[group_type] or false
+        is_aerial = is_aerial
     }
 
-    local is_aerial = AttackGroupProcessor.FLYING_GROUPS[type] or false
     Event.dispatch({
-        name = Event.get_event_name(Config.REQUEST_PATH),
+        name = Event.get_event_name(Config.EVENT_REQUEST_PATH),
         source_force = force,
         surface = surface,
         start = center_location,
@@ -389,7 +420,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
 end
 
 ---
---- options{group_type, featured_group_id, is_elite_attack, target_force, surface, from_retry, bypass_attack_meter, spawn_location}
+--- options={group_type, featured_group_id, is_elite_attack, target_force, surface, from_retry, bypass_attack_meter, spawn_location}
 function AttackGroupProcessor.generate_group(
         race_name,
         force,
@@ -405,8 +436,10 @@ function AttackGroupProcessor.generate_group(
     end
     local target_force = options.target_force or AttackGroupHeatProcessor.pick_target(race_name)
     local surface = options.surface or AttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
-
-    if surface == nil or not surface.valid then
+    if global.override_interplanetary_attack_enabled or
+       surface == nil or
+       not surface.valid
+    then
         set_group_tracker(race_name, nil)
         return false
     end
@@ -459,18 +492,18 @@ function AttackGroupProcessor.generate_group(
                 surface, center_location, force,
                 race_name, units_number, options.group_type,
                 options.featured_group_id, options.is_elite_attack,
-                center_location, attack_beacon_data.beacon
+                attack_beacon_data.beacon
         )
 
         if bypass_attack_meter == false then
             if options.is_elite_attack then
                 Event.dispatch({
-                    name = Event.get_event_name(Config.ADJUST_ACCUMULATED_ATTACK_METER),
+                    name = Event.get_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER),
                     race_name = race_name
                 })
             end
             Event.dispatch({
-                name = Event.get_event_name(Config.ADJUST_ATTACK_METER),
+                name = Event.get_event_name(Config.EVENT_ADJUST_ATTACK_METER),
                 race_name = race_name
             })
         end
@@ -614,21 +647,13 @@ function AttackGroupProcessor.generate_immediate_group(surface, group_position, 
     local race_name = race_name or SurfaceProcessor.get_enemy_on(surface.name)
 
     local force_name = ForceHelper.get_force_name_from(race_name)
+    local force = game.forces[force_name]
     local group = surface.create_unit_group { position = group_position, force = force_name}
 
     local i = 0
     repeat
-        local unit_name =  RaceSettingsHelper.get_race_entity_name(race_name, RaceSettingsHelper.pick_an_unit(race_name), RaceSettingsHelper.get_level(race_name))
-        local spawn_position = surface.find_non_colliding_position(unit_name, group.position,
-                AttackGroupProcessor.GROUP_AREA, 2)
-        local entity = surface.create_entity {
-            position = spawn_position,
-            force = force_name,
-            name = unit_name
-        }
-        if entity then
-            group.add_member(entity)
-        end
+        local unit_name =  RaceSettingsHelper.pick_an_unit(race_name)
+        add_an_unit_to_group(surface, group, force, race_name, unit_name, false)
         i = i + 1
     until i == spawn_count
 
@@ -636,10 +661,21 @@ function AttackGroupProcessor.generate_immediate_group(surface, group_position, 
 end
 
 ---
---- Generate an unit via queue, without pathing.  Targets custom pathing via 3rd party conditions
+--- Generate an unit via queue, without command.  Targets custom pathing via 3rd party conditions
 ---
-function AttackGroupProcessor.generate_group_via_quick_queue()
-
+function AttackGroupProcessor.generate_group_via_quick_queue(
+    race_name, target_force, group_unit_number, surface, drop_location, options
+)
+    local force = game.forces[target_force]
+    local attack_beacon_data  = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
+    if attack_beacon_data then
+        generate_unit_queue(
+                surface, drop_location, target_force,
+                race_name, group_unit_number, options.group_type,
+                options.featured_group_id, options.is_elite_attack,
+                attack_beacon_data.beacon, true
+        )
+    end
 end
 
 function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, target_force)

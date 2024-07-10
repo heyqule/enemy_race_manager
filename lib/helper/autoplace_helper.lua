@@ -6,7 +6,7 @@
 --- Credit: Cold Biters, Alien Biomes for volume_to_noise_expression
 ---
 local noise = require("noise")
-local String = require('__stdlib__/stdlib/utils/string')
+
 local AutplaceHelper = {}
 
 local function peak_to_noise_expression(variable, optimal, range)

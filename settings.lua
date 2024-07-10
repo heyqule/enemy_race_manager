@@ -620,8 +620,8 @@ data:extend {
         name = "enemyracemanager-environmental-raids-chance",
         description = "enemyracemanager-environmental-raids-chance",
         setting_type = "runtime-global",
-        default_value = 33,
-        allowed_values = { 5, 10, 20, 25, 33, 50, 66, 75, 80},
+        default_value = 50,
+        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80},
         order = "enemyracemanager-901"
     },
     {

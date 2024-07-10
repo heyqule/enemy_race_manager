@@ -11,7 +11,7 @@ require('util')
 local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
 local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
@@ -68,7 +68,7 @@ local onUnitGroupCreated = function(event)
             else
                 scout_unit_name = 1
             end
-        elseif (RaceSettingsHelper.can_spawn(75) or TEST_MODE) then
+        elseif (UtilHelper.can_spawn(75) or TEST_MODE) then
             scout_unit_name = 1
         end
 
@@ -122,10 +122,10 @@ local onUnitFinishGathering = function(event)
         }
     end
 
-
+    local scount_unit_name = global.scout_unit_name[group.group_number]
     if  ForceHelper.is_enemy_force(group_force) and
         (group.is_script_driven == false or is_erm_group) and
-        global.scout_unit_name[group.group_number]
+        scount_unit_name
     then
         local surface = group.surface
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
@@ -133,13 +133,13 @@ local onUnitFinishGathering = function(event)
             position =  group.position,
             surface = surface,
             force = group_force,
-            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[global.scout_unit_name[group.group_number].scout_type]),
+            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scount_unit_name.scout_type]),
             count = 1
         })
         group.add_member(scout);
     end
 
-    if global.scout_unit_name[group.group_number] then
+    if scount_unit_name then
         global.scout_unit_name[group.group_number] = nil
     end
 end
@@ -147,8 +147,9 @@ end
 --- handle scouts under ai complete
 local handle_scouts = function(scout_unit_data)
     if scout_unit_data and
-            scout_unit_data.can_repath and
-            scout_unit_data.entity.valid then
+        scout_unit_data.can_repath and
+        scout_unit_data.entity.valid
+    then
         local tracker = global.scout_tracker[scout_unit_data.race_name]
         if tracker then
             local entity = tracker.entity
@@ -167,8 +168,8 @@ local handle_scouts = function(scout_unit_data)
                         return
                     end
 
-                    global.scout_tracker[scout_unit_data.race_name]['final_destination'] = target_beacon.position
-                    global.scout_tracker[scout_unit_data.race_name]['update_tick'] = game.tick
+                    tracker['final_destination'] = target_beacon.position
+                    tracker['update_tick'] = game.tick
                     scout_unit_data.entity.set_command({
                         type = defines.command.go_to_location,
                         destination = target_beacon.position,
@@ -236,7 +237,7 @@ Event.register(defines.events.on_script_path_request_finished, function(event)
 end)
 
 --- Initial path finder
-Event.register(Event.generate_event_name(Config.REQUEST_PATH), function(event)
+Event.register(Event.generate_event_name(Config.EVENT_REQUEST_PATH), function(event)
     AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
 end)
 
@@ -262,3 +263,13 @@ local function handle_unit_spawner(event)
 end
 
 Event.register(defines.events.on_entity_died, handle_unit_spawner , is_unit_spawner)
+
+
+
+Event.register(Event.generate_event_name(Config.EVENT_REQUEST_BASE_BUILD), function(event)
+    BaseBuildProcessor.build_formation(event.group)
+end)
+
+Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC), function(event)
+
+end)

@@ -162,7 +162,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
         local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
 
         Event.dispatch({
-            name = Event.get_event_name(GlobalConfig.BASE_BUILT_EVENT),
+            name = Event.get_event_name(GlobalConfig.EVENT_BASE_BUILT),
             entity = built_entity })
     end
 end
