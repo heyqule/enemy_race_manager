@@ -4,6 +4,7 @@ Date: 2024-07-10
 
   Bugfixes:
     - Fix a crash when boss performs an attack in artillery_mode.
+    - Fix a crash when enemy level up with a boss on the field.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.11

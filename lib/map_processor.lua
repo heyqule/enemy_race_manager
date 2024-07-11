@@ -83,7 +83,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
     local position = entity.position
 
-    if race_name == nameToken[1] and race_settings[nameToken[1]].level == tonumber(nameToken[3]) then
+    if race_name == nameToken[1] and tonumber(nameToken[3]) >= race_settings[nameToken[1]].level then
         return
     end
 
