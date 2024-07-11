@@ -86,7 +86,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     end
 
     if return_position == nil then
-        return_position = boss.silo_position
+        return_position = boss.silo_position or {0, 0}
         artillery_mode = true
     end
 
