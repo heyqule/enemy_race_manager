@@ -24,6 +24,7 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
+        table.insert(tests,"tests/interplanetary_attacks")
     else
         error('Required erm_zerg and erm_protoss to test attack functions')
     end
@@ -36,4 +37,8 @@ if TEST_MODE and script.active_mods["factorio-test"] then
 
     require("__factorio-test__/init")(tests)
     -- the first argument is a list of test files (require paths) to run
+
+    --require("__factorio-test__/init")({
+    --    "tests/attack_group"
+    --})
 end

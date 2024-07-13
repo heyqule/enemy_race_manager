@@ -83,7 +83,7 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
 
         local resource = surface.create_entity({ name = 'iron-ore', amount=10000, position = { -200, -200 } })
         local mining_drill = surface.create_entity({ name = 'electric-mining-drill', force = 'player', amount=10000, position = { -200, -200 } })
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 200, 0 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 200, 0 } })
         local gun_turret = surface.create_entity({ name = 'gun-turret', force = 'player', position = { 200, 100 } })
         local furnace = surface.create_entity({ name = 'electric-furnace', force = 'player', position = { 200, -200 } })
         local lab = surface.create_entity({ name = 'lab', force = 'player', position = { 0, -200 } })
@@ -194,7 +194,7 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -100, -100 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -100, -100 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -110, -110 }, { -90, -90 } })
 
         after_ticks(1440, function()

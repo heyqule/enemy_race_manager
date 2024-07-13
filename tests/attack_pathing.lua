@@ -543,7 +543,7 @@ it("Can't avoid land Beacon, all enemies killed by turrets", function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -572,7 +572,7 @@ it("Aerial Attack", function()
     surface.force_generate_chunk_requests()
     buildBaseNoOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -613,7 +613,7 @@ it("Avoid Defence Beacon (Ground Attack) using left side", function()
 
     buildBaseWithWestDefenseNorthOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -659,7 +659,7 @@ it("Avoid Defence Beacon (Aerial Attack) using left side", function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -691,7 +691,7 @@ it("Avoid Defence Beacon (Ground Attack) using right side", function()
 
     buildBaseWithWestDefenseSouthOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -723,7 +723,7 @@ it("Avoid Defence Beacon (Aerial Attack) using right side", function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -760,7 +760,7 @@ it("Picking area with lowest defense score from East", function()
         gatewidth = 320
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-720,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -816,7 +816,7 @@ it("Picking area with lowest defense score from North", function()
         gatewidth = 320
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={0,-720}})
     AttackGroupBeaconProcessor.init_index()
@@ -870,7 +870,7 @@ it("Picking aerial area with lowest defense score from East", function()
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -925,7 +925,7 @@ it("When inserted waypoint is unreachable, enemies should still able to route to
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
@@ -978,7 +978,7 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-350,350}})
     AttackGroupBeaconProcessor.init_index()
@@ -992,7 +992,7 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
     end)
 
     after_ticks(900, function()
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { -500, 0 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -500, 0 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
         AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
     end)
@@ -1019,7 +1019,7 @@ it('Land attack group cant find a valid path, switch to aerial group instead', f
 
     buildBaseNoOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     surface.create_entity({name='erm_vanilla/biter-spawner/10', position={-250,-250}})
     AttackGroupBeaconProcessor.init_index()
@@ -1057,7 +1057,7 @@ it("Unable to find enemy near scout beacon during path finding, removing scout b
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     local gun_turret = surface.create_entity({ name = 'gun-turret', force = 'player', position = { 200, 10 }, raise_built=true })
     local landing_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = {200, 0} })

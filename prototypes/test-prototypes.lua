@@ -3,8 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 4:56 PM
 ---
+require('util')
+local rocket_silo_test = util.table.deepcopy(data.raw["rocket-silo"]["rocket-silo"])
+rocket_silo_test.name = 'erm-rocket-silo-test'
+rocket_silo_test.max_health = 99999999
 
 data:extend({
+    rocket_silo_test,
     { -- Falling meteor projectiles
         type = "projectile",
         name = 'erm-test-meteor',

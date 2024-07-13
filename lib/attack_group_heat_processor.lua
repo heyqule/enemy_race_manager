@@ -146,25 +146,32 @@ end
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
     local surface_data = global.attack_heat_by_surfaces[race_name]
+    local return_surface = nil
     if global.is_multi_planets_game and
         surface_data and
         global.total_enemy_surfaces > 1
     then
-        local next, surface = next(surface_data)
+        local _, surface = next(surface_data)
         if surface and surface.has_attack_beacon then
-            return game.surfaces[surface.surface_index]
+            return_surface = game.surfaces[surface.surface_index]
         else
             for _, surface in pairs(surface_data) do
                 if surface.has_attack_beacon then
-                    return game.surfaces[surface.surface_index]
+                    return_surface = game.surfaces[surface.surface_index]
+                    break;
                 end
             end
+        end
 
-            local ask_friend_roll = true
+        if not return_surface or global.override_interplanetary_attack_enabled then
+            local ask_friend_roll = nil
             local interplanetary_attack_enable = Config.interplanetary_attack_enable()
 
             if interplanetary_attack_enable then
-                ask_friend_roll = global.force_ask_friend or RaceSettingsHelper.can_spawn(50)
+                ask_friend_roll = global.override_ask_friend
+                if ask_friend_roll == nil then
+                    ask_friend_roll = RaceSettingsHelper.can_spawn(50)
+                end
             end
 
             -- Transfer all attack points to a friend that can attack.
@@ -174,12 +181,10 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                         if surface and surface.has_attack_beacon and
                                 global.attack_heat[friend_race_name][surface_index] ~= nil
                         then
-                            RaceSettingsHelper.add_to_attack_meter(friend_race_name,
-                                    RaceSettingsHelper.get_attack_meter(race_name)
-                            )
-                            RaceSettingsHelper.add_to_attack_meter(race_name,
-                                    RaceSettingsHelper.get_attack_meter(race_name) * -1
-                            )
+
+                            --- AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
+                            RaceSettingsHelper.add_to_attack_meter(friend_race_name, RaceSettingsHelper.get_next_attack_threshold(race_name))
+                            RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
                             return nil
                         end
                     end
@@ -187,20 +192,17 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             end
 
             if interplanetary_attack_enable or global.override_interplanetary_attack_enabled then
-
                 Event.dispatch({
                     name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
                     race_name = race_name,
-                    target_force = target_force,
-                    surface = surface
+                    target_force = target_force
                 })
-
                 return nil
             end
         end
     end
 
-    return game.surfaces[NAUVIS]
+    return return_surface or game.surfaces[NAUVIS]
 end
 
 AttackGroupHeatProcessor.pick_target = function(race_name)

@@ -149,7 +149,7 @@ describe("Create Beacon", function()
     it("create_attack_entity_beacon_from_trunk()", function()
         local surface = game.surfaces[1]
         local laser_entity = surface.create_entity({ name = 'artillery-turret', force = 'player', position = { 10, 10 } })
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 20, 20 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 20, 20 } })
 
         AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { 5, 5 }, { 25, 25 } })
         local attack_beacons = surface.find_entities_filtered({ name = 'erm_attackable_entity_beacon' })
@@ -220,7 +220,7 @@ describe("Pick Attack Entity Beacon", function()
     it("attack beacons", function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 100, 100 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 100, 100 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { 90, 90 }, { 110, 110 } })
 
         local enemy = game.forces['enemy']
@@ -237,7 +237,7 @@ describe("Pick Attack Entity Beacon", function()
 
     it("next attackable target", function()
         local surface = game.surfaces[1]
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 100, 100 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 100, 100 } })
         local position = AttackGroupBeaconProcessor.pick_nearby_attack_location(surface, {x=0, y=0})
         assert.not_nil(position, 'Has next attack target')
     end)
@@ -479,7 +479,7 @@ describe("Modify", function()
             {180, 0 },
             {200, 0}
         })
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = player, position = { 0, 0 }, raise_built = true })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = player, position = { 0, 0 }, raise_built = true })
 
         after_ticks(300, function()
             local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })
@@ -516,7 +516,7 @@ describe("Modify", function()
             {-10, 180 },
             {10, 200}
         })
-        local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built = true  })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built = true  })
 
         after_ticks(300, function()
             local spawn_beacons = surface.count_entities_filtered({ name = 'erm_spawn_beacon' })

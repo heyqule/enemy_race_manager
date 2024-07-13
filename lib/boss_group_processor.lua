@@ -28,14 +28,6 @@ local is_flying_only_boss = function()
     return global.boss.flying_only
 end
 
-local get_colliding_unit = function(race_name)
-    return RaceSettingsHelper.get_race_entity_name(
-            race_name,
-            global.race_settings[race_name].colliding_unit,
-            global.race_settings[race_name].level
-    )
-end
-
 local create_group = function(max_cycles, unit_per_cycle, default_max_group)
     if global.boss_group_spawn.group or global.boss_group_spawn.featured_group_id == nil then
         return
@@ -45,7 +37,7 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
     local boss = global.boss
     local surface = boss.surface
     local force = boss.force
-    local center_location = surface.find_non_colliding_position(get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1, true)
+    local center_location = surface.find_non_colliding_position(RaceSettingsHelper.get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1, true)
     if (center_location) then
         local group = surface.create_unit_group({ position = center_location, force = force })
 

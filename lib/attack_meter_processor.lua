@@ -165,13 +165,19 @@ function AttackMeterProcessor.form_group(race_name, force)
     end
 end
 
-function AttackMeterProcessor.adjustAttackMeter(race_name)
+function AttackMeterProcessor.adjust_attack_meter(race_name)
     RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
     calculateNextThreshold(race_name)
 end
 
-function AttackMeterProcessor.adjustLastAccumulatedAttackMeter(race_name)
+function AttackMeterProcessor.adjust_last_accumulated_attack_meter(race_name)
     RaceSettingsHelper.set_last_accumulated_attack_meter(race_name, RaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
+end
+
+function AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
+    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(friend_race_name))
+    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
+    calculateNextThreshold(race_name)
 end
 
 return AttackMeterProcessor

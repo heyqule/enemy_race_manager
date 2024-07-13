@@ -73,7 +73,9 @@ end)
 Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN), function(event)
     local surface = event.surface
     local intel = event.intel
-    if surface and tonumber(intel.se_fetch_on) + cache_time < event.tick then
+    if surface and intel and
+            tonumber(intel.se_fetch_on) + cache_time < event.tick
+    then
         update_attackable_zone_data(surface.name)
         intel.se_fetch_on = event.tick
     end

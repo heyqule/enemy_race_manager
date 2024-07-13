@@ -21,9 +21,9 @@ Event.on_nth_tick(Config.ATTACK_GROUP_GATHERING_CRON, function(event)
 end)
 
 Event.register(Event.generate_event_name(Config.EVENT_ADJUST_ATTACK_METER), function(event)
-    AttackMeterProcessor.adjustAttackMeter(event.race_name)
+    AttackMeterProcessor.adjust_attack_meter(event.race_name)
 end)
 
 Event.register(Event.generate_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER), function(event)
-    AttackMeterProcessor.adjustLastAccumulatedAttackMeter(event.race_name)
+    AttackMeterProcessor.adjust_last_accumulated_attack_meter(event.race_name)
 end)

@@ -183,7 +183,7 @@ it("Select a hottest surface with multiple surface", function()
         })
         ling.die('player')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
     for active_race, _ in pairs(global.active_races) do
         AttackGroupHeatProcessor.aggregate_heat(active_race)
         AttackGroupHeatProcessor.cooldown_heat(active_race)
@@ -191,7 +191,7 @@ it("Select a hottest surface with multiple surface", function()
 
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_surface = AttackGroupHeatProcessor.pick_surface('erm_vanilla', game.forces['player'])
-    assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface'..picked_surface.name)
+    assert( picked_surface.name == game.surfaces['test_surface_3'].name, 'Pick test_surface_3 as surface.  It picked '..picked_surface.name)
     global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
 end)
 
@@ -221,7 +221,7 @@ it("Select a hottest surface and force combo", function()
         })
         biter.die('test_player_3')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     game.create_surface('test_surface_3')
     local surface = game.surfaces[3]
@@ -277,7 +277,7 @@ it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. B
         })
         biter.die('test_player_3')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     game.create_surface('test_surface_3')
     local surface = game.surfaces[3]
@@ -316,7 +316,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
         })
         biter.die('player')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     game.create_surface('test_surface_2')
     local surface = game.surfaces[2]
@@ -354,7 +354,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
     end
     RaceSettingsHelper.add_to_attack_meter('erm_zerg', 1000)
     after_ticks(300, function()
-        global.force_ask_friend = true
+        global.override_ask_friend = true
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_1_RACE_PER_SURFACE
         local target_force = AttackGroupHeatProcessor.pick_target('erm_zerg')
         global.override_ask_friend = true
@@ -362,11 +362,11 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
         global.override_ask_friend = false
         assert( picked_surface == nil, 'Couldnt pick surface, asking for friend')
         --- Check friend's attack points.
-        assert(RaceSettingsHelper.get_attack_meter('erm_vanilla') >= 1000, 'Friends needs attack point')
-        assert(RaceSettingsHelper.get_attack_meter('erm_zerg') == 0, 'Friends needs attack point')
+        assert(RaceSettingsHelper.get_attack_meter('erm_vanilla') > RaceSettingsHelper.get_attack_meter('erm_zerg'), 'erm_vanilla needs attack point')
+        assert(RaceSettingsHelper.get_attack_meter('erm_zerg') < RaceSettingsHelper.get_attack_meter('erm_vanilla'), 'erm_zerg needs give out points')
 
         global.settings['enemyracemanager-mapping-method'] = MAP_GEN_DEFAULT
-        global.force_ask_friend = false
+        global.override_ask_friend = false
         done()
     end)
 end)
@@ -398,7 +398,7 @@ it("Remove Surface", function()
         })
         biter.die('test_player_3')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     game.create_surface('test_surface_3')
     local surface3 = game.surfaces[3]
@@ -455,7 +455,7 @@ it("Remove Player Force", function()
         })
         biter.die('test_player_3')
     end
-    local rocket_launcher = surface.create_entity({ name = 'rocket-silo', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
 
     game.create_surface('test_surface_3')
     local surface3 = game.surfaces[3]

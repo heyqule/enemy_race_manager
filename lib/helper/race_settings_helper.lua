@@ -182,6 +182,19 @@ function RaceSettingsHelper.get_race_entity_name(target_race, name, level)
     return target_race .. '/' .. name .. '/' .. level
 end
 
+
+function RaceSettingsHelper.get_colliding_unit(race_name)
+    local collide_unit_name = global.race_settings[race_name].colliding_unit
+    if not collide_unit_name then
+        collide_unit_name = global.race_settings[race_name]['units'][1][1]
+    end
+    return RaceSettingsHelper.get_race_entity_name(
+            race_name,
+            collide_unit_name,
+            global.race_settings[race_name].level
+    )
+end
+
 function RaceSettingsHelper.add_killed_units_count(target_race, count)
     if global.race_settings[target_race].unit_killed_count == nil then
         global.race_settings[target_race].unit_killed_count = 0

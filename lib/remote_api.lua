@@ -181,8 +181,10 @@ function ERM_RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                { group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
-                  featured_group_id = squad_id}
+                {
+                    group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                    featured_group_id = squad_id
+                }
         )
     end
 end
@@ -200,9 +202,10 @@ function ERM_RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
-                 featured_group_id = squad_id,
-                 is_elite_attack = true
+                {
+                    group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
+                    featured_group_id = squad_id,
+                    is_elite_attack = true
                 }
         )
     end
@@ -221,19 +224,23 @@ function ERM_RemoteAPI.generate_elite_featured_flying_group(race_name, size, squ
                 race_name,
                 game.forces[ForceHelper.get_force_name_from(race_name)],
                 size,
-                {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
-                 featured_group_id = squad_id,
-                 is_elite_attack = true}
+                {
+                    group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                    featured_group_id = squad_id,
+                    is_elite_attack = true
+                }
         )
     end
 end
 
 function ERM_RemoteAPI.add_boss_attack_group(group)
-    local group_data = BossGroupProcessor.get_default_data()
-    group_data['group'] = group
-    group_data['group_number'] = group.group_number
-    group_data['total_units'] = table_size(group.members)
-    table.insert(global.boss_attack_groups, group_data)
+    if group.valid and next(group.members) then
+        local group_data = BossGroupProcessor.get_default_data()
+        group_data['group'] = group
+        group_data['group_number'] = group.group_number
+        group_data['total_units'] = table_size(group.members)
+        table.insert(global.boss_attack_groups, group_data)
+    end
 end
 
 function ERM_RemoteAPI.add_erm_attack_group(group, target_force)

@@ -14,6 +14,8 @@ after_each(function()
     TestShared.reset_the_factory()
     global.erm_unit_groups = {}
     EnvironmentalAttacks.reset_global()
+    global.override_environmental_attack_can_spawn = nil
+    global.override_environmental_attack_spawn_home = nil
 end)
 
 
@@ -21,7 +23,7 @@ it("Attack Target", function()
     async(1200)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
-            { name = 'rocket-silo',
+            { name = 'erm-rocket-silo-test',
               force = 'player',
               position = { 0, 0 }
             })
@@ -52,7 +54,7 @@ it("Build Base", function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
-            { name = 'rocket-silo',
+            { name = 'erm-rocket-silo-test',
               force = 'player',
               position = { 0, 0 }
             })
@@ -83,7 +85,7 @@ it("Can't spawn", function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
-            { name = 'rocket-silo',
+            { name = 'erm-rocket-silo-test',
               force = 'player',
               position = { 0, 0 }
             })
@@ -112,7 +114,7 @@ it("Test Enabler", function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
-            { name = 'rocket-silo',
+            { name = 'erm-rocket-silo-test',
               force = 'player',
               position = { 0, 0 }
             })

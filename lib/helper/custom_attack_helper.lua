@@ -107,6 +107,7 @@ end
 local drop_unit = function(event, race_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
+    local source_entity = event.source_entity
     local race_settings = get_race_settings(race_name)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
@@ -132,12 +133,12 @@ local drop_unit = function(event, race_name, unit_name, count, position)
                     distraction = defines.distraction.by_anything
                 })
 
-                if event.source_entity and
-                        event.source_entity.type == 'unit' and
-                        event.source_entity.unit_group and
-                        event.source_entity.unit_group.force == entity.force
+                if source_entity and
+                        source_entity.type == 'unit' and
+                        source_entity.unit_group and
+                        source_entity.unit_group.force == entity.force
                 then
-                    event.source_entity.unit_group.add_member(entity)
+                    source_entity.unit_group.add_member(entity)
                 end
             end
             idx = idx + 1

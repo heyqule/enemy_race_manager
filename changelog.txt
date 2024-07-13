@@ -10,25 +10,28 @@ Date: 2024-??-??
     - They can be intercept with meteorite defense.
     - >>> Optional Interplanetary Raids for SE <<<
     - When a race is unable to perform attack with its custom attack groups, they will try to raid a planet that has your buildings.
-    - This usually happens when you extincted them on a planet.
+    - This usually happens when you extincted them.
+    - These groups are always angry. They'll attack anything in sight.
     - This ignores the threat meter in SE.  They can drop on your 0% threat planet.
-    - WARNING: Above raid features should be off for existing SE save, unless your defenses are prepared for this.
+    - WARNING!!!: Above raid features should be off for existing SE save, unless your defenses are prepared for this.
 
   Changes:
     - Changed Deployer UI layout.
     - Added surface and type filter to Deployer UI
     - Added zoom to entity button on Deployer UI when the player and entity is on same planet.
-    - Removed alt left click action on deployers.
+    - Removed alt left click action on deployers, incompatible with UI update.
     - Added surface filter to Teleport UI
     - Fixed incorrect tooltips
     - Increased multiplier for genocidal weapon from x10 to x200. (base setting, 300 AP, gives 60K AP, appox 20 attack groups)
     - Changed super-weapon-attack-point setting max value from 10000 to 1000.  If you are using max value, you will get 500K AP for using genocidal weapon.
-    - Regroup settings.
+    - Reordered settings.
     - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack point.
+    - When a custom attack group no longer path a new target after they has completed the command, they will now build a base on its location before becoming autonomous group.
 
   Bugfixes:
     - Fixed army stats panel overflow.
     - Attempted to fix timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
+    - Fixed an issue when enemy group repath may cause them to rubberband.
 
 
 ---------------------------------------------------------------------------------------------------

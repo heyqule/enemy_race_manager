@@ -9,7 +9,7 @@ local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 
 local SpawnLocationScanner = {}
 
-local distance = 5 --chunks
+local distance = 10 --chunks
 local chunk_size = 32
 local radius = distance * chunk_size
 local angle_division = 15
@@ -178,12 +178,12 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
 
     --- only track new trunk when it's not hitting the border, and the trunk is generated
     if not using_max_radius and new_chunk_is_generated then
-        tracker_data.last_chunk_position[current_direction] = { x = new_chunk.x, y = new_chunk.y }
+        tracker_data.last_chunk_position[current_direction] = new_chunk
     elseif using_max_radius then
         --- restart scan from 320 tile, when using max_radius
         tracker_data.last_chunk_position[current_direction] = {
-            x = {direction_multipler[1] * distance * 2},
-            y = {direction_multipler[2] * distance * 2}
+            x = direction_multipler[1] * distance,
+            y = direction_multipler[2] * distance
         }
     end
 

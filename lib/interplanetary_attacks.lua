@@ -12,6 +12,7 @@ local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 
 local InterplanetaryAttacks = {}
 
@@ -35,6 +36,16 @@ function InterplanetaryAttacks.init_globals()
     --- }
     global.interplanetary_intel = global.interplanetary_intel or {}
     global.interplanetary_tracker = global.interplanetary_tracker or {}
+
+    if not global.interplanetary_intel[1] then
+        global.interplanetary_intel[1]   = {
+            radius = 900000,
+            type = 'planet',
+            se_fetch_on = game.tick,
+            defense = 0,
+            has_player_entities = true,
+        }
+    end
 end
 
 function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
@@ -50,18 +61,17 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     local surface = game.surfaces[surface_id]
 
     global.interplanetary_tracker.surface_id = surface_id
-    -- roll attack chance, 50 % - calculated_defense
-    --- call event dispatcher
 
     --- Lower spawn chance by up to 20%
     if intel.defense and intel.defense > 0 then
-        intel.calculated_defense = math.ceil(math.min(math.pow(math.log(intel.defense),2) * 5, 20))
+        intel.calculated_defense = math.ceil(math.min(math.pow(math.log(intel.defense),2) * 1.5, 20))
     else
         intel.calculated_defense = 0
     end
 
-    global.override_interplanetary_attack_can_spawn = true
-    if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false or global.override_interplanetary_attack_can_spawn then
+    if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false and
+        not global.override_interplanetary_attack_roll_bypass then
+        AttackMeterProcessor.adjust_attack_meter(race_name)
         return false
     end
 
@@ -79,7 +89,8 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
     --- If it's a build group, 20 units use for building on spot, the rest will attack.
-    if RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or global.override_interplanetary_attack_build_base then
+     local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or global.override_interplanetary_attack_build_base
+    if build_home then
         group_unit_number = group_unit_number - home_group_size
     end
 
@@ -90,7 +101,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
         group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
     end
 
-   if home_group_size then
+   if build_home then
         local group = AttackGroupProcessor.generate_immediate_group(
                 game.surfaces[global.interplanetary_tracker.surface_id],
                 drop_location,
@@ -106,7 +117,9 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     end
 
     local options = {
-        group_type = group_type
+        group_type = group_type,
+        preserve_tracker = true,
+        always_angry = false
     }
     AttackGroupProcessor.generate_group_via_quick_queue(
             race_name,
@@ -116,8 +129,9 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
             drop_location,
             options
     )
+    AttackMeterProcessor.adjust_attack_meter(race_name)
 
-    return false
+    return true
 end
 
 function InterplanetaryAttacks.queue_scan()
@@ -169,6 +183,12 @@ end
 
 function InterplanetaryAttacks.remove_surface(surface_index)
     global.interplanetary_intel[surface_index] = nil
+end
+
+function InterplanetaryAttacks.reset_globals()
+    global.interplanetary_intel = {}
+    global.interplanetary_tracker =  {}
+    InterplanetaryAttacks.init_globals()
 end
 
 return InterplanetaryAttacks

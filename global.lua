@@ -4,7 +4,7 @@
 --- DateTime: 1/1/2021 6:08 PM
 ---
 
--- FOR VANILLA ENEMIES
+-- FOR VANILLA ENEMIES / enemy forces.
 MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
@@ -12,6 +12,10 @@ FORCE_NAME = 'enemy'
 DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
 TEST_MODE = true
+--- For debugging beacons
+BEACON_SELECTABLE = true
+
+
 
 CONSTRUCTION_ATTACK = 'embtr-con'
 LOGISTIC_ATTACK = 'embtr-log'

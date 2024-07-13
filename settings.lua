@@ -578,6 +578,7 @@ data:extend {
         default_value = true,
         order = "enemyracemanager-442"
     },
+    --- Time based Raids
     {
         type = "bool-setting",
         name = "enemyracemanager-time-based-enable",
