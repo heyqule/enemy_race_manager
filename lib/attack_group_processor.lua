@@ -509,15 +509,18 @@ function AttackGroupProcessor.generate_group(
         if spawn_beacon == nil or spawn_beacon.valid == false then
             if halt_cron == false and from_retry < RETRY then
 
-                -- Retry to find new beacons
+                --- Retry to find new beacons
                 options.from_retry = from_retry + 1
                 Cron.add_quick_queue('AttackGroupProcessor.generate_group',
                         race_name, force, units_number, options)
             else
-                -- Drop current group if retry fails
-                print('Drop current group... retry failed')
+                --- Drop current group if retry fails
                 set_group_tracker(race_name, nil)
-                if Config.interplanetary_attack_enable() then
+
+                --- Try roll a interplantary attack, 33% chance
+                if Config.interplanetary_attack_enable() and
+                   RaceSettingsHelper.can_spawn(33)
+                then
                     Event.dispatch({
                         name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
                         race_name = race_name,
@@ -697,14 +700,12 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
         --- Victory Expansion
         local erm_group_data = global.erm_unit_groups[group.group_number]
         if erm_group_data and erm_group_data.has_completed_command then
-            print('victory exapsnion?')
             Event.dispatch({
                 name = Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
                 group = group,
                 limit = 1
             })
         end
-        print('set_autonomous?')
         group.set_autonomous()
     end
 end

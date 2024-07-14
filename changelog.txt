@@ -10,10 +10,11 @@ Date: 2024-??-??
     - They can be intercept with meteorite defense.
     - >>> Optional Interplanetary Raids for SE <<<
     - When a race is unable to perform attack with its custom attack groups, they will try to raid a planet that has your buildings.
-    - This usually happens when you extincted them.
-    - These groups are always angry. They'll attack anything in sight.
-    - This ignores the threat meter in SE.  They can drop on your 0% threat planet.
-    - WARNING!!!: Above raid features should be off for existing SE save, unless your defenses are prepared for this.
+    - This happens when you extincted them on a surface.
+    - They sometimes use this strategy if they couldn't path under the regular strategies.
+    - They can drop on your 0% threat planet.
+    - They "usually" to drop in area outside of your factory.
+    - WARNING!!!: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.
 
   Changes:
     - Changed Deployer UI layout.

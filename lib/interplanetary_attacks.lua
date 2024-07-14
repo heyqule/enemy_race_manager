@@ -38,14 +38,19 @@ function InterplanetaryAttacks.init_globals()
     global.interplanetary_tracker = global.interplanetary_tracker or {}
 
     if not global.interplanetary_intel[1] then
-        global.interplanetary_intel[1]   = {
-            radius = 900000,
-            type = 'planet',
-            se_fetch_on = game.tick,
-            defense = 0,
-            has_player_entities = true,
-        }
+        global.interplanetary_intel[1] = InterplanetaryAttacks.get_default_intel()
+        global.interplanetary_intel[1].has_player_entities = true
     end
+end
+
+function InterplanetaryAttacks.get_default_intel()
+    return {
+        radius = 900000,
+        type = 'planet',
+        updated = game.tick,
+        defense = 0,
+        has_player_entities = false,
+    }
 end
 
 function InterplanetaryAttacks.exec(race_name, target_force, drop_location)

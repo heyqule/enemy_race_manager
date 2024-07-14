@@ -1,12 +1,12 @@
 
 local TestShared = require('shared')
 
-local TestShared = require('shared')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local Event = require("__stdlib__/stdlib/event/event")
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -38,7 +38,7 @@ local race_name = 'erm_zerg'
 local enemy_force_name = 'enemy_erm_zerg'
 
 it("Interplanetary Attack: Attack Target", function()
-    async(18000)
+    async(12000)
     local surface = game.surfaces[1]
     local player = game.forces['player']
     surface.request_to_generate_chunks({ 0, 0 }, 25)
@@ -52,12 +52,11 @@ it("Interplanetary Attack: Attack Target", function()
     global.race_settings[race_name].attack_meter = 3000
     global.race_settings[race_name].next_attack_threshold = 3000
 
-
     after_ticks(1800, function()
         InterplanetaryAttacks.exec(race_name, player)
     end)
 
-    after_ticks(18000, function()
+    after_ticks(12000, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = 'unit',
@@ -78,13 +77,13 @@ it("Interplanetary Attack: Attack Target", function()
 end)
 
 it("Interplanetary Attack: No friends, have to launch attack", function()
-    async(36000)
+    async(12000)
     local surface = game.surfaces[1]
     local surface2 = game.create_surface('test_surface_2')
     global.interplanetary_intel[surface2.index]   = {
         radius = 900000,
         type = 'planet',
-        se_fetch_on = game.tick,
+        updated = game.tick,
         defense = 0,
         has_player_entities = true,
     }
@@ -105,7 +104,7 @@ it("Interplanetary Attack: No friends, have to launch attack", function()
         AttackGroupHeatProcessor.aggregate_heat(active_race)
     end
 
-    after_ticks(36000, function()
+    after_ticks(12000, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = 'unit',

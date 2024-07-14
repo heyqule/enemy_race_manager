@@ -55,7 +55,7 @@ local update_attackable_zone_data = function(surface_name)
             data.defense = data.defense + defense
         end
 
-        data.se_fetch_on = game.tick
+        data.updated = game.tick
         InterplanetaryAttacks.set_intel(surface.index, data)
     end
     surface_profiler.stop()
@@ -74,10 +74,10 @@ Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN
     local surface = event.surface
     local intel = event.intel
     if surface and intel and
-            tonumber(intel.se_fetch_on) + cache_time < event.tick
+            tonumber(intel.updated) + cache_time < event.tick
     then
         update_attackable_zone_data(surface.name)
-        intel.se_fetch_on = event.tick
+        intel.updated = event.tick
     end
 end)
 
