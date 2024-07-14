@@ -357,15 +357,17 @@ local generate_unit_queue = function(
         is_aerial = is_aerial
     }
 
-    Event.dispatch({
-        name = Event.get_event_name(Config.EVENT_REQUEST_PATH),
-        source_force = force,
-        surface = surface,
-        start = center_location,
-        goal = attack_beacon.position,
-        is_aerial = is_aerial,
-        group_number = unit_group.group_number,
-    })
+    Event.raise_event(
+        Event.get_event_name(Config.EVENT_REQUEST_PATH),
+        {
+            source_force = force,
+            surface = surface,
+            start = center_location,
+            goal = attack_beacon.position,
+            is_aerial = is_aerial,
+            group_number = unit_group.group_number,
+        }
+    )
 end
 
 function AttackGroupProcessor.init_globals()
@@ -521,11 +523,11 @@ function AttackGroupProcessor.generate_group(
                 if Config.interplanetary_attack_enable() and
                    RaceSettingsHelper.can_spawn(33)
                 then
-                    Event.dispatch({
-                        name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
-                        race_name = race_name,
-                        target_force = target_force
-                    })
+                    Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
+                            {
+                                race_name = race_name,
+                                target_force = target_force
+                            })
                 end
             end
             return false
@@ -548,15 +550,20 @@ function AttackGroupProcessor.generate_group(
 
         if bypass_attack_meter == false then
             if options.is_elite_attack then
-                Event.dispatch({
-                    name = Event.get_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER),
-                    race_name = race_name
-                })
+                Event.raise_event(
+                        Event.get_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER),
+                        {
+                            race_name = race_name
+                        }
+                )
             end
-            Event.dispatch({
-                name = Event.get_event_name(Config.EVENT_ADJUST_ATTACK_METER),
-                race_name = race_name
-            })
+
+            Event.raise_event(
+                Event.get_event_name(Config.EVENT_ADJUST_ATTACK_METER),
+                    {
+                        race_name = race_name
+                    }
+            )
         end
 
         return true
@@ -700,11 +707,13 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
         --- Victory Expansion
         local erm_group_data = global.erm_unit_groups[group.group_number]
         if erm_group_data and erm_group_data.has_completed_command then
-            Event.dispatch({
-                name = Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
-                group = group,
-                limit = 1
-            })
+            Event.raise_event(
+                    Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
+                    {
+                        group = group,
+                        limit = 1
+                    }
+            )
         end
         group.set_autonomous()
     end

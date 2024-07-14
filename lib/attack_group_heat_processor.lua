@@ -192,8 +192,7 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             end
 
             if interplanetary_attack_enable or global.override_interplanetary_attack_enabled then
-                Event.dispatch({
-                    name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
+                Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),{
                     race_name = race_name,
                     target_force = target_force
                 })

@@ -35,10 +35,11 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         error('Required erm_terran to test army functions')
     end
 
-    --require("__factorio-test__/init")(tests)
+     require("__factorio-test__/init")(tests)
     -- the first argument is a list of test files (require paths) to run
 
-    require("__factorio-test__/init")({
-        "tests/interplanetary_attacks"
-    })
+    --require("__factorio-test__/init")({
+    --    "tests/attack_group",
+    --    "tests/interplanetary_attacks"
+    --})
 end

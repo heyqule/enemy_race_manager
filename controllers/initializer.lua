@@ -109,8 +109,7 @@ local addRaceSettings = function()
 
     remote.call('enemyracemanager', 'register_race', race_settings)
 
-    Event.dispatch({
-        name = Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
+    Event.raise_event(Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE),{affected_race = MOD_NAME })
 end
 
 local prepare_world = function()
@@ -143,6 +142,8 @@ local prepare_world = function()
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
+
+    Event.raise_event(Event.get_event_name(GlobalConfig.PREPARE_WORLD),{})
 end
 
 local conditional_events = function()
@@ -209,8 +210,7 @@ local init_globals = function()
     --- Wipe this cache due to cache pollution from previous version.
     global.force_race_name_cache = {}
 
-    Event.dispatch({
-        name = Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)})
+    Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL),{})
 end
 
 --- Init events

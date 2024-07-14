@@ -34,6 +34,9 @@ Date: 2024-??-??
     - Attempted to fix timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
     - Fixed an issue when enemy group repath may cause them to rubberband.
 
+  Modding:
+    - Fixed event calls to use Event.raise_event(script.raise_event), instead of stdlib's Event.dispatch. So that other mods can listen via script.on_event().
+
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.12

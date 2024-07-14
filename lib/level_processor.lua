@@ -39,9 +39,13 @@ local handle_unit_tier = function(race_settings, force, race_name, dispatch)
     if current_tier < GlobalConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
         level_up_tier(current_tier, race_settings, race_name)
         if dispatch then
-            Event.dispatch(
-                    { name = Event.get_event_name(GlobalConfig.EVENT_TIER_WENT_UP),
-                      affected_race = race_settings[race_name] })
+            --Event.dispatch(
+            --        { name = Event.get_event_name(GlobalConfig.EVENT_TIER_WENT_UP),
+            --          affected_race = race_settings[race_name] })
+            Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_TIER_WENT_UP),
+                    {
+                      affected_race = race_settings[race_name]
+                    })
         end
     end
 end
@@ -68,9 +72,11 @@ local handle_unit_level = function(race_settings, force, race_name, dispatch)
         race_settings[race_name].level_warned = false
         if dispatch then
             game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-            Event.dispatch({
-                name = Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
-                affected_race = race_settings[race_name] })
+
+            Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
+                    {
+                        affected_race = race_settings[race_name]
+                    })
         end
     end
 end
@@ -149,8 +155,11 @@ function LevelManager.calculate_multiple_levels()
         if GlobalConfig.race_is_active(race_name) and has_valid_race_settings(race_settings, race_name) and race_settings[race_name].level > GlobalConfig.get_max_level() then
             race_settings[race_name].level = GlobalConfig.get_max_level()
             game.print('Max level reduced: ' .. race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-            Event.dispatch({
-                name = Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+
+            Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
+                    {
+                        affected_race = race_settings[race_name]
+                    })
         end
 
         if has_valid_race_settings(race_settings, race_name) then
@@ -177,11 +186,16 @@ function LevelManager.calculate_multiple_levels()
             
             if level_up then
                 game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-                Event.dispatch({
-                    name = Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
-                Event.dispatch(
-                        { name = Event.get_event_name(GlobalConfig.EVENT_TIER_WENT_UP),
-                          affected_race = race_settings[race_name] })
+
+                Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
+                        {
+                            affected_race = race_settings[race_name]
+                        })
+
+                Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_TIER_WENT_UP),
+                        {
+                            affected_race = race_settings[race_name]
+                        })
             end
         end
         :: skip_calculate_multiple_level_for_force ::
@@ -221,8 +235,12 @@ function LevelManager.level_by_command(race_settings, race_name, target_level)
     race_settings[race_name].level = target_level
 
     game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
-    Event.dispatch({
-        name = Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP), affected_race = race_settings[race_name] })
+
+    Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
+        {
+            affected_race = race_settings[race_name]
+        }
+    )
 end
 
 function LevelManager.get_evolution_factor(race_name)

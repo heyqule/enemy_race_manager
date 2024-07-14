@@ -6,6 +6,7 @@
 ---
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/setting-constants')
+local Event = require("__stdlib__/stdlib/event/event")
 
 local GlobalConfig = {}
 
@@ -39,25 +40,37 @@ GlobalConfig.GC_AND_STATS = 25000
 
 -- EVENTS
 GlobalConfig.EVENT_TIER_WENT_UP = 'erm_tier_went_up'
+Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP)
 GlobalConfig.EVENT_LEVEL_WENT_UP = 'erm_level_went_up'
+Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP)
 
 GlobalConfig.EVENT_FLUSH_GLOBAL = 'erm_flush_global'
-
+Event.generate_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)
 GlobalConfig.EVENT_ADJUST_ATTACK_METER = 'erm_adjust_attack_meter'
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ATTACK_METER)
 GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER = 'erm_adjust_accumulated_attack_meter'
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER)
 
 --- Group command management
 GlobalConfig.EVENT_BASE_BUILT = 'erm_base_built'
+Event.generate_event_name(GlobalConfig.EVENT_BASE_BUILT)
 GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN = 'erm_interplanetary_attack_scan'
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN)
 GlobalConfig.EVENT_REQUEST_PATH = 'erm_request_path'
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_PATH)
 GlobalConfig.EVENT_REQUEST_BASE_BUILD = 'erm_request_base_build'
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_BASE_BUILD)
 GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = 'erm_interplanatary_attack_exec'
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC)
 
 -- How to use event erm_race_setting_updated
 -- Check race exists
 -- update settings
 GlobalConfig.RACE_SETTING_UPDATE = 'erm_race_setting_update'
+Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE)
+
 GlobalConfig.PREPARE_WORLD = 'erm_prepare_world'
+Event.generate_event_name(GlobalConfig.PREPARE_WORLD)
 
 GlobalConfig.MAX_LEVELS = 20
 GlobalConfig.MAX_ELITE_LEVELS = 5

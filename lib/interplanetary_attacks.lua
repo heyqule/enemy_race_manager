@@ -114,8 +114,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
                 race_name
         )
         if group then
-            Event.dispatch({
-                name = Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
+            Event.raise_event(Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),{
                 group = group
             })
         end
@@ -155,8 +154,7 @@ function InterplanetaryAttacks.scan(surface)
     if surface and ForceHelper.can_have_enemy_on(surface) then
         --- Event to manipulate global.interplanetary_intel
         local intel =  global.interplanetary_intel[surface.index]
-        Event.dispatch({
-            name = Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN),
+        Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN),{
             intel = intel,
             surface = surface
         })
