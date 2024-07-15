@@ -265,3 +265,17 @@ Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
         end
     end
 end)
+
+--- Initialize event names
+Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP)
+Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP)
+Event.generate_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ATTACK_METER)
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER)
+Event.generate_event_name(GlobalConfig.EVENT_BASE_BUILT)
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN)
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_PATH)
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_BASE_BUILD)
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC)
+Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE)
+Event.generate_event_name(GlobalConfig.PREPARE_WORLD)
