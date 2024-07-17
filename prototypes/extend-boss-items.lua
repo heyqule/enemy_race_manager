@@ -3,8 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/12/2022 6:15 PM
 ---
-local Table = require('__stdlib__/stdlib/utils/table')
-local ERMDataHelper = require('__enemyracemanager__/lib/rig/data_helper')
+
 local Sprites = require('__stdlib__/stdlib/data/modules/sprites')
 
 --- Add PSI Emitter Satellite, spawn boss and return 2000 space science pack
@@ -78,7 +77,7 @@ data:extend({ {
               },
 })
 
-Table.insert(data.raw['technology']['space-science-pack']['effects'],
+table.insert(data.raw['technology']['space-science-pack']['effects'],
         {
             type = "unlock-recipe",
             recipe = "psi-tracking-satellite",

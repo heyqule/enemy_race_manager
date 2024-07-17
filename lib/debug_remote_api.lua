@@ -7,7 +7,6 @@
 --
 local util = require('util')
 
-local Table = require('__stdlib__/stdlib/utils/table')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')

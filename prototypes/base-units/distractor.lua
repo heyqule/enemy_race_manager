@@ -5,11 +5,9 @@
 ---
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ERM_DataHelper = require('__enemyracemanager__/lib/rig/data_helper')
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local String = require('__stdlib__/stdlib/utils/string')
+
 require('util')
 
 require('__stdlib__/stdlib/utils/defines/time')
