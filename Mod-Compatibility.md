@@ -67,7 +67,11 @@
 - Ion Cannon SE
 - Kastorio2: Atomic Bomb, Atomic Artillery Shell, Antimatter Bomb, Antimatter Artillery Shell
 - Industrial Revolution: Atomic Artillery Shell
+- PlutoniumEnergy: plutonium-atomic-rocket
 
 ### Team Competitions or any mod that adds new enemy forces
 ERM logics do not affect on custom enemy forces which created by other mods.
 In Team Competitions', I recommended to turn off its "Multiple Alien Forces" option. Otherwise, the enemy stays at level 1 and none of the advance logic work.
+
+### ERM - Terran Units for Players - but easier
+Marked incompatible as it's causing crashes.

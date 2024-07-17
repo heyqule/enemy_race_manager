@@ -10,8 +10,8 @@ Date: 2024-??-??
     - They can be intercept with meteorite defense.
     - >>> Optional Interplanetary Raids for SE <<<
     - When a race is unable to perform attack with its custom attack groups, they will try to raid a planet that has your buildings.
-    - This happens when you extincted them on a surface.
-    - They sometimes use this strategy if they couldn't path under the regular strategies.
+    - This happens when you extincted them on a planet/moon.
+    - They sometimes use this strategy if they couldn't spawn under the regular strategies.
     - They can drop on your 0% threat planet.
     - They "usually" to drop in area outside of your factory.
     - WARNING!!!: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.
@@ -25,9 +25,11 @@ Date: 2024-??-??
     - Fixed incorrect tooltips
     - Increased multiplier for genocidal weapon from x10 to x200. (base setting, 300 AP, gives 60K AP, appox 20 attack groups)
     - Changed super-weapon-attack-point setting max value from 10000 to 1000.  If you are using max value, you will get 500K AP for using genocidal weapon.
-    - Reordered settings.
-    - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack point.
+    - Reordered some settings.
+    - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack points.
     - When a custom attack group no longer path a new target after they has completed the command, they will now build a base on its location before becoming autonomous group.
+    - Warning: "ERM - Terran Units for Players - but easier" has marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.
+    - If you are in mid-game with the above mod, please do not upgrade and stay on 1.21.
 
   Bugfixes:
     - Fixed army stats panel overflow.
@@ -35,7 +37,8 @@ Date: 2024-??-??
     - Fixed an issue when enemy group repath may cause them to rubberband.
 
   Modding:
-    - Fixed event calls to use Event.raise_event(script.raise_event), instead of stdlib's Event.dispatch. So that other mods can listen via script.on_event().
+    - Changed event calls to use Event.raise_event(script.raise_event), instead of stdlib's Event.dispatch. So that other mods can listen via script.on_event().
+    - Added endpoints for environmental attack and interplanetary attack.
 
 
 ---------------------------------------------------------------------------------------------------
