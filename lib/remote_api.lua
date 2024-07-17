@@ -11,13 +11,15 @@ local Event = require('__stdlib__/stdlib/event/event')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local BossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
+local EnvironmentalAttack = require('__enemyracemanager__/lib/environmental_attacks')
+local InterplanetaryAttack = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 local RemoteAPI = {}
 
@@ -240,6 +242,35 @@ function RemoteAPI.generate_elite_featured_flying_group(race_name, size, squad_i
     end
 end
 
+--- Usage  remote.call('enemyracemanager', 'spawn_environmental_attack', 'nauvis', {x=100,y=200}, false?, false?)
+function RemoteAPI.spawn_environmental_attack(surface, target_position, force_spawn, force_spawn_base)
+    local surface_obj = game.surfaces[surface]
+    if not surface then
+        error('Surface name is required')
+    end
+    if not target_position then
+       error('Target Position is required')
+    end
+    force_spawn = force_spawn or false
+    force_spawn_base = force_spawn_base or false
+    EnvironmentalAttack.exec(surface_obj, target_position, force_spawn, force_spawn_base)
+end
+
+--- Usage  remote.call('enemyracemanager', 'spawn_interplanetary_attack', 'erm_zerg', 'players', {x=100,y=200})
+function RemoteAPI.spawn_interplanetary_attack(race_name, target_force, drop_location)
+    local race_settings = global.race_settings[race_name]
+    if not race_settings then
+        error('Race name is required / invalid')
+    end
+    local force = game.forces[target_force]
+    if not force then
+        error('Target Force is required')
+    end
+    EnvironmentalAttack.exec(race_settings.race, force, drop_location)
+end
+
+--- Usage: remote.call('enemyracemanager', 'add_boss_attack_group')
+--- Assign unit group to manage by boss group logics
 function RemoteAPI.add_boss_attack_group(group)
     if group.valid and next(group.members) then
         local group_data = BossGroupProcessor.get_default_data()
@@ -250,6 +281,8 @@ function RemoteAPI.add_boss_attack_group(group)
     end
 end
 
+--- Usage: remote.call('enemyracemanager', 'add_boss_attack_group')
+--- Assign unit group to ERM attack group, which manage by ERM group logics
 function RemoteAPI.add_erm_attack_group(group, target_force)
     if group.valid and next(group.members) then
         global.erm_unit_groups[group.group_number] = {
