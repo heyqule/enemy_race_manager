@@ -21,8 +21,10 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - **WARNING: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.**
 - Army control UI improvements.
 - Many bugfixes
-- **Warning: "ERM - Terran Units for Players - but easier" has marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.**
+- **Warning: "ERM - Terran Units for Players - but easier" marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.**
 - If you are in mid-game with the above mod, please do not upgrade and stay on 1.21.
+
+P.S.: This is last feature release before Factorio 2.0.
 
 ### Race Mods Changes
 

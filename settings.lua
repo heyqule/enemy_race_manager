@@ -454,7 +454,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 200,
         minimum_value = 100,
-        maximum_value = 10000,
+        maximum_value = 1000,
         order = "enemyracemanager-311"
     },
     {
@@ -613,7 +613,7 @@ data:extend {
         description = "enemyracemanager-environmental-raids-units",
         setting_type = "runtime-global",
         default_value = 5,
-        allowed_values = { 5, 6, 8, 10, 12, 15, 20},
+        allowed_values = { 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50},
         order = "enemyracemanager-900"
     },
     {
@@ -642,7 +642,7 @@ data:extend {
         description = "enemyracemanager-interplanetary-raids",
         setting_type = "runtime-global",
         default_value = true,
-        order = "enemyracemanager-901",
+        order = "enemyracemanager-910",
     },
     {
         type = "int-setting",
@@ -651,7 +651,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 25,
         allowed_values = {0, 10, 20, 25, 33, 50, 66, 75},
-        order = "enemyracemanager-902"
+        order = "enemyracemanager-911"
     },
 }
 
