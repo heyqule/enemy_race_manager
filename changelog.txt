@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.0
-Date: 2024-??-??
+Date: 2024-07-26
 
   Features:
     - Added rally point support to army unit deployers
@@ -29,12 +29,12 @@ Date: 2024-??-??
     - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack points.
     - When a custom attack group no longer path a new target after they has completed the command, they will now build a base on its location before becoming autonomous group.
     - Warning: "ERM - Terran Units for Players - but easier" has marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.
-    - If you are in mid-game with the above mod, please do not upgrade and stay on 1.21.
+    - If you are playing a save with the above mod, please do not upgrade and stay on 1.21.
 
   Bugfixes:
     - Fixed army stats panel overflow.
-    - Attempted to fix timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
-    - Fixed an issue when enemy group repath may cause them to rubberband.
+    - Fixed? timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
+    - Fixed? an issue when enemy group repath may cause them to rubberband.
 
   Modding:
     - Changed event calls to use Event.raise_event(script.raise_event), instead of stdlib's Event.dispatch. So that other mods can listen via script.on_event().

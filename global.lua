@@ -9,11 +9,11 @@ MOD_NAME = 'erm_vanilla'
 FORCE_NAME = 'enemy'
 
 --- Enable this flag to enable debug features
-DEBUG_MODE = true
+DEBUG_MODE = false
 --- Enable this flag when running tests.  It forces some chance based logics to run.
-TEST_MODE = true
+TEST_MODE = false
 --- For debugging beacons
-BEACON_SELECTABLE = true
+BEACON_SELECTABLE = false
 
 
 
