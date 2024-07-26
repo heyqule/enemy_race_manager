@@ -3,13 +3,10 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 12:46 AM
 ---
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 local ERM_DataHelper = require('__enemyracemanager__/lib/rig/data_helper')
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local String = require('__stdlib__/stdlib/utils/string')
 require('util')
 
 require('__stdlib__/stdlib/utils/defines/time')
@@ -190,7 +187,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     return robot
 end
 
-local max_level = ErmConfig.MAX_LEVELS + ErmConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelCombatRobots(i, 'defender') })

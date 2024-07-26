@@ -6,21 +6,21 @@
 
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 local BossAttackProcessor = {}
 
 BossAttackProcessor.TYPE_PROJECTILE = 1
 BossAttackProcessor.TYPE_BEAM = 2
 
-local scanLength = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
-local scanRadius = ErmConfig.BOSS_ARTILLERY_SCAN_RADIUS
+local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
+local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
 local type_name = { 'projectile', 'beam' }
 
@@ -50,7 +50,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
 
     if attackable_entities_cache == nil and not artillery_mode then
         attackable_entities_cache = surface.find_entities_filtered {
-            force = ErmForceHelper.get_player_forces(),
+            force = ForceHelper.get_player_forces(),
             radius = 64,
             position = boss.entity_position,
             limit = 50,
@@ -63,9 +63,9 @@ local pick_near_by_player_entity_position = function(artillery_mode)
 
     if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
         attackable_entities_cache = surface.find_entities_filtered {
-            force = ErmForceHelper.get_player_forces(),
+            force = ForceHelper.get_player_forces(),
             area = get_scan_area[boss.target_direction](global.boss.entity_position.x, global.boss.entity_position.y),
-            limit = ErmConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
+            limit = GlobalConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
@@ -99,11 +99,11 @@ local queue_attack = function(data)
         local position, artillery_mode = pick_near_by_player_entity_position()
         data['artillery_mode'] = artillery_mode
         data['position'] = position
-        ErmCron.add_boss_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
+        Cron.add_boss_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
     end
 end
 
-local can_spawn = ErmRaceSettingsHelper.can_spawn
+local can_spawn = RaceSettingsHelper.can_spawn
 
 local set_optional_data = function(data, attacks, index, name)
     if attacks[name] then
@@ -171,7 +171,7 @@ local process_attack = function(data, unique_position)
     local surface = data['surface']
     local entity_force = data['entity_force']
     if not (surface and surface.valid and entity_force and entity_force.valid) or data['position'] == nil then
-        ErmDebugHelper.print('not valid surface / force / position')
+        DebugHelper.print('not valid surface / force / position')
         return
     end
     local start_position = {
@@ -182,7 +182,7 @@ local process_attack = function(data, unique_position)
 
     if data['artillery_mode'] then
         data['speed'] = 1
-        data['range'] = ErmConfig.BOSS_ARTILLERY_SCAN_RANGE
+        data['range'] = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
     end
 
     for i = 1, data['count'] do
@@ -251,14 +251,14 @@ function BossAttackProcessor.exec_phase()
 end
 
 function BossAttackProcessor.process_despawn_attack()
-    ErmDebugHelper.print('Despawn Attack...')
+    DebugHelper.print('Despawn Attack...')
     BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
     for i = 1, data['spread'] do
         local position, artillery_mode = pick_near_by_player_entity_position(true)
         data['artillery_mode'] = artillery_mode
         data['position'] = position
-        ErmCron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data), true)
+        Cron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data), true)
     end
 end
 

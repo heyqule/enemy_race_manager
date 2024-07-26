@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:23 PM
 ---
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 -- Change resistance values on vanilla armors
 local armor_change_resistance = function(percentage_value, fixed_value)
     return {

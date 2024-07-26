@@ -64,7 +64,13 @@ data:extend(
                 type = "item-subgroup",
                 name = "erm_ai_beacons",
                 group = "combat",
-                order = "z-erm_attack_beacons"
+                order = "z-erm_ai_beacons"
+            },
+            {
+                type = "item-subgroup",
+                name = "erm_rally_point",
+                group = "combat",
+                order = "z-erm_rally_point"
             }
         })
 -- Recipe Category

@@ -14,7 +14,7 @@ local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 --- Detail Windows
-local ERM_DetailWindow = {
+local DetailWindow = {
     root_name = 'erm_races_manager_detail',
     window_width = 680,
     levelup_slider_name = 'levelup_slider',
@@ -29,29 +29,29 @@ local element_valid = function(event)
 end
 
 --- Detail Windows functions
-function ERM_DetailWindow.show(player, race_setting)
+function DetailWindow.show(player, race_setting)
     local gui = player.gui.screen
-    if gui[ERM_DetailWindow.root_name] then
+    if gui[DetailWindow.root_name] then
         return
     end
     local detail_window = gui.add {
         type = "frame",
-        name = ERM_DetailWindow.root_name,
+        name = DetailWindow.root_name,
         direction = "vertical",
     }
     detail_window.force_auto_center()
-    ERM_DetailWindow.parent_window = player.opened
+    DetailWindow.parent_window = player.opened
     player.opened = detail_window
 
     local admin = player.admin
     -- Race Manager Title
     local title_flow = detail_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
-    title_flow.style.minimal_width = ERM_DetailWindow.window_width
+    title_flow.style.minimal_width = DetailWindow.window_width
 
     local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.detail_title", race_setting.race }, style = 'caption_label' }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = ERM_DetailWindow.window_width - 24 - 175
+    pusher.style.width = DetailWindow.window_width - 24 - 175
     pusher.style.height = 24
     pusher.drag_target = detail_window
 
@@ -67,7 +67,7 @@ function ERM_DetailWindow.show(player, race_setting)
 
     local main_flow = detail_window.add { type = 'flow', direction = "horizontal" }
     local left_flow = main_flow.add { type = 'flow', direction = "vertical" }
-    left_flow.style.width = ERM_DetailWindow.window_width / 2
+    left_flow.style.width = DetailWindow.window_width / 2
 
     local item_table = left_flow.add { type = "table", column_count = 2, style = "bordered_table" }
     item_table.style.horizontally_stretchable = true
@@ -110,7 +110,7 @@ function ERM_DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = boss_kill_count }
 
     local right_flow = main_flow.add { type = 'flow', direction = "vertical" }
-    right_flow.style.width = ERM_DetailWindow.window_width / 2
+    right_flow.style.width = DetailWindow.window_width / 2
 
     if admin then
         local setting_flow = right_flow.add { type = "flow", name = "setting_flow", direction = 'vertical' }
@@ -129,7 +129,7 @@ function ERM_DetailWindow.show(player, race_setting)
                                     tooltip = { 'gui.level_up_slider_tooltip' }
             }
             local level_slider = level_slider_flow.add { type = "slider",
-                                                         name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_slider_name,
+                                                         name = race_setting.race .. "/" .. DetailWindow.levelup_slider_name,
                                                          tooltip = { 'gui.level_up_slider_tooltip' },
                                                          minimum_value = current_level,
                                                          maximum_value = max_level,
@@ -139,7 +139,7 @@ function ERM_DetailWindow.show(player, race_setting)
             level_slider.slider_value = current_level
             level_slider.set_slider_value_step(1)
             level_slider.style.vertical_align = "bottom"
-            level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.levelup_value_name, caption = race_setting.level }
+            level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.levelup_value_name, caption = race_setting.level }
             add_confirm_button = true
         else
             level_slider_flow.add { type = "label",
@@ -157,7 +157,7 @@ function ERM_DetailWindow.show(player, race_setting)
                                            tooltip = { 'gui.evolution_factor_slider_tooltip' }
         }
         local evolution_factor_slider = evolution_factor_slider_flow.add { type = "slider",
-                                                                           name = race_setting.race .. "/" .. ERM_DetailWindow.evolution_factor_slider_name,
+                                                                           name = race_setting.race .. "/" .. DetailWindow.evolution_factor_slider_name,
                                                                            tooltip = { 'gui.evolution_factor_slider_tooltip' },
                                                                            minimum_value = 0,
                                                                            maximum_value = 100
@@ -165,13 +165,13 @@ function ERM_DetailWindow.show(player, race_setting)
         local evolution_factor_value = math.floor(LevelManager.get_evolution_factor(race_setting.race) * 100)
         evolution_factor_slider.slider_value = evolution_factor_value
         evolution_factor_slider.style.vertical_align = "bottom"
-        evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. ERM_DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
+        evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
         evolution_factor_slider_flow.add { type = "label", caption = "%" }
         --- END EVOLUTION FACTOR SLIDER ---
 
         local gap = setting_flow.add { type = "empty-widget" }
         gap.style.height = 4
-        setting_flow.add { type = "button", name = race_setting.race .. "/" .. ERM_DetailWindow.confirm_name, caption = { "gui.confirm" }, style = "green_button" }
+        setting_flow.add { type = "button", name = race_setting.race .. "/" .. DetailWindow.confirm_name, caption = { "gui.confirm" }, style = "green_button" }
 
         local center_gap = right_flow.add { type = "empty-widget" }
         center_gap.style.height = 16
@@ -193,7 +193,7 @@ function ERM_DetailWindow.show(player, race_setting)
     boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { 'gui.boss_details' } }
 end
 
-function ERM_DetailWindow.update_slider_text(event, slider_name, slider_value)
+function DetailWindow.update_slider_text(event, slider_name, slider_value)
     if element_valid(event) then
         local nameToken = String.split(event.element.name, '/')
 
@@ -205,7 +205,7 @@ function ERM_DetailWindow.update_slider_text(event, slider_name, slider_value)
 end
 
 local process_level_slider = function(element, race_name)
-    local level_slider_name = race_name .. '/' .. ERM_DetailWindow.levelup_slider_name
+    local level_slider_name = race_name .. '/' .. DetailWindow.levelup_slider_name
     local level = tonumber(element.parent['level_slider_flow'][level_slider_name].slider_value)
     if level ~= global.race_settings[race_name].level then
         LevelManager.level_by_command(global.race_settings, race_name, level)
@@ -213,31 +213,31 @@ local process_level_slider = function(element, race_name)
 end
 
 local process_evolution_factor_slider = function(element, race_name)
-    local evolution_slider_name = race_name .. '/' .. ERM_DetailWindow.evolution_factor_slider_name
+    local evolution_slider_name = race_name .. '/' .. DetailWindow.evolution_factor_slider_name
     local evolution_factor = tonumber(element.parent['evolution_factor_slider_flow'][evolution_slider_name].slider_value) / 100
     game.forces[ForceHelper.get_force_name_from(race_name)].evolution_factor = evolution_factor
     game.print('Setting ' .. race_name .. ' evolution factor to ' .. tostring(evolution_factor))
 end
 
-function ERM_DetailWindow.confirm(owner, nameToken, element)
+function DetailWindow.confirm(owner, nameToken, element)
     process_level_slider(element, nameToken[1])
     process_evolution_factor_slider(element, nameToken[1])
-    ERM_DetailWindow.hide(owner)
+    DetailWindow.hide(owner)
 end
 
-function ERM_DetailWindow.replace_enemy(owner, nameToken)
+function DetailWindow.replace_enemy(owner, nameToken)
     SurfaceProcessor.assign_race(owner.surface, nameToken[1])
     ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
 end
 
-function ERM_DetailWindow.hide(player)
-    player.gui.screen[ERM_DetailWindow.root_name].destroy()
+function DetailWindow.hide(player)
+    player.gui.screen[DetailWindow.root_name].destroy()
 end
 
-function ERM_DetailWindow.toggle_close(owner)
+function DetailWindow.toggle_close(owner)
     if owner then
-        ERM_DetailWindow.hide(owner)
+        DetailWindow.hide(owner)
     end
 end
 
-return ERM_DetailWindow
+return DetailWindow

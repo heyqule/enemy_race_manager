@@ -152,6 +152,65 @@ describe("Army Deployment", function()
         end)
 
     end)
+
+    it('Deployment with rally point', function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local force = game.forces['player']
+        local unit_name = "erm_terran/marine/mk1"
+
+        local powerinterface = surface.create_entity({
+            force=force,
+            name='electric-energy-interface',
+            position={4,4},
+            raise_built = true
+        })
+        local substation = surface.create_entity({
+            force=force,
+            name='substation',
+            position={3,4},
+            raise_built = true
+        })
+        local entity = surface.create_entity({
+            force=force,
+            name='erm_terran/barrack',
+            position={0,0},
+            raise_built = true
+        })
+        local rally_point = surface.create_entity({
+            force=force,
+            player=game.players[1],
+            name='erm_rally_point',
+            position={100, 100},
+            raise_built = true
+        })
+        local output_inventory = entity.get_output_inventory()
+        entity.set_recipe(unit_name)
+        output_inventory.insert({name=unit_name, count=20})
+
+        local deployer = global.army_built_deployers[force.index][tonumber(entity.unit_number)]
+        assert.not_nil(deployer,'Deploy Registered')
+        if deployer and deployer.entity.valid then
+            ArmyDeployment.add_rallypoint(rally_point, deployer.entity.unit_number)
+            ArmyDeployment.add_to_active(deployer.entity)
+            rally_point.destroy()
+            assert.not_nil(deployer.entity,'Deploy Entity Valid')
+            assert.not_nil(deployer.rally_point,'Rally point not set')
+            assert.not_nil(deployer.rally_draw_link,'Rally point draw_link not set')
+            assert.not_nil(deployer.rally_draw_flag,'Rally point draw_flag not set')
+        end
+
+        after_ticks(1800, function()
+            local marines = surface.find_entities_filtered({
+                name=unit_name,
+                position={100,100},
+                radius=32
+            })
+
+            assert( table_size(marines) > 0, 'Marine can not spawned while power is out')
+            done()
+        end)
+    end)
 end)
 describe("Army Teleport", function()
     it('Teleport, same surface', function()

@@ -17,7 +17,6 @@ after_each(function()
 end)
 
 
-describe("Level Manager", function()
     it("calculate_levels and calculateMutlipleLevels", function()
         global.race_settings['erm_vanilla'].evolution_base_point = 2
         LevelManager.calculate_levels()
@@ -46,7 +45,8 @@ describe("Level Manager", function()
 
         after_ticks(1800, function()
             local entities = surface.find_entities_filtered({
-                type='unit-spawner'
+                type='unit-spawner',
+                force='enemy'
             })
             assert.equal('erm_vanilla/biter-spawner/10',entities[1].name, 'Correct updated unit spawner')
         end)
@@ -62,4 +62,3 @@ describe("Level Manager", function()
         LevelManager.calculate_levels()
         assert(global.race_settings['erm_vanilla'].tier == 3, 'Tier == 3')
     end)
-end)

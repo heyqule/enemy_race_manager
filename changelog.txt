@@ -1,4 +1,47 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.0
+Date: 2024-07-26
+
+  Features:
+    - Added rally point support to army unit deployers
+    - Added custom UI to handle rally point and deploy active toggle when you open army unit deployers UI.
+    - >>> Optional Environmental Raids for SE <<<
+    - Meteorites have a chance to spawn units.  They may attack your base or build base on its landing site.
+    - They can be intercept with meteorite defense.
+    - >>> Optional Interplanetary Raids for SE <<<
+    - When a race is unable to perform attack with its custom attack groups, they will try to raid a planet that has your buildings.
+    - This happens when you extincted them on a planet/moon.
+    - They sometimes use this strategy if they couldn't spawn under the regular strategies.
+    - They can drop on your 0% threat planet.
+    - They "usually" to drop in area outside of your factory.
+    - WARNING!!!: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.
+
+  Changes:
+    - Changed Deployer UI layout.
+    - Added surface and type filter to Deployer UI
+    - Added zoom to entity button on Deployer UI when the player and entity is on same planet.
+    - Removed alt left click action on deployers, incompatible with UI update.
+    - Added surface filter to Teleport UI
+    - Fixed incorrect tooltips
+    - Increased multiplier for genocidal weapon from x10 to x200. (base setting, 300 AP, gives 60K AP, appox 20 attack groups)
+    - Changed super-weapon-attack-point setting max value from 10000 to 1000.  If you are using max value, you will get 500K AP for using genocidal weapon.
+    - Reordered some settings.
+    - Add "plutonium-atomic-rocket" from PlutoniumEnergy to support super weapon attack points.
+    - When a custom attack group no longer path a new target after they has completed the command, they will now build a base on its location before becoming autonomous group.
+    - Warning: "ERM - Terran Units for Players - but easier" has marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.
+    - If you are playing a save with the above mod, please do not upgrade and stay on 1.21.
+
+  Bugfixes:
+    - Fixed army stats panel overflow.
+    - Fixed? timed unit spawner may stuck on a path because the timed unit are not attacking the trees/rocks.
+    - Fixed? an issue when enemy group repath may cause them to rubberband.
+
+  Modding:
+    - Changed event calls to use Event.raise_event(script.raise_event), instead of stdlib's Event.dispatch. So that other mods can listen via script.on_event().
+    - Added endpoints for environmental attack and interplanetary attack.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 1.21.12
 Date: 2024-07-10
 
@@ -75,7 +118,7 @@ Date: 2024-06-16
 
   Bugfixes:
     - Fixed a crash when spawn beacon was somehow removed outside of ERM.
-    - When picked spawn location has an invalid beacon, it will removed the data tracking list.
+    - When picked spawn location has an invalid beacon, it will removed from the data tracking list.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.21.2
@@ -96,7 +139,7 @@ Date: 2024-06-09
     - Fixed new game crash under certain load order with 3rd party mods.
     - Fixed Rampant compatibility issue, which scout unit spawns unexpectedly when it created unit group for its internal process.
 
-  Optimization:
+  Optimizations:
     - Changed all garbage collection calls to handle in cron jobs.
 
 
@@ -121,7 +164,7 @@ Date: 2024-06-07
     - Enemies prioritize the surface get attacked the most.
     - Enemies may ask their allies to take revenge, if they are not able to attack on a surface.
     - >>> Others <<<
-    - When enemy successfully spawns a custom attack groups, pollution is deducted from attack target chunk.
+    - When enemy successfully spawns a custom attack group, pollution is deducted from attack target chunk.
 
   Changes:
     - Free for all "multiplier" is configurable in startup tab.  It affects damage and health.
@@ -152,7 +195,7 @@ Date: 2024-06-07
     - Fixed duplicated names in global.attack_group_attackable_entity_names
     - Fixed some UI incorrect descriptions.
 
-  Optimization:
+  Optimizations:
     - Cron processor changes
     - ERM Attack Groups disband after 14 nauvis days or under certain size to reduce idle units.
     - [Internal] Added regression tests.

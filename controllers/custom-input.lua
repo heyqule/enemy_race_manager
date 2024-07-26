@@ -6,8 +6,8 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
-local ErmMainWindow = require('__enemyracemanager__/gui/main_window')
+local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local MainWindow = require('__enemyracemanager__/gui/main_window')
 
 local valid_erm_left_click = {
     ['radar'] = function(event)
@@ -16,10 +16,10 @@ local valid_erm_left_click = {
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
+            ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then
-                local element = player.gui.screen[ErmArmyControlUI.root_name]['main-tab'][ErmArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_from']
-                ErmArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['left-listing']['army_cc/cc_select_from']
+                ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
             end
         end
     end,
@@ -37,21 +37,10 @@ local valid_erm_alt_left_click = {
 
         if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[3])
+            ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then
-                local element = player.gui.screen[ErmArmyControlUI.root_name]['main-tab'][ErmArmyControlUI.tab_names[3]]['main-pane']['army_cc/cc_select_to']
-                ErmArmyControlUI.set_selected_cc(player, element, entity.backer_name)
-            end
-        end
-    end,
-    ['assembling-machine'] = function(event)
-        --@TODO scroll_to_element
-        local player = game.players[event.player_index]
-        if player and player.valid and global.army_registered_deployers[event.selected_prototype.name] then
-            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            if entity and entity.valid then
-                ErmArmyControlUI.open_tab(player, ErmArmyControlUI.tab_names[2])
-                ErmArmyControlUI.scroll_to_deployer(player, entity.unit_number)
+                local element = player.gui.screen[ArmyControlUI.root_name]['main-tab'][ArmyControlUI.tab_names[3]]['main-pane']['right-listing']['army_cc/cc_select_to']
+                ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
             end
         end
     end
@@ -65,13 +54,13 @@ end)
 
 Event.register('erm-open-army-window', function(event)
     if game.players[event.player_index] then
-        ErmArmyControlUI.toggle_main_window(game.players[event.player_index])
+        ArmyControlUI.toggle_main_window(game.players[event.player_index])
     end
 end)
 
 Event.register('erm-open-stat-window', function(event)
     if game.players[event.player_index] then
-        ErmMainWindow.toggle_main_window(game.players[event.player_index])
+        MainWindow.toggle_main_window(game.players[event.player_index])
     end
 end)
 

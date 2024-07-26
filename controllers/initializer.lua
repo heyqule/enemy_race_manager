@@ -8,30 +8,32 @@ local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmMapProcessor = require('__enemyracemanager__/lib/map_processor')
-local ErmLevelProcessor = require('__enemyracemanager__/lib/level_processor')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local MapProcessor = require('__enemyracemanager__/lib/map_processor')
+local LevelProcessor = require('__enemyracemanager__/lib/level_processor')
 
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmSurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
 local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
+local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
 
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
-local ErmBossProcessor = require('__enemyracemanager__/lib/boss_processor')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
-local ErmGui = require('__enemyracemanager__/gui/main')
+local GuiContainer = require('__enemyracemanager__/gui/main')
 
-local ErmCompat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
+local Compat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
 
 local addRaceSettings = function()
     local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
@@ -103,16 +105,15 @@ local addRaceSettings = function()
         race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
     end
 
-    ErmRaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
+    RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
     remote.call('enemyracemanager', 'register_race', race_settings)
 
-    Event.dispatch({
-        name = Event.get_event_name(ErmConfig.RACE_SETTING_UPDATE), affected_race = MOD_NAME })
+    Event.raise_event(Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE),{affected_race = MOD_NAME })
 end
 
 local prepare_world = function()
-    ErmConfig.initialize_races_data()
+    GlobalConfig.initialize_races_data()
 
     -- Game map settings
     game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
@@ -129,30 +130,26 @@ local prepare_world = function()
     end
 
     -- Race Cleanup
-    ErmRaceSettingsHelper.clean_up_race()
-    ErmSurfaceProcessor.numeric_to_name_conversion()
-    ErmSurfaceProcessor.rebuild_race(global.race_settings)
+    RaceSettingsHelper.clean_up_race()
+    SurfaceProcessor.numeric_to_name_conversion()
+    SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
     if table_size(global.race_settings) > 0 then
-        ErmLevelProcessor.calculate_multiple_levels()
+        LevelProcessor.calculate_multiple_levels()
     end
 
     AttackGroupBeaconProcessor.init_index()
-    ErmSurfaceProcessor.wander_unit_clean_up()
+    SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
-    if script.active_mods["erm_easier_terran"] then
-        game.print('[color=red]Warning: You have "ERM - Terran Units for Players - but easier" installed.[/color]')
-        game.print('[color=red]The mod may cause game crash. Please install swap it with "ERM - Terran Units for Players" instead. "ERM - Terran Units for Players" now have a cheap mode to reduce construction cost.[/color]')
-        game.print('[color=red]"ERM - Terran Units for Players - but easier" will become incompatible in 1.22 release.[/color]')
-    end
+    Event.raise_event(Event.get_event_name(GlobalConfig.PREPARE_WORLD),{})
 end
 
 local conditional_events = function()
     if remote.interfaces["newgameplus"] then
         Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
-            ErmCompat_NewGamePlus.exec(event)
+            Compat_NewGamePlus.exec(event)
         end)
     end
 
@@ -165,11 +162,11 @@ local conditional_events = function()
     end
 
     if global.quick_cron_is_running then
-        Event.on_nth_tick(ErmConfig.QUICK_CRON, ErmCron.process_quick_queue)
+        Event.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
     if global.boss and global.boss.entity then
-        Event.on_nth_tick(ErmConfig.BOSS_QUEUE_CRON, ErmCron.process_boss_queue)
+        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
     end
 end
 
@@ -186,52 +183,58 @@ local init_globals = function()
     global.active_races = {}
     global.active_races_names = {}
     global.active_races_num = 1
+    global.is_multi_planets_game = false
+    --- SE or DLC
+    if script.active_mods['space-exploration'] then
+        global.is_multi_planets_game = true
+    end
 
-    ErmSurfaceProcessor.init_globals()
+    SurfaceProcessor.init_globals()
     AttackMeterProcessor.init_globals()
-    ErmMapProcessor.init_globals()
-    ErmForceHelper.init_globals()
-    ErmCron.init_globals()
+    MapProcessor.init_globals()
+    ForceHelper.init_globals()
+    Cron.init_globals()
     AttackGroupProcessor.init_globals()
     AttackGroupBeaconProcessor.init_globals()
     AttackGroupPathingProcessor.init_globals()
     AttackGroupHeatProcessor.init_globals()
-    ErmBossProcessor.init_globals()
-    ErmArmyPopulationProcessor.init_globals()
+    BossProcessor.init_globals()
+    ArmyPopulationProcessor.init_globals()
     ArmyTeleportationProcessor.init_globals()
     ArmyDeploymentProcessor.init_globals()
-    ErmGui.init_globals()
+    GuiContainer.init_globals()
+    SpawnLocationScanner.init_globals()
+    InterplanetaryAttacks.init_globals()
 
 
     --- Wipe this cache due to cache pollution from previous version.
     global.force_race_name_cache = {}
 
-    Event.dispatch({
-        name = Event.get_event_name(ErmConfig.FLUSH_GLOBAL)})
+    Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL),{})
 end
 
 --- Init events
 Event.on_init(function(event)
     init_globals()
-    ErmConfig.refresh_config()
+    GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     conditional_events()
 end)
 
 Event.on_load(function(event)
-    ErmMapProcessor.rebuild_queue()
-    ErmCron.rebuild_queue()
+    MapProcessor.rebuild_queue()
+    Cron.rebuild_queue()
     conditional_events()
 end)
 
 Event.on_configuration_changed(function(event)
     init_globals()
-    ErmConfig.refresh_config()
+    GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     for _, player in pairs(game.connected_players) do
-        ErmGui.main_window.update_overhead_button(player.index)
+        GuiContainer.main_window.update_overhead_button(player.index)
     end
 end)
 
@@ -245,8 +248,8 @@ local setting_functions = {
     end,
     ['enemyracemanager-army-limit-multiplier'] = function(event)
         for _, force in pairs(game.forces) do
-            if ErmArmyPopulationProcessor.has_army_data(force) then
-                ErmArmyPopulationProcessor.calculate_max_units(force)
+            if ArmyPopulationProcessor.has_army_data(force) then
+                ArmyPopulationProcessor.calculate_max_units(force)
             end
         end
     end
@@ -262,3 +265,17 @@ Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
         end
     end
 end)
+
+--- Initialize event names
+Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP)
+Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP)
+Event.generate_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ATTACK_METER)
+Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER)
+Event.generate_event_name(GlobalConfig.EVENT_BASE_BUILT)
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN)
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_PATH)
+Event.generate_event_name(GlobalConfig.EVENT_REQUEST_BASE_BUILD)
+Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC)
+Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE)
+Event.generate_event_name(GlobalConfig.PREPARE_WORLD)

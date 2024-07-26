@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 8/8/2021 10:34 PM
 ---
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 local Compat_NewGamePlus = {}
 
@@ -17,7 +17,7 @@ function Compat_NewGamePlus.exec(event)
             race_settings.current_turrets_tier = race_settings.turrets[1]
             race_settings.current_command_centers_tier = race_settings.command_centers[1]
             race_settings.current_support_structures_tier = race_settings.support_structures[1]
-        elseif game.forces[ErmForceHelper.get_force_name_from(race_settings.race)].evolution_factor == 0 then
+        elseif game.forces[ForceHelper.get_force_name_from(race_settings.race)].evolution_factor == 0 then
             race_settings.evolution_base_point = race_settings.global_evolution_point
         end
 

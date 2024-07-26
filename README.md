@@ -14,18 +14,17 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
   Groups: [https://www.youtube.com/watch?v=LDdkzwMX73s](https://www.youtube.com/watch?v=LDdkzwMX73s)
 - ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
-### 1.21 Changes
+### 1.22 Changes
 
-- Rework custom attack group's pathfinder. They may deploy different pathing strategies.
-- Rework custom attack group's target force and surface selection.
-- Scout subsystem.  Custom attack groups need to find their targets with aerial and ground scouts.
-- Added 2 new sets of enemy level up progressions. (see Enemy Unit Leveling section for details)
-- Ctrl + Alt + S to open stats window.
-- Precision strike warning now ping the attack group spawn position, instead of target position.
-- "Disable friendly fire" is in startup setting. When it's on, Explosive cannon projectiles, Explosive rockets and grenades do not do friendly fire to same force. Default: ON
-- Enemy units reach max movement and attack speed at level 5 by default.
-- Various changes and bugfixes, please see changelog for details.
+- Environmental attack groups for SE, when meteor falls, a small group may spawn.
+- Interplanetary Raids for SE, when a race has extincted on a planet.  They may launch attacks on another planet.
+- **WARNING: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.**
+- Army control UI improvements.
+- Many changes and bugfixes
+- **Warning: "ERM - Terran Units for Players - but easier" marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.**
+- If you are in mid-game with the above mod, please do not upgrade and stay on 1.21.
 
+P.S.: This is last feature release before Factorio 2.0.
 
 ### Race Mods Changes
 

@@ -8,15 +8,12 @@
 --- https://lua-api.factorio.com/latest/Concepts.html#ChunkPositionAndArea
 ---
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local String = require('__stdlib__/stdlib/utils/string')
 local Queue = require('__stdlib__/stdlib/misc/queue')
-local Game = require('__stdlib__/stdlib/game')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local ErmRaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+
 
 require('__enemyracemanager__/setting-constants')
 
@@ -37,14 +34,14 @@ local vanilla_structures = {
 }
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
-    if ErmConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
+    if GlobalConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
         local enemy_surface = global.enemy_surfaces[surface.name]
         if enemy_surface and nameToken[1] ~= enemy_surface then
             nameToken[1] = enemy_surface
             if entity.type == 'turret' then
-                nameToken[2] = ErmRaceSettingHelper.pick_a_turret(enemy_surface)
+                nameToken[2] = RaceSettingHelper.pick_a_turret(enemy_surface)
             else
-                nameToken[2] = ErmRaceSettingHelper.pick_a_spawner(enemy_surface)
+                nameToken[2] = RaceSettingHelper.pick_a_spawner(enemy_surface)
             end
         end
     end
@@ -67,18 +64,18 @@ local get_surface_by_name = function(surfaces, name)
 end
 
 local level_up_enemy_structures = function(surface, entity, race_settings)
-    if ErmForceHelper.is_erm_unit(entity) == false and vanilla_structures[entity.name] == nil then
+    if ForceHelper.is_erm_unit(entity) == false and vanilla_structures[entity.name] == nil then
         return
     end
 
     local force_name = entity.force.name
-    local race_name = ErmForceHelper.extract_race_name_from(force_name)
+    local race_name = ForceHelper.extract_race_name_from(force_name)
 
-    if not ErmConfig.race_is_active(race_name) then
+    if not GlobalConfig.race_is_active(race_name) then
         return
     end
 
-    local nameToken = ErmForceHelper.get_name_token(entity.name)
+    local nameToken = ForceHelper.get_name_token(entity.name)
 
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
     local position = entity.position
@@ -91,7 +88,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 
     local new_force_name = entity.force.name
     if nameToken[1] ~= race_name then
-        new_force_name = ErmForceHelper.get_force_name_from(nameToken[1])
+        new_force_name = ForceHelper.get_force_name_from(nameToken[1])
     end
 
     entity.destroy()
@@ -105,7 +102,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 end
 
 local process_enemy_level = function(surface, area, race_settings)
-    local building = surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret' }, force = ErmForceHelper.get_enemy_forces() })
+    local building = surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret' }, force = ForceHelper.get_enemy_forces() })
     if table_size(building) > 0 then
         for k, entity in pairs(building) do
             level_up_enemy_structures(surface, entity, race_settings)
@@ -118,7 +115,7 @@ local process_enemy_level = function(surface, area, race_settings)
         top_left = { area.left_top.x - larger_radius, area.left_top.y - larger_radius },
         bottom_right = { area.right_bottom.x + larger_radius, area.right_bottom.y + larger_radius },
     }
-    local units = surface.find_entities_filtered({ area = larger_area, type = { 'unit' }, force = ErmForceHelper.get_enemy_forces() })
+    local units = surface.find_entities_filtered({ area = larger_area, type = { 'unit' }, force = ForceHelper.get_enemy_forces() })
     if table_size(units) > 0 then
         for _, entity in pairs(units) do
             if entity.unit_group == nil then
@@ -134,7 +131,7 @@ function MapProcessor.init_globals()
 end
 
 function MapProcessor.queue_chunks(surface, area)
-    if not ErmForceHelper.can_have_enemy_on(surface) or not area then
+    if not ForceHelper.can_have_enemy_on(surface) or not area then
         return
     end
 
@@ -142,7 +139,7 @@ function MapProcessor.queue_chunks(surface, area)
         global.mapproc_chunk_queue[surface.name] = Queue()
     end
 
-    local unit_size = surface.count_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ErmForceHelper.get_enemy_forces(), limit = 1 })
+    local unit_size = surface.count_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ForceHelper.get_enemy_forces(), limit = 1 })
     if unit_size > 0 then
         global.mapproc_chunk_queue[surface.name](area)
     end
@@ -161,7 +158,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             goto process_chunks_continue
         end
 
-        for i = 1, ErmConfig.MAP_PROCESS_CHUNK_BATCH do
+        for i = 1, GlobalConfig.MAP_PROCESS_CHUNK_BATCH do
             local area = queue()
             if area == nil then
                 break
@@ -181,7 +178,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
             count = count + 1
         end
 
-        if count > ErmConfig.MAP_PROCESS_CHUNK_BATCH then
+        if count > GlobalConfig.MAP_PROCESS_CHUNK_BATCH then
             break
         end
 
@@ -201,7 +198,7 @@ function MapProcessor.rebuild_queue()
     end
 end
 
-function MapProcessor.rebuild_map(game)
+function MapProcessor.rebuild_map()
     MapProcessor.clean_queue()
     for i, surface in pairs(game.surfaces) do
         for chunk in surface.get_chunks() do

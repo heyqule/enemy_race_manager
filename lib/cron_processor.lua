@@ -4,12 +4,11 @@
 --- DateTime: 7/21/2021 5:34 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
 local Type = require('__stdlib__/stdlib/utils/type')
 local Queue = require('__stdlib__/stdlib/misc/queue')
 
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 
 local CronProcessor = {}
 
@@ -113,7 +112,7 @@ function CronProcessor.add_quick_queue(request, ...)
 
     if global.quick_cron_is_running == false then
         global.quick_cron_is_running = true
-        Event.on_nth_tick(ErmConfig.QUICK_CRON, CronProcessor.process_quick_queue)
+        Event.on_nth_tick(GlobalConfig.QUICK_CRON, CronProcessor.process_quick_queue)
     end
 end
 
@@ -158,7 +157,7 @@ function CronProcessor.process_quick_queue()
 
      if global.quick_cron_is_running == true and Queue.is_empty(global.quick_cron) then
          global.quick_cron_is_running = false
-         Event.remove(ErmConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
+         Event.remove(GlobalConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
      end
 end
 

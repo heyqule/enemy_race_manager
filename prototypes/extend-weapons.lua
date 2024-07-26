@@ -3,12 +3,11 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:23 PM
 ---
-local Table = require('__stdlib__/stdlib/utils/table')
 local WeaponHelper = require('prototypes.helper.weapon')
 
 -- Mandatory vanilla game changes --
 -- Add artillery-shell damage bonus to stronger explosive
-Table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
+table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         {
             type = "ammo-damage",
             ammo_category = "artillery-shell",

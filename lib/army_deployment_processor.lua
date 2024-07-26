@@ -5,9 +5,9 @@
 ---
 
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ArmyDeploymentProcessor = {}
 --- Internal unit spawn cooldown for each deployer (in tick)
@@ -33,7 +33,7 @@ end
 
 local stop_event = function()
     if global.army_deployer_event_running == true and can_stop_event() then
-        Event.remove(ErmConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
+        Event.remove(GlobalConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
         global.army_deployer_event_running = false
     end
 end
@@ -49,8 +49,8 @@ local add_statistic = function(entity, item_name, count)
     end
 end
 
-local spawn_unit = function(data_unit)
-    local entity = data_unit.entity
+local spawn_unit = function(deployer_data)
+    local entity = deployer_data.entity
     local surface = entity.surface
     local registered_units = global.army_registered_units
     if entity and entity.valid and
@@ -61,12 +61,16 @@ local spawn_unit = function(data_unit)
             local contents = inventory.get_contents()
             for unit_name, count in pairs(contents) do
                 if registered_units[unit_name] and count > 0 and
-                        ErmArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ErmArmyPopulationProcessor.max_pop(force) and
-                        ErmArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
+                        ArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ArmyPopulationProcessor.max_pop(force) and
+                        ArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
                 then
-                    local position = ErmArmyFunctions.get_position(unit_name, entity, entity.position)
-                    local spawned_entity = ErmArmyFunctions.spawn_unit(entity, unit_name, position)
-                    ErmArmyFunctions.assign_wander_command(spawned_entity)
+                    local position = ArmyFunctions.get_position(unit_name, entity, entity.position)
+                    local spawned_entity = ArmyFunctions.spawn_unit(entity, unit_name, position)
+                    if deployer_data.rally_point then
+                        ArmyFunctions.assign_goto_command(spawned_entity, deployer_data.rally_point)
+                    else
+                        ArmyFunctions.assign_wander_command(spawned_entity)
+                    end
                     if spawned_entity then
                         inventory.remove({ name = unit_name, count = 1 })
                         add_statistic(entity, unit_name, count)
@@ -95,6 +99,43 @@ local init_active_data = function(force)
     end
 end
 
+local remove_rallypoint_drawing = function(data)
+    if data.rally_draw_link and rendering.is_valid(data.rally_draw_link) then
+        rendering.destroy(data.rally_draw_link)
+        data.rally_draw_link = nil
+    end
+    if data.rally_draw_flag and rendering.is_valid(data.rally_draw_flag) then
+        rendering.destroy(data.rally_draw_flag)
+        data.rally_draw_flag = nil
+    end
+end
+
+local draw_link = function(rallypoint, deployer)
+    return rendering.draw_line({
+        color = {r=0,g=1,b=0,a=0.5},
+        from = deployer.position,
+        to = rallypoint.position,
+        width = 2,
+        gap_length = 3,
+        dash_length = 3,
+        surface = deployer.surface,
+        forces = {deployer.force},
+        only_in_alt_mode = true,
+        draw_on_ground = true
+    })
+end
+
+local draw_flag = function(rallypoint)
+    return rendering.draw_sprite({
+        sprite = 'utility/spawn_flag',
+        target = rallypoint.position,
+        surface = rallypoint.surface,
+        forces = {rallypoint.force},
+        only_in_alt_mode = true,
+        draw_on_ground = true
+    })
+end
+
 function ArmyDeploymentProcessor.init_globals()
     global.army_active_deployers = global.army_active_deployers or {}
     global.army_built_deployers = global.army_built_deployers or {}
@@ -114,7 +155,7 @@ function ArmyDeploymentProcessor.start_event(reload)
         if not reload then
             global.army_deployer_event_running = true
         end
-        Event.on_nth_tick(ErmConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
+        Event.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
     end
 end
 
@@ -134,8 +175,12 @@ function ArmyDeploymentProcessor.add_entity(entity)
     global.army_built_deployers[force.index][unit_number] = {
         entity = entity,
         build_only = false,
-        -- @Todo support rally points
-        rally_point = {}
+        -- hold position
+        rally_point = nil,
+        -- holds draw_line ID, remove when unset
+        rally_draw_link = nil,
+        -- holds draw_sprite ID, remove when unset
+        rally_draw_flag = nil
     }
 
     if start_with_auto_deploy then
@@ -143,6 +188,41 @@ function ArmyDeploymentProcessor.add_entity(entity)
     end
 
     ArmyDeploymentProcessor.start_event()
+end
+
+
+function ArmyDeploymentProcessor.add_rallypoint(rallypoint, deployer_number)
+    local force_id = rallypoint.force.index
+    local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
+    if deployer_data == nil or deployer_data.entity.valid == false then
+        ArmyDeploymentProcessor.remove_entity(force_id, deployer_number)
+        return nil
+    end
+
+    if deployer_data.rally_point then
+        remove_rallypoint_drawing(deployer_data)
+    end
+    local link_id = draw_link(rallypoint, deployer_data.entity)
+    local flag_id = draw_flag(rallypoint)
+    deployer_data.rally_point = rallypoint.position
+    deployer_data.rally_draw_link = link_id
+    deployer_data.rally_draw_flag = flag_id
+end
+
+function ArmyDeploymentProcessor.remove_rallypoint(force_id, deployer_number)
+    local deployer_data = ArmyDeploymentProcessor.get_deployer_data(force_id, deployer_number)
+    remove_rallypoint_drawing(deployer_data)
+    deployer_data.rally_point = nil
+end
+
+
+
+function ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
+    if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        return global.army_built_deployers[force_index][unit_number]
+    end
+
+    return nil
 end
 
 function ArmyDeploymentProcessor.add_to_active(entity)
@@ -165,6 +245,7 @@ end
 
 function ArmyDeploymentProcessor.remove_entity(force_index, unit_number)
     if global.army_built_deployers[force_index] and global.army_built_deployers[force_index][unit_number] then
+        remove_rallypoint_drawing(global.army_built_deployers[force_index][unit_number])
         global.army_built_deployers[force_index][unit_number] = nil
         ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
     end
@@ -194,7 +275,7 @@ function ArmyDeploymentProcessor.process_retry(force_index, unit_number)
 end
 
 local stop_event_check = 2 * defines.time.minute
-local stop_event_check_modular = stop_event_check - ErmConfig.AUTO_DEPLOY_CRON
+local stop_event_check_modular = stop_event_check - GlobalConfig.AUTO_DEPLOY_CRON
 
 function ArmyDeploymentProcessor.deploy()
     local current_tick = game.tick
@@ -202,7 +283,7 @@ function ArmyDeploymentProcessor.deploy()
         if force_data.total > 0 then
             local force = game.forces[force_index]
             if force and force.valid then
-                if ErmArmyPopulationProcessor.is_under_max_pop(force) then
+                if ArmyPopulationProcessor.is_under_max_pop(force) then
                     for unit_number, deployer_data in pairs(force_data['deployers']) do
                         if deployer_data.entity and deployer_data.entity.valid then
                             if current_tick > deployer_data.next_tick then

@@ -6,13 +6,13 @@
 ---
 --- Reward player when they beat boss within the time limit.
 ---
-local ErmRaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local ErmDebugHelper = require('__enemyracemanager__/lib/debug_helper')
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
+local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
 
 local BossRewardProcessor = {}
 
-local can_spawn = ErmRaceSettingsHelper.can_spawn
+local can_spawn = RaceSettingsHelper.can_spawn
 
 --- Intermediate products / weapon consumables
 --- No raw materials
@@ -144,7 +144,7 @@ function BossRewardProcessor.exec()
                 chest.minable = false
                 chest.rotatable = false
                 chest.operable = false
-                ErmDebugHelper.print('Spawning Chest with ' .. infinity_item_name)
+                DebugHelper.print('Spawning Chest with ' .. infinity_item_name)
                 table.insert(global.boss_rewards, reward_data(chest))
             end
         end
@@ -163,7 +163,7 @@ function BossRewardProcessor.clean_up()
                 reward.entity and
                 reward.entity.valid
         then
-            ErmDebugHelper.print('Destroy chest at ' .. reward.entity_position.x .. '/' .. reward.entity_position.y)
+            DebugHelper.print('Destroy chest at ' .. reward.entity_position.x .. '/' .. reward.entity_position.y)
             reward.entity.destroy();
             table.insert(removed_positions, position)
         end

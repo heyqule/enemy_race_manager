@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "1.21.12",
+  "version": "1.22.0",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -14,6 +14,7 @@
     "~zerm_postprocess >= 1.0.0",
     "!hardcorio",
     "!biter_factions",
+    "!erm_easier_terran",
     "?Krastorio2",
     "?IndustrialRevolution",
     "?IndustrialRevolution3",

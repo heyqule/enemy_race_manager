@@ -6,9 +6,9 @@
 local Event = require('__stdlib__/stdlib/event/event')
 require('__stdlib__/stdlib/utils/defines/time')
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
-local ErmArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
 local isFollowResearch = function(research)
     return string.find(research.name, 'follower-robot-count-', 1, true)
@@ -18,23 +18,23 @@ end
 Event.register(defines.events.on_research_finished, function(event)
     local research = event.research
     if isFollowResearch(research) then
-        ErmArmyPopulation.calculate_max_units(research.force)
-        ErmArmyControlUI.update_army_stats()
+        ArmyPopulation.calculate_max_units(research.force)
+        ArmyControlUI.update_army_stats()
     end
 end)
 
 Event.register(defines.events.on_research_reversed, function(event)
     local research = event.research
     if isFollowResearch(research) then
-        ErmArmyPopulation.calculate_max_units(research.force)
-        ErmArmyControlUI.update_army_stats()
+        ArmyPopulation.calculate_max_units(research.force)
+        ArmyControlUI.update_army_stats()
     end
 end)
 
 Event.register(defines.events.script_raised_destroy, function(event)
     local entity = event.entity
-    if entity and entity.valid and ErmArmyPopulation.is_army_unit(entity)then
-        ErmArmyPopulation.remove_unit_count(entity)
-        ErmArmyControlUI.update_army_stats()
+    if entity and entity.valid and ArmyPopulation.is_army_unit(entity)then
+        ArmyPopulation.remove_unit_count(entity)
+        ArmyControlUI.update_army_stats()
     end
 end)

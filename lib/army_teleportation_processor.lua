@@ -7,10 +7,10 @@
 --- It can teleport registered army units and base-game character
 local util = require('util')
 local Event = require('__stdlib__/stdlib/event/event')
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmCron = require('__enemyracemanager__/lib/cron_processor')
-local ErmArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ErmArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local Cron = require('__enemyracemanager__/lib/cron_processor')
+local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
 
 local ArmyTeleportationProcessor = {}
 
@@ -28,7 +28,7 @@ local unset_indicator = function(teleport)
 end
 
 local process_teleport_queue = function()
-    ErmCron.process_teleport_queue()
+    Cron.process_teleport_queue()
 end
 
 function ArmyTeleportationProcessor.start_event(reload)
@@ -37,7 +37,7 @@ function ArmyTeleportationProcessor.start_event(reload)
             ArmyTeleportationProcessor.scan_units()
             global.army_teleporter_event_running = true
         end
-        Event.on_nth_tick(ErmConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
+        Event.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
 end
 
@@ -54,7 +54,7 @@ end
 
 local stop_event = function()
     if global.army_teleporter_event_running == true then
-        Event.remove(ErmConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
+        Event.remove(GlobalConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
         global.army_teleporter_event_running = false
     end
 end
@@ -94,7 +94,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     global.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
         -- @Todo support rally points
-        rally_point = {}
+        rally_point = nil
     }
     global.army_teleporters_name_mapping[name] = {
         force_id = force.index,
@@ -259,13 +259,13 @@ function ArmyTeleportationProcessor.scan_units()
     if can_stop_event() then
         stop_event()
     else
-        ErmCron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
+        Cron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
     end
 end
 
 function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
     for _, unit in pairs(units) do
-        ErmCron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
+        Cron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
     end
 end
 
@@ -278,21 +278,19 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
     end
 
     if can_teleport(unit.force.index) and unit_close_to_entrance(unit, from_entity) then
-        local position = ErmArmyFunctions.get_position(unit.name, exit_entity, exit_entity.position)
+        local position = ArmyFunctions.get_position(unit.name, exit_entity, exit_entity.position)
 
         if position then
             if unit.surface == exit_entity.surface then
                 unit.teleport(position)
-                ErmArmyFunctions.assign_wander_command(unit)
+                ArmyFunctions.assign_wander_command(unit)
             else
-                local unit_health = unit.health
-                local spawned_entity = ErmArmyFunctions.spawn_unit(exit_entity, unit.name, position)
+                local spawned_entity = unit.clone({position=position,surface=exit_entity.surface})
                 if spawned_entity and spawned_entity.valid then
-                    ErmArmyPopulationProcessor.remove_unit_count(spawned_entity)
-                    spawned_entity.health = unit_health
+                    ArmyPopulationProcessor.remove_unit_count(spawned_entity)
                     --- @todo render Recall effect on entrance position
                     unit.destroy()
-                    ErmArmyFunctions.assign_wander_command(spawned_entity)
+                    ArmyFunctions.assign_wander_command(spawned_entity)
                 end
             end
         end

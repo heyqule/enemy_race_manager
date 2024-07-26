@@ -1,7 +1,7 @@
 require "prototypes.extend-collision"
 require "prototypes.extend-types"
 
-require "prototypes.extend-bitters"
+require "prototypes.extend-biters"
 require "prototypes.extend-spawners"
 
 require "prototypes.base-units.defender"
@@ -11,6 +11,7 @@ require "prototypes.base-units.construction"
 require "prototypes.base-units.logistic"
 
 require "prototypes.base-spawner.roboport"
+
 
 if settings.startup['enemyracemanager-enable-bitters'].value then
     -- This set of data is used for set up default autoplace calculation.
@@ -37,3 +38,4 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
 end
 
 require "prototypes.extend-mapping-beacons"
+require "prototypes.extend-rallypoint"

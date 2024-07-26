@@ -24,6 +24,7 @@ local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
 local BossGroupProcessor = require('__enemyracemanager__/lib/boss_group_processor')
 local BossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
 local BossRewardProcessor = require('__enemyracemanager__/lib/boss_reward_processor')
+local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 require('prototypes/compatibility/controls')
 
@@ -128,6 +129,12 @@ cron_switch = {
     ['ForceHelper.refresh_all_enemy_forces'] = function(args)
         ForceHelper.refresh_all_enemy_forces()
     end,
+    ['InterplanetaryAttacks.queue_scan'] = function(args)
+        InterplanetaryAttacks.queue_scan()
+    end,
+    ['InterplanetaryAttacks.scan'] = function(args)
+        InterplanetaryAttacks.scan(unpack(args))
+    end,
     --LevelProcessor
     ['LevelProcessor.calculate_multiple_levels'] = function(args)
         LevelProcessor.calculate_multiple_levels()
@@ -181,3 +188,5 @@ require('__enemyracemanager__/controllers/commands')
 require('__enemyracemanager__/controllers/compatibility/k2')
 
 require('__enemyracemanager__/controllers/compatibility/mining_drone')
+
+require('__enemyracemanager__/controllers/compatibility/space_exploration')

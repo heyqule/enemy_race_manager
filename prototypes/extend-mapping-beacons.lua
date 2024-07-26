@@ -111,7 +111,9 @@ if DEBUG_MODE then
     for _, data in pairs(data.raw['simple-entity-with-owner']) do
         if (data['subgroup'] == 'erm_ai_beacons') then
             data['render_layer'] = 'air-object'
-            --data['selection_box'] = { { -1, -1 }, { 1, 1 } }
+            if BEACON_SELECTABLE then
+                data['selection_box'] = { { -1, -1 }, { 1, 1 } }
+            end
             data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}
             data.map_color = {b=0,g=1,r=0,a=1}
             data.order = 'aaaaa'

@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 11/7/2022 10:25 PM
 ---
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local BASE_MAX_UNIT = 150
 
 local ArmyPopulationProcessor = {}
@@ -70,7 +70,7 @@ function ArmyPopulationProcessor.index()
         return
     end
 
-    local playerForces = ErmForceHelper.get_player_forces()
+    local playerForces = ForceHelper.get_player_forces()
     for _, force in pairs(playerForces) do
         init_force_data(game.forces[force], true)
     end
@@ -79,7 +79,7 @@ function ArmyPopulationProcessor.index()
         if surface.valid then
             local units = surface.find_entities_filtered({
                 type = "unit",
-                force = ErmForceHelper.get_player_forces()
+                force = ForceHelper.get_player_forces()
             })
             for _, unit in pairs(units) do
                 if army_registered_units[unit.name] then

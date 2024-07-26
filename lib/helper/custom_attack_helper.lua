@@ -12,8 +12,9 @@ local String = require('__stdlib__/stdlib/utils/string')
 local Math = require('__stdlib__/stdlib/utils/math')
 require("util")
 
-local ErmConfig = require('__enemyracemanager__/lib/global_config')
-local ErmForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -63,7 +64,7 @@ local get_race_settings = function(race_name, reload)
     end
 
     global.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
-    global.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * ErmConfig.LEVEL_PROCESS_INTERVAL + 1
+    global.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * GlobalConfig.LEVEL_PROCESS_INTERVAL + 1
     return global.custom_attack_race_settings[race_name]
 end
 
@@ -106,10 +107,11 @@ end
 local drop_unit = function(event, race_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
+    local source_entity = event.source_entity
     local race_settings = get_race_settings(race_name)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
 
     position.x = position.x + 2
 
@@ -131,12 +133,12 @@ local drop_unit = function(event, race_name, unit_name, count, position)
                     distraction = defines.distraction.by_anything
                 })
 
-                if event.source_entity and
-                        event.source_entity.type == 'unit' and
-                        event.source_entity.unit_group and
-                        event.source_entity.unit_group.force == entity.force
+                if source_entity and
+                        source_entity.type == 'unit' and
+                        source_entity.unit_group and
+                        source_entity.unit_group.force == entity.force
                 then
-                    event.source_entity.unit_group.add_member(entity)
+                    source_entity.unit_group.add_member(entity)
                 end
             end
             idx = idx + 1
@@ -175,13 +177,11 @@ end
 
 local CustomAttackHelper = {}
 
+CustomAttackHelper.can_spawn = UtilHelper.can_spawn
+
 function CustomAttackHelper.get_race_settings(race_name, force)
     local settings = get_race_settings(race_name, force)
     return settings
-end
-
-function CustomAttackHelper.can_spawn(chance_value)
-    return math.random(1, 100) > (100 - chance_value)
 end
 
 function CustomAttackHelper.valid(event, race_name)
@@ -237,7 +237,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
     local source_entity = event.source_entity
-    local force_name = ErmForceHelper.get_force_name_from(race_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
 
     local position = event.target_position or event.target_entity.position
     position.x = position.x + 2
@@ -321,16 +321,70 @@ local break_time_to_live = function(count, max_count, units_total)
     return count == max_count or units_total == 0
 end
 
+--- Try target trees and rocks when the parent unit is stuck on pathing and timed unit don't have targets.
+local try_kill_a_tree_or_rock = function(units)
+    local is_enemy_force = false
+    local next_idx, value
+    for i = 1, 5, 1 do
+        next_idx, value = next(units, next_idx)
+
+        local entity
+        if value and value.entity then
+            entity = value.entity
+        end
+
+        if entity and entity.valid then
+            if not is_enemy_force then
+                is_enemy_force = remote.call('enemyracemanager', 'is_enemy_force', entity.force)
+            end
+
+            local command = entity.command
+            if is_enemy_force and
+                    command and (command.type == nil or command.type == defines.command.wander)
+            then
+                local surface = entity.surface
+                local idx, target_entity
+
+                local entities = surface.find_entities_filtered({
+                    position = entity.position,
+                    radius = 32,
+                    name = {"rock-big","sand-rock-big","rock-huge"},
+                    limit = 1,
+                })
+
+                idx, target_entity = next(entities)
+
+                if not target_entity then
+                    local entities = surface.find_entities_filtered({
+                        position = entity.position,
+                        radius = 32,
+                        type = {"tree"},
+                        limit = 1,
+                    })
+
+                    idx, target_entity = next(entities)
+                end
+
+                if target_entity then
+                    entity.set_command({
+                        type = defines.command.attack,
+                        target = target_entity,
+                    })
+                end
+            end
+        end
+    end
+end
+
 ---
 --- Clean up time to live units
 ---
 function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overflow_batch)
-    regular_batch = regular_batch or ErmConfig.TIME_TO_LIVE_UNIT_BATCH
-    overflow_batch = overflow_batch or ErmConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
+    regular_batch = regular_batch or GlobalConfig.TIME_TO_LIVE_UNIT_BATCH
+    overflow_batch = overflow_batch or GlobalConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH
 
     local unit_total = global.time_to_live_units_total
     local units = global.time_to_live_units
-    local is_overflow = false
 
     if unit_total == nil or unit_total == 0 then
         return
@@ -338,9 +392,8 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
 
     local count = 0
     local max_count = regular_batch
-    if unit_total > ErmConfig.MAX_TIME_TO_LIVE_UNIT then
+    if unit_total > GlobalConfig.MAX_TIME_TO_LIVE_UNIT then
         max_count = overflow_batch
-        is_overflow = true
     end
     for idx, value in pairs(units) do
         local entity = value.entity
@@ -358,6 +411,8 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
             break
         end
     end
+
+    try_kill_a_tree_or_rock(units)
 
     global.time_to_live_units_total = unit_total
 end

@@ -10,12 +10,10 @@ local new_cron = {}
 for _, cron in pairs(global.quick_cron.objects) do
     local data = unpack(cron[2])
     if cron[1] ~= 'AttackGroupProcessor.generate_group' then
-        print(cron[1])
         table.insert(new_cron, cron)
     end
 
     if cron[1] == 'AttackGroupProcessor.generate_group' and data and data[9] and data[9] == true then
-        print(cron[1])
         table.insert(new_cron, cron)
     end
 end

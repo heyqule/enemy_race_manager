@@ -468,6 +468,7 @@ AttackGroupBeaconProcessor.AERIAL_BEACON = AERIAL_BEACON
 AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON = ATTACK_ENTITIES_BEACON
 AttackGroupBeaconProcessor.SPAWN_BEACON = SPAWN_BEACON
 AttackGroupBeaconProcessor.RESOURCE_BEACON = RESOURCE_BEACON
+AttackGroupBeaconProcessor.ATTACKABLE_ENTITY_TYPES = ATTACKABLE_ENTITY_TYPES
 
 AttackGroupBeaconProcessor.LAND_SCOUT = LAND_SCOUT
 AttackGroupBeaconProcessor.AERIAL_SCOUT = AERIAL_SCOUT
@@ -1022,13 +1023,19 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
                 is_valid_beacon(value.beacon)
         then
             if value.beacon.health > REMOVE_ATTACK_ENTITY_BEACON_COUNTS then
-                entity_data = value
                 control_data[ATTACK_ENTITIES_TARGET_FORCE] = target_force.name
                 control_data[ATTACK_ENTITIES_CURRENT_KEY] = key
                 control_data[ATTACK_ENTITIES_SELECTED_KEY] = key
+
+                --- update beacon health when picked.
+                local attackable_entities = count_attackable_entities(value.beacon, ATTACK_ENTITIES_SCAN_RADIUS)
+                value.beacon.health = attackable_entities
+
+                entity_data = value
+
                 break
             elseif value.beacon.health == REMOVE_ATTACK_ENTITY_BEACON_COUNTS and
-                    value.is_spawn ~= true
+                    value.is_spawn == false
             then
                 value.beacon.destructible = true
                 value.beacon.destroy()
@@ -1053,15 +1060,12 @@ end
 
 AttackGroupBeaconProcessor.pick_nearby_attack_location = function(surface, init_position)
     local entities = get_attackable_entity(surface, get_next_attack_area(init_position))
-    local position
 
     local next_index = next(entities)
     if next_index then
         local entity = entities[next_index]
-        position = { x = entity.position.x, y = entity.position.y }
+        return entity
     end
-
-    return position
 end
 
 AttackGroupBeaconProcessor.pick_resource_location = function(surface, init_position, direction, distance)

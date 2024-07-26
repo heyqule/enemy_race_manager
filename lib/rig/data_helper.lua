@@ -7,21 +7,19 @@
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/setting-constants')
 
-local String = require('__stdlib__/stdlib/utils/string')
-local Table = require('__stdlib__/stdlib/utils/table')
 local util = require("util")
 
-local ErmDataHelper = {}
+local DataHelper = {}
 
-ErmDataHelper.getFlyingCollisionMask = function()
+DataHelper.getFlyingCollisionMask = function()
     local air_collision_mask = util.table.deepcopy(data.raw['arrow']['collision-mask-flying-layer']['collision_mask'])
-    Table.insert(air_collision_mask, 'not-colliding-with-itself')
+    table.insert(air_collision_mask, 'not-colliding-with-itself')
     return air_collision_mask
 end
 
-ErmDataHelper.getFlyingLayerName = function()
+DataHelper.getFlyingLayerName = function()
     local air_collision_mask = util.table.deepcopy(data.raw['arrow']['collision-mask-flying-layer']['collision_mask'][1])
     return air_collision_mask
 end
 
-return ErmDataHelper
+return DataHelper
