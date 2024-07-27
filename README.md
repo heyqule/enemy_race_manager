@@ -19,7 +19,8 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Environmental attack groups for SE, when meteor falls, a small group may spawn.
 - Interplanetary Raids for SE, when a race has extincted on a planet.  They may launch attacks on another planet.
 - **WARNING: Above raid features should be turned off for existing Space Exploration save, unless your defenses are prepared for them.**
-- Army control UI improvements.
+- Army control UI improvements 
+- Rally point support on deployers.
 - Many changes and bugfixes
 - **Warning: "ERM - Terran Units for Players - but easier" marked as incompatible as it is causing crashes. Please use regular "ERM - Terran Units for Players" instead.**
 - If you are in mid-game with the above mod, please do not upgrade and stay on 1.21.

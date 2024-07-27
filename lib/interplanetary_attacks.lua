@@ -160,7 +160,7 @@ function InterplanetaryAttacks.scan(surface)
         })
 
         --- Scan planet for dropzone only if it's occupied
-        if intel.has_player_entities then
+        if intel and intel.has_player_entities then
             local max_planet_radius
             if intel.radius then
                 max_planet_radius = intel.radius
