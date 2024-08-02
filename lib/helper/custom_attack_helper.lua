@@ -282,6 +282,10 @@ end
 function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
     local boss_data = remote.call('enemyracemanager', 'get_boss_data')
+    if boss_data == nil then
+        return
+    end
+
     local surface = game.surfaces[event.surface_index]
     local nameToken = get_name_token(boss_data.entity_name)
     local level = tonumber(nameToken[3])

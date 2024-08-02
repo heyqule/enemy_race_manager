@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.2
+Date: 2024-08-02
+
+  Changes:
+    - Removed game profiler from spawn_location_scanner
+
+  Bugfixes:
+    - Fixed an crash that happened after the boss dies and the boss logic still tried to spawn a boss wave.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.22.1
 Date: 2024-07-27
 

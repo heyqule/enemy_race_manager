@@ -105,7 +105,6 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
     if not surface then
         return
     end
-    local spawn_profiler = game.create_profiler()
     max_planet_radius = max_planet_radius or nil
     local surface_index = surface.index
 
@@ -189,9 +188,6 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
 
     --- Change direction
     tracker_data.direction = (current_direction + 1) % 8
-
-    spawn_profiler.stop()
-    log({ '', 'SpawnLocationScanner.scan: '..surface.name..' ', spawn_profiler })
 end
 
 function SpawnLocationScanner.is_valid_position(surface, tile_position)
