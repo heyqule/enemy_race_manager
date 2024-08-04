@@ -179,11 +179,15 @@ local init_globals = function()
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     global.settings = global.settings or {}
 
+    -- Use for decorative removal when building dies
+    global.decorative_cache = global.decorative_cache or {}
+
     global.installed_races = {}
     global.active_races = {}
     global.active_races_names = {}
     global.active_races_num = 1
     global.is_multi_planets_game = false
+
     --- SE or DLC
     if script.active_mods['space-exploration'] then
         global.is_multi_planets_game = true

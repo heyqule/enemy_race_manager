@@ -152,7 +152,36 @@ local script_functions = {
         end
         
         EnvironmentalAttacks.exec(surface, target_position, force_spawn, force_spawn_home)
-    end
+    end,
+
+    [CREEP_REMOVAL] = function(event)
+        local spawner = event.source_entity
+        if spawner and spawner.valid then
+            local prototype = spawner.prototype
+            local prototype_name = prototype.name
+            local prototype_decos = prototype.spawn_decoration
+            local names
+            if global.decorative_cache[prototype_name] then
+                names = global.decorative_cache[prototype_name]
+            elseif prototype_decos then
+                names = {}
+                for i = 1, table_size(prototype_decos), 1 do
+                    table.insert(names, prototype_decos[i].decorative)
+                end
+                global.decorative_cache[prototype_name] = names
+            end
+
+            if names then
+                spawner.surface.destroy_decoratives({
+                    name = names,
+                    area = {
+                        left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
+                        right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
+                    }
+                })
+            end
+        end
+    end,
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
     if script_functions[event.effect_id] then

@@ -40,6 +40,8 @@ require('prototypes/map-generation.lua')
 
 require('prototypes/extend-scout-units')
 
+require('prototypes/extend-creep-removal')
+
 if TEST_MODE then
     require('prototypes/test-prototypes')
 end
