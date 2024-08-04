@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.3
+Date: 2024-08-04
+
+  Changes:
+    - Remove spawner decorative when enemy spawners destroyed.
+    - updated locale
+
+  Bugfixes:
+    - Fixed a load crash with cold biter under linux.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.22.2
 Date: 2024-08-02
 
