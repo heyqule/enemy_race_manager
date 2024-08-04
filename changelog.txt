@@ -1,9 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.0
-Date: 2024-??-??
+Version: 1.22.3
+Date: 2024-08-04
 
   Changes:
-    - Remove spawn decorative when enemy spawners destroyed.
+    - Remove spawner decorative when enemy spawners destroyed.
+    - updated locale
+
+  Bugfixes:
+    - Fixed a load crash with cold biter under linux.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.2
