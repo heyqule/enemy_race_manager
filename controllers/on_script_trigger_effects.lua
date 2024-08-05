@@ -41,6 +41,35 @@ local is_valid_attack_for_counter_attack = function(event)
     return Config.super_weapon_counter_attack_enable() and game.surfaces[event.surface_index].valid
 end
 
+local remove_creep = function(entity)
+    local spawner = entity
+    if spawner and spawner.valid then
+        local spawner_name = spawner.name
+        local names
+        if global.decorative_cache[spawner_name] then
+            names = global.decorative_cache[spawner_name]
+        else
+            local prototype = spawner.prototype
+            local prototype_decos = prototype.spawn_decoration
+            names = {}
+            for i = 1, table_size(prototype_decos), 1 do
+                table.insert(names, prototype_decos[i].decorative)
+            end
+            global.decorative_cache[spawner_name] = names
+        end
+
+        if names then
+            spawner.surface.destroy_decoratives({
+                name = names,
+                area = {
+                    left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
+                    right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
+                }
+            })
+        end
+    end
+end
+
 local script_functions = {
 
     --- Biter attacks
@@ -155,32 +184,7 @@ local script_functions = {
     end,
 
     [CREEP_REMOVAL] = function(event)
-        local spawner = event.source_entity
-        if spawner and spawner.valid then
-            local prototype = spawner.prototype
-            local prototype_name = prototype.name
-            local prototype_decos = prototype.spawn_decoration
-            local names
-            if global.decorative_cache[prototype_name] then
-                names = global.decorative_cache[prototype_name]
-            elseif prototype_decos then
-                names = {}
-                for i = 1, table_size(prototype_decos), 1 do
-                    table.insert(names, prototype_decos[i].decorative)
-                end
-                global.decorative_cache[prototype_name] = names
-            end
-
-            if names then
-                spawner.surface.destroy_decoratives({
-                    name = names,
-                    area = {
-                        left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
-                        right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
-                    }
-                })
-            end
-        end
+        remove_creep(event.source_entity)
     end,
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
