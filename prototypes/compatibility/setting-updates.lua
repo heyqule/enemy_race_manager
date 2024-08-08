@@ -12,11 +12,10 @@ end
 
 if mods['ArmouredBiters'] then
     require "ArmouredBiters/settings"
-
 end
 
 if mods['Cold_biters'] then
-    require "Cold_biters/settings"
+    require "Cold_Biters/settings"
 end
 
 if mods['Explosive_biters'] then
