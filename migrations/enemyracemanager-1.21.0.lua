@@ -14,7 +14,11 @@ global.attack_group_valid_targets = nil
 
 -- Clear up invalid groups
 for id, content in pairs(global.erm_unit_groups) do
-    if content.group_number or content.group == nil or content.group.valid == false then
+    if (type(content) == 'table' and content.valid == false) or
+        content.group_number or
+        content.group == nil or
+        content.group.valid == false
+    then
         global.erm_unit_groups[id] = nil
     else
         global.erm_unit_groups[id].nearby_retry = 0

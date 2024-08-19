@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.5
+Date: 2024-08-19
+
+  Changes:
+    - Updated Hungarian Locale (by CsokiHUN).
+
+  Bugfixes:
+    - Fix a crash on 1.21.0 Migration script under certain conditions.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.22.4
 Date: 2024-08-08
 

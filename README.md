@@ -278,6 +278,7 @@ Otherwise, your map won't have any enemies on generated chucks as the ERM enemie
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
 - RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D
+- HU: CsokiHUN
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race
 Manager":
