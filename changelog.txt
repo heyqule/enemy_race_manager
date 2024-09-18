@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.22.6
+Date: 2024-09-18
+
+  Bugfixes:
+    - Fixed a crash when spawn position is not found in one of spawning logic.
+    - Fixed a startup crash when disable biter without other ERM race mod installed.
+    - * Not recommend to disable biter without having other ERM races. It may raise other unforeseen issues.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.22.5
 Date: 2024-08-19
 
@@ -6,7 +15,7 @@ Date: 2024-08-19
     - Updated Hungarian Locale (by CsokiHUN).
 
   Bugfixes:
-    - Fix a crash on 1.21.0 Migration script under certain conditions.
+    - Fixed a crash on 1.21.0 Migration script under certain conditions.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.4

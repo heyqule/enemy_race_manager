@@ -158,12 +158,15 @@ local add_an_unit_to_group = function(surface, group, force, race_name, unit_nam
 
     local position = surface.find_non_colliding_position(unit_full_name, group.position,
             AttackGroupProcessor.GROUP_AREA, 2)
+    local entity
 
-    local entity = surface.create_entity({
-        name = unit_full_name,
-        position = position,
-        force = force
-    })
+    if position then
+        entity = surface.create_entity({
+            name = unit_full_name,
+            position = position,
+            force = force
+        })
+    end
 
     if entity then
         group.add_member(entity)
@@ -786,6 +789,10 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     local spawn_location = surface.find_non_colliding_position(
             scout_name, spawn_beacon.position,
             AttackGroupProcessor.GROUP_AREA, 1)
+
+    if not spawn_location then
+        return nil
+    end
 
     local scout = surface.create_entity({
         name = scout_name,
