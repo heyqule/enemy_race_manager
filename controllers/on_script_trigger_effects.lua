@@ -46,8 +46,8 @@ local remove_creep = function(entity)
     if spawner and spawner.valid then
         local spawner_name = spawner.name
         local names
-        if global.decorative_cache[spawner_name] then
-            names = global.decorative_cache[spawner_name]
+        if storage.decorative_cache[spawner_name] then
+            names = storage.decorative_cache[spawner_name]
         else
             local prototype = spawner.prototype
             local prototype_decos = prototype.spawn_decoration
@@ -55,7 +55,7 @@ local remove_creep = function(entity)
             for i = 1, table_size(prototype_decos), 1 do
                 table.insert(names, prototype_decos[i].decorative)
             end
-            global.decorative_cache[spawner_name] = names
+            storage.decorative_cache[spawner_name] = names
         end
 
         if names then
@@ -108,7 +108,7 @@ local script_functions = {
 
     --- Boss related
     [TRIGGER_BOSS_DIES] = function(args)
-        global.boss.victory = true
+        storage.boss.victory = true
     end,
 
     --- Attack group beacons
@@ -167,15 +167,15 @@ local script_functions = {
         local force_spawn, force_spawn_home
         if TEST_MODE then
             force_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
-            if global.override_environmental_attack_can_spawn == 1 then
+            if storage.override_environmental_attack_can_spawn == 1 then
                 force_spawn = true
-            elseif global.override_environmental_attack_can_spawn == -1 then
+            elseif storage.override_environmental_attack_can_spawn == -1 then
                 force_spawn = false
             end
 
-            if global.override_environmental_attack_spawn_home == 1 then
+            if storage.override_environmental_attack_spawn_home == 1 then
                 force_spawn_home = true
-            elseif global.override_environmental_attack_spawn_home == -1 then
+            elseif storage.override_environmental_attack_spawn_home == -1 then
                 force_spawn_home = false
             end
         end

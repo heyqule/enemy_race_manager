@@ -18,29 +18,29 @@ end)
 
 
     it("calculate_levels and calculateMutlipleLevels", function()
-        global.race_settings['erm_vanilla'].evolution_base_point = 2
+        storage.race_settings['erm_vanilla'].evolution_base_point = 2
         LevelManager.calculate_levels()
-        assert(global.race_settings['erm_vanilla'].level == 2, 'Level == 2')
+        assert(storage.race_settings['erm_vanilla'].level == 2, 'Level == 2')
 
-        global.race_settings['erm_vanilla'].evolution_base_point = 10
+        storage.race_settings['erm_vanilla'].evolution_base_point = 10
         LevelManager.calculate_levels()
-        assert(global.race_settings['erm_vanilla'].level == 3, 'Level == 3')
+        assert(storage.race_settings['erm_vanilla'].level == 3, 'Level == 3')
 
-        global.race_settings['erm_vanilla'].evolution_base_point = 50
+        storage.race_settings['erm_vanilla'].evolution_base_point = 50
         LevelManager.calculate_multiple_levels()
-        assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
+        assert(storage.race_settings['erm_vanilla'].level == 10, 'Level == 10')
     end)
 
     it("Test enemy level update", function()
         local surface = game.surfaces[1]
         local enemy_force = game.forces['enemy']
-        local overlord = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', force = enemy_force, position = { 10, 10 } })
-        global.race_settings['erm_vanilla'].evolution_base_point = 50
+        local overlord = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', force = enemy_force, position = { 10, 10 } })
+        storage.race_settings['erm_vanilla'].evolution_base_point = 50
         LevelManager.calculate_multiple_levels()
 
         after_ticks(2, function()
-            assert(global.race_settings['erm_vanilla'].level == 10, 'Level == 10')
-            assert( table_size(global.mapproc_chunk_queue) > 0, 'Has map queue')
+            assert(storage.race_settings['erm_vanilla'].level == 10, 'Level == 10')
+            assert( table_size(storage.mapproc_chunk_queue) > 0, 'Has map queue')
         end)
 
         after_ticks(1800, function()
@@ -48,17 +48,17 @@ end)
                 type='unit-spawner',
                 force='enemy'
             })
-            assert.equal('erm_vanilla/biter-spawner/10',entities[1].name, 'Correct updated unit spawner')
+            assert.equal('erm_vanilla--biter-spawner--10',entities[1].name, 'Correct updated unit spawner')
         end)
     end)
 
     it("Tiers switch", function()
         local force = game.forces['enemy']
-        force.evolution_factor = 0.41
+        force.set_evolution_factor(0.41)
         LevelManager.calculate_levels()
-        assert(global.race_settings['erm_vanilla'].tier == 2, 'Tier == 2')
+        assert(storage.race_settings['erm_vanilla'].tier == 2, 'Tier == 2')
 
-        force.evolution_factor = 0.81
+        force.set_evolution_factor(0.81)
         LevelManager.calculate_levels()
-        assert(global.race_settings['erm_vanilla'].tier == 3, 'Tier == 3')
+        assert(storage.race_settings['erm_vanilla'].tier == 3, 'Tier == 3')
     end)

@@ -7,7 +7,7 @@
 -- require('__enemyracemanager__/lib/rig/unit_helper')
 --
 local ERM_UnitHelper = {}
-local Math = require('__stdlib__/stdlib/utils/math')
+
 require('__stdlib__/stdlib/utils/defines/time')
 local String = require('__stdlib__/stdlib/utils/string')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
@@ -27,7 +27,7 @@ end
 
 local get_strength_percentage = function(level, multiplier, not_overflow)
     if not_overflow then
-        return Math.min(100, level * multiplier) / 100
+        return math.min(100, level * multiplier) / 100
     end
     return level * multiplier / 100
 end
@@ -50,7 +50,7 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
         extra_health = level * 50 - level * 50 * (level * 5 / 100)
     end
 
-    return Math.floor(base_health + (incremental_health * internal_multiplier) + extra_health)
+    return math.floor(base_health + (incremental_health * internal_multiplier) + extra_health)
 end
 
 -- Unit Health
@@ -58,7 +58,7 @@ function ERM_UnitHelper.get_building_health(base_health, incremental_health, lev
     if level == 1 then
         return base_health
     end
-    return Math.floor(base_health + (incremental_health * get_strength_percentage(level, get_strength_multiplier())))
+    return math.floor(base_health + (incremental_health * get_strength_percentage(level, get_strength_multiplier())))
 end
 
 
@@ -68,7 +68,7 @@ function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, 
     if level == 1 then
         return base_resistance
     end
-    return Math.min(Math.floor(base_resistance + (incremental_resistance * (level * get_strength_multiplier() * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
+    return math.min(math.floor(base_resistance + (incremental_resistance * (level * get_strength_multiplier() * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
 -- Attack Damage
@@ -91,7 +91,7 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return Math.max(base_speed - (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)), max_attack_speed)
+    return math.max(base_speed - (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)), max_attack_speed)
 end
 
 -- Movement Speed, reach max at level 5
@@ -175,8 +175,28 @@ function ERM_UnitHelper.format_team_color(color, tint_strength)
 end
 
 function ERM_UnitHelper.is_erm_unit(dataItem)
-    local nameToken = String.split(dataItem.name, '/')
+    local nameToken = String.split(dataItem.name, '--')
     return (data.erm_registered_race and data.erm_registered_race[nameToken[1]]) or false
+end
+
+function ERM_UnitHelper.make_unit_melee_ammo_type(damage_value)
+    return
+    {
+        target_type = "entity",
+        action =
+        {
+            type = "direct",
+            action_delivery =
+            {
+                type = "instant",
+                target_effects =
+                {
+                    type = "damage",
+                    damage = { amount = damage_value , type = "physical"}
+                }
+            }
+        }
+    }
 end
 
 return ERM_UnitHelper

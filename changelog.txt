@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+Date: ????-??-??
+
+  Features
+    - Updated to Factorio 2.0
+    - Replaced Level system with Quality System.
+    - [Quality System]
+
+  Changes:
+    - Adapted 16 directions.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.22.6
 Date: 2024-09-18
 

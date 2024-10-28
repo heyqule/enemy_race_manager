@@ -63,53 +63,28 @@ robot_animations.defender = {
                 filename = "__base__/graphics/entity/defender-robot/defender-robot.png",
                 priority = "high",
                 line_length = 16,
-                width = 32,
-                height = 33,
+                width = 56,
+                height = 59,
                 frame_count = 1,
                 animation_speed = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, 0.25),
-                y = 33,
-                hr_version = {
-                    filename = "__base__/graphics/entity/defender-robot/hr-defender-robot.png",
-                    priority = "high",
-                    line_length = 16,
-                    width = 56,
-                    height = 59,
-                    frame_count = 1,
-                    animation_speed = 1,
-                    direction_count = 16,
-                    shift = util.by_pixel(0, 0.25),
-                    y = 59,
-                    scale = 0.5
-                }
+                y = 59,
+                scale = 0.5
             },
             {
                 filename = "__base__/graphics/entity/defender-robot/defender-robot-mask.png",
                 priority = "high",
                 line_length = 16,
-                width = 18,
-                height = 16,
+                width = 28,
+                height = 21,
                 frame_count = 1,
                 animation_speed = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, -4.75),
                 tint = { r = 0.5, g = 0, b = 1, a = 1 },
-                y = 16,
-                hr_version = {
-                    filename = "__base__/graphics/entity/defender-robot/hr-defender-robot-mask.png",
-                    priority = "high",
-                    line_length = 16,
-                    width = 28,
-                    height = 21,
-                    frame_count = 1,
-                    animation_speed = 1,
-                    direction_count = 16,
-                    shift = util.by_pixel(0, -4.75),
-                    tint = { r = 0.5, g = 0, b = 1, a = 1 },
-                    y = 21,
-                    scale = 0.5
-                }
+                y = 21,
+                scale = 0.5
             }
         }
     },
@@ -117,26 +92,14 @@ robot_animations.defender = {
         filename = "__base__/graphics/entity/defender-robot/defender-robot-shadow.png",
         priority = "high",
         line_length = 16,
-        width = 45,
-        height = 26,
+        width = 88,
+        height = 50,
         frame_count = 1,
         animation_speed = 1,
         direction_count = 16,
         shift = util.by_pixel(25.5, 19),
-        draw_as_shadow = true,
-        hr_version = {
-            filename = "__base__/graphics/entity/defender-robot/hr-defender-robot-shadow.png",
-            priority = "high",
-            line_length = 16,
-            width = 88,
-            height = 50,
-            frame_count = 1,
-            animation_speed = 1,
-            direction_count = 16,
-            shift = util.by_pixel(25.5, 19),
-            scale = 0.5,
-            draw_as_shadow = true
-        }
+        scale = 0.5,
+        draw_as_shadow = true
     }
 }
 
@@ -146,8 +109,8 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     local original_health = robot['max_health'] * 3
 
     robot['type'] = 'unit'
-    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
-    robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. robot['name'], tostring(level) }
+    robot['name'] = MOD_NAME .. '--' .. robot['name'] .. '--' .. level
     robot["subgroup"] = "erm-flying-enemies"
     robot['has_belt_immunity'] = true
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
@@ -177,7 +140,9 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot['distance_per_frame'] = 0.17
     robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
     robot['vision_distance'] = vision_distance
-    robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    robot['absorptions_to_join_attack'] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    }
     robot['distraction_cooldown'] = distraction_cooldown
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box

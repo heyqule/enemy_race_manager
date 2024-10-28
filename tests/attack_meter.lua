@@ -9,9 +9,9 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local TestShared = require('shared')
 
 
-local biter_name = 'erm_vanilla/medium-biter/1' -- 1 points
-local turret_name = 'erm_vanilla/medium-worm-turret/1' -- 10 points
-local spawner_name = 'erm_vanilla/biter-spawner/1' -- 50 points
+local biter_name = 'erm_vanilla--medium-biter--1' -- 1 points
+local turret_name = 'erm_vanilla--medium-worm-turret--1' -- 10 points
+local spawner_name = 'erm_vanilla--biter-spawner--1' -- 50 points
 local force_name = 'enemy'
 local race_name = 'erm_vanilla'
 
@@ -41,8 +41,8 @@ it("Calculate attack points", function()
     end
 
     after_ticks(4200, function()
-        assert(1220 <= global.race_settings[race_name].attack_meter ,'Round: Attack Meter Number')
-        assert(1220 <= global.race_settings[race_name].attack_meter_total, 'Round: Accumulated Attack Meter Number')
+        assert(1220 <= storage.race_settings[race_name].attack_meter ,'Round: Attack Meter Number')
+        assert(1220 <= storage.race_settings[race_name].attack_meter_total, 'Round: Accumulated Attack Meter Number')
 
         for i = 1, 70, 1 do
             surface.create_entity({name=biter_name,position={0,i * 10}}) -- 20
@@ -61,15 +61,15 @@ it("Calculate attack points", function()
 
     --- When attack group generated
     after_ticks(22000, function()
-        assert(global.race_settings[race_name].attack_meter <= 5490,'Round2: Attack Meter Number')
-        assert(5490 <= global.race_settings[race_name].attack_meter_total,'Round2: Accumulated Attack Meter Number')
+        assert(storage.race_settings[race_name].attack_meter <= 5490,'Round2: Attack Meter Number')
+        assert(5490 <= storage.race_settings[race_name].attack_meter_total,'Round2: Accumulated Attack Meter Number')
         done()
     end)
 end)
 
 it("Base evolution - kills-deduction true", function()
     async(7200)
-    global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
+    storage.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
     local surface = game.surfaces[1]
     AttackGroupBeaconProcessor.init_index()
 
@@ -83,25 +83,25 @@ it("Base evolution - kills-deduction true", function()
     end
 
     after_ticks(4000, function()
-        assert(global.race_settings[race_name].evolution_base_point < 0,'spawner-kills-deduction true')
-        global.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = false
+        assert(storage.race_settings[race_name].evolution_base_point < 0,'spawner-kills-deduction true')
+        storage.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = false
         done()
     end)
 end)
 
 it("Time base attack", function()
     async(10800)
-    global.race_settings[race_name].level = 3
+    storage.race_settings[race_name].level = 3
     AttackGroupBeaconProcessor.init_index()
     local last_minute = 0
 
     after_ticks(4000, function()
-        assert(global.race_settings[race_name].attack_meter > 0,'time base attack - 1st minute')
-        last_minute = global.race_settings[race_name].attack_meter
+        assert(storage.race_settings[race_name].attack_meter > 0,'time base attack - 1st minute')
+        last_minute = storage.race_settings[race_name].attack_meter
     end)
 
     after_ticks(7600, function()
-        assert(global.race_settings[race_name].attack_meter > last_minute,'time base attack - 2st minute')
+        assert(storage.race_settings[race_name].attack_meter > last_minute,'time base attack - 2st minute')
         done()
     end)
 end)
@@ -111,11 +111,11 @@ it("Time base attack - level req not met", function()
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(4000, function()
-        assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 1st minute')
+        assert(storage.race_settings[race_name].attack_meter == 0,'time base attack - 1st minute')
     end)
 
     after_ticks(7600, function()
-        assert(global.race_settings[race_name].attack_meter == 0,'time base attack - 2st minute')
+        assert(storage.race_settings[race_name].attack_meter == 0,'time base attack - 2st minute')
         done()
     end)
 end)

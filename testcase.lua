@@ -32,7 +32,7 @@ if TEST_MODE and script.active_mods["factorio-test"] then
     if script.active_mods['erm_terran'] then
         table.insert(tests,"tests/army")
     else
-        error('Required erm_terran to test army functions')
+        --error('Required erm_terran to test army functions')
     end
 
      require("__factorio-test__/init")(tests)

@@ -27,7 +27,7 @@ data:extend(
                     },
                 },
                 ingredients = {
-                    { type = "item", name = "empty-barrel", amount = 10 }
+                    { type = "item", name = "barrel", amount = 10 }
                 },
                 results = {
                     { type = "item", name = "steel-plate", amount = 8 }

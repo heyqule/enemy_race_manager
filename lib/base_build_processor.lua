@@ -86,11 +86,13 @@ function BaseBuildProcessor.determine_build_group(entity)
         type = 'unit',
     }
     for _, unit in pairs(near_by_units) do
-        if unit.unit_group and
-                unit.unit_group.command and
-                unit.unit_group.command.type == defines.command.build_base
+        if  unit.commandable and
+            unit.commandable.is_entity and
+            unit.commandable.parent_group and
+            unit.commandable.parent_group.command and
+            unit.commandable.parent_group.command.type == defines.command.build_base
         then
-            return unit.unit_group
+            return unit.commandable.parent_group
         end
     end
     return nil
@@ -149,7 +151,7 @@ end
 function BaseBuildProcessor.getBuildingName(race_name, type)
     local func = building_switch[type]
 
-    return race_name .. '/' .. func(race_name) .. '/' .. RaceSettingsHelper.get_level(race_name)
+    return race_name .. '--' .. func(race_name) .. '--' .. RaceSettingsHelper.get_level(race_name)
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)

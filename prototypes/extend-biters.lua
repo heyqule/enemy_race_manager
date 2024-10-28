@@ -36,8 +36,8 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = util.table.deepcopy(data.raw['unit'][type])
     local original_health = biter['max_health']
 
-    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }
-    biter['name'] = MOD_NAME .. '/' .. biter['name'] .. '/' .. level
+    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. biter['name'], tostring(level) }
+    biter['name'] = MOD_NAME .. '--' .. biter['name'] .. '--' .. level
     biter['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
     biter['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -50,7 +50,9 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
     biter['healing_per_tick'] = 0
-    biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
+    biter['absorptions_to_join_attack'] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(biter['absorptions_to_join_attack']['pollution'], level)
+    }
     if string.find(type, 'spitter') then
         biter['attack_parameters']['damage_modifier'] = 0.33 * biter['attack_parameters']['damage_modifier']
         local attack_range = ERM_UnitHelper.get_attack_range(level)

@@ -18,7 +18,7 @@ local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_a
 local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
 
 Event.on_nth_tick(GlobalConfig.CHUNK_QUEUE_PROCESS_INTERVAL, function(event)
-    MapProcessor.process_chunks(game.surfaces, global.race_settings)
+    MapProcessor.process_chunks(game.surfaces, storage.race_settings)
 end)
 
 Event.register(defines.events.on_chunk_generated, function(event)

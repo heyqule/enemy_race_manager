@@ -38,19 +38,19 @@ describe("Army Count", function()
 
         for i = 1, 10, 1 do
             surface.create_entity({
-                name='erm_terran/marine/mk1',
+                name='erm_terran--marine--mk1',
                 position={0,0},
                 force=force,
             })
 
             surface.create_entity({
-                name='erm_terran/battlecruiser/laser',
+                name='erm_terran--battlecruiser--laser',
                 position={0,0},
                 force=force,
             })
 
             surface.create_entity({
-                name='erm_terran/vulture',
+                name='erm_terran--vulture',
                 position={0,0},
                 force=force,
             })
@@ -61,7 +61,7 @@ describe("Army Count", function()
         assert(ArmyPop.unit_count(force) == 30, 'Unit Count correct')
 
         local vultures = surface.find_entities_filtered({
-            name='erm_terran/vulture'
+            name='erm_terran--vulture'
         })
 
         for _, vulture in pairs(vultures) do
@@ -73,7 +73,7 @@ describe("Army Count", function()
 
 
         local marines = surface.find_entities_filtered({
-            name='erm_terran/marine/mk1'
+            name='erm_terran--marine--mk1'
         })
 
         for _, marine in pairs(marines) do
@@ -85,7 +85,7 @@ describe("Army Count", function()
 
         for i = 1, 40, 1 do
             surface.create_entity({
-                name='erm_terran/battlecruiser/laser',
+                name='erm_terran--battlecruiser--laser',
                 position={0,0},
                 force=force
             })
@@ -101,7 +101,7 @@ describe("Army Deployment", function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local unit_name = "erm_terran/marine/mk1"
+        local unit_name = "erm_terran--marine--mk1"
 
         local powerinterface = surface.create_entity({
             force=force,
@@ -117,7 +117,7 @@ describe("Army Deployment", function()
         })
         local entity = surface.create_entity({
             force=force,
-            name='erm_terran/barrack',
+            name='erm_terran--barrack',
             position={0,0},
             raise_built = true
         })
@@ -125,7 +125,7 @@ describe("Army Deployment", function()
         entity.set_recipe(unit_name)
         output_inventory.insert({name=unit_name, count=20})
 
-        local deployer = global.army_built_deployers[force.index][tonumber(entity.unit_number)]
+        local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
         assert.not_nil(deployer,'Deploy Registered')
         if deployer and deployer.entity.valid then
             ArmyDeployment.add_to_active(deployer.entity)
@@ -157,7 +157,7 @@ describe("Army Deployment", function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local unit_name = "erm_terran/marine/mk1"
+        local unit_name = "erm_terran--marine--mk1"
 
         local powerinterface = surface.create_entity({
             force=force,
@@ -173,7 +173,7 @@ describe("Army Deployment", function()
         })
         local entity = surface.create_entity({
             force=force,
-            name='erm_terran/barrack',
+            name='erm_terran--barrack',
             position={0,0},
             raise_built = true
         })
@@ -188,7 +188,7 @@ describe("Army Deployment", function()
         entity.set_recipe(unit_name)
         output_inventory.insert({name=unit_name, count=20})
 
-        local deployer = global.army_built_deployers[force.index][tonumber(entity.unit_number)]
+        local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
         assert.not_nil(deployer,'Deploy Registered')
         if deployer and deployer.entity.valid then
             ArmyDeployment.add_rallypoint(rally_point, deployer.entity.unit_number)
@@ -218,8 +218,8 @@ describe("Army Teleport", function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local building = "erm_terran/command-center"
-        local unit_name = "erm_terran/marine/mk1"
+        local building = "erm_terran--command-center"
+        local unit_name = "erm_terran--marine--mk1"
 
         local powerinterface1 = surface.create_entity({
             force=force,
@@ -303,8 +303,8 @@ describe("Army Teleport", function()
         local surface2 = game.create_surface('test_surface_2')
 
         local force = game.forces['player']
-        local building = "erm_terran/command-center"
-        local unit_name = "erm_terran/marine/mk1"
+        local building = "erm_terran--command-center"
+        local unit_name = "erm_terran--marine--mk1"
 
         local powerinterface1 = surface.create_entity({
             force=force,

@@ -129,7 +129,7 @@ local get_item_name = function()
 end
 
 function BossRewardProcessor.exec()
-    local boss = global.boss
+    local boss = storage.boss
     for _, value in pairs(reward_settings) do
         if (can_spawn(value['chance'][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
@@ -145,14 +145,14 @@ function BossRewardProcessor.exec()
                 chest.rotatable = false
                 chest.operable = false
                 DebugHelper.print('Spawning Chest with ' .. infinity_item_name)
-                table.insert(global.boss_rewards, reward_data(chest))
+                table.insert(storage.boss_rewards, reward_data(chest))
             end
         end
     end
 end
 
 function BossRewardProcessor.clean_up()
-    local rewards = global.boss_rewards
+    local rewards = storage.boss_rewards
     if rewards == nil or #rewards == 0 then
         return
     end
@@ -170,7 +170,7 @@ function BossRewardProcessor.clean_up()
     end
 
     for _, position in pairs(removed_positions) do
-        table.remove(global.boss_rewards, position)
+        table.remove(storage.boss_rewards, position)
     end
 end
 

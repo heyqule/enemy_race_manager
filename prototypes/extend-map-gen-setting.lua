@@ -23,9 +23,6 @@ map_gen_settings['default']['erm-rts-world'] = {
         enemy_expansion = {
             min_expansion_cooldown = 5 * 3600,
             max_expansion_cooldown = 20 * 3600
-        },
-        difficulty_settings = {
-            research_queue_setting = 'always'
         }
     }
 }
@@ -57,9 +54,6 @@ map_gen_settings['default']['erm-rts-death-world'] = {
         pollution = {
             ageing = 0.5,
             enemy_attack_pollution_consumption_modifier = 0.5
-        },
-        difficulty_settings = {
-            research_queue_setting = 'always'
         }
     }
 }
@@ -86,9 +80,6 @@ if DEBUG_MODE then
             pollution = {
                 ageing = 0.5,
                 enemy_attack_pollution_consumption_modifier = 0.5
-            },
-            difficulty_settings = {
-                research_queue_setting = 'always'
             }
         }
     }

@@ -135,7 +135,7 @@ local prepare_world = function()
     SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
-    if table_size(global.race_settings) > 0 then
+    if table_size(storage.race_settings) > 0 then
         LevelProcessor.calculate_multiple_levels()
     end
 
@@ -153,44 +153,44 @@ local conditional_events = function()
         end)
     end
 
-    if global.army_teleporter_event_running then
+    if storage.army_teleporter_event_running then
         ArmyTeleportationProcessor.start_event(true)
     end
 
-    if global.army_deployer_event_running then
+    if storage.army_deployer_event_running then
         ArmyDeploymentProcessor.start_event(true)
     end
 
-    if global.quick_cron_is_running then
+    if storage.quick_cron_is_running then
         Event.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
-    if global.boss and global.boss.entity then
+    if storage.boss and storage.boss.entity then
         Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
     end
 end
 
 local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
-    global.race_settings = global.race_settings or {}
+    storage.race_settings = storage.race_settings or {}
 
     -- Move all cache to this to resolve desync issues.
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
-    global.settings = global.settings or {}
+    storage.settings = storage.settings or {}
 
     -- Use for decorative removal when building dies
-    global.decorative_cache = global.decorative_cache or {}
+    storage.decorative_cache = storage.decorative_cache or {}
 
-    global.installed_races = {}
-    global.active_races = {}
-    global.active_races_names = {}
-    global.active_races_num = 1
-    global.is_multi_planets_game = false
+    storage.installed_races = {}
+    storage.active_races = {}
+    storage.active_races_names = {}
+    storage.active_races_num = 1
+    storage.is_multi_planets_game = false
 
     --- SE or DLC
     if script.active_mods['space-exploration'] then
-        global.is_multi_planets_game = true
+        storage.is_multi_planets_game = true
     end
 
     SurfaceProcessor.init_globals()
@@ -212,7 +212,7 @@ local init_globals = function()
 
 
     --- Wipe this cache due to cache pollution from previous version.
-    global.force_race_name_cache = {}
+    storage.force_race_name_cache = {}
 
     Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL),{})
 end
@@ -245,10 +245,10 @@ end)
 ---Custom setting processors
 local setting_functions = {
     ['enemyracemanager-max-gathering-groups'] = function(event)
-        game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
+        game.map_settings.unit_group.max_gathering_unit_groups = storage.settings[event.setting]
     end,
     ['enemyracemanager-max-group-size'] = function(event)
-        game.map_settings.unit_group.max_unit_group_size = global.settings[event.setting]
+        game.map_settings.unit_group.max_unit_group_size = storage.settings[event.setting]
     end,
     ['enemyracemanager-army-limit-multiplier'] = function(event)
         for _, force in pairs(game.forces) do
@@ -262,7 +262,7 @@ Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
     if event.setting_type == 'runtime-global' and
             string.find(event.setting, 'enemyracemanager', 1, true)
     then
-        global.settings[event.setting] = settings.global[event.setting].value
+        storage.settings[event.setting] = settings.global[event.setting].value
 
         if setting_functions[event.setting] then
             setting_functions[event.setting](event)

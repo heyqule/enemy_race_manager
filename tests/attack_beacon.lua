@@ -12,7 +12,7 @@ local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
 local NOT_SCAN_DISTANCE = {5200, 6400}
 local RADIUS_SCAN_DISTANCE = {200, 750}
 local SCAN_HALF_WIDTH = 160
-local directions = {0,2,4,6}
+local directions = {0,4,8,12}
 
 local bounding_box_calc = {
     [defines.direction.north] = function(target_position, range)
@@ -72,7 +72,7 @@ describe("Create Beacon", function()
         local player_force = game.forces['player']
         local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
         local second_laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 15, 15 } })
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 12, 12 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { 12, 12 } })
         entity.die(player_force)
         local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
         assert.not_nil(land_beacons, 'Beacon created')
@@ -85,7 +85,7 @@ describe("Create Beacon", function()
         local player_force = game.forces['player']
         local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
         local second_laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 15, 15 } })
-        local entity = surface.create_entity({ name = 'erm_vanilla/aerial_scout/1', force = 'enemy', position = { 12, 12 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla--aerial_scout--1', force = 'enemy', position = { 12, 12 } })
         entity.die(player_force)
         local aerial_beacons = surface.find_entities_filtered({ name = 'erm_aerial_beacon' })
         assert.not_nil(aerial_beacons, 'Beacon created')
@@ -98,7 +98,7 @@ describe("Create Beacon", function()
         local player_force = game.forces['player']
         local laser_entity = surface.create_entity({ name = 'artillery-turret', force = player_force, position = { 10, 10 } })
         local second_laser_entity = surface.create_entity({ name = 'artillery-turret', force = player_force, position = { 15, 15 } })
-        local entity = surface.create_entity({ name = 'erm_vanilla/land_scout/1', force = 'enemy', position = { 12, 12 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { 12, 12 } })
         entity.die(player_force)
         local attackable_entity_beacon = surface.find_entities_filtered({ name = 'erm_attackable_entity_beacon' })
         assert.not_nil(attackable_entity_beacon, 'Beacon created')
@@ -136,7 +136,7 @@ describe("Create Beacon", function()
 
     it("create_spawn_beacon_from_trunk()", function()
         local surface = game.surfaces[1]
-        surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 20, 20 } })
+        surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 20, 20 } })
 
         local spawner = surface.count_entities_filtered({ type = 'unit-spawner' })
         assert(spawner == 1, 'Spawner Created')
@@ -201,14 +201,14 @@ describe("Surfaces and Forces", function()
         local surface = game.surfaces[1]
 
         -- Force it as valid enemy race
-        global.enemy_force_check[force_name] = true
+        storage.enemy_force_check[force_name] = true
         AttackGroupBeaconProcessor.add_new_force(force)
 
         local control_data = AttackGroupBeaconProcessor.get_control_data(surface.index, force.name)
         assert.equal('table',type(control_data), 'Test a valid ERM force')
 
         game.merge_forces('enemy_101', 'player')
-        global.enemy_force_check[force_name] = nil
+        storage.enemy_force_check[force_name] = nil
         after_ticks(60, function()
             control_data = AttackGroupBeaconProcessor.get_control_data(surface.index, force_name)
             assert.is_nil(control_data, 'Valid Force Control Data')
@@ -255,7 +255,7 @@ describe("Pick Spawn beacon", function()
                 surface.force_generate_chunk_requests()
 
                 local test_location = test_locations[direction](range)
-                local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -292,7 +292,7 @@ describe("Pick Spawn beacon", function()
             surface.force_generate_chunk_requests()
 
             local test_location = test_locations[direction](range)
-            local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+            local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
             local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                 {test_location.x-15, test_location.y-15 },
                 {test_location.x+15, test_location.y+15}
@@ -331,7 +331,7 @@ describe("Pick Spawn beacon", function()
             surface.force_generate_chunk_requests()
 
             local test_location = {x=radius, y=radius}
-            local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+            local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
             local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                 {test_location.x-15, test_location.y-15 },
                 {test_location.x+15, test_location.y+15}
@@ -369,24 +369,24 @@ describe("Pick Spawn beacon", function()
         local enemy = game.forces['enemy']
 
         local control_key = 5
-        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
+        storage['cdata'][surface.index][enemy.name]['ssk'] = control_key
 
-        global['erm_spawn_beacon'][surface.index] = {}
-        global['erm_spawn_beacon'][surface.index][enemy.name] = {}
+        storage['erm_spawn_beacon'][surface.index] = {}
+        storage['erm_spawn_beacon'][surface.index][enemy.name] = {}
         for i = 1, 10, 1 do
             local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
-            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
+            storage['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
         end
 
-        assert.not_nil( global['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is not nil")
+        assert.not_nil( storage['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is not nil")
 
         local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
-        assert.equal(node, global['erm_spawn_beacon'][surface.index][enemy.name][6].beacon, "It picks the 6th beacon")
+        assert.equal(node, storage['erm_spawn_beacon'][surface.index][enemy.name][6].beacon, "It picks the 6th beacon")
 
-        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
-        global['erm_spawn_beacon'][surface.index][enemy.name][5] = nil
+        storage['cdata'][surface.index][enemy.name]['ssk'] = control_key
+        storage['erm_spawn_beacon'][surface.index][enemy.name][5] = nil
 
-        assert.is_nil( global['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is nil")
+        assert.is_nil( storage['erm_spawn_beacon'][surface.index][enemy.name][5], "5th node is nil")
 
         local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
         assert.not_nil(node, "It picks another beacon")
@@ -422,7 +422,7 @@ describe("Modify", function()
         local player_force = game.forces[1]
         local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
 
-        local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', position = { 0, 0 } })
+        local land_scout = surface.create_entity({ name = 'erm_vanilla--land_scout--1', position = { 0, 0 } })
         land_scout.die('player')
 
         local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
@@ -430,15 +430,15 @@ describe("Modify", function()
         local beacon_number = beacon.unit_number
 
         assert.is_true(beacon.valid, 'Beacon is valid')
-        assert(type(global['erm_land_beacon'][1]['enemy'][beacon_number]) == 'table', "beacon data exist")
+        assert(type(storage['erm_land_beacon'][1]['enemy'][beacon_number]) == 'table', "beacon data exist")
         laser_entity.die('player')
 
         after_ticks(30, function()
-            local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', position = { 0, 0 } })
+            local land_scout = surface.create_entity({ name = 'erm_vanilla--land_scout--1', position = { 0, 0 } })
             land_scout.die('player')
 
             assert.is_false(beacon.valid, 'Beacon is invalid after killed')
-            assert(global['erm_land_beacon'][1]['enemy'][beacon_number] == nil, "global is nil")
+            assert(storage['erm_land_beacon'][1]['enemy'][beacon_number] == nil, "storage is nil")
             done()
         end)
     end)
@@ -450,7 +450,7 @@ describe("Modify", function()
         local player_force = game.forces['player']
         local laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 10, 10 } })
         local second_laser_entity = surface.create_entity({ name = 'laser-turret', force = player_force, position = { 15, 15 } })
-        local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', position = { 0, 0 } })
+        local land_scout = surface.create_entity({ name = 'erm_vanilla--land_scout--1', position = { 0, 0 } })
         land_scout.die('player')
         local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
         assert(land_beacons[1].health == 2, 'Beacon health not match, should be 2')
@@ -458,7 +458,7 @@ describe("Modify", function()
         second_laser_entity.die('player')
 
         after_ticks(30, function()
-            local land_scout = surface.create_entity({ name = 'erm_vanilla/land_scout/1', position = { 0, 0 } })
+            local land_scout = surface.create_entity({ name = 'erm_vanilla--land_scout--1', position = { 0, 0 } })
             land_scout.die('player')
             local land_beacons = surface.find_entities_filtered({ name = 'erm_land_beacon' })
 
@@ -472,9 +472,9 @@ describe("Modify", function()
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
-        local spawner1 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 190, 0 } })
-        local spawner2 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 200, 0 } })
-        local spawner3 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 210, 0 } })
+        local spawner1 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 190, 0 } })
+        local spawner2 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 200, 0 } })
+        local spawner3 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 210, 0 } })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {180, 0 },
             {200, 0}
@@ -511,7 +511,7 @@ describe("Modify", function()
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
         local player = game.forces['player']
-        local spawner2 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 0, 200 }})
+        local spawner2 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 0, 200 }})
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {-10, 180 },
             {10, 200}
@@ -558,7 +558,7 @@ describe("Pick Spawn Cache", function()
 
             local test_location = test_locations[direction](range)
             if direction == defines.direction.north or direction == defines.direction.south then
-                local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -587,11 +587,11 @@ describe("Pick Spawn Cache", function()
         local last_spawn_location_number = spawn_location.unit_number
         assert.equal(first_spawn_location_number, last_spawn_location_number, 'First and last spawn should be equal')
 
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[0], 'Verify cached_beacon_matrix')
-        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[2].skip, 'Verify cached_beacon_matrix')
-        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[4], 'Verify cached_beacon_matrix')
-        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[6].skip, 'Verify cached_beacon_matrix')
+        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[4].skip, 'Verify cached_beacon_matrix')
+        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[8], 'Verify cached_beacon_matrix')
+        assert.not_nil( data_check.cache['enemy'].cached_beacon_matrix[12].skip, 'Verify cached_beacon_matrix')
         assert.not_nil( data_check.cache['enemy'].cached_spawner_matrix[0], 'Verify cached_spawner_matrix')
 
     end)
@@ -606,7 +606,7 @@ describe("Pick Spawn Cache", function()
 
             local test_location = test_locations[direction](range)
             if direction == defines.direction.south then
-                local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -653,11 +653,11 @@ describe("Pick Spawn Cache", function()
 
             local test_location = test_locations[direction](range)
             if direction == defines.direction.south then
-                to_die_entity_1 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                to_die_entity_1 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 test_location.x = test_location.x + 10
-                to_die_entity_2 = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                to_die_entity_2 = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 test_location.x = test_location.x + 10
-                to_die_entity_3 =surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                to_die_entity_3 =surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -691,10 +691,10 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(first_spawn,'First Spawn Pick success')
         assert.not_nil(second_spawn,'Second Spawn Pick success')
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.equal(data_check.cache['enemy'].tier, 1, 'Tier 1, Data:'..data_check.cache['enemy'].tier)
-        --- Picked 4 and moved scanner to 6
-        assert.equal(data_check.cache['enemy'].direction, 6, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
+        --- Picked 8 and moved scanner to 12
+        assert.equal(data_check.cache['enemy'].direction, 12, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
 
         to_die_entity_1.die(player)
         to_die_entity_2.die(player)
@@ -702,7 +702,7 @@ describe("Pick Spawn Cache", function()
         --- Spawner 4
         local test_location = test_locations[defines.direction.south](range)
         test_location.x = test_location.x + 10
-        surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+        surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {test_location.x-15, test_location.y-15 },
             {test_location.x+15, test_location.y+15}
@@ -719,7 +719,7 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(new_spawn,'New Spawn Pick success')
         assert.equal(data_check.cache['enemy'].tier, 1, 'Tier 1, Data:'..data_check.cache['enemy'].tier)
-        assert.equal(data_check.cache['enemy'].direction, 6, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
+        assert.equal(data_check.cache['enemy'].direction, 12, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
     end)
     it("Cache Miss, when all spawners in the area destroyed, pick new beacon",function()
         AttackGroupBeaconProcessor.init_index()
@@ -733,7 +733,7 @@ describe("Pick Spawn Cache", function()
 
             local test_location = test_locations[direction](range)
             if direction == defines.direction.south then
-                to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -748,7 +748,7 @@ describe("Pick Spawn Cache", function()
 
             local test_location = test_locations[direction](range)
             if direction == defines.direction.east then
-                local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+                local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
                 local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                     {test_location.x-15, test_location.y-15 },
                     {test_location.x+15, test_location.y+15}
@@ -783,9 +783,9 @@ describe("Pick Spawn Cache", function()
         assert.not_nil(second_spawn,'Second Spawn Pick success')
         assert.equal(first_spawn.unit_number, second_spawn.unit_number, "Both picks should be equal")
 
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.equal(data_check.cache['enemy'].tier, 1, 'Tier 1, Data:'..data_check.cache['enemy'].tier)
-        assert.equal(data_check.cache['enemy'].direction, 6, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
+        assert.equal(data_check.cache['enemy'].direction, 12, 'Direction South(4), Scanner at West(6), Data: '..data_check.cache['enemy'].direction)
 
         to_die_entity.die(player)
 
@@ -812,7 +812,7 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(far_away_beacon,'Pick up far_away_beacon')
         assert.equal(data_check.cache['enemy'].tier, 3, 'Tier 3, Data:'..data_check.cache['enemy'].tier)
-        assert.equal(data_check.cache['enemy'].direction, 4, 'Direction East(2), Scanner at South(4), Data: '..data_check.cache['enemy'].direction)
+        assert.equal(data_check.cache['enemy'].direction, 8, 'Direction East(2), Scanner at South(4), Data: '..data_check.cache['enemy'].direction)
     end)
     it("Last Resort Cache Hit",function()
         AttackGroupBeaconProcessor.init_index()
@@ -822,7 +822,7 @@ describe("Pick Spawn Cache", function()
         surface.request_to_generate_chunks(test_location,3)
         surface.force_generate_chunk_requests()
 
-        local to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+        local to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {test_location.x-15, test_location.y-15 },
             {test_location.x+15, test_location.y+15}
@@ -849,7 +849,7 @@ describe("Pick Spawn Cache", function()
         end
 
         assert.not_nil(last_resort,'Pick up last resort location')
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil(data_check.cache['enemy'].last_resort_spawner, 'Has last resort spawner')
 
         AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
@@ -863,7 +863,7 @@ describe("Pick Spawn Cache", function()
         surface.request_to_generate_chunks(test_location,3)
         surface.force_generate_chunk_requests()
 
-        local to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+        local to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {test_location.x-15, test_location.y-15 },
             {test_location.x+15, test_location.y+15}
@@ -891,7 +891,7 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(last_resort,'Pick up last resort location')
 
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil(data_check.cache['enemy'].last_resort_spawner, 'Has last resort spawner')
         assert.is_nil(data_check.cache['enemy'].bypass, 'Not by passed')
         assert.not_nil(data_check.cache['enemy'].bypass_scanner, 'Has by passed scanner')
@@ -899,7 +899,7 @@ describe("Pick Spawn Cache", function()
         to_die_entity.die(player)
 
         local test_location = {x=140, y=140}
-        local to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+        local to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {test_location.x-15, test_location.y-15 },
             {test_location.x+15, test_location.y+15}
@@ -932,7 +932,7 @@ describe("Pick Spawn Cache", function()
         surface.request_to_generate_chunks(test_location,3)
         surface.force_generate_chunk_requests()
 
-        local to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+        local to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
         local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
             {test_location.x-15, test_location.y-15 },
             {test_location.x+15, test_location.y+15}
@@ -960,7 +960,7 @@ describe("Pick Spawn Cache", function()
             end
         end
 
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.is_nil(data_check.cache['enemy'].last_resort_spawner, 'Has last resort spawner')
         assert.not_nil(data_check.cache['enemy'].bypass, 'Not by passed')
         assert.not_nil(data_check.cache['enemy'].bypass_scanner, 'Has by passed scanner')
@@ -995,13 +995,13 @@ describe("Pick Spawn Cache", function()
             end
         end
 
-        local data_check = global[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.is_nil(data_check.cache['enemy'].last_resort_spawner, 'Dont have last resort spawner')
         assert.not_nil(data_check.cache['enemy'].bypass, 'Not by passed')
         assert.not_nil(data_check.cache['enemy'].bypass_scanner, 'Has by passed scanner')
 
         after_ticks(120, function()
-            local to_die_entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = test_location })
+            local to_die_entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = test_location })
             local created_beacon = AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, {
                 {test_location.x-15, test_location.y-15 },
                 {test_location.x+15, test_location.y+15}

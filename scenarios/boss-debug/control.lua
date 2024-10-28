@@ -46,7 +46,7 @@ Event.register(defines.events.on_player_created, function(event)
     --local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
     --player.set_controller{type = defines.controllers.character, character = character}
     --player.teleport({0, 0})
-    global.rocket_silo = surface.create_entity({
+    storage.rocket_silo = surface.create_entity({
         name = 'rocket-silo',
         force = 'player',
         player = 1,
@@ -115,7 +115,7 @@ local spawn_units = function(surface)
     }
     for _, entity in pairs(entities) do
         if entity and entity.valid then
-            entity.set_command(command)
+            entity.commandable.set_command(command)
         end
     end
 
@@ -129,8 +129,8 @@ Event.on_nth_tick(900, function(event)
 
     local surface = game.surfaces[1]
 
-    if global.rocket_silo == nil or not global.rocket_silo.valid then
-        global.rocket_silo = surface.create_entity({
+    if storage.rocket_silo == nil or not storage.rocket_silo.valid then
+        storage.rocket_silo = surface.create_entity({
             name = 'rocket-silo',
             force = 'player',
             player = 1,

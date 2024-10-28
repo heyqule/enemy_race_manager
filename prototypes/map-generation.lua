@@ -63,7 +63,7 @@ local x_axis_negative_probability_expression = function(autoplace)
 end
 
 local process_x_axis_unit = function(v)
-    local nameToken = String.split(v.name, '/')
+    local nameToken = String.split(v.name, '--')
     local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
     local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
 
@@ -93,7 +93,7 @@ local process_x_axis = function()
 end
 
 local process_y_axis_unit = function(v)
-    local nameToken = String.split(v.name, '/')
+    local nameToken = String.split(v.name, '--')
     local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
     local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
 
@@ -123,7 +123,7 @@ local process_y_axis = function()
 end
 
 local process_4_ways_unit = function(v)
-    local nameToken = String.split(v.name, '/')
+    local nameToken = String.split(v.name, '--')
     local topleft = nameToken[1] == settings.startup['enemyracemanager-4way-top-left'].value
     local topright = nameToken[1] == settings.startup['enemyracemanager-4way-top-right'].value
     local bottomright = nameToken[1] == settings.startup['enemyracemanager-4way-bottom-right'].value
@@ -216,8 +216,8 @@ end
 --- Free up the number of autoplace entities.  Large number of autoplace entities lags the game when exploring new chunks
 DebugHelper.print('Disabling high level spawners autoplace:')
 for _, v in pairs(data.raw["unit-spawner"]) do
-    if String.find(v.name, '/', 1, true) then
-        local nameToken = String.split(v.name, '/')
+    if String.find(v.name, '--', 1, true) then
+        local nameToken = String.split(v.name, '--')
         local level = tonumber(nameToken[3])
         if level and level > 1 then
             DebugHelper.print('Disabling:' .. v.name)
@@ -227,8 +227,8 @@ for _, v in pairs(data.raw["unit-spawner"]) do
 end
 
 for _, v in pairs(data.raw["turret"]) do
-    if String.find(v.name, '/', 1, true) then
-        local nameToken = String.split(v.name, '/')
+    if String.find(v.name, '--', 1, true) then
+        local nameToken = String.split(v.name, '--')
         local level = tonumber(nameToken[3])
         if level and level > 1 then
             DebugHelper.print('Disabling:' .. v.name)

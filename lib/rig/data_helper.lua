@@ -4,22 +4,17 @@
 --- DateTime: 12/21/2020 3:16 PM
 --- require('__enemyracemanager__/lib/global_config')
 ---
-require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/setting-constants')
 
-local util = require("util")
 
 local DataHelper = {}
 
 DataHelper.getFlyingCollisionMask = function()
-    local air_collision_mask = util.table.deepcopy(data.raw['arrow']['collision-mask-flying-layer']['collision_mask'])
-    table.insert(air_collision_mask, 'not-colliding-with-itself')
-    return air_collision_mask
+    return {layers={flying_units = true}, not_colliding_with_itself = true}
 end
 
 DataHelper.getFlyingLayerName = function()
-    local air_collision_mask = util.table.deepcopy(data.raw['arrow']['collision-mask-flying-layer']['collision_mask'][1])
-    return air_collision_mask
+    return 'flying_units'
 end
 
 return DataHelper

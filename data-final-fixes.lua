@@ -22,7 +22,7 @@ if DEBUG_MODE then
             if entity.autoplace ~= nil then
                 autoplace_count = autoplace_count + 1
 
-                local nameToken = String.split(entity.name, '/')
+                local nameToken = String.split(entity.name, '--')
                 if table_size(nameToken) == 3 then
                     erm_prototype_count = erm_prototype_count + 1
                 end

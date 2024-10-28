@@ -48,23 +48,23 @@ function TestShared.reset_the_factory()
 end
 --- Clear cron and its trackers
 function TestShared.CleanCron()
-    global.one_minute_cron = Queue()
-    global.fifteen_seconds_cron = Queue()
-    global.ten_seconds_cron = Queue()
-    global.two_seconds_cron = Queue()
-    global.one_second_cron = Queue()
+    storage.one_minute_cron = Queue()
+    storage.fifteen_seconds_cron = Queue()
+    storage.ten_seconds_cron = Queue()
+    storage.two_seconds_cron = Queue()
+    storage.one_second_cron = Queue()
 
     -- Conditional Crons
-    global.quick_cron = Queue()  -- Spawn
-    global.teleport_cron = {}
+    storage.quick_cron = Queue()  -- Spawn
+    storage.teleport_cron = {}
 
-    global.erm_unit_group = {}
-    global.group_tracker = {}
-    global.scout_tracker = {}
-    global.scout_by_unit_number = {}
-    global.scout_scanner = false
-    global.quick_cron_is_running = false
-    global.army_teleporter_event_running = false
+    storage.erm_unit_group = {}
+    storage.group_tracker = {}
+    storage.scout_tracker = {}
+    storage.scout_by_unit_number = {}
+    storage.scout_scanner = false
+    storage.quick_cron_is_running = false
+    storage.army_teleporter_event_running = false
 end
 
 function TestShared.reset_attack_meter()
@@ -72,8 +72,8 @@ function TestShared.reset_attack_meter()
         local force_name = force.name
         local race_name = ForceHelper.extract_race_name_from(force_name)
         if race_name then
-            global.race_settings[race_name].attack_meter = 0
-            global.race_settings[race_name].attack_meter_total = 0
+            storage.race_settings[race_name].attack_meter = 0
+            storage.race_settings[race_name].attack_meter_total = 0
         end
     end
 end

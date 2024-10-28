@@ -11,9 +11,9 @@ local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_grou
 local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
 
 local reset_scout_global = function()
-    global.scout_tracker = {}
-    global.scout_by_unit_number = {}
-    global.scout_scanner = false
+    storage.scout_tracker = {}
+    storage.scout_by_unit_number = {}
+    storage.scout_scanner = false
 end
 
 before_each(function()
@@ -31,7 +31,7 @@ end)
 local race_name = 'erm_vanilla'
 local player = 'player'
 local enemy = 'enemy'
-local biter_spawner = 'erm_vanilla/biter-spawner/1'
+local biter_spawner = 'erm_vanilla--biter-spawner--1'
 
     it("Spawn Scout", function()
         async(900)
@@ -68,8 +68,8 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
                 },
             })
             assert(count == 1, 'It should not spawn additional scout, while one is active')
-            assert.not_nil(global.scout_tracker[race_name],'scout_tracker data exists')
-            assert.not_nil(global.scout_by_unit_number[scout.unit_number],'scout_by_unit_number data exists')
+            assert.not_nil(storage.scout_tracker[race_name],'scout_tracker data exists')
+            assert.not_nil(storage.scout_by_unit_number[scout.unit_number],'scout_by_unit_number data exists')
             done()
         end)
     end)
@@ -104,7 +104,7 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
             radius = 8,
             distraction = defines.distraction.none
         })
-        scout.set_command(command_chain)
+        scout.commandable.set_command(command_chain)
 
         after_ticks(4200, function()
             local count = surface.count_entities_filtered({
@@ -134,7 +134,7 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
-        global.scout_by_unit_number[scout.unit_number].can_repath = false
+        storage.scout_by_unit_number[scout.unit_number].can_repath = false
 
         after_ticks(2500, function()
             local scout_count = surface.count_entities_filtered({
@@ -163,18 +163,18 @@ local biter_spawner = 'erm_vanilla/biter-spawner/1'
         local enemy = game.forces['enemy']
 
         local control_key = 5
-        global['cdata'][surface.index][enemy.name]['ssk'] = control_key
+        storage['cdata'][surface.index][enemy.name]['ssk'] = control_key
 
-        global['erm_spawn_beacon'][surface.index] = {}
-        global['erm_spawn_beacon'][surface.index][enemy.name] = {}
+        storage['erm_spawn_beacon'][surface.index] = {}
+        storage['erm_spawn_beacon'][surface.index][enemy.name] = {}
         for i = 1, 10, 1 do
             local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
-            global['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
+            storage['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
         end
 
-        local entity = surface.create_entity({ name = 'erm_vanilla/biter-spawner/1', position = { 50,50 } })
+        local entity = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', position = { 50,50 } })
 
-        global['erm_spawn_beacon'][surface.index][enemy.name][6].beacon.destroy()
+        storage['erm_spawn_beacon'][surface.index][enemy.name][6].beacon.destroy()
 
         after_ticks(30, function()
             AttackGroupProcessor.spawn_scout(race_name, game.forces['enemy'], surface, game.forces['player'])

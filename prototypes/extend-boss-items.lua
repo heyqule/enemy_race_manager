@@ -4,7 +4,6 @@
 --- DateTime: 7/12/2022 6:15 PM
 ---
 
-local Sprites = require('__stdlib__/stdlib/data/modules/sprites')
 
 --- Add PSI Emitter Satellite, spawn boss and return 2000 space science pack
 data:extend({ {
@@ -40,13 +39,16 @@ data:extend({ {
                   enabled = false,
                   category = "crafting",
                   ingredients = {
-                      { "satellite", 1 },
-                      { "raw-fish", 100 },
-                      { "wood", 100 },
-                      { "processing-unit", 100 },
-                      { "water-barrel", 10 }
+                      -- @TODO replace with starter pack for SA
+                      -- {type="item", name="satellite", amount=1},
+                      {type="item", name="raw-fish", amount=100},
+                      {type="item", name="wood", amount=100},
+                      {type="item", name="processing-unit", amount=100},
+                      {type="item", name="water-barrel", amount=100},
                   },
-                  result = "psi-tracking-satellite",
+                  results = {
+                      {type="item", name="psi-tracking-satellite", amount=1},
+                  },
                   requester_paste_multiplier = 1
               },
               {
@@ -64,7 +66,6 @@ data:extend({ {
                   corpse = "small-remnants",
                   collision_box = { { -0.35, -0.35 }, { 0.35, 0.35 } },
                   selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } },
-                  pictures = Sprites.empty_pictures(),
                   max_distance_of_nearby_sector_revealed = 1,
                   max_distance_of_sector_revealed = 1,
                   energy_per_sector = "999999kJ",

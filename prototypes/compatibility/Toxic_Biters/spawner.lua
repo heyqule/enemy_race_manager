@@ -6,7 +6,8 @@
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
-local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
+local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
+local enemy_autoplace = require ("prototypes.entity.enemy-autoplace-utils")
 
 require('__stdlib__/stdlib/utils/defines/time')
 require('__enemyracemanager__/global')
@@ -37,8 +38,8 @@ function makeLevelSpawners(level, type)
 
     local original_hitpoint = spawner['max_health']
 
-    spawner['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. spawner['name'], level }
-    spawner['name'] = MOD_NAME .. '/' .. spawner['name'] .. '/' .. level;
+    spawner['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. spawner['name'], level }
+    spawner['name'] = MOD_NAME .. '--' .. spawner['name'] .. '--' .. level;
     spawner['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier, level)
     spawner['resistances'] = {
         { type = "acid", percent = 95 },

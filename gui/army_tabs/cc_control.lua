@@ -9,7 +9,7 @@ local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 
 local has_selected_cc = function(player, backer_name, type)
-    if global.army_windows_tab_player_data[player.index].selected_cc[type] == backer_name then
+    if storage.army_windows_tab_player_data[player.index].selected_cc[type] == backer_name then
         return true
     end
     return false
@@ -37,7 +37,7 @@ local get_command_centers = function(player, windows_tab_data)
     local right_name_list = {}
     local left_selected_surface = windows_tab_data.cc_surfaces_select_from
     local right_selected_surface = windows_tab_data.cc_surfaces_select_to
-    local force_list = global.army_built_teleporters[player.force.index];
+    local force_list = storage.army_built_teleporters[player.force.index];
     local left_surface, right_surface
 
     if left_selected_surface and left_selected_surface ~= ALL_PLANETS then
@@ -66,7 +66,7 @@ local get_command_centers = function(player, windows_tab_data)
         end
     end
 
-    global.army_windows_tab_player_data[player.index].cc_surfaces_selection = surface_selection
+    storage.army_windows_tab_player_data[player.index].cc_surfaces_selection = surface_selection
 
     return left_name_list, right_name_list
 end
@@ -85,7 +85,7 @@ function CommandCenterControlGUI.update(player)
     local main_tab = SharedTabFunctions.get_main_tab(player)
     SharedTabFunctions.clear_tab(main_tab, CommandCenterControlGUI.name)
 
-    local windows_tab_data = global.army_windows_tab_player_data[player.index]
+    local windows_tab_data = storage.army_windows_tab_player_data[player.index]
     local from_commandcenters, to_commandcenters = get_command_centers(player, windows_tab_data)
     local from_selected = get_selected_index(from_commandcenters, player, 'from') or 0
     local to_selected = get_selected_index(to_commandcenters, player, 'to') or 0

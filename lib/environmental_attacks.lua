@@ -45,7 +45,7 @@ function EnvironmentalAttacks.exec(surface, target_position,
             BaseBuildProcessor.build_formation(group)
         else
             AttackGroupProcessor.process_attack_position(group, defines.distraction.by_enemy, true)
-            global.erm_unit_groups[group.group_number] = {
+            storage.erm_unit_groups[group.unique_id] = {
                 group = group,
                 start_position = group.position,
                 always_angry = false,
@@ -59,8 +59,8 @@ function EnvironmentalAttacks.exec(surface, target_position,
 end
 
 function EnvironmentalAttacks.reset_global()
-    global.override_environmental_attack_spawn_home = nil
-    global.override_environmental_attack_can_spawn = nil
+    storage.override_environmental_attack_spawn_home = nil
+    storage.override_environmental_attack_can_spawn = nil
 end
 
 return EnvironmentalAttacks

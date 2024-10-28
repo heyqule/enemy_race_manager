@@ -57,7 +57,7 @@ function DetailWindow.show(player, race_setting)
 
     local close_button = title_flow.add { type = "sprite-button",
                                           name = 'erm_detail_close_button',
-                                          sprite = "utility/close_white",
+                                          sprite = "utility/close",
                                           style = 'frame_action_button',
                                           tooltip = { "gui.back-instruction" }
     }
@@ -207,15 +207,15 @@ end
 local process_level_slider = function(element, race_name)
     local level_slider_name = race_name .. '/' .. DetailWindow.levelup_slider_name
     local level = tonumber(element.parent['level_slider_flow'][level_slider_name].slider_value)
-    if level ~= global.race_settings[race_name].level then
-        LevelManager.level_by_command(global.race_settings, race_name, level)
+    if level ~= storage.race_settings[race_name].level then
+        LevelManager.level_by_command(storage.race_settings, race_name, level)
     end
 end
 
 local process_evolution_factor_slider = function(element, race_name)
     local evolution_slider_name = race_name .. '/' .. DetailWindow.evolution_factor_slider_name
     local evolution_factor = tonumber(element.parent['evolution_factor_slider_flow'][evolution_slider_name].slider_value) / 100
-    game.forces[ForceHelper.get_force_name_from(race_name)].evolution_factor = evolution_factor
+    game.forces[ForceHelper.get_force_name_from(race_name)].set_evolution_factor(evolution_factor)
     game.print('Setting ' .. race_name .. ' evolution factor to ' .. tostring(evolution_factor))
 end
 
@@ -227,7 +227,7 @@ end
 
 function DetailWindow.replace_enemy(owner, nameToken)
     SurfaceProcessor.assign_race(owner.surface, nameToken[1])
-    ReplacementProcessor.rebuild_map(owner.surface, global.race_settings, nameToken[1])
+    ReplacementProcessor.rebuild_map(owner.surface, storage.race_settings, nameToken[1])
 end
 
 function DetailWindow.hide(player)

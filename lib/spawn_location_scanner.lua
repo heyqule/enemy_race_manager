@@ -14,7 +14,7 @@ local chunk_size = 32
 local radius = distance * chunk_size
 local angle_division = 15
 
-local reference_unit_name = 'erm_vanilla/behemoth-biter/1'
+local reference_unit_name = 'erm_vanilla--behemoth-biter--1'
 
 local floor = math.floor
 local rad = math.rad
@@ -44,14 +44,14 @@ local directions_degrees = {
 }
 
 local init_surface_globals = function(surface_index)
-    if global.spawn_locations_tracker[surface_index] == nil then
-        global.spawn_locations_tracker[surface_index] = {
+    if storage.spawn_locations_tracker[surface_index] == nil then
+        storage.spawn_locations_tracker[surface_index] = {
             direction = defines.direction.north,
             last_chunk_position = {
                 [defines.direction.north] = {x=0,y=0}
             }
         }
-        global.spawn_locations[surface_index] = {}
+        storage.spawn_locations[surface_index] = {}
     end
 end
 
@@ -67,25 +67,29 @@ local random_point_on_circumference = function (radius, angle_start, angle_end)
 
     return {x = radius * math.cos(theta), y = radius * math.sin(theta)}
 end
+
+local pick_next_direction = function(current_direction)
+    return (current_direction + 2) % 16
+end
 ---
 --- for storing scanner chunks
 ---
 function SpawnLocationScanner.init_globals()
-    --- global.spawn_locations[surface_index] = {
+    --- storage.spawn_locations[surface_index] = {
     ---      [defines.direction.north] = {
     ---         trunk = {x,y} //trunk position
     ---         updated = tick //tick this was updated
     ---         can_spawn = true //whether things can spawn on this trunk
     ---      }
     --- }
-    global.spawn_locations = global.spawn_locations or {}
-    --- global.spawn_locations_tracker[surface_index] = {
+    storage.spawn_locations = storage.spawn_locations or {}
+    --- storage.spawn_locations_tracker[surface_index] = {
     ---    direction = defines.direction.north,
     ---    last_chunk_position = {
     ---        [defines.direction.north] = {x,y}
     ---    }
     --- }
-    global.spawn_locations_tracker = global.spawn_locations_tracker or {}
+    storage.spawn_locations_tracker = storage.spawn_locations_tracker or {}
 end
 
 local is_larger_than_planet_radius = function(position, max_planet_radius)
@@ -111,18 +115,18 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
     init_surface_globals(surface_index)
 
     -- pick a chunk
-    local current_direction = global.spawn_locations_tracker[surface_index].direction or  1
+    local current_direction = storage.spawn_locations_tracker[surface_index].direction or 2
 
-    if global.spawn_locations[surface_index][current_direction] and
-       next(global.spawn_locations[surface_index][current_direction])
+    if storage.spawn_locations[surface_index][current_direction] and
+       next(storage.spawn_locations[surface_index][current_direction])
     then
         --- assign cache position is still valid.
-        global.spawn_locations_tracker[surface_index].direction = (current_direction + 1) % 8
+        storage.spawn_locations_tracker[surface_index].direction = pick_next_direction(current_direction)
         return
     end
 
     local direction_multipler = directions[current_direction]
-    local chunk_position = global.spawn_locations_tracker[surface_index].last_chunk_position[current_direction] or {x=0,y=0}
+    local chunk_position = storage.spawn_locations_tracker[surface_index].last_chunk_position[current_direction] or {x=0,y=0}
 
     local new_chunk = {
         x = chunk_position.x + direction_multipler[1] * distance,
@@ -138,7 +142,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
        new_chunk_is_generated and
        SpawnLocationScanner.is_valid_position(surface, tile_position)
     then
-        global.spawn_locations[surface_index][current_direction] = tile_position
+        storage.spawn_locations[surface_index][current_direction] = tile_position
         has_valid_chunk = true
     end
 
@@ -167,13 +171,13 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
         until i == 6 or valid_position == true
 
         if valid_position then
-            global.spawn_locations[surface_index][current_direction] = {x=cir_tile_position.x,y=cir_tile_position.y}
+            storage.spawn_locations[surface_index][current_direction] = {x=cir_tile_position.x,y=cir_tile_position.y}
             has_valid_chunk = true
         end
         using_max_radius = true
     end
 
-    local tracker_data = global.spawn_locations_tracker[surface_index]
+    local tracker_data = storage.spawn_locations_tracker[surface_index]
 
     --- only track new trunk when it's not hitting the border, and the trunk is generated
     if not using_max_radius and new_chunk_is_generated then
@@ -187,7 +191,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
     end
 
     --- Change direction
-    tracker_data.direction = (current_direction + 1) % 8
+    tracker_data.direction = pick_next_direction(current_direction)
 end
 
 function SpawnLocationScanner.is_valid_position(surface, tile_position)
@@ -217,16 +221,16 @@ function SpawnLocationScanner.get_spawn_location(surface)
     end
 
     local surface_index = surface.index
-    local spawn_data = global.spawn_locations[surface_index]
-    local spawn_tracker = global.spawn_locations_tracker[surface_index]
+    local spawn_data = storage.spawn_locations[surface_index]
+    local spawn_tracker = storage.spawn_locations_tracker[surface_index]
 
     if not spawn_data then
         return
     end
 
-    local direction = 1
+    local direction = 2
     if spawn_tracker and spawn_tracker.last_attack_direction then
-        direction = spawn_tracker.last_attack_direction or 1
+        direction = spawn_tracker.last_attack_direction or 2
     end
 
     local stop = false
@@ -238,18 +242,18 @@ function SpawnLocationScanner.get_spawn_location(surface)
             stop = true
         elseif position then
             -- invalid old node
-            global.spawn_locations[surface_index][direction] = nil
+            storage.spawn_locations[surface_index][direction] = nil
         end
         i = i + 1
     until stop == true or i == 7
-    direction = (direction + 1) % 8
+    direction = pick_next_direction(direction)
     spawn_tracker.last_attack_direction = direction
     return position
 end
 
 function SpawnLocationScanner.remove_surface(surface_id)
-    global.spawn_locations[surface_id] = nil
-    global.spawn_locations_tracker[surface_id] = nil
+    storage.spawn_locations[surface_id] = nil
+    storage.spawn_locations_tracker[surface_id] = nil
 end
 
 

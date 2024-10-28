@@ -24,22 +24,22 @@ local group_variance = 20
 local home_group_size = 20
 
 local can_perform_attack = function()
-    return global.is_multi_planets_game and Config.interplanetary_attack_enable()
+    return storage.is_multi_planets_game and Config.interplanetary_attack_enable()
 end
 
 function InterplanetaryAttacks.init_globals()
-    --- global.interplanetary_intel[surface_index] = {
+    --- storage.interplanetary_intel[surface_index] = {
     ---     radius,
     ---     type={"moon","planet",etc},
     ---     has_player_entities=true,
     ---     defense=0
     --- }
-    global.interplanetary_intel = global.interplanetary_intel or {}
-    global.interplanetary_tracker = global.interplanetary_tracker or {}
+    storage.interplanetary_intel = storage.interplanetary_intel or {}
+    storage.interplanetary_tracker = storage.interplanetary_tracker or {}
 
-    if not global.interplanetary_intel[1] then
-        global.interplanetary_intel[1] = InterplanetaryAttacks.get_default_intel()
-        global.interplanetary_intel[1].has_player_entities = true
+    if not storage.interplanetary_intel[1] then
+        storage.interplanetary_intel[1] = InterplanetaryAttacks.get_default_intel()
+        storage.interplanetary_intel[1].has_player_entities = true
     end
 end
 
@@ -58,14 +58,14 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
         return false
     end
 
-    local surface_id, intel = next(global.interplanetary_intel, global.interplanetary_tracker.surface_id)
+    local surface_id, intel = next(storage.interplanetary_intel, storage.interplanetary_tracker.surface_id)
     if not surface_id or not intel then
-        global.interplanetary_tracker.surface_id = nil
+        storage.interplanetary_tracker.surface_id = nil
         return false
     end
     local surface = game.surfaces[surface_id]
 
-    global.interplanetary_tracker.surface_id = surface_id
+    storage.interplanetary_tracker.surface_id = surface_id
 
     --- Lower spawn chance by up to 20%
     if intel.defense and intel.defense > 0 then
@@ -75,7 +75,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     end
 
     if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false and
-        not global.override_interplanetary_attack_roll_bypass then
+        not storage.override_interplanetary_attack_roll_bypass then
         AttackMeterProcessor.adjust_attack_meter(race_name)
         return false
     end
@@ -94,21 +94,21 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
     --- If it's a build group, 20 units use for building on spot, the rest will attack.
-     local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or global.override_interplanetary_attack_build_base
+     local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or storage.override_interplanetary_attack_build_base
     if build_home then
         group_unit_number = group_unit_number - home_group_size
     end
 
 
     local group_type
-    if (flying_enabled and spawn_as_flying_squad) or global.override_interplanetary_attack_spawn_flyers then
+    if (flying_enabled and spawn_as_flying_squad) or storage.override_interplanetary_attack_spawn_flyers then
         group_unit_number = math.ceil(group_unit_number / 2)
         group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
     end
 
    if build_home then
         local group = AttackGroupProcessor.generate_immediate_group(
-                game.surfaces[global.interplanetary_tracker.surface_id],
+                game.surfaces[storage.interplanetary_tracker.surface_id],
                 drop_location,
                 home_group_size,
                 race_name
@@ -152,8 +152,8 @@ function InterplanetaryAttacks.scan(surface)
     end
 
     if surface and ForceHelper.can_have_enemy_on(surface) then
-        --- Event to manipulate global.interplanetary_intel
-        local intel =  global.interplanetary_intel[surface.index]
+        --- Event to manipulate storage.interplanetary_intel
+        local intel =  storage.interplanetary_intel[surface.index]
         Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN),{
             intel = intel,
             surface = surface
@@ -177,20 +177,20 @@ function InterplanetaryAttacks.set_intel(surface_index, data)
         return
     end
 
-    global.interplanetary_intel[surface_index] = data
+    storage.interplanetary_intel[surface_index] = data
 end
 
 function InterplanetaryAttacks.get_intel(surface_index)
-    return global.interplanetary_intel[surface_index]
+    return storage.interplanetary_intel[surface_index]
 end
 
 function InterplanetaryAttacks.remove_surface(surface_index)
-    global.interplanetary_intel[surface_index] = nil
+    storage.interplanetary_intel[surface_index] = nil
 end
 
 function InterplanetaryAttacks.reset_globals()
-    global.interplanetary_intel = {}
-    global.interplanetary_tracker =  {}
+    storage.interplanetary_intel = {}
+    storage.interplanetary_tracker =  {}
     InterplanetaryAttacks.init_globals()
 end
 

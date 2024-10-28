@@ -25,7 +25,7 @@ function ScenarioHelper.spawn_tile(surface, radius, tile_name)
     radius = radius or 128
     tile_name = tile_name or 'concrete'
     --Spawn concrete tiles
-    local prototypes = game.tile_prototypes
+    local prototypes = prototypes.tile
     local tiles = {}
     for x = (radius * -1), radius, 1 do
         for y = (radius * -1), radius, 1 do
@@ -68,10 +68,10 @@ end
 
 function ScenarioHelper.set_tech_level(force, level)
 
-    for _, tech in pairs(force.technologies) do
-        tech.researched = false
-        force.set_saved_technology_progress(tech, 0)
-    end
+    --for _, tech in pairs(force.technologies) do
+    --    tech.researched = false
+    --    force.set_saved_technology_progress(tech, 0)
+    --end
     force.enable_all_technologies()
     force.enable_all_recipes()
 

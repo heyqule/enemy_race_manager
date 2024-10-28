@@ -8,9 +8,6 @@ local ERM_AnimationRig = {}
 
 local set_properties = function(layer, name, value)
     layer[name] = value
-    if layer['hr_version'] then
-        layer['hr_version'][name] = value
-    end
 end
 
 function ERM_AnimationRig.adjust_still_frame(layer, value)

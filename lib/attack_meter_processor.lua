@@ -22,10 +22,11 @@ AttackMeterProcessor.TURRET_POINTS = 10;
 AttackMeterProcessor.UNIT_POINTS = 1;
 
 local get_statistic_cache = function(race_name, force)
-    if global.kill_count_statistics_cache[race_name] == nil then
-        global.kill_count_statistics_cache[race_name] = force.kill_count_statistics
+    if storage.kill_count_statistics_cache[race_name] == nil then
+         -- @TODO per surface stats, need a death listener to track
+        storage.kill_count_statistics_cache[race_name] = force.get_kill_count_statistics(1)
     end
-    return global.kill_count_statistics_cache[race_name]
+    return storage.kill_count_statistics_cache[race_name]
 end
 
 local calculatePoints = function(race_name, statistic,
@@ -33,8 +34,8 @@ local calculatePoints = function(race_name, statistic,
     local points = 0
     for _, name in pairs(entity_names) do
         local count = statistic.get_flow_count {
-            name = race_name .. '/' .. name .. '/' .. level,
-            input = false,
+            name = race_name .. '--' .. name .. '--' .. level,
+            category = 'output',
             precision_index = interval
         }
         points = points + count
@@ -53,7 +54,7 @@ local calculateNextThreshold = function(race_name)
 end
 
 function AttackMeterProcessor.init_globals()
-    global.kill_count_statistics_cache = global.kill_count_statistics_cache or {}
+    storage.kill_count_statistics_cache = storage.kill_count_statistics_cache or {}
 end
 
 function AttackMeterProcessor.exec()
@@ -136,7 +137,7 @@ function AttackMeterProcessor.calculate_points(force_name)
         spawner_evolution_points = building_points * -1.5 * spawner_destroy_factor
     end
 
-    global.race_settings[race_name].evolution_base_point = global.race_settings[race_name].evolution_base_point + unit_evolution_points + turret_evolution_points + spawner_evolution_points
+    storage.race_settings[race_name].evolution_base_point = storage.race_settings[race_name].evolution_base_point + unit_evolution_points + turret_evolution_points + spawner_evolution_points
 
 end
 

@@ -38,12 +38,12 @@ end)
 
 
 it("Default", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_DEFAULT
+    storage.settings['enemyracemanager-build-style'] = BUILDING_DEFAULT
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = 'erm_zerg--zergling--1'
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
-        position={0,0},
+        name='erm_zerg--hatchery--1',
+        position={10,10},
         force = enemy_force
     })
     spawn_units(surface,name)
@@ -58,17 +58,17 @@ it("Default", function()
     end)
 end)
 it("Command Center / Build a town", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_CMD
+    storage.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_CMD
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = 'erm_zerg--zergling--1'
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name='erm_zerg--hatchery--1',
         position={0,0},
         force = enemy_force
     })
     local unit_group = spawn_units(surface,name)
     BaseBuildProcessor.exec(building)
-    after_ticks(3500, function()
+    after_ticks(3600, function()
         local count = surface.count_entities_filtered({
             type="unit-spawner",
             force = enemy_force
@@ -84,11 +84,11 @@ it("Command Center / Build a town", function()
     end)
 end)
 it("Build a town", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_A_TOWN
+    storage.settings['enemyracemanager-build-style'] = BUILDING_A_TOWN
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = 'erm_zerg--zergling--1'
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name='erm_zerg--hatchery--1',
         position={20,20},
         force = enemy_force
     })
@@ -110,11 +110,11 @@ it("Build a town", function()
     end)
 end)
 it("Fully Expansion", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_ARRIVAL
+    storage.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_ARRIVAL
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = 'erm_zerg--zergling--1'
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name='erm_zerg--hatchery--1',
         position={0,0},
         force = enemy_force
     })

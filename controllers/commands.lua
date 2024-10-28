@@ -7,5 +7,5 @@
 commands.add_command("ERM_GetRaceSettings",
         { "description.command-regenerate-enemy" },
         function()
-            game.print(game.table_to_json(global.race_settings))
+            game.print(helpers.table_to_json(storage.race_settings))
         end)

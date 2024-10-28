@@ -44,7 +44,8 @@ end
 local function get_command_chain()
     return {
         type = defines.command.compound,
-        structure_type = defines.compound_command.return_last,
+        --structure_type = defines.compound_command.return_last,
+        structure_type = defines.compound_command.logical_and,
         commands = {}
     }
 end
@@ -68,28 +69,34 @@ local compute_beacon_buffer_position = {
 
 
 function AttackGroupPathingProcessor.init_globals()
-    global.request_path = global.request_path or {}
-    global.request_path_link = global.request_path_link or {}
+    storage.request_path = storage.request_path or {}
+    storage.request_path_link = storage.request_path_link or {}
 end
 
 function AttackGroupPathingProcessor.reset_globals()
-    global.request_path = {}
-    global.request_path_link = {}
+    storage.request_path = {}
+    storage.request_path_link = {}
 end
 
 function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial, group_number)
 
     local bounding_box, collision_mask
     local race_name = ForceHelper.extract_race_name_from(source_force.name)
-    collision_mask = {"not-colliding-with-itself"}
+    collision_mask = {layers={},not_colliding_with_itself=true}
 
+    local scout_name
     if is_aerial then
-        local scout_unit = game.entity_prototypes[AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.AERIAL_SCOUT)]
-        bounding_box = scout_unit.collision_box
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.AERIAL_SCOUT)
     else
-        local scout_unit = game.entity_prototypes[AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.LAND_SCOUT)]
-        bounding_box = scout_unit.collision_box
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.LAND_SCOUT)
     end
+
+    local data_table = prototypes.get_entity_filtered({{
+           filter = 'name',
+           name = scout_name
+       }})
+
+    bounding_box = data_table[scout_name].collision_box
 
     local request_id = surface.request_path({
         bounding_box = bounding_box,
@@ -103,7 +110,7 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     if request_id then
         AttackGroupPathingProcessor.remove_node(surface.index,group_number)
 
-        global.request_path[request_id] = {
+        storage.request_path[request_id] = {
             surface = surface,
             source_force = source_force,
             start = start,
@@ -114,7 +121,7 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
         }
 
 
-        global.request_path_link[group_number] = request_id
+        storage.request_path_link[group_number] = request_id
     end
 end
 
@@ -126,11 +133,11 @@ end
 --- Then try using beacon with lower health.
 --- Once all options have tried and failed, unleash additional strategies or repeat existing strategies :)
 function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, path_nodes, tryagainlater)
-    if global.request_path[path_id] == nil or path_nodes == nil then
+    if storage.request_path[path_id] == nil or path_nodes == nil then
         return nil
     end
 
-    local request_path_data = global.request_path[path_id];
+    local request_path_data = storage.request_path[path_id];
 
     if path_nodes then
 
@@ -165,9 +172,9 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                             path_id, path_node, enemy.position, search_beacons, true)
                 else
                     if beacon.name == AttackGroupBeaconProcessor.LAND_BEACON then
-                        global[AttackGroupBeaconProcessor.LAND_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                        storage[AttackGroupBeaconProcessor.LAND_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
                     else
-                        global[AttackGroupBeaconProcessor.AERIAL_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                        storage[AttackGroupBeaconProcessor.AERIAL_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
                     end
                     beacon.destroy()
                 end
@@ -183,13 +190,13 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
         path_id, path_node, enemy_position, search_beacons
 )
 
-    local request_path_data = global.request_path[path_id]
+    local request_path_data = storage.request_path[path_id]
 
     if request_path_data == nil then
         return
     end
 
-    local direction = Position.complex_direction_to(path_node.position, enemy_position)
+    local direction = Position.complex_direction_to(path_node.position, enemy_position) % 16
 
     local left_top = {}
     local bottom_right = {}
@@ -230,7 +237,7 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
             radius = CHUNK_SIZE;
         })
 
-        global.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
+        storage.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
     end
 end
 
@@ -240,7 +247,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 )
     is_right_side = is_right_side or false
 
-    local request_path_data = global.request_path[path_id]
+    local request_path_data = storage.request_path[path_id]
 
     if request_path_data == nil then
         return
@@ -249,11 +256,13 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
     local direction = Position.complex_direction_to(path_node.position, enemy_position)
 
 
-    local target_direction = math.abs(direction - 10 % 8)
-    local side_key = AttackGroupPathingProcessor.STRATEGY_LT
+    local target_direction, side_key
     if is_right_side then
-        target_direction = math.abs(direction + 10 % 8)
+        target_direction = math.abs(direction + 20 % 16)
         side_key = AttackGroupPathingProcessor.STRATEGY_RT
+    else
+        target_direction = math.abs(direction - 20 % 16)    
+        side_key = AttackGroupPathingProcessor.STRATEGY_LT 
     end
     local new_position = Position.translate(
             path_node.position,
@@ -261,17 +270,21 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
             math.random(TRANSLATE_RANGE-CHUNK_SIZE, TRANSLATE_RANGE+CHUNK_SIZE)
     )
 
-    local area = request_path_data.surface.find_entities_filtered {
+    if DEBUG_MODE then
+        DebugHelper.drawline(request_path_data.surface.index, "enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
+        DebugHelper.drawline(request_path_data.surface.index, "path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
+    end
+
+    local area = request_path_data.surface.count_entities_filtered {
         name = search_beacons,
         force = request_path_data.source_force,
         radius = BEACON_RADIUS,
         position = {new_position.x, new_position.y},
         limit = 1
     }
-    local area_size = table_size(area)
 
 
-    if area_size == 0 then
+    if area == 0 then
         local commands_chain = get_command_chain()
 
         table.insert(commands_chain.commands, {
@@ -286,7 +299,11 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
             radius = CHUNK_SIZE;
         })
 
-        global.request_path[path_id].commands[side_key] = commands_chain
+        if DEBUG_MODE then
+            DebugHelper.drawline(request_path_data.surface.index, "new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
+        end            
+
+        storage.request_path[path_id].commands[side_key] = commands_chain
     end
 end
 
@@ -298,9 +315,9 @@ end
 function AttackGroupPathingProcessor.get_command(group_number, strategy)
     strategy = strategy or AttackGroupPathingProcessor.STRATEGY_BF
 
-    if global.override_attack_strategy then
-        strategy = global.override_attack_strategy
-        global.override_attack_strategy = nil
+    if storage.override_attack_strategy then
+        strategy = storage.override_attack_strategy
+        storage.override_attack_strategy = nil
     else
         for _, data in pairs(AttackGroupPathingProcessor.CUSTOM_STRATEGIES) do
             if can_reroll(strategy, data[2]) then
@@ -310,10 +327,10 @@ function AttackGroupPathingProcessor.get_command(group_number, strategy)
         end
     end
 
-    local request_id = global.request_path_link[group_number]
+    local request_id = storage.request_path_link[group_number]
 
     if request_id then
-        local request_path_data = global.request_path[request_id]
+        local request_path_data = storage.request_path[request_id]
         if request_path_data and
            request_path_data.commands[strategy]
         then
@@ -328,34 +345,34 @@ function AttackGroupPathingProcessor.get_command(group_number, strategy)
 end
 
 function AttackGroupPathingProcessor.relink_request(old_group_number, new_group_number)
-    local request_id = global.request_path_link[old_group_number]
+    local request_id = storage.request_path_link[old_group_number]
 
     if request_id then
-        global.request_path_link[new_group_number] = request_id
-        global.request_path_link[old_group_number] = nil
+        storage.request_path_link[new_group_number] = request_id
+        storage.request_path_link[old_group_number] = nil
     end
 end
 
 --- Remove node based on coorindate
 function AttackGroupPathingProcessor.remove_node(group_number)
 
-    local request_id = global.request_path_link[group_number]
+    local request_id = storage.request_path_link[group_number]
 
     if request_id then
-        global.request_path[request_id] = nil
-        global.request_path_link[group_number] = nil
+        storage.request_path[request_id] = nil
+        storage.request_path_link[group_number] = nil
     end
 end
 
 
 function AttackGroupPathingProcessor.remove_old_nodes()
-    for id, _ in pairs(global.request_path_link) do
-        local request_id = global.request_path_link[id]
+    for id, _ in pairs(storage.request_path_link) do
+        local request_id = storage.request_path_link[id]
         if request_id and
-            game.tick > global.request_path[request_id].tick + GC_TICK
+            game.tick > storage.request_path[request_id].tick + GC_TICK
         then
-            global.request_path[request_id] = nil
-            global.request_path_link[id] = nil
+            storage.request_path[request_id] = nil
+            storage.request_path_link[id] = nil
         end
     end
 end

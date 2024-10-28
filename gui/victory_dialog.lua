@@ -54,9 +54,9 @@ function BossVictoryDialog.hide(player)
 end
 
 function BossVictoryDialog.confirm(race_name)
-    if global.race_settings[race_name].boss_tier < GlobalConfig.BOSS_MAX_TIERS then
-        global.race_settings[race_name].boss_tier = global.race_settings[race_name].boss_tier + 1
-        game.print("[color=#ff0000]" .. race_name .. '[/color] is now on boss tier ' .. tostring(global.race_settings[race_name].boss_tier))
+    if storage.race_settings[race_name].boss_tier < GlobalConfig.BOSS_MAX_TIERS then
+        storage.race_settings[race_name].boss_tier = storage.race_settings[race_name].boss_tier + 1
+        game.print("[color=#ff0000]" .. race_name .. '[/color] is now on boss tier ' .. tostring(storage.race_settings[race_name].boss_tier))
     end
 end
 

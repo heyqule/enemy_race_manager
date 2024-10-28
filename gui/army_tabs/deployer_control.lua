@@ -21,7 +21,7 @@ function DeployerControlGUI.update(player)
     local deployer_type_filters = player_ui_data.deployer_type_filters
     local deployer_surface_filter = player_ui_data.deployer_surface_filter
 
-    local deployers = global.army_built_deployers[force.index]
+    local deployers = storage.army_built_deployers[force.index]
     if deployers == nil then
         pane.add { type = "label", caption = { 'gui-army.no_deployer' } }
         return
@@ -29,8 +29,8 @@ function DeployerControlGUI.update(player)
 
     -- Data managemenent
     local active_deployers = {}
-    if global.army_active_deployers[force.index] then
-        active_deployers = global.army_active_deployers[force.index]['deployers']
+    if storage.army_active_deployers[force.index] then
+        active_deployers = storage.army_active_deployers[force.index]['deployers']
     end
 
     local filtered_deployers = {}
@@ -75,7 +75,7 @@ function DeployerControlGUI.update(player)
     --- Filter types and surfaces
     local filters = pane.add { type = "flow", direction = "horizontal" }
 
-    for name, _ in pairs(global.army_registered_deployers) do
+    for name, _ in pairs(storage.army_registered_deployers) do
         local sprite = filters.add {
             type = "sprite-button",
             name="army_deployer/filter_type/"..name,
