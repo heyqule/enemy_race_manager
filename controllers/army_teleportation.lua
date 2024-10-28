@@ -23,7 +23,7 @@ end
 
 local is_valid_command_center = function(event)
     local entity = event.created_entity or event.entity
-    local cc = global.army_registered_command_centers
+    local cc = storage.army_registered_command_centers
     if entity and entity.valid and cc then
         return cc[entity.name]
     end

@@ -26,8 +26,8 @@ local RemoteAPI = {}
 --- Create or update race setting
 --- Usage: remote.call('enemyracemanager', 'register_race', {settings...})
 function RemoteAPI.register_race(race_settings)
-    if global and global.race_settings then
-        global.race_settings[race_settings.race] = race_settings
+    if storage and storage.race_settings then
+        storage.race_settings[race_settings.race] = race_settings
         RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
         RaceSettingsHelper.refresh_current_tier(race_settings.race)
     end
@@ -36,8 +36,8 @@ end
 --- Return race setting
 --- Usage: remote.call('enemyracemanager', 'get_race', 'erm_zerg')
 function RemoteAPI.get_race(race)
-    if global and global.race_settings and global.race_settings[race] then
-        return global.race_settings[race]
+    if storage and storage.race_settings and storage.race_settings[race] then
+        return storage.race_settings[race]
     end
     return nil
 end
@@ -45,10 +45,10 @@ end
 --- Return race tier
 --- Usage: remote.call('enemyracemanager', 'get_race_tier', 'erm_zerg')
 function RemoteAPI.get_race_tier(race)
-    if global and global.race_settings and
-            global.race_settings[race] and global.race_settings[race].tier then
+    if storage and storage.race_settings and
+            storage.race_settings[race] and storage.race_settings[race].tier then
 
-        return global.race_settings[race].tier
+        return storage.race_settings[race].tier
     end
     return 1
 end
@@ -56,18 +56,18 @@ end
 --- Return race level
 --- Usage: remote.call('enemyracemanager', 'get_race_level', 'erm_zerg')
 function RemoteAPI.get_race_level(race)
-    if global.race_settings and
-            global.race_settings[race] and
-            global.race_settings[race].level then
+    if storage.race_settings and
+            storage.race_settings[race] and
+            storage.race_settings[race].level then
 
-        return global.race_settings[race].level
+        return storage.race_settings[race].level
     end
     return 1
 end
 
 function RemoteAPI.get_boss_data()
-    if global.boss and global.boss.entity then
-        return global.boss
+    if storage.boss and storage.boss.entity then
+        return storage.boss
     end
     return nil
 end
@@ -78,8 +78,8 @@ function RemoteAPI.add_points_to_attack_meter(race, value)
     local races = GlobalConfig.get_enemy_races()
     race = race or races[math.random(1, GlobalConfig.get_enemy_races_total())]
 
-    if global.race_settings and
-            global.race_settings[race]
+    if storage.race_settings and
+            storage.race_settings[race]
     then
         RaceSettingsHelper.add_to_attack_meter(race, value)
 
@@ -94,8 +94,8 @@ end
 --- 2. make change to race_settings
 --- 3. remote.call('enemyracemanager', 'update_race_setting', race_settings)
 function RemoteAPI.update_race_setting(race_setting)
-    if global and global.race_settings and global.race_settings[race_setting.race] then
-        global.race_settings[race_setting.race] = race_setting
+    if storage and storage.race_settings and storage.race_settings[race_setting.race] then
+        storage.race_settings[race_setting.race] = race_setting
         RaceSettingsHelper.refresh_current_tier(race_setting.race)
 
         return true
@@ -258,7 +258,7 @@ end
 
 --- Usage  remote.call('enemyracemanager', 'spawn_interplanetary_attack', 'erm_zerg', 'players', {x=100,y=200})
 function RemoteAPI.spawn_interplanetary_attack(race_name, target_force, drop_location)
-    local race_settings = global.race_settings[race_name]
+    local race_settings = storage.race_settings[race_name]
     if not race_settings then
         error('Race name is required / invalid')
     end
@@ -275,9 +275,9 @@ function RemoteAPI.add_boss_attack_group(group)
     if group.valid and next(group.members) then
         local group_data = BossGroupProcessor.get_default_data()
         group_data['group'] = group
-        group_data['group_number'] = group.group_number
+        group_data['unique_id'] = group.unique_id
         group_data['total_units'] = table_size(group.members)
-        table.insert(global.boss_attack_groups, group_data)
+        table.insert(storage.boss_attack_groups, group_data)
     end
 end
 
@@ -285,7 +285,7 @@ end
 --- Assign unit group to ERM attack group, which manage by ERM group logics
 function RemoteAPI.add_erm_attack_group(group, target_force)
     if group.valid and next(group.members) then
-        global.erm_unit_groups[group.group_number] = {
+        storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,
             nearby_retry = 0,
@@ -300,7 +300,7 @@ function RemoteAPI.override_attack_strategy(strategy_id)
     if strategy_id < 1 or strategy_id > 3 then
         error('ERMAPI.override_attack_strategy: Invalid Attack Strategy. Choose 1. Smart BrutalForce, 2. Route to left, 3. Route to right')
     end
-    global.override_attack_strategy = strategy_id
+    storage.override_attack_strategy = strategy_id
 end
 
 function RemoteAPI.milestones_preset_addons()

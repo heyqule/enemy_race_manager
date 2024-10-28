@@ -14,7 +14,7 @@ local valid_erm_left_click = {
 
         local player = game.players[event.player_index]
 
-        if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
+        if player and player.valid and storage.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then
@@ -35,7 +35,7 @@ local valid_erm_alt_left_click = {
     ['radar'] = function(event)
         local player = game.players[event.player_index]
 
-        if player and player.valid and global.army_registered_command_centers[event.selected_prototype.name] then
+        if player and player.valid and storage.army_registered_command_centers[event.selected_prototype.name] then
             local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
             ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
             if entity then

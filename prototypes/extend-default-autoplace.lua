@@ -20,9 +20,7 @@
 --
 
 
-local noise = require("noise")
 local String = require('__stdlib__/stdlib/utils/string')
-local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
 local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
@@ -445,7 +443,7 @@ for key, race_data in pairs(updated_specs) do
     local volume = volumes[key]
     if volume then
         if race_data.entity_filter then
-            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. '/' .. race_data.entity_filter .. ' Volume:')
+            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. '--' .. race_data.entity_filter .. ' Volume:')
         else
             DebugHelper.print('Autoplace - ' .. race_data.mod_name .. ' Volume:')
         end

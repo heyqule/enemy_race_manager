@@ -22,41 +22,41 @@ local Debug_RemoteAPI = {}
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_race_settings')
 function Debug_RemoteAPI.print_race_settings()
-    log(game.table_to_json(global.race_settings))
+    log(helpers.table_to_json(storage.race_settings))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_surface_races')
 function Debug_RemoteAPI.print_surface_races()
     local value_table = {}
-    for index, value in pairs(global.enemy_surfaces) do
+    for index, value in pairs(storage.enemy_surfaces) do
         value_table[game.surfaces[index].name] = value
     end
-    log(game.table_to_json(value_table))
+    log(helpers.table_to_json(value_table))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_forces')
 function Debug_RemoteAPI.print_forces()
-    log(game.table_to_json(game.forces))
+    log(helpers.table_to_json(game.forces))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_option_settings')
 function Debug_RemoteAPI.print_option_settings()
-    log(game.table_to_json(global.settings))
+    log(helpers.table_to_json(storage.settings))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_installed_races')
 function Debug_RemoteAPI.print_installed_races()
-    log(game.table_to_json(GlobalConfig.get_installed_races()))
+    log(helpers.table_to_json(GlobalConfig.get_installed_races()))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_enemy_races')
 function Debug_RemoteAPI.print_enemy_races()
-    log(game.table_to_json(GlobalConfig.get_enemy_races()))
+    log(helpers.table_to_json(GlobalConfig.get_enemy_races()))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'print_global')
 function Debug_RemoteAPI.print_global()
-    game.write_file('enemyracemanager/erm-global.json', game.table_to_json(util.copy(global)))
+    helpers.write_file('enemyracemanager/erm-storage.json', helpers.table_to_json(util.copy(storage)))
 
     for interface_name, functions in pairs(remote.interfaces) do
         if functions["print_global"] and interface_name ~= 'enemyracemanager_debug' then
@@ -68,13 +68,13 @@ end
 --- Usage: remote.call('enemyracemanager_debug', 'print_calculate_attack_points')
 function Debug_RemoteAPI.print_calculate_attack_points()
     local table = {}
-    for name, _ in pairs(global.race_settings) do
+    for name, _ in pairs(storage.race_settings) do
         table[name] = {
             current_points = RaceSettingsHelper.get_attack_meter(name),
             next_threshold = RaceSettingsHelper.get_next_attack_threshold(name)
         }
     end
-    log(game.table_to_json(table))
+    log(helpers.table_to_json(table))
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'exec_attack_group', 'erm_zerg')
@@ -94,7 +94,7 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'add_points_to_attack_meter', 500000)
 function Debug_RemoteAPI.add_points_to_attack_meter(value)
-    for name, _ in pairs(global.race_settings) do
+    for name, _ in pairs(storage.race_settings) do
         RaceSettingsHelper.add_to_attack_meter(name, value)
     end
 end
@@ -106,44 +106,44 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'level_up', 20)
 function Debug_RemoteAPI.level_up(level)
-    for race_name, _ in pairs(global.race_settings) do
-        LevelProcessor.level_by_command(global.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
+    for race_name, _ in pairs(storage.race_settings) do
+        LevelProcessor.level_by_command(storage.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
     end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'set_evolution_factor', 0.5)
 function Debug_RemoteAPI.set_evolution_factor(value)
-    for race_name, _ in pairs(global.race_settings) do
+    for race_name, _ in pairs(storage.race_settings) do
         local force = game.forces[ForceHelper.get_force_name_from(race_name)]
         if force then
-            force.evolution_factor = math.min(value, 1)
+            force.set_evolution_factor(math.min(value, 1))
         end
     end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'set_tier', 1)
 function Debug_RemoteAPI.set_tier(value)
-    for race_name, _ in pairs(global.race_settings) do
-        global.race_settings[race_name].tier = math.min(value, 3)
+    for race_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[race_name].tier = math.min(value, 3)
         RaceSettingsHelper.refresh_current_tier(race_name)
     end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'set_boss_tier', 1)
 function Debug_RemoteAPI.set_boss_tier(value)
-    for race_name, _ in pairs(global.race_settings) do
-        global.race_settings[race_name].boss_tier = math.max(1, math.min(value, 5))
+    for race_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[race_name].boss_tier = math.max(1, math.min(value, 5))
     end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'reset_level')
 function Debug_RemoteAPI.reset_level()
-    for race_name, _ in pairs(global.race_settings) do
-        global.race_settings[race_name].evolution_base_point = 0
-        global.race_settings[race_name].evolution_point = 0
-        global.race_settings[race_name].tier = 1
-        LevelProcessor.level_by_command(global.race_settings, race_name, 1)
-        game.forces[ForceHelper.get_force_name_from(race_name)].evolution_factor = 0
+    for race_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[race_name].evolution_base_point = 0
+        storage.race_settings[race_name].evolution_point = 0
+        storage.race_settings[race_name].tier = 1
+        LevelProcessor.level_by_command(storage.race_settings, race_name, 1)
+        game.forces[ForceHelper.get_force_name_from(race_name)].set_evolution_factor(0)
     end
 end
 
@@ -177,7 +177,7 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'set_evolution_base_point'，‘erm_zerg', 100)
 function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
-    global.race_settings[race_name].evolution_base_point = value
+    storage.race_settings[race_name].evolution_base_point = value
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'spawn_boss', {x=100,y=100})
@@ -190,15 +190,15 @@ end
 
 --- Usage: remote.call('enemyracemanager_debug', 'win_boss')
 function Debug_RemoteAPI.win_boss()
-    if global.boss then
-        global.boss.victory = true
+    if storage.boss then
+        storage.boss.victory = true
     end
 end
 
 --- Usage: remote.call('enemyracemanager_debug', 'loss_boss')
 function Debug_RemoteAPI.loss_boss()
-    if global.boss then
-        global.boss.despawn_at_tick = 1
+    if storage.boss then
+        storage.boss.despawn_at_tick = 1
     end
 end
 
@@ -240,7 +240,7 @@ end
 
 --- remote.call('enemyracemanager_debug', 'validate_erm_groups')
 function Debug_RemoteAPI.validate_erm_groups()
-    for id, content in pairs(global.erm_unit_groups) do
+    for id, content in pairs(storage.erm_unit_groups) do
         print(id..' = '.. tostring(content.group.valid))
     end
 end

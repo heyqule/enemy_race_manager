@@ -76,10 +76,6 @@ end
 function ERM_UnitTint.mask_tint(layer, color)
     layer['tint'] = color
     layer['apply_runtime_tint'] = false
-    if layer['hr_version'] then
-        layer['hr_version']['tint'] = color
-        layer['hr_version']['apply_runtime_tint'] = false
-    end
 end
 
 return ERM_UnitTint

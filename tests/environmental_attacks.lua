@@ -6,16 +6,16 @@ local EnvironmentalAttacks = require('__enemyracemanager__/lib/environmental_att
 
 before_each(function()
     TestShared.prepare_the_factory()
-    global.erm_unit_groups = {}
+    storage.erm_unit_groups = {}
     EnvironmentalAttacks.reset_global()
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
-    global.erm_unit_groups = {}
+    storage.erm_unit_groups = {}
     EnvironmentalAttacks.reset_global()
-    global.override_environmental_attack_can_spawn = nil
-    global.override_environmental_attack_spawn_home = nil
+    storage.override_environmental_attack_can_spawn = nil
+    storage.override_environmental_attack_spawn_home = nil
 end)
 
 
@@ -29,8 +29,8 @@ it("Attack Target", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.override_environmental_attack_can_spawn = 1
-    global.override_environmental_attack_spawn_home = -1
+    storage.override_environmental_attack_can_spawn = 1
+    storage.override_environmental_attack_spawn_home = -1
 
     local meteor = surface.create_entity(
 { name = 'erm-test-meteor',
@@ -60,8 +60,8 @@ it("Build Base", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.override_environmental_attack_can_spawn = 1
-    global.override_environmental_attack_spawn_home = 1
+    storage.override_environmental_attack_can_spawn = 1
+    storage.override_environmental_attack_spawn_home = 1
 
     local meteor = surface.create_entity(
             { name = 'erm-test-meteor',
@@ -91,8 +91,8 @@ it("Can't spawn", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.override_environmental_attack_can_spawn = -1
-    global.override_environmental_attack_spawn_home = -1
+    storage.override_environmental_attack_can_spawn = -1
+    storage.override_environmental_attack_spawn_home = -1
 
     local meteor = surface.create_entity(
             { name = 'erm-test-meteor',
@@ -120,7 +120,7 @@ it("Test Enabler", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    global.settings['enemyracemanager-environmental-raids'] = false
+    storage.settings['enemyracemanager-environmental-raids'] = false
 
     local meteor = surface.create_entity(
             { name = 'erm-test-meteor',
@@ -133,7 +133,7 @@ it("Test Enabler", function()
         local count = surface.count_entities_filtered({
             type="unit",
         })
-        global.settings['enemyracemanager-environmental-raids'] = true
+        storage.settings['enemyracemanager-environmental-raids'] = true
         assert(count == 0, 'Should not have unit on the surface')
         done()
     end)

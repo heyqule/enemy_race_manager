@@ -36,7 +36,7 @@ end
 
 local handle_unit_tier = function(race_settings, force, race_name, dispatch)
     local current_tier = race_settings[race_name].tier
-    if current_tier < GlobalConfig.MAX_TIER and force.evolution_factor >= tier_map[current_tier] then
+    if current_tier < GlobalConfig.MAX_TIER and force.get_evolution_factor() >= tier_map[current_tier] then
         level_up_tier(current_tier, race_settings, race_name)
         if dispatch then
             --Event.dispatch(
@@ -82,7 +82,8 @@ local handle_unit_level = function(race_settings, force, race_name, dispatch)
 end
 
 local calculate_evolution_points = function(race_settings, settings, force, race_name)
-    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.evolution_factor_by_pollution + force.evolution_factor_by_time + force.evolution_factor_by_killing_spawners) * settings.global['enemyracemanager-evolution-point-multipliers'].value
+    -- @TODO evolution factor is now per surface. need a new formular for this.
+    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.get_evolution_factor_by_pollution() + force.get_evolution_factor_by_time() + force.get_evolution_factor_by_killing_spawners()) * settings.global['enemyracemanager-evolution-point-multipliers'].value
     race_settings[race_name].global_evolution_point = race_settings[race_name].evolution_point
     return race_settings[race_name].evolution_point
 end
@@ -107,7 +108,7 @@ function LevelManager.calculate_levels()
         return
     end
 
-    local race_settings = global.race_settings
+    local race_settings = storage.race_settings
     local forces = game.forces
     local settings = settings
 
@@ -140,7 +141,7 @@ function LevelManager.calculate_levels()
 end
 
 function LevelManager.calculate_multiple_levels()
-    local race_settings = global.race_settings
+    local race_settings = storage.race_settings
     local forces = game.forces
     local settings = settings
 
@@ -247,7 +248,7 @@ function LevelManager.get_evolution_factor(race_name)
     local new_force_name = ForceHelper.get_force_name_from(race_name)
 
     if game.forces[new_force_name] then
-        return game.forces[new_force_name].evolution_factor
+        return game.forces[new_force_name].get_evolution_factor()
     end
 
     return 0
@@ -264,10 +265,10 @@ end
 function LevelManager.reset_all_progress()
     for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
         local race_name = ForceHelper.extract_race_name_from(force_name)
-        global.race_settings[race_name].level = 1
-        global.race_settings[race_name].tier = 1
-        global.race_settings[race_name].evolution_point = 0
-        global.race_settings[race_name].evolution_base_point = 0
+        storage.race_settings[race_name].level = 1
+        storage.race_settings[race_name].tier = 1
+        storage.race_settings[race_name].evolution_point = 0
+        storage.race_settings[race_name].evolution_base_point = 0
         local force = game.forces[force_name]
         force.reset_evolution()
     end

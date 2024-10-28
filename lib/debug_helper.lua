@@ -27,4 +27,55 @@ function DebugHelper.print(message)
     end
 end
 
+function DebugHelper.drawline(surface, text, color, from, to, gap_length, dash_length)
+    gap_length = gap_length or 3
+    dash_length = dash_length or 3
+    surface = surface or 1
+    local text_offset = 10
+
+    if from == nil or to == nil then
+        return
+    end
+
+    if from.x == nil and from[1] then
+        from.x = from[1]
+        from.y = from[2]
+    end        
+    if to.x == nil and to[1] then
+        to.x = to[1]
+        to.y = to[2]
+    end        
+    --Draw text and
+
+    rendering.draw_text({
+        text = {"", text},
+        target = {x = from.x - text_offset,y = from.y - text_offset},
+        surface = surface,
+        color = color,
+        scale = 2,
+        time_to_live = 3600
+    })
+    rendering.draw_text({
+        text = {"", text},
+        surface = surface,
+        target = {x = to.x + text_offset,y = to.y + text_offset},
+        color = color,
+        scale = 2,
+        time_to_live = 3600
+    })
+    rendering.draw_line({
+        color = color,
+        from = from,
+        to = to,
+        width = 2,
+        gap_length = gap_length,
+        dash_length = gap_length,
+        surface = surface,
+        forces = 'player',
+        only_in_alt_mode = false,
+        draw_on_ground = true,
+        time_to_live = 3600
+    })
+end
+
 return DebugHelper

@@ -64,50 +64,27 @@ robot_animations["construction-robot"] = {
         filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
         priority = "high",
         line_length = 16,
-        width = 32,
-        height = 36,
+        width = 66,
+        height = 76,
         frame_count = 1,
         shift = util.by_pixel(0, -4.5),
         direction_count = 16,
         tint = { r = 0.5, g = 0, b = 1, a = 1 },
-        y = 36,
-        hr_version = {
-            filename = "__base__/graphics/entity/construction-robot/hr-construction-robot.png",
-            priority = "high",
-            line_length = 16,
-            width = 66,
-            height = 76,
-            frame_count = 1,
-            shift = util.by_pixel(0, -4.5),
-            direction_count = 16,
-            tint = { r = 0.5, g = 0, b = 1, a = 1 },
-            y = 76,
-            scale = 0.5
-        }
+        y = 76,
+        scale = 0.5
     },
 
     shadow_in_motion = {
         filename = "__base__/graphics/entity/construction-robot/construction-robot-shadow.png",
         priority = "high",
         line_length = 16,
-        width = 53,
-        height = 25,
+        width = 104,
+        height = 49,
         frame_count = 1,
-        shift = util.by_pixel(33.5, 18.5),
+        shift = util.by_pixel(33.5, 18.75),
         direction_count = 16,
-        draw_as_shadow = true,
-        hr_version = {
-            filename = "__base__/graphics/entity/construction-robot/hr-construction-robot-shadow.png",
-            priority = "high",
-            line_length = 16,
-            width = 104,
-            height = 49,
-            frame_count = 1,
-            shift = util.by_pixel(33.5, 18.75),
-            direction_count = 16,
-            scale = 0.5,
-            draw_as_shadow = true
-        }
+        scale = 0.5,
+        draw_as_shadow = true
     },
 
 }
@@ -118,8 +95,8 @@ function makeConstructionRobot(level)
     local original_health = robot['max_health'] * 3
 
     robot['type'] = 'unit'
-    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
-    robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. robot['name'], tostring(level) }
+    robot['name'] = MOD_NAME .. '--' .. robot['name'] .. '--' .. level
     robot["subgroup"] = "erm-builder-enemies"
     robot['has_belt_immunity'] = true
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier, level)
@@ -140,6 +117,7 @@ function makeConstructionRobot(level)
         min_attack_distance = attack_range - 4,
         cooldown = 60,
         warmup = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, level),
+        ammo_category = 'erm-biter-damage',
         ammo_type = {
             category = "melee",
             target_type = "direction",
@@ -169,12 +147,15 @@ function makeConstructionRobot(level)
             robot_animations[type].shadow_in_motion,
         }
     }
+    robot['is_military_target'] = true
     robot['attack_parameters']['animation'] = robot['run_animation']
     robot['attack_parameters']['ammo_type']['category'] = 'erm-biter-damage'
     robot['distance_per_frame'] = 0.17
     robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
     robot['vision_distance'] = vision_distance
-    robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    robot['absorptions_to_join_attack'] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    }
     robot['distraction_cooldown'] = distraction_cooldown
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box

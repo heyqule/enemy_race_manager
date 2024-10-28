@@ -45,8 +45,8 @@ function DeployerAttachement.show(player, unit_number)
     container.add { type = "button", name = "erm_rally_point_unset", caption = { "gui-rallypoint.unset" }, style = "red_button"}
 
     local active_deployers = {}
-    if global.army_active_deployers[force_index] then
-        active_deployers = global.army_active_deployers[force_index]['deployers']
+    if storage.army_active_deployers[force_index] then
+        active_deployers = storage.army_active_deployers[force_index]['deployers']
     end
     container.add { type = "label", caption = {'gui-rallypoint.auto_deploy'}}
     local switch = container.add {

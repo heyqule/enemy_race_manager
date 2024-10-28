@@ -22,32 +22,32 @@ local PLAYER = 1
 local NAUVIS = 1
 
 local init_data = function(race_name, surface_index)
-    if  global.attack_heat[race_name] == nil or
-        global.attack_heat[race_name][surface_index] == nil
+    if  storage.attack_heat[race_name] == nil or
+        storage.attack_heat[race_name][surface_index] == nil
     then
-        global.attack_heat[race_name] = global.attack_heat[race_name] or {}
-        global.attack_heat[race_name][surface_index] = global.attack_heat[race_name][surface_index] or {}
+        storage.attack_heat[race_name] = storage.attack_heat[race_name] or {}
+        storage.attack_heat[race_name][surface_index] = storage.attack_heat[race_name][surface_index] or {}
     end
 end
 
 AttackGroupHeatProcessor.init_globals = function()
-    --- global.attack_heat[race_index][surface_index][attacker_force_index]
-    global.attack_heat = global.attack_heat or {}
-    global.attack_heat_by_forces = global.attack_heat_by_forces or {}
-    global.attack_heat_by_surfaces = global.attack_heat_by_surfaces or {}
+    --- storage.attack_heat[race_index][surface_index][attacker_force_index]
+    storage.attack_heat = storage.attack_heat or {}
+    storage.attack_heat_by_forces = storage.attack_heat_by_forces or {}
+    storage.attack_heat_by_surfaces = storage.attack_heat_by_surfaces or {}
 end
 
 AttackGroupHeatProcessor.reset_globals = function()
-    global.attack_heat = {}
-    global.attack_heat_by_forces = global.attack_heat_by_forces or {}
-    global.attack_heat_by_surfaces = global.attack_heat_by_surfaces or {}
+    storage.attack_heat = {}
+    storage.attack_heat_by_forces = storage.attack_heat_by_forces or {}
+    storage.attack_heat_by_surfaces = storage.attack_heat_by_surfaces or {}
 end
 
 --- Handle removing surface data
 AttackGroupHeatProcessor.remove_surface = function(surface_index)
-    for active_race, _ in pairs(global.active_races) do
-        if global.attack_heat[active_race] and global.attack_heat[active_race][surface_index] then
-            global.attack_heat[active_race][surface_index] = nil
+    for active_race, _ in pairs(storage.active_races) do
+        if storage.attack_heat[active_race] and storage.attack_heat[active_race][surface_index] then
+            storage.attack_heat[active_race][surface_index] = nil
             AttackGroupHeatProcessor.aggregate_heat(active_race)
         end
     end
@@ -55,9 +55,9 @@ end
 
 --- Handle removing player force data
 AttackGroupHeatProcessor.remove_force = function(attacker_index)
-    for active_race, _ in pairs(global.active_races) do
-        if global.attack_heat[active_race] then
-            for _, surface_data in pairs(global.attack_heat[active_race]) do
+    for active_race, _ in pairs(storage.active_races) do
+        if storage.attack_heat[active_race] then
+            for _, surface_data in pairs(storage.attack_heat[active_race]) do
                 if surface_data[attacker_index] then
                     surface_data[attacker_index] = nil
                 end
@@ -73,14 +73,14 @@ AttackGroupHeatProcessor.calculate_heat = function(race_name, surface_index, att
         return
     end
     init_data(race_name, surface_index)
-    local points = global.attack_heat[race_name][surface_index][attacker_index] or 0
+    local points = storage.attack_heat[race_name][surface_index][attacker_index] or 0
     heat_points = heat_points or AttackGroupHeatProcessor.DEFAULT_VALUE
     points = points + heat_points
-    global.attack_heat[race_name][surface_index][attacker_index] = points
+    storage.attack_heat[race_name][surface_index][attacker_index] = points
 end
 
 AttackGroupHeatProcessor.cooldown_heat = function(race_name)
-    local attack_heat = global.attack_heat[race_name]
+    local attack_heat = storage.attack_heat[race_name]
     if attack_heat == nil then
         return nil
     end
@@ -99,9 +99,9 @@ AttackGroupHeatProcessor.cooldown_heat = function(race_name)
 end
 
 AttackGroupHeatProcessor.aggregate_heat = function(race_name)
-    if global.attack_heat[race_name] == nil then
-        global.attack_heat_by_surfaces[race_name] = nil
-        global.attack_heat_by_forces[race_name] = nil
+    if storage.attack_heat[race_name] == nil then
+        storage.attack_heat_by_surfaces[race_name] = nil
+        storage.attack_heat_by_forces[race_name] = nil
         return nil
     end
 
@@ -109,7 +109,7 @@ AttackGroupHeatProcessor.aggregate_heat = function(race_name)
     local attack_heat_by_forces = {}
 
     --- Aggregate
-    for surface_index, surface_data in pairs(global.attack_heat[race_name]) do
+    for surface_index, surface_data in pairs(storage.attack_heat[race_name]) do
         local surface_heat = attack_heat_by_surfaces[surface_index] or { surface_index = surface_index, heat = 0 }
         for attacker_index, points in pairs(surface_data) do
             local force_heat = attack_heat_by_forces[attacker_index] or { attacker_index = attacker_index, heat = 0 }
@@ -138,18 +138,18 @@ AttackGroupHeatProcessor.aggregate_heat = function(race_name)
     table.sort(sorted_surfaces, function(a, b) return a.heat > b.heat  end)
     table.sort(sorted_forces, function(a, b) return a.heat > b.heat  end)
 
-    --- Assign global
-    global.attack_heat_by_surfaces[race_name] = sorted_surfaces
-    global.attack_heat_by_forces[race_name] = sorted_forces
+    --- Assign storage
+    storage.attack_heat_by_surfaces[race_name] = sorted_surfaces
+    storage.attack_heat_by_forces[race_name] = sorted_forces
 end
 
 AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
-    local surface_data = global.attack_heat_by_surfaces[race_name]
+    local surface_data = storage.attack_heat_by_surfaces[race_name]
     local return_surface = nil
-    if global.is_multi_planets_game and
+    if storage.is_multi_planets_game and
         surface_data and
-        global.total_enemy_surfaces > 1
+        storage.total_enemy_surfaces > 1
     then
         local _, surface = next(surface_data)
         if surface and surface.has_attack_beacon then
@@ -163,12 +163,12 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             end
         end
 
-        if not return_surface or global.override_interplanetary_attack_enabled then
+        if not return_surface or storage.override_interplanetary_attack_enabled then
             local ask_friend_roll = nil
             local interplanetary_attack_enable = Config.interplanetary_attack_enable()
 
             if interplanetary_attack_enable then
-                ask_friend_roll = global.override_ask_friend
+                ask_friend_roll = storage.override_ask_friend
                 if ask_friend_roll == nil then
                     ask_friend_roll = RaceSettingsHelper.can_spawn(50)
                 end
@@ -176,10 +176,10 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
 
             -- Transfer all attack points to a friend that can attack.
             if ask_friend and ask_friend_roll then
-                for friend_race_name, race_surface_data in pairs(global.attack_heat_by_surfaces) do
+                for friend_race_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
                     for surface_index, surface in pairs(race_surface_data) do
                         if surface and surface.has_attack_beacon and
-                                global.attack_heat[friend_race_name][surface_index] ~= nil
+                                storage.attack_heat[friend_race_name][surface_index] ~= nil
                         then
 
                             --- AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
@@ -191,7 +191,7 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                 end
             end
 
-            if interplanetary_attack_enable or global.override_interplanetary_attack_enabled then
+            if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
                 Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),{
                     race_name = race_name,
                     target_force = target_force
@@ -206,8 +206,8 @@ end
 
 AttackGroupHeatProcessor.pick_target = function(race_name)
     --- If the game has multiple player forces, pick from heat list
-    local attack_heat_by_forces = global.attack_heat_by_forces[race_name]
-    local total_player_forces = global.total_player_forces
+    local attack_heat_by_forces = storage.attack_heat_by_forces[race_name]
+    local total_player_forces = storage.total_player_forces
 
     if total_player_forces > 1 and
         attack_heat_by_forces and

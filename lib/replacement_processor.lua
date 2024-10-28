@@ -21,11 +21,11 @@ local ReplacementProcessor = {}
 
 local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
-    local race_pick = global.replacement_race_pick
+    local race_pick = storage.replacement_race_pick
     local base_name = RaceSettingHelper.pick_a_spawner(race_pick)
     local new_force_name = ForceHelper.get_force_name_from(race_pick)
 
-    local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
+    local name = race_settings[race_pick].race .. '--' .. base_name .. '--' .. race_settings[race_pick].level
     entity.destroy()
     if not surface.can_place_entity({ name = name, force = new_force_name, position = position }) then
         position = surface.find_non_colliding_position(name, position, 32, 8, true)
@@ -38,9 +38,9 @@ end
 
 local replace_turrets = function(surface, entity, race_settings)
     local position = entity.position
-    local race_pick = global.replacement_race_pick
+    local race_pick = storage.replacement_race_pick
     local base_name = RaceSettingHelper.pick_a_turret(race_pick)
-    local name = race_settings[race_pick].race .. '/' .. base_name .. '/' .. race_settings[race_pick].level
+    local name = race_settings[race_pick].race .. '--' .. base_name .. '--' .. race_settings[race_pick].level
     local new_force_name = ForceHelper.get_force_name_from(race_pick)
 
     entity.destroy()
@@ -77,7 +77,7 @@ end
 
 function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
     if surface then
-        global.replacement_race_pick = race_pick
+        storage.replacement_race_pick = race_pick
         local profiler = game.create_profiler()
         for chunk in surface.get_chunks() do
             ReplacementProcessor.process_chunks(surface, chunk.area, race_settings)
@@ -89,7 +89,7 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
             end
         end
         profiler.stop()
-        game.print({ '', 'Rebuild Map: ' .. global.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler })
+        game.print({ '', 'Rebuild Map: ' .. storage.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler })
     end
 end
 
@@ -107,7 +107,7 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
             return
         end
 
-        global.replacement_race_pick = race_pick
+        storage.replacement_race_pick = race_pick
         local nameToken = ForceHelper.get_name_token(entity.name)
 
         if (race_pick == nameToken[1] and nameToken[3] == race_settings[race_pick].level) then

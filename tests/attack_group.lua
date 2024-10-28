@@ -13,20 +13,20 @@ local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 
 before_each(function()
     TestShared.prepare_the_factory()
-    global.erm_unit_groups = {}
+    storage.erm_unit_groups = {}
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
-    global.erm_unit_groups = {}
+    storage.erm_unit_groups = {}
 end)
 
-local command_center = 'erm_zerg/hive/20'
-local ultralisk = 'erm_zerg/ultralisk/20'
+local command_center = 'erm_zerg--hive--20'
+local ultralisk = 'erm_zerg--ultralisk--20'
 local force_name = 'enemy_erm_zerg'
 local race_name = 'erm_zerg'
 local PLAYER = 'player'
-local SCOUT_NAME_PATTERN = '_scout/'
+local SCOUT_NAME_PATTERN = '_scout--'
 
 local function spawn_cc(surface)
     local position = {x=0,y=320}
@@ -39,7 +39,7 @@ local function spawn_regular_unit_group(surface, position, is_auto)
     local group = surface.create_unit_group {position = position, force = 'enemy'}
     for i = 0, 50, 1 do
         local entity = surface.create_entity({
-            name = 'erm_vanilla/small-biter/1',
+            name = 'erm_vanilla--small-biter--1',
             position = position
         })
         group.add_member(entity)
@@ -50,27 +50,31 @@ local function spawn_regular_unit_group(surface, position, is_auto)
     return group
 end
 
-    --- Regular attack group Test
+--- Regular attack group Test
     it("Regular Group by AP", function()
         async(14400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
-        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
+        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 } })
         AttackGroupBeaconProcessor.init_index()
 
-        global.race_settings[race_name].level = 20
-        global.race_settings[race_name].tier = 3
-        global.race_settings[race_name].attack_meter = 3500
-        global.race_settings[race_name].next_attack_threshold = 3000
-
+        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].tier = 3
+        storage.race_settings[race_name].attack_meter = 3500
+        storage.race_settings[race_name].next_attack_threshold = 3000
+        -- @TODO remove test speed changes
+        --after_ticks(10000, function()
+        --    game.speed = 1
+        --end)
         after_ticks(14400, function()
-            assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
+            --game.speed = 1000
+            assert(table_size(storage.erm_unit_groups) == 1,'Check Erm unit group table')
 
-            local key = next(global.erm_unit_groups)
-            assert.not_nil(global.erm_unit_groups[key], 'Check Unit Group Data')
+            local key = next(storage.erm_unit_groups)
+            assert.not_nil(storage.erm_unit_groups[key], 'Check Unit Group Data')
 
-            local group = global.erm_unit_groups[key].group
-            assert.truthy(global.erm_unit_groups[key].group.valid, 'Check Unit Group valid')
+            local group = storage.erm_unit_groups[key].group
+            assert.truthy(storage.erm_unit_groups[key].group.valid, 'Check Unit Group valid')
 
             local member = group.members[5]
             local nameToken = ForceHelper.get_name_token(member.name)
@@ -86,21 +90,21 @@ end
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
 
-        global.erm_unit_groups = {}
-        global.race_settings[race_name].level = 20
-        global.race_settings[race_name].tier = 3
-        global.race_settings[race_name].attack_meter = 3000
-        global.race_settings[race_name].next_attack_threshold = 3000
-        global.race_settings[race_name].attack_meter_total = 60000
+        storage.erm_unit_groups = {}
+        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].tier = 3
+        storage.race_settings[race_name].attack_meter = 3000
+        storage.race_settings[race_name].next_attack_threshold = 3000
+        storage.race_settings[race_name].attack_meter_total = 60000
 
         after_ticks(14400, function()
-            assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
+            assert(table_size(storage.erm_unit_groups) == 1,'Check Erm unit group table')
 
-            local key = next(global.erm_unit_groups)
-            assert.not_nil(global.erm_unit_groups[key], 'Check Group Record')
+            local key = next(storage.erm_unit_groups)
+            assert.not_nil(storage.erm_unit_groups[key], 'Check Group Record')
 
-            local group = global.erm_unit_groups[key].group
-            assert.truthy(global.erm_unit_groups[key].group.valid, 'Check Unit Group valid')
+            local group = storage.erm_unit_groups[key].group
+            assert.truthy(storage.erm_unit_groups[key].group.valid, 'Check Unit Group valid')
 
             local member = group.members[3]
             local nameToken = ForceHelper.get_name_token(member.name)
@@ -111,7 +115,7 @@ end
 
     it("Superweapon revenge", function()
         async(7300)
-        global.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 20
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
@@ -144,10 +148,10 @@ end
         end)
 
         after_ticks(3600, function()
-            assert(table_size(global.erm_unit_groups) == 1,'Check Erm unit group table')
+            assert(table_size(storage.erm_unit_groups) == 1,'Check Erm unit group table')
 
-            local key = next(global.erm_unit_groups)
-            assert.not_nil(global.erm_unit_groups[key], 'Check Group Record')
+            local key = next(storage.erm_unit_groups)
+            assert.not_nil(storage.erm_unit_groups[key], 'Check Group Record')
             done()
         end)
     end)
@@ -220,8 +224,8 @@ end
 
     it("Featured Group", function()
         async(7300)
-        global.race_settings[race_name].level = 20
-        global.race_settings[race_name].tier = 1
+        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -258,8 +262,8 @@ end
 
     it("Featured Flyer Group", function()
         async(7300)
-        global.race_settings[race_name].level = 20
-        global.race_settings[race_name].tier = 1
+        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -296,8 +300,8 @@ end
 
     it("Group Killed during generation", function()
         async(1900)
-        global.race_settings[race_name].level = 20
-        global.race_settings[race_name].tier = 1
+        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -309,11 +313,11 @@ end
                 200
         )
         after_ticks(600, function()
-            local group = global.group_tracker.erm_zerg.group
+            local group = storage.group_tracker.erm_zerg.group
             group.destroy()
         end)
         after_ticks(1800, function()
-            assert.equal(global.group_tracker.erm_zerg, nil, 'Remove record from group tracker')
+            assert.equal(storage.group_tracker.erm_zerg, nil, 'Remove record from group tracker')
             done()
         end)
     end)
@@ -325,7 +329,7 @@ end
         AttackGroupBeaconProcessor.init_index()
 
         local group = spawn_regular_unit_group(surface, entity.position, true)
-        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
         group.start_moving()
 
         local has_scout = false
@@ -336,7 +340,7 @@ end
             end
         end
         assert.equal(has_scout, true, 'Scout is in the team')
-        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
     end)
 
     it("Non-ERM Manual group should NOT have a scout", function()
@@ -346,7 +350,7 @@ end
         AttackGroupBeaconProcessor.init_index()
 
         local group = spawn_regular_unit_group(surface, entity.position, false)
-        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
         group.start_moving()
 
         local has_scout = false
@@ -357,7 +361,7 @@ end
             end
         end
         assert.equal(has_scout, false, 'Scout is not in the team')
-        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
     end)
 
     it("Empty unit group should not include in ERM group tracker", function()
@@ -366,9 +370,9 @@ end
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         local group = surface.create_unit_group {position = entity.position, force = 'enemy'}
-        assert.not_nil(global.scout_unit_name[group.group_number],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
         group.start_moving()
-        assert.is_nil(global.scout_unit_name[group.group_number],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
     end)
 
 it("Enemy victory expansion", function()

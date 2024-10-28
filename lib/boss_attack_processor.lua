@@ -43,7 +43,7 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     artillery_mode = artillery_mode or false
 
     local return_position
-    local boss = global.boss
+    local boss = storage.boss
     local surface = boss.surface
     local attackable_entities_cache = boss.attackable_entities_cache
     local attackable_entities_cache_size = boss.attackable_entities_cache_size
@@ -57,24 +57,24 @@ local pick_near_by_player_entity_position = function(artillery_mode)
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
-        global.boss.attackable_entities_cache = attackable_entities_cache
-        global.boss.attackable_entities_cache_size = attackable_entities_cache_size
+        storage.boss.attackable_entities_cache = attackable_entities_cache
+        storage.boss.attackable_entities_cache_size = attackable_entities_cache_size
     end
 
     if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ForceHelper.get_player_forces(),
-            area = get_scan_area[boss.target_direction](global.boss.entity_position.x, global.boss.entity_position.y),
+            area = get_scan_area[boss.target_direction](storage.boss.entity_position.x, storage.boss.entity_position.y),
             limit = GlobalConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
-        global.boss.attackable_entities_cache = attackable_entities_cache
-        global.boss.attackable_entities_cache_size = attackable_entities_cache_size
+        storage.boss.attackable_entities_cache = attackable_entities_cache
+        storage.boss.attackable_entities_cache_size = attackable_entities_cache_size
         artillery_mode = true
     end
 
-    if global.boss.attackable_entities_cache_size > 0 then
+    if storage.boss.attackable_entities_cache_size > 0 then
         local retry = 0
         repeat
             local entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
@@ -115,11 +115,11 @@ end
 
 local select_attack = function(mod_name, attacks, tier)
     local data
-    local boss = global.boss
+    local boss = storage.boss
     for i, value in pairs(attacks['projectile_name']) do
         if can_spawn(attacks['projectile_chance'][i]) then
             data = {
-                entity_name = mod_name .. '/' .. value .. '-' .. type_name[attacks['projectile_type'][i]] .. '-t' .. tier,
+                entity_name = mod_name .. '--' .. value .. '-' .. type_name[attacks['projectile_type'][i]] .. '-t' .. tier,
                 count = attacks['projectile_count'][i],
                 spread = attacks['projectile_spread'][i],
                 type = attacks['projectile_type'][i],
@@ -143,24 +143,24 @@ local select_attack = function(mod_name, attacks, tier)
 end
 
 local fetch_attack_data = function(race_name)
-    if not global.boss.attack_cache then
-        global.boss.attack_cache = remote.call(race_name .. '_boss_attacks', 'get_attack_data')
+    if not storage.boss.attack_cache then
+        storage.boss.attack_cache = remote.call(race_name .. '_boss_attacks', 'get_attack_data')
     end
 end
 
 local prepare_attack = function(type)
-    local race_name = global.boss.race_name
-    local tier = global.boss.boss_tier
+    local race_name = storage.boss.race_name
+    local tier = storage.boss.boss_tier
     fetch_attack_data(race_name)
-    local data = select_attack(race_name, global.boss.attack_cache[type], tier)
+    local data = select_attack(race_name, storage.boss.attack_cache[type], tier)
     queue_attack(data)
 end
 
 local get_despawn_attack = function()
-    local race_name = global.boss.race_name
-    local tier = global.boss.boss_tier
+    local race_name = storage.boss.race_name
+    local tier = storage.boss.boss_tier
     fetch_attack_data(race_name)
-    local data = select_attack(race_name, global.boss.attack_cache['despawn_attacks'], tier)
+    local data = select_attack(race_name, storage.boss.attack_cache['despawn_attacks'], tier)
     return data
 end
 
@@ -230,8 +230,8 @@ local process_attack = function(data, unique_position)
 end
 
 function BossAttackProcessor.unset_attackable_entities_cache()
-    global.boss.attackable_entities_cache = nil
-    global.boss.attackable_entities_cache_size = 0
+    storage.boss.attackable_entities_cache = nil
+    storage.boss.attackable_entities_cache_size = 0
 end
 
 function BossAttackProcessor.exec_basic()
@@ -263,7 +263,7 @@ function BossAttackProcessor.process_despawn_attack()
 end
 
 function BossAttackProcessor.process_attack(data, force)
-    if (force ~= true and (data == nil or not global.boss or not global.boss.entity or not global.boss.entity.valid or not data['position'])) then
+    if (force ~= true and (data == nil or not storage.boss or not storage.boss.entity or not storage.boss.entity.valid or not data['position'])) then
         return
     end
 

@@ -15,7 +15,8 @@ data:extend({
         order = 'erm_rally_point',
         place_result = 'erm_rally_point',
         stack_size = 1,
-        flags = {"only-in-cursor","spawnable","not-stackable","hide-from-bonus-gui","hide-from-fuel-tooltip","hidden"}
+        flags = {"only-in-cursor","spawnable","not-stackable","hide-from-bonus-gui","hide-from-fuel-tooltip"},
+        hidden = true
     },
     {
         type = "simple-entity-with-owner",
@@ -25,8 +26,9 @@ data:extend({
         icon_size = 64,
         max_health = 100,
         collision_box = nil,
-        collision_mask = {},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable","hidden","not-selectable-in-game"},
+        collision_mask = {layers={}},
+        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable","not-selectable-in-game"},
+        hidden = true,
         picture = {
             filename = "__core__/graphics/spawn-flag.png",
             width = 64,

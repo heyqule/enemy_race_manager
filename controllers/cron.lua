@@ -20,7 +20,7 @@ Event.on_nth_tick(Config.GC_AND_STATS, function(event)
 
     Cron.add_quick_queue('BossRewardProcessor.clean_up')
 
-    for active_race, _ in pairs(global.active_races) do
+    for active_race, _ in pairs(storage.active_races) do
         Cron.add_quick_queue('AttackGroupHeatProcessor.aggregate_heat',active_race)
         Cron.add_quick_queue('AttackGroupHeatProcessor.cooldown_heat',active_race)
     end

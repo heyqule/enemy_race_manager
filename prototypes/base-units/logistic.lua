@@ -59,51 +59,27 @@ robot_animations["logistic-robot"] = {
         filename = "__base__/graphics/entity/logistic-robot/logistic-robot.png",
         priority = "high",
         line_length = 16,
-        width = 41,
-        height = 42,
+        width = 80,
+        height = 84,
         frame_count = 1,
         shift = util.by_pixel(0, -3),
         direction_count = 16,
         tint = { r = 0.5, g = 0, b = 1, a = 1 },
-        y = 126,
-        hr_version = {
-            filename = "__base__/graphics/entity/logistic-robot/hr-logistic-robot.png",
-            priority = "high",
-            line_length = 16,
-            width = 80,
-            height = 84,
-            frame_count = 1,
-            shift = util.by_pixel(0, -3),
-            direction_count = 16,
-            tint = { r = 0.5, g = 0, b = 1, a = 1 },
-            y = 252,
-            scale = 0.5
-        }
+        y = 252,
+        scale = 0.5
     },
     shadow_in_motion = {
         filename = "__base__/graphics/entity/logistic-robot/logistic-robot-shadow.png",
         priority = "high",
         line_length = 16,
-        width = 58,
-        height = 29,
+        width = 115,
+        height = 57,
         frame_count = 1,
-        shift = util.by_pixel(32, 19.5),
+        shift = util.by_pixel(31.75, 19.75),
         direction_count = 16,
-        y = 29,
-        draw_as_shadow = true,
-        hr_version = {
-            filename = "__base__/graphics/entity/logistic-robot/hr-logistic-robot-shadow.png",
-            priority = "high",
-            line_length = 16,
-            width = 115,
-            height = 57,
-            frame_count = 1,
-            shift = util.by_pixel(31.75, 19.75),
-            direction_count = 16,
-            y = 57 * 3,
-            scale = 0.5,
-            draw_as_shadow = true
-        }
+        y = 57 * 3,
+        scale = 0.5,
+        draw_as_shadow = true
     }
 }
 
@@ -113,8 +89,8 @@ function makeLogisticRobot(level)
     local original_health = robot['max_health'] * 3
 
     robot['type'] = 'unit'
-    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
-    robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. robot['name'], tostring(level) }
+    robot['name'] = MOD_NAME .. '--' .. robot['name'] .. '--' .. level
     robot["subgroup"] = "erm-dropship-enemies"
     robot['has_belt_immunity'] = true
     robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier, level)
@@ -134,6 +110,7 @@ function makeLogisticRobot(level)
         range = attack_range,
         min_attack_distance = attack_range - 4,
         warmup = 10,
+        ammo_category = 'erm-biter-damage',
         cooldown = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, level),
         ammo_type = {
             category = "melee",
@@ -167,7 +144,10 @@ function makeLogisticRobot(level)
     robot['distance_per_frame'] = 0.17
     robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
     robot['vision_distance'] = vision_distance
-    robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    robot['absorptions_to_join_attack'] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    }
+    robot['is_military_target'] = true
     robot['distraction_cooldown'] = distraction_cooldown
     robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
     robot['collision_box'] = collision_box

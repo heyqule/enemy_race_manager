@@ -35,7 +35,7 @@ local vanilla_structures = {
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
     if GlobalConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
-        local enemy_surface = global.enemy_surfaces[surface.name]
+        local enemy_surface = storage.enemy_surfaces[surface.name]
         if enemy_surface and nameToken[1] ~= enemy_surface then
             nameToken[1] = enemy_surface
             if entity.type == 'turret' then
@@ -50,12 +50,12 @@ local process_one_race_per_surface_mapping = function(surface, entity, nameToken
 end
 
 local get_surface_by_name = function(surfaces, name)
-    local surface_cache = global.mapproc_surfaces_cache[name]
+    local surface_cache = storage.mapproc_surfaces_cache[name]
     if surface_cache == nil or surface_cache.valid == false then
         for k, surface in pairs(surfaces) do
             if surface.name == name then
                 surface_cache = surface
-                global.mapproc_surfaces_cache[name] = surface_cache
+                storage.mapproc_surfaces_cache[name] = surface_cache
                 break
             end
         end
@@ -84,7 +84,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
         return
     end
 
-    local name = nameToken[1] .. '/' .. nameToken[2] .. '/' .. race_settings[nameToken[1]].level
+    local name = nameToken[1] .. '--' .. nameToken[2] .. '--' .. race_settings[nameToken[1]].level
 
     local new_force_name = entity.force.name
     if nameToken[1] ~= race_name then
@@ -118,7 +118,8 @@ local process_enemy_level = function(surface, area, race_settings)
     local units = surface.find_entities_filtered({ area = larger_area, type = { 'unit' }, force = ForceHelper.get_enemy_forces() })
     if table_size(units) > 0 then
         for _, entity in pairs(units) do
-            if entity.unit_group == nil then
+            local entity_command = entity.commandable
+            if entity_command and not entity_command.is_unit_group then
                 entity.destroy()
             end
         end
@@ -126,8 +127,8 @@ local process_enemy_level = function(surface, area, race_settings)
 end
 
 function MapProcessor.init_globals()
-    global.mapproc_surfaces_cache = global.mapproc_surfaces_cache or {}
-    global.mapproc_chunk_queue = global.mapproc_chunk_queue or {} -- Need on_load metafix
+    storage.mapproc_surfaces_cache = storage.mapproc_surfaces_cache or {}
+    storage.mapproc_chunk_queue = storage.mapproc_chunk_queue or {} -- Need on_load metafix
 end
 
 function MapProcessor.queue_chunks(surface, area)
@@ -135,26 +136,26 @@ function MapProcessor.queue_chunks(surface, area)
         return
     end
 
-    if global.mapproc_chunk_queue[surface.name] == nil then
-        global.mapproc_chunk_queue[surface.name] = Queue()
+    if storage.mapproc_chunk_queue[surface.name] == nil then
+        storage.mapproc_chunk_queue[surface.name] = Queue()
     end
 
     local unit_size = surface.count_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ForceHelper.get_enemy_forces(), limit = 1 })
     if unit_size > 0 then
-        global.mapproc_chunk_queue[surface.name](area)
+        storage.mapproc_chunk_queue[surface.name](area)
     end
 end
 
 function MapProcessor.process_chunks(surfaces, race_settings)
     local count = 1;
 
-    for k, queue in pairs(global.mapproc_chunk_queue) do
+    for k, queue in pairs(storage.mapproc_chunk_queue) do
         if queue == nil then
             goto process_chunks_continue
         end
 
         if Queue.is_empty(queue) then
-            global.mapproc_chunk_queue[k] = nil
+            storage.mapproc_chunk_queue[k] = nil
             goto process_chunks_continue
         end
 
@@ -166,7 +167,7 @@ function MapProcessor.process_chunks(surfaces, race_settings)
 
             local surface = get_surface_by_name(surfaces, k)
             if surface == nil or surface.valid == false then
-                global.mapproc_chunk_queue[k] = nil
+                storage.mapproc_chunk_queue[k] = nil
                 break
             end
 
@@ -187,13 +188,13 @@ function MapProcessor.process_chunks(surfaces, race_settings)
 end
 
 function MapProcessor.clean_queue()
-    global.mapproc_chunk_queue = {}
+    storage.mapproc_chunk_queue = {}
 end
 
 function MapProcessor.rebuild_queue()
-    if global.mapproc_chunk_queue ~= nil then
-        for _, queue in pairs(global.mapproc_chunk_queue) do
-            Queue.load(global.mapproc_chunk_queue[_])
+    if storage.mapproc_chunk_queue ~= nil then
+        for _, queue in pairs(storage.mapproc_chunk_queue) do
+            Queue.load(storage.mapproc_chunk_queue[_])
         end
     end
 end

@@ -72,7 +72,7 @@ function Army_MainWindow.show(player)
 
     local close_button = title_flow.add { type = "sprite-button",
                                           name = 'erm_army_close_button',
-                                          sprite = "utility/close_white",
+                                          sprite = "utility/close",
                                           style = 'frame_action_button',
                                           tooltip = { "gui-army.close-button" }
     }
@@ -258,7 +258,7 @@ end
 function Army_MainWindow.stop_link(player)
     local player_data = SharedTabFunctions.get_player_tab_data(player)
     local force = player.force
-    if global.army_entrance_teleporters[force.index] then
+    if storage.army_entrance_teleporters[force.index] then
         player_data.success_message = { 'gui-army.cc_unlinked_with', player_data.selected_cc.from, player_data.selected_cc.to }
         ArmyTeleportationProcessor.unlink(force)
     else
@@ -294,8 +294,8 @@ end
 
 function Army_MainWindow.deployer_turn_on(player, deployer_unit_number)
     local force = player.force
-    if global.army_built_deployers[force.index] then
-        local deployer = global.army_built_deployers[force.index][tonumber(deployer_unit_number)]
+    if storage.army_built_deployers[force.index] then
+        local deployer = storage.army_built_deployers[force.index][tonumber(deployer_unit_number)]
         if deployer and deployer.entity.valid then
             ArmyDeploymentProcessor.add_to_active(deployer.entity)
         end

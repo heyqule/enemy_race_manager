@@ -49,33 +49,33 @@ local process_all_jobs_as_1s_cron = function(cron_list)
 end
 
 function CronProcessor.init_globals()
-    global.one_minute_cron = global.one_minute_cron or Queue()
-    global.fifteen_seconds_cron = global.fifteen_seconds_cron or Queue()
-    global.ten_seconds_cron = global.ten_seconds_cron or Queue()
-    global.two_seconds_cron = global.two_seconds_cron or Queue()
-    global.one_second_cron = global.one_second_cron or Queue()
+    storage.one_minute_cron = storage.one_minute_cron or Queue()
+    storage.fifteen_seconds_cron = storage.fifteen_seconds_cron or Queue()
+    storage.ten_seconds_cron = storage.ten_seconds_cron or Queue()
+    storage.two_seconds_cron = storage.two_seconds_cron or Queue()
+    storage.one_second_cron = storage.one_second_cron or Queue()
 
     -- Conditional Crons
-    global.quick_cron = global.quick_cron or Queue()  -- Spawn
-    global.quick_cron_is_running = false
+    storage.quick_cron = storage.quick_cron or Queue()  -- Spawn
+    storage.quick_cron_is_running = false
 
-    global.boss_cron = global.boss_cron or Queue()
+    storage.boss_cron = storage.boss_cron or Queue()
 
     -- Multi force Cron.
-    global.teleport_cron = global.teleport_cron or {}
+    storage.teleport_cron = storage.teleport_cron or {}
 end
 
 function CronProcessor.rebuild_queue()
-    Queue.load(global.one_minute_cron)
-    Queue.load(global.fifteen_seconds_cron)
-    Queue.load(global.ten_seconds_cron)
-    Queue.load(global.two_seconds_cron)
-    Queue.load(global.one_second_cron)
-    Queue.load(global.quick_cron)
-    Queue.load(global.boss_cron)
+    Queue.load(storage.one_minute_cron)
+    Queue.load(storage.fifteen_seconds_cron)
+    Queue.load(storage.ten_seconds_cron)
+    Queue.load(storage.two_seconds_cron)
+    Queue.load(storage.one_second_cron)
+    Queue.load(storage.quick_cron)
+    Queue.load(storage.boss_cron)
 
-    if Type.Table(global.teleport_cron) then
-        for _, queue in pairs(global.teleport_cron) do
+    if Type.Table(storage.teleport_cron) then
+        for _, queue in pairs(storage.teleport_cron) do
             Queue.load(queue)
         end
     end
@@ -83,42 +83,42 @@ end
 
 function CronProcessor.add_1_min_queue(request, ...)
     local args = { ... }
-    global.one_minute_cron({ request, args })
+    storage.one_minute_cron({ request, args })
 end
 
 function CronProcessor.add_15_sec_queue(request, ...)
     local args = { ... }
-    global.fifteen_seconds_cron({ request, args })
+    storage.fifteen_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_10_sec_queue(request, ...)
     local args = { ... }
-    global.ten_seconds_cron({ request, args })
+    storage.ten_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_2_sec_queue(request, ...)
     local args = { ... }
-    global.two_seconds_cron({ request, args })
+    storage.two_seconds_cron({ request, args })
 end
 
 function CronProcessor.add_1_sec_queue(request, ...)
     local args = { ... }
-    global.one_second_cron({ request, args })
+    storage.one_second_cron({ request, args })
 end
 
 function CronProcessor.add_quick_queue(request, ...)
     local args = { ... }
-    global.quick_cron({ request, args })
+    storage.quick_cron({ request, args })
 
-    if global.quick_cron_is_running == false then
-        global.quick_cron_is_running = true
+    if storage.quick_cron_is_running == false then
+        storage.quick_cron_is_running = true
         Event.on_nth_tick(GlobalConfig.QUICK_CRON, CronProcessor.process_quick_queue)
     end
 end
 
 function CronProcessor.add_boss_queue(request, ...)
     local args = { ... }
-    global.boss_cron({ request, args })
+    storage.boss_cron({ request, args })
 end
 
 function CronProcessor.add_teleport_queue(request, ...)
@@ -126,51 +126,51 @@ function CronProcessor.add_teleport_queue(request, ...)
     local unit = args[1]
     local force = unit.force
 
-    if global.teleport_cron[force.index] == nil then
-        global.teleport_cron[force.index] = Queue()
+    if storage.teleport_cron[force.index] == nil then
+        storage.teleport_cron[force.index] = Queue()
     end
-    global.teleport_cron[force.index]({ request, args })
+    storage.teleport_cron[force.index]({ request, args })
 end
 
 function CronProcessor.process_1_min_queue()
-    process_all_jobs(global.one_minute_cron)
+    process_all_jobs(storage.one_minute_cron)
 end
 
 function CronProcessor.process_15_sec_queue()
-    process_all_jobs(global.fifteen_seconds_cron)
+    process_all_jobs(storage.fifteen_seconds_cron)
 end
 
 function CronProcessor.process_2_sec_queue()
-    process_all_jobs(global.two_seconds_cron)
+    process_all_jobs(storage.two_seconds_cron)
 end
 
 function CronProcessor.process_10_sec_queue()
-    process_all_jobs_as_1s_cron(global.ten_seconds_cron)
+    process_all_jobs_as_1s_cron(storage.ten_seconds_cron)
 end
 
 function CronProcessor.process_1_sec_queue()
-    process_one_job(global.one_second_cron)
+    process_one_job(storage.one_second_cron)
 end
 
 function CronProcessor.process_quick_queue()
-    process_one_job(global.quick_cron)
+    process_one_job(storage.quick_cron)
 
-     if global.quick_cron_is_running == true and Queue.is_empty(global.quick_cron) then
-         global.quick_cron_is_running = false
+     if storage.quick_cron_is_running == true and Queue.is_empty(storage.quick_cron) then
+         storage.quick_cron_is_running = false
          Event.remove(GlobalConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
      end
 end
 
 function CronProcessor.process_boss_queue()
-    process_one_job(global.boss_cron)
+    process_one_job(storage.boss_cron)
 end
 
 function CronProcessor.empty_boss_queue()
-    global.boss_cron = Queue()
+    storage.boss_cron = Queue()
 end
 
 function CronProcessor.process_teleport_queue()
-    for _, queue in pairs(global.teleport_cron) do
+    for _, queue in pairs(storage.teleport_cron) do
         process_one_job(queue)
     end
 end

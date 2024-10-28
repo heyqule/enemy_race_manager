@@ -25,64 +25,64 @@ local FEATURE_GROUP_TYPE_MIXED = 1
 local FEATURE_GROUP_TYPE_FLYING = 2
 
 local is_flying_only_boss = function()
-    return global.boss.flying_only
+    return storage.boss.flying_only
 end
 
 local create_group = function(max_cycles, unit_per_cycle, default_max_group)
-    if global.boss_group_spawn.group or global.boss_group_spawn.featured_group_id == nil then
+    if storage.boss_group_spawn.group or storage.boss_group_spawn.featured_group_id == nil then
         return
     end
 
     default_max_group = default_max_group or true
-    local boss = global.boss
+    local boss = storage.boss
     local surface = boss.surface
     local force = boss.force
     local center_location = surface.find_non_colliding_position(RaceSettingsHelper.get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1, true)
     if (center_location) then
         local group = surface.create_unit_group({ position = center_location, force = force })
 
-        global.boss_group_spawn.group = group
-        global.boss_group_spawn.group_number = group.group_number
-        DebugHelper.print('BossGroupProcessor: Create Group...' .. tostring(group.group_number))
+        storage.boss_group_spawn.group = group
+        storage.boss_group_spawn.unique_id = group.unique_id
+        DebugHelper.print('BossGroupProcessor: Create Group...' .. tostring(group.unique_id))
         unit_per_cycle = unit_per_cycle or GlobalConfig.boss_spawn_size
-        global.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
-        global.boss_group_spawn.unit_per_cycle = unit_per_cycle
+        storage.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
+        storage.boss_group_spawn.unit_per_cycle = unit_per_cycle
 
         local max_units
         if default_max_group then
-            max_units = (global.boss_group_spawn.max_cycles * GlobalConfig.boss_spawn_size)
+            max_units = (storage.boss_group_spawn.max_cycles * GlobalConfig.boss_spawn_size)
         else
-            max_units = global.boss_group_spawn.max_cycles * unit_per_cycle
+            max_units = storage.boss_group_spawn.max_cycles * unit_per_cycle
         end
-        global.boss_group_spawn.max_units = max_units
-        DebugHelper.print('BossGroupProcessor: max_cycles:' .. tostring(global.boss_group_spawn.max_cycles)
-                .. ' unit_per_cycle: ' .. tostring(global.boss_group_spawn.unit_per_cycle)
-                .. ' max_units: ' .. tostring(global.boss_group_spawn.max_units))
+        storage.boss_group_spawn.max_units = max_units
+        DebugHelper.print('BossGroupProcessor: max_cycles:' .. tostring(storage.boss_group_spawn.max_cycles)
+                .. ' unit_per_cycle: ' .. tostring(storage.boss_group_spawn.unit_per_cycle)
+                .. ' max_units: ' .. tostring(storage.boss_group_spawn.max_units))
     end
 end
 
 local pick_featured_group = function()
-    if global.boss_group_spawn.featured_group_id then
+    if storage.boss_group_spawn.featured_group_id then
         return
     end
 
-    local boss = global.boss
+    local boss = storage.boss
     local race_name = boss.race_name
     if is_flying_only_boss() and RaceSettingsHelper.has_featured_flying_squad(race_name) then
         local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
-        global.boss_group_spawn.featured_group_id = squad_id
-        global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
+        storage.boss_group_spawn.featured_group_id = squad_id
+        storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
         DebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_FLYING) .. '/' .. tostring(squad_id))
     else
         if RaceSettingsHelper.has_featured_flying_squad(race_name) and RaceSettingsHelper.can_spawn(33) then
             local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
-            global.boss_group_spawn.featured_group_id = squad_id
-            global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
+            storage.boss_group_spawn.featured_group_id = squad_id
+            storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
             DebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_FLYING) .. '/' .. tostring(squad_id))
         elseif RaceSettingsHelper.has_featured_squad(race_name) then
             local squad_id = RaceSettingsHelper.get_featured_squad_id(race_name);
-            global.boss_group_spawn.featured_group_id = squad_id
-            global.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_MIXED
+            storage.boss_group_spawn.featured_group_id = squad_id
+            storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_MIXED
             DebugHelper.print('BossGroupProcessor: Picked feature group...' .. tostring(FEATURE_GROUP_TYPE_MIXED) .. '/' .. tostring(squad_id))
         end
     end
@@ -92,13 +92,13 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     useCycle = useCycle or true
     queueCycle = queueCycle or false
     local unit_name
-    local spawn_data = global.boss_group_spawn
-    local boss_data = global.boss
+    local spawn_data = storage.boss_group_spawn
+    local boss_data = storage.boss
     local group = spawn_data.group
     local surface = boss_data.surface
 
     if group == nil or group.valid == false then
-        global.boss_group_spawn = BossGroupProcessor.get_default_data()
+        storage.boss_group_spawn = BossGroupProcessor.get_default_data()
         return
     end
 
@@ -113,7 +113,7 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
         local unit_full_name = RaceSettingsHelper.get_race_entity_name(
                 boss_data.race_name,
                 unit_name,
-                GlobalConfig.BOSS_LEVELS[global.race_settings[boss_data.race_name].boss_tier]
+                GlobalConfig.BOSS_LEVELS[storage.race_settings[boss_data.race_name].boss_tier]
         )
 
         local position = surface.find_non_colliding_position(unit_full_name, group.position,
@@ -130,22 +130,22 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
         i = i + 1
     until i == spawn_data.unit_per_cycle
 
-    global.boss_group_spawn.total_units = #group.members
+    storage.boss_group_spawn.total_units = #group.members
     if useCycle then
-        global.boss_group_spawn.current_cycle = global.boss_group_spawn.current_cycle + 1
+        storage.boss_group_spawn.current_cycle = storage.boss_group_spawn.current_cycle + 1
     end
-    DebugHelper.print('BossGroupProcessor: Spawned Cycle: ' .. tostring(global.boss_group_spawn.current_cycle))
+    DebugHelper.print('BossGroupProcessor: Spawned Cycle: ' .. tostring(storage.boss_group_spawn.current_cycle))
     DebugHelper.print('BossGroupProcessor: Spawned units:' .. tostring(i))
     DebugHelper.print('BossGroupProcessor: Total units:' .. tostring(spawn_data.total_units))
     --DebugHelper.print('BossGroupProcessor: TYPE: '..serpent.block(spawn_data))
 
-    if global.boss_group_spawn.current_cycle == global.boss_group_spawn.max_cycles or
-            global.boss_group_spawn.total_units >= global.boss_group_spawn.max_units
+    if storage.boss_group_spawn.current_cycle == storage.boss_group_spawn.max_cycles or
+            storage.boss_group_spawn.total_units >= storage.boss_group_spawn.max_units
     then
         AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
 
-        table.insert(global.boss_attack_groups, spawn_data)
-        global.boss_group_spawn = BossGroupProcessor.get_default_data()
+        table.insert(storage.boss_attack_groups, spawn_data)
+        storage.boss_group_spawn = BossGroupProcessor.get_default_data()
         DebugHelper.print('BossGroupProcessor: Assigned to attack group')
     elseif (queueCycle) then
         Cron.add_2_sec_queue('BossGroupProcessor.generate_units', useCycle, queueCycle)
@@ -197,26 +197,26 @@ function BossGroupProcessor.process_attack_groups()
         return
     end
 
-    local number_of_groups = #global.boss_attack_groups
+    local number_of_groups = #storage.boss_attack_groups
     if number_of_groups > 0 then
         local removable_indexes = {}
         for i = 1, number_of_groups do
-            local group_data = global.boss_attack_groups[i];
+            local group_data = storage.boss_attack_groups[i];
             local group = group_data.group
             if group and group.valid then
                 if group.command == nil or
                         group.state == defines.group_state.finished then
-                    DebugHelper.print('BossGroupProcessor.process_attack_groups: New Target for ' .. global.boss_attack_groups[i].group_number)
+                    DebugHelper.print('BossGroupProcessor.process_attack_groups: New Target for ' .. storage.boss_attack_groups[i].unique_id)
                     AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
                 end
             else
-                DebugHelper.print('BossGroupProcessor.process_attack_groups: Removing Group' .. global.boss_attack_groups[i].group_number)
+                DebugHelper.print('BossGroupProcessor.process_attack_groups: Removing Group' .. storage.boss_attack_groups[i].unique_id)
                 table.insert(removable_indexes, i)
             end
         end
 
         for i = 1, #removable_indexes do
-            table.remove(global.boss_attack_groups, removable_indexes[i])
+            table.remove(storage.boss_attack_groups, removable_indexes[i])
         end
     end
 

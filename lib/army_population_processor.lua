@@ -21,7 +21,7 @@ local set_default_values = function(force)
         auto_deploy = {},
     }
 
-    for name, value in pairs(global.army_registered_units) do
+    for name, value in pairs(storage.army_registered_units) do
         if not default_values['unit_types'][name] then
             default_values['unit_types'][name] = { pop_count = 0, unit_count = 0 }
         end
@@ -35,36 +35,36 @@ end
 local init_force_data = function(force, force_reset)
     force_reset = force_reset or false
     local preserve_auto_deploy
-    if global.army_populations[force.name] and force_reset then
-        preserve_auto_deploy = global.army_populations[force.name]['auto_deploy']
+    if storage.army_populations[force.name] and force_reset then
+        preserve_auto_deploy = storage.army_populations[force.name]['auto_deploy']
     end
 
-    if not global.army_populations[force.name] or force_reset then
-        global.army_populations[force.name] = set_default_values(force)
+    if not storage.army_populations[force.name] or force_reset then
+        storage.army_populations[force.name] = set_default_values(force)
     end
 
     if preserve_auto_deploy then
-        global.army_populations[force.name]['auto_deploy'] = preserve_auto_deploy
+        storage.army_populations[force.name]['auto_deploy'] = preserve_auto_deploy
     end
 end
 
 function ArmyPopulationProcessor.init_globals()
-    global.army_populations = global.army_populations or {}
+    storage.army_populations = storage.army_populations or {}
     --- Store player spawnable army unit names
-    global.army_registered_units = global.army_registered_units or {}
+    storage.army_registered_units = storage.army_registered_units or {}
 end
 
 function ArmyPopulationProcessor.register_unit(unit_name, pop_count)
-    if global.army_registered_units == nil then
-        global.army_registered_units = {}
+    if storage.army_registered_units == nil then
+        storage.army_registered_units = {}
     end
 
-    global.army_registered_units[unit_name] = pop_count
+    storage.army_registered_units[unit_name] = pop_count
 end
 
 function ArmyPopulationProcessor.index()
     local profiler = game.create_profiler()
-    local army_registered_units = global.army_registered_units
+    local army_registered_units = storage.army_registered_units
     ArmyPopulationProcessor.init_globals()
     if army_registered_units == nil or table_size(army_registered_units) == 0 then
         return
@@ -94,14 +94,14 @@ end
 
 function ArmyPopulationProcessor.calculate_max_units(force)
     init_force_data(force)
-    global.army_populations[force.name]['max_pop'] = get_max_pop(force.maximum_following_robot_count)
-    force.print('Max Army Population: ' .. global.army_populations[force.name]['max_pop'])
+    storage.army_populations[force.name]['max_pop'] = get_max_pop(force.maximum_following_robot_count)
+    force.print('Max Army Population: ' .. storage.army_populations[force.name]['max_pop'])
 end
 
 function ArmyPopulationProcessor.can_place_unit(unit)
     local unit_force = unit.force
     init_force_data(unit_force)
-    return global.army_populations[unit_force.name]['max_pop'] >= (global.army_populations[unit_force.name]['pop_count'] + global.army_registered_units[unit.name])
+    return storage.army_populations[unit_force.name]['max_pop'] >= (storage.army_populations[unit_force.name]['pop_count'] + storage.army_registered_units[unit.name])
 
 end
 
@@ -109,8 +109,8 @@ function ArmyPopulationProcessor.add_unit_count(unit)
     local unit_name = unit.name
     local unit_force = unit.force
     init_force_data(unit_force)
-    local army_registered_units = global.army_registered_units
-    local army_pop = global.army_populations
+    local army_registered_units = storage.army_registered_units
+    local army_pop = storage.army_populations
     if unit_force and army_registered_units[unit_name] then
 
         local pop = army_registered_units[unit_name]
@@ -125,8 +125,8 @@ end
 function ArmyPopulationProcessor.remove_unit_count(unit)
     local unit_name = unit.name
     local unit_force = unit.force
-    local army_registered_units = global.army_registered_units
-    local army_pop = global.army_populations
+    local army_registered_units = storage.army_registered_units
+    local army_pop = storage.army_populations
     if unit_force and army_registered_units[unit_name] then
         local pop = army_registered_units[unit_name]
         local force_name = unit_force.name
@@ -139,7 +139,7 @@ end
 
 function ArmyPopulationProcessor.is_army_unit(unit)
     local unit_name = unit.name
-    local army_registered_units = global.army_registered_units
+    local army_registered_units = storage.army_registered_units
     if army_registered_units[unit_name] then
         return true
     end
@@ -148,35 +148,35 @@ function ArmyPopulationProcessor.is_army_unit(unit)
 end
 
 function ArmyPopulationProcessor.get_army_data(force)
-    if global.army_populations[force.name] == nil then
+    if storage.army_populations[force.name] == nil then
         init_force_data(force)
     end
 
-    return global.army_populations[force.name]
+    return storage.army_populations[force.name]
 end
 
 function ArmyPopulationProcessor.has_army_data(force)
-    return global.army_populations[force.name] ~= nil
+    return storage.army_populations[force.name] ~= nil
 end
 
 function ArmyPopulationProcessor.max_pop(force)
-    return global.army_populations[force.name].max_pop
+    return storage.army_populations[force.name].max_pop
 end
 
 function ArmyPopulationProcessor.pop_count(force)
-    return global.army_populations[force.name].pop_count
+    return storage.army_populations[force.name].pop_count
 end
 
 function ArmyPopulationProcessor.unit_count(force)
-    return global.army_populations[force.name].unit_count
+    return storage.army_populations[force.name].unit_count
 end
 
 function ArmyPopulationProcessor.unit_count_by_name(force, name)
-    return global.army_populations[force.name]['unit_types'][name]['unit_count']
+    return storage.army_populations[force.name]['unit_types'][name]['unit_count']
 end
 
 function ArmyPopulationProcessor.unit_population(name)
-    return global.army_registered_units[name]
+    return storage.army_registered_units[name]
 end
 
 function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count)
@@ -184,12 +184,12 @@ function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name,
         player.print('You can not set deploy planner to fewer than 1 unit.')
         return false
     end
-    global.army_populations[force.name]['auto_deploy'][name] = unit_count
+    storage.army_populations[force.name]['auto_deploy'][name] = unit_count
     return true
 end
 
 function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
-    return global.army_populations[force.name]['auto_deploy'][name]
+    return storage.army_populations[force.name]['auto_deploy'][name]
 end
 
 function ArmyPopulationProcessor.is_under_max_pop(force)

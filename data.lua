@@ -1,4 +1,6 @@
-require "prototypes.extend-collision"
+-- May not needed for 2.0
+-- require "prototypes.extend-collision"
+
 require "prototypes.extend-types"
 
 require "prototypes.extend-biters"
@@ -30,8 +32,8 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
         temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
     })
 
-    require('prototypes/compatibility/BobsEnemies/spawn_spec')
-    require('prototypes/compatibility/NaturalEvolutionEnemies/spawn_spec')
+    --require('prototypes/compatibility/BobsEnemies/spawn_spec')
+    --require('prototypes/compatibility/NaturalEvolutionEnemies/spawn_spec')
 
     data.erm_land_scout[MOD_NAME] = 'small-biter'
     data.erm_aerial_scout[MOD_NAME] = 'defender'

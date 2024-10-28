@@ -10,9 +10,9 @@ end
 
 require('prototypes/extend-ground-fire-patches.lua')
 
-require('prototypes/extend-defense.lua')
+--require('prototypes/extend-defense.lua')
 
-require("prototypes/extend-reinforced-items")
+--require("prototypes/extend-reinforced-items")
 
 require('prototypes/extend-weapons.lua')
 
@@ -34,9 +34,10 @@ require "prototypes/extend-freeforall"
 
 require('prototypes/compatibility/data-updates.lua')
 
-require('prototypes/extend-default-autoplace.lua')
+-- @TODO need noise expression fix
+--require('prototypes/extend-default-autoplace.lua')
 
-require('prototypes/map-generation.lua')
+--require('prototypes/map-generation.lua')
 
 require('prototypes/extend-scout-units')
 

@@ -15,16 +15,20 @@ elseif mods['combat-mechanics-overhaul'] then
     collision_mask_util_extended.get_make_named_collision_mask('flying-layer')
 else
     -- Handle vanilla collision layer
-    local collision_mask_util = require("__core__/lualib/collision-mask-util")
-    local flying_layer = collision_mask_util.get_first_unused_layer()
-    data:extend({
-        {
-            type = "arrow",
-            name = "collision-mask-flying-layer",
-            collision_mask = { flying_layer },
-            flags = { "placeable-off-grid", "not-on-map" },
-            circle_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 },
-            arrow_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 }
-        }
-    })
+    -- local collision_mask_util = require("__core__/lualib/collision-mask-util")
+    --local flying_layer = collision_mask_util.get_first_unused_layer()
+    --data:extend({
+    --    {
+    --        type = "arrow",
+    --        name = "collision-mask-flying-layer",
+    --        collision_mask = { flying_layer },
+    --        flags = { "placeable-off-grid", "not-on-map" },
+    --        circle_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 },
+    --        arrow_picture = { filename = "__core__/graphics/empty.png", priority = "low", width = 1, height = 1 }
+    --    }
+    --})
+
+    -- set it like this... data.raw.tile.landfill.collision_mask.layers.flying_layer = true
 end
+
+-- Maybe not needed.

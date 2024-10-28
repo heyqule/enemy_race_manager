@@ -46,7 +46,7 @@ local onBiterBaseBuilt = function(event)
     if entity and entity.valid then
         local race_name = ForceHelper.extract_race_name_from(entity.force.name)
         if Config.race_is_active(race_name) then
-            local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
+            local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, storage.race_settings, entity.force.name)
             if replaced_entity and replaced_entity.valid then
                 BaseBuildProcessor.exec(replaced_entity)
             end
@@ -60,11 +60,11 @@ local onUnitGroupCreated = function(event)
     local group = event.group
     local force = group.force
     local racename = ForceHelper.extract_race_name_from(force.name)
-    local is_erm_group = global.group_tracker and global.group_tracker[racename]
+    local is_erm_group = storage.group_tracker and storage.group_tracker[racename]
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_erm_group then
-            if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
+            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[racename].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -74,7 +74,7 @@ local onUnitGroupCreated = function(event)
         end
 
         if scout_unit_name then
-            global.scout_unit_name[group.group_number] = {
+            storage.scout_unit_name[group.unique_id] = {
                 entity = group,
                 scout_type = scout_unit_name,
                 tick = game.tick
@@ -99,7 +99,7 @@ local onUnitFinishGathering = function(event)
     if not group.valid then
         return
     end
-    local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
+    local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.unique_id)
     local group_force = group.force
 
     if ForceHelper.is_enemy_force(group_force) and
@@ -112,7 +112,7 @@ local onUnitFinishGathering = function(event)
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
         local target = AttackGroupHeatProcessor.pick_target(race_name)
         AttackGroupProcessor.process_attack_position(group, nil, nil, target)
-        global.erm_unit_groups[group.group_number] = {
+        storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,
             always_angry = false,
@@ -123,7 +123,7 @@ local onUnitFinishGathering = function(event)
         }
     end
 
-    local scount_unit_name = global.scout_unit_name[group.group_number]
+    local scount_unit_name = storage.scout_unit_name[group.unique_id]
     if  ForceHelper.is_enemy_force(group_force) and
         (group.is_script_driven == false or is_erm_group) and
         scount_unit_name
@@ -141,7 +141,7 @@ local onUnitFinishGathering = function(event)
     end
 
     if scount_unit_name then
-        global.scout_unit_name[group.group_number] = nil
+        storage.scout_unit_name[group.unique_id] = nil
     end
 end
 
@@ -151,7 +151,7 @@ local handle_scouts = function(scout_unit_data)
         scout_unit_data.can_repath and
         scout_unit_data.entity.valid
     then
-        local tracker = global.scout_tracker[scout_unit_data.race_name]
+        local tracker = storage.scout_tracker[scout_unit_data.race_name]
         if tracker then
             local entity = tracker.entity
             if util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
@@ -171,7 +171,7 @@ local handle_scouts = function(scout_unit_data)
 
                     tracker['final_destination'] = target_beacon.position
                     tracker['update_tick'] = game.tick
-                    scout_unit_data.entity.set_command({
+                    scout_unit_data.entity.commandable.set_command({
                         type = defines.command.go_to_location,
                         destination = target_beacon.position,
                         radius = 16,
@@ -187,13 +187,13 @@ local nearby_retry = 3
 --- handle ERM groups under ai complete
 local handle_erm_groups = function(unit_number, event_result, was_distracted)
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
-        local erm_unit_group = global.erm_unit_groups[unit_number]
+        local erm_unit_group = storage.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
         AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
 
         if group.valid == false then
-            global.erm_unit_groups[unit_number] = nil
+            storage.erm_unit_groups[unit_number] = nil
             return
         end
 
@@ -232,7 +232,7 @@ local onAiCompleted = function(event)
     -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
     handle_erm_groups(unit_number, event_result, event.was_distracted)
 
-    local scout_unit_data = global.scout_by_unit_number[unit_number]
+    local scout_unit_data = storage.scout_by_unit_number[unit_number]
     handle_scouts(scout_unit_data)
 end
 

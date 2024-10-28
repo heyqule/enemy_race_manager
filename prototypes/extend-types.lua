@@ -1,4 +1,3 @@
-local Sprites = require('__stdlib__/stdlib/data/modules/sprites')
 --- Damage Types
 data:extend(
         {
@@ -89,13 +88,20 @@ data:extend({
     },
 })
 
+data:extend({
+    {
+        type = "collision-layer",
+        name = "flying_units",
+    }
+})
+
 --- Mod wide slow stickers
 data:extend({
     {
         type = "sticker",
         name = "5-075-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.75,
         vehicle_speed_modifier = 0.75,
@@ -104,7 +110,7 @@ data:extend({
         type = "sticker",
         name = "5-050-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.50,
         vehicle_speed_modifier = 0.50,
@@ -113,7 +119,7 @@ data:extend({
         type = "sticker",
         name = "5-025-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.25,
         vehicle_speed_modifier = 0.25,
@@ -122,7 +128,7 @@ data:extend({
         type = "sticker",
         name = "30-050-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 30 * 60,
         target_movement_modifier = 0.50,
         vehicle_speed_modifier = 0.50,
@@ -131,7 +137,7 @@ data:extend({
         type = "sticker",
         name = "10-025-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 10 * 60,
         target_movement_modifier = 0.25,
         vehicle_speed_modifier = 0.25,

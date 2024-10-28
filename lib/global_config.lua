@@ -151,7 +151,7 @@ local refreshable_settings = {
 --- Only assign empty as erm_vanilla in control phase
 ---
 local get_selected_race_value = function(value)
-    if (value == 'empty' and global) then
+    if (value == 'empty' and storage) then
         return 'erm_vanilla'
     end
 
@@ -173,16 +173,16 @@ local convert_max_level = function(setting_value)
 end
 
 local get_global_setting_value = function(setting_name)
-    local setting_value = global.settings[setting_name]
+    local setting_value = storage.settings[setting_name]
     if setting_value == nil then
         setting_value = settings.global[setting_name].value
-        global.settings[setting_name] = setting_value
+        storage.settings[setting_name] = setting_value
     end
     return setting_value
 end
 
 local global_setting_exists = function()
-    return global and global.settings
+    return storage and storage.settings
 end
 
 local check_register_erm_race = function(mod_name)
@@ -201,30 +201,30 @@ end
 function GlobalConfig.refresh_config()
     for _, setting_name in pairs(refreshable_settings.startup) do
         if setting_name == 'enemyracemanager-max-level' then
-            global.settings[setting_name] = convert_max_level(settings.startup[setting_name].value)
+            storage.settings[setting_name] = convert_max_level(settings.startup[setting_name].value)
         elseif setting_name == 'enemyracemanager-max-attack-range' then
-            global.settings[setting_name] = settings.startup[setting_name].value
+            storage.settings[setting_name] = settings.startup[setting_name].value
         else
-            global.settings[setting_name] = settings.startup[setting_name].value
+            storage.settings[setting_name] = settings.startup[setting_name].value
         end
     end
 
     for _, setting_name in pairs(refreshable_settings.global) do
-        global.settings[setting_name] = settings.global[setting_name].value
+        storage.settings[setting_name] = settings.global[setting_name].value
     end
 end
 
 function GlobalConfig.get_max_level()
     local current_level_setting
     if global_setting_exists() then
-        current_level_setting = global.settings['enemyracemanager-max-level']
+        current_level_setting = storage.settings['enemyracemanager-max-level']
     end
 
     if current_level_setting == nil then
         current_level_setting = convert_max_level(settings.startup['enemyracemanager-max-level'].value)
 
         if global_setting_exists() then
-            global.settings['enemyracemanager-max-level'] = current_level_setting
+            storage.settings['enemyracemanager-max-level'] = current_level_setting
         end
     end
 
@@ -234,14 +234,14 @@ end
 function GlobalConfig.get_max_attack_range()
     local current_range
     if global_setting_exists() then
-        current_range = global.settings['enemyracemanager-max-attack-range']
+        current_range = storage.settings['enemyracemanager-max-attack-range']
     end
 
     if current_range == nil then
         current_range = settings.startup['enemyracemanager-max-attack-range'].value
 
         if global_setting_exists() then
-            global.settings['enemyracemanager-max-attack-range'] = current_range
+            storage.settings['enemyracemanager-max-attack-range'] = current_range
         end
     end
     return current_range
@@ -255,14 +255,14 @@ end
 function GlobalConfig.get_mapping_method()
     local mapping_method
     if global_setting_exists() then
-        mapping_method = global.settings['enemyracemanager-mapping-method']
+        mapping_method = storage.settings['enemyracemanager-mapping-method']
     end
 
     if mapping_method == nil then
         mapping_method = settings.startup['enemyracemanager-mapping-method'].value
 
         if global_setting_exists() then
-            global.settings['enemyracemanager-mapping-method'] = mapping_method
+            storage.settings['enemyracemanager-mapping-method'] = mapping_method
         end
     end
     return mapping_method
@@ -453,24 +453,24 @@ function GlobalConfig.interplanetary_attack_raid_build_base_chance()
 end
 
 function GlobalConfig.initialize_races_data()
-    global.installed_races = { MOD_NAME }
+    storage.installed_races = { MOD_NAME }
     if settings.startup['enemyracemanager-enable-bitters'].value then
-        global.active_races = { [MOD_NAME] = true }
+        storage.active_races = { [MOD_NAME] = true }
     end
 
     for name, _ in pairs(script.active_mods) do
         if check_register_erm_race(name) then
-            table.insert(global.installed_races, name)
+            table.insert(storage.installed_races, name)
         end
     end
 
     if GlobalConfig.mapgen_is_2_races_split() then
-        global.active_races = {
+        storage.active_races = {
             [GlobalConfig.positive_axis_race()] = true,
             [GlobalConfig.negative_axis_race()] = true
         }
     elseif GlobalConfig.mapgen_is_4_races_split() then
-        global.active_races = {
+        storage.active_races = {
             [GlobalConfig.top_left_race()] = true,
             [GlobalConfig.top_right_race()] = true,
             [GlobalConfig.bottom_left_race()] = true,
@@ -479,32 +479,32 @@ function GlobalConfig.initialize_races_data()
     else
         for name, _ in pairs(script.active_mods) do
             if check_register_erm_race(name) then
-                global.active_races[name] = true
+                storage.active_races[name] = true
             end
         end
     end
 
-    global.active_races_num = table_size(global.active_races)
+    storage.active_races_num = table_size(storage.active_races)
 
-    for key, _ in pairs(global.active_races) do
-        table.insert(global.active_races_names, key)
+    for key, _ in pairs(storage.active_races) do
+        table.insert(storage.active_races_names, key)
     end
 end
 
 function GlobalConfig.get_enemy_races()
-    return global.active_races_names
+    return storage.active_races_names
 end
 
 function GlobalConfig.get_enemy_races_total()
-    return global.active_races_num
+    return storage.active_races_num
 end
 
 function GlobalConfig.race_is_active(race_name)
-    return global.active_races[race_name] == true
+    return storage.active_races[race_name] == true
 end
 
 function GlobalConfig.get_installed_races()
-    return global.installed_races
+    return storage.installed_races
 end
 
 function GlobalConfig.format_daytime(start_tick, end_tick)
@@ -532,9 +532,10 @@ function GlobalConfig.format_daytime_string(start_tick, end_tick)
 end
 
 function GlobalConfig.add_attack_group_attackable_entity(name)
-    if game.entity_prototypes[name] then
+    local data_table = prototypes.get_entity_filtered({{ filter = 'name', name = name }})
+    if data_table[name] then
         local name_exists = false
-        for _, value in pairs(global.attack_group_attackable_entity_names) do
+        for _, value in pairs(storage.attack_group_attackable_entity_names) do
             if value == name then
                 name_exists = true
                 break;
@@ -542,7 +543,7 @@ function GlobalConfig.add_attack_group_attackable_entity(name)
         end
 
         if not name_exists then
-            table.insert(global.attack_group_attackable_entity_names, name)
+            table.insert(storage.attack_group_attackable_entity_names, name)
         end
     end
 end

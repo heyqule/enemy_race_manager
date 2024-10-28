@@ -7,7 +7,8 @@
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 
-local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
+local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
+local enemy_autoplace = require ("prototypes.entity.enemy-autoplace-utils")
 
 
 require('util')
@@ -37,8 +38,8 @@ function makeLevelTurrets(level, type, distance)
 
     local original_hitpoint = turret['max_health']
 
-    turret['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. turret['name'], level }
-    turret['name'] = MOD_NAME .. '/' .. turret['name'] .. '/' .. level;
+    turret['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. turret['name'], level }
+    turret['name'] = MOD_NAME .. '--' .. turret['name'] .. '--' .. level;
     turret['max_health'] = ERM_UnitHelper.get_building_health(original_hitpoint, original_hitpoint * max_hitpoint_multiplier, level)
     turret['resistances'] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

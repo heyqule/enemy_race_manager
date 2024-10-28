@@ -21,7 +21,7 @@ local GUI = {
 }
 
 function GUI.init_globals()
-    global.army_windows_tab_player_data = global.army_windows_tab_player_data or {}
+    storage.army_windows_tab_player_data = storage.army_windows_tab_player_data or {}
 end
 
 return GUI

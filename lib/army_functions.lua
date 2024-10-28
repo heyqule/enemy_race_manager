@@ -28,7 +28,7 @@ end
 
 function ArmyFunctions.assign_wander_command(unit)
     if unit and unit.valid then
-        unit.set_command {
+        unit.commandable.set_command {
             type = defines.command.wander,
             radius = 16,
             ticks_to_wait = 300,
@@ -39,7 +39,7 @@ end
 
 function ArmyFunctions.assign_goto_command(unit, position)
     if unit and unit.valid then
-        unit.set_command {
+        unit.commandable.set_command {
             type = defines.command.go_to_location,
             destination = position,
             radius = 16,

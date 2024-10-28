@@ -13,7 +13,7 @@ DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
 TEST_MODE = true
 --- For debugging beacons
-BEACON_SELECTABLE = false
+BEACON_SELECTABLE = true
 
 
 

@@ -17,7 +17,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_S.png",
@@ -36,7 +36,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_A.png",
@@ -55,7 +55,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_L.png",
@@ -74,7 +74,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_E.png",
@@ -93,7 +93,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_R.png",

@@ -8,7 +8,7 @@ local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local Compat_NewGamePlus = {}
 
 function Compat_NewGamePlus.exec(event)
-    for _, race_settings in pairs(global.race_settings) do
+    for _, race_settings in pairs(storage.race_settings) do
         if event.tech_reset == true then
             race_settings.level = 1
             race_settings.tier = 1
@@ -17,7 +17,7 @@ function Compat_NewGamePlus.exec(event)
             race_settings.current_turrets_tier = race_settings.turrets[1]
             race_settings.current_command_centers_tier = race_settings.command_centers[1]
             race_settings.current_support_structures_tier = race_settings.support_structures[1]
-        elseif game.forces[ForceHelper.get_force_name_from(race_settings.race)].evolution_factor == 0 then
+        elseif game.forces[ForceHelper.get_force_name_from(race_settings.race)].get_evolution_factor() == 0 then
             race_settings.evolution_base_point = race_settings.global_evolution_point
         end
 

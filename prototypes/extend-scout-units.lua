@@ -7,8 +7,8 @@ require('util')
 
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 
-local LAND_SCOUT = '/land_scout/'
-local AERIAL_SCOUT = '/aerial_scout/'
+local LAND_SCOUT = '--land_scout--'
+local AERIAL_SCOUT = '--aerial_scout--'
 
 local land_scout_script = {
     type = "script",
@@ -27,7 +27,7 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 for level = 1, 20 ,1 do
     for mod_name, unit_name in pairs(data.erm_land_scout) do
-        local target_unit = mod_name .. '/' .. unit_name .. '/1'
+        local target_unit = mod_name .. '--' .. unit_name .. '--1'
         local unit = util.table.deepcopy(data.raw['unit'][target_unit])
         unit['name'] = mod_name .. LAND_SCOUT .. level
         unit['max_health'] = ERM_UnitHelper.get_health(land_original_health, land_original_health * max_hitpoint_multiplier, level)
@@ -45,7 +45,7 @@ for level = 1, 20 ,1 do
     end
 
     for mod_name, unit_name in pairs(data.erm_aerial_scout) do
-        local target_unit = mod_name .. '/' .. unit_name .. '/1'
+        local target_unit = mod_name .. '--' .. unit_name .. '--1'
         local unit = util.table.deepcopy(data.raw['unit'][target_unit])
         unit['name'] = mod_name .. AERIAL_SCOUT .. level
         unit['max_health'] = ERM_UnitHelper.get_health(aerial_original_health, aerial_original_health * max_hitpoint_multiplier, level)

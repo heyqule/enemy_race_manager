@@ -45,7 +45,7 @@ EventGui.on_click('.*/more_action', function(event)
     local owner = game.players[element.player_index]
     if owner then
         local nameToken = String.split(event.element.name, '/')
-        GuiContainer.detail_window.show(owner, global.race_settings[nameToken[1]])
+        GuiContainer.detail_window.show(owner, storage.race_settings[nameToken[1]])
     end
 end)
 
@@ -93,7 +93,7 @@ EventGui.on_click('.*/replace_enemy', function(event)
     end
 
     local nameToken = String.split(element.name, '/')
-    if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and global.race_settings[nameToken[1]] then
+    if (game.forces['enemy_' .. nameToken[1]] or nameToken[1] == MOD_NAME) and storage.race_settings[nameToken[1]] then
         local owner = game.players[element.player_index]
         GuiContainer.detail_window.replace_enemy(owner, nameToken)
         GuiContainer.main_window.update_all()
@@ -108,7 +108,7 @@ EventGui.on_click('.*/boss_details', function(event)
 
     local nameToken = String.split(element.name, '/')
     local owner = game.players[element.player_index]
-    GuiContainer.boss_detail_window.show(owner, nameToken[1], global.boss_logs[nameToken[1]])
+    GuiContainer.boss_detail_window.show(owner, nameToken[1], storage.boss_logs[nameToken[1]])
 end)
 
 --- Victory Dialog events ---
@@ -214,7 +214,7 @@ local gui_open_switch = {
     [defines.gui_type.entity] = function(event)
         local owner = game.players[event.player_index]
         local entity = event.entity
-        local registered_deployer = global.army_registered_deployers
+        local registered_deployer = storage.army_registered_deployers
 
         if event.gui_type == defines.gui_type.entity and
                 entity and entity.valid and
@@ -248,7 +248,7 @@ local gui_tab_handlers = {
         local element = event.element
         local player = game.players[event.player_index]
         if player and player.valid then
-            global.army_windows_tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
+            storage.army_windows_tab_player_data[event.player_index].active_tab_id = element.selected_tab_index
             GuiContainer.army_control_window.update(player, element.selected_tab_index)
         end
     end
@@ -283,7 +283,7 @@ end)
 EventGui.on_selection_state_changed('army_cc/filter_.*_surface', function(event)
     local element = event.element
     local player = game.players[element.player_index]
-    local window_tab_data = global.army_windows_tab_player_data[player.index]
+    local window_tab_data = storage.army_windows_tab_player_data[player.index]
 
     local surface_name = element.get_item(element.selected_index)
     if surface_name == ALL_PLANETS then
@@ -377,13 +377,13 @@ EventGui.on_click('army_deployer/filter_type/.*', function(event)
     if player and player.valid then
         local nameToken = String.split(element.name, '/')
         local army_window = GuiContainer.army_control_window
-        local filter = global.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]]
+        local filter = storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]]
         if filter then
             filter = false
         else
             filter = true
         end
-        global.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]] = filter
+        storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]..'/'..nameToken[4]] = filter
         army_window.update_deployers()
     end
 end)
@@ -398,7 +398,7 @@ EventGui.on_click('army_deployer/open_map/.*', function(event)
     local player = game.players[element.player_index]
     if player and player.valid then
         local nameToken = String.split(element.name, '/')
-        local deployers = global.army_built_deployers[player.force.index]
+        local deployers = storage.army_built_deployers[player.force.index]
         local unit_number = tonumber(nameToken[3])
         if deployers and deployers[unit_number] and deployers[unit_number].entity.valid then
             player.zoom_to_world(deployers[unit_number].entity.position)
@@ -418,9 +418,9 @@ local deployer_surface_dropdown = function(event)
         local index = element.selected_index
         local surface_name = element.get_item(index)
         if surface_name == ALL_PLANETS then
-            global.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
+            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
         else
-            global.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name
+            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name
         end
 
         GuiContainer.army_control_window.update_deployers()

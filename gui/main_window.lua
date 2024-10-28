@@ -55,7 +55,7 @@ function MainWindow.show(player)
 
     local close_button = title_flow.add { type = "sprite-button",
                                           name = 'erm_close_button',
-                                          sprite = "utility/close_white",
+                                          sprite = "utility/close",
                                           style = 'frame_action_button',
                                           tooltip = { "gui.close-instruction" }
     }
@@ -68,8 +68,8 @@ function MainWindow.show(player)
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
     scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet', player.surface.name }, style = 'caption_label' }
-    if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.name] then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race', global.enemy_surfaces[player.surface.name] } }
+    if GlobalConfig.mapgen_is_one_race_per_surface() and storage.enemy_surfaces[player.surface.name] then
+        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race', storage.enemy_surfaces[player.surface.name] } }
     elseif GlobalConfig.mapgen_is_2_races_split() then
         scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
     else
@@ -87,9 +87,9 @@ function MainWindow.show(player)
     item_table.add { type = "label", caption = { 'gui.attack_column' } }
     item_table.add { type = "label", caption = { 'gui.action_column' } }
 
-    LevelManager.calculate_evolution_points(global.race_settings, game.forces, settings)
+    LevelManager.calculate_evolution_points(storage.race_settings, game.forces, settings)
 
-    for name, race_setting in pairs(global.race_settings) do
+    for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
             item_table.add { type = "label", caption = race_setting.label }
             item_table.add { type = "label", caption = race_setting.level }
@@ -166,7 +166,7 @@ end
 function MainWindow.reset_default(event)
     local profiler = game.create_profiler()
     for _, surface in pairs(game.surfaces) do
-        ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
+        ReplacementProcessor.resetDefault(surface, storage.race_settings, 'enemy')
         MainWindow.update_all()
     end
     profiler.stop()

@@ -77,7 +77,7 @@ function BossDetailsWindow.show(player, race_name, boss_log)
 
     local close_button = title_flow.add { type = "sprite-button",
                                           name = 'erm_boss_detail_close_button',
-                                          sprite = "utility/close_white",
+                                          sprite = "utility/close",
                                           style = 'frame_action_button',
                                           tooltip = { "gui.back-instruction" }
     }
@@ -140,7 +140,7 @@ end
 function BossDetailsWindow.update_data_box(element, owner)
     if owner and element then
         local nameToken = String.split(element.name, '/')
-        local boss_log = global.boss_logs[nameToken[1]]
+        local boss_log = storage.boss_logs[nameToken[1]]
         local total_entries = #boss_log.entries
         local detail_element = element.parent[nameToken[1] .. '/erm_boss_detail_data_box']
         detail_element.clear()

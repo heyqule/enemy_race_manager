@@ -20,7 +20,7 @@ local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_Sound = require('__base__/prototypes/entity/sounds')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local enemy_autoplace = require("__enemyracemanager__/lib/enemy-autoplace-utils")
+local enemy_autoplace = require ("__base__/prototypes/entity/enemy-autoplace-utils")
 local name = 'roboport'
 
 -- Hitpoints
@@ -56,13 +56,13 @@ local max_friends_around_to_spawn = 5
 local spawn_table = function(level)
     local res = {}
     --Tire 1
-    res[1] = { MOD_NAME .. '/defender/' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
-    res[2] = { MOD_NAME .. '/distractor/' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
-    res[3] = { MOD_NAME .. '/destroyer/' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
-    res[4] = { MOD_NAME .. '/logistic-robot/' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
-    res[5] = { MOD_NAME .. '/construction-robot/' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
-    res[6] = { MOD_NAME .. '/small-biter/' .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
-    res[7] = { MOD_NAME .. '/medium-biter/' .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[1] = { MOD_NAME .. '--defender--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
+    res[2] = { MOD_NAME .. '--distractor--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
+    res[3] = { MOD_NAME .. '--destroyer--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
+    res[4] = { MOD_NAME .. '--logistic-robot--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
+    res[5] = { MOD_NAME .. '--construction-robot--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
+    res[6] = { MOD_NAME .. '--small-biter--' .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[7] = { MOD_NAME .. '--medium-biter--' .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
 
     return res
 end
@@ -77,8 +77,8 @@ function make_roboport(level)
     data:extend({
         {
             type = "unit-spawner",
-            name = MOD_NAME .. '/' .. name .. '/' .. level,
-            localised_name = { 'entity-name.' .. MOD_NAME .. '/' .. name, level },
+            name = MOD_NAME .. '--' .. name .. '--' .. level,
+            localised_name = { 'entity-name.' .. MOD_NAME .. '--' .. name, tostring(level) },
             order = "b-d-c",
             icon = "__base__/graphics/icons/roboport.png",
             icons = {
@@ -114,105 +114,64 @@ function make_roboport(level)
                 { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
             },
             healing_per_tick = ERM_UnitHelper.get_building_healing(hitpoint, max_hitpoint_multiplier, level),
-            pollution_absorption_absolute = pollution_absorption_absolute,
-            pollution_absorption_proportional = 0.01,
+            absorptions_per_second = {
+                pollution = { absolute = pollution_absorption_absolute, proportional = 0.01 }
+            },
             max_count_of_owned_units = max_count_of_owned_units,
             max_friends_around_to_spawn = max_friends_around_to_spawn,
-            animations = {
-                layers = {
-                    {
-                        filename = "__base__/graphics/entity/roboport/roboport-base.png",
-                        width = 143,
-                        height = 135,
-                        shift = { 0.5, 0.25 },
-                        hr_version = {
-                            filename = "__base__/graphics/entity/roboport/hr-roboport-base.png",
+            graphics_set = {
+                animations = {
+                    layers = {
+                        {
+                            filename = "__base__/graphics/entity/roboport/roboport-base.png",
                             width = 228,
                             height = 277,
-                            shift = util.by_pixel(2, 7.75),
+                            shift = util.by_pixel(2, -2.25),
                             scale = 0.5
-                        }
-                    },
-                    {
-                        filename = "__base__/graphics/entity/worm/worm-folded.png",
-                        width = 66,
-                        height = 60,
-                        direction_count = 1,
-                        scale = 0.75,
-                        shift = util.by_pixel(0, -15),
-                        hr_version = {
-                            filename = "__base__/graphics/entity/worm/hr-worm-folded.png",
+                        },
+                        {
+                            filename = "__base__/graphics/entity/worm/worm-folded.png",
                             width = 130,
                             height = 120,
                             direction_count = 1,
                             scale = 0.4,
                             shift = util.by_pixel(0, -15),
-                        }
-                    },
-                    {
-                        filename = "__base__/graphics/entity/roboport/roboport-shadow.png",
-                        width = 147,
-                        height = 101,
-                        draw_as_shadow = true,
-                        shift = util.by_pixel(28.5, 19.25),
-                        hr_version = {
-                            filename = "__base__/graphics/entity/roboport/hr-roboport-shadow.png",
+                        },
+                        {
+                            filename = "__base__/graphics/entity/roboport/roboport-shadow.png",
                             width = 294,
                             height = 201,
                             draw_as_shadow = true,
-                            force_hr_shadow = true,
                             shift = util.by_pixel(28.5, 19.25),
                             scale = 0.5
                         }
                     }
                 }
-            },
+            } ,
             integration = {
                 layers = {
                     {
                         filename = "__base__/graphics/entity/roboport/roboport-base.png",
-                        width = 143,
-                        height = 135,
-                        shift = { 0.5, 0.25 },
-                        hr_version = {
-                            filename = "__base__/graphics/entity/roboport/hr-roboport-base.png",
-                            width = 228,
-                            height = 277,
-                            shift = util.by_pixel(2, 7.75),
-                            scale = 0.5
-                        }
+                        width = 228,
+                        height = 277,
+                        shift = util.by_pixel(2, 7.75),
+                        scale = 0.5
                     },
                     {
                         filename = "__base__/graphics/entity/worm/worm-folded.png",
-                        width = 66,
-                        height = 60,
+                        width = 130,
+                        height = 120,
                         direction_count = 1,
-                        scale = 0.75,
+                        scale = 0.4,
                         shift = util.by_pixel(0, -15),
-                        hr_version = {
-                            filename = "__base__/graphics/entity/worm/hr-worm-folded.png",
-                            width = 130,
-                            height = 120,
-                            direction_count = 1,
-                            scale = 0.4,
-                            shift = util.by_pixel(0, -15),
-                        }
                     },
                     {
                         filename = "__base__/graphics/entity/roboport/roboport-shadow.png",
-                        width = 147,
-                        height = 101,
+                        width = 294,
+                        height = 201,
                         draw_as_shadow = true,
                         shift = util.by_pixel(28.5, 19.25),
-                        hr_version = {
-                            filename = "__base__/graphics/entity/roboport/hr-roboport-shadow.png",
-                            width = 294,
-                            height = 201,
-                            draw_as_shadow = true,
-                            force_hr_shadow = true,
-                            shift = util.by_pixel(28.5, 19.25),
-                            scale = 0.5
-                        }
+                        scale = 0.5
                     }
                 }
             },
@@ -226,7 +185,8 @@ function make_roboport(level)
             -- distance_factor used to be 1, but Twinsen says:
             -- "The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty)."
             -- (2018-12-07)
-            autoplace = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME),
+            -- @TODO noise expression fix
+            -- autoplace = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
             map_color = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
