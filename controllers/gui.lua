@@ -5,7 +5,7 @@
 ---
 local String = require('__stdlib__/stdlib/utils/string')
 local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local GuiContainer = require('__enemyracemanager__/gui/main')

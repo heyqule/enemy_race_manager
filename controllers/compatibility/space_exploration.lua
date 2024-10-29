@@ -15,7 +15,7 @@ local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
 
 --- Pull from SE once every hour
-local cache_time = defines.time.hour
+local cache_time = hour
 
 local add_exclusion_surfaces = function(event)
     for _, node in pairs(UniverseRaw.universe.space_zones) do

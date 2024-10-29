@@ -8,7 +8,7 @@
 --
 local ERM_UnitHelper = {}
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 local String = require('__stdlib__/stdlib/utils/string')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 
@@ -105,12 +105,12 @@ end
 -- unit healing (full heal in 120s)
 function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, level)
     return 0
-    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (2 * defines.time.minute)
+    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (2 * minute)
 end
 
 -- building healing (full heal in 300s)
 function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, level)
-    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (5 * defines.time.minute)
+    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (5 * minute)
 end
 
 function ERM_UnitHelper.modify_biter_damage(biter, level)

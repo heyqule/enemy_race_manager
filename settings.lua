@@ -48,15 +48,6 @@ data:extend {
         default_value = true,
         order = "enemyracemanager-1060"
     },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-menu-replacement-race",
-        description = "enemyracemanager-menu-replacement-race",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        allowed_values = {MOD_NAME},
-        order = "enemyracemanager-1061"
-    },
     --- Startup: Leveling
     {
         type = "string-setting",
@@ -135,14 +126,6 @@ data:extend {
         default_value = MAP_GEN_DEFAULT,
         allowed_values = { MAP_GEN_DEFAULT, MAP_GEN_2_RACES_SPLIT, MAP_GEN_4_RACES_SPLIT, MAP_GEN_1_RACE_PER_SURFACE },
         order = "enemyracemanager-201"
-    },
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-default_enforce_temperature",
-        description = "enemyracemanager-default_enforce_temperature",
-        setting_type = "startup",
-        default_value = false,
-        order = "enemyracemanager-202",
     },
     {
         type = "string-setting",

@@ -9,7 +9,7 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 
 require('util')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value

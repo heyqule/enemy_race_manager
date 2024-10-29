@@ -9,8 +9,8 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 
 require('util')
 local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
-local enemy_autoplace = require ("prototypes.entity.enemy-autoplace-utils")
-require('__stdlib__/stdlib/utils/defines/time')
+local enemy_autoplace = require ("prototypes.entity.enemy-autoplace")
+
 require('__enemyracemanager__/global')
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
@@ -92,6 +92,5 @@ if settings.startup['enemyracemanager-enable-bitters'].value and settings.startu
         elevation = 2, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
         temperature = 3, --1,2,3 (1 cold, 2. normal, 3 hot)
         entity_filter = 'explosive',
-        enforce_temperature = true,
     })
 end

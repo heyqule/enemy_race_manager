@@ -83,7 +83,7 @@ local reward_settings = {
 }
 
 -- Infinite chests stay for 14 Nauvis Days.
-local expire_at = defines.time.minute * 7 * 14
+local expire_at = minute * 7 * 14
 
 local get_infinite_chest = function()
     return {

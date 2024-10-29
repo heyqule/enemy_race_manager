@@ -42,5 +42,3 @@ if DEBUG_MODE then
     log(serpent.block(damage_types))
 
 end
-
-require('prototypes/biter-menu-replace')

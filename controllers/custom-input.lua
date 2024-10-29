@@ -4,7 +4,7 @@
 --- DateTime: 11/17/2022 9:11 PM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
+
 
 local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 local MainWindow = require('__enemyracemanager__/gui/main_window')
