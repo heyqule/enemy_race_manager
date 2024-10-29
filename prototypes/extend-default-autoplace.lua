@@ -45,9 +45,19 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
     end
 
     if is_turret then
-        v.autoplace = AutoplaceUtil.enemy_worm_autoplace(v.autoplace.probability_expression, force_name, volume)
+        v.autoplace = AutoplaceUtil.enemy_worm_autoplace({
+            probability_expression = v.autoplace.probability_expression,
+            force = force_name,
+            volume = volume,
+            control = v.autoplace.control
+        })
     else
-        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(v.autoplace.probability_expression, force_name, volume)
+        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace({
+            probability_expression = v.autoplace.probability_expression,
+            force = force_name,
+            volume = volume,
+            control = v.autoplace.control
+        })
     end
 end
 

@@ -31,7 +31,6 @@ local base_electric_resistance = -50
 local incremental_electric_resistance = 100
 
 function makeLevelSpawners(level, type)
-    data.raw['unit-spawner'][type]['autoplace'] = nil
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
 
     local original_hitpoint = spawner['max_health']
@@ -71,7 +70,10 @@ function makeLevelSpawners(level, type)
     end)()
 
     spawner['result_units'] = result_units
-    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace({
+        probability_expression = 'enemy_autoplace_base(0, 90004)',
+        force = FORCE_NAME,
+    })
     spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-cold_biter_map_color'].value)
 
     return spawner

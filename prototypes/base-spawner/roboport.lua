@@ -186,7 +186,10 @@ function make_roboport(level)
             -- 'The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty).'
             -- (2018-12-07)
             -- @TODO noise expression fix
-            autoplace = enemy_autoplace.enemy_spawner_autoplace('enemy_autoplace_base(0, 100)', FORCE_NAME),
+            autoplace = enemy_autoplace.enemy_spawner_autoplace({
+                probability_expression = 'enemy_autoplace_base(0, 100)',
+                force = FORCE_NAME,
+            }),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
             map_color = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)

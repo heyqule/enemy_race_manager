@@ -4,8 +4,6 @@ local function string_min(a, b)
   return 'min(' .. a .. ', '.. b .. ')'
 end
 
-
-
 --- Function Credit: Alien Biomes
 --- 1.1 Base Game reference:
 --- aux(desert - red sand): 0 - 1
@@ -72,12 +70,17 @@ local function enemy_autoplace(params)
   local force = params.force or 'enemy'
   local order = params.order or 'a['..force..']-autoplace'
   local final_expression
+  local climate_controls
   if params.volume then
-    local climate_controls = volume_to_noise_expression(params.volume)
+    climate_controls = volume_to_noise_expression(params.volume)
+  end
+
+  if climate_controls then
     final_expression = 'min('..climate_controls..','.. params.probability_expression .. ')'
   else
     final_expression = params.probability_expression
   end
+
   return
   {
     control = params.control or control_name,
@@ -88,27 +91,33 @@ local function enemy_autoplace(params)
   }
 end
 
-local function enemy_spawner_autoplace(probability_expression, force, volume)
+local function enemy_spawner_autoplace(params)
   local autoplace_spec = {
-    probability_expression = probability_expression,
-    order = 'a['..force..']-a[spawner]',
-    force = force
+    probability_expression = params.probability_expression,
+    order = 'a['..params.force..']-a[spawner]',
+    force = params.force
   }
-  if volume then
-    autoplace_spec.volume = volume
+  if params.volume then
+    autoplace_spec.volume = params.volume
+  end
+  if params.control then
+    autoplace_spec.control = params.control
   end
   return enemy_autoplace(autoplace_spec)
 end
 
-local function enemy_worm_autoplace(probability_expression, force, volume)
+local function enemy_worm_autoplace(params)
   local autoplace_spec =  {
-    probability_expression = '(' .. probability_expression .. ') * (1 - no_enemies_mode)',
-    order = 'a['..force..']-a[worm]',
-    force = force,
+    probability_expression = '(' .. params.probability_expression .. ') * (1 - no_enemies_mode)',
+    order = 'a['..params.force..']-a[worm]',
+    force = params.force,
     is_turret = true
   }
-  if volume then
-    autoplace_spec.volume = volume
+  if params.volume then
+    autoplace_spec.volume = params.volume
+  end
+  if params.control then
+    autoplace_spec.control = params.control
   end
   return enemy_autoplace(autoplace_spec)
 end

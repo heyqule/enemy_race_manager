@@ -33,7 +33,6 @@ local base_cold_resistance = -50
 local incremental_cold_resistance = 100
 
 function makeLevelTurrets(level, type, distance)
-    data.raw['turret'][type]['autoplace'] = nil
     local turret = util.table.deepcopy(data.raw['turret'][type])
 
     local original_hitpoint = turret['max_health']
@@ -55,7 +54,10 @@ function makeLevelTurrets(level, type, distance)
     turret['attack_parameters']['damage_modifier'] = 0.33
 
     ERM_UnitHelper.modify_biter_damage(turret, level)
-    turret['autoplace'] = enemy_autoplace.enemy_worm_autoplace(distance, FORCE_NAME)
+    turret['autoplace'] = enemy_autoplace.enemy_worm_autoplace( {
+        probability_expression = 'enemy_autoplace_base('..distance..', 90000)',
+        force = FORCE_NAME
+    })
 
     turret['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-toxic_biter_map_color'].value)
 
