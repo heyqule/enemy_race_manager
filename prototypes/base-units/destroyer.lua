@@ -12,7 +12,7 @@ local Table = require('__stdlib__/stdlib/utils/table')
 local String = require('__stdlib__/stdlib/utils/string')
 require('util')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.75

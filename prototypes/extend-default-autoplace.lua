@@ -4,7 +4,7 @@
 --- DateTime: 8/4/2023 12:02 AM
 ---
 
---
+-- This is only affect nauvis by default.
 -- data.erm_spawn_specs = data.erm_spawn_specs or {}
 -- table.insert(data.erm_spawn_specs, {
 --    mod_name=MOD_NAME,
@@ -14,7 +14,6 @@
 --    elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
 --    temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
 --    entity_filter = 'cold', -- this filter entities by string.find (this example is using "cold" prefix from cold-biters)
---    enforce_temperature = false, -- enforce temperature filter
 -- })
 --
 --
@@ -22,7 +21,7 @@
 
 local String = require('__stdlib__/stdlib/utils/string')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
+local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace')
 local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 require('global')
@@ -325,12 +324,7 @@ if mods['alien-biomes'] then
     temperature_ranges = { { -21, 34.75 }, { 33.25, 96.75 }, { 95.25, 151 } }
 end
 
-local enforce_temp = settings.startup['enemyracemanager-default_enforce_temperature'].value
 local balance_by_temperature = false
-
-if enforce_temp then
-    balance_by_temperature = true
-end
 
 local erm_race_data = data.erm_spawn_specs
 
@@ -391,7 +385,7 @@ for key, race_data in pairs(updated_specs) do
         end
     end
 
-    if enforce_temp or race_data.enforce_temperature then
+    if race_data.temperature then
         balance_by_temperature = true
         volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
         volume['temperature_max'] = temperature_ranges[race_data.temperature][2]

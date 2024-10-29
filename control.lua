@@ -5,7 +5,6 @@
 -- Time: 11:29 AM
 -- To change this template use File | Settings | File Templates.
 --
-require('__stdlib__/stdlib/utils/defines/time')
 require('util')
 require('global')
 

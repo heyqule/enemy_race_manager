@@ -4,7 +4,7 @@
 --- DateTime: 7/24/2021 6:52 PM
 ---
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/setting-constants')
 
 
@@ -64,7 +64,7 @@ local get_race_settings = function(race_name, reload)
     end
 
     storage.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
-    storage.custom_attack_race_settings[race_name].tick = game.tick + defines.time.minute * GlobalConfig.LEVEL_PROCESS_INTERVAL + 1
+    storage.custom_attack_race_settings[race_name].tick = game.tick + minute * GlobalConfig.LEVEL_PROCESS_INTERVAL + 1
     return storage.custom_attack_race_settings[race_name]
 end
 

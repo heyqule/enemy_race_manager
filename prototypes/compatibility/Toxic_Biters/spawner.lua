@@ -7,9 +7,9 @@
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
-local enemy_autoplace = require ("prototypes.entity.enemy-autoplace-utils")
+local enemy_autoplace = require ("prototypes.entity.enemy-autoplace")
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 require('util')
 
@@ -96,6 +96,5 @@ if settings.startup['enemyracemanager-enable-bitters'].value and settings.startu
         elevation = 1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
         temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
         entity_filter = 'toxic',
-        enforce_temperature = true,
     })
 end

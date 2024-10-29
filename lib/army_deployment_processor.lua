@@ -274,7 +274,7 @@ function ArmyDeploymentProcessor.process_retry(force_index, unit_number)
     end
 end
 
-local stop_event_check = 2 * defines.time.minute
+local stop_event_check = 2 * minute
 local stop_event_check_modular = stop_event_check - GlobalConfig.AUTO_DEPLOY_CRON
 
 function ArmyDeploymentProcessor.deploy()

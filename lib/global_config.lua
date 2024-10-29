@@ -4,7 +4,7 @@
 --- DateTime: 12/21/2020 3:16 PM
 --- require('__enemyracemanager__/lib/global_config')
 ---
-require('__stdlib__/stdlib/utils/defines/time')
+require('util')
 require('__enemyracemanager__/setting-constants')
 
 local GlobalConfig = {}
@@ -15,9 +15,9 @@ GlobalConfig.MAP_PROCESS_CHUNK_BATCH = 20
 -- Processing Event Interval
 GlobalConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
 
-GlobalConfig.LEVEL_PROCESS_INTERVAL = 10 * defines.time.minute
-GlobalConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * defines.time.minute + 1
-GlobalConfig.ATTACK_POINT_CALCULATION = defines.time.minute + 3
+GlobalConfig.LEVEL_PROCESS_INTERVAL = 10 * minute
+GlobalConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup['enemyracemanager-attack-meter-group-interval'].value * minute + 1
+GlobalConfig.ATTACK_POINT_CALCULATION = minute + 3
 GlobalConfig.BOSS_QUEUE_CRON = 11
 GlobalConfig.TELEPORT_QUEUE_CRON = 33
 GlobalConfig.AUTO_DEPLOY_CRON = 311
@@ -25,13 +25,13 @@ GlobalConfig.SPAWN_SCOUTS_INTERVAL = 25301
 
 -- +1 to spread the job across all ticks
 -- execute all job on designated tick
-GlobalConfig.ONE_MINUTE_CRON = defines.time.minute + 1
-GlobalConfig.FIFTEEN_SECONDS_CRON = 15 * defines.time.second + 1
-GlobalConfig.TWO_SECONDS_CRON = 2 * defines.time.second + 1
+GlobalConfig.ONE_MINUTE_CRON = minute + 1
+GlobalConfig.FIFTEEN_SECONDS_CRON = 15 * second + 1
+GlobalConfig.TWO_SECONDS_CRON = 2 * second + 1
 
 -- execute one job on designated tick
-GlobalConfig.TEN_SECONDS_CRON = 10 * defines.time.second + 1
-GlobalConfig.ONE_SECOND_CRON = defines.time.second + 1
+GlobalConfig.TEN_SECONDS_CRON = 10 * second + 1
+GlobalConfig.ONE_SECOND_CRON = second + 1
 GlobalConfig.QUICK_CRON = 11
 
 -- Run garbage collection and statistics on each nauvis day
@@ -509,14 +509,14 @@ end
 
 function GlobalConfig.format_daytime(start_tick, end_tick)
     local difference = end_tick - start_tick
-    local day = math.floor(difference / defines.time.day)
-    local hour_difference = difference - (day * defines.time.day)
-    local hour = math.floor(hour_difference / defines.time.hour)
-    local minute_difference = difference - (day * defines.time.day) - (hour * defines.time.hour)
-    local minute = math.floor(minute_difference / defines.time.minute)
-    local second_difference = difference - (day * defines.time.day) - (hour * defines.time.hour) - (minute * defines.time.minute)
-    local second = math.floor(second_difference / defines.time.second)
-    return day, hour, minute, second
+    local lday = math.floor(difference / day)
+    local hour_difference = difference - (lday * day)
+    local lhour = math.floor(hour_difference / hour)
+    local minute_difference = difference - (lday * day) - (lhour * hour)
+    local lminute = math.floor(minute_difference / minute)
+    local second_difference = difference - (lday * day) - (lhour * hour) - (lminute * minute)
+    local lsecond = math.floor(second_difference / second)
+    return lday, lhour, lminute, lsecond
 end
 
 function GlobalConfig.format_daytime_string(start_tick, end_tick)

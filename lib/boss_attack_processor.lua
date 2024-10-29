@@ -4,7 +4,7 @@
 --- DateTime: 7/16/2022 2:58 PM
 ---
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')

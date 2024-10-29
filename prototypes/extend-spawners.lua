@@ -10,10 +10,10 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local String = require('__stdlib__/stdlib/utils/string')
 require('util')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 --local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
-local enemy_autoplace = require ("__base__/prototypes/entity/enemy-autoplace-utils")
+local enemy_autoplace = require ("__enemyracemanager__/prototypes/enemy-autoplace")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -94,7 +94,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     end
 
     -- @TODO Noise expression
-    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace("enemy_autoplace_base(0, 6)")
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace("enemy_autoplace_base(0, 6)", FORCE_NAME)
     spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return spawner
@@ -122,7 +122,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
     ERM_UnitHelper.modify_biter_damage(worm, level)
     -- @TODO Noise expression
-    worm['autoplace'] = enemy_autoplace.enemy_spawner_autoplace("enemy_autoplace_base(0, 6)")
+    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace("enemy_autoplace_base(2, 3)", FORCE_NAME)
     worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return worm

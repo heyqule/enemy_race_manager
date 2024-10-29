@@ -7,11 +7,11 @@
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
-local enemy_autoplace = require ("prototypes.entity.enemy-autoplace-utils")
+local enemy_autoplace = require ("prototypes.entity.enemy-autoplace")
 
 require('util')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value

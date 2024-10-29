@@ -4,7 +4,7 @@
 --- DateTime: 2/15/2022 9:56 PM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 require('util')
 
@@ -20,7 +20,6 @@ local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_a
 
 
 local Config = require('__enemyracemanager__/lib/global_config')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
 
 local DEBUG_BEHAVIOUR_RESULTS = {
     [defines.behavior_result.in_progress] = 'defines.behavior_result.in_progress',

@@ -9,7 +9,7 @@ local ERM_DataHelper = require('__enemyracemanager__/lib/rig/data_helper')
 
 require('util')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.5

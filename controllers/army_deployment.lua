@@ -5,7 +5,7 @@
 ---
 
 local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
+
 
 local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')

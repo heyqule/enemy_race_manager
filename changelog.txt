@@ -5,10 +5,13 @@ Date: ????-??-??
   Features
     - Updated to Factorio 2.0
     - Replaced Level system with Quality System.
-    - [Quality System]
+    - Quality System\n lol wtf
 
   Changes:
-    - Adapted 16 directions.
+    -
+    - Removed dependency of stdlib.
+    - Removed all compatibility supports for 1.1 mods.
+    - Removed menu biter replacement.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6

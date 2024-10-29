@@ -5,7 +5,7 @@
 ---
 local Event = require('__stdlib__/stdlib/event/event')
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require('__enemyracemanager__/global')
 
 local Cron = require('__enemyracemanager__/lib/cron_processor')

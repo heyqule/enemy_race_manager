@@ -4,7 +4,7 @@
 --- DateTime: 7/16/2022 2:58 PM
 ---
 require('util')
-require('__stdlib__/stdlib/utils/defines/time')
+
 
 local Event = require('__stdlib__/stdlib/event/event')
 local StdIs = require('__stdlib__/stdlib/utils/is')
@@ -387,7 +387,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         storage.boss.silo_position = rocket_silo.position
         storage.boss.spawned_tick = game.tick
         storage.boss.boss_tier = RaceSettingsHelper.boss_tier(storage.boss.race_name)
-        storage.boss.despawn_at_tick = game.tick + (defines.time.minute * GlobalConfig.BOSS_DESPAWN_TIMER[storage.boss.boss_tier])
+        storage.boss.despawn_at_tick = game.tick + (minute * GlobalConfig.BOSS_DESPAWN_TIMER[storage.boss.boss_tier])
         BossProcessor.index_turrets(surface)
         DebugHelper.print('BossProcessor: Indexed positions: ' .. storage.boss_spawnable_index.size)
 

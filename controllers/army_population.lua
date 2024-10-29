@@ -4,7 +4,7 @@
 --- DateTime: 11/7/2022 10:55 PM
 ---
 local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
+
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')

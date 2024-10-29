@@ -11,7 +11,7 @@
 ---
 
 
-require('__stdlib__/stdlib/utils/defines/time')
+
 require("util")
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
@@ -20,7 +20,7 @@ local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_Sound = require('__base__/prototypes/entity/sounds')
 local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local enemy_autoplace = require ("__base__/prototypes/entity/enemy-autoplace-utils")
+local enemy_autoplace = require ("__enemyracemanager__/prototypes/enemy-autoplace")
 local name = 'roboport'
 
 -- Hitpoints

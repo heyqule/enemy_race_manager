@@ -11,7 +11,7 @@ local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 require('__enemyracemanager__/global')
 require('__enemyracemanager__/setting-constants')
 local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
-local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
+local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace')
 
 local SPLIT_POINT = settings.startup['enemyracemanager-2way-group-split-point'].value
 -- Add 4 chunks gap between races
@@ -229,7 +229,7 @@ end
 for _, v in pairs(data.raw["turret"]) do
     if String.find(v.name, '--', 1, true) then
         local nameToken = String.split(v.name, '--')
-        local level = tonumber(nameToken[3])
+        local level = tonumber(nameToken  [3])
         if level and level > 1 then
             DebugHelper.print('Disabling:' .. v.name)
             data.raw['turret'][v.name]['autoplace'] = nil_expression()
