@@ -19,7 +19,7 @@ after_each(function()
 end)
 
 
-it("Attack Target", function()
+it('Attack Target', function()
     async(1200)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
@@ -41,7 +41,7 @@ it("Attack Target", function()
 
     after_ticks(1200, function()
         local count = surface.count_entities_filtered({
-            type="unit",
+            type='unit',
             position={0,0},
             radius = 32
         })
@@ -50,7 +50,7 @@ it("Attack Target", function()
     end)
 end)
 
-it("Build Base", function()
+it('Build Base', function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
@@ -72,7 +72,7 @@ it("Build Base", function()
 
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
-            type="unit-spawner",
+            type='unit-spawner',
             target = {80, 80},
             radius = 32
         })
@@ -81,7 +81,7 @@ it("Build Base", function()
     end)
 end)
 
-it("Can't spawn", function()
+it('Can't spawn', function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
@@ -103,14 +103,14 @@ it("Can't spawn", function()
 
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
-            type="unit",
+            type='unit',
         })
         assert(count == 0, 'Should not have unit on the surface')
         done()
     end)
 end)
 
-it("Test Enabler", function()
+it('Test Enabler', function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(
@@ -131,7 +131,7 @@ it("Test Enabler", function()
 
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
-            type="unit",
+            type='unit',
         })
         storage.settings['enemyracemanager-environmental-raids'] = true
         assert(count == 0, 'Should not have unit on the surface')

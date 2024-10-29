@@ -7,30 +7,30 @@
 data:extend(
         {
             {
-                type = "recipe",
-                name = "barrel-steel-plate",
-                order = "z[smelt-to-steel-plate]",
-                subgroup = "empty-barrel",
-                category = "smelting",
+                type = 'recipe',
+                name = 'barrel-steel-plate',
+                order = 'z[smelt-to-steel-plate]',
+                subgroup = 'empty-barrel',
+                category = 'smelting',
                 energy_required = 5,
                 enabled = false,
                 icons = {
                     {
-                        icon = "__base__/graphics/icons/steel-plate.png",
+                        icon = '__base__/graphics/icons/steel-plate.png',
                         icon_size = 64,
                     },
                     {
-                        icon = "__base__/graphics/icons/fluid/barreling/empty-barrel.png",
+                        icon = '__base__/graphics/icons/fluid/barreling/empty-barrel.png',
                         icon_size = 64,
                         scale = 0.25,
                         shift = { 9, 9 }
                     },
                 },
                 ingredients = {
-                    { type = "item", name = "barrel", amount = 10 }
+                    { type = 'item', name = 'barrel', amount = 10 }
                 },
                 results = {
-                    { type = "item", name = "steel-plate", amount = 8 }
+                    { type = 'item', name = 'steel-plate', amount = 8 }
                 },
                 allow_decomposition = false,
             },
@@ -38,7 +38,7 @@ data:extend(
 
 table.insert(data.raw['technology']['fluid-handling']['effects'],
         {
-            type = "unlock-recipe",
-            recipe = "barrel-steel-plate",
+            type = 'unlock-recipe',
+            recipe = 'barrel-steel-plate',
         }
 )

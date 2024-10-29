@@ -22,26 +22,26 @@ function ArmyHelpGUI.update(player)
         auto_deploy = 'on'
     end
 
-    pane.add { type = "label", caption = { 'gui-army.deployer_title' }, style = "heading_1_label" }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description0' } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description1', auto_deploy } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description2' } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description3' } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description4', timeout } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description5' } }
-    pane.add { type = "label", caption = { 'gui-army.deployer_description6' } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_title' }, style = 'heading_1_label' }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description0' } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description1', auto_deploy } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description2' } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description3' } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description4', timeout } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description5' } }
+    pane.add { type = 'label', caption = { 'gui-army.deployer_description6' } }
 
-    pane.add { type = "label", caption = { 'gui-army.cc_title' }, style = "heading_1_label" }
-    pane.add { type = "label", caption = { 'gui-army.cc_description0' } }
-    pane.add { type = "label", caption = { 'gui-army.cc_description1' } }
-    pane.add { type = "label", caption = { 'gui-army.cc_description2' } }
-    pane.add { type = "label", caption = { 'gui-army.cc_description3', timeout } }
-    pane.add { type = "label", caption = { 'gui-army.cc_description4' } }
+    pane.add { type = 'label', caption = { 'gui-army.cc_title' }, style = 'heading_1_label' }
+    pane.add { type = 'label', caption = { 'gui-army.cc_description0' } }
+    pane.add { type = 'label', caption = { 'gui-army.cc_description1' } }
+    pane.add { type = 'label', caption = { 'gui-army.cc_description2' } }
+    pane.add { type = 'label', caption = { 'gui-army.cc_description3', timeout } }
+    pane.add { type = 'label', caption = { 'gui-army.cc_description4' } }
 
-    pane.add { type = "label", caption = { 'gui-army.deploy_planner_title' }, style = "heading_1_label" }
-    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description0' } }
-    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description1' } }
-    pane.add { type = "label", caption = { 'gui-army.deploy_planner_description2' } }
+    pane.add { type = 'label', caption = { 'gui-army.deploy_planner_title' }, style = 'heading_1_label' }
+    pane.add { type = 'label', caption = { 'gui-army.deploy_planner_description0' } }
+    pane.add { type = 'label', caption = { 'gui-army.deploy_planner_description1' } }
+    pane.add { type = 'label', caption = { 'gui-army.deploy_planner_description2' } }
 end
 
 return ArmyHelpGUI

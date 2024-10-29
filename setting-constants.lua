@@ -3,14 +3,14 @@ MAP_GEN_2_RACES_SPLIT = '2 Races Split'
 MAP_GEN_4_RACES_SPLIT = '4 Races Split'
 MAP_GEN_1_RACE_PER_SURFACE = '1 Race / Surface'
 
-MAX_LEVEL_5 = "Casual - Max L5"
-MAX_LEVEL_10 = "Normal - Max L10"
-MAX_LEVEL_15 = "Advanced - Max L15"
-MAX_LEVEL_20 = "Hardcore - Max L20"
+MAX_LEVEL_5 = 'Casual - Max L5'
+MAX_LEVEL_10 = 'Normal - Max L10'
+MAX_LEVEL_15 = 'Advanced - Max L15'
+MAX_LEVEL_20 = 'Hardcore - Max L20'
 
-LEVEL_MODE_REGULAR = "Regular"
-LEVEL_MODE_EXPRESS = "Express"
-LEVEL_MODE_SHINKANSEN = "Shinkansen"
+LEVEL_MODE_REGULAR = 'Regular'
+LEVEL_MODE_EXPRESS = 'Express'
+LEVEL_MODE_SHINKANSEN = 'Shinkansen'
 
 ATTACK_RANGE_14 = 14
 ATTACK_RANGE_20 = 20
@@ -39,11 +39,11 @@ BUILDING_FORMATION_1_9_0 = '1-9-0'
 BUILDING_FORMATION_1_9_10 = '1-9-10'
 BUILDING_FORMATION_RANDOM = 'random'
 
-BOSS_NORMAL = "Normal"
-BOSS_HARD = "Advanced"
-BOSS_GODLIKE = "Godlike"
+BOSS_NORMAL = 'Normal'
+BOSS_HARD = 'Advanced'
+BOSS_GODLIKE = 'Godlike'
 
-BOSS_SPAWN_SQUAD = "Squad"
-BOSS_SPAWN_PATROL = "Patrol"
-BOSS_SPAWN_PLATOON = "Platoon"
+BOSS_SPAWN_SQUAD = 'Squad'
+BOSS_SPAWN_PATROL = 'Patrol'
+BOSS_SPAWN_PLATOON = 'Platoon'
 

@@ -10,7 +10,7 @@ require('__enemyracemanager__/setting-constants')
 
 local String = require('__stdlib__/stdlib/utils/string')
 local Math = require('__stdlib__/stdlib/utils/math')
-require("util")
+require('util')
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
@@ -355,12 +355,12 @@ local try_kill_a_tree_or_rock = function(units)
                     position = entity.position,
                     radius = 32,
                     name = {
-                        "big-rock",
-                        "big-sand-rock",
-                        "huge-rock",
-                        "big-volcanic-rock",
-                        "huge-volcanic-rock",
-                        "big-fulgora-rock"
+                        'big-rock',
+                        'big-sand-rock',
+                        'huge-rock',
+                        'big-volcanic-rock',
+                        'huge-volcanic-rock',
+                        'big-fulgora-rock'
                     },
                     limit = 1,
                 })
@@ -371,7 +371,7 @@ local try_kill_a_tree_or_rock = function(units)
                     local entities = surface.find_entities_filtered({
                         position = entity.position,
                         radius = 32,
-                        type = {"tree"},
+                        type = {'tree'},
                         limit = 1,
                     })
 

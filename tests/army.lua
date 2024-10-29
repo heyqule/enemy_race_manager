@@ -30,8 +30,8 @@ after_each(function()
     delete_surfaces()
 end)
 
-describe("Army Count", function()
-    it("Increase / Decrease", function()
+describe('Army Count', function()
+    it('Increase / Decrease', function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
@@ -96,12 +96,12 @@ describe("Army Count", function()
 
     end)
 end)
-describe("Army Deployment", function()
+describe('Army Deployment', function()
     it('Deployment', function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local unit_name = "erm_terran--marine--mk1"
+        local unit_name = 'erm_terran--marine--mk1'
 
         local powerinterface = surface.create_entity({
             force=force,
@@ -157,7 +157,7 @@ describe("Army Deployment", function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local unit_name = "erm_terran--marine--mk1"
+        local unit_name = 'erm_terran--marine--mk1'
 
         local powerinterface = surface.create_entity({
             force=force,
@@ -212,14 +212,14 @@ describe("Army Deployment", function()
         end)
     end)
 end)
-describe("Army Teleport", function()
+describe('Army Teleport', function()
     it('Teleport, same surface', function()
         async(7200)
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local force = game.forces['player']
-        local building = "erm_terran--command-center"
-        local unit_name = "erm_terran--marine--mk1"
+        local building = 'erm_terran--command-center'
+        local unit_name = 'erm_terran--marine--mk1'
 
         local powerinterface1 = surface.create_entity({
             force=force,
@@ -303,8 +303,8 @@ describe("Army Teleport", function()
         local surface2 = game.create_surface('test_surface_2')
 
         local force = game.forces['player']
-        local building = "erm_terran--command-center"
-        local unit_name = "erm_terran--marine--mk1"
+        local building = 'erm_terran--command-center'
+        local unit_name = 'erm_terran--marine--mk1'
 
         local powerinterface1 = surface.create_entity({
             force=force,

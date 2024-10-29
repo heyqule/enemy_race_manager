@@ -7,41 +7,41 @@ local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 -- Change resistance values on vanilla armors
 local armor_change_resistance = function(percentage_value, fixed_value)
     return {
-        { type = "acid", percent = percentage_value, decrease = fixed_value },
-        { type = "poison", percent = percentage_value, decrease = fixed_value },
-        { type = "physical", percent = percentage_value, decrease = fixed_value },
-        { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value },
-        { type = "laser", percent = percentage_value, decrease = fixed_value },
-        { type = "electric", percent = percentage_value, decrease = fixed_value },
-        { type = "cold", percent = percentage_value, decrease = fixed_value }
+        { type = 'acid', percent = percentage_value, decrease = fixed_value },
+        { type = 'poison', percent = percentage_value, decrease = fixed_value },
+        { type = 'physical', percent = percentage_value, decrease = fixed_value },
+        { type = 'fire', percent = percentage_value, decrease = fixed_value },
+        { type = 'explosion', percent = percentage_value, decrease = fixed_value },
+        { type = 'laser', percent = percentage_value, decrease = fixed_value },
+        { type = 'electric', percent = percentage_value, decrease = fixed_value },
+        { type = 'cold', percent = percentage_value, decrease = fixed_value }
     }
 end
 
 local vehicle_change_resistance = function(percentage_value, fixed_value)
     return {
-        { type = "acid", percent = percentage_value, decrease = fixed_value },
-        { type = "poison", percent = percentage_value, decrease = fixed_value },
-        { type = "physical", percent = percentage_value, decrease = fixed_value },
-        { type = "fire", percent = percentage_value, decrease = fixed_value },
-        { type = "explosion", percent = percentage_value, decrease = fixed_value },
-        { type = "laser", percent = percentage_value, decrease = fixed_value },
-        { type = "electric", percent = percentage_value, decrease = fixed_value },
-        { type = "cold", percent = percentage_value, decrease = fixed_value },
-        { type = "impact", percent = 90, decrease = 50 },
+        { type = 'acid', percent = percentage_value, decrease = fixed_value },
+        { type = 'poison', percent = percentage_value, decrease = fixed_value },
+        { type = 'physical', percent = percentage_value, decrease = fixed_value },
+        { type = 'fire', percent = percentage_value, decrease = fixed_value },
+        { type = 'explosion', percent = percentage_value, decrease = fixed_value },
+        { type = 'laser', percent = percentage_value, decrease = fixed_value },
+        { type = 'electric', percent = percentage_value, decrease = fixed_value },
+        { type = 'cold', percent = percentage_value, decrease = fixed_value },
+        { type = 'impact', percent = 90, decrease = 50 },
     }
 end
 
 local rails_change_resistance = function()
     return {
-        { type = "acid", percent = 90 },
-        { type = "poison", percent = 100 },
-        { type = "physical", percent = 75 },
-        { type = "fire", percent = 100 },
-        { type = "explosion", percent = 75 },
-        { type = "laser", percent = 75 },
-        { type = "cold", percent = 90 },
-        { type = "electric", percent = 90 }
+        { type = 'acid', percent = 90 },
+        { type = 'poison', percent = 100 },
+        { type = 'physical', percent = 75 },
+        { type = 'fire', percent = 100 },
+        { type = 'explosion', percent = 75 },
+        { type = 'laser', percent = 75 },
+        { type = 'cold', percent = 90 },
+        { type = 'electric', percent = 90 }
     }
 end
 
@@ -91,30 +91,30 @@ if settings.startup['enemyracemanager-enhance-defense'].value == true then
     local walls = data.raw['wall']
     for _, entity in pairs(walls) do
         entity['resistances'] = {
-            { type = "acid", percent = 50, decrease = 0 },
-            { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
-            { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = 'acid', percent = 50, decrease = 0 },
+            { type = 'poison', percent = 100, decrease = 0 },
+            { type = 'physical', percent = 50, decrease = 0 },
+            { type = 'fire', percent = 100, decrease = 0 },
+            { type = 'explosion', percent = 50, decrease = 10 },
+            { type = 'impact', percent = 50, decrease = 45 },
+            { type = 'laser', percent = 50, decrease = 0 },
+            { type = 'electric', percent = 50, decrease = 0 },
+            { type = 'cold', percent = 50, decrease = 0 }
         }
     end
 
     local gates = data.raw['gate']
     for _, entity in pairs(gates) do
         entity['resistances'] = {
-            { type = "acid", percent = 50, decrease = 0 },
-            { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
-            { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = 'acid', percent = 50, decrease = 0 },
+            { type = 'poison', percent = 100, decrease = 0 },
+            { type = 'physical', percent = 50, decrease = 0 },
+            { type = 'fire', percent = 100, decrease = 0 },
+            { type = 'explosion', percent = 50, decrease = 10 },
+            { type = 'impact', percent = 50, decrease = 45 },
+            { type = 'laser', percent = 50, decrease = 0 },
+            { type = 'electric', percent = 50, decrease = 0 },
+            { type = 'cold', percent = 50, decrease = 0 }
         }
     end
 

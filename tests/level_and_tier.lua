@@ -17,7 +17,7 @@ after_each(function()
 end)
 
 
-    it("calculate_levels and calculateMutlipleLevels", function()
+    it('calculate_levels and calculateMutlipleLevels', function()
         storage.race_settings['erm_vanilla'].evolution_base_point = 2
         LevelManager.calculate_levels()
         assert(storage.race_settings['erm_vanilla'].level == 2, 'Level == 2')
@@ -31,7 +31,7 @@ end)
         assert(storage.race_settings['erm_vanilla'].level == 10, 'Level == 10')
     end)
 
-    it("Test enemy level update", function()
+    it('Test enemy level update', function()
         local surface = game.surfaces[1]
         local enemy_force = game.forces['enemy']
         local overlord = surface.create_entity({ name = 'erm_vanilla--biter-spawner--1', force = enemy_force, position = { 10, 10 } })
@@ -52,7 +52,7 @@ end)
         end)
     end)
 
-    it("Tiers switch", function()
+    it('Tiers switch', function()
         local force = game.forces['enemy']
         force.set_evolution_factor(0.41)
         LevelManager.calculate_levels()

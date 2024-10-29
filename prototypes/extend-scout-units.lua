@@ -11,19 +11,19 @@ local LAND_SCOUT = '--land_scout--'
 local AERIAL_SCOUT = '--aerial_scout--'
 
 local land_scout_script = {
-    type = "script",
+    type = 'script',
     effect_id = LAND_SCOUT_BEACON
 }
 
 
 local aerial_scout_script = {
-    type = "script",
+    type = 'script',
     effect_id = AERIAL_SCOUT_BEACON
 }
 
 local land_original_health = 50
 local aerial_original_health = 40
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
+local max_hitpoint_multiplier = settings.startup['enemyracemanager-max-hitpoint-multipliers'].value
 
 for level = 1, 20 ,1 do
     for mod_name, unit_name in pairs(data.erm_land_scout) do

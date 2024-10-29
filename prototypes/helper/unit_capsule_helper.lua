@@ -11,40 +11,40 @@ function ERM_UnitCapsuleHelper.add_capsule(unit_name, cooldown, stack_size)
     local name = 'erm_' .. unit_name
     data:extend({
         {
-            type = "capsule",
-            subgroup = "capsule",
+            type = 'capsule',
+            subgroup = 'capsule',
             name = name,
             capsule_action = {
                 attack_parameters = {
-                    ammo_category = "capsule",
+                    ammo_category = 'capsule',
                     ammo_type = {
                         action = {
                             action_delivery = {
                                 projectile = name,
                                 starting_speed = 0.3,
-                                type = "projectile"
+                                type = 'projectile'
                             },
-                            type = "direct"
+                            type = 'direct'
                         },
-                        category = "capsule",
-                        target_type = "position"
+                        category = 'capsule',
+                        target_type = 'position'
                     },
                     cooldown = cooldown,
                     projectile_creation_distance = 0.6,
                     range = 12,
-                    type = "projectile"
+                    type = 'projectile'
                 },
-                type = "throw"
+                type = 'throw'
             },
             icons = {
                 { icon = base_entity.icon, icon_size = base_entity.icon_size }
             },
-            order = "u[unit-capsule]-" .. name,
+            order = 'u[unit-capsule]-' .. name,
             stack_size = stack_size,
-            localised_name = { "erm.unit-capsule", { "entity-name." .. name } }
+            localised_name = { 'erm.unit-capsule', { 'entity-name.' .. name } }
         },
         {
-            type = "projectile",
+            type = 'projectile',
             name = name,
             acceleration = 0.005,
             action = {
@@ -52,31 +52,31 @@ function ERM_UnitCapsuleHelper.add_capsule(unit_name, cooldown, stack_size)
                     target_effects = {
                         entity_name = unit_name,
                         show_in_tooltip = true,
-                        type = "create-entity"
+                        type = 'create-entity'
                     },
-                    type = "instant"
+                    type = 'instant'
                 },
-                type = "direct"
+                type = 'direct'
             },
             animation = {
-                filename = "__base__/graphics/entity/poison-capsule/poison-capsule.png",
+                filename = '__base__/graphics/entity/poison-capsule/poison-capsule.png',
                 frame_count = 1,
                 height = 32,
-                priority = "high",
+                priority = 'high',
                 width = 32
             },
             flags = {
-                "not-on-map"
+                'not-on-map'
             },
             light = {
                 intensity = 0.5,
                 size = 4
             },
             shadow = {
-                filename = "__base__/graphics/entity/poison-capsule/poison-capsule-shadow.png",
+                filename = '__base__/graphics/entity/poison-capsule/poison-capsule-shadow.png',
                 frame_count = 1,
                 height = 32,
-                priority = "high",
+                priority = 'high',
                 width = 32
             },
             smoke = nil,
@@ -89,7 +89,7 @@ function ERM_UnitCapsuleHelper.add_recipe(unit_name, craft_time, ingredients)
     local name = 'erm_' .. unit_name
     data:extend({
         {
-            type = "recipe",
+            type = 'recipe',
             name = name,
             result = name,
             enabled = false,
@@ -97,7 +97,7 @@ function ERM_UnitCapsuleHelper.add_recipe(unit_name, craft_time, ingredients)
             ingredients = ingredients,
             requester_paste_multiplier = 1,
             always_show_made_in = true,
-            category = "erm_controllable_units"
+            category = 'erm_controllable_units'
         }
     })
 end
@@ -107,21 +107,21 @@ function ERM_UnitCapsuleHelper.add_technology(unit_name, prerequisites, tech_uni
     local name = 'erm_' .. unit_name
     data:extend({
         {
-            type = "technology",
+            type = 'technology',
             name = name,
             effects = {
                 {
-                    type = "unlock-recipe",
+                    type = 'unlock-recipe',
                     recipe = name,
                 },
             },
             icons = {
                 { icon = base_entity.icon, icon_size = base_entity.icon_size }
             },
-            order = "e-g",
+            order = 'e-g',
             prerequisites = prerequisites,
             unit = tech_unit,
-            localised_name = { "erm.unit-capsule", { "entity-name." .. unit_name } }
+            localised_name = { 'erm.unit-capsule', { 'entity-name.' .. unit_name } }
         }
     })
 end

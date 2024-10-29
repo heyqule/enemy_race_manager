@@ -278,7 +278,7 @@ local draw_time = function(boss, current_tick)
     local datetime_str = GlobalConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
 
     rendering.draw_text({
-        text = { "description.boss-despawn-in", datetime_str },
+        text = { 'description.boss-despawn-in', datetime_str },
         surface = boss.surface_name,
         target = boss.entity,
         target_offset = { -3.5, -8 },

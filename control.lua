@@ -28,10 +28,10 @@ local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_a
 require('prototypes/compatibility/controls')
 
 local RemoteApi = require('__enemyracemanager__/lib/remote_api')
-remote.add_interface("enemyracemanager", RemoteApi)
+remote.add_interface('enemyracemanager', RemoteApi)
 
 local DebugRemoteApi = require('__enemyracemanager__/lib/debug_remote_api')
-remote.add_interface("enemyracemanager_debug", DebugRemoteApi)
+remote.add_interface('enemyracemanager_debug', DebugRemoteApi)
 
 -- Register Cron Functions
 cron_switch = {

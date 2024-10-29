@@ -257,7 +257,7 @@ end
 function LevelManager.print_level_curve_table()
     local string = ''
     for i = 1, GlobalConfig.get_max_level() - 1 do
-        string = string .. tostring(i + 1) .. " = " .. tostring(evolution_points[i]) .. ', '
+        string = string .. tostring(i + 1) .. ' = ' .. tostring(evolution_points[i]) .. ', '
     end
     game.print('Level Curve: ' .. string)
 end

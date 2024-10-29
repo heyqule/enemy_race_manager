@@ -6,16 +6,16 @@ require('util')
 local map_gen_settings = util.table.deepcopy(data.raw['map-gen-presets'])
 
 map_gen_settings['default']['erm-rts-world'] = {
-    order = "h",
+    order = 'h',
     basic_settings = {
         autoplace_controls =
         {
-            ["iron-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["copper-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["stone"] = { frequency="very-high", richness = "very-poor"},
-            ["coal"] = { frequency="very-high", richness = "very-poor"},
-            ["uranium-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["crude-oil"] = { frequency="very-high", richness = "very-poor"}
+            ['iron-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['copper-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['stone'] = { frequency='very-high', richness = 'very-poor'},
+            ['coal'] = { frequency='very-high', richness = 'very-poor'},
+            ['uranium-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['crude-oil'] = { frequency='very-high', richness = 'very-poor'}
         },
         starting_area = 1.5
     },
@@ -28,17 +28,17 @@ map_gen_settings['default']['erm-rts-world'] = {
 }
 
 map_gen_settings['default']['erm-rts-death-world'] = {
-    order = "i",
+    order = 'i',
     basic_settings = {
         property_expression_names = {},
         autoplace_controls = {
-            ["iron-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["copper-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["stone"] = { frequency="very-high", richness = "very-poor"},
-            ["coal"] = { frequency="very-high", richness = "very-poor"},
-            ["uranium-ore"] = { frequency="very-high", richness = "very-poor"},
-            ["crude-oil"] = { frequency="very-high", richness = "very-poor"},
-            ["enemy-base"] = { frequency = "very-high", size = "very-big" }
+            ['iron-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['copper-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['stone'] = { frequency='very-high', richness = 'very-poor'},
+            ['coal'] = { frequency='very-high', richness = 'very-poor'},
+            ['uranium-ore'] = { frequency='very-high', richness = 'very-poor'},
+            ['crude-oil'] = { frequency='very-high', richness = 'very-poor'},
+            ['enemy-base'] = { frequency = 'very-high', size = 'very-big' }
         },
         starting_area = 1.5
     },
@@ -60,13 +60,13 @@ map_gen_settings['default']['erm-rts-death-world'] = {
 
 if DEBUG_MODE then
     map_gen_settings['default']['erm-debug'] = {
-        order = "k",
+        order = 'k',
         basic_settings = {
             property_expression_names = {},
             autoplace_controls = {
-                ["enemy-base"] = { frequency = 5, size = 5 },
+                ['enemy-base'] = { frequency = 5, size = 5 },
             },
-            starting_area = "very-big",
+            starting_area = 'very-big',
         },
         advanced_settings = {
             enemy_evolution = {

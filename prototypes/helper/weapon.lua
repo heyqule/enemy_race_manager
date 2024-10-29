@@ -9,7 +9,7 @@ local ERM_WeaponDataHelper = {}
 -- Change rocket/cannon area explosives to hit all units
 function ERM_WeaponDataHelper.ignore_collision_for_area_damage(target_effects)
     for i, effect in pairs(target_effects) do
-        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+        if effect['type'] == 'nested-result' and effect['action']['type'] == 'area' then
             effect['action']['ignore_collision_condition'] = true
         end
     end
@@ -32,7 +32,7 @@ local disable_friendly_fire = function(projectile, action_type)
     -- Single action
     if projectile[action_type] and projectile[action_type]['action_delivery'] then
         for _, effect in pairs(projectile[action_type]['action_delivery']['target_effects']) do
-            if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+            if effect['type'] == 'nested-result' and effect['action']['type'] == 'area' then
                 effect['action']['force'] = 'not-same'
             end
         end
@@ -46,7 +46,7 @@ local disable_friendly_fire = function(projectile, action_type)
             end
 
             for _, effect in pairs(action['action_delivery']['target_effects']) do
-                if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
+                if effect['type'] == 'nested-result' and effect['action']['type'] == 'area' then
                     effect['action']['force'] = 'not-same'
                 end
             end

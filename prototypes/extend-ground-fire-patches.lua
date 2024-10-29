@@ -7,7 +7,7 @@
 ---
 require('global')
 
-for _, fire in pairs(data.raw["fire"]) do
+for _, fire in pairs(data.raw['fire']) do
     if DEBUG_MODE then
         log(fire.name..' init:'..tostring(fire.initial_lifetime)..' max:'..tostring(fire.maximum_lifetime))
     end

@@ -33,7 +33,7 @@ local player = 'player'
 local enemy = 'enemy'
 local biter_spawner = 'erm_vanilla--biter-spawner--1'
 
-    it("Spawn Scout", function()
+    it('Spawn Scout', function()
         async(900)
 
         local surface = game.surfaces[1]
@@ -74,7 +74,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
         end)
     end)
 
-    it("Scout Scanning: buildings", function()
+    it('Scout Scanning: buildings', function()
         async(4200)
         local surface = game.surfaces[1]
         local entity = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
@@ -115,7 +115,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
         end)
     end)
 
-    it("Detour to a resource node, then go to final_destination", function()
+    it('Detour to a resource node, then go to final_destination', function()
         local surface = game.surfaces[1]
 
         local spawner = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
@@ -143,7 +143,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
                 radius=32,
             })
             local corpse_count = surface.count_entities_filtered({
-                type="corpse",
+                type='corpse',
                 position={0,0},
                 radius=32,
             })
@@ -157,7 +157,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
     end)
 
 
-    it("Spawn beacon data is still in the data tree while spawn beacon is invalid", function()
+    it('Spawn beacon data is still in the data tree while spawn beacon is invalid', function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
         local enemy = game.forces['enemy']
@@ -168,7 +168,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
         storage['erm_spawn_beacon'][surface.index] = {}
         storage['erm_spawn_beacon'][surface.index][enemy.name] = {}
         for i = 1, 10, 1 do
-            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
+            local entity = surface.create_entity({name = 'erm_spawn_beacon', position={i*5,i*5}})
             storage['erm_spawn_beacon'][surface.index][enemy.name][i] = { beacon = entity }
         end
 
@@ -186,7 +186,7 @@ local biter_spawner = 'erm_vanilla--biter-spawner--1'
         end)
     end)
 
-    it("When scout is done first location, it should scout second location", function()
+    it('When scout is done first location, it should scout second location', function()
         async(1800)
 
         local surface = game.surfaces[1]

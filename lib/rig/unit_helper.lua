@@ -182,17 +182,17 @@ end
 function ERM_UnitHelper.make_unit_melee_ammo_type(damage_value)
     return
     {
-        target_type = "entity",
+        target_type = 'entity',
         action =
         {
-            type = "direct",
+            type = 'direct',
             action_delivery =
             {
-                type = "instant",
+                type = 'instant',
                 target_effects =
                 {
-                    type = "damage",
-                    damage = { amount = damage_value , type = "physical"}
+                    type = 'damage',
+                    damage = { amount = damage_value , type = 'physical'}
                 }
             }
         }

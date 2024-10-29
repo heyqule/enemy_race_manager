@@ -30,9 +30,9 @@ function MainWindow.show(player)
         return
     end
     local main_window = gui.add {
-        type = "frame",
+        type = 'frame',
         name = MainWindow.root_name,
-        direction = "vertical",
+        direction = 'vertical',
     }
     main_window.force_auto_center()
     player.opened = main_window
@@ -46,24 +46,24 @@ function MainWindow.show(player)
     local title_flow = main_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
     title_flow.style.minimal_width = MainWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
+    local title = title_flow.add { type = 'label', name = 'title', caption = { 'gui.title' }, style = 'caption_label' }
 
-    local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
+    local pusher = title_flow.add { type = 'empty-widget', style = 'draggable_space_header' }
     pusher.style.width = MainWindow.window_width - 24 - 160
     pusher.style.height = 24
     pusher.drag_target = main_window
 
-    local close_button = title_flow.add { type = "sprite-button",
+    local close_button = title_flow.add { type = 'sprite-button',
                                           name = 'erm_close_button',
-                                          sprite = "utility/close",
+                                          sprite = 'utility/close',
                                           style = 'frame_action_button',
-                                          tooltip = { "gui.close-instruction" }
+                                          tooltip = { 'gui.close-instruction' }
     }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local scroll = main_window.add { type = "scroll-pane", style = "scroll_pane_in_shallow_frame" }
+    local scroll = main_window.add { type = 'scroll-pane', style = 'scroll_pane_in_shallow_frame' }
     scroll.style.margin = 5
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
@@ -76,39 +76,39 @@ function MainWindow.show(player)
         scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_mixed_races' } }
     end
 
-    local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
+    local item_table = scroll.add { type = 'table', column_count = 7, style = 'bordered_table' }
     item_table.style.horizontally_stretchable = false
 
-    item_table.add { type = "label", caption = { 'gui.race_column' } }
-    item_table.add { type = "label", caption = { 'gui.level_column' } }
-    item_table.add { type = "label", caption = { 'gui.tier_column' } }
-    item_table.add { type = "label", caption = { 'gui.evolution_column' } }
-    item_table.add { type = "label", caption = { 'gui.evolution_factor_column' } }
-    item_table.add { type = "label", caption = { 'gui.attack_column' } }
-    item_table.add { type = "label", caption = { 'gui.action_column' } }
+    item_table.add { type = 'label', caption = { 'gui.race_column' } }
+    item_table.add { type = 'label', caption = { 'gui.level_column' } }
+    item_table.add { type = 'label', caption = { 'gui.tier_column' } }
+    item_table.add { type = 'label', caption = { 'gui.evolution_column' } }
+    item_table.add { type = 'label', caption = { 'gui.evolution_factor_column' } }
+    item_table.add { type = 'label', caption = { 'gui.attack_column' } }
+    item_table.add { type = 'label', caption = { 'gui.action_column' } }
 
     LevelManager.calculate_evolution_points(storage.race_settings, game.forces, settings)
 
     for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
-            item_table.add { type = "label", caption = race_setting.label }
-            item_table.add { type = "label", caption = race_setting.level }
-            item_table.add { type = "label", caption = race_setting.tier }
-            item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
-            item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(name)) }
-            item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
-            local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
-            action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { 'gui.more_action' }, tooltip = { 'gui.more_action_tooltip' } }
+            item_table.add { type = 'label', caption = race_setting.label }
+            item_table.add { type = 'label', caption = race_setting.level }
+            item_table.add { type = 'label', caption = race_setting.tier }
+            item_table.add { type = 'label', caption = string.format('%.4f', race_setting.evolution_point) }
+            item_table.add { type = 'label', caption = string.format('%.4f', LevelManager.get_evolution_factor(name)) }
+            item_table.add { type = 'label', caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
+            local action_flow = item_table.add { type = 'flow', name = name .. '_flow', direction = 'vertical' }
+            action_flow.add { type = 'button', name = race_setting.race .. '/more_action', caption = { 'gui.more_action' }, tooltip = { 'gui.more_action_tooltip' } }
         end
     end
 
     if admin then
-        local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
-        bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
-        local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
+        local bottom_flow = main_window.add { type = 'flow', direction = 'horizontal' }
+        bottom_flow.add { type = 'button', name = 'erm_reset_default_bitter', caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
+        local button_pusher = bottom_flow.add { type = 'empty-widget', style = 'draggable_space_header' }
         button_pusher.style.width = 300
         button_pusher.style.height = 24
-        bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
+        bottom_flow.add { type = 'button', name = 'erm_clean_idle_biter', caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
     end
 end
 
@@ -182,7 +182,7 @@ function MainWindow.update_overhead_button(player_index)
     local button_flow = mod_gui.get_button_flow(owner)
 
     if owner and button_flow and not button_flow['erm_toggle'] then
-        button_flow.add { type = "sprite-button", name = "erm_toggle", tooltip = { 'gui.show-enemy-stats' }, sprite = 'utility/force_editor_icon' }
+        button_flow.add { type = 'sprite-button', name = 'erm_toggle', tooltip = { 'gui.show-enemy-stats' }, sprite = 'utility/force_editor_icon' }
     end
 end
 

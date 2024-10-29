@@ -9,8 +9,8 @@ local WeaponHelper = require('prototypes.helper.weapon')
 -- Add artillery-shell damage bonus to stronger explosive
 table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
         {
-            type = "ammo-damage",
-            ammo_category = "artillery-shell",
+            type = 'ammo-damage',
+            ammo_category = 'artillery-shell',
             modifier = 0.33
         }
 )

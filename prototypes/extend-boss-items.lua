@@ -7,80 +7,80 @@
 
 --- Add PSI Emitter Satellite, spawn boss and return 2000 space science pack
 data:extend({ {
-                  type = "item",
-                  name = "psi-tracking-satellite",
+                  type = 'item',
+                  name = 'psi-tracking-satellite',
                   icons = {
                       {
-                          icon = "__base__/graphics/icons/satellite.png",
+                          icon = '__base__/graphics/icons/satellite.png',
                           icon_size = 64,
                       },
                       {
-                          icon = "__base__/graphics/icons/signal/signal_P.png",
+                          icon = '__base__/graphics/icons/signal/signal_P.png',
                           icon_size = 64,
                           scale = 0.25,
                           shift = { -9, -9 }
                       },
                       {
-                          icon = "__base__/graphics/icons/signal/signal_T.png",
+                          icon = '__base__/graphics/icons/signal/signal_T.png',
                           icon_size = 64,
                           scale = 0.25,
                           shift = { 9, -9 }
                       },
                   },
-                  subgroup = "space-related",
-                  order = "m[psi-tracking-satellite]",
+                  subgroup = 'space-related',
+                  order = 'm[psi-tracking-satellite]',
                   stack_size = 1,
-                  rocket_launch_product = { "space-science-pack", 1200 }
+                  rocket_launch_product = { 'space-science-pack', 1200 }
               },
               {
-                  type = "recipe",
-                  name = "psi-tracking-satellite",
+                  type = 'recipe',
+                  name = 'psi-tracking-satellite',
                   energy_required = 5,
                   enabled = false,
-                  category = "crafting",
+                  category = 'crafting',
                   ingredients = {
                       -- @TODO replace with starter pack for SA
-                      -- {type="item", name="satellite", amount=1},
-                      {type="item", name="raw-fish", amount=100},
-                      {type="item", name="wood", amount=100},
-                      {type="item", name="processing-unit", amount=100},
-                      {type="item", name="water-barrel", amount=100},
+                      -- {type='item', name='satellite', amount=1},
+                      {type='item', name='raw-fish', amount=100},
+                      {type='item', name='wood', amount=100},
+                      {type='item', name='processing-unit', amount=100},
+                      {type='item', name='water-barrel', amount=100},
                   },
                   results = {
-                      {type="item", name="psi-tracking-satellite", amount=1},
+                      {type='item', name='psi-tracking-satellite', amount=1},
                   },
                   requester_paste_multiplier = 1
               },
               {
-                  type = "radar",
-                  name = "erm-boss-beacon",
-                  render_layer = "object",
-                  icon = "__base__/graphics/icons/steel-chest.png",
+                  type = 'radar',
+                  name = 'erm-boss-beacon',
+                  render_layer = 'object',
+                  icon = '__base__/graphics/icons/steel-chest.png',
                   icon_size = 64, icon_mipmaps = 4,
-                  flags = { "placeable-neutral", "not-on-map" },
-                  order = "erm-boss-beacon",
+                  flags = { 'placeable-neutral', 'not-on-map' },
+                  order = 'erm-boss-beacon',
                   is_military_target = false,
                   minable = nil,
                   collision_mask = nil,
                   max_health = 9999,
-                  corpse = "small-remnants",
+                  corpse = 'small-remnants',
                   collision_box = { { -0.35, -0.35 }, { 0.35, 0.35 } },
                   selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } },
                   max_distance_of_nearby_sector_revealed = 1,
                   max_distance_of_sector_revealed = 1,
-                  energy_per_sector = "999999kJ",
-                  energy_per_nearby_scan = "1kJ",
+                  energy_per_sector = '999999kJ',
+                  energy_per_nearby_scan = '1kJ',
                   energy_source = {
-                      type = "void",
+                      type = 'void',
                   },
-                  energy_usage = "1kW",
+                  energy_usage = '1kW',
                   selectable_in_game = false,
               },
 })
 
 table.insert(data.raw['technology']['space-science-pack']['effects'],
         {
-            type = "unlock-recipe",
-            recipe = "psi-tracking-satellite",
+            type = 'unlock-recipe',
+            recipe = 'psi-tracking-satellite',
         }
 )
