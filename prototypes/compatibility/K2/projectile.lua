@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 10/23/2021 1:07 PM
 ---
-local String = require('__stdlib__/stdlib/utils/string')
-local WeaponHelper = require('prototypes.helper.weapon')
+local String = require("__stdlib__/stdlib/utils/string")
+local WeaponHelper = require("prototypes.helper.weapon")
 
 local projectiles = {
-    { 'pistol-ammo-', 2 },
-    { 'rifle-ammo-', 4 },
+    { "pistol-ammo-", 2 },
+    { "rifle-ammo-", 4 },
 }
 
 for _, projectile in pairs(projectiles) do
@@ -20,13 +20,13 @@ for _, projectile in pairs(projectiles) do
 end
 
 local aoe_projectiles = {
-    { 'anti-material-rifle-ammo-', 4 },
+    { "anti-material-rifle-ammo-", 4 },
 }
 
 for _, projectile in pairs(aoe_projectiles) do
     for i = 1, projectile[2], 1 do
         if data.raw.projectile[projectile[1] .. tostring(i)] then
-            WeaponHelper.ignore_collision_for_area_damage(data.raw.projectile[projectile[1] .. tostring(i)]['action']['action_delivery']['target_effects'])
+            WeaponHelper.ignore_collision_for_area_damage(data.raw.projectile[projectile[1] .. tostring(i)]["action"]["action_delivery"]["target_effects"])
         end
     end
 end

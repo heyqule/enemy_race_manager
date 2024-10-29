@@ -3,17 +3,17 @@
 --- Created by heyqule.
 --- DateTime: 12/24/2020 8:21 PM
 ---
---- require('__enemyracemanager__/lib/level_processor')
+--- require("__enemyracemanager__/lib/level_processor")
 --- References:
 --- https://lua-api.factorio.com/latest/LuaForce.html
 ---
-local String = require('__stdlib__/stdlib/utils/string')
-local Event = require('__stdlib__/stdlib/event/event')
+local String = require("__stdlib__/stdlib/utils/string")
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 
 local LevelManager = {}
 
@@ -23,9 +23,9 @@ local tier_map = { 0.4, 0.8 }
 -- Evolution point for leveling
 local evolution_points = { 1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000 }
 
-if settings.startup['enemyracemanager-evolution-point-ll-express'].value == LEVEL_MODE_EXPRESS then
+if settings.startup["enemyracemanager-evolution-point-ll-express"].value == LEVEL_MODE_EXPRESS then
     evolution_points = {1, 2, 4, 7, 12, 18, 26, 36, 48, 66, 94, 140, 190, 255, 330, 420, 530, 666, 900}
-elseif settings.startup['enemyracemanager-evolution-point-ll-express'].value == LEVEL_MODE_SHINKANSEN then
+elseif settings.startup["enemyracemanager-evolution-point-ll-express"].value == LEVEL_MODE_SHINKANSEN then
     evolution_points = {1, 2, 3, 5, 10, 16, 23, 31, 42, 55, 69, 105, 160, 225, 320, 420, 530, 666, 800}
 end
 
@@ -58,7 +58,7 @@ end
 local warn_user = function(current_level, race_settings, race_name)
     if GlobalConfig.spawner_kills_deduct_evolution_points() and race_settings[race_name].evolution_point >= (evolution_points[current_level] * 0.95) and not race_settings[race_name].level_warned then
         race_settings[race_name].level_warned = true
-        game.print(race_settings[race_name].race..' has over 95% evolution points to next level!');
+        game.print(race_settings[race_name].race.." has over 95% evolution points to next level!");
     end
 end
 
@@ -71,7 +71,7 @@ local handle_unit_level = function(race_settings, force, race_name, dispatch)
         race_settings[race_name].level = current_level + 1
         race_settings[race_name].level_warned = false
         if dispatch then
-            game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+            game.print(race_settings[race_name].race .. " = L" .. race_settings[race_name].level)
 
             Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
                     {
@@ -83,7 +83,7 @@ end
 
 local calculate_evolution_points = function(race_settings, settings, force, race_name)
     -- @TODO evolution factor is now per surface. need a new formular for this.
-    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.get_evolution_factor_by_pollution() + force.get_evolution_factor_by_time() + force.get_evolution_factor_by_killing_spawners()) * settings.global['enemyracemanager-evolution-point-multipliers'].value
+    race_settings[race_name].evolution_point = race_settings[race_name].evolution_base_point + (force.get_evolution_factor_by_pollution() + force.get_evolution_factor_by_time() + force.get_evolution_factor_by_killing_spawners()) * settings.global["enemyracemanager-evolution-point-multipliers"].value
     race_settings[race_name].global_evolution_point = race_settings[race_name].evolution_point
     return race_settings[race_name].evolution_point
 end
@@ -155,7 +155,7 @@ function LevelManager.calculate_multiple_levels()
 
         if GlobalConfig.race_is_active(race_name) and has_valid_race_settings(race_settings, race_name) and race_settings[race_name].level > GlobalConfig.get_max_level() then
             race_settings[race_name].level = GlobalConfig.get_max_level()
-            game.print('Max level reduced: ' .. race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+            game.print("Max level reduced: " .. race_settings[race_name].race .. " = L" .. race_settings[race_name].level)
 
             Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
                     {
@@ -186,7 +186,7 @@ function LevelManager.calculate_multiple_levels()
             end
             
             if level_up then
-                game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+                game.print(race_settings[race_name].race .. " = L" .. race_settings[race_name].level)
 
                 Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
                         {
@@ -235,7 +235,7 @@ end
 function LevelManager.level_by_command(race_settings, race_name, target_level)
     race_settings[race_name].level = target_level
 
-    game.print(race_settings[race_name].race .. ' = L' .. race_settings[race_name].level)
+    game.print(race_settings[race_name].race .. " = L" .. race_settings[race_name].level)
 
     Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP),
         {
@@ -255,11 +255,11 @@ function LevelManager.get_evolution_factor(race_name)
 end
 
 function LevelManager.print_level_curve_table()
-    local string = ''
+    local string = ""
     for i = 1, GlobalConfig.get_max_level() - 1 do
-        string = string .. tostring(i + 1) .. ' = ' .. tostring(evolution_points[i]) .. ', '
+        string = string .. tostring(i + 1) .. " = " .. tostring(evolution_points[i]) .. ", "
     end
-    game.print('Level Curve: ' .. string)
+    game.print("Level Curve: " .. string)
 end
 
 function LevelManager.reset_all_progress()

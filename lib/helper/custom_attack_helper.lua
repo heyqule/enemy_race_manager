@@ -5,16 +5,16 @@
 ---
 
 
-require('__enemyracemanager__/setting-constants')
+require("__enemyracemanager__/setting-constants")
 
 
-local String = require('__stdlib__/stdlib/utils/string')
-local Math = require('__stdlib__/stdlib/utils/math')
-require('util')
+local String = require("__stdlib__/stdlib/utils/string")
+local Math = require("__stdlib__/stdlib/utils/math")
+require("util")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -33,10 +33,10 @@ local get_name_token = function(name)
     end
 
     if storage.force_entity_name_cache[name] == nil then
-        if not String.find(name, '--', 1, true) then
-            storage.force_entity_name_cache[name] = { MOD_NAME, name, '1' }
+        if not String.find(name, "--", 1, true) then
+            storage.force_entity_name_cache[name] = { MOD_NAME, name, "1" }
         else
-            storage.force_entity_name_cache[name] = String.split(name, '--')
+            storage.force_entity_name_cache[name] = String.split(name, "--")
         end
     end
 
@@ -63,15 +63,15 @@ local get_race_settings = function(race_name, reload)
         return storage.custom_attack_race_settings[race_name]
     end
 
-    storage.custom_attack_race_settings[race_name] = remote.call('enemyracemanager', 'get_race', race_name)
+    storage.custom_attack_race_settings[race_name] = remote.call("enemyracemanager", "get_race", race_name)
     storage.custom_attack_race_settings[race_name].tick = game.tick + minute * GlobalConfig.LEVEL_PROCESS_INTERVAL + 1
     return storage.custom_attack_race_settings[race_name]
 end
 
 local get_low_tier_flying_unit = function(race_name)
     local race_settings = get_race_settings(race_name)
-    if type(race_settings['flying_units'][1][1]) ~= nil then
-        return race_settings['flying_units'][1][1]
+    if type(race_settings["flying_units"][1][1]) ~= nil then
+        return race_settings["flying_units"][1][1]
     end
 
     return nil
@@ -85,7 +85,7 @@ local get_drop_position = function(final_unit_name, surface, position, race_name
         if drop_position == nil then
             local low_tier_flyer_name = get_low_tier_flying_unit(race_name)
             if low_tier_flyer_name then
-                final_unit_name = race_name .. '--' .. low_tier_flyer_name ..'--' .. tostring(level)
+                final_unit_name = race_name .. "--" .. low_tier_flyer_name .."--" .. tostring(level)
                 drop_position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
             end
         end
@@ -96,7 +96,7 @@ end
 local add_member = function(final_unit_name, surface, drop_position, force_name, group)
     if drop_position then
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
-        if entity.type == 'unit' then
+        if entity.type == "unit" then
             if group.valid then
                 group.add_member(entity)
             end
@@ -115,7 +115,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
 
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. '--' .. unit_name .. '--' .. level
+    local final_unit_name = race_name .. "--" .. unit_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
@@ -125,7 +125,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
-            if entity.type == 'unit' then
+            if entity.type == "unit" then
                 entity.commandable.set_command({
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },
@@ -134,7 +134,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
                 })
 
                 if source_entity and
-                        source_entity.type == 'unit' and
+                        source_entity.type == "unit" and
                         source_entity.commandable and
                         source_entity.commandable.is_unit_group and
                         source_entity.commandable.force == entity.force
@@ -150,10 +150,10 @@ end
 local drop_player_unit = function(event, race_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     local race_settings = get_race_settings(race_name)
-    local force = event.source_entity.force or 'player'
+    local force = event.source_entity.force or "player"
     local surface = game.surfaces[event.surface_index]
 
-    local final_unit_name = race_name .. '--' .. unit_name
+    local final_unit_name = race_name .. "--" .. unit_name
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
@@ -163,7 +163,7 @@ local drop_player_unit = function(event, race_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force })
-            if entity and entity.valid and entity.type == 'unit' then
+            if entity and entity.valid and entity.type == "unit" then
                 entity.commandable.set_command({
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },
@@ -188,7 +188,7 @@ end
 function CustomAttackHelper.valid(event, race_name)
     return (event.source_entity and
             String.find(event.source_entity.name, race_name, 1, true) ~= nil) or
-            String.find(event.effect_id, '-bs', 1, true) ~= nil
+            String.find(event.effect_id, "-bs", 1, true) ~= nil
 end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
@@ -258,7 +258,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     end
 
     repeat
-        local final_unit_name = race_name .. '--' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '--' .. level
+        local final_unit_name = race_name .. "--" .. CustomAttackHelper.get_unit(race_name, "droppable_units") .. "--" .. level
         local drop_position
         final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
         add_member(final_unit_name, surface, drop_position, force_name, group)
@@ -273,7 +273,7 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
             distraction = defines.distraction.by_anything
         })
 
-        remote.call('enemyracemanager', 'add_erm_attack_group', group)
+        remote.call("enemyracemanager", "add_erm_attack_group", group)
     end
 end
 
@@ -282,7 +282,7 @@ end
 ---
 function CustomAttackHelper.drop_boss_units(event, race_name, count)
     count = count or 10
-    local boss_data = remote.call('enemyracemanager', 'get_boss_data')
+    local boss_data = remote.call("enemyracemanager", "get_boss_data")
     if boss_data == nil then
         return
     end
@@ -299,7 +299,7 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         position = position, force = boss_data.force
     }
     repeat
-        local final_unit_name = race_name .. '--' .. CustomAttackHelper.get_unit(race_name, 'droppable_units') .. '--' .. tostring(level)
+        local final_unit_name = race_name .. "--" .. CustomAttackHelper.get_unit(race_name, "droppable_units") .. "--" .. tostring(level)
         local drop_position
         final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
         add_member(final_unit_name, surface, drop_position, boss_data.force, group)
@@ -319,14 +319,14 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         distraction = defines.distraction.by_anything
     })
 
-    remote.call('enemyracemanager', 'add_boss_attack_group', group)
+    remote.call("enemyracemanager", "add_boss_attack_group", group)
 end
 
 local break_time_to_live = function(count, max_count, units_total)
     return count == max_count or units_total == 0
 end
 
---- Try target trees and rocks when the parent unit is stuck on pathing and timed unit don't have targets.
+--- Try target trees and rocks when the parent unit is stuck on pathing and timed unit don"t have targets.
 --- @TODO need to fix big rock entities
 local try_kill_a_tree_or_rock = function(units)
     local is_enemy_force = false
@@ -341,7 +341,7 @@ local try_kill_a_tree_or_rock = function(units)
 
         if entity and entity.valid then
             if not is_enemy_force then
-                is_enemy_force = remote.call('enemyracemanager', 'is_enemy_force', entity.force)
+                is_enemy_force = remote.call("enemyracemanager", "is_enemy_force", entity.force)
             end
 
             local command = entity.commandable.command
@@ -355,12 +355,12 @@ local try_kill_a_tree_or_rock = function(units)
                     position = entity.position,
                     radius = 32,
                     name = {
-                        'big-rock',
-                        'big-sand-rock',
-                        'huge-rock',
-                        'big-volcanic-rock',
-                        'huge-volcanic-rock',
-                        'big-fulgora-rock'
+                        "big-rock",
+                        "big-sand-rock",
+                        "huge-rock",
+                        "big-volcanic-rock",
+                        "huge-volcanic-rock",
+                        "big-fulgora-rock"
                     },
                     limit = 1,
                 })
@@ -371,7 +371,7 @@ local try_kill_a_tree_or_rock = function(units)
                     local entities = surface.find_entities_filtered({
                         position = entity.position,
                         radius = 32,
-                        type = {'tree'},
+                        type = {"tree"},
                         limit = 1,
                     })
 

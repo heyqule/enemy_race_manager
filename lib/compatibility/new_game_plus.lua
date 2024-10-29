@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 8/8/2021 10:34 PM
 ---
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
 local Compat_NewGamePlus = {}
 

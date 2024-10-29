@@ -8,29 +8,29 @@
 --- https://lua-api.factorio.com/latest/Concepts.html#ChunkPositionAndArea
 ---
 
-local Queue = require('__stdlib__/stdlib/misc/queue')
+local Queue = require("__stdlib__/stdlib/misc/queue")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 
 
-require('__enemyracemanager__/setting-constants')
+require("__enemyracemanager__/setting-constants")
 
 local MapProcessor = {}
 
 local vanilla_structures = {
-    ['biter-spawner'] = true,
-    ['spitter-spawner'] = true,
-    ['small-worm-turret'] = true,
-    ['medium-worm-turret'] = true,
-    ['big-worm-turret'] = true,
-    ['behemoth-worm-turret'] = true,
+    ["biter-spawner"] = true,
+    ["spitter-spawner"] = true,
+    ["small-worm-turret"] = true,
+    ["medium-worm-turret"] = true,
+    ["big-worm-turret"] = true,
+    ["behemoth-worm-turret"] = true,
 
-    ['armoured-biter-spawner'] = true,
-    ['explosive-biter-spawner'] = true,
-    ['cb-cold-spawner'] = true,
-    ['toxic-biter-spawner'] = true,
+    ["armoured-biter-spawner"] = true,
+    ["explosive-biter-spawner"] = true,
+    ["cb-cold-spawner"] = true,
+    ["toxic-biter-spawner"] = true,
 }
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
@@ -38,7 +38,7 @@ local process_one_race_per_surface_mapping = function(surface, entity, nameToken
         local enemy_surface = storage.enemy_surfaces[surface.name]
         if enemy_surface and nameToken[1] ~= enemy_surface then
             nameToken[1] = enemy_surface
-            if entity.type == 'turret' then
+            if entity.type == "turret" then
                 nameToken[2] = RaceSettingHelper.pick_a_turret(enemy_surface)
             else
                 nameToken[2] = RaceSettingHelper.pick_a_spawner(enemy_surface)
@@ -84,7 +84,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
         return
     end
 
-    local name = nameToken[1] .. '--' .. nameToken[2] .. '--' .. race_settings[nameToken[1]].level
+    local name = nameToken[1] .. "--" .. nameToken[2] .. "--" .. race_settings[nameToken[1]].level
 
     local new_force_name = entity.force.name
     if nameToken[1] ~= race_name then
@@ -102,7 +102,7 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
 end
 
 local process_enemy_level = function(surface, area, race_settings)
-    local building = surface.find_entities_filtered({ area = area, type = { 'unit-spawner', 'turret' }, force = ForceHelper.get_enemy_forces() })
+    local building = surface.find_entities_filtered({ area = area, type = { "unit-spawner", "turret" }, force = ForceHelper.get_enemy_forces() })
     if table_size(building) > 0 then
         for k, entity in pairs(building) do
             level_up_enemy_structures(surface, entity, race_settings)
@@ -115,7 +115,7 @@ local process_enemy_level = function(surface, area, race_settings)
         top_left = { area.left_top.x - larger_radius, area.left_top.y - larger_radius },
         bottom_right = { area.right_bottom.x + larger_radius, area.right_bottom.y + larger_radius },
     }
-    local units = surface.find_entities_filtered({ area = larger_area, type = { 'unit' }, force = ForceHelper.get_enemy_forces() })
+    local units = surface.find_entities_filtered({ area = larger_area, type = { "unit" }, force = ForceHelper.get_enemy_forces() })
     if table_size(units) > 0 then
         for _, entity in pairs(units) do
             local entity_command = entity.commandable
@@ -140,7 +140,7 @@ function MapProcessor.queue_chunks(surface, area)
         storage.mapproc_chunk_queue[surface.name] = Queue()
     end
 
-    local unit_size = surface.count_entities_filtered({ area = area, type = { 'unit-spawner', 'turret', 'unit' }, force = ForceHelper.get_enemy_forces(), limit = 1 })
+    local unit_size = surface.count_entities_filtered({ area = area, type = { "unit-spawner", "turret", "unit" }, force = ForceHelper.get_enemy_forces(), limit = 1 })
     if unit_size > 0 then
         storage.mapproc_chunk_queue[surface.name](area)
     end

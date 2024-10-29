@@ -4,23 +4,23 @@
 --- DateTime: 7/21/2021 10:45 PM
 ---
 
-require('util')
-require('global')
-local Position = require('__stdlib__/stdlib/area/position')
-local Event = require('__stdlib__/stdlib/event/event')
+require("util")
+require("global")
+local Position = require("__stdlib__/stdlib/area/position")
+local Event = require("__stdlib__/stdlib/event/event")
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local Config = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local AttackGroupProcessor = {}
 
@@ -62,13 +62,13 @@ AttackGroupProcessor.GROUP_TIERS = {
 }
 
 local DEBUG_GROUP_STATES = {
-    [defines.group_state.gathering] = 'defines.group_state.gathering',
-    [defines.group_state.moving] = 'defines.group_state.moving',
-    [defines.group_state.attacking_distraction] = 'defines.group_state.attacking_distraction',
-    [defines.group_state.attacking_target] = 'defines.group_state.attacking_target',
-    [defines.group_state.finished] = 'defines.group_state.finished',
-    [defines.group_state.pathfinding] = 'defines.group_state.pathfinding',
-    [defines.group_state.wander_in_group] = 'defines.group_state.wander_in_group'
+    [defines.group_state.gathering] = "defines.group_state.gathering",
+    [defines.group_state.moving] = "defines.group_state.moving",
+    [defines.group_state.attacking_distraction] = "defines.group_state.attacking_distraction",
+    [defines.group_state.attacking_target] = "defines.group_state.attacking_target",
+    [defines.group_state.finished] = "defines.group_state.finished",
+    [defines.group_state.pathfinding] = "defines.group_state.pathfinding",
+    [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
 }
 
 
@@ -221,14 +221,14 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                     destination = { x = position.x, y = position.y },
                     radius = AttackGroupProcessor.ATTACK_RADIUS
                 }
-                DebugHelper.drawline(1, 'default attack path', {r=1,g=1,b=0,a=0.5}, group.position , position)
+                DebugHelper.drawline(1, "default attack path", {r=1,g=1,b=0,a=0.5}, group.position , position)
             else
                 if DEBUG_MODE then
                     for index, command in pairs(commands) do
                         if index == 1 then
-                            DebugHelper.drawline(1, 'custom attack path:'..index, {r=1,g=1,b=0,a=0.5}, request_path_data.start , command.destination)
+                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5}, request_path_data.start , command.destination)
                         elseif commands.commands[index] then
-                            DebugHelper.drawline(1, 'custom attack path:'..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
+                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
                         end
                     end
                 end                
@@ -244,7 +244,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 if Config.precision_strike_warning() then
                     local group_position = group.position
                     group.surface.print({
-                        'description.message-incoming-precision-attack',
+                        "description.message-incoming-precision-attack",
                         race_name,
                         SurfaceProcessor.get_gps_message(
                                 group_position.x,
@@ -331,8 +331,8 @@ local generate_unit_queue = function(
 
     local unit_group = surface.create_unit_group({ position = center_location, force = force })
 
-    set_group_tracker(race_name, unit_group, 'group')
-    set_group_tracker(race_name, unit_group.unique_id, 'unique_id')
+    set_group_tracker(race_name, unit_group, "group")
+    set_group_tracker(race_name, unit_group.unique_id, "unique_id")
 
     repeat
         local unit_batch = AttackGroupProcessor.UNIT_PER_BATCH
@@ -341,7 +341,7 @@ local generate_unit_queue = function(
         end
         if as_quick_queue then
             Cron.add_quick_queue(
-                'AttackGroupProcessor.add_to_group',
+                "AttackGroupProcessor.add_to_group",
                 surface,
                 unit_group,
                 force,
@@ -350,7 +350,7 @@ local generate_unit_queue = function(
             )
         else
             Cron.add_1_sec_queue(
-                'AttackGroupProcessor.add_to_group',
+                "AttackGroupProcessor.add_to_group",
                 surface,
                 unit_group,
                 force,
@@ -403,7 +403,7 @@ function AttackGroupProcessor.init_globals()
     AttackGroupProcessor.clear_invalid_scout_unit_name()
     if next(storage.scout_tracker) then
         storage.scout_scanner = true
-        Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
+        Cron.add_15_sec_queue("AttackGroupBeaconProcessor.start_scout_scan")
     end
 end
 
@@ -528,7 +528,7 @@ function AttackGroupProcessor.generate_group(
 
                 --- Retry to find new beacons
                 options.from_retry = from_retry + 1
-                Cron.add_quick_queue('AttackGroupProcessor.generate_group',
+                Cron.add_quick_queue("AttackGroupProcessor.generate_group",
                         race_name, force, units_number, options)
             else
                 --- Drop current group if retry fails
@@ -589,7 +589,7 @@ end
 
 function AttackGroupProcessor.generate_nuked_group(surface, position, radius, source_entity)
     local target_unit = surface.find_entities_filtered({
-        type = { 'unit-spawner' },
+        type = { "unit-spawner" },
         force = ForceHelper.get_enemy_forces(),
         area = {
             { position.x - radius, position.y - radius },
@@ -610,7 +610,7 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius, so
             { position.x + radius, position.y + radius }
         },
         force = target_unit.force,
-        condition = 'same'
+        condition = "same"
     })
 
     if #units >= 50 then
@@ -681,7 +681,7 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
     distraction = distraction or defines.distraction.by_enemy
     find_nearby = find_nearby or false
     new_beacon = new_beacon or false
-    target_force = target_force or game.forces['player']
+    target_force = target_force or game.forces["player"]
 
     local attack_position = nil
     local target_entity = nil
@@ -835,7 +835,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
 
     if storage.scout_scanner == false then
         storage.scout_scanner = true
-        Cron.add_15_sec_queue('AttackGroupBeaconProcessor.start_scout_scan')
+        Cron.add_15_sec_queue("AttackGroupBeaconProcessor.start_scout_scan")
     end
 
     return scout
@@ -869,7 +869,7 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
 
             AttackGroupPathingProcessor.remove_node(group_number)
             --- This call needs to bypass attack meters calculations
-            Cron.add_2_sec_queue('AttackGroupProcessor.generate_group',
+            Cron.add_2_sec_queue("AttackGroupProcessor.generate_group",
                 race_name, group_force, math.max(math.ceil(group_size / 2), 10),
                 { group_type=group_type,
                   target_force = target_force,

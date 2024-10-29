@@ -4,7 +4,7 @@
 --- DateTime: 3/17/2021 8:16 PM
 ---
 
-require('ArmouredBiters/control')
-require('Cold_Biters/control')
-require('Explosive_Biters/control')
-require('Toxic_Biters/control')
+require("ArmouredBiters/control")
+require("Cold_Biters/control")
+require("Explosive_Biters/control")
+require("Toxic_Biters/control")

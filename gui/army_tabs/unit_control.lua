@@ -4,12 +4,12 @@
 --- DateTime: 6/22/2024 10:00 PM
 ---
 
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
-local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
+local SharedTabFunctions = require("__enemyracemanager__/gui/army_tabs/shared")
 
 local UnitControlGUI = {}
 
-UnitControlGUI.name = 'army-stats-pane'
+UnitControlGUI.name = "army-stats-pane"
 
 function UnitControlGUI.update(player)
     local main_tab = SharedTabFunctions.get_main_tab(player)
@@ -18,38 +18,38 @@ function UnitControlGUI.update(player)
 
     local pane = main_tab[name]
     local army_data = ArmyPopulationProcessor.get_army_data(player.force)
-    pane.add { type = 'label', name = 'army_pop_general_info', caption = { 'gui-army.pop_general_info', army_data['max_pop'], army_data['pop_count'], army_data['unit_count'] } }
+    pane.add { type = "label", name = "army_pop_general_info", caption = { "gui-army.pop_general_info", army_data["max_pop"], army_data["pop_count"], army_data["unit_count"] } }
 
-    if table_size(army_data['unit_types']) > 0 then
-        local scroll_pane = pane.add { type = 'scroll-pane'}
-        local item_table = scroll_pane.add { type = 'table', column_count = 5, style = 'bordered_table' }
+    if table_size(army_data["unit_types"]) > 0 then
+        local scroll_pane = pane.add { type = "scroll-pane"}
+        local item_table = scroll_pane.add { type = "table", column_count = 5, style = "bordered_table" }
         item_table.style.horizontally_stretchable = false
 
-        item_table.add { type = 'label', caption = { 'gui-army.control_unit_type' } }
-        item_table.add { type = 'label', caption = { 'gui-army.control_unit_pop' } }
-        item_table.add { type = 'label', caption = { 'gui-army.control_unit_count' } }
-        item_table.add { type = 'label', caption = { 'gui-army.control_unit_deploy' }, tooltip = { 'gui-army.control_unit_deploy_tooltip' } }
-        item_table.add { type = 'label', caption = { 'gui-army.control_unit_deploy_pop' }, tooltip = { 'gui-army.control_unit_deploy_pop_tooltip' } }
+        item_table.add { type = "label", caption = { "gui-army.control_unit_type" } }
+        item_table.add { type = "label", caption = { "gui-army.control_unit_pop" } }
+        item_table.add { type = "label", caption = { "gui-army.control_unit_count" } }
+        item_table.add { type = "label", caption = { "gui-army.control_unit_deploy" }, tooltip = { "gui-army.control_unit_deploy_tooltip" } }
+        item_table.add { type = "label", caption = { "gui-army.control_unit_deploy_pop" }, tooltip = { "gui-army.control_unit_deploy_pop_tooltip" } }
 
-        for name, unit_data in pairs(army_data['unit_types']) do
-            if unit_data['unit_count'] > 0 then
-                local sprite = item_table.add { type = 'sprite', sprite = 'recipe/' .. name }
+        for name, unit_data in pairs(army_data["unit_types"]) do
+            if unit_data["unit_count"] > 0 then
+                local sprite = item_table.add { type = "sprite", sprite = "recipe/" .. name }
                 sprite.style.width = 32
                 sprite.style.height = 32
                 sprite.style.stretch_image_to_widget_size = true
-                item_table.add { type = 'label', caption = unit_data['pop_count'] }
-                item_table.add { type = 'label', caption = unit_data['unit_count'] }
+                item_table.add { type = "label", caption = unit_data["pop_count"] }
+                item_table.add { type = "label", caption = unit_data["unit_count"] }
 
-                local auto_deploy_units = army_data['auto_deploy'][name]
+                local auto_deploy_units = army_data["auto_deploy"][name]
                 local textfield = item_table.add {
-                    type = 'textfield', numeric = true,
-                    name = 'army_deployer/planner/' .. name,
+                    type = "textfield", numeric = true,
+                    name = "army_deployer/planner/" .. name,
                     text = auto_deploy_units,
-                    tooltip = { 'gui-army.control_unit_deploy_box_tooltip' }
+                    tooltip = { "gui-army.control_unit_deploy_box_tooltip" }
                 }
                 textfield.style.width = 48
                 textfield.style.height = 24
-                item_table.add { type = 'label', caption = auto_deploy_units * ArmyPopulationProcessor.unit_population(name) }
+                item_table.add { type = "label", caption = auto_deploy_units * ArmyPopulationProcessor.unit_population(name) }
             end
         end
     end

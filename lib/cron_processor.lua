@@ -4,11 +4,11 @@
 --- DateTime: 7/21/2021 5:34 PM
 ---
 
-local Type = require('__stdlib__/stdlib/utils/type')
-local Queue = require('__stdlib__/stdlib/misc/queue')
+local Type = require("__stdlib__/stdlib/utils/type")
+local Queue = require("__stdlib__/stdlib/misc/queue")
 
-local Event = require('__stdlib__/stdlib/event/event')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local Event = require("__stdlib__/stdlib/event/event")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 local CronProcessor = {}
 
@@ -22,7 +22,7 @@ local process_one_job = function(cron_list)
     if cron_switch[job[1]] then
         cron_switch[job[1]](job[2])
     else
-        log('Invalid Call: ' .. job[1])
+        log("Invalid Call: " .. job[1])
     end
 end
 

@@ -3,11 +3,11 @@
 --- Created by heyqule.
 --- DateTime: 11/17/2022 10:19 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
 local add_command_center = function(event)
     local entity = event.created_entity or event.entity

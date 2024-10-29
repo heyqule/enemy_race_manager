@@ -9,13 +9,13 @@ local ScenarioHelper = {}
 function ScenarioHelper.build_base(surface, blueprint_string, x_offset, y_offset)
     x_offset = x_offset or 0
     y_offset = y_offset or 0
-    local bp_entity = surface.create_entity { name = 'item-on-ground', position = { 10, 10 }, stack = 'blueprint' }
+    local bp_entity = surface.create_entity { name = "item-on-ground", position = { 10, 10 }, stack = "blueprint" }
     bp_entity.stack.import_stack(blueprint_string)
     local bp_entities = bp_entity.stack.get_blueprint_entities()
     bp_entity.destroy()
     for _, entity in pairs(util.table.deepcopy(bp_entities)) do
         entity.position = { entity.position.x + x_offset, entity.position.y + y_offset }
-        entity.force = 'player'
+        entity.force = "player"
         entity.raise_built = true
         surface.create_entity(entity)
     end
@@ -23,7 +23,7 @@ end
 
 function ScenarioHelper.spawn_tile(surface, radius, tile_name)
     radius = radius or 128
-    tile_name = tile_name or 'concrete'
+    tile_name = tile_name or "concrete"
     --Spawn concrete tiles
     local prototypes = prototypes.tile
     local tiles = {}
@@ -44,7 +44,7 @@ end
 
 function ScenarioHelper.spawn_lab_tiles(surface, radius)
 
-    local tile_types = { 'lab-dark-1', 'lab-dark-2' }
+    local tile_types = { "lab-dark-1", "lab-dark-2" }
     local tiles = {}
     radius = radius or 128
     for x = (radius * -1), radius, 1 do
@@ -83,13 +83,13 @@ function ScenarioHelper.set_tech_level(force, level)
         end
     else
         local techs = {
-            'physical-projectile-damage-',
-            'stronger-explosives-',
-            'refined-flammables-',
-            'energy-weapons-damage-',
-            'worker-robots-speed-',
-            'laser-shooting-speed-',
-            'weapon-shooting-speed-',
+            "physical-projectile-damage-",
+            "stronger-explosives-",
+            "refined-flammables-",
+            "energy-weapons-damage-",
+            "worker-robots-speed-",
+            "laser-shooting-speed-",
+            "weapon-shooting-speed-",
         }
         for i = 1, level do
             for _, techname in pairs(techs) do
@@ -103,18 +103,18 @@ function ScenarioHelper.set_tech_level(force, level)
 end
 
 function ScenarioHelper.set_enemy_params(level, tier, factor)
-    remote.call('enemyracemanager_debug', 'set_evolution_factor', factor)
-    remote.call('enemyracemanager_debug', 'level_up', level)
-    remote.call('enemyracemanager_debug', 'set_tier', tier)
-    remote.call('enemyracemanager_debug', 'attack_group_beacon_index')
+    remote.call("enemyracemanager_debug", "set_evolution_factor", factor)
+    remote.call("enemyracemanager_debug", "level_up", level)
+    remote.call("enemyracemanager_debug", "set_tier", tier)
+    remote.call("enemyracemanager_debug", "attack_group_beacon_index")
 end
 
 function ScenarioHelper.set_attack_points()
-    remote.call('enemyracemanager_debug', 'add_points_to_attack_meter', 1000000)
+    remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 1000000)
 end
 
 function ScenarioHelper.set_boss_tier(tier)
-    remote.call('enemyracemanager_debug', 'set_boss_tier', tier)
+    remote.call("enemyracemanager_debug", "set_boss_tier", tier)
 end
 
 function ScenarioHelper.set_enemy_expansion(min, max)

@@ -3,15 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 10:41 PM
 ---
-local String = require('__stdlib__/stdlib/utils/string')
-local WeaponHelper = require('prototypes.helper.weapon')
+local String = require("__stdlib__/stdlib/utils/string")
+local WeaponHelper = require("prototypes.helper.weapon")
 
-for _, projectile in pairs(data.raw['projectile']) do
-    if String.starts_with(projectile['name'], 'bullet-') then
+for _, projectile in pairs(data.raw["projectile"]) do
+    if String.starts_with(projectile["name"], "bullet-") then
         WeaponHelper.add_air_layer_to_projectile(projectile)
     end
 
-    if String.starts_with(projectile['name'], 'scrap-') then
+    if String.starts_with(projectile["name"], "scrap-") then
         WeaponHelper.add_air_layer_to_projectile(projectile)
     end
 end

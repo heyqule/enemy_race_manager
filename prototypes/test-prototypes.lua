@@ -3,27 +3,27 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 4:56 PM
 ---
-require('util')
-local rocket_silo_test = util.table.deepcopy(data.raw['rocket-silo']['rocket-silo'])
-rocket_silo_test.name = 'erm-rocket-silo-test'
+require("util")
+local rocket_silo_test = util.table.deepcopy(data.raw["rocket-silo"]["rocket-silo"])
+rocket_silo_test.name = "erm-rocket-silo-test"
 rocket_silo_test.max_health = 99999999
 
-local gun_turret_test = util.table.deepcopy(data.raw['ammo-turret']['gun-turret'])
-gun_turret_test.name = 'erm-gun-turret-test'
+local gun_turret_test = util.table.deepcopy(data.raw["ammo-turret"]["gun-turret"])
+gun_turret_test.name = "erm-gun-turret-test"
 gun_turret_test.max_health = 99999999
 
 data:extend({
     rocket_silo_test,
     gun_turret_test,
     { -- Falling meteor projectiles
-        type = 'projectile',
-        name = 'erm-test-meteor',
+        type = "projectile",
+        name = "erm-test-meteor",
         acceleration = 0,
         rotatable = false,
         pictures =
         {
             {
-                filename = '__base__/graphics/decorative/rock-big/rock-big-01.png',
+                filename = "__base__/graphics/decorative/rock-big/rock-big-01.png",
                 width = 188,
                 height = 127,
                 scale = 0.5,
@@ -31,17 +31,17 @@ data:extend({
             },
         },
         action = {
-            type = 'direct',
+            type = "direct",
             action_delivery = {
-                type = 'instant',
+                type = "instant",
                 target_effects = {
                     {
-                        type = 'script',
+                        type = "script",
                         effect_id = ENVIRONMENTAL_ATTACK
                     }
                 },
             },
         },
-        flags = { 'not-on-map' },
+        flags = { "not-on-map" },
     },
 })

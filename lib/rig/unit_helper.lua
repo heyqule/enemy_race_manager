@@ -4,13 +4,13 @@
 -- Date: 12/15/2020
 -- Time: 9:59 PM
 -- To change this template use File | Settings | File Templates.
--- require('__enemyracemanager__/lib/rig/unit_helper')
+-- require("__enemyracemanager__/lib/rig/unit_helper")
 --
 local ERM_UnitHelper = {}
 
 
-local String = require('__stdlib__/stdlib/utils/string')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local String = require("__stdlib__/stdlib/utils/string")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
 local max_resistance_percentage = 95
@@ -18,11 +18,11 @@ local max_resistance_percentage = 95
 local max_attack_speed = 15
 
 local get_damage_multiplier = function()
-    return settings.startup['enemyracemanager-damage-multipliers'].value
+    return settings.startup["enemyracemanager-damage-multipliers"].value
 end
 
 local get_strength_multiplier = function()
-    return settings.startup['enemyracemanager-level-multipliers'].value
+    return settings.startup["enemyracemanager-level-multipliers"].value
 end
 
 local get_strength_percentage = function(level, multiplier, not_overflow)
@@ -80,7 +80,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, level)
         damage = (base_dmg + (incremental_dmg * get_strength_percentage(level, get_strength_multiplier())) * get_damage_multiplier())
     end
 
-    if settings.startup['enemyracemanager-free-for-all'].value then
+    if settings.startup["enemyracemanager-free-for-all"].value then
         damage = damage * GlobalConfig.FFA_MULTIPLIER
     end
     return damage
@@ -99,7 +99,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)) * settings.startup['enemyracemanager-running-speed-multipliers'].value
+    return base_speed + (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)) * settings.startup["enemyracemanager-running-speed-multipliers"].value
 end
 
 -- unit healing (full heal in 120s)
@@ -114,19 +114,19 @@ function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplie
 end
 
 function ERM_UnitHelper.modify_biter_damage(biter, level)
-    if biter['attack_parameters']['damage_modifier'] == nil then
-        biter['attack_parameters']['damage_modifier'] = 1
+    if biter["attack_parameters"]["damage_modifier"] == nil then
+        biter["attack_parameters"]["damage_modifier"] = 1
     end
 
-    biter['attack_parameters']['damage_modifier'] = ERM_UnitHelper.get_damage(biter['attack_parameters']['damage_modifier'], biter['attack_parameters']['damage_modifier'], level)
+    biter["attack_parameters"]["damage_modifier"] = ERM_UnitHelper.get_damage(biter["attack_parameters"]["damage_modifier"], biter["attack_parameters"]["damage_modifier"], level)
 
-    if settings.startup['enemyracemanager-free-for-all'].value then
-        biter['attack_parameters']['damage_modifier'] = biter['attack_parameters']['damage_modifier'] * (GlobalConfig.FFA_MULTIPLIER / 10)
+    if settings.startup["enemyracemanager-free-for-all"].value then
+        biter["attack_parameters"]["damage_modifier"] = biter["attack_parameters"]["damage_modifier"] * (GlobalConfig.FFA_MULTIPLIER / 10)
     end
 end
 
 function ERM_UnitHelper.get_pollution_attack(value, level)
-    local setting_value = settings.startup['enemyracemanager-pollution-to-attack-multipliers'].value
+    local setting_value = settings.startup["enemyracemanager-pollution-to-attack-multipliers"].value
     if level == 1 or setting_value == 0 then
         return value
     end
@@ -175,24 +175,24 @@ function ERM_UnitHelper.format_team_color(color, tint_strength)
 end
 
 function ERM_UnitHelper.is_erm_unit(dataItem)
-    local nameToken = String.split(dataItem.name, '--')
+    local nameToken = String.split(dataItem.name, "--")
     return (data.erm_registered_race and data.erm_registered_race[nameToken[1]]) or false
 end
 
 function ERM_UnitHelper.make_unit_melee_ammo_type(damage_value)
     return
     {
-        target_type = 'entity',
+        target_type = "entity",
         action =
         {
-            type = 'direct',
+            type = "direct",
             action_delivery =
             {
-                type = 'instant',
+                type = "instant",
                 target_effects =
                 {
-                    type = 'damage',
-                    damage = { amount = damage_value , type = 'physical'}
+                    type = "damage",
+                    damage = { amount = damage_value , type = "physical"}
                 }
             }
         }

@@ -4,16 +4,16 @@
 --- DateTime: 7/17/2021 1:51 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
+local String = require("__stdlib__/stdlib/utils/string")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local AttackMeterProcessor = {}
 
@@ -34,8 +34,8 @@ local calculatePoints = function(race_name, statistic,
     local points = 0
     for _, name in pairs(entity_names) do
         local count = statistic.get_flow_count {
-            name = race_name .. '--' .. name .. '--' .. level,
-            category = 'output',
+            name = race_name .. "--" .. name .. "--" .. level,
+            category = "output",
             precision_index = interval
         }
         points = points + count
@@ -80,7 +80,7 @@ function AttackMeterProcessor.add_form_group_cron()
         local force = game.forces[force_name]
         local race_name = ForceHelper.extract_race_name_from(force_name)
         if GlobalConfig.race_is_active(race_name) then
-            Cron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
+            Cron.add_10_sec_queue("AttackMeterProcessor.form_group", race_name, force)
         end
     end
 end

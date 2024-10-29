@@ -10,7 +10,7 @@ function SharedFunctions.add_mini_map(pane, name, player, entity, position, zoom
     zoom = zoom or 0.75
     position = position or entity.position
     local map = pane.add {
-        type = 'minimap',
+        type = "minimap",
         name = name,
         force = entity.force.name,
         chart_player_index = player.index,

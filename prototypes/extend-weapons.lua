@@ -3,65 +3,65 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:23 PM
 ---
-local WeaponHelper = require('prototypes.helper.weapon')
+local WeaponHelper = require("prototypes.helper.weapon")
 
 -- Mandatory vanilla game changes --
 -- Add artillery-shell damage bonus to stronger explosive
-table.insert(data.raw['technology']['stronger-explosives-7']['effects'],
+table.insert(data.raw["technology"]["stronger-explosives-7"]["effects"],
         {
-            type = 'ammo-damage',
-            ammo_category = 'artillery-shell',
+            type = "ammo-damage",
+            ammo_category = "artillery-shell",
             modifier = 0.33
         }
 )
 
-if settings.startup['enemyracemanager-disable-friendly-fire'].value == true then
-    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-rocket'])
-    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-cannon-projectile'])
-    WeaponHelper.remove_friendly_fire(data.raw['projectile']['explosive-uranium-cannon-projectile'])
-    WeaponHelper.remove_friendly_fire(data.raw['projectile']['grenade'])
+if settings.startup["enemyracemanager-disable-friendly-fire"].value == true then
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["explosive-rocket"])
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["explosive-cannon-projectile"])
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["explosive-uranium-cannon-projectile"])
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["grenade"])
 end
 
 -- Allow rocket explosion to hit air
-WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-rocket']['action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw["projectile"]["explosive-rocket"]["action"]["action_delivery"]["target_effects"])
 
 
 -- Allow cannon explosion to hit air, projectile does not hit air
-WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw["projectile"]["explosive-cannon-projectile"]["final_action"]["action_delivery"]["target_effects"])
 
-WeaponHelper.ignore_collision_for_area_damage(data.raw['projectile']['explosive-uranium-cannon-projectile']['final_action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw["projectile"]["explosive-uranium-cannon-projectile"]["final_action"]["action_delivery"]["target_effects"])
 
-WeaponHelper.change_piercing_damage(data.raw['projectile']['uranium-cannon-projectile'], 5000)
-WeaponHelper.change_piercing_damage(data.raw['projectile']['cannon-projectile'], 5000)
+WeaponHelper.change_piercing_damage(data.raw["projectile"]["uranium-cannon-projectile"], 5000)
+WeaponHelper.change_piercing_damage(data.raw["projectile"]["cannon-projectile"], 5000)
 
 -- Allow artillery projectile explosion to hit air
-WeaponHelper.ignore_collision_for_area_damage(data.raw['artillery-projectile']['artillery-projectile']['action']['action_delivery']['target_effects'])
+WeaponHelper.ignore_collision_for_area_damage(data.raw["artillery-projectile"]["artillery-projectile"]["action"]["action_delivery"]["target_effects"])
 
 -- Allow shotgun and cannon to hit air
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['shotgun-pellet'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['piercing-shotgun-pellet'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-cannon-projectile'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['explosive-uranium-cannon-projectile'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['cannon-projectile'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['uranium-cannon-projectile'])
-WeaponHelper.ignore_collision_for_area_damage(data.raw['smoke-with-trigger']['poison-cloud']['action']['action_delivery']['target_effects'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['grenade'])
-WeaponHelper.add_air_layer_to_projectile(data.raw['projectile']['slowdown-capsule'])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["shotgun-pellet"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["piercing-shotgun-pellet"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["explosive-cannon-projectile"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["explosive-uranium-cannon-projectile"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["cannon-projectile"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["uranium-cannon-projectile"])
+WeaponHelper.ignore_collision_for_area_damage(data.raw["smoke-with-trigger"]["poison-cloud"]["action"]["action_delivery"]["target_effects"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["grenade"])
+WeaponHelper.add_air_layer_to_projectile(data.raw["projectile"]["slowdown-capsule"])
 
 --- Replace stunt sticker with slow sticker for land-mine, only modify vanilla build.
-local source_effects = data.raw['land-mine']['land-mine']['action']['action_delivery']['source_effects'][1]
+local source_effects = data.raw["land-mine"]["land-mine"]["action"]["action_delivery"]["source_effects"][1]
 if
 source_effects ~= nil and
-        source_effects['action']['action_delivery'] ~= nil and
-        source_effects['action']['action_delivery']['target_effects'][2] ~= nil
+        source_effects["action"]["action_delivery"] ~= nil and
+        source_effects["action"]["action_delivery"]["target_effects"][2] ~= nil
 then
-    local land_mine_damage = source_effects['action']['action_delivery']['target_effects'][1]
+    local land_mine_damage = source_effects["action"]["action_delivery"]["target_effects"][1]
 
-    land_mine_damage['damage']['amount'] = land_mine_damage['damage']['amount'] * 3
+    land_mine_damage["damage"]["amount"] = land_mine_damage["damage"]["amount"] * 3
 
-    local land_mine_sticker = source_effects['action']['action_delivery']['target_effects'][2]
-    if land_mine_sticker.type == 'create-sticker' then
-        land_mine_sticker.sticker = '30-050-slowdown-sticker'
+    local land_mine_sticker = source_effects["action"]["action_delivery"]["target_effects"][2]
+    if land_mine_sticker.type == "create-sticker" then
+        land_mine_sticker.sticker = "30-050-slowdown-sticker"
         land_mine_sticker.show_in_tooltip = true
     end
 end

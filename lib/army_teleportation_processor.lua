@@ -5,17 +5,17 @@
 ---
 
 --- It can teleport registered army units and base-game character
-local util = require('util')
-local Event = require('__stdlib__/stdlib/event/event')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local util = require("util")
+local Event = require("__stdlib__/stdlib/event/event")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local ArmyFunctions = require("__enemyracemanager__/lib/army_functions")
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 
 local ArmyTeleportationProcessor = {}
 
 -- Disable link if cc is idle.
-local MAX_RETRY = settings.startup['enemyracemanager-unit-framework-timeout'].value * 4;
+local MAX_RETRY = settings.startup["enemyracemanager-unit-framework-timeout"].value * 4;
 
 local BOX_WIDTH = 48;
 local DOUBLE_BOX_WIDTH = 64;
@@ -89,7 +89,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     if army_built_teleporters[force.index][surface.index] == nil then
         storage.army_built_teleporters[force.index][surface.index] = {}
     end
-    local name = surface.name .. ', X:' .. position.x .. ', Y:' .. position.y
+    local name = surface.name .. ", X:" .. position.x .. ", Y:" .. position.y
     entity.backer_name = name
     storage.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
@@ -237,7 +237,7 @@ function ArmyTeleportationProcessor.scan_units()
                     right_bottom = { position.x + BOX_WIDTH, position.y + BOX_WIDTH }
                 },
                 force = from_entity.force,
-                type = 'unit',
+                type = "unit",
                 limit = 24
             }
 
@@ -259,13 +259,13 @@ function ArmyTeleportationProcessor.scan_units()
     if can_stop_event() then
         stop_event()
     else
-        Cron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
+        Cron.add_15_sec_queue("ArmyTeleportationProcessor.scan_units")
     end
 end
 
 function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
     for _, unit in pairs(units) do
-        Cron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
+        Cron.add_teleport_queue("ArmyTeleportationProcessor.teleport", unit, from_entity, exit_entity)
     end
 end
 

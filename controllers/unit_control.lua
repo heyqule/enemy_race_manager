@@ -3,39 +3,39 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:56 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
-require('__enemyracemanager__/global')
-require('util')
+require("__enemyracemanager__/global")
+require("util")
 
-local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
-local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local ReplacementProcessor = require("__enemyracemanager__/lib/replacement_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 
-local Config = require('__enemyracemanager__/lib/global_config')
+local Config = require("__enemyracemanager__/lib/global_config")
 
 local DEBUG_BEHAVIOUR_RESULTS = {
-    [defines.behavior_result.in_progress] = 'defines.behavior_result.in_progress',
-    [defines.behavior_result.fail] = 'defines.behavior_result.fail',
-    [defines.behavior_result.success] = 'defines.behavior_result.success',
-    [defines.behavior_result.deleted] = 'defines.behavior_result.deleted'
+    [defines.behavior_result.in_progress] = "defines.behavior_result.in_progress",
+    [defines.behavior_result.fail] = "defines.behavior_result.fail",
+    [defines.behavior_result.success] = "defines.behavior_result.success",
+    [defines.behavior_result.deleted] = "defines.behavior_result.deleted"
 }
 
 local DEBUG_GROUP_STATES = {
-    [defines.group_state.gathering] = 'defines.group_state.gathering',
-    [defines.group_state.moving] = 'defines.group_state.moving',
-    [defines.group_state.attacking_distraction] = 'defines.group_state.attacking_distraction',
-    [defines.group_state.attacking_target] = 'defines.group_state.attacking_target',
-    [defines.group_state.finished] = 'defines.group_state.finished',
-    [defines.group_state.pathfinding] = 'defines.group_state.pathfinding',
-    [defines.group_state.wander_in_group] = 'defines.group_state.wander_in_group'
+    [defines.group_state.gathering] = "defines.group_state.gathering",
+    [defines.group_state.moving] = "defines.group_state.moving",
+    [defines.group_state.attacking_distraction] = "defines.group_state.attacking_distraction",
+    [defines.group_state.attacking_target] = "defines.group_state.attacking_target",
+    [defines.group_state.finished] = "defines.group_state.finished",
+    [defines.group_state.pathfinding] = "defines.group_state.pathfinding",
+    [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
 }
 
 local CHUNK_SIZE = 32
@@ -168,8 +168,8 @@ local handle_scouts = function(scout_unit_data)
                         return
                     end
 
-                    tracker['final_destination'] = target_beacon.position
-                    tracker['update_tick'] = game.tick
+                    tracker["final_destination"] = target_beacon.position
+                    tracker["update_tick"] = game.tick
                     scout_unit_data.entity.commandable.set_command({
                         type = defines.command.go_to_location,
                         destination = target_beacon.position,
@@ -228,7 +228,7 @@ local onAiCompleted = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
 
-    -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
+    -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
     handle_erm_groups(unit_number, event_result, event.was_distracted)
 
     local scout_unit_data = storage.scout_by_unit_number[unit_number]
@@ -256,7 +256,7 @@ Event.register(defines.events.on_ai_command_completed, onAiCompleted)
 
 --- @TODO 2.0 handle this with per planet statistic?
 local function is_unit_spawner(event)
-    return event.entity.type == 'unit-spawner' and not ForceHelper.is_enemy_force(event.force)
+    return event.entity.type == "unit-spawner" and not ForceHelper.is_enemy_force(event.force)
 end
 
 local function handle_unit_spawner(event)

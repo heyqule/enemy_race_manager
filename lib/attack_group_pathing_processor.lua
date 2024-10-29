@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 1/5/2024 9:03 PM
 ---
-local Position = require('__stdlib__/stdlib/area/position')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local DebugHelper =  require('__enemyracemanager__/lib/debug_helper')
+local Position = require("__stdlib__/stdlib/area/position")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local DebugHelper =  require("__enemyracemanager__/lib/debug_helper")
 
 local can_spawn = RaceSettingsHelper.can_spawn
 
@@ -91,7 +91,7 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
     end
 
     local data_table = prototypes.get_entity_filtered({{
-           filter = 'name',
+           filter = "name",
            name = scout_name
        }})
 
@@ -126,7 +126,7 @@ end
 
 --- How does this work?
 --- Once request path is valid, pick the closest beacon in the path.
---- If it's flier group, flier beacons get priority
+--- If it"s flier group, flier beacons get priority
 --- Try alt path A using that beacon, save to cache,
 --- Try alt path B using that beacon, save to cache,
 --- Then try using beacon with lower health.
@@ -161,13 +161,13 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                 })
 
                 if enemy then
-                    Cron.add_quick_queue('AttackGroupPathingProcessor.construct_brutal_force_commands',
+                    Cron.add_quick_queue("AttackGroupPathingProcessor.construct_brutal_force_commands",
                             path_id, beacon, enemy.position, search_beacons)
 
-                    Cron.add_quick_queue('AttackGroupPathingProcessor.construct_side_attack_commands',
+                    Cron.add_quick_queue("AttackGroupPathingProcessor.construct_side_attack_commands",
                             path_id, path_node, enemy.position, search_beacons)
 
-                    Cron.add_quick_queue('AttackGroupPathingProcessor.construct_side_attack_commands',
+                    Cron.add_quick_queue("AttackGroupPathingProcessor.construct_side_attack_commands",
                             path_id, path_node, enemy.position, search_beacons, true)
                 else
                     if beacon.name == AttackGroupBeaconProcessor.LAND_BEACON then
@@ -270,8 +270,8 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
     )
 
     if DEBUG_MODE then
-        DebugHelper.drawline(request_path_data.surface.index, 'enemy to new pos', {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
-        DebugHelper.drawline(request_path_data.surface.index, 'path node to new pos', {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
+        DebugHelper.drawline(request_path_data.surface.index, "enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
+        DebugHelper.drawline(request_path_data.surface.index, "path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
     end
 
     local area = request_path_data.surface.count_entities_filtered {
@@ -299,7 +299,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
         })
 
         if DEBUG_MODE then
-            DebugHelper.drawline(request_path_data.surface.index, 'new pos to destination', {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
+            DebugHelper.drawline(request_path_data.surface.index, "new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
         end            
 
         storage.request_path[path_id].commands[side_key] = commands_chain

@@ -4,13 +4,13 @@
 --- DateTime: 2/15/2022 10:29 PM
 ---
 
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-require('__enemyracemanager__/global')
+require("__enemyracemanager__/global")
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 
 Event.on_nth_tick(Config.ATTACK_POINT_CALCULATION, function(event)
     AttackMeterProcessor.exec()

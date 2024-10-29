@@ -7,13 +7,13 @@
 ---
 
 local remove_creep = {
-    type = 'script',
+    type = "script",
     effect_id = CREEP_REMOVAL
 }
 
-for _, spawner in pairs(data.raw['unit-spawner']) do
+for _, spawner in pairs(data.raw["unit-spawner"]) do
     if spawner.spawn_decoration then
-        if (type(spawner.dying_trigger_effect) == 'table') then
+        if (type(spawner.dying_trigger_effect) == "table") then
             table.insert(spawner.dying_trigger_effect, remove_creep)
         else
             spawner.dying_trigger_effect = {

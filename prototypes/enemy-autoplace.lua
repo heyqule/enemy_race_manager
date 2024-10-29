@@ -1,7 +1,7 @@
-local control_name = 'enemy-base'
+local control_name = "enemy-base"
 
 local function string_min(a, b)
-  return 'min(' .. a .. ', '.. b .. ')'
+  return "min(" .. a .. ", ".. b .. ")"
 end
 
 --- Function Credit: Alien Biomes
@@ -20,18 +20,18 @@ end
 local function volume_to_noise_expression(volume)
 
   local result = nil
-  if (volume['aux_min'] and  volume['aux_max']) then
-    local aux_center = (volume['aux_min'] + volume['aux_max']) / 2
-    local aux_range = math.abs(volume['aux_min'] - volume['aux_max']) / 2 + 0.005
+  if (volume["aux_min"] and  volume["aux_max"]) then
+    local aux_center = (volume["aux_min"] + volume["aux_max"]) / 2
+    local aux_range = math.abs(volume["aux_min"] - volume["aux_max"]) / 2 + 0.005
 
-    local aux_fitness = 'erm_plateau_peak_to_noise_expression(aux,'..aux_center..','..aux_range..')'
+    local aux_fitness = "erm_plateau_peak_to_noise_expression(aux,"..aux_center..","..aux_range..")"
     result = aux_fitness
   end
 
-  if (volume['moisture_min'] and  volume['moisture_max']) then
-    local moisture_center = (volume['moisture_min'] + volume['moisture_max']) / 2
-    local moisture_range = math.abs(volume['moisture_min'] - volume['moisture_max']) / 2 + 0.005
-    local moisture_fitness = 'erm_plateau_peak_to_noise_expression(moisture,'..moisture_center..','..moisture_range..')'
+  if (volume["moisture_min"] and  volume["moisture_max"]) then
+    local moisture_center = (volume["moisture_min"] + volume["moisture_max"]) / 2
+    local moisture_range = math.abs(volume["moisture_min"] - volume["moisture_max"]) / 2 + 0.005
+    local moisture_fitness = "erm_plateau_peak_to_noise_expression(moisture,"..moisture_center..","..moisture_range..")"
     if(result == nil) then
       result = moisture_fitness
     else
@@ -39,10 +39,10 @@ local function volume_to_noise_expression(volume)
     end
   end
 
-  if (volume['temperature_min'] and  volume['temperature_max']) then
-    local temperature_center = (volume['temperature_min'] + volume['temperature_max']) / 2
-    local temperature_range = math.abs(volume['temperature_min'] - volume['temperature_max']) / 2
-    local temperature_fitness = 'erm_plateau_peak_to_noise_expression(temperature,'..temperature_center..','..temperature_range..')'
+  if (volume["temperature_min"] and  volume["temperature_max"]) then
+    local temperature_center = (volume["temperature_min"] + volume["temperature_max"]) / 2
+    local temperature_range = math.abs(volume["temperature_min"] - volume["temperature_max"]) / 2
+    local temperature_fitness = "erm_plateau_peak_to_noise_expression(temperature,"..temperature_center..","..temperature_range..")"
     if(result == nil) then
       result = temperature_fitness
     else
@@ -50,11 +50,11 @@ local function volume_to_noise_expression(volume)
     end
   end
 
-  if (volume['elevation_min'] and  volume['elevation_max']) then
-    local elevation_center = (volume['elevation_min'] + volume['elevation_max']) / 2
-    local elevation_range = math.abs(volume['elevation_min'] - volume['elevation_max']) / 2
+  if (volume["elevation_min"] and  volume["elevation_max"]) then
+    local elevation_center = (volume["elevation_min"] + volume["elevation_max"]) / 2
+    local elevation_range = math.abs(volume["elevation_min"] - volume["elevation_max"]) / 2
 
-    local elevation_fitness = 'erm_plateau_peak_to_noise_expression(elevation,'..elevation_center..','..elevation_range..')'
+    local elevation_fitness = "erm_plateau_peak_to_noise_expression(elevation,"..elevation_center..","..elevation_range..")"
     if(result == nil) then
       result = elevation_fitness
     else
@@ -67,8 +67,8 @@ end
 
 
 local function enemy_autoplace(params)
-  local force = params.force or 'enemy'
-  local order = params.order or 'a['..force..']-autoplace'
+  local force = params.force or "enemy"
+  local order = params.order or "a["..force.."]-autoplace"
   local final_expression
   local climate_controls
   if params.volume then
@@ -76,7 +76,7 @@ local function enemy_autoplace(params)
   end
 
   if climate_controls then
-    final_expression = 'min('..climate_controls..','.. params.probability_expression .. ')'
+    final_expression = "min("..climate_controls..",".. params.probability_expression .. ")"
   else
     final_expression = params.probability_expression
   end
@@ -85,7 +85,7 @@ local function enemy_autoplace(params)
   {
     control = params.control or control_name,
     order = order,
-    force = force or 'enemy',
+    force = force or "enemy",
     probability_expression = final_expression,
     richness_expression = 1
   }
@@ -94,7 +94,7 @@ end
 local function enemy_spawner_autoplace(params)
   local autoplace_spec = {
     probability_expression = params.probability_expression,
-    order = 'a['..params.force..']-a[spawner]',
+    order = "a["..params.force.."]-a[spawner]",
     force = params.force
   }
   if params.volume then
@@ -108,8 +108,8 @@ end
 
 local function enemy_worm_autoplace(params)
   local autoplace_spec =  {
-    probability_expression = '(' .. params.probability_expression .. ') * (1 - no_enemies_mode)',
-    order = 'a['..params.force..']-a[worm]',
+    probability_expression = "(" .. params.probability_expression .. ") * (1 - no_enemies_mode)",
+    order = "a["..params.force.."]-a[worm]",
     force = params.force,
     is_turret = true
   }

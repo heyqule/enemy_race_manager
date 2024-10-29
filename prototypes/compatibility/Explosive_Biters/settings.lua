@@ -5,11 +5,11 @@
 ---
 data:extend {
     {
-        type = 'color-setting',
-        name = 'enemyracemanager-explosive_biter_map_color',
-        description = 'enemyracemanager-explosive_biter_map_color',
-        setting_type = 'startup',
+        type = "color-setting",
+        name = "enemyracemanager-explosive_biter_map_color",
+        description = "enemyracemanager-explosive_biter_map_color",
+        setting_type = "startup",
         default_value = { r = 205, g = 171, b = 13, a = 255 },
-        order = 'enemyracemanager-1004'
+        order = "enemyracemanager-1004"
     },
 }

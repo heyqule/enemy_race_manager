@@ -4,9 +4,9 @@
 --- DateTime: 8/18/2023 10:39 AM
 ---
 
-if mods['Natural_Evolution_Enemies'] then
+if mods["Natural_Evolution_Enemies"] then
     table.insert(data.erm_spawn_specs, {
-        mod_name = 'ne-',
+        mod_name = "ne-",
         force_name = FORCE_NAME,
         moisture = 2, -- 1 = Dry and 2 = Wet
         aux = 1, -- 1 = red desert, 2 = sand

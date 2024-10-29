@@ -3,15 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 11/7/2022 10:55 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 
 local SCOUT_ACTIVE_TICK = 25000 * 7 --- 7 nauvis days
 
@@ -29,7 +29,7 @@ Event.on_nth_tick(Config.SPAWN_SCOUTS_INTERVAL, function(event)
             local target_force = AttackGroupHeatProcessor.pick_target(race_name)
             local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force)
             if target_force and surface then
-                Cron.add_10_sec_queue('AttackGroupProcessor.spawn_scout', race_name, source_force, surface, target_force)
+                Cron.add_10_sec_queue("AttackGroupProcessor.spawn_scout", race_name, source_force, surface, target_force)
             end
         end
     end
@@ -44,7 +44,7 @@ end
 
 local is_valid_target = function(event)
     local entity = event.created_entity or event.entity
-    if entity and entity.valid and (entity.type == 'rocket-silo' or entity.type == 'artillery-turret')then
+    if entity and entity.valid and (entity.type == "rocket-silo" or entity.type == "artillery-turret")then
         return true
     end
     return false

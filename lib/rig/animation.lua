@@ -11,7 +11,7 @@ local set_properties = function(layer, name, value)
 end
 
 function ERM_AnimationRig.adjust_still_frame(layer, value)
-    set_properties(layer, 'still_frame', value)
+    set_properties(layer, "still_frame", value)
 end
 
 function ERM_AnimationRig.adjust_still_frame_all(layers, value)
@@ -21,7 +21,7 @@ function ERM_AnimationRig.adjust_still_frame_all(layers, value)
 end
 
 function ERM_AnimationRig.adjust_repeat_count(layer, value)
-    set_properties(layer, 'repeat_count', value)
+    set_properties(layer, "repeat_count", value)
 end
 
 function ERM_AnimationRig.adjust_repeat_count_all(layers, value)
@@ -31,7 +31,7 @@ function ERM_AnimationRig.adjust_repeat_count_all(layers, value)
 end
 
 function ERM_AnimationRig.adjust_max_advance(layer, value)
-    set_properties(layer, 'max_advance', value)
+    set_properties(layer, "max_advance", value)
 end
 
 function ERM_AnimationRig.adjust_max_advance_all(layers, value)
@@ -41,7 +41,7 @@ function ERM_AnimationRig.adjust_max_advance_all(layers, value)
 end
 
 function ERM_AnimationRig.adjust_frame_count(layer, value)
-    set_properties(layer, 'frame_count', value)
+    set_properties(layer, "frame_count", value)
 end
 
 function ERM_AnimationRig.adjust_frame_count_all(layers, value)
@@ -51,7 +51,7 @@ function ERM_AnimationRig.adjust_frame_count_all(layers, value)
 end
 
 function ERM_AnimationRig.adjust_direction_count(layer, value)
-    set_properties(layer, 'direction_count', value)
+    set_properties(layer, "direction_count", value)
 end
 
 function ERM_AnimationRig.adjust_direction_count_all(layers, value)

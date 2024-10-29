@@ -11,7 +11,7 @@ BossAttacksData.default_speed = 1
 --Example:
 --BossAttacks.basic_attacks =
 --{
---    projectile_name = {'blood-cloud','acid-cloud','blood-fire'},
+--    projectile_name = {"blood-cloud","acid-cloud","blood-fire"},
 --    projectile_type = {
 --        BossAttackProcessor.TYPE_PROJECTILE,
 --        BossAttackProcessor.TYPE_PROJECTILE,

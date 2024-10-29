@@ -1,8 +1,8 @@
-local Table = require('__stdlib__/stdlib/utils/table')
-local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
+local Table = require("__stdlib__/stdlib/utils/table")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local RaceSettingsHelper = {
-    default_mod_name = 'erm_vanilla'
+    default_mod_name = "erm_vanilla"
 }
 
 local FEATURE_RACE_NAME = 1
@@ -21,17 +21,17 @@ function RaceSettingsHelper.clean_up_race()
     for _, item in pairs(storage.race_settings) do
         if item.race ~= RaceSettingsHelper.default_mod_name and script.active_mods[item.race] == nil then
             storage.race_settings = Table.remove_keys(storage.race_settings, { item.race })
-            game.merge_forces('enemy_' .. item.race, 'enemy')
+            game.merge_forces("enemy_" .. item.race, "enemy")
         end
     end
 end
 
 function RaceSettingsHelper.pick_a_spawner(target_race)
-    local support_structures = storage.race_settings[target_race]['current_support_structures_tier']
-    local base_structures = storage.race_settings[target_race]['current_command_centers_tier']
+    local support_structures = storage.race_settings[target_race]["current_support_structures_tier"]
+    local base_structures = storage.race_settings[target_race]["current_command_centers_tier"]
     local pick = math.random();
 
-    local base_name = ''
+    local base_name = ""
     if pick < 0.125 then
         base_name = base_structures[math.random(1, #base_structures)]
     else
@@ -42,37 +42,37 @@ function RaceSettingsHelper.pick_a_spawner(target_race)
 end
 
 function RaceSettingsHelper.pick_a_turret(target_race)
-    local turret_tier = storage.race_settings[target_race]['current_turrets_tier']
+    local turret_tier = storage.race_settings[target_race]["current_turrets_tier"]
     local base_name = turret_tier[math.random(1, #turret_tier)]
     return base_name
 end
 
 function RaceSettingsHelper.pick_a_command_center(target_race)
-    local cc_tier = storage.race_settings[target_race]['current_command_centers_tier']
+    local cc_tier = storage.race_settings[target_race]["current_command_centers_tier"]
     local base_name = cc_tier[math.random(1, #cc_tier)]
     return base_name
 end
 
 function RaceSettingsHelper.pick_a_support_building(target_race)
-    local support_tier = storage.race_settings[target_race]['current_support_structures_tier']
+    local support_tier = storage.race_settings[target_race]["current_support_structures_tier"]
     local base_name = support_tier[math.random(1, #support_tier)]
     return base_name
 end
 
 function RaceSettingsHelper.pick_an_unit(target_race)
-    local units = storage.race_settings[target_race]['current_units_tier']
+    local units = storage.race_settings[target_race]["current_units_tier"]
     local unit_name = units[math.random(1, #units)]
     return unit_name
 end
 
 function RaceSettingsHelper.pick_an_unit_from_tier(target_race, tier)
-    local units = storage.race_settings[target_race]['units'][tier]
+    local units = storage.race_settings[target_race]["units"][tier]
     local unit_name = units[math.random(1, #units)]
     return unit_name
 end
 
 function RaceSettingsHelper.has_flying_unit(target_race)
-    if storage.race_settings[target_race]['flying_units'] == nil then
+    if storage.race_settings[target_race]["flying_units"] == nil then
         return false
     end
 
@@ -80,13 +80,13 @@ function RaceSettingsHelper.has_flying_unit(target_race)
 end
 
 function RaceSettingsHelper.pick_a_flying_unit_from_tier(target_race, tier)
-    local units = storage.race_settings[target_race]['flying_units'][tier]
+    local units = storage.race_settings[target_race]["flying_units"][tier]
     local unit_name = units[math.random(1, #units)]
     return unit_name
 end
 
 function RaceSettingsHelper.has_dropship_unit(target_race)
-    if storage.race_settings[target_race]['dropship'] == nil then
+    if storage.race_settings[target_race]["dropship"] == nil then
         return false
     end
 
@@ -94,15 +94,15 @@ function RaceSettingsHelper.has_dropship_unit(target_race)
 end
 
 function RaceSettingsHelper.pick_dropship_unit(target_race)
-    return storage.race_settings[target_race]['dropship']
+    return storage.race_settings[target_race]["dropship"]
 end
 
 function RaceSettingsHelper.is_timed_unit(target_race, unit_name)
-    return storage.race_settings[target_race]['timed_units'][unit_name]
+    return storage.race_settings[target_race]["timed_units"][unit_name]
 end
 
 function RaceSettingsHelper.is_command_center(target_race, name)
-    local command_centers = storage.race_settings[target_race]['current_command_centers_tier']
+    local command_centers = storage.race_settings[target_race]["current_command_centers_tier"]
     for _, val in pairs(command_centers) do
         if val == name then
             return true
@@ -179,14 +179,14 @@ function RaceSettingsHelper.get_tier(target_race)
 end
 
 function RaceSettingsHelper.get_race_entity_name(target_race, name, level)
-    return target_race .. '--' .. name .. '--' .. level
+    return target_race .. "--" .. name .. "--" .. level
 end
 
 
 function RaceSettingsHelper.get_colliding_unit(race_name)
     local collide_unit_name = storage.race_settings[race_name].colliding_unit
     if not collide_unit_name then
-        collide_unit_name = storage.race_settings[race_name]['units'][1][1]
+        collide_unit_name = storage.race_settings[race_name]["units"][1][1]
     end
     return RaceSettingsHelper.get_race_entity_name(
             race_name,
@@ -265,44 +265,44 @@ function RaceSettingsHelper.process_unit_spawn_rate_cache(race_data)
         for _, featured_groups in pairs(race_data.featured_groups) do
             process_spawn_chance_cache(featured_groups)
         end
-        race_data['featured_groups_total'] = #race_data.featured_groups
+        race_data["featured_groups_total"] = #race_data.featured_groups
     end
 
     if race_data.featured_flying_groups then
         for _, featured_groups in pairs(race_data.featured_flying_groups) do
             process_spawn_chance_cache(featured_groups)
         end
-        race_data['featured_flying_groups_total'] = #race_data.featured_flying_groups
+        race_data["featured_flying_groups_total"] = #race_data.featured_flying_groups
     end
 
     return race_data
 end
 
 function RaceSettingsHelper.get_featured_squad_id(race_name)
-    return math.random(1, storage.race_settings[race_name]['featured_groups_total'])
+    return math.random(1, storage.race_settings[race_name]["featured_groups_total"])
 end
 
 function RaceSettingsHelper.get_featured_flying_squad_id(race_name)
-    return math.random(1, storage.race_settings[race_name]['featured_flying_groups_total'])
+    return math.random(1, storage.race_settings[race_name]["featured_flying_groups_total"])
 end
 
 function RaceSettingsHelper.get_featured_unit_cost(target_race, featured_group_id)
-    local featured_group = storage.race_settings[target_race]['featured_groups'][featured_group_id]
+    local featured_group = storage.race_settings[target_race]["featured_groups"][featured_group_id]
     return featured_group[FEATURE_RACE_SPAWN_COST];
 end
 
 function RaceSettingsHelper.pick_featured_unit(target_race, featured_group_id)
-    local featured_group = storage.race_settings[target_race]['featured_groups'][featured_group_id]
+    local featured_group = storage.race_settings[target_race]["featured_groups"][featured_group_id]
     return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1, featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 function RaceSettingsHelper.pick_featured_flying_unit(target_race, featured_group_id)
-    local featured_group = storage.race_settings[target_race]['featured_flying_groups'][featured_group_id]
+    local featured_group = storage.race_settings[target_race]["featured_flying_groups"][featured_group_id]
     return featured_group[FEATURE_RACE_NAME][featured_group[FEATURE_RACE_SPAWN_CACHE][math.random(1, featured_group[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 function RaceSettingsHelper.has_featured_flying_squad(target_race)
-    if storage.race_settings[target_race]['featured_flying_groups'] == nil then
+    if storage.race_settings[target_race]["featured_flying_groups"] == nil then
         return false
     end
 
@@ -310,7 +310,7 @@ function RaceSettingsHelper.has_featured_flying_squad(target_race)
 end
 
 function RaceSettingsHelper.has_featured_squad(target_race)
-    if storage.race_settings[target_race]['featured_groups'] == nil then
+    if storage.race_settings[target_race]["featured_groups"] == nil then
         return false
     end
 
@@ -318,11 +318,11 @@ function RaceSettingsHelper.has_featured_squad(target_race)
 end
 
 function RaceSettingsHelper.get_total_featured_squads(target_race)
-    return storage.race_settings[target_race]['featured_groups_total'] or 0
+    return storage.race_settings[target_race]["featured_groups_total"] or 0
 end
 
 function RaceSettingsHelper.get_total_featured_flying_squads(target_race)
-    return storage.race_settings[target_race]['featured_flying_groups_total'] or 0
+    return storage.race_settings[target_race]["featured_flying_groups_total"] or 0
 end
 
 function RaceSettingsHelper.is_in_boss_mode()
@@ -330,15 +330,15 @@ function RaceSettingsHelper.is_in_boss_mode()
 end
 
 function RaceSettingsHelper.has_boss(target_race)
-    return storage.race_settings[target_race]['boss_building'] or false
+    return storage.race_settings[target_race]["boss_building"] or false
 end
 
 function RaceSettingsHelper.boss_tier(target_race)
-    return storage.race_settings[target_race]['boss_tier'] or 1
+    return storage.race_settings[target_race]["boss_tier"] or 1
 end
 
 function RaceSettingsHelper.k2_creep_enabled(target_race)
-    if target_race == nil or storage.race_settings[target_race] == nil or storage.race_settings[target_race]['enable_k2_creep'] == false then
+    if target_race == nil or storage.race_settings[target_race] == nil or storage.race_settings[target_race]["enable_k2_creep"] == false then
         return false
     end
 

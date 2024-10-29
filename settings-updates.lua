@@ -4,6 +4,6 @@
 --- DateTime: 8/1/2023 10:55 PM
 ---
 
-require('global')
+require("global")
 
-require 'prototypes/compatibility/setting-updates.lua'
+require "prototypes/compatibility/setting-updates.lua"

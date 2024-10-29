@@ -1,12 +1,12 @@
 
-local TestShared = require('shared')
+local TestShared = require("shared")
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local Event = require('__stdlib__/stdlib/event/event')
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local Event = require("__stdlib__/stdlib/event/event")
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -34,13 +34,13 @@ after_each(function()
 end)
 
 
-local race_name = 'erm_zerg'
-local enemy_force_name = 'enemy_erm_zerg'
+local race_name = "erm_zerg"
+local enemy_force_name = "enemy_erm_zerg"
 
-it('Interplanetary Attack: Attack Target', function()
+it("Interplanetary Attack: Attack Target", function()
     async(12000)
     local surface = game.surfaces[1]
-    local player = game.forces['player']
+    local player = game.forces["player"]
     surface.request_to_generate_chunks({ 0, 0 }, 25)
     surface.force_generate_chunk_requests()
     AttackGroupBeaconProcessor.init_index()
@@ -59,35 +59,35 @@ it('Interplanetary Attack: Attack Target', function()
     after_ticks(12000, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
-            type = 'unit',
+            type = "unit",
             force = enemy_force_name
         })
-        assert(table_size(entities) > 0,'Has units')
+        assert(table_size(entities) > 0,"Has units")
 
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
-            type = 'unit-spawner',
-            force = 'enemy_erm_zerg'
+            type = "unit-spawner",
+            force = "enemy_erm_zerg"
         })
-        assert(table_size(entities) > 0,'Has victory expansion')
+        assert(table_size(entities) > 0,"Has victory expansion")
 
-        assert(    storage.race_settings[race_name].attack_meter < 3000, 'Attack point successfully deducted')
+        assert(    storage.race_settings[race_name].attack_meter < 3000, "Attack point successfully deducted")
         done()
     end)
 end)
 
-it('Interplanetary Attack: No friends, have to launch attack', function()
+it("Interplanetary Attack: No friends, have to launch attack", function()
     async(12000)
     local surface = game.surfaces[1]
-    local surface2 = game.create_surface('test_surface_2')
+    local surface2 = game.create_surface("test_surface_2")
     storage.interplanetary_intel[surface2.index]   = {
         radius = 900000,
-        type = 'planet',
+        type = "planet",
         updated = game.tick,
         defense = 0,
         has_player_entities = true,
     }
-    local player = game.forces['player']
+    local player = game.forces["player"]
     surface.request_to_generate_chunks({ 0, 0 }, 25)
     surface.force_generate_chunk_requests()
     AttackGroupBeaconProcessor.init_index()
@@ -107,19 +107,19 @@ it('Interplanetary Attack: No friends, have to launch attack', function()
     after_ticks(12000, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
-            type = 'unit',
+            type = "unit",
             force = enemy_force_name
         })
-        assert(table_size(entities) > 0,'Has units')
+        assert(table_size(entities) > 0,"Has units")
 
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
-            type = 'unit-spawner',
-            force = 'enemy_erm_zerg'
+            type = "unit-spawner",
+            force = "enemy_erm_zerg"
         })
-        assert(table_size(entities) > 0,'Has victory expansion')
+        assert(table_size(entities) > 0,"Has victory expansion")
 
-        assert(    storage.race_settings[race_name].attack_meter < 3000, 'Attack point successfully deducted')
+        assert(    storage.race_settings[race_name].attack_meter < 3000, "Attack point successfully deducted")
         done()
     end)
 end)

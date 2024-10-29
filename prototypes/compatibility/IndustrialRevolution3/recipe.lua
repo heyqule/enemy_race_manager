@@ -4,4 +4,4 @@
 --- DateTime: 1/28/2023 4:39 PM
 ---
 
-data.raw['recipe']['barrel-steel-plate']['results'][1]['amount'] = 32
+data.raw["recipe"]["barrel-steel-plate"]["results"][1]["amount"] = 32

@@ -3,11 +3,11 @@
 --- Created by heyqule.
 --- DateTime: 8/27/2023 1:10 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
-local Config = require('__enemyracemanager__/lib/global_config')
+local Event = require("__stdlib__/stdlib/event/event")
+local Config = require("__enemyracemanager__/lib/global_config")
 
 local add_mining_drone = function(event)
-    Config.add_attack_group_attackable_entity('mining-depot')
+    Config.add_attack_group_attackable_entity("mining-depot")
 end
 
 Event.register(Event.generate_event_name(Config.EVENT_FLUSH_GLOBAL), function(event)

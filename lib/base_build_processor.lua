@@ -4,26 +4,26 @@
 --- DateTime: 3/31/2021 8:54 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
-local Event = require('__stdlib__/stdlib/event/event')
+local String = require("__stdlib__/stdlib/utils/string")
+local Event = require("__stdlib__/stdlib/event/event")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local BaseBuildProcessor = {}
 
 local building_switch = {
-    ['cc'] = function(race_name)
+    ["cc"] = function(race_name)
         return RaceSettingsHelper.pick_a_command_center(race_name)
     end,
-    ['support'] = function(race_name)
+    ["support"] = function(race_name)
         return RaceSettingsHelper.pick_a_support_building(race_name)
     end,
-    ['turret'] = function(race_name)
+    ["turret"] = function(race_name)
         return RaceSettingsHelper.pick_a_turret(race_name)
     end
 }
@@ -83,7 +83,7 @@ function BaseBuildProcessor.determine_build_group(entity)
         force = entity.force,
         position = entity.position,
         radius = 32,
-        type = 'unit',
+        type = "unit",
     }
     for _, unit in pairs(near_by_units) do
         if  unit.commandable and
@@ -116,29 +116,29 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 
     local formation = {}
-    if GlobalConfig.build_formation() == 'random' then
+    if GlobalConfig.build_formation() == "random" then
         formation = { 1, math.random(3, 8), math.random(5, 12) }
     else
-        formation = String.split(GlobalConfig.build_formation(), '-')
+        formation = String.split(GlobalConfig.build_formation(), "-")
     end
 
     for _, unit in pairs(members) do
         local name = nil
         if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'cc')
+            name = BaseBuildProcessor.getBuildingName(race_name, "cc")
             cc = cc + 1
         elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'support')
+            name = BaseBuildProcessor.getBuildingName(race_name, "support")
             support = support + 1
         elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'turret')
+            name = BaseBuildProcessor.getBuildingName(race_name, "turret")
             turret = turret + 1
         else
             return
         end
 
         Cron.add_1_sec_queue(
-                'BaseBuildProcessor.build',
+                "BaseBuildProcessor.build",
                 unit.surface,
                 name,
                 force_name,
@@ -151,7 +151,7 @@ end
 function BaseBuildProcessor.getBuildingName(race_name, type)
     local func = building_switch[type]
 
-    return race_name .. '--' .. func(race_name) .. '--' .. RaceSettingsHelper.get_level(race_name)
+    return race_name .. "--" .. func(race_name) .. "--" .. RaceSettingsHelper.get_level(race_name)
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)
