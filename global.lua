@@ -14,8 +14,8 @@ DEBUG_MODE = true
 TEST_MODE = true
 --- For debugging beacons
 BEACON_SELECTABLE = true
---- Enable this flag when sampling aux, moisture, elevation, and enemy probablity.
-SAMPLE_TILE_MODE = true
+--- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
+SAMPLE_TILE_MODE = false
 
 
 CONSTRUCTION_ATTACK = 'embtr-con'

@@ -29,7 +29,6 @@ local base_cold_resistance = -100
 local incremental_cold_resistance = 0
 
 function makeLevelSpawners(level, type)
-    data.raw['unit-spawner'][type]['autoplace'] = nil
     local spawner = util.table.deepcopy(data.raw['unit-spawner'][type])
 
     local original_hitpoint = spawner['max_health']
@@ -69,7 +68,11 @@ function makeLevelSpawners(level, type)
     end)()
 
     spawner['result_units'] = result_units
-    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace(0, FORCE_NAME)
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace({
+        probability_expression = 'enemy_autoplace_base(0, 90005)',
+        force = FORCE_NAME,
+        control = 'hot_enemy_base'
+    })
     spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-explosive_biter_map_color'].value)
     return spawner
 end

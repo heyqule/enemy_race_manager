@@ -32,16 +32,17 @@ require 'prototypes/extend-recipes'
 
 require 'prototypes/extend-freeforall'
 
-require('prototypes/compatibility/data-updates.lua')
-
-
-require('prototypes/extend-default-autoplace.lua')
-
-require('prototypes/map-generation.lua')
+require('prototypes/compatibility/data-updates')
 
 require('prototypes/extend-scout-units')
 
 require('prototypes/extend-creep-removal')
+
+if not feature_flags.space_travel then
+    require('prototypes/extend-default-autoplace')
+end
+
+require('prototypes/map-generation.lua')
 
 if TEST_MODE then
     require('prototypes/test-prototypes')

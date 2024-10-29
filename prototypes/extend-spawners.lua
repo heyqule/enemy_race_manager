@@ -94,7 +94,10 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     end
 
     -- @TODO Noise expression
-    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace('enemy_autoplace_base(0, 6)', FORCE_NAME)
+    spawner['autoplace'] = enemy_autoplace.enemy_spawner_autoplace({
+        probability_expression = 'enemy_autoplace_base(0, 6)',
+        force = FORCE_NAME,
+    })
     spawner['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return spawner
@@ -122,7 +125,9 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     worm['healing_per_tick'] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
     ERM_UnitHelper.modify_biter_damage(worm, level)
     -- @TODO Noise expression
-    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace('enemy_autoplace_base(2, 3)', FORCE_NAME)
+    worm['autoplace'] = enemy_autoplace.enemy_worm_autoplace({
+        probability_expression = 'enemy_autoplace_base('..distance..', 3)', force = FORCE_NAME
+    })
     worm['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
 
     return worm
