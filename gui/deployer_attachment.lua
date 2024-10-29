@@ -19,42 +19,42 @@ function DeployerAttachement.show(player, unit_number)
 
     local anchor = {gui=defines.relative_gui_type.assembling_machine_gui, position=defines.relative_gui_position.right}
     local container = gui.add{
-        type = "frame",
+        type = 'frame',
         name = DeployerAttachement.root_name,
-        direction="vertical",
+        direction='vertical',
         anchor = anchor,
         -- use gui element tags to store a reference to deployer unit_number
         tags = {
             unit_number = unit_number
         }
     }
-    container.style.vertically_stretchable = "stretch_and_expand"
+    container.style.vertically_stretchable = 'stretch_and_expand'
 
-    container.add { type = "label", caption = { 'gui-rallypoint.current_location' } }
+    container.add { type = 'label', caption = { 'gui-rallypoint.current_location' } }
 
     local data = ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
 
     if data.rally_point and data.rally_point.x then
-        container.add { type = "label", caption = data.rally_point.x .. ',' .. data.rally_point.y }
+        container.add { type = 'label', caption = data.rally_point.x .. ',' .. data.rally_point.y }
         SharedGuiFunctions.add_mini_map(container,  'erm_rallypoint_map',
                 player, data.entity, data.rally_point, 1, { width = 128, height = 128 }, {'gui-rallypoint.map_open'})
     else
-        container.add { type = "label", caption = 'N/A'}
+        container.add { type = 'label', caption = 'N/A'}
     end
-    container.add { type = "button", name = "erm_rally_point_set", caption = { "gui-rallypoint.set" }, style = "green_button_no_confirm", tooltip=nil}
-    container.add { type = "button", name = "erm_rally_point_unset", caption = { "gui-rallypoint.unset" }, style = "red_button"}
+    container.add { type = 'button', name = 'erm_rally_point_set', caption = { 'gui-rallypoint.set' }, style = 'green_button_no_confirm', tooltip=nil}
+    container.add { type = 'button', name = 'erm_rally_point_unset', caption = { 'gui-rallypoint.unset' }, style = 'red_button'}
 
     local active_deployers = {}
     if storage.army_active_deployers[force_index] then
         active_deployers = storage.army_active_deployers[force_index]['deployers']
     end
-    container.add { type = "label", caption = {'gui-rallypoint.auto_deploy'}}
+    container.add { type = 'label', caption = {'gui-rallypoint.auto_deploy'}}
     local switch = container.add {
-        type = "switch",
-        name = "army_deployer/auto_deploy/" .. data.entity.unit_number,
+        type = 'switch',
+        name = 'army_deployer/auto_deploy/' .. data.entity.unit_number,
         allow_none_state = false,
-        left_label_caption = "OFF",
-        right_label_caption = "ON"
+        left_label_caption = 'OFF',
+        right_label_caption = 'ON'
     }
     if active_deployers[unit_number] then
         switch.switch_state = 'right'

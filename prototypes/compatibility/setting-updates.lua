@@ -7,21 +7,21 @@ local version = require('__stdlib__/stdlib/vendor/version')
 require('global')
 
 if mods['Krastorio2'] then
-    require "K2/settings"
+    require 'K2/settings'
 end
 
 if mods['ArmouredBiters'] then
-    require "ArmouredBiters/settings"
+    require 'ArmouredBiters/settings'
 end
 
 if mods['Cold_biters'] then
-    require "Cold_Biters/settings"
+    require 'Cold_Biters/settings'
 end
 
 if mods['Explosive_biters'] then
-    require "Explosive_Biters/settings"
+    require 'Explosive_Biters/settings'
 end
 
 if mods['Toxic_biters'] then
-    require "Toxic_Biters/settings"
+    require 'Toxic_Biters/settings'
 end

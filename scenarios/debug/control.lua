@@ -38,7 +38,7 @@ script.on_event(defines.events.on_player_created, function(event)
     --if player.character then
     --    player.character.destroy()
     --end
-    --local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
+    --local character = player.surface.create_entity { name = 'character', position = player.surface.find_non_colliding_position('character', player.force.get_spawn_position(player.surface), 10, 2), force = force }
     --player.set_controller { type = defines.controllers.character, character = character }
     --player.teleport({ 0, 0 })
 

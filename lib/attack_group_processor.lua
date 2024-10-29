@@ -221,14 +221,14 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                     destination = { x = position.x, y = position.y },
                     radius = AttackGroupProcessor.ATTACK_RADIUS
                 }
-                DebugHelper.drawline(1, "default attack path", {r=1,g=1,b=0,a=0.5}, group.position , position)
+                DebugHelper.drawline(1, 'default attack path', {r=1,g=1,b=0,a=0.5}, group.position , position)
             else
                 if DEBUG_MODE then
                     for index, command in pairs(commands) do
                         if index == 1 then
-                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5}, request_path_data.start , command.destination)
+                            DebugHelper.drawline(1, 'custom attack path:'..index, {r=1,g=1,b=0,a=0.5}, request_path_data.start , command.destination)
                         elseif commands.commands[index] then
-                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
+                            DebugHelper.drawline(1, 'custom attack path:'..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
                         end
                     end
                 end                
@@ -589,7 +589,7 @@ end
 
 function AttackGroupProcessor.generate_nuked_group(surface, position, radius, source_entity)
     local target_unit = surface.find_entities_filtered({
-        type = { "unit-spawner" },
+        type = { 'unit-spawner' },
         force = ForceHelper.get_enemy_forces(),
         area = {
             { position.x - radius, position.y - radius },

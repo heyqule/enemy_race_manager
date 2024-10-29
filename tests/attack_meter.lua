@@ -24,7 +24,7 @@ after_each(function()
 end)
 
 
-it("Calculate attack points", function()
+it('Calculate attack points', function()
     async(24000)
     local surface = game.surfaces[1]
     AttackGroupBeaconProcessor.init_index()
@@ -67,7 +67,7 @@ it("Calculate attack points", function()
     end)
 end)
 
-it("Base evolution - kills-deduction true", function()
+it('Base evolution - kills-deduction true', function()
     async(7200)
     storage.settings['enemyracemanager-evolution-point-spawner-kills-deduction'] = true
     local surface = game.surfaces[1]
@@ -89,7 +89,7 @@ it("Base evolution - kills-deduction true", function()
     end)
 end)
 
-it("Time base attack", function()
+it('Time base attack', function()
     async(10800)
     storage.race_settings[race_name].level = 3
     AttackGroupBeaconProcessor.init_index()
@@ -106,7 +106,7 @@ it("Time base attack", function()
     end)
 end)
 
-it("Time base attack - level req not met", function()
+it('Time base attack - level req not met', function()
     async(10800)
     AttackGroupBeaconProcessor.init_index()
 

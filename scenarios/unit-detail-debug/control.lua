@@ -9,9 +9,9 @@ Event.on_init(function(event)
     game.map_settings.enemy_expansion.enabled = false
     local surface = game.surfaces[1]
     local mgs = surface.map_gen_settings
-    mgs.autoplace_controls["enemy-base"].frequency = 0
-    mgs.autoplace_controls["enemy-base"].size = 0
-    mgs.autoplace_controls["enemy-base"].richness = 0
+    mgs.autoplace_controls['enemy-base'].frequency = 0
+    mgs.autoplace_controls['enemy-base'].size = 0
+    mgs.autoplace_controls['enemy-base'].richness = 0
     game.surfaces[1].map_gen_settings = mgs
 end)
 
@@ -33,14 +33,14 @@ Event.register(defines.events.on_player_created, function(event)
     if player.character then
         player.character.destroy()
     end
-    --local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
+    --local character = player.surface.create_entity{name = 'character', position = player.surface.find_non_colliding_position('character', player.force.get_spawn_position(player.surface), 10, 2), force = force}
     --player.set_controller{type = defines.controllers.character, character = character}
     --player.teleport({0, 0})
 
     local prototypes = game.get_filtered_entity_prototypes({
-        { filter = "type", type = "unit-spawner", mode = 'or' },
-        { filter = "type", type = "turret", mode = 'or' },
-        { filter = "type", type = "unit", mode = 'or' }
+        { filter = 'type', type = 'unit-spawner', mode = 'or' },
+        { filter = 'type', type = 'turret', mode = 'or' },
+        { filter = 'type', type = 'unit', mode = 'or' }
     })
     local i = 0
     local x = -200

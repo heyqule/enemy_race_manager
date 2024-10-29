@@ -10,17 +10,17 @@ local BEACON_HEALTH_LIMIT = 200
 data:extend({
     --- Spawn beacon marks an area with enemies' unit-spawners
     {
-        type = "simple-entity-with-owner",
-        name = "erm_spawn_beacon",
-        subgroup = "erm_ai_beacons",
-        icon = "__base__/graphics/icons/signal/signal_S.png",
+        type = 'simple-entity-with-owner',
+        name = 'erm_spawn_beacon',
+        subgroup = 'erm_ai_beacons',
+        icon = '__base__/graphics/icons/signal/signal_S.png',
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable'},
         picture = {
-            filename = "__base__/graphics/icons/signal/signal_S.png",
+            filename = '__base__/graphics/icons/signal/signal_S.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
@@ -29,17 +29,17 @@ data:extend({
     },
     --- Aerial beacon marks player's defense location via air
     {
-        type = "simple-entity-with-owner",
-        name = "erm_aerial_beacon",
-        subgroup = "erm_ai_beacons",
-        icon = "__base__/graphics/icons/signal/signal_A.png",
+        type = 'simple-entity-with-owner',
+        name = 'erm_aerial_beacon',
+        subgroup = 'erm_ai_beacons',
+        icon = '__base__/graphics/icons/signal/signal_A.png',
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable'},
         picture = {
-            filename = "__base__/graphics/icons/signal/signal_A.png",
+            filename = '__base__/graphics/icons/signal/signal_A.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
@@ -48,17 +48,17 @@ data:extend({
     },
     --- Land beacon marks player's defense location via land
     {
-        type = "simple-entity-with-owner",
-        name = "erm_land_beacon",
-        subgroup = "erm_ai_beacons",
-        icon = "__base__/graphics/icons/signal/signal_L.png",
+        type = 'simple-entity-with-owner',
+        name = 'erm_land_beacon',
+        subgroup = 'erm_ai_beacons',
+        icon = '__base__/graphics/icons/signal/signal_L.png',
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable'},
         picture = {
-            filename = "__base__/graphics/icons/signal/signal_L.png",
+            filename = '__base__/graphics/icons/signal/signal_L.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
@@ -67,17 +67,17 @@ data:extend({
     },
     --- Attackable entities beacon are an area that has entities with matching attack entity types
     {
-        type = "simple-entity-with-owner",
-        name = "erm_attackable_entity_beacon",
-        subgroup = "erm_ai_beacons",
-        icon = "__base__/graphics/icons/signal/signal_E.png",
+        type = 'simple-entity-with-owner',
+        name = 'erm_attackable_entity_beacon',
+        subgroup = 'erm_ai_beacons',
+        icon = '__base__/graphics/icons/signal/signal_E.png',
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable'},
         picture = {
-            filename = "__base__/graphics/icons/signal/signal_E.png",
+            filename = '__base__/graphics/icons/signal/signal_E.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
@@ -86,17 +86,17 @@ data:extend({
     },
     --- Resource beacons are used to track resource locations, so that scout will attempt to scout those areas.
     {
-        type = "simple-entity-with-owner",
-        name = "erm_resource_beacon",
-        subgroup = "erm_ai_beacons",
-        icon = "__base__/graphics/icons/signal/signal_R.png",
+        type = 'simple-entity-with-owner',
+        name = 'erm_resource_beacon',
+        subgroup = 'erm_ai_beacons',
+        icon = '__base__/graphics/icons/signal/signal_R.png',
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable'},
         picture = {
-            filename = "__base__/graphics/icons/signal/signal_R.png",
+            filename = '__base__/graphics/icons/signal/signal_R.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
@@ -114,7 +114,7 @@ if DEBUG_MODE then
             if BEACON_SELECTABLE then
                 data['selection_box'] = { { -1, -1 }, { 1, 1 } }
             end
-            data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}
+            data.flags = {'not-repairable','not-deconstructable','not-blueprintable'}
             data.map_color = {b=0,g=1,r=0,a=1}
             data.order = 'aaaaa'
         end

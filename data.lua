@@ -1,18 +1,18 @@
 -- May not needed for 2.0
--- require "prototypes.extend-collision"
+-- require 'prototypes.extend-collision'
 
-require "prototypes.extend-types"
+require 'prototypes.noise-functions'
+require 'prototypes.extend-types'
+require 'prototypes.extend-biters'
+require 'prototypes.extend-spawners'
 
-require "prototypes.extend-biters"
-require "prototypes.extend-spawners"
+require 'prototypes.base-units.defender'
+require 'prototypes.base-units.destroyer'
+require 'prototypes.base-units.distractor'
+require 'prototypes.base-units.construction'
+require 'prototypes.base-units.logistic'
 
-require "prototypes.base-units.defender"
-require "prototypes.base-units.destroyer"
-require "prototypes.base-units.distractor"
-require "prototypes.base-units.construction"
-require "prototypes.base-units.logistic"
-
-require "prototypes.base-spawner.roboport"
+require 'prototypes.base-spawner.roboport'
 
 data.erm_registered_race = data.erm_registered_race or {}
 data.erm_spawn_specs = data.erm_spawn_specs or {}
@@ -39,5 +39,5 @@ if settings.startup['enemyracemanager-enable-bitters'].value then
     data.erm_aerial_scout[MOD_NAME] = 'defender'
 end
 
-require "prototypes.extend-mapping-beacons"
-require "prototypes.extend-rallypoint"
+require 'prototypes.extend-mapping-beacons'
+require 'prototypes.extend-rallypoint'

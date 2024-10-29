@@ -6,7 +6,7 @@
 
 local SharedGuiFunctions = require('__enemyracemanager__/gui/shared')
 local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
-local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
 
 local has_selected_cc = function(player, backer_name, type)
     if storage.army_windows_tab_player_data[player.index].selected_cc[type] == backer_name then
@@ -73,10 +73,10 @@ end
 
 local CommandCenterControlGUI = {
     name = 'command-center-pane',
-    cc_from_selector = "army_cc/cc_select_from",
-    cc_to_selector = "army_cc/cc_select_to",
-    stop_link_button = "army_cc/stop_link",
-    start_link_button = "army_cc/start_link",
+    cc_from_selector = 'army_cc/cc_select_from',
+    cc_to_selector = 'army_cc/cc_select_to',
+    stop_link_button = 'army_cc/stop_link',
+    start_link_button = 'army_cc/start_link',
 }
 
 
@@ -104,8 +104,8 @@ function CommandCenterControlGUI.update(player)
         name = 'left-listing'
     }
     local left_surface_filter = left_listing.add {
-        type = "drop-down",
-        name="army_cc/filter_from_surface",
+        type = 'drop-down',
+        name='army_cc/filter_from_surface',
         items = windows_tab_data.cc_surfaces_selection,
         selected_index = windows_tab_data.cc_surfaces_select_from_index or 1,
     }
@@ -123,7 +123,7 @@ function CommandCenterControlGUI.update(player)
     local center_pane = horizontal.add {
         type = 'flow',
         direction = 'vertical',
-        name = "center-pane"
+        name = 'center-pane'
     }
     center_pane.style.width = 390
     center_pane.style.left_margin = 5
@@ -150,7 +150,7 @@ function CommandCenterControlGUI.update(player)
     if selected_from_entity and selected_from_entity.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,
-                "army_cc/from_map",
+                'army_cc/from_map',
                 player,
                 selected_from_entity,
                 nil,
@@ -171,7 +171,7 @@ function CommandCenterControlGUI.update(player)
     if selected_to_entity and selected_to_entity.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,
-                "army_cc/to_map",
+                'army_cc/to_map',
                 player,
                 selected_to_entity,
                 nil,
@@ -195,7 +195,7 @@ function CommandCenterControlGUI.update(player)
         name = CommandCenterControlGUI.cc_from_selector
     }
     center_pane_row_selected_from.add { type = 'label', caption = { 'gui-army.cc_selected_from' } }
-    center_pane_row_selected_from.add { type = 'label', name = "army_cc/selected/from_label", caption = get_cc_name(selected_from_entity) }
+    center_pane_row_selected_from.add { type = 'label', name = 'army_cc/selected/from_label', caption = get_cc_name(selected_from_entity) }
     center_pane_row_selected_from.style.width = 200
     center_pane_row_selected_from.style.right_margin = 20
 
@@ -205,7 +205,7 @@ function CommandCenterControlGUI.update(player)
         name = 'army_cc/selected/to_pane'
     }
     center_pane_row_selected_to.add { type = 'label', caption = { 'gui-army.cc_selected_to' } }
-    center_pane_row_selected_to.add { type = 'label', name = "army_cc/selected/to_label", caption = get_cc_name(selected_to_entity) }
+    center_pane_row_selected_to.add { type = 'label', name = 'army_cc/selected/to_label', caption = get_cc_name(selected_to_entity) }
 
 
     -- CENTER CC LINK BUTTONS
@@ -214,21 +214,21 @@ function CommandCenterControlGUI.update(player)
         direction = 'horizontal'
     }
 
-    local unlink_button = center_pane_row_links.add { type = 'button', name = CommandCenterControlGUI.stop_link_button, caption = { 'gui-army.cc_unlink' }, style = "red_button" }
+    local unlink_button = center_pane_row_links.add { type = 'button', name = CommandCenterControlGUI.stop_link_button, caption = { 'gui-army.cc_unlink' }, style = 'red_button' }
     unlink_button.tooltip = 'Stop Communication'
 
-    local link_button = center_pane_row_links.add { type = 'button', name = CommandCenterControlGUI.start_link_button, caption = { 'gui-army.cc_link' }, style = "green_button" }
+    local link_button = center_pane_row_links.add { type = 'button', name = CommandCenterControlGUI.start_link_button, caption = { 'gui-army.cc_link' }, style = 'green_button' }
     link_button.style.left_margin = 165
     link_button.tooltip = 'Start Communication'
 
     if player_data.error_message ~= nil then
-        local error_message = center_pane.add { type = 'label', name = "army_cc/linked/error_message", caption = player_data.error_message, visible = true, style = 'bold_red_label' }
+        local error_message = center_pane.add { type = 'label', name = 'army_cc/linked/error_message', caption = player_data.error_message, visible = true, style = 'bold_red_label' }
         error_message.style.top_margin = 10
         player_data.error_message = nil
     end
 
     if player_data.success_message ~= nil then
-        local success_message = center_pane.add { type = 'label', name = "army_cc/linked/success_message", caption = player_data.success_message, visible = true, style = 'bold_green_label' }
+        local success_message = center_pane.add { type = 'label', name = 'army_cc/linked/success_message', caption = player_data.success_message, visible = true, style = 'bold_green_label' }
         success_message.style.top_margin = 10
         player_data.success_message = nil
     end
@@ -246,7 +246,7 @@ function CommandCenterControlGUI.update(player)
         name = 'army_cc/active/from_pane'
     }
     center_pane_row_active_from.add { type = 'label', caption = { 'gui-army.cc_linked_from' } }
-    center_pane_row_active_from.add { type = 'label', name = "army_cc/linked/from_label", caption = get_cc_name(entrance) }
+    center_pane_row_active_from.add { type = 'label', name = 'army_cc/linked/from_label', caption = get_cc_name(entrance) }
     center_pane_row_active_from.style.width = 200
     center_pane_row_active_from.style.right_margin = 20
 
@@ -256,7 +256,7 @@ function CommandCenterControlGUI.update(player)
         name = 'army_cc/active/to_pane'
     }
     center_pane_row_active_to.add { type = 'label', caption = { 'gui-army.cc_linked_to' } }
-    center_pane_row_active_to.add { type = 'label', name = "army_cc/linked/to_label", caption = get_cc_name(exit) }
+    center_pane_row_active_to.add { type = 'label', name = 'army_cc/linked/to_label', caption = get_cc_name(exit) }
 
     local center_pane_row_link_map = center_pane.add {
         type = 'flow',
@@ -267,7 +267,7 @@ function CommandCenterControlGUI.update(player)
     if entrance and entrance.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_link_map,
-                "army_cc/from_map",
+                'army_cc/from_map',
                 player,
                 entrance,
                 nil,
@@ -287,7 +287,7 @@ function CommandCenterControlGUI.update(player)
     if exit and exit.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_link_map,
-                "army_cc/to_map",
+                'army_cc/to_map',
                 player,
                 exit,
                 nil,
@@ -304,8 +304,8 @@ function CommandCenterControlGUI.update(player)
     }
 
     local right_surface_filter = right_listing.add {
-        type = "drop-down",
-        name="army_cc/filter_to_surface",
+        type = 'drop-down',
+        name='army_cc/filter_to_surface',
         items = windows_tab_data.cc_surfaces_selection,
         selected_index = windows_tab_data.cc_surfaces_select_to_index or 1,
     }

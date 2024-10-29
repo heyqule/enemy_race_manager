@@ -12,7 +12,7 @@ require('util')
 
 require('__enemyracemanager__/global')
 
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
+local max_hitpoint_multiplier = settings.startup['enemyracemanager-max-hitpoint-multipliers'].value / 2
 
 
 -- Handles acid and poison resistance
@@ -36,18 +36,18 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = util.table.deepcopy(data.raw['unit'][type])
     local original_hitpoint = biter['max_health']
 
-    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. biter['name'], level }
+    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '--' .. biter['name'], tostring(level) }
     biter['name'] = MOD_NAME .. '--' .. biter['name'] .. '--' .. level
     biter['max_health'] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, level)
     biter['resistances'] = {
-        { type = "acid", percent = 95 },
-        { type = "poison", percent = 95 },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
+        { type = 'acid', percent = 95 },
+        { type = 'poison', percent = 95 },
+        { type = 'physical', percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+        { type = 'fire', percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = 'explosion', percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+        { type = 'laser', percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = 'electric', percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+        { type = 'cold', percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
     biter['healing_per_tick'] = 0
 
@@ -61,9 +61,11 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     end
 
     ERM_UnitHelper.modify_biter_damage(biter, level)
-    biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup['enemyracemanager-level-multipliers'].value, level)
 
-    biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
+    biter['absorptions_to_join_attack'] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(biter.absorptions_to_join_attack.pollution, level)
+    }
     biter['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-toxic_biter_map_color'].value)
 
     return biter
@@ -93,7 +95,7 @@ for i = 1, max_level do
     -- 1, 12500 - 10, 43750 - 20, 75000 (org: 50000)
     data:extend({ makeLevelEnemy(i, 'leviathan-toxic-spitter', 5) })
 
-    if not settings.startup["tb-disable-mother"].value then
+    if not settings.startup['tb-disable-mother'].value then
         -- 1, 33333 - 10, 116666 - 20, 200000 (org: 100000)
         data:extend({ makeLevelEnemy(i, 'mother-toxic-spitter', 3) })
     end

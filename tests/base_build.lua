@@ -37,7 +37,7 @@ after_each(function()
 end)
 
 
-it("Default", function()
+it('Default', function()
     storage.settings['enemyracemanager-build-style'] = BUILDING_DEFAULT
     local surface = game.surfaces[1]
     local name = 'erm_zerg--zergling--1'
@@ -51,13 +51,13 @@ it("Default", function()
 
     after_ticks(300, function()
         local count = surface.count_entities_filtered({
-            type="unit-spawner",
+            type='unit-spawner',
             force = enemy_force
         })
         assert(count == 1, 'Only 1 spawner')
     end)
 end)
-it("Command Center / Build a town", function()
+it('Command Center / Build a town', function()
     storage.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_CMD
     local surface = game.surfaces[1]
     local name = 'erm_zerg--zergling--1'
@@ -70,11 +70,11 @@ it("Command Center / Build a town", function()
     BaseBuildProcessor.exec(building)
     after_ticks(3600, function()
         local count = surface.count_entities_filtered({
-            type="unit-spawner",
+            type='unit-spawner',
             force = enemy_force
         })
         local turret_count = surface.count_entities_filtered({
-            type="turret",
+            type='turret',
             force = enemy_force
         })
         local unit_count = table_size(unit_group.members)
@@ -83,7 +83,7 @@ it("Command Center / Build a town", function()
         assert(unit_count > 1, 'building units remained')
     end)
 end)
-it("Build a town", function()
+it('Build a town', function()
     storage.settings['enemyracemanager-build-style'] = BUILDING_A_TOWN
     local surface = game.surfaces[1]
     local name = 'erm_zerg--zergling--1'
@@ -96,11 +96,11 @@ it("Build a town", function()
     BaseBuildProcessor.exec(building)
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
-            type="unit-spawner",
+            type='unit-spawner',
             force = enemy_force
         })
         local turret_count = surface.count_entities_filtered({
-            type="turret",
+            type='turret',
             force = enemy_force
         })
         local unit_count = table_size(unit_group.members)
@@ -109,7 +109,7 @@ it("Build a town", function()
         assert(unit_count > 1, 'building units remained')
     end)
 end)
-it("Fully Expansion", function()
+it('Fully Expansion', function()
     storage.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_ARRIVAL
     local surface = game.surfaces[1]
     local name = 'erm_zerg--zergling--1'
@@ -122,11 +122,11 @@ it("Fully Expansion", function()
     BaseBuildProcessor.exec(building)
     after_ticks(3600, function()
         local count = surface.count_entities_filtered({
-            type="unit-spawner",
+            type='unit-spawner',
             force = enemy_force
         })
         local turret_count = surface.count_entities_filtered({
-            type="turret",
+            type='turret',
             force = enemy_force
         })
         assert(count > 6, 'more than 6 spawner spawned')

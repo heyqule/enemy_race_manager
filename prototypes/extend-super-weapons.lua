@@ -7,28 +7,28 @@
 require('util')
 
 local super_weapon_attack_points = {
-    type = "script",
+    type = 'script',
     effect_id = PLAYER_SUPER_WEAPON_ATTACK,
 }
 
 local purifier_weapon_attack_points = {
-    type = "script",
+    type = 'script',
     effect_id = PLAYER_PLANET_PURIFIER_ATTACK
 }
 
 local super_weapon_counter_attack = {
-    type = "script",
+    type = 'script',
     effect_id = PLAYER_SUPER_WEAPON_COUNTER_ATTACK,
 }
 
 local purifier_weapon_counter_attack = {
-    type = "script",
+    type = 'script',
     effect_id = PLAYER_PLANET_PURIFIER_COUNTER_ATTACK
 }
 
 -- base-game Nuclear bomb Projectiles
-if data.raw["projectile"]["atomic-rocket"] then
-    local entity = util.table.deepcopy(data.raw["projectile"]["atomic-rocket"])
+if data.raw['projectile']['atomic-rocket'] then
+    local entity = util.table.deepcopy(data.raw['projectile']['atomic-rocket'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     --- only for running tests, base game is able to call an unit group to attack.
     if TEST_MODE then
@@ -37,10 +37,10 @@ if data.raw["projectile"]["atomic-rocket"] then
 
     local target_effect_num_7 = entity.action.action_delivery.target_effects[7]
     if target_effect_num_7 and
-            target_effect_num_7.type == "damage"
+            target_effect_num_7.type == 'damage'
     then
         entity.action.action_delivery.target_effects[7]
-                      .damage.type = "radioactive"
+                      .damage.type = 'radioactive'
     end
 
     data:extend({ entity })
@@ -54,8 +54,8 @@ if data.raw["projectile"]["atomic-rocket"] then
 end
 
 -- Ion Cannon
-if mods['Kux-OrbitalIonCannon'] and data.raw["projectile"]["crosshairs"] then
-    local entity = util.table.deepcopy(data.raw["projectile"]["crosshairs"])
+if mods['Kux-OrbitalIonCannon'] and data.raw['projectile']['crosshairs'] then
+    local entity = util.table.deepcopy(data.raw['projectile']['crosshairs'])
     table.insert(entity['action'][1]['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action'][1]['action_delivery']['target_effects'], super_weapon_counter_attack)
 
@@ -68,7 +68,7 @@ if mods['Kux-OrbitalIonCannon'] and data.raw["projectile"]["crosshairs"] then
 
     data:extend({ entity })
 
-    local dummy_entity = util.table.deepcopy(data.raw["projectile"]["dummy-crosshairs"])
+    local dummy_entity = util.table.deepcopy(data.raw['projectile']['dummy-crosshairs'])
     table.insert(dummy_entity['action'][1]['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(dummy_entity['action'][1]['action_delivery']['target_effects'], super_weapon_counter_attack)
 
@@ -82,8 +82,8 @@ if mods['Kux-OrbitalIonCannon'] and data.raw["projectile"]["crosshairs"] then
 end
 
 -- MIRVs
-if mods['MIRV'] and data.raw["ammo"]["mirv-ammo"] then
-    local entity = util.table.deepcopy(data.raw["ammo"]["mirv-ammo"])
+if mods['MIRV'] and data.raw['ammo']['mirv-ammo'] then
+    local entity = util.table.deepcopy(data.raw['ammo']['mirv-ammo'])
     table.insert(entity['ammo_type']['action']['action_delivery']['target_effects'], purifier_weapon_attack_points)
     table.insert(entity['ammo_type']['action']['action_delivery']['target_effects'], purifier_weapon_counter_attack)
     data:extend({ entity })
@@ -100,8 +100,8 @@ if mods['MIRV'] and data.raw["ammo"]["mirv-ammo"] then
 end
 
 -- Space Exploration
-if mods['space-exploration'] and data.raw["projectile"]["se-plague-rocket"] then
-    local entity = util.table.deepcopy(data.raw["projectile"]["se-iridium-piledriver"])
+if mods['space-exploration'] and data.raw['projectile']['se-plague-rocket'] then
+    local entity = util.table.deepcopy(data.raw['projectile']['se-iridium-piledriver'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
 
@@ -119,22 +119,22 @@ if mods['space-exploration'] and data.raw["projectile"]["se-plague-rocket"] then
 
     data:extend({ entity })
 
-    local entity2 = util.table.deepcopy(data.raw["projectile"]["se-plague-rocket"])
+    local entity2 = util.table.deepcopy(data.raw['projectile']['se-plague-rocket'])
     table.insert(entity2['action']['action_delivery']['target_effects'], purifier_weapon_attack_points)
 
     data:extend({ entity2 })
 end
 
 -- Atomic Artillery
-if mods['AtomicArtillery'] and data.raw["artillery-projectile"]["atomic-artillery-projectile"] then
-    local entity = util.table.deepcopy(data.raw["artillery-projectile"]["atomic-artillery-projectile"])
+if mods['AtomicArtillery'] and data.raw['artillery-projectile']['atomic-artillery-projectile'] then
+    local entity = util.table.deepcopy(data.raw['artillery-projectile']['atomic-artillery-projectile'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })
 end
 
 if mods['IndustrialRevolution'] and data.raw['artillery-projectile']['atomic-artillery-projectile'] then
-    local entity = util.table.deepcopy(data.raw["artillery-projectile"]["atomic-artillery-projectile"])
+    local entity = util.table.deepcopy(data.raw['artillery-projectile']['atomic-artillery-projectile'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })
@@ -142,24 +142,24 @@ end
 
 -- K2 antimatter rocket, antimatter-artillery-projectile, atomic-artillery
 if mods['Krastorio2'] then
-    local entity = util.table.deepcopy(data.raw["artillery-projectile"]["atomic-artillery"])
+    local entity = util.table.deepcopy(data.raw['artillery-projectile']['atomic-artillery'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })
 
-    entity = util.table.deepcopy(data.raw["projectile"]["antimatter-rocket-projectile"])
+    entity = util.table.deepcopy(data.raw['projectile']['antimatter-rocket-projectile'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })
 
-    entity = util.table.deepcopy(data.raw["artillery-projectile"]["antimatter-artillery-projectile"])
+    entity = util.table.deepcopy(data.raw['artillery-projectile']['antimatter-artillery-projectile'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })
 end
 
 if mods['PlutoniumEnergy'] then
-    local entity = util.table.deepcopy(data.raw["projectile"]["plutonium-atomic-rocket"])
+    local entity = util.table.deepcopy(data.raw['projectile']['plutonium-atomic-rocket'])
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_attack_points)
     table.insert(entity['action']['action_delivery']['target_effects'], super_weapon_counter_attack)
     data:extend({ entity })

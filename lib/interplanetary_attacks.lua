@@ -30,7 +30,7 @@ end
 function InterplanetaryAttacks.init_globals()
     --- storage.interplanetary_intel[surface_index] = {
     ---     radius,
-    ---     type={"moon","planet",etc},
+    ---     type={'moon','planet',etc},
     ---     has_player_entities=true,
     ---     defense=0
     --- }
@@ -173,7 +173,7 @@ end
 
 function InterplanetaryAttacks.set_intel(surface_index, data)
     if data and not type(data) == 'table' then
-        error("data must be a table")
+        error('data must be a table')
         return
     end
 

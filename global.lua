@@ -14,7 +14,8 @@ DEBUG_MODE = true
 TEST_MODE = true
 --- For debugging beacons
 BEACON_SELECTABLE = true
-
+--- Enable this flag when sampling aux, moisture, elevation, and enemy probablity.
+SAMPLE_TILE_MODE = true
 
 
 CONSTRUCTION_ATTACK = 'embtr-con'
@@ -31,7 +32,7 @@ PLAYER_PLANET_PURIFIER_COUNTER_ATTACK = 'empck-pp'
 ARMY_POPULATION_INCREASE = 'empop-i'
 ARMY_POPULATION_DECREASE = 'empop-d'
 
-ARMY_RALLYPOINT_DEPLOY = "emrpt-d"
+ARMY_RALLYPOINT_DEPLOY = 'emrpt-d'
 
 ROCKET_SILO_PLACED = 'emrs-p'
 ROCKET_SILO_REMOVED  = 'emrs-r'

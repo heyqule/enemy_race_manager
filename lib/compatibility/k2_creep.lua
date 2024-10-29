@@ -18,7 +18,7 @@ end
 
 function K2Creep.on_chunk_generated(event)
     local nests = event.surface.find_entities_filtered({
-        type = "unit-spawner",
+        type = 'unit-spawner',
         area = event.area,
         force = ForceHelper.get_enemy_forces(),
     })
@@ -31,7 +31,7 @@ end
 function K2Creep.on_spawner_built(event)
     local entity = event.entity
 
-    if entity and entity.valid and entity.type == "unit-spawner" then
+    if entity and entity.valid and entity.type == 'unit-spawner' then
         K2Creep.generate_creep(event.entity.surface, event.entity)
     end
 end

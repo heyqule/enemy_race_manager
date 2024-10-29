@@ -59,8 +59,8 @@ function Debug_RemoteAPI.print_global()
     helpers.write_file('enemyracemanager/erm-storage.json', helpers.table_to_json(util.copy(storage)))
 
     for interface_name, functions in pairs(remote.interfaces) do
-        if functions["print_global"] and interface_name ~= 'enemyracemanager_debug' then
-            remote.call(interface_name, "print_global")
+        if functions['print_global'] and interface_name ~= 'enemyracemanager_debug' then
+            remote.call(interface_name, 'print_global')
         end
     end
 end

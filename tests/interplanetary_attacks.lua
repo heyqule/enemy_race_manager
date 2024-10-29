@@ -6,7 +6,7 @@ local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_a
 local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
 local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local Event = require("__stdlib__/stdlib/event/event")
+local Event = require('__stdlib__/stdlib/event/event')
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -37,7 +37,7 @@ end)
 local race_name = 'erm_zerg'
 local enemy_force_name = 'enemy_erm_zerg'
 
-it("Interplanetary Attack: Attack Target", function()
+it('Interplanetary Attack: Attack Target', function()
     async(12000)
     local surface = game.surfaces[1]
     local player = game.forces['player']
@@ -76,7 +76,7 @@ it("Interplanetary Attack: Attack Target", function()
     end)
 end)
 
-it("Interplanetary Attack: No friends, have to launch attack", function()
+it('Interplanetary Attack: No friends, have to launch attack', function()
     async(12000)
     local surface = game.surfaces[1]
     local surface2 = game.create_surface('test_surface_2')

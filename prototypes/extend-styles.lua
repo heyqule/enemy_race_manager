@@ -4,20 +4,20 @@
 --- DateTime: 11/25/2022 11:37 PM
 ---
 
-data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
-    type = "frame_style",
-    parent = "frame",
+data.raw['gui-style']['default']['erm_deep_frame_in_highlight_frame'] = {
+    type = 'frame_style',
+    parent = 'frame',
     padding = 0,
     graphical_set = {
         base = {
             position = { 85, 0 }, corner_size = 8,
             center = { position = { 21, 4 }, size = { 2, 2 } },
-            draw_type = "inner"
+            draw_type = 'inner'
         },
         shadow = default_inner_glow(default_glow_color, 1)
     },
     vertical_flow_style = {
-        type = "vertical_flow_style",
+        type = 'vertical_flow_style',
         vertical_spacing = 0
     }
 }
@@ -26,8 +26,8 @@ data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
 
 data.raw['gui-style']['default']['green_button_no_confirm'] =
 {
-    type = "button_style",
-    parent = "button",
+    type = 'button_style',
+    parent = 'button',
     default_graphical_set =
     {
         base = {position = {68, 17}, corner_size = 8},
@@ -49,5 +49,5 @@ data.raw['gui-style']['default']['green_button_no_confirm'] =
         base = {position = {85, 17}, corner_size = 8},
         shadow = default_dirt
     },
-    left_click_sound = {{ filename = "__core__/sound/gui-green-confirm.ogg", volume = 1 }},
+    left_click_sound = {{ filename = '__core__/sound/gui-green-confirm.ogg', volume = 1 }},
 }

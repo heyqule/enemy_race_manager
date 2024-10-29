@@ -5,11 +5,11 @@
 ---
 data:extend {
     {
-        type = "color-setting",
-        name = "enemyracemanager-armoured_biter_map_color",
-        description = "enemyracemanager-armoured_biter_map_color",
-        setting_type = "startup",
+        type = 'color-setting',
+        name = 'enemyracemanager-armoured_biter_map_color',
+        description = 'enemyracemanager-armoured_biter_map_color',
+        setting_type = 'startup',
         default_value = { r = 20, g = 61, b = 46, a = 255 },
-        order = "enemyracemanager-1002"
+        order = 'enemyracemanager-1002'
     },
 }

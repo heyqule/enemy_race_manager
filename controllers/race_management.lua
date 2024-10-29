@@ -27,8 +27,8 @@ end)
 Event.register(Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP), function(event)
     if GlobalConfig.race_is_active(event.affected_race.race) then
         MapProcessor.rebuild_map()
-        if remote.interfaces[event.affected_race.race] and remote.interfaces[event.affected_race.race]["refresh_custom_attack_cache"] then
-            remote.call(event.affected_race.race, "refresh_custom_attack_cache")
+        if remote.interfaces[event.affected_race.race] and remote.interfaces[event.affected_race.race]['refresh_custom_attack_cache'] then
+            remote.call(event.affected_race.race, 'refresh_custom_attack_cache')
         end
     end
 end)

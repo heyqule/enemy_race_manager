@@ -51,7 +51,7 @@ local function spawn_regular_unit_group(surface, position, is_auto)
 end
 
 --- Regular attack group Test
-    it("Regular Group by AP", function()
+    it('Regular Group by AP', function()
         async(14400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -83,7 +83,7 @@ end
         end)
     end)
     --- Elite group Test
-    it("Elite Group by AAP", function()
+    it('Elite Group by AAP', function()
         async(14400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -113,7 +113,7 @@ end
         end)
     end)
 
-    it("Superweapon revenge", function()
+    it('Superweapon revenge', function()
         async(7300)
         storage.race_settings[race_name].level = 20
         local surface = game.surfaces[1]
@@ -138,7 +138,7 @@ end
         after_ticks(300, function()
             surface.create_entity({
                 type = 'projectile',
-                name = "atomic-rocket",
+                name = 'atomic-rocket',
                 force = PLAYER,
                 target = entity,
                 position = laser_turret.position,
@@ -156,7 +156,7 @@ end
         end)
     end)
 
-    it("Flyers", function()
+    it('Flyers', function()
         async(7300)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -188,7 +188,7 @@ end
         end)
     end)
 
-    it("Dropships", function()
+    it('Dropships', function()
         async(7300)
 
         local surface = game.surfaces[1]
@@ -222,7 +222,7 @@ end
         end)
     end)
 
-    it("Featured Group", function()
+    it('Featured Group', function()
         async(7300)
         storage.race_settings[race_name].level = 20
         storage.race_settings[race_name].tier = 1
@@ -260,7 +260,7 @@ end
         end)
     end)
 
-    it("Featured Flyer Group", function()
+    it('Featured Flyer Group', function()
         async(7300)
         storage.race_settings[race_name].level = 20
         storage.race_settings[race_name].tier = 1
@@ -298,7 +298,7 @@ end
         end)
     end)
 
-    it("Group Killed during generation", function()
+    it('Group Killed during generation', function()
         async(1900)
         storage.race_settings[race_name].level = 20
         storage.race_settings[race_name].tier = 1
@@ -322,14 +322,14 @@ end
         end)
     end)
 
-    it("Autonomous Group should have an scout", function()
+    it('Autonomous Group should have an scout', function()
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
 
         local group = spawn_regular_unit_group(surface, entity.position, true)
-        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],'Scout name in cache')
         group.start_moving()
 
         local has_scout = false
@@ -340,17 +340,17 @@ end
             end
         end
         assert.equal(has_scout, true, 'Scout is in the team')
-        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],'Scout name cache removed')
     end)
 
-    it("Non-ERM Manual group should NOT have a scout", function()
+    it('Non-ERM Manual group should NOT have a scout', function()
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
 
         local group = spawn_regular_unit_group(surface, entity.position, false)
-        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],'Scout name in cache')
         group.start_moving()
 
         local has_scout = false
@@ -361,21 +361,21 @@ end
             end
         end
         assert.equal(has_scout, false, 'Scout is not in the team')
-        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],'Scout name cache removed')
     end)
 
-    it("Empty unit group should not include in ERM group tracker", function()
+    it('Empty unit group should not include in ERM group tracker', function()
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         local group = surface.create_unit_group {position = entity.position, force = 'enemy'}
-        assert.not_nil(storage.scout_unit_name[group.unique_id],"Scout name in cache")
+        assert.not_nil(storage.scout_unit_name[group.unique_id],'Scout name in cache')
         group.start_moving()
-        assert.is_nil(storage.scout_unit_name[group.unique_id],"Scout name cache removed")
+        assert.is_nil(storage.scout_unit_name[group.unique_id],'Scout name cache removed')
     end)
 
-it("Enemy victory expansion", function()
+it('Enemy victory expansion', function()
     async(18000)
     local surface = game.surfaces[1]
     local entity = spawn_cc(surface)

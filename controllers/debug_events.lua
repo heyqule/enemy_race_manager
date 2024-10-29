@@ -68,12 +68,12 @@ local print_chunk_tile_details = function(event)
 
     runs = runs + 1
 
-    --if runs % 1000 == 0 then
-    --    print('saving to disk...')
-    --    table.sort(max_min_by_tile)
-    --    game.write_file('enemyracemanager/erm-tiles-data.lua','tile = '..serpent.block(max_min_by_tile))
-    --    game.write_file('enemyracemanager/erm-world-data.lua','world = '..serpent.block(max_min))
-    --end
+    if runs % 1000 == 0 then
+        print('saving to disk...')
+        table.sort(max_min_by_tile)
+        helpers.write_file('enemyracemanager/erm-tiles-data.lua','tile = '..serpent.block(max_min_by_tile))
+        helpers.write_file('enemyracemanager/erm-world-data.lua','world = '..serpent.block(max_min))
+    end
 end
 
 local print_chunk_player_details = function(event)
@@ -96,12 +96,12 @@ local print_chunk_player_details = function(event)
     end
 end
 
---if DEBUG_MODE then
---    Event.register(defines.events.on_chunk_generated, function(event)
---        print_chunk_tile_details(event)
---    end)
---
---    Event.on_nth_tick(61, function(event)
---        print_chunk_player_details(event)
---    end)
---end
+if SAMPLE_TILE_MODE then
+    Event.register(defines.events.on_chunk_generated, function(event)
+        print_chunk_tile_details(event)
+    end)
+
+    Event.on_nth_tick(61, function(event)
+        print_chunk_player_details(event)
+    end)
+end

@@ -7,7 +7,7 @@ local modify_race_setting = function()
         local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
 
         DebugHelper.print('ArmouredBiters is active')
-        if settings.startup["ab-enable-nest"].value then
+        if settings.startup['ab-enable-nest'].value then
             table.insert(race_settings.support_structures[1], 'armoured-biter-spawner')
         end
 

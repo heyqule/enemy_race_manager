@@ -15,7 +15,7 @@ after_each(function()
 end)
 
 
-it("Dropship", function()
+it('Dropship', function()
     local surface = game.surfaces[1]
     local enemy_force = game.forces['enemy']
     local player_force = game.forces['player']
@@ -30,7 +30,7 @@ it("Dropship", function()
     end)
 end)
 
-it("Builder", function()
+it('Builder', function()
     local surface = game.surfaces[1]
     local enemy_force = game.forces['enemy']
     local player_force = game.forces['player']
@@ -45,7 +45,7 @@ it("Builder", function()
     end)
 end)
 
-it("Timed units", function()
+it('Timed units', function()
     async(14400)
     local surface = game.surfaces[1]
     local enemy_force = game.forces['enemy']
@@ -69,7 +69,7 @@ it("Timed units", function()
     end)
 end)
 
-it("Protoss: Time Unit Tree/Stone blockage test", function()
+it('Protoss: Time Unit Tree/Stone blockage test', function()
     async(7200)
     local surface = game.surfaces[1]
     local enemy_force = game.forces['enemy_erm_protoss']

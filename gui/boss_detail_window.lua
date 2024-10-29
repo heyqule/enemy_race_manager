@@ -6,7 +6,7 @@
 
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
 local String = require('__stdlib__/stdlib/utils/string')
-local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
 
 --- Boss Details Windows
 local BossDetailsWindow = {
@@ -27,27 +27,27 @@ local get_victory_label = function(victory)
 end
 
 local add_data_entry = function(data_box, entry)
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_tier' } }
-    data_box.add { type = "label", caption = entry.tier }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_tier' } }
+    data_box.add { type = 'label', caption = entry.tier }
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_victory' } }
-    data_box.add { type = "label", caption = get_victory_label(entry.victory) }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_victory' } }
+    data_box.add { type = 'label', caption = get_victory_label(entry.victory) }
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_location' } }
-    local position_label = data_box.add { type = "label", caption = SurfaceProcessor.get_gps_message(entry.location.x, entry.location.y, entry.surface) }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_location' } }
+    local position_label = data_box.add { type = 'label', caption = SurfaceProcessor.get_gps_message(entry.location.x, entry.location.y, entry.surface) }
     position_label.style.rich_text_setting = defines.rich_text_setting.highlight
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_spawned_at' } }
-    data_box.add { type = "label", caption = GlobalConfig.format_daytime_string(0, entry.spawn_tick) }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_spawned_at' } }
+    data_box.add { type = 'label', caption = GlobalConfig.format_daytime_string(0, entry.spawn_tick) }
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_fight_duration' } }
-    data_box.add { type = "label", caption = GlobalConfig.format_daytime_string(entry.spawn_tick, entry.last_tick) }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_fight_duration' } }
+    data_box.add { type = 'label', caption = GlobalConfig.format_daytime_string(entry.spawn_tick, entry.last_tick) }
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_difficulty' } }
-    data_box.add { type = "label", caption = entry.difficulty }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_difficulty' } }
+    data_box.add { type = 'label', caption = entry.difficulty }
 
-    data_box.add { type = "label", caption = { 'gui.boss_detail_data_squad_size' } }
-    data_box.add { type = "label", caption = entry.squad_size }
+    data_box.add { type = 'label', caption = { 'gui.boss_detail_data_squad_size' } }
+    data_box.add { type = 'label', caption = entry.squad_size }
 end
 
 function BossDetailsWindow.show(player, race_name, boss_log)
@@ -56,9 +56,9 @@ function BossDetailsWindow.show(player, race_name, boss_log)
         return
     end
     local detail_window = gui.add {
-        type = "frame",
+        type = 'frame',
         name = BossDetailsWindow.root_name,
-        direction = "vertical",
+        direction = 'vertical',
     }
     detail_window.force_auto_center()
     BossDetailsWindow.parent_window = player.opened
@@ -68,36 +68,36 @@ function BossDetailsWindow.show(player, race_name, boss_log)
     local title_flow = detail_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
     title_flow.style.minimal_width = BossDetailsWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.boss_detail_title", race_name }, style = 'caption_label' }
+    local title = title_flow.add { type = 'label', name = 'title', caption = { 'gui.boss_detail_title', race_name }, style = 'caption_label' }
 
-    local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
+    local pusher = title_flow.add { type = 'empty-widget', style = 'draggable_space_header' }
     pusher.style.width = BossDetailsWindow.window_width - 24 - 175
     pusher.style.height = 24
     pusher.drag_target = detail_window
 
-    local close_button = title_flow.add { type = "sprite-button",
+    local close_button = title_flow.add { type = 'sprite-button',
                                           name = 'erm_boss_detail_close_button',
-                                          sprite = "utility/close",
+                                          sprite = 'utility/close',
                                           style = 'frame_action_button',
-                                          tooltip = { "gui.back-instruction" }
+                                          tooltip = { 'gui.back-instruction' }
     }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local best_record_flow = detail_window.add { type = "flow", name = "best_record_flow", direction = 'vertical' }
+    local best_record_flow = detail_window.add { type = 'flow', name = 'best_record_flow', direction = 'vertical' }
     if boss_log == nil or boss_log.best_record.time == -1 then
-        best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { "gui.boss_detail_best_record_na" }, style = 'caption_label' }
+        best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { 'gui.boss_detail_best_record_na' }, style = 'caption_label' }
     else
         local datetime_str = GlobalConfig.format_daytime_string(0, boss_log.best_record.time)
-        best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { "gui.boss_detail_best_record", datetime_str, boss_log.best_record.tier, boss_log.difficulty, boss_log.squad_size }, style = 'caption_label' }
+        best_record_flow.add { type = 'label', name = 'erm_boss_detail_best_record', caption = { 'gui.boss_detail_best_record', datetime_str, boss_log.best_record.tier, boss_log.difficulty, boss_log.squad_size }, style = 'caption_label' }
     end
 
-    local entries_top_flow = detail_window.add { type = "flow", name = "entries_root_flow", direction = 'vertical' }
-    local entries_horizontal_flow = entries_top_flow.add { type = "flow", name = "entries_main_flow", direction = 'horizontal', style = "inset_frame_container_horizontal_flow" }
+    local entries_top_flow = detail_window.add { type = 'flow', name = 'entries_root_flow', direction = 'vertical' }
+    local entries_horizontal_flow = entries_top_flow.add { type = 'flow', name = 'entries_main_flow', direction = 'horizontal', style = 'inset_frame_container_horizontal_flow' }
     local list_box = entries_horizontal_flow.add {
-        type = "list-box",
-        name = race_name .. "/erm_boss_detail_list_box"
+        type = 'list-box',
+        name = race_name .. '/erm_boss_detail_list_box'
     }
     list_box.style.width = BossDetailsWindow.window_width * 0.35
     list_box.style.height = BossDetailsWindow.window_height - 80

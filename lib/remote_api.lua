@@ -306,14 +306,14 @@ end
 function RemoteAPI.milestones_preset_addons()
     if settings.startup['enemyracemanager-enable-bitters'].value then
         return {
-            ["enemyracemanager"] = {
-                required_mods = { "enemyracemanager" },
+            ['enemyracemanager'] = {
+                required_mods = { 'enemyracemanager' },
                 milestones = {
-                    { type = "group", name = "Kills" },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/5", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/10", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/15", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/20", quantity = 1, next = "x10" },
+                    { type = 'group', name = 'Kills' },
+                    { type = 'kill', name = 'erm_vanilla/biter-spawner/5', quantity = 1 },
+                    { type = 'kill', name = 'erm_vanilla/biter-spawner/10', quantity = 1 },
+                    { type = 'kill', name = 'erm_vanilla/biter-spawner/15', quantity = 1 },
+                    { type = 'kill', name = 'erm_vanilla/biter-spawner/20', quantity = 1, next = 'x10' },
                 }
             }
         }

@@ -44,8 +44,7 @@ end
 local function get_command_chain()
     return {
         type = defines.command.compound,
-        --structure_type = defines.compound_command.return_last,
-        structure_type = defines.compound_command.logical_and,
+        structure_type = defines.compound_command.return_last,
         commands = {}
     }
 end
@@ -271,8 +270,8 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
     )
 
     if DEBUG_MODE then
-        DebugHelper.drawline(request_path_data.surface.index, "enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
-        DebugHelper.drawline(request_path_data.surface.index, "path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
+        DebugHelper.drawline(request_path_data.surface.index, 'enemy to new pos', {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
+        DebugHelper.drawline(request_path_data.surface.index, 'path node to new pos', {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
     end
 
     local area = request_path_data.surface.count_entities_filtered {
@@ -300,7 +299,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
         })
 
         if DEBUG_MODE then
-            DebugHelper.drawline(request_path_data.surface.index, "new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
+            DebugHelper.drawline(request_path_data.surface.index, 'new pos to destination', {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
         end            
 
         storage.request_path[path_id].commands[side_key] = commands_chain

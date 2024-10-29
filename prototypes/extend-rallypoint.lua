@@ -7,41 +7,41 @@ require('util')
 
 data:extend({
     {
-        type = "item",
+        type = 'item',
         name = 'erm_rally_point',
-        icon = "__core__/graphics/spawn-flag.png",
+        icon = '__core__/graphics/spawn-flag.png',
         icon_size = 64,
-        subgroup = "erm_controllable_units",
+        subgroup = 'erm_controllable_units',
         order = 'erm_rally_point',
         place_result = 'erm_rally_point',
         stack_size = 1,
-        flags = {"only-in-cursor","spawnable","not-stackable","hide-from-bonus-gui","hide-from-fuel-tooltip"},
+        flags = {'only-in-cursor','spawnable','not-stackable','hide-from-bonus-gui','hide-from-fuel-tooltip'},
         hidden = true
     },
     {
-        type = "simple-entity-with-owner",
+        type = 'simple-entity-with-owner',
         name = 'erm_rally_point',
-        subgroup = "erm_rally_point",
-        icon = "__core__/graphics/spawn-flag.png",
+        subgroup = 'erm_rally_point',
+        icon = '__core__/graphics/spawn-flag.png',
         icon_size = 64,
         max_health = 100,
         collision_box = nil,
         collision_mask = {layers={}},
-        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable","not-selectable-in-game"},
+        flags = {'not-on-map','not-repairable','not-deconstructable','not-blueprintable','not-selectable-in-game'},
         hidden = true,
         picture = {
-            filename = "__core__/graphics/spawn-flag.png",
+            filename = '__core__/graphics/spawn-flag.png',
             width = 64,
             height = 64,
             draw_as_glow = true,
         },
         map_color = nil,
         created_effect = {
-            type = "direct",
+            type = 'direct',
             action_delivery = {
-                type = "instant",
+                type = 'instant',
                 target_effects = {
-                    type = "script",
+                    type = 'script',
                     effect_id = ARMY_RALLYPOINT_DEPLOY
                 }
             }

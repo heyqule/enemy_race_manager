@@ -11,14 +11,14 @@ local titleCase = function(first, rest)
 end
 
 local fixName = function(name)
-    local fixed_name = string.gsub(name, "(%a)([%w_']*)", titleCase)
-    fixed_name = string.gsub(fixed_name, "_", " ")
+    local fixed_name = string.gsub(name, '(%a)([%w_"]*)', titleCase)
+    fixed_name = string.gsub(fixed_name, '_', ' ')
     return fixed_name
 end
 
 function DebugHelper.print_translate_to_console(mode_name, name, level)
     -- Print translate to console
-    log(mode_name .. '/' .. name .. '/' .. level .. '=' .. fixName(name) .. ' L' .. level)
+    log(mode_name .. '--' .. name .. '--' .. level .. '=' .. fixName(name) .. ' L' .. level)
 end
 
 function DebugHelper.print(message)
@@ -48,7 +48,7 @@ function DebugHelper.drawline(surface, text, color, from, to, gap_length, dash_l
     --Draw text and
 
     rendering.draw_text({
-        text = {"", text},
+        text = {'', text},
         target = {x = from.x - text_offset,y = from.y - text_offset},
         surface = surface,
         color = color,
@@ -56,7 +56,7 @@ function DebugHelper.drawline(surface, text, color, from, to, gap_length, dash_l
         time_to_live = 3600
     })
     rendering.draw_text({
-        text = {"", text},
+        text = {'', text},
         surface = surface,
         target = {x = to.x + text_offset,y = to.y + text_offset},
         color = color,

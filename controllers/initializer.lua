@@ -116,8 +116,8 @@ local prepare_world = function()
     GlobalConfig.initialize_races_data()
 
     -- Game map settings
-    game.map_settings.unit_group.max_gathering_unit_groups = settings.global["enemyracemanager-max-gathering-groups"].value
-    game.map_settings.unit_group.max_unit_group_size = settings.global["enemyracemanager-max-group-size"].value
+    game.map_settings.unit_group.max_gathering_unit_groups = settings.global['enemyracemanager-max-gathering-groups'].value
+    game.map_settings.unit_group.max_unit_group_size = settings.global['enemyracemanager-max-group-size'].value
     game.map_settings.unit_group.max_member_speedup_when_behind = 2
     game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
     game.map_settings.unit_group.max_group_slowdown_factor = 1
@@ -147,8 +147,8 @@ local prepare_world = function()
 end
 
 local conditional_events = function()
-    if remote.interfaces["newgameplus"] then
-        Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
+    if remote.interfaces['newgameplus'] then
+        Event.register(remote.call('newgameplus', 'get_on_post_new_game_plus_event'), function(event)
             Compat_NewGamePlus.exec(event)
         end)
     end

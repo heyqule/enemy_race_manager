@@ -13,15 +13,14 @@
 --    aux=1, -- 1 = red desert, 2 = sand
 --    elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
 --    temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
---    entity_filter = 'cold', -- this filter entities by string.find (this example is using "cold" prefix from cold-biters)
+--    entity_filter = 'cold', -- this filter entities by string.find (this example is using 'cold' prefix from cold-biters)
 -- })
 --
 --
 
-
-local String = require('__stdlib__/stdlib/utils/string')
+require('util')
 local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace')
+local AutoplaceUtil = require('__enemyracemanager__/prototypes/enemy-autoplace')
 local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
 require('global')
@@ -37,18 +36,18 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
         return
     end
 
-    if String.find(v.name, mod_name, 1, true) == nil then
+    if string.find(v.name, mod_name, 1, true) == nil then
         return
     end
 
-    if entity_filter ~= nil and String.find(v.name, entity_filter, 1, true) == nil then
+    if entity_filter ~= nil and string.find(v.name, entity_filter, 1, true) == nil then
         return
     end
 
     if is_turret then
-        v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, force_name, volume, 2)
+        v.autoplace = AutoplaceUtil.enemy_worm_autoplace(v.autoplace.probability_expression, force_name, volume)
     else
-        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, force_name, volume, 2)
+        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(v.autoplace.probability_expression, force_name, volume)
     end
 end
 
@@ -67,7 +66,7 @@ local get_distance = function(v, force_name)
     end
 
     for name, d in pairs(distances) do
-        if String.find(v.name, name, 1, true) then
+        if string.find(v.name, name, 1, true) then
             return d
         end
     end
@@ -77,7 +76,7 @@ end
 
 --- ChatGPT function with some tweaks. XD
 local rebalanceTables = function(...)
-    local numTables = select("#", ...)
+    local numTables = select('#', ...)
     local newTables = {}
     local totalSize = 0
 
@@ -165,11 +164,11 @@ local rearrange_specs = function()
     local updated_specs = data.erm_spawn_specs
 
     for key, data in pairs(statistic) do
-        local token = String.split(key, '_')
+        local token = util.split(key, '_')
         local volume_type = token[1]
         local volume_index = token[2]
         for _, data_item in pairs(data) do
-            local datatoken = String.split(data_item, statistic_separator)
+            local datatoken = util.split(data_item, statistic_separator)
             local mod_name = datatoken[1]
             local mod_filter = datatoken[2]
             for spec_key, spec in pairs(updated_specs) do
@@ -193,7 +192,7 @@ local balance_volumes_by_aux = function(data)
 
     -- Find the unique (moisture_min, moisture_max) pairs
     for _, elementData in ipairs(data) do
-        local key = elementData.moisture_min .. "-" .. elementData.moisture_max
+        local key = elementData.moisture_min .. '-' .. elementData.moisture_max
         if not uniqueMoisturePairs[key] then
             uniqueMoisturePairs[key] = {}
         end
@@ -239,7 +238,7 @@ local balance_volumes_by_temperature = function(data)
 
     -- Find the unique (moisture_min, moisture_max) pairs
     for _, elementData in ipairs(data) do
-        local key = elementData.temperature_min .. "-" .. elementData.temperature_max
+        local key = elementData.temperature_min .. '-' .. elementData.temperature_max
         if not uniqueTempPairs[key] then
             uniqueTempPairs[key] = {}
         end
@@ -317,7 +316,7 @@ end
 -------------
 local moisture_ranges = { { 0, 0.505 }, { 0.495, 1 } }
 local aux_ranges = { { 0, 0.505 }, { 0.495, 1 } }
-local temperature_ranges = { { 12, 14.01 }, { 13.99, 16.01 }, { 15.99, 18 } }
+local temperature_ranges = { { -25, 14.01 }, { 13.99, 16.01 }, { 15.99, 35 } }
 local elevation_ranges = { { -1, 25.5 }, { 24.5, 48.5 }, { 47.5, 70 } }
 if mods['alien-biomes'] then
     DebugHelper.print('Autoplace - Using Alien Biomes')
@@ -385,12 +384,6 @@ for key, race_data in pairs(updated_specs) do
         end
     end
 
-    if race_data.temperature then
-        balance_by_temperature = true
-        volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
-        volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
-    end
-
     volumes[key] = volume
 end
 
@@ -443,7 +436,7 @@ for key, race_data in pairs(updated_specs) do
         end
 
         DebugHelper.print(serpent.block(volume))
-        for _, v in pairs(data.raw["unit-spawner"]) do
+        for _, v in pairs(data.raw['unit-spawner']) do
             tune_autoplace(
                     v, false, volume,
                     race_data.mod_name, race_data.force_name,
@@ -451,7 +444,7 @@ for key, race_data in pairs(updated_specs) do
             )
         end
 
-        for _, v in pairs(data.raw["turret"]) do
+        for _, v in pairs(data.raw['turret']) do
             tune_autoplace(
                     v, true, volume,
                     race_data.mod_name, race_data.force_name,

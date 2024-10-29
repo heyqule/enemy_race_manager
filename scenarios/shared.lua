@@ -44,7 +44,7 @@ end
 
 function ScenarioHelper.spawn_lab_tiles(surface, radius)
 
-    local tile_types = { "lab-dark-1", "lab-dark-2" }
+    local tile_types = { 'lab-dark-1', 'lab-dark-2' }
     local tiles = {}
     radius = radius or 128
     for x = (radius * -1), radius, 1 do

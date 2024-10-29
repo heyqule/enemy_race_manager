@@ -7,14 +7,14 @@ local mod_gui = require('mod-gui')
 local String = require('__stdlib__/stdlib/utils/string')
 
 local SharedGuiFunctions = require('__enemyracemanager__/gui/shared')
-local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
-local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
-local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
+local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
 
-local UnitTab = require("__enemyracemanager__/gui/army_tabs/unit_control")
-local DeployerTab = require("__enemyracemanager__/gui/army_tabs/deployer_control")
-local CCTab = require("__enemyracemanager__/gui/army_tabs/cc_control")
-local HelpTab = require("__enemyracemanager__/gui/army_tabs/help")
+local UnitTab = require('__enemyracemanager__/gui/army_tabs/unit_control')
+local DeployerTab = require('__enemyracemanager__/gui/army_tabs/deployer_control')
+local CCTab = require('__enemyracemanager__/gui/army_tabs/cc_control')
+local HelpTab = require('__enemyracemanager__/gui/army_tabs/help')
 local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
 
 local Army_MainWindow = {
@@ -48,9 +48,9 @@ function Army_MainWindow.show(player)
         return
     end
     local main_window = gui.add {
-        type = "frame",
+        type = 'frame',
         name = SharedTabFunctions.root_name,
-        direction = "vertical",
+        direction = 'vertical',
     }
     main_window.force_auto_center()
 
@@ -63,42 +63,42 @@ function Army_MainWindow.show(player)
     title_flow.style.minimal_width = Army_MainWindow.window_width
     title_flow.style.maximal_width = Army_MainWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'header-title', caption = { "gui-army.control-title" }, style = 'caption_label' }
+    local title = title_flow.add { type = 'label', name = 'header-title', caption = { 'gui-army.control-title' }, style = 'caption_label' }
 
-    local pusher = title_flow.add { type = "empty-widget", name = "header-pusher", style = "draggable_space_header" }
+    local pusher = title_flow.add { type = 'empty-widget', name = 'header-pusher', style = 'draggable_space_header' }
     pusher.style.width = Army_MainWindow.window_width - 24 - 250
     pusher.style.height = 24
     pusher.drag_target = main_window
 
-    local close_button = title_flow.add { type = "sprite-button",
+    local close_button = title_flow.add { type = 'sprite-button',
                                           name = 'erm_army_close_button',
-                                          sprite = "utility/close",
+                                          sprite = 'utility/close',
                                           style = 'frame_action_button',
-                                          tooltip = { "gui-army.close-button" }
+                                          tooltip = { 'gui-army.close-button' }
     }
     close_button.style.width = 24
     close_button.style.height = 24
     close_button.style.horizontal_align = 'right'
 
-    local tabbed_pane = main_window.add { type = "tabbed-pane", name = 'main-tab' }
-    local tab1 = tabbed_pane.add { type = "tab", caption = "Army Stats", name = 'army-stats-tab' }
-    local tab2 = tabbed_pane.add { type = "tab", caption = "Deployers", name = 'deployer-tab' }
-    local tab3 = tabbed_pane.add { type = "tab", caption = "Command Center", name = 'command-center-tab' }
-    local tab4 = tabbed_pane.add { type = "tab", caption = "Help", name = 'help-tab' }
+    local tabbed_pane = main_window.add { type = 'tabbed-pane', name = 'main-tab' }
+    local tab1 = tabbed_pane.add { type = 'tab', caption = 'Army Stats', name = 'army-stats-tab' }
+    local tab2 = tabbed_pane.add { type = 'tab', caption = 'Deployers', name = 'deployer-tab' }
+    local tab3 = tabbed_pane.add { type = 'tab', caption = 'Command Center', name = 'command-center-tab' }
+    local tab4 = tabbed_pane.add { type = 'tab', caption = 'Help', name = 'help-tab' }
 
-    local army_stats_pane = tabbed_pane.add { type = "flow", name = UnitTab.name, direction = 'vertical' }
+    local army_stats_pane = tabbed_pane.add { type = 'flow', name = UnitTab.name, direction = 'vertical' }
     army_stats_pane.style.margin = 5
     army_stats_pane.style.width = Army_MainWindow.window_width - 40
 
-    local deployer_pane = tabbed_pane.add { type = "flow", name = DeployerTab.name, direction = 'vertical' }
+    local deployer_pane = tabbed_pane.add { type = 'flow', name = DeployerTab.name, direction = 'vertical' }
     deployer_pane.style.margin = 5
     deployer_pane.style.width = Army_MainWindow.window_width - 40
 
-    local command_center_pane = tabbed_pane.add { type = "flow", name = CCTab.name, direction = 'vertical' }
+    local command_center_pane = tabbed_pane.add { type = 'flow', name = CCTab.name, direction = 'vertical' }
     command_center_pane.style.margin = 5
     command_center_pane.style.width = Army_MainWindow.window_width - 40
 
-    local help_pane = tabbed_pane.add { type = "scroll-pane", name = HelpTab.name, direction = 'vertical' }
+    local help_pane = tabbed_pane.add { type = 'scroll-pane', name = HelpTab.name, direction = 'vertical' }
     help_pane.style.margin = 5
     help_pane.style.width = Army_MainWindow.window_width - 40
 
@@ -207,9 +207,9 @@ function Army_MainWindow.update_overhead_button(player_index)
 
     if owner and button_flow and not button_flow['erm_army_control_toggle'] then
         if game.item_prototypes['erm_terran/command-center'] then
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui-army.show-control' }, sprite = 'item/erm_terran/command-center' }
+            button_flow.add { type = 'sprite-button', name = 'erm_army_control_toggle', tooltip = { 'gui-army.show-control' }, sprite = 'item/erm_terran/command-center' }
         else
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { 'gui-army.show-control' }, sprite = 'item/submachine-gun' }
+            button_flow.add { type = 'sprite-button', name = 'erm_army_control_toggle', tooltip = { 'gui-army.show-control' }, sprite = 'item/submachine-gun' }
         end
     end
 end

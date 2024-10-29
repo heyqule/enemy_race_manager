@@ -21,7 +21,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-0"] = {
+    ['frozen-snow-0'] = {
         aux = {
             max = 1,
             min = 0
@@ -43,7 +43,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-1"] = {
+    ['frozen-snow-1'] = {
         aux = {
             max = 1,
             min = 0
@@ -65,7 +65,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-2"] = {
+    ['frozen-snow-2'] = {
         aux = {
             max = 1,
             min = 0
@@ -87,7 +87,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-3"] = {
+    ['frozen-snow-3'] = {
         aux = {
             max = 1,
             min = 0
@@ -109,7 +109,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-4"] = {
+    ['frozen-snow-4'] = {
         aux = {
             max = 1,
             min = 0
@@ -131,7 +131,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-5"] = {
+    ['frozen-snow-5'] = {
         aux = {
             max = 1,
             min = 0
@@ -153,7 +153,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-6"] = {
+    ['frozen-snow-6'] = {
         aux = {
             max = 1,
             min = 0
@@ -175,7 +175,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-7"] = {
+    ['frozen-snow-7'] = {
         aux = {
             max = 1,
             min = 0
@@ -197,7 +197,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-8"] = {
+    ['frozen-snow-8'] = {
         aux = {
             max = 1,
             min = 0
@@ -219,7 +219,7 @@ tile = {
             min = -20
         }
     },
-    ["frozen-snow-9"] = {
+    ['frozen-snow-9'] = {
         aux = {
             max = 1,
             min = 0
@@ -241,7 +241,7 @@ tile = {
             min = -20
         }
     },
-    ["mineral-aubergine-dirt-1"] = {
+    ['mineral-aubergine-dirt-1'] = {
         aux = {
             max = 1,
             min = 0.76912540197372437
@@ -263,7 +263,7 @@ tile = {
             min = 27.554433822631836
         }
     },
-    ["mineral-aubergine-dirt-2"] = {
+    ['mineral-aubergine-dirt-2'] = {
         aux = {
             max = 1,
             min = 0.77839893102645874
@@ -285,7 +285,7 @@ tile = {
             min = 28.789655685424805
         }
     },
-    ["mineral-aubergine-dirt-3"] = {
+    ['mineral-aubergine-dirt-3'] = {
         aux = {
             max = 1,
             min = 0.79685044288635254
@@ -307,7 +307,7 @@ tile = {
             min = 28.381032943725586
         }
     },
-    ["mineral-aubergine-dirt-4"] = {
+    ['mineral-aubergine-dirt-4'] = {
         aux = {
             max = 1,
             min = 0.81525415182113647
@@ -329,7 +329,7 @@ tile = {
             min = 28.668584823608398
         }
     },
-    ["mineral-aubergine-dirt-5"] = {
+    ['mineral-aubergine-dirt-5'] = {
         aux = {
             max = 1,
             min = 0.76580679416656494
@@ -351,7 +351,7 @@ tile = {
             min = 28.150506973266602
         }
     },
-    ["mineral-aubergine-dirt-6"] = {
+    ['mineral-aubergine-dirt-6'] = {
         aux = {
             max = 1,
             min = 0.77718633413314819
@@ -373,7 +373,7 @@ tile = {
             min = 28.393373489379883
         }
     },
-    ["mineral-aubergine-sand-1"] = {
+    ['mineral-aubergine-sand-1'] = {
         aux = {
             max = 1,
             min = 0.76676374673843384
@@ -395,7 +395,7 @@ tile = {
             min = 28.313230514526367
         }
     },
-    ["mineral-aubergine-sand-2"] = {
+    ['mineral-aubergine-sand-2'] = {
         aux = {
             max = 1,
             min = 0.76125425100326538
@@ -417,7 +417,7 @@ tile = {
             min = 28.614213943481445
         }
     },
-    ["mineral-aubergine-sand-3"] = {
+    ['mineral-aubergine-sand-3'] = {
         aux = {
             max = 1,
             min = 0.77942180633544922
@@ -439,7 +439,7 @@ tile = {
             min = 29.252252578735352
         }
     },
-    ["mineral-beige-dirt-1"] = {
+    ['mineral-beige-dirt-1'] = {
         aux = {
             max = 0.61979448795318604,
             min = 0.28559374809265137
@@ -461,7 +461,7 @@ tile = {
             min = 28.994853973388672
         }
     },
-    ["mineral-beige-dirt-2"] = {
+    ['mineral-beige-dirt-2'] = {
         aux = {
             max = 0.62518632411956787,
             min = 0.28582018613815308
@@ -483,7 +483,7 @@ tile = {
             min = 28.973760604858398
         }
     },
-    ["mineral-beige-dirt-3"] = {
+    ['mineral-beige-dirt-3'] = {
         aux = {
             max = 0.59557831287384033,
             min = 0.34593933820724487
@@ -505,7 +505,7 @@ tile = {
             min = 30.002685546875
         }
     },
-    ["mineral-beige-dirt-4"] = {
+    ['mineral-beige-dirt-4'] = {
         aux = {
             max = 0.58545279502868652,
             min = 0.31763693690299988
@@ -527,7 +527,7 @@ tile = {
             min = 29.49012565612793
         }
     },
-    ["mineral-beige-dirt-5"] = {
+    ['mineral-beige-dirt-5'] = {
         aux = {
             max = 0.61106008291244507,
             min = 0.29340893030166626
@@ -549,7 +549,7 @@ tile = {
             min = 28.341215133666992
         }
     },
-    ["mineral-beige-dirt-6"] = {
+    ['mineral-beige-dirt-6'] = {
         aux = {
             max = 0.62341517210006714,
             min = 0.27562588453292847
@@ -571,7 +571,7 @@ tile = {
             min = 28.467105865478516
         }
     },
-    ["mineral-beige-sand-1"] = {
+    ['mineral-beige-sand-1'] = {
         aux = {
             max = 0.62170600891113281,
             min = 0.28160318732261658
@@ -593,7 +593,7 @@ tile = {
             min = 26.8790283203125
         }
     },
-    ["mineral-beige-sand-2"] = {
+    ['mineral-beige-sand-2'] = {
         aux = {
             max = 0.6265411376953125,
             min = 0.2813727855682373
@@ -615,7 +615,7 @@ tile = {
             min = 28.425069808959961
         }
     },
-    ["mineral-beige-sand-3"] = {
+    ['mineral-beige-sand-3'] = {
         aux = {
             max = 0.61820083856582642,
             min = 0.27571773529052734
@@ -637,7 +637,7 @@ tile = {
             min = 28.598091125488281
         }
     },
-    ["mineral-black-dirt-1"] = {
+    ['mineral-black-dirt-1'] = {
         aux = {
             max = 1,
             min = 0.67848241329193115
@@ -659,7 +659,7 @@ tile = {
             min = -1.7233989238739014
         }
     },
-    ["mineral-black-dirt-2"] = {
+    ['mineral-black-dirt-2'] = {
         aux = {
             max = 1,
             min = 0.67946505546569824
@@ -681,7 +681,7 @@ tile = {
             min = -1.2390270233154297
         }
     },
-    ["mineral-black-dirt-3"] = {
+    ['mineral-black-dirt-3'] = {
         aux = {
             max = 1,
             min = 0.67955696582794189
@@ -703,7 +703,7 @@ tile = {
             min = -2.1580162048339844
         }
     },
-    ["mineral-black-dirt-4"] = {
+    ['mineral-black-dirt-4'] = {
         aux = {
             max = 1,
             min = 0.68905818462371826
@@ -725,7 +725,7 @@ tile = {
             min = 0.039661407470703125
         }
     },
-    ["mineral-black-dirt-5"] = {
+    ['mineral-black-dirt-5'] = {
         aux = {
             max = 1,
             min = 0.66961777210235596
@@ -747,7 +747,7 @@ tile = {
             min = -1.8770389556884766
         }
     },
-    ["mineral-black-dirt-6"] = {
+    ['mineral-black-dirt-6'] = {
         aux = {
             max = 1,
             min = 0.68713068962097168
@@ -769,7 +769,7 @@ tile = {
             min = -1.0817756652832031
         }
     },
-    ["mineral-black-sand-1"] = {
+    ['mineral-black-sand-1'] = {
         aux = {
             max = 1,
             min = 0.68114215135574341
@@ -791,7 +791,7 @@ tile = {
             min = -0.69139480590820313
         }
     },
-    ["mineral-black-sand-2"] = {
+    ['mineral-black-sand-2'] = {
         aux = {
             max = 1,
             min = 0.67596954107284546
@@ -813,7 +813,7 @@ tile = {
             min = -1.6518726348876953
         }
     },
-    ["mineral-black-sand-3"] = {
+    ['mineral-black-sand-3'] = {
         aux = {
             max = 1,
             min = 0.67363655567169189
@@ -835,7 +835,7 @@ tile = {
             min = -0.41618490219116211
         }
     },
-    ["mineral-brown-dirt-1"] = {
+    ['mineral-brown-dirt-1'] = {
         aux = {
             max = 0.59611082077026367,
             min = 0.27886909246444702
@@ -857,7 +857,7 @@ tile = {
             min = 59.079742431640625
         }
     },
-    ["mineral-brown-dirt-2"] = {
+    ['mineral-brown-dirt-2'] = {
         aux = {
             max = 0.61586230993270874,
             min = 0.29040485620498657
@@ -879,7 +879,7 @@ tile = {
             min = 59.254608154296875
         }
     },
-    ["mineral-brown-dirt-3"] = {
+    ['mineral-brown-dirt-3'] = {
         aux = {
             max = 0.32621711492538452,
             min = 0.31121274828910828
@@ -901,7 +901,7 @@ tile = {
             min = 66.980667114257813
         }
     },
-    ["mineral-brown-dirt-4"] = {
+    ['mineral-brown-dirt-4'] = {
         aux = {
             max = 0.60515385866165161,
             min = 0.34668457508087158
@@ -923,7 +923,7 @@ tile = {
             min = 63.469264984130859
         }
     },
-    ["mineral-brown-dirt-5"] = {
+    ['mineral-brown-dirt-5'] = {
         aux = {
             max = 0.61518561840057373,
             min = 0.28886497020721436
@@ -945,7 +945,7 @@ tile = {
             min = 57.856742858886719
         }
     },
-    ["mineral-brown-dirt-6"] = {
+    ['mineral-brown-dirt-6'] = {
         aux = {
             max = 0.6196635365486145,
             min = 0.29404455423355103
@@ -967,7 +967,7 @@ tile = {
             min = 58.4136962890625
         }
     },
-    ["mineral-brown-sand-1"] = {
+    ['mineral-brown-sand-1'] = {
         aux = {
             max = 0.61397838592529297,
             min = 0.28022709488868713
@@ -989,7 +989,7 @@ tile = {
             min = 58.500850677490234
         }
     },
-    ["mineral-brown-sand-2"] = {
+    ['mineral-brown-sand-2'] = {
         aux = {
             max = 0.61095410585403442,
             min = 0.28636801242828369
@@ -1011,7 +1011,7 @@ tile = {
             min = 58.561237335205078
         }
     },
-    ["mineral-brown-sand-3"] = {
+    ['mineral-brown-sand-3'] = {
         aux = {
             max = 0.60732972621917725,
             min = 0.28001487255096436
@@ -1033,7 +1033,7 @@ tile = {
             min = 59.500942230224609
         }
     },
-    ["mineral-cream-dirt-1"] = {
+    ['mineral-cream-dirt-1'] = {
         aux = {
             max = 0.33288609981536865,
             min = 0
@@ -1055,7 +1055,7 @@ tile = {
             min = 28.67686653137207
         }
     },
-    ["mineral-cream-dirt-2"] = {
+    ['mineral-cream-dirt-2'] = {
         aux = {
             max = 0.30649673938751221,
             min = 0
@@ -1077,7 +1077,7 @@ tile = {
             min = 28.684902191162109
         }
     },
-    ["mineral-cream-dirt-3"] = {
+    ['mineral-cream-dirt-3'] = {
         aux = {
             max = 0.30473318696022034,
             min = 0
@@ -1099,7 +1099,7 @@ tile = {
             min = 29.060104370117188
         }
     },
-    ["mineral-cream-dirt-4"] = {
+    ['mineral-cream-dirt-4'] = {
         aux = {
             max = 0.30418947339057922,
             min = 0
@@ -1121,7 +1121,7 @@ tile = {
             min = 29.122779846191406
         }
     },
-    ["mineral-cream-dirt-5"] = {
+    ['mineral-cream-dirt-5'] = {
         aux = {
             max = 0.31819427013397217,
             min = 0
@@ -1143,7 +1143,7 @@ tile = {
             min = 28.733425140380859
         }
     },
-    ["mineral-cream-dirt-6"] = {
+    ['mineral-cream-dirt-6'] = {
         aux = {
             max = 0.30978825688362122,
             min = 0
@@ -1165,7 +1165,7 @@ tile = {
             min = 27.684856414794922
         }
     },
-    ["mineral-cream-sand-1"] = {
+    ['mineral-cream-sand-1'] = {
         aux = {
             max = 0.31512123346328735,
             min = 0
@@ -1187,7 +1187,7 @@ tile = {
             min = 28.101034164428711
         }
     },
-    ["mineral-cream-sand-2"] = {
+    ['mineral-cream-sand-2'] = {
         aux = {
             max = 0.32247209548950195,
             min = 0
@@ -1209,7 +1209,7 @@ tile = {
             min = 28.780014038085938
         }
     },
-    ["mineral-cream-sand-3"] = {
+    ['mineral-cream-sand-3'] = {
         aux = {
             max = 0.30779248476028442,
             min = 0
@@ -1231,7 +1231,7 @@ tile = {
             min = 28.930463790893555
         }
     },
-    ["mineral-dustyrose-dirt-1"] = {
+    ['mineral-dustyrose-dirt-1'] = {
         aux = {
             max = 0.8239361047744751,
             min = 0.58095860481262207
@@ -1253,7 +1253,7 @@ tile = {
             min = 28.660453796386719
         }
     },
-    ["mineral-dustyrose-dirt-2"] = {
+    ['mineral-dustyrose-dirt-2'] = {
         aux = {
             max = 0.82128411531448364,
             min = 0.57767289876937866
@@ -1275,7 +1275,7 @@ tile = {
             min = 29.334163665771484
         }
     },
-    ["mineral-dustyrose-dirt-3"] = {
+    ['mineral-dustyrose-dirt-3'] = {
         aux = {
             max = 0.77749133110046387,
             min = 0.58190983533859253
@@ -1297,7 +1297,7 @@ tile = {
             min = 27.794004440307617
         }
     },
-    ["mineral-dustyrose-dirt-4"] = {
+    ['mineral-dustyrose-dirt-4'] = {
         aux = {
             max = 0.81159573793411255,
             min = 0.60322725772857666
@@ -1319,7 +1319,7 @@ tile = {
             min = 28.131118774414063
         }
     },
-    ["mineral-dustyrose-dirt-5"] = {
+    ['mineral-dustyrose-dirt-5'] = {
         aux = {
             max = 0.81508100032806396,
             min = 0.58008855581283569
@@ -1341,7 +1341,7 @@ tile = {
             min = 28.473804473876953
         }
     },
-    ["mineral-dustyrose-dirt-6"] = {
+    ['mineral-dustyrose-dirt-6'] = {
         aux = {
             max = 0.82328987121582031,
             min = 0.57675325870513916
@@ -1363,7 +1363,7 @@ tile = {
             min = 28.942079544067383
         }
     },
-    ["mineral-dustyrose-sand-1"] = {
+    ['mineral-dustyrose-sand-1'] = {
         aux = {
             max = 0.81579321622848511,
             min = 0.56984704732894897
@@ -1385,7 +1385,7 @@ tile = {
             min = 29.238380432128906
         }
     },
-    ["mineral-dustyrose-sand-2"] = {
+    ['mineral-dustyrose-sand-2'] = {
         aux = {
             max = 0.81844329833984375,
             min = 0.57642078399658203
@@ -1407,7 +1407,7 @@ tile = {
             min = 28.178150177001953
         }
     },
-    ["mineral-dustyrose-sand-3"] = {
+    ['mineral-dustyrose-sand-3'] = {
         aux = {
             max = 0.81408798694610596,
             min = 0.56230753660202026
@@ -1429,7 +1429,7 @@ tile = {
             min = 29.313262939453125
         }
     },
-    ["mineral-grey-dirt-1"] = {
+    ['mineral-grey-dirt-1'] = {
         aux = {
             max = 0.72528374195098877,
             min = 0.2825990617275238
@@ -1451,7 +1451,7 @@ tile = {
             min = -1.0472221374511719
         }
     },
-    ["mineral-grey-dirt-2"] = {
+    ['mineral-grey-dirt-2'] = {
         aux = {
             max = 0.71708142757415771,
             min = 0.28174996376037598
@@ -1473,7 +1473,7 @@ tile = {
             min = -1.6220054626464844
         }
     },
-    ["mineral-grey-dirt-3"] = {
+    ['mineral-grey-dirt-3'] = {
         aux = {
             max = 0.70626270771026611,
             min = 0.30414408445358276
@@ -1495,7 +1495,7 @@ tile = {
             min = -0.83589935302734375
         }
     },
-    ["mineral-grey-dirt-4"] = {
+    ['mineral-grey-dirt-4'] = {
         aux = {
             max = 0.71465319395065308,
             min = 0.30801266431808472
@@ -1517,7 +1517,7 @@ tile = {
             min = -0.52824497222900391
         }
     },
-    ["mineral-grey-dirt-5"] = {
+    ['mineral-grey-dirt-5'] = {
         aux = {
             max = 0.71587479114532471,
             min = 0.26907563209533691
@@ -1539,7 +1539,7 @@ tile = {
             min = -1.3783152103424072
         }
     },
-    ["mineral-grey-dirt-6"] = {
+    ['mineral-grey-dirt-6'] = {
         aux = {
             max = 0.73061984777450562,
             min = 0.27425038814544678
@@ -1561,7 +1561,7 @@ tile = {
             min = -1.7165718078613281
         }
     },
-    ["mineral-grey-sand-1"] = {
+    ['mineral-grey-sand-1'] = {
         aux = {
             max = 0.72133928537368774,
             min = 0.28105425834655762
@@ -1583,7 +1583,7 @@ tile = {
             min = -0.7654118537902832
         }
     },
-    ["mineral-grey-sand-2"] = {
+    ['mineral-grey-sand-2'] = {
         aux = {
             max = 0.7229076623916626,
             min = 0.28998112678527832
@@ -1605,7 +1605,7 @@ tile = {
             min = -0.67799091339111328
         }
     },
-    ["mineral-grey-sand-3"] = {
+    ['mineral-grey-sand-3'] = {
         aux = {
             max = 0.71722853183746338,
             min = 0.28413909673690796
@@ -1627,7 +1627,7 @@ tile = {
             min = -0.46524333953857422
         }
     },
-    ["mineral-purple-dirt-1"] = {
+    ['mineral-purple-dirt-1'] = {
         aux = {
             max = 1,
             min = 0.87606716156005859
@@ -1649,7 +1649,7 @@ tile = {
             min = 59.117889404296875
         }
     },
-    ["mineral-purple-dirt-2"] = {
+    ['mineral-purple-dirt-2'] = {
         aux = {
             max = 1,
             min = 0.89119714498519897
@@ -1671,7 +1671,7 @@ tile = {
             min = 58.835487365722656
         }
     },
-    ["mineral-purple-dirt-3"] = {
+    ['mineral-purple-dirt-3'] = {
         aux = {
             max = 1,
             min = 0.90050768852233887
@@ -1693,7 +1693,7 @@ tile = {
             min = 59.508274078369141
         }
     },
-    ["mineral-purple-dirt-4"] = {
+    ['mineral-purple-dirt-4'] = {
         aux = {
             max = 1,
             min = 0.89488375186920166
@@ -1715,7 +1715,7 @@ tile = {
             min = 58.855926513671875
         }
     },
-    ["mineral-purple-dirt-5"] = {
+    ['mineral-purple-dirt-5'] = {
         aux = {
             max = 1,
             min = 0.86361747980117798
@@ -1737,7 +1737,7 @@ tile = {
             min = 58.6175537109375
         }
     },
-    ["mineral-purple-dirt-6"] = {
+    ['mineral-purple-dirt-6'] = {
         aux = {
             max = 1,
             min = 0.88718163967132568
@@ -1759,7 +1759,7 @@ tile = {
             min = 58.818988800048828
         }
     },
-    ["mineral-purple-sand-1"] = {
+    ['mineral-purple-sand-1'] = {
         aux = {
             max = 1,
             min = 0.84789121150970459
@@ -1781,7 +1781,7 @@ tile = {
             min = 59.373218536376953
         }
     },
-    ["mineral-purple-sand-2"] = {
+    ['mineral-purple-sand-2'] = {
         aux = {
             max = 1,
             min = 0.8604280948638916
@@ -1803,7 +1803,7 @@ tile = {
             min = 59.073654174804688
         }
     },
-    ["mineral-purple-sand-3"] = {
+    ['mineral-purple-sand-3'] = {
         aux = {
             max = 1,
             min = 0.89902579784393311
@@ -1825,7 +1825,7 @@ tile = {
             min = 59.417369842529297
         }
     },
-    ["mineral-red-dirt-1"] = {
+    ['mineral-red-dirt-1'] = {
         aux = {
             max = 0.80640292167663574,
             min = 0.59277850389480591
@@ -1847,7 +1847,7 @@ tile = {
             min = 59.192489624023438
         }
     },
-    ["mineral-red-dirt-2"] = {
+    ['mineral-red-dirt-2'] = {
         aux = {
             max = 0.81816959381103516,
             min = 0.59470474720001221
@@ -1869,7 +1869,7 @@ tile = {
             min = 59.497035980224609
         }
     },
-    ["mineral-red-dirt-3"] = {
+    ['mineral-red-dirt-3'] = {
         aux = {
             max = 0.78293526172637939,
             min = 0.62159430980682373
@@ -1891,7 +1891,7 @@ tile = {
             min = 58.822566986083984
         }
     },
-    ["mineral-red-dirt-4"] = {
+    ['mineral-red-dirt-4'] = {
         aux = {
             max = 0.8177725076675415,
             min = 0.63520848751068115
@@ -1913,7 +1913,7 @@ tile = {
             min = 58.603096008300781
         }
     },
-    ["mineral-red-dirt-5"] = {
+    ['mineral-red-dirt-5'] = {
         aux = {
             max = 0.81695151329040527,
             min = 0.58641791343688965
@@ -1935,7 +1935,7 @@ tile = {
             min = 59.373641967773438
         }
     },
-    ["mineral-red-dirt-6"] = {
+    ['mineral-red-dirt-6'] = {
         aux = {
             max = 0.8088223934173584,
             min = 0.57716959714889526
@@ -1957,7 +1957,7 @@ tile = {
             min = 58.882514953613281
         }
     },
-    ["mineral-red-sand-1"] = {
+    ['mineral-red-sand-1'] = {
         aux = {
             max = 0.82692396640777588,
             min = 0.58575201034545898
@@ -1979,7 +1979,7 @@ tile = {
             min = 58.747817993164063
         }
     },
-    ["mineral-red-sand-2"] = {
+    ['mineral-red-sand-2'] = {
         aux = {
             max = 0.81349015235900879,
             min = 0.58018940687179565
@@ -2001,7 +2001,7 @@ tile = {
             min = 58.422927856445313
         }
     },
-    ["mineral-red-sand-3"] = {
+    ['mineral-red-sand-3'] = {
         aux = {
             max = 0.8289414644241333,
             min = 0.56890267133712769
@@ -2023,7 +2023,7 @@ tile = {
             min = 58.878616333007813
         }
     },
-    ["mineral-tan-dirt-1"] = {
+    ['mineral-tan-dirt-1'] = {
         aux = {
             max = 0.31103858351707458,
             min = 0
@@ -2045,7 +2045,7 @@ tile = {
             min = 58.740474700927734
         }
     },
-    ["mineral-tan-dirt-2"] = {
+    ['mineral-tan-dirt-2'] = {
         aux = {
             max = 0.27086484432220459,
             min = 0
@@ -2067,7 +2067,7 @@ tile = {
             min = 59.354042053222656
         }
     },
-    ["mineral-tan-dirt-3"] = {
+    ['mineral-tan-dirt-3'] = {
         aux = {
             max = 0.16879084706306458,
             min = 0
@@ -2089,7 +2089,7 @@ tile = {
             min = 59.413955688476563
         }
     },
-    ["mineral-tan-dirt-4"] = {
+    ['mineral-tan-dirt-4'] = {
         aux = {
             max = 0.18866264820098877,
             min = 0
@@ -2111,7 +2111,7 @@ tile = {
             min = 59.049709320068359
         }
     },
-    ["mineral-tan-dirt-5"] = {
+    ['mineral-tan-dirt-5'] = {
         aux = {
             max = 0.31622284650802612,
             min = 0
@@ -2133,7 +2133,7 @@ tile = {
             min = 58.102043151855469
         }
     },
-    ["mineral-tan-dirt-6"] = {
+    ['mineral-tan-dirt-6'] = {
         aux = {
             max = 0.30748337507247925,
             min = 0
@@ -2155,7 +2155,7 @@ tile = {
             min = 58.705734252929688
         }
     },
-    ["mineral-tan-sand-1"] = {
+    ['mineral-tan-sand-1'] = {
         aux = {
             max = 0.31030726432800293,
             min = 0
@@ -2177,7 +2177,7 @@ tile = {
             min = 58.515979766845703
         }
     },
-    ["mineral-tan-sand-2"] = {
+    ['mineral-tan-sand-2'] = {
         aux = {
             max = 0.31222006678581238,
             min = 0
@@ -2199,7 +2199,7 @@ tile = {
             min = 59.376285552978516
         }
     },
-    ["mineral-tan-sand-3"] = {
+    ['mineral-tan-sand-3'] = {
         aux = {
             max = 0.31568196415901184,
             min = 0
@@ -2221,7 +2221,7 @@ tile = {
             min = 59.418750762939453
         }
     },
-    ["mineral-violet-dirt-1"] = {
+    ['mineral-violet-dirt-1'] = {
         aux = {
             max = 0.90751743316650391,
             min = 0.78263294696807861
@@ -2243,7 +2243,7 @@ tile = {
             min = 59.663349151611328
         }
     },
-    ["mineral-violet-dirt-2"] = {
+    ['mineral-violet-dirt-2'] = {
         aux = {
             max = 0.90986180305480957,
             min = 0.78458607196807861
@@ -2265,7 +2265,7 @@ tile = {
             min = 59.830215454101563
         }
     },
-    ["mineral-violet-dirt-3"] = {
+    ['mineral-violet-dirt-3'] = {
         aux = {
             max = 0.88834834098815918,
             min = 0.8010021448135376
@@ -2287,7 +2287,7 @@ tile = {
             min = 66.210731506347656
         }
     },
-    ["mineral-violet-dirt-4"] = {
+    ['mineral-violet-dirt-4'] = {
         aux = {
             max = 0.87684452533721924,
             min = 0.80826997756958008
@@ -2309,7 +2309,7 @@ tile = {
             min = 60.925899505615234
         }
     },
-    ["mineral-violet-dirt-5"] = {
+    ['mineral-violet-dirt-5'] = {
         aux = {
             max = 0.92276930809020996,
             min = 0.76786792278289795
@@ -2331,7 +2331,7 @@ tile = {
             min = 58.942832946777344
         }
     },
-    ["mineral-violet-dirt-6"] = {
+    ['mineral-violet-dirt-6'] = {
         aux = {
             max = 0.91209137439727783,
             min = 0.78797876834869385
@@ -2353,7 +2353,7 @@ tile = {
             min = 58.825466156005859
         }
     },
-    ["mineral-violet-sand-1"] = {
+    ['mineral-violet-sand-1'] = {
         aux = {
             max = 0.91785454750061035,
             min = 0.79435580968856812
@@ -2375,7 +2375,7 @@ tile = {
             min = 59.36724853515625
         }
     },
-    ["mineral-violet-sand-2"] = {
+    ['mineral-violet-sand-2'] = {
         aux = {
             max = 0.90743082761764526,
             min = 0.85310894250869751
@@ -2397,7 +2397,7 @@ tile = {
             min = 59.957649230957031
         }
     },
-    ["mineral-violet-sand-3"] = {
+    ['mineral-violet-sand-3'] = {
         aux = {
             max = 0.90863120555877686,
             min = 0.79650712013244629
@@ -2419,7 +2419,7 @@ tile = {
             min = 58.888004302978516
         }
     },
-    ["mineral-white-dirt-1"] = {
+    ['mineral-white-dirt-1'] = {
         aux = {
             max = 0.30682402849197388,
             min = 0
@@ -2441,7 +2441,7 @@ tile = {
             min = -1.5109071731567383
         }
     },
-    ["mineral-white-dirt-2"] = {
+    ['mineral-white-dirt-2'] = {
         aux = {
             max = 0.31487822532653809,
             min = 0
@@ -2463,7 +2463,7 @@ tile = {
             min = -0.72039127349853516
         }
     },
-    ["mineral-white-dirt-3"] = {
+    ['mineral-white-dirt-3'] = {
         aux = {
             max = 0.30535417795181274,
             min = 0
@@ -2485,7 +2485,7 @@ tile = {
             min = -0.44051599502563477
         }
     },
-    ["mineral-white-dirt-4"] = {
+    ['mineral-white-dirt-4'] = {
         aux = {
             max = 0.30993685126304626,
             min = 0
@@ -2507,7 +2507,7 @@ tile = {
             min = -1.796205997467041
         }
     },
-    ["mineral-white-dirt-5"] = {
+    ['mineral-white-dirt-5'] = {
         aux = {
             max = 0.319629967212677,
             min = 0
@@ -2529,7 +2529,7 @@ tile = {
             min = -0.93503570556640625
         }
     },
-    ["mineral-white-dirt-6"] = {
+    ['mineral-white-dirt-6'] = {
         aux = {
             max = 0.31775784492492676,
             min = 0
@@ -2551,7 +2551,7 @@ tile = {
             min = -1.0142979621887207
         }
     },
-    ["mineral-white-sand-1"] = {
+    ['mineral-white-sand-1'] = {
         aux = {
             max = 0.31798917055130005,
             min = 0
@@ -2573,7 +2573,7 @@ tile = {
             min = -0.40972757339477539
         }
     },
-    ["mineral-white-sand-2"] = {
+    ['mineral-white-sand-2'] = {
         aux = {
             max = 0.31080985069274902,
             min = 0
@@ -2595,7 +2595,7 @@ tile = {
             min = -0.69754409790039063
         }
     },
-    ["mineral-white-sand-3"] = {
+    ['mineral-white-sand-3'] = {
         aux = {
             max = 0.3193860650062561,
             min = 0
@@ -2617,7 +2617,7 @@ tile = {
             min = -0.86353683471679688
         }
     },
-    ["vegetation-blue-grass-1"] = {
+    ['vegetation-blue-grass-1'] = {
         aux = {
             max = 1,
             min = 0.68491059541702271
@@ -2639,7 +2639,7 @@ tile = {
             min = -0.58050155639648438
         }
     },
-    ["vegetation-blue-grass-2"] = {
+    ['vegetation-blue-grass-2'] = {
         aux = {
             max = 1,
             min = 0.68414407968521118
@@ -2661,7 +2661,7 @@ tile = {
             min = -1.2590351104736328
         }
     },
-    ["vegetation-green-grass-1"] = {
+    ['vegetation-green-grass-1'] = {
         aux = {
             max = 0.72526979446411133,
             min = 0
@@ -2683,7 +2683,7 @@ tile = {
             min = 18.741479873657227
         }
     },
-    ["vegetation-green-grass-2"] = {
+    ['vegetation-green-grass-2'] = {
         aux = {
             max = 0.72687011957168579,
             min = 0
@@ -2705,7 +2705,7 @@ tile = {
             min = 18.086408615112305
         }
     },
-    ["vegetation-green-grass-3"] = {
+    ['vegetation-green-grass-3'] = {
         aux = {
             max = 0.7207036018371582,
             min = 0
@@ -2727,7 +2727,7 @@ tile = {
             min = 19.032375335693359
         }
     },
-    ["vegetation-green-grass-4"] = {
+    ['vegetation-green-grass-4'] = {
         aux = {
             max = 0.72633457183837891,
             min = 0
@@ -2749,7 +2749,7 @@ tile = {
             min = 18.746013641357422
         }
     },
-    ["vegetation-mauve-grass-1"] = {
+    ['vegetation-mauve-grass-1'] = {
         aux = {
             max = 1,
             min = 0.69794189929962158
@@ -2771,7 +2771,7 @@ tile = {
             min = 18.902141571044922
         }
     },
-    ["vegetation-mauve-grass-2"] = {
+    ['vegetation-mauve-grass-2'] = {
         aux = {
             max = 1,
             min = 0.67865055799484253
@@ -2793,7 +2793,7 @@ tile = {
             min = 19.5142822265625
         }
     },
-    ["vegetation-olive-grass-1"] = {
+    ['vegetation-olive-grass-1'] = {
         aux = {
             max = 0.71924036741256714,
             min = 0
@@ -2815,7 +2815,7 @@ tile = {
             min = 49.132801055908203
         }
     },
-    ["vegetation-olive-grass-2"] = {
+    ['vegetation-olive-grass-2'] = {
         aux = {
             max = 0.71086359024047852,
             min = 0
@@ -2837,7 +2837,7 @@ tile = {
             min = 48.559558868408203
         }
     },
-    ["vegetation-orange-grass-1"] = {
+    ['vegetation-orange-grass-1'] = {
         aux = {
             max = 0.70352840423583984,
             min = 0
@@ -2859,7 +2859,7 @@ tile = {
             min = 80.00433349609375
         }
     },
-    ["vegetation-orange-grass-2"] = {
+    ['vegetation-orange-grass-2'] = {
         aux = {
             max = 0.69079267978668213,
             min = 0
@@ -2881,7 +2881,7 @@ tile = {
             min = 80.002166748046875
         }
     },
-    ["vegetation-purple-grass-1"] = {
+    ['vegetation-purple-grass-1'] = {
         aux = {
             max = 1,
             min = 0.69218683242797852
@@ -2903,7 +2903,7 @@ tile = {
             min = 38.201152801513672
         }
     },
-    ["vegetation-purple-grass-2"] = {
+    ['vegetation-purple-grass-2'] = {
         aux = {
             max = 1,
             min = 0.68390887975692749
@@ -2925,7 +2925,7 @@ tile = {
             min = 38.893478393554688
         }
     },
-    ["vegetation-red-grass-1"] = {
+    ['vegetation-red-grass-1'] = {
         aux = {
             max = 1,
             min = 0.69906425476074219
@@ -2947,7 +2947,7 @@ tile = {
             min = 79.050018310546875
         }
     },
-    ["vegetation-red-grass-2"] = {
+    ['vegetation-red-grass-2'] = {
         aux = {
             max = 1,
             min = 0.70585960149765015
@@ -2969,7 +2969,7 @@ tile = {
             min = 79.665298461914063
         }
     },
-    ["vegetation-turquoise-grass-1"] = {
+    ['vegetation-turquoise-grass-1'] = {
         aux = {
             max = 0.71732431650161743,
             min = 0
@@ -2991,7 +2991,7 @@ tile = {
             min = -1.4036340713500977
         }
     },
-    ["vegetation-turquoise-grass-2"] = {
+    ['vegetation-turquoise-grass-2'] = {
         aux = {
             max = 0.71826362609863281,
             min = 0
@@ -3013,7 +3013,7 @@ tile = {
             min = -0.60504913330078125
         }
     },
-    ["vegetation-violet-grass-1"] = {
+    ['vegetation-violet-grass-1'] = {
         aux = {
             max = 1,
             min = 0.69244742393493652
@@ -3035,7 +3035,7 @@ tile = {
             min = 58.720085144042969
         }
     },
-    ["vegetation-violet-grass-2"] = {
+    ['vegetation-violet-grass-2'] = {
         aux = {
             max = 1,
             min = 0.68938279151916504
@@ -3057,7 +3057,7 @@ tile = {
             min = 58.891304016113281
         }
     },
-    ["vegetation-yellow-grass-1"] = {
+    ['vegetation-yellow-grass-1'] = {
         aux = {
             max = 0.71110260486602783,
             min = 0
@@ -3079,7 +3079,7 @@ tile = {
             min = 63.656852722167969
         }
     },
-    ["vegetation-yellow-grass-2"] = {
+    ['vegetation-yellow-grass-2'] = {
         aux = {
             max = 0.71187496185302734,
             min = 0
@@ -3101,7 +3101,7 @@ tile = {
             min = 63.341888427734375
         }
     },
-    ["volcanic-blue-heat-1"] = {
+    ['volcanic-blue-heat-1'] = {
         aux = {
             max = 0.89950263500213623,
             min = 0.78546524047851563
@@ -3123,7 +3123,7 @@ tile = {
             min = 99.999496459960938
         }
     },
-    ["volcanic-blue-heat-2"] = {
+    ['volcanic-blue-heat-2'] = {
         aux = {
             max = 0.89702707529067993,
             min = 0.79396605491638184
@@ -3145,7 +3145,7 @@ tile = {
             min = 117.38204193115234
         }
     },
-    ["volcanic-blue-heat-3"] = {
+    ['volcanic-blue-heat-3'] = {
         aux = {
             max = 0.86433589458465576,
             min = 0.79597055912017822
@@ -3167,7 +3167,7 @@ tile = {
             min = 135.189208984375
         }
     },
-    ["volcanic-green-heat-1"] = {
+    ['volcanic-green-heat-1'] = {
         aux = {
             max = 0.82503747940063477,
             min = 0.71224159002304077
@@ -3189,7 +3189,7 @@ tile = {
             min = 99.716888427734375
         }
     },
-    ["volcanic-green-heat-2"] = {
+    ['volcanic-green-heat-2'] = {
         aux = {
             max = 0.81745696067810059,
             min = 0.73656398057937622
@@ -3211,7 +3211,7 @@ tile = {
             min = 118.25163269042969
         }
     },
-    ["volcanic-green-heat-3"] = {
+    ['volcanic-green-heat-3'] = {
         aux = {
             max = 0.79942208528518677,
             min = 0.75945180654525757
@@ -3233,7 +3233,7 @@ tile = {
             min = 135.02120971679688
         }
     },
-    ["volcanic-green-heat-4"] = {
+    ['volcanic-green-heat-4'] = {
         aux = {
             max = 0.81431639194488525,
             min = 0.77321231365203857
@@ -3255,7 +3255,7 @@ tile = {
             min = 142.879150390625
         }
     },
-    ["volcanic-orange-heat-1"] = {
+    ['volcanic-orange-heat-1'] = {
         aux = {
             max = 0.7245018482208252,
             min = 0
@@ -3277,7 +3277,7 @@ tile = {
             min = 98.575096130371094
         }
     },
-    ["volcanic-orange-heat-2"] = {
+    ['volcanic-orange-heat-2'] = {
         aux = {
             max = 0.39001971483230591,
             min = 0
@@ -3299,7 +3299,7 @@ tile = {
             min = 117.10517883300781
         }
     },
-    ["volcanic-orange-heat-3"] = {
+    ['volcanic-orange-heat-3'] = {
         aux = {
             max = 0.359017014503479,
             min = 0
@@ -3321,7 +3321,7 @@ tile = {
             min = 131.91604614257813
         }
     },
-    ["volcanic-orange-heat-4"] = {
+    ['volcanic-orange-heat-4'] = {
         aux = {
             max = 0.17525970935821533,
             min = 0
@@ -3343,7 +3343,7 @@ tile = {
             min = 142.28115844726563
         }
     },
-    ["volcanic-purple-heat-1"] = {
+    ['volcanic-purple-heat-1'] = {
         aux = {
             max = 1,
             min = 0.88721275329589844
@@ -3365,7 +3365,7 @@ tile = {
             min = 99.074844360351563
         }
     },
-    ["volcanic-purple-heat-2"] = {
+    ['volcanic-purple-heat-2'] = {
         aux = {
             max = 1,
             min = 0.88852393627166748
@@ -3387,7 +3387,7 @@ tile = {
             min = 120.00946044921875
         }
     },
-    ["volcanic-purple-heat-3"] = {
+    ['volcanic-purple-heat-3'] = {
         aux = {
             max = 1,
             min = 1
@@ -3409,7 +3409,7 @@ tile = {
             min = 134.54466247558594
         }
     },
-    ["volcanic-purple-heat-4"] = {
+    ['volcanic-purple-heat-4'] = {
         aux = {
             max = 1,
             min = 1
@@ -3453,7 +3453,7 @@ tile = {
             min = -20
         }
     },
-    ["water-mud"] = {
+    ['water-mud'] = {
         aux = {
             max = 1,
             min = 0
@@ -3475,7 +3475,7 @@ tile = {
             min = -0.22267293930053711
         }
     },
-    ["water-shallow"] = {
+    ['water-shallow'] = {
         aux = {
             max = 1,
             min = 0

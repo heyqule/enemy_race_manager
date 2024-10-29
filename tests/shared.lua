@@ -96,7 +96,7 @@ end
 
 function TestShared.reset_lab_tile(radius)
     local surface = game.surfaces[1]
-    local tile_types = { "lab-dark-2","lab-dark-1" }
+    local tile_types = { 'lab-dark-2','lab-dark-1' }
     local tiles = {}
     local radius = radius or 320
     for x = (radius * -1), radius, 1 do

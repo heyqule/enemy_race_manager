@@ -71,7 +71,7 @@ EventGui.on_click('erm_detail_close_button', function(event)
     end
 end)
 
-EventGui.on_click(".*/" .. GuiContainer.detail_window.confirm_name, function(event)
+EventGui.on_click('.*/' .. GuiContainer.detail_window.confirm_name, function(event)
     local element = event.element
     if not (element and element.valid) then
         return
@@ -290,10 +290,10 @@ EventGui.on_selection_state_changed('army_cc/filter_.*_surface', function(event)
         surface_name = nil
     end
 
-    if string.find(element.name, "from") then
+    if string.find(element.name, 'from') then
         window_tab_data.cc_surfaces_select_from = surface_name
         window_tab_data.cc_surfaces_select_from_index = element.selected_index
-    elseif string.find(element.name, "to") then
+    elseif string.find(element.name, 'to') then
         window_tab_data.cc_surfaces_select_to = surface_name
         window_tab_data.cc_surfaces_select_to_index = element.selected_index
     end

@@ -7,8 +7,8 @@ require('__enemyracemanager__/global')
 local String = require('__stdlib__/stdlib/utils/string')
 
 if DEBUG_MODE then
-    data.raw["radar"]["radar"]['max_distance_of_sector_revealed'] = 15
-    data.raw["radar"]["radar"]['max_distance_of_nearby_sector_revealed'] = 15
+    data.raw['radar']['radar']['max_distance_of_sector_revealed'] = 15
+    data.raw['radar']['radar']['max_distance_of_nearby_sector_revealed'] = 15
 
     local autoplace_count = 0
     local prototype_count = 0

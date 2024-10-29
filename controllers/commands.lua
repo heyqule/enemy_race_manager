@@ -4,8 +4,8 @@
 --- DateTime: 2/15/2022 9:42 PM
 ---
 
-commands.add_command("ERM_GetRaceSettings",
-        { "description.command-regenerate-enemy" },
+commands.add_command('ERM_GetRaceSettings',
+        { 'description.command-regenerate-enemy' },
         function()
             game.print(helpers.table_to_json(storage.race_settings))
         end)
