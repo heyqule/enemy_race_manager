@@ -4,8 +4,7 @@
 --- DateTime: 11/5/2022 11:13 AM
 ---
 
-local mod_gui = require("mod-gui")
-local String = require("__stdlib__/stdlib/utils/string")
+require('util')
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local LevelManager = require("__enemyracemanager__/lib/level_processor")
@@ -195,7 +194,7 @@ end
 
 function DetailWindow.update_slider_text(event, slider_name, slider_value)
     if element_valid(event) then
-        local nameToken = String.split(event.element.name, "/")
+        local nameToken = util.split(event.element.name, "/")
 
         if nameToken[2] == slider_name then
             local name = nameToken[1] .. "/" .. slider_value

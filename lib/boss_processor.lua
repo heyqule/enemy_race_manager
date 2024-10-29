@@ -93,7 +93,7 @@ local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
     end
 
     if target_spawner then
-        -- Skip if it"s too close to any of the turrets
+        -- Skip if it"too close to any of the turrets
         local turret = surface.find_entities_filtered { position = target_spawner.position, radius = 192, type = turrets, limit = 1 }
         if turret[1] then
             return

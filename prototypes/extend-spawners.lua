@@ -7,7 +7,7 @@
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
-local String = require("__stdlib__/stdlib/utils/string")
+
 require("util")
 
 
@@ -61,7 +61,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     -- @TODO Changed to absorptions_per_second?
     --spawner["pollution_absorption_absolute"] = spawner["pollution_absorption_absolute"] * 10
 
-    if String.find(type, "spitter", 1, true) then
+    if string.find(type, "spitter", 1, true) then
         spawner["result_units"] = (function()
             local res = {}
             res[1] = { MOD_NAME .. "--small-spitter--" .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }

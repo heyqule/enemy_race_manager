@@ -10,7 +10,7 @@ local RaceSettingsHelper = require("helper/race_settings_helper")
 local Configs = require("global_config")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 
-local Position = require("__stdlib__/stdlib/area/position")
+local Position = require("__erm_libs__/stdlib/area/position")
 local Event = require("__stdlib__/stdlib/event/event")
 
 local AttackGroupBeaconProcessor = {}
@@ -1251,7 +1251,7 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
             tracker.last_resource_position == nil and
             has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
         then
-            --- Switch to resource path only if it"s heading to final_destination
+            --- Switch to resource path only if it"heading to final_destination
             if command and command.type == defines.command.go_to_location and
                 command.destination.x == tracker.final_destination.x and
                 command.destination.y == tracker.final_destination.y

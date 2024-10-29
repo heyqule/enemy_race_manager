@@ -6,7 +6,7 @@
 
 require("util")
 require("global")
-local Position = require("__stdlib__/stdlib/area/position")
+local Position = require("__erm_libs__/stdlib/area/position")
 local Event = require("__stdlib__/stdlib/event/event")
 
 local Config = require("__enemyracemanager__/lib/global_config")
@@ -226,7 +226,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 if DEBUG_MODE then
                     for index, command in pairs(commands) do
                         if index == 1 then
-                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5}, request_path_data.start , command.destination)
+                            DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5}, group.position , command.destination)
                         elseif commands.commands[index] then
                             DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
                         end
@@ -255,6 +255,19 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                 end
             end
             group.set_command(commands)
+            if not storage.erm_unit_groups[group.unique_id] then
+                storage.erm_unit_groups[group.unique_id] = {
+                    commands = commands,
+                    start_position = group.position,
+                    group = group,
+                    always_angry = false,
+                    nearby_retry = 0,
+                    attack_force = 'player',
+                    created = game.tick
+                }
+            else
+                storage.erm_unit_groups[group.unique_id].commands = commands        
+            end
             surface.pollute(position, pollution_deduction)
         else
             --group.set_autonomous()

@@ -8,8 +8,6 @@
 require("__enemyracemanager__/setting-constants")
 
 
-local String = require("__stdlib__/stdlib/utils/string")
-local Math = require("__stdlib__/stdlib/utils/math")
 require("util")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
@@ -33,10 +31,10 @@ local get_name_token = function(name)
     end
 
     if storage.force_entity_name_cache[name] == nil then
-        if not String.find(name, "--", 1, true) then
+        if not string.find(name, "--", 1, true) then
             storage.force_entity_name_cache[name] = { MOD_NAME, name, "1" }
         else
-            storage.force_entity_name_cache[name] = String.split(name, "--")
+            storage.force_entity_name_cache[name] = util.split(name, "--")
         end
     end
 
@@ -187,8 +185,8 @@ end
 
 function CustomAttackHelper.valid(event, race_name)
     return (event.source_entity and
-            String.find(event.source_entity.name, race_name, 1, true) ~= nil) or
-            String.find(event.effect_id, "-bs", 1, true) ~= nil
+            string.find(event.source_entity.name, race_name, 1, true) ~= nil) or
+            string.find(event.effect_id, "-bs", 1, true) ~= nil
 end
 
 function CustomAttackHelper.get_unit(race_name, unit_type)
@@ -200,7 +198,7 @@ function CustomAttackHelper.get_unit(race_name, unit_type)
 
     local unit_data = race_settings[unit_type][race_settings.tier]
 
-    return unit_data[FEATURE_RACE_NAME][unit_data[FEATURE_RACE_SPAWN_CACHE][Math.random(unit_data[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
+    return unit_data[FEATURE_RACE_NAME][unit_data[FEATURE_RACE_SPAWN_CACHE][math.random(unit_data[FEATURE_RACE_SPAWN_CACHE_SIZE])]]
 end
 
 ---

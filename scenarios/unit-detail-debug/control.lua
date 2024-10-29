@@ -1,7 +1,7 @@
 require("util")
 local scenarios_helper = require("__enemyracemanager__/scenarios/shared.lua")
 
-local String = require("__stdlib__/stdlib/utils/string")
+
 local Event = require("__stdlib__/stdlib/event/event")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 

@@ -179,7 +179,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
 
     local tracker_data = storage.spawn_locations_tracker[surface_index]
 
-    --- only track new trunk when it"s not hitting the border, and the trunk is generated
+    --- only track new trunk when it"not hitting the border, and the trunk is generated
     if not using_max_radius and new_chunk_is_generated then
         tracker_data.last_chunk_position[current_direction] = new_chunk
     elseif using_max_radius then

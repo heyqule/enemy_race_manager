@@ -139,7 +139,7 @@ end
 --end
 --
 --local process_x_axis_unit = function(v)
---    local nameToken = String.split(v.name, "--")
+--    local nameToken = util.split(v.name, "--")
 --    local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
 --    local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
 --
@@ -199,7 +199,7 @@ end
 --end
 --
 --local process_4_ways_unit = function(v)
---    local nameToken = String.split(v.name, "--")
+--    local nameToken = util.split(v.name, "--")
 --    local topleft = nameToken[1] == settings.startup["enemyracemanager-4way-top-left"].value
 --    local topright = nameToken[1] == settings.startup["enemyracemanager-4way-top-right"].value
 --    local bottomright = nameToken[1] == settings.startup["enemyracemanager-4way-bottom-right"].value

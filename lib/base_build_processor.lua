@@ -4,7 +4,7 @@
 --- DateTime: 3/31/2021 8:54 PM
 ---
 
-local String = require("__stdlib__/stdlib/utils/string")
+require('util')
 local Event = require("__stdlib__/stdlib/event/event")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
@@ -119,7 +119,7 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     if GlobalConfig.build_formation() == "random" then
         formation = { 1, math.random(3, 8), math.random(5, 12) }
     else
-        formation = String.split(GlobalConfig.build_formation(), "-")
+        formation = util.split(GlobalConfig.build_formation(), "-")
     end
 
     for _, unit in pairs(members) do
