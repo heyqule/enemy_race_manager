@@ -2,16 +2,23 @@
 Version: 2.0.0
 Date: ????-??-??
 
-  Features
+  Major Features:
     - Updated to Factorio 2.0
+    - The mod focuses on interplanetary war logistic.
+
+  Features
+    - Updated autoplace handlers.
     - Replaced Level system with Quality System.
-    - Quality System\n lol wtf
+
 
   Changes:
-    -
+    - PSI Emitter Satellite for boss is now only used for base game. Bosses in [space-age] spawn in their respective planet.
+    - Added a free for all planet.  Utilizing 2 way split autoplace to spawn enemy.  Your goal is to bring "peace" on that planet. \nRace can be configured in startup settings.
     - Removed dependency of stdlib.
     - Removed all compatibility supports for 1.1 mods.
     - Removed menu biter replacement.
+    - Removed Spawner generation methods. On nauvis, you can have to pick your race in start up setting. Default to Biters.
+    - Removed 4 way splits.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6

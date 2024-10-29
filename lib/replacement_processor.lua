@@ -8,14 +8,14 @@
 --- https://lua-api.factorio.com/latest/Concepts.html#ChunkPositionAndArea
 ---
 
-local Table = require('__stdlib__/stdlib/utils/table')
-local String = require('__stdlib__/stdlib/utils/string')
-local Game = require('__stdlib__/stdlib/game')
+local Table = require("__stdlib__/stdlib/utils/table")
+local String = require("__stdlib__/stdlib/utils/string")
+local Game = require("__stdlib__/stdlib/game")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib//debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib//debug_helper")
 
 local ReplacementProcessor = {}
 
@@ -25,7 +25,7 @@ local replace_structures = function(surface, entity, race_settings)
     local base_name = RaceSettingHelper.pick_a_spawner(race_pick)
     local new_force_name = ForceHelper.get_force_name_from(race_pick)
 
-    local name = race_settings[race_pick].race .. '--' .. base_name .. '--' .. race_settings[race_pick].level
+    local name = race_settings[race_pick].race .. "--" .. base_name .. "--" .. race_settings[race_pick].level
     entity.destroy()
     if not surface.can_place_entity({ name = name, force = new_force_name, position = position }) then
         position = surface.find_non_colliding_position(name, position, 32, 8, true)
@@ -40,7 +40,7 @@ local replace_turrets = function(surface, entity, race_settings)
     local position = entity.position
     local race_pick = storage.replacement_race_pick
     local base_name = RaceSettingHelper.pick_a_turret(race_pick)
-    local name = race_settings[race_pick].race .. '--' .. base_name .. '--' .. race_settings[race_pick].level
+    local name = race_settings[race_pick].race .. "--" .. base_name .. "--" .. race_settings[race_pick].level
     local new_force_name = ForceHelper.get_force_name_from(race_pick)
 
     entity.destroy()
@@ -54,7 +54,7 @@ local replace_turrets = function(surface, entity, race_settings)
 end
 
 function ReplacementProcessor.process_chunks(surface, area, race_settings)
-    local turrets = Table.filter(surface.find_entities_filtered({ area = area, type = 'turret' }), Game.VALID_FILTER)
+    local turrets = Table.filter(surface.find_entities_filtered({ area = area, type = "turret" }), Game.VALID_FILTER)
     local turret_size = table_size(turrets)
     if turret_size > 0 then
         Table.each(turrets, function(entity)
@@ -64,7 +64,7 @@ function ReplacementProcessor.process_chunks(surface, area, race_settings)
         end)
     end
 
-    local spawners = Table.filter(surface.find_entities_filtered({ area = area, type = 'unit-spawner' }), Game.VALID_FILTER)
+    local spawners = Table.filter(surface.find_entities_filtered({ area = area, type = "unit-spawner" }), Game.VALID_FILTER)
     local spawners_size = table_size(spawners)
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
@@ -89,7 +89,7 @@ function ReplacementProcessor.rebuild_map(surface, race_settings, race_pick)
             end
         end
         profiler.stop()
-        game.print({ '', 'Rebuild Map: ' .. storage.replacement_race_pick .. ' on ' .. surface.name .. '  ', profiler })
+        game.print({ "", "Rebuild Map: " .. storage.replacement_race_pick .. " on " .. surface.name .. "  ", profiler })
     end
 end
 
@@ -114,9 +114,9 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
             return
         end
 
-        if (entity.type == 'unit-spawner') then
+        if (entity.type == "unit-spawner") then
             returned_entity = replace_structures(surface, entity, race_settings)
-        elseif (entity.type == 'turret') then
+        elseif (entity.type == "turret") then
             returned_entity = replace_turrets(surface, entity, race_settings)
         end
     end
@@ -125,30 +125,30 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
 end
 
 function ReplacementProcessor.resetDefault(surface)
-    local spawners = Table.filter(surface.find_entities_filtered({ type = 'unit-spawner' }), Game.VALID_FILTER)
+    local spawners = Table.filter(surface.find_entities_filtered({ type = "unit-spawner" }), Game.VALID_FILTER)
     local spawners_size = table_size(spawners)
-    local spawner_names = { 'spitter-spawner', 'biter-spawner' }
+    local spawner_names = { "spitter-spawner", "biter-spawner" }
     if spawners_size > 0 then
         Table.each(spawners, function(entity)
             if ForceHelper.is_enemy_force(entity.force) then
                 local position = entity.position
                 local name = spawner_names[math.random(1, 2)]
                 entity.destroy()
-                surface.create_entity({ name = name, position = position, force = 'enemy', spawn_decorations = true })
+                surface.create_entity({ name = name, position = position, force = "enemy", spawn_decorations = true })
             end
         end)
     end
 
-    local turrets = Table.filter(surface.find_entities_filtered({ type = 'turret' }), Game.VALID_FILTER)
+    local turrets = Table.filter(surface.find_entities_filtered({ type = "turret" }), Game.VALID_FILTER)
     local turret_size = table_size(turrets)
-    local turret_names = { 'big-worm-turret', 'behemoth-worm-turret' }
+    local turret_names = { "big-worm-turret", "behemoth-worm-turret" }
     if turret_size > 0 then
         Table.each(turrets, function(entity)
             if ForceHelper.is_enemy_force(entity.force) then
                 local position = entity.position
                 local name = turret_names[math.random(1, 2)]
                 entity.destroy()
-                surface.create_entity({ name = name, position = position, force = 'enemy' })
+                surface.create_entity({ name = name, position = position, force = "enemy" })
             end
         end)
     end

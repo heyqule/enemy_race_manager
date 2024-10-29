@@ -4,8 +4,8 @@
 --- DateTime: 1/7/2024 2:39 PM
 ---
 
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local TestShared = require('shared')
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local TestShared = require("shared")
 
 
 
@@ -18,32 +18,32 @@ after_each(function()
 end)
 
 
-it('Add and remove surface', function()
-    local new_surface_name = 'test_surface_2'
+it("Add and remove surface", function()
+    local new_surface_name = "test_surface_2"
     game.create_surface(new_surface_name)
-    assert.not_nil(storage.enemy_surfaces[new_surface_name],'New race assigned to new surface')
+    assert.not_nil(storage.enemy_surfaces[new_surface_name],"New race assigned to new surface")
 
-    local rejected_surface_name = 'Vault 1'
+    local rejected_surface_name = "Vault 1"
     game.create_surface(rejected_surface_name)
-    assert.is_nil(storage.enemy_surfaces[rejected_surface_name],'New race not assigned to unsupported surfaces')
+    assert.is_nil(storage.enemy_surfaces[rejected_surface_name],"New race not assigned to unsupported surfaces")
 
-    local rejected_surface_name2 = 'aai-signals'
+    local rejected_surface_name2 = "aai-signals"
     game.create_surface(rejected_surface_name2)
-    assert.is_nil(storage.enemy_surfaces[rejected_surface_name2],'R2: New race not assigned to unsupported surfaces')
+    assert.is_nil(storage.enemy_surfaces[rejected_surface_name2],"R2: New race not assigned to unsupported surfaces")
 
     game.delete_surface(new_surface_name)
     game.delete_surface(rejected_surface_name)
     game.delete_surface(rejected_surface_name2)
     after_ticks(60, function()
-        assert.is_nil(storage.enemy_surfaces[new_surface_name],'Removed new race from surface')
+        assert.is_nil(storage.enemy_surfaces[new_surface_name],"Removed new race from surface")
     end)
 end)
 
 ticks_between_tests(60)
-it('Reindex Surfaces', function()
+it("Reindex Surfaces", function()
     local surface_count = 10
     for i = 0, surface_count, 1 do
-        local new_surface_name = 'test_surface'..tostring(i)
+        local new_surface_name = "test_surface"..tostring(i)
         game.create_surface(new_surface_name)
     end
 
@@ -51,10 +51,10 @@ it('Reindex Surfaces', function()
     storage.enemy_surfaces = {}
     SurfaceProcessor.rebuild_race()
     local new_list = table.deepcopy(storage.enemy_surfaces)
-    assert.not_equal(old_list, new_list, 'Both list should not be equal')
-    assert.equal(table_size(new_list), storage.total_enemy_surfaces, 'Total enemy surface and new list must be equal')
+    assert.not_equal(old_list, new_list, "Both list should not be equal")
+    assert.equal(table_size(new_list), storage.total_enemy_surfaces, "Total enemy surface and new list must be equal")
     for i = 0, surface_count, 1 do
-        local new_surface_name = 'test_surface'..tostring(i)
+        local new_surface_name = "test_surface"..tostring(i)
         game.delete_surface(new_surface_name)
     end
 end)

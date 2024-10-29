@@ -5,10 +5,10 @@
 ---
 ---
 
-for name, node in pairs(data.raw['projectile']) do
-    if string.find(name, 'se-falling-meteor',1,true) then
-        table.insert(node['action']['action_delivery']['target_effects'],  {
-            type = 'script',
+for name, node in pairs(data.raw["projectile"]) do
+    if string.find(name, "se-falling-meteor",1,true) then
+        table.insert(node["action"]["action_delivery"]["target_effects"],  {
+            type = "script",
             effect_id = ENVIRONMENTAL_ATTACK
         })
     end

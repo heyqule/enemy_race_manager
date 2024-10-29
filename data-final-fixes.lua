@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 10/23/2021 12:53 PM
 ---
-require('__enemyracemanager__/global')
-local String = require('__stdlib__/stdlib/utils/string')
+require("__enemyracemanager__/global")
+local String = require("__stdlib__/stdlib/utils/string")
 
 if DEBUG_MODE then
-    data.raw['radar']['radar']['max_distance_of_sector_revealed'] = 15
-    data.raw['radar']['radar']['max_distance_of_nearby_sector_revealed'] = 15
+    data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15
+    data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 15
 
     local autoplace_count = 0
     local prototype_count = 0
@@ -22,23 +22,23 @@ if DEBUG_MODE then
             if entity.autoplace ~= nil then
                 autoplace_count = autoplace_count + 1
 
-                local nameToken = String.split(entity.name, '--')
+                local nameToken = String.split(entity.name, "--")
                 if table_size(nameToken) == 3 then
                     erm_prototype_count = erm_prototype_count + 1
                 end
             end
 
-            if type_name == 'damage-type' then
+            if type_name == "damage-type" then
                 damage_types_count = damage_types_count + 1
                 table.insert(damage_types, entity.name)
             end
         end
     end
-    log('Total Prototypes:' .. prototype_count)
-    log('Total Prototypes with autoplace: ' .. autoplace_count)
-    log('Total ERM enemy prototype with autoplace: ' .. erm_prototype_count)
+    log("Total Prototypes:" .. prototype_count)
+    log("Total Prototypes with autoplace: " .. autoplace_count)
+    log("Total ERM enemy prototype with autoplace: " .. erm_prototype_count)
 
-    log('Total Damage Types:'..damage_types_count)
+    log("Total Damage Types:"..damage_types_count)
     log(serpent.block(damage_types))
 
 end

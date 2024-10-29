@@ -5,11 +5,11 @@
 ---
 data:extend {
     {
-        type = 'bool-setting',
-        name = 'enemyracemanager-vanilla-k2-creep',
-        description = 'enemyracemanager-vanilla-k2-creep',
-        setting_type = 'startup',
+        type = "bool-setting",
+        name = "enemyracemanager-vanilla-k2-creep",
+        description = "enemyracemanager-vanilla-k2-creep",
+        setting_type = "startup",
         default_value = true,
-        order = 'enemyracemanager-1000',
+        order = "enemyracemanager-1000",
     }
 }

@@ -5,13 +5,13 @@
 ---
 ---
 
-require('util')
-local Event = require('__stdlib__/stdlib/event/event')
+require("util")
+local Event = require("__stdlib__/stdlib/event/event")
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
+local Config = require("__enemyracemanager__/lib/global_config")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 
 local AttackGroupHeatProcessor = {}
 

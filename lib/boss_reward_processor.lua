@@ -6,9 +6,9 @@
 ---
 --- Reward player when they beat boss within the time limit.
 ---
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local BossRewardProcessor = {}
 
@@ -17,30 +17,30 @@ local can_spawn = RaceSettingsHelper.can_spawn
 --- Intermediate products / weapon consumables
 --- No raw materials
 local rewards_items_data = {
-    'uranium-238',
-    'advanced-circuit',
-    'electric-engine-unit',
-    'battery',
-    'rocket',
-    'heavy-oil-barrel',
-    'sulfuric-acid-barrel',
-    'engine-unit',
-    'electronic-circuit',
-    'plastic-bar',
-    'sulfur',
-    'steel-plate',
-    'explosives',
-    'solid-fuel',
-    'piercing-rounds-magazine',
-    'grenade',
-    'stone-wall',
-    'light-oil-barrel',
-    'petroleum-gas-barrel',
-    'copper-plate',
-    'iron-plate',
-    'stone-brick',
-    'crude-oil-barrel',
-    'iron-gear-wheel',
+    "uranium-238",
+    "advanced-circuit",
+    "electric-engine-unit",
+    "battery",
+    "rocket",
+    "heavy-oil-barrel",
+    "sulfuric-acid-barrel",
+    "engine-unit",
+    "electronic-circuit",
+    "plastic-bar",
+    "sulfur",
+    "steel-plate",
+    "explosives",
+    "solid-fuel",
+    "piercing-rounds-magazine",
+    "grenade",
+    "stone-wall",
+    "light-oil-barrel",
+    "petroleum-gas-barrel",
+    "copper-plate",
+    "iron-plate",
+    "stone-brick",
+    "crude-oil-barrel",
+    "iron-gear-wheel",
 }
 
 --- Big Mod Compaibility rewards
@@ -87,8 +87,8 @@ local expire_at = minute * 7 * 14
 
 local get_infinite_chest = function()
     return {
-        name = 'infinity-chest',
-        force = 'neutral'
+        name = "infinity-chest",
+        force = "neutral"
     }
 end
 
@@ -131,20 +131,20 @@ end
 function BossRewardProcessor.exec()
     local boss = storage.boss
     for _, value in pairs(reward_settings) do
-        if (can_spawn(value['chance'][boss.boss_tier])) then
+        if (can_spawn(value["chance"][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
             if chest then
                 local infinity_item_name = get_item_name()
                 chest.set_infinity_container_filter(1, {
                     name = infinity_item_name,
                     count = 100,
-                    mode = 'exactly'
+                    mode = "exactly"
                 })
                 chest.destructible = false
                 chest.minable = false
                 chest.rotatable = false
                 chest.operable = false
-                DebugHelper.print('Spawning Chest with ' .. infinity_item_name)
+                DebugHelper.print("Spawning Chest with " .. infinity_item_name)
                 table.insert(storage.boss_rewards, reward_data(chest))
             end
         end
@@ -163,7 +163,7 @@ function BossRewardProcessor.clean_up()
                 reward.entity and
                 reward.entity.valid
         then
-            DebugHelper.print('Destroy chest at ' .. reward.entity_position.x .. '/' .. reward.entity_position.y)
+            DebugHelper.print("Destroy chest at " .. reward.entity_position.x .. "/" .. reward.entity_position.y)
             reward.entity.destroy();
             table.insert(removed_positions, position)
         end

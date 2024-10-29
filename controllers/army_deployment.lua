@@ -4,11 +4,11 @@
 --- DateTime: 11/21/2022 11:48 PM
 ---
 
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
 local add_deployer = function(event)
     local entity = event.created_entity or event.entity

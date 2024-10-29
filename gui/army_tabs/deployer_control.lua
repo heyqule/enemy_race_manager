@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 6/22/2024 10:00 PM
 ---
-local SharedGuiFunctions = require('__enemyracemanager__/gui/shared')
-local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
+local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
+local SharedTabFunctions = require("__enemyracemanager__/gui/army_tabs/shared")
 
 local DeployerControlGUI = {}
 
-DeployerControlGUI.name = 'deployer-pane'
+DeployerControlGUI.name = "deployer-pane"
 
 function DeployerControlGUI.update(player)
     local main_tab = SharedTabFunctions.get_main_tab(player)
@@ -23,14 +23,14 @@ function DeployerControlGUI.update(player)
 
     local deployers = storage.army_built_deployers[force.index]
     if deployers == nil then
-        pane.add { type = 'label', caption = { 'gui-army.no_deployer' } }
+        pane.add { type = "label", caption = { "gui-army.no_deployer" } }
         return
     end
 
     -- Data managemenent
     local active_deployers = {}
     if storage.army_active_deployers[force.index] then
-        active_deployers = storage.army_active_deployers[force.index]['deployers']
+        active_deployers = storage.army_active_deployers[force.index]["deployers"]
     end
 
     local filtered_deployers = {}
@@ -73,14 +73,14 @@ function DeployerControlGUI.update(player)
 
     -- Rendering
     --- Filter types and surfaces
-    local filters = pane.add { type = 'flow', direction = 'horizontal' }
+    local filters = pane.add { type = "flow", direction = "horizontal" }
 
     for name, _ in pairs(storage.army_registered_deployers) do
         local sprite = filters.add {
-            type = 'sprite-button',
-            name='army_deployer/filter_type/'..name,
-            sprite = 'recipe/' .. name,
-            style = 'frame_button',
+            type = "sprite-button",
+            name="army_deployer/filter_type/"..name,
+            sprite = "recipe/" .. name,
+            style = "frame_button",
             auto_toggle = true,
         }
         sprite.style.width = 32
@@ -93,27 +93,27 @@ function DeployerControlGUI.update(player)
     end
 
     local surface_dropdown = filters.add {
-        type = 'drop-down',
-        name='army_deployer/filter_surface',
+        type = "drop-down",
+        name="army_deployer/filter_surface",
         items = filtered_surface,
         selected_index = selected_index
     }
     surface_dropdown.style.height = 32
     surface_dropdown.style.left_margin = 5
 
-    local main_view = pane.add { type = 'flow', direction = 'horizontal', name='army_deployer/main_view' }
+    local main_view = pane.add { type = "flow", direction = "horizontal", name="army_deployer/main_view" }
 
-    local listing = main_view.add { type = 'scroll-pane', direction = 'vertical', name='army_deployer/listing'}
+    local listing = main_view.add { type = "scroll-pane", direction = "vertical", name="army_deployer/listing"}
     listing.style.horizontally_stretchable = false
     listing.style.vertically_stretchable = false
     listing.style.width = 550
 
     local deployer_table = listing.add {
-        type = 'table',
+        type = "table",
         column_count = 5,
         vertical_centering = false,
-        name = 'army_deployer/deployer_table',
-        style = 'bordered_table'
+        name = "army_deployer/deployer_table",
+        style = "bordered_table"
     }
 
     for unit_number, deployer in pairs(filtered_deployers) do
@@ -124,18 +124,18 @@ function DeployerControlGUI.update(player)
         local sprite = nil
         if player.surface.index == entity.surface.index then
             sprite = deployer_table.add {
-                type = 'sprite-button',
-                name = 'army_deployer/open_map/'..unit_number,
-                sprite = 'recipe/' .. entity.name,
-                tooltip = { 'gui-army.deployer_name_click',
+                type = "sprite-button",
+                name = "army_deployer/open_map/"..unit_number,
+                sprite = "recipe/" .. entity.name,
+                tooltip = { "gui-army.deployer_name_click",
                             entity.localised_name }
             }
         else
             sprite = deployer_table.add {
-                type = 'sprite',
-                name = 'army_deployer/deployer/'..unit_number,
-                sprite = 'recipe/' .. entity.name,
-                tooltip = { 'gui-army.deployer_name',
+                type = "sprite",
+                name = "army_deployer/deployer/"..unit_number,
+                sprite = "recipe/" .. entity.name,
+                tooltip = { "gui-army.deployer_name",
                             entity.localised_name }
             }
             sprite.style.stretch_image_to_widget_size = true
@@ -146,9 +146,9 @@ function DeployerControlGUI.update(player)
         local recipe = entity.get_recipe()
         if recipe then
             local output_sprite = deployer_table.add {
-                type = 'sprite',
-                sprite = 'recipe/' .. recipe.name,
-                tooltip = { 'gui-army.recipe_name',
+                type = "sprite",
+                sprite = "recipe/" .. recipe.name,
+                tooltip = { "gui-army.recipe_name",
                             recipe.localised_name }
             }
             output_sprite.style.width = 32
@@ -156,9 +156,9 @@ function DeployerControlGUI.update(player)
             output_sprite.style.stretch_image_to_widget_size = true
         else
             local output_sprite = deployer_table.add {
-                type = 'sprite',
-                sprite = 'utility/missing_icon',
-                tooltip = {'gui-army.missing_recipe'}
+                type = "sprite",
+                sprite = "utility/missing_icon",
+                tooltip = {"gui-army.missing_recipe"}
             }
             output_sprite.style.width = 32
             output_sprite.style.height = 32
@@ -166,49 +166,49 @@ function DeployerControlGUI.update(player)
         end
 
         local label_position = deployer_table.add {
-            type = 'label',
-            caption = { 'gui-army.deployer_location',
+            type = "label",
+            caption = { "gui-army.deployer_location",
                         entity.surface.name, entity.position.x, entity.position.y }
         }
 
         local switch = deployer_table.add {
-            type = 'switch',
-            name = 'army_deployer/build_only/' .. entity.unit_number,
+            type = "switch",
+            name = "army_deployer/build_only/" .. entity.unit_number,
             allow_none_state = false,
-            left_label_caption = 'B/D',
-            left_label_tooltip = { 'gui-army.deployer_bd_tooltip' },
-            right_label_caption = 'BO',
-            right_label_tooltip = { 'gui-army.deployer_bo_tooltip' }
+            left_label_caption = "B/D",
+            left_label_tooltip = { "gui-army.deployer_bd_tooltip" },
+            right_label_caption = "BO",
+            right_label_tooltip = { "gui-army.deployer_bo_tooltip" }
         }
         if deployer.build_only then
-            switch.switch_state = 'right'
+            switch.switch_state = "right"
         end
 
         local switch = deployer_table.add {
-            type = 'switch',
-            name = 'army_deployer/auto_deploy/' .. entity.unit_number,
+            type = "switch",
+            name = "army_deployer/auto_deploy/" .. entity.unit_number,
             allow_none_state = false,
-            left_label_caption = 'OFF',
-            right_label_caption = 'ON'
+            left_label_caption = "OFF",
+            right_label_caption = "ON"
         }
         if active_deployers[unit_number] then
-            switch.switch_state = 'right'
+            switch.switch_state = "right"
         end
     end
 
 
 
     --- Batch Actions
-    local batch_options = main_view.add { type = 'flow', direction = 'vertical' }
+    local batch_options = main_view.add { type = "flow", direction = "vertical" }
 
-    local batch_label = batch_options.add { type = 'label', caption = { 'gui-army.deployer_auto_deploy' } }
+    local batch_label = batch_options.add { type = "label", caption = { "gui-army.deployer_auto_deploy" } }
     batch_label.style.left_margin = 10
 
-    local deploy_buttons = batch_options.add { type = 'flow', direction = 'horizontal' }
-    local turn_all_on = deploy_buttons.add { type = 'button', name = 'army_deployer/all/on', caption = { 'gui-army.deployer_all_on' }, style = 'green_button', tooltip = { 'gui-army.deployer_all_on_tooltip' } }
+    local deploy_buttons = batch_options.add { type = "flow", direction = "horizontal" }
+    local turn_all_on = deploy_buttons.add { type = "button", name = "army_deployer/all/on", caption = { "gui-army.deployer_all_on" }, style = "green_button", tooltip = { "gui-army.deployer_all_on_tooltip" } }
     turn_all_on.style.left_margin = 10
     turn_all_on.style.width = 80
-    local turn_all_off = deploy_buttons.add { type = 'button', name = 'army_deployer/all/off', caption = { 'gui-army.deployer_all_off' }, style = 'red_button', tooltip = { 'gui-army.deployer_all_off_tooltip' } }
+    local turn_all_off = deploy_buttons.add { type = "button", name = "army_deployer/all/off", caption = { "gui-army.deployer_all_off" }, style = "red_button", tooltip = { "gui-army.deployer_all_off_tooltip" } }
     turn_all_off.style.left_margin = 10
     turn_all_off.style.width = 80
 end

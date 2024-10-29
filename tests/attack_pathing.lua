@@ -3,11 +3,11 @@
 --- Created by heyqule.
 --- DateTime: 1/13/2024 12:19 PM
 ---
-require('global')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local TestShared = require('shared')
+require("global")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local TestShared = require("shared")
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -35,19 +35,19 @@ local top_horizontal_river = function(surface, dimension, riverwidth, has_gate, 
     if has_gate then
         for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
 
         for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = (dimension) - (dimension - gatewidth), dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     else
         for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = dimension * -1, dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     end
@@ -68,19 +68,19 @@ local function bottom_horizontal_river(surface, dimension, riverwidth, has_gate,
     if has_gate then
         for y = dimension - riverwidth, dimension, 1 do
             for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
 
         for y = dimension - riverwidth, dimension, 1 do
             for x= (dimension) - (dimension - gatewidth), dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     else
         for y = dimension - riverwidth, dimension, 1 do
             for x= dimension * -1, dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     end
@@ -101,19 +101,19 @@ local function left_vertical_river(surface, dimension, riverwidth, has_gate, gat
     if has_gate then
         for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
             for x=(dimension * -1), (dimension * -1) + riverwidth, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
 
         for y = (dimension) - (dimension - gatewidth), dimension, 1 do
             for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     else
         for y = (dimension * -1), dimension, 1 do
             for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     end
@@ -134,19 +134,19 @@ local function right_vertical_river(surface, dimension, riverwidth, has_gate, ga
     if has_gate then
         for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
             for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
 
         for y = (dimension) - (dimension - gatewidth), dimension, 1 do
             for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     else
         for y=(dimension * -1), dimension, 1 do
             for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = 'water', position={x,y}})
+                table.insert(water_tiles, {name = "water", position={x,y}})
             end
         end
     end
@@ -160,7 +160,7 @@ local function draw_water(surface, x1,y1,x2,y2)
     local water_tiles = {}
     for x = x1, x2, 1 do
         for y = y1, y2, 1 do
-            table.insert(water_tiles, {name = 'water', position={x,y}})
+            table.insert(water_tiles, {name = "water", position={x,y}})
         end
     end
 
@@ -171,10 +171,10 @@ end
 
 local function buildBaseNoOpen(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
     bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
     left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
@@ -183,10 +183,10 @@ end
 
 local function buildBaseWithWestDefense(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     -- (-) Top horizontal
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
@@ -197,25 +197,25 @@ local function buildBaseWithWestDefense(options)
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
         for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name='stone-wall',position={x,y},  force = 'player'})
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
         end
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+6,y}, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
         end
         if y%2 == 0 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+8,y}, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+9,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+10,y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -223,20 +223,20 @@ local function buildBaseWithWestDefense(options)
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+12,y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+14,y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithWestDefenseNorthOpen(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     -- (-) Top horizontal
     top_horizontal_river(surface, dimension, riverwidth, true, gatewidth)
@@ -247,25 +247,25 @@ local function buildBaseWithWestDefenseNorthOpen(options)
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
         for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name='stone-wall',position={x,y},  force = 'player'})
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
         end
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+6,y}, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
         end
         if y%2 == 0 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+8,y}, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+9,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+10,y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -273,20 +273,20 @@ local function buildBaseWithWestDefenseNorthOpen(options)
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+12,y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+14,y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithWestDefenseSouthOpen(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     -- (-) Top horizontal
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
@@ -297,25 +297,25 @@ local function buildBaseWithWestDefenseSouthOpen(options)
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
         for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name='stone-wall',position={x,y},  force = 'player'})
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
         end
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+6,y}, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
         end
         if y%2 == 0 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+8,y}, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+9,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.north
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+10,y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -323,20 +323,20 @@ local function buildBaseWithWestDefenseSouthOpen(options)
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+12,y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+14,y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithWestDefenseForBrutalForce(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     -- (-) Top horizontal
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
@@ -347,25 +347,25 @@ local function buildBaseWithWestDefenseForBrutalForce(options)
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
         for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name='stone-wall',position={x,y},  force = 'player'})
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
         end
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+6,y}, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
         end
         if y%2 == 0 and y > -200 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+8,y}, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+9,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+10,y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -373,20 +373,20 @@ local function buildBaseWithWestDefenseForBrutalForce(options)
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+12,y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+14,y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithNorthDefenseForBrutalForce(options)
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     -- (-) Top horizontal
     top_horizontal_river(surface, dimension, riverwidth, true, gatewidth)
@@ -397,25 +397,25 @@ local function buildBaseWithNorthDefenseForBrutalForce(options)
     -- build walls
     for x = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
         for y=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name='stone-wall',position={x,y},  force = 'player'})
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
         end
 
         if x%2 == 0 then
-            surface.create_entity({name='laser-turret',position={x, (dimension * -1)+6}, force = 'player'})
+            surface.create_entity({name="laser-turret",position={x, (dimension * -1)+6}, force = "player"})
         end
         if x%2 == 0 and x < 200 then
-            surface.create_entity({name='gun-turret',position={x, (dimension * -1)+8}, force = 'player'})
+            surface.create_entity({name="gun-turret",position={x, (dimension * -1)+8}, force = "player"})
         end
         if x%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={x,(dimension * -1)+9}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={x,(dimension * -1)+9}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if x%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={x, (dimension * -1)+10}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={x, (dimension * -1)+10}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -423,20 +423,20 @@ local function buildBaseWithNorthDefenseForBrutalForce(options)
         end
 
         if x%10 == 0 then
-            surface.create_entity({name='substation',position={x, (dimension * -1)+12}, force = 'player'})
+            surface.create_entity({name="substation",position={x, (dimension * -1)+12}, force = "player"})
         end
         if x%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={x, (dimension * -1)+14}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={x, (dimension * -1)+14}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithWestAerialDefenseForBrutalForce()
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
     bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
@@ -446,21 +446,21 @@ local function buildBaseWithWestAerialDefenseForBrutalForce()
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+36, y }, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
         end
         if y%2 == 0 and y < 0 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+38, y }, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+39,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+39,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+40, y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -468,20 +468,20 @@ local function buildBaseWithWestAerialDefenseForBrutalForce()
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+42, y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+44, y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
         end
     end
 end
 
 local function buildBaseWithBackdoorOpen()
     options = options or {}
-    local dimension = options['dimension'] or DEFAULT_DIMENSION
-    local riverwidth = options['riverwidth'] or RIVER_WIDTH
-    local gatewidth = options['gatewidth'] or GATE_WIDTH
-    local surface = options['surface'] or game.surfaces[1]
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
 
     top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
     bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
@@ -495,21 +495,21 @@ local function buildBaseWithBackdoorOpen()
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
 
         if y%2 == 0 then
-            surface.create_entity({name='laser-turret',position={(dimension * -1)+36, y }, force = 'player'})
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
         end
         if y%2 == 0 and y < 0 then
-            surface.create_entity({name='gun-turret',position={(dimension * -1)+38, y }, force = 'player'})
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name='stack-inserter',position={(dimension * -1)+39,y}, force = 'player'})
+            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+39,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
-            local chest = surface.create_entity({name='infinity-chest',position={(dimension * -1)+40, y}, force = 'player'})
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
             chest.set_infinity_container_filter(1, {
-                name = 'uranium-rounds-magazine',
+                name = "uranium-rounds-magazine",
                 count = 100,
-                mode = 'exactly'
+                mode = "exactly"
             })
             chest.minable = false
             chest.rotatable = false
@@ -517,10 +517,10 @@ local function buildBaseWithBackdoorOpen()
         end
 
         if y%10 == 0 then
-            surface.create_entity({name='substation',position={(dimension * -1)+42, y}, force = 'player'})
+            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
         end
         if y%10 == 0 then
-            surface.create_entity({name='electric-energy-interface',position={(dimension * -1)+44, y}, force = 'player'})
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
         end
     end
 end
@@ -531,11 +531,11 @@ end
 
 
 
-it('Can't avoid land Beacon, all enemies killed by turrets', function()
+it("Can"t avoid land Beacon, all enemies killed by turrets", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -543,48 +543,48 @@ it('Can't avoid land Beacon, all enemies killed by turrets', function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
     after_ticks(7200, function()
-        assert(rocket_launcher.get_health_ratio() == 1, 'Enemy should not able to arrive attack target')
+        assert(rocket_launcher.get_health_ratio() == 1, "Enemy should not able to arrive attack target")
         done()
     end)
 end)
 
-it('Aerial Attack', function()
+it("Aerial Attack", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
     surface.force_generate_chunk_requests()
     buildBaseNoOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
     
     after_ticks(7200, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { 0, 0 },
             radius = 64,
         }
@@ -595,17 +595,17 @@ it('Aerial Attack', function()
                 break;
             end
         end
-        assert.equal(air_scout, true, 'Has air scout')
-        assert(entity_is_damage(rocket_launcher), 'Enemy can attack target')
+        assert.equal(air_scout, true, "Has air scout")
+        assert(entity_is_damage(rocket_launcher), "Enemy can attack target")
         done()
     end)
 end)
 
-it('Avoid Defence Beacon (Ground Attack) using left side', function()
+it("Avoid Defence Beacon (Ground Attack) using left side", function()
     async(7500)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -613,17 +613,17 @@ it('Avoid Defence Beacon (Ground Attack) using left side', function()
 
     buildBaseWithWestDefenseNorthOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
     end)
 
@@ -635,8 +635,8 @@ it('Avoid Defence Beacon (Ground Attack) using left side', function()
     after_ticks(7500, function()
         --game.speed = 1000
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { 0, 0 },
             radius = 64,
         }
@@ -647,17 +647,17 @@ it('Avoid Defence Beacon (Ground Attack) using left side', function()
                 break;
             end
         end
-        assert.equal(land_scout, true, 'Has land scout')
-        assert(entity_is_damage(rocket_launcher), 'Able to attack target')
+        assert.equal(land_scout, true, "Has land scout")
+        assert(entity_is_damage(rocket_launcher), "Able to attack target")
         done()
     end)
 end)
 
-it('Avoid Defence Beacon (Aerial Attack) using left side', function()
+it("Avoid Defence Beacon (Aerial Attack) using left side", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -665,31 +665,31 @@ it('Avoid Defence Beacon (Aerial Attack) using left side', function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
     end)
 
     after_ticks(7200, function()
-        assert(entity_is_damage(rocket_launcher), 'Flyers are able to attack target')
+        assert(entity_is_damage(rocket_launcher), "Flyers are able to attack target")
         done()
     end)
 end)
 
-it('Avoid Defence Beacon (Ground Attack) using right side', function()
+it("Avoid Defence Beacon (Ground Attack) using right side", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -697,31 +697,31 @@ it('Avoid Defence Beacon (Ground Attack) using right side', function()
 
     buildBaseWithWestDefenseSouthOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
     end)
 
     after_ticks(7200, function()
-        assert(entity_is_damage(rocket_launcher), 'Able to attack target')
+        assert(entity_is_damage(rocket_launcher), "Able to attack target")
         done()
     end)
 end)
 
-it('Avoid Defence Beacon (Aerial Attack) using right side', function()
+it("Avoid Defence Beacon (Aerial Attack) using right side", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -729,32 +729,32 @@ it('Avoid Defence Beacon (Aerial Attack) using right side', function()
 
     buildBaseWithWestDefense()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
     end)
 
     after_ticks(7200, function()
-        assert(entity_is_damage(rocket_launcher), 'Flyers are able to attack target')
+        assert(entity_is_damage(rocket_launcher), "Flyers are able to attack target")
         done()
     end)
 end)
 
 
-it('Picking area with lowest defense score from East', function()
+it("Picking area with lowest defense score from East", function()
     async(3300)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -766,37 +766,37 @@ it('Picking area with lowest defense score from East', function()
         gatewidth = 320
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-720,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-720,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, -200 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -200 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, -120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -120 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, 120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 120 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -485, 200 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 200 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
     after_ticks(3300, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { x = -550, y = -200 },
             radius = 48,
         }
 
-        assert(enemies[1] ~= nil, 'There are enemies near target beacon')
+        assert(enemies[1] ~= nil, "There are enemies near target beacon")
 
         done()
     end)
@@ -806,11 +806,11 @@ it('Picking area with lowest defense score from East', function()
     end)
 end)
 
-it('Picking area with lowest defense score from North', function()
+it("Picking area with lowest defense score from North", function()
     async(3300)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -822,37 +822,37 @@ it('Picking area with lowest defense score from North', function()
         gatewidth = 320
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={0,-720}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={0,-720}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -200,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200,-485 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -120,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -120,-485 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { -40,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -40,-485 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { 40,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 40,-485 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { 120,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 120,-485 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { 200,-485 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 200,-485 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
     after_ticks(3300, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { x = 170, y = -550 },
             radius = 48,
         }
 
-        assert(enemies[1] ~= nil, 'There are enemies near target beacon')
+        assert(enemies[1] ~= nil, "There are enemies near target beacon")
         done()
     end)
 
@@ -861,11 +861,11 @@ it('Picking area with lowest defense score from North', function()
     end)
 end)
 
-it('Picking aerial area with lowest defense score from East', function()
+it("Picking aerial area with lowest defense score from East", function()
     async(3900)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -876,37 +876,37 @@ it('Picking aerial area with lowest defense score from East', function()
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-620,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
 
     local x = -175
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -200 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -200 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -120 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, 120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 120 } })
 
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
     end)
 
     after_ticks(3900, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { x = x - 32, y = 42 },
             radius = 48,
         }
 
-        assert(enemies[1] ~= nil, 'There are enemies near target beacon')
+        assert(enemies[1] ~= nil, "There are enemies near target beacon")
 
         done()
     end)
@@ -916,11 +916,11 @@ it('Picking aerial area with lowest defense score from East', function()
     end)
 end)
 
-it('When inserted waypoint is unreachable, enemies should still able to route to target.', function()
+it("When inserted waypoint is unreachable, enemies should still able to route to target.", function()
     async(9600)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -931,36 +931,36 @@ it('When inserted waypoint is unreachable, enemies should still able to route to
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-620,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
 
     local x = -170
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -200 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -200 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -120 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, -40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, 40 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 40 } })
 
-    local entity = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = { x, 120 } })
+    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 120 } })
 
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
     after_ticks(9600, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { x = 0, y = 0 },
             radius = 48,
         }
 
-        assert(enemies[1] ~= nil, 'There are enemies near target beacon')
+        assert(enemies[1] ~= nil, "There are enemies near target beacon")
         done()
     end)
 
@@ -969,11 +969,11 @@ it('When inserted waypoint is unreachable, enemies should still able to route to
     end)
 end)
 
-it('Attack beacon couldnt reach a spawn beacon on first try', function()
+it("Attack beacon couldnt reach a spawn beacon on first try", function()
     async(1500)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     --surface.request_to_generate_chunks({ 0, 0 }, 30)
@@ -984,27 +984,27 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-350,350}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-350,350}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
     after_ticks(600, function()
-        assert(storage.group_tracker.erm_vanilla == nil, 'Shouldn't able to spawn units')
+        assert(storage.group_tracker.erm_vanilla == nil, "Shouldn"t able to spawn units")
     end)
 
     after_ticks(900, function()
-        local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { -500, 0 } })
+        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -500, 0 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
     after_ticks(1200, function()
-        assert(storage.group_tracker.erm_vanilla.current_size > 0, 'Able to spawn units')
+        assert(storage.group_tracker.erm_vanilla.current_size > 0, "Able to spawn units")
         done()
     end)
 
@@ -1013,11 +1013,11 @@ it('Attack beacon couldnt reach a spawn beacon on first try', function()
     end)
 end)
 
-it('Land attack group cant find a valid path, switch to aerial group instead', function()
+it("Land attack group cant find a valid path, switch to aerial group instead", function()
     async(7200)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
 
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
@@ -1025,24 +1025,24 @@ it('Land attack group cant find a valid path, switch to aerial group instead', f
 
     buildBaseNoOpen()
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={-250,-250}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={-250,-250}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 100)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
     after_ticks(7200, function()
         local enemies = surface.find_entities_filtered {
-            force = 'enemy',
-            type = 'unit',
+            force = "enemy",
+            type = "unit",
             position = { x = 0, y = 0},
             radius = 48,
         }
 
-        assert(enemies[1] ~= nil, 'There are enemies near target beacon')
+        assert(enemies[1] ~= nil, "There are enemies near target beacon")
         done()
     end)
 
@@ -1051,11 +1051,11 @@ it('Land attack group cant find a valid path, switch to aerial group instead', f
     end)
 end)
 
-it('Unable to find enemy near scout beacon during path finding, removing scout beacon', function()
+it("Unable to find enemy near scout beacon during path finding, removing scout beacon", function()
     async(3600)
     local surface = game.surfaces[1]
-    local enemy = game.forces['enemy']
-    local player = game.forces['player']
+    local enemy = game.forces["enemy"]
+    local player = game.forces["player"]
     -- Require generated chunks
     surface.request_to_generate_chunks({ 0, 0 }, 20)
     surface.force_generate_chunk_requests()
@@ -1063,41 +1063,41 @@ it('Unable to find enemy near scout beacon during path finding, removing scout b
         dimension = 480,
     })
 
-    local rocket_launcher = surface.create_entity({ name = 'erm-rocket-silo-test', force = 'player', position = { 0, 0 }, raise_built=true })
+    local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    local gun_turret = surface.create_entity({ name = 'gun-turret', force = 'player', position = { 200, 10 }, raise_built=true })
-    local landing_scout = surface.create_entity({ name = 'erm_vanilla--land_scout--1', force = 'enemy', position = {200, 0} })
+    local gun_turret = surface.create_entity({ name = "gun-turret", force = "player", position = { 200, 10 }, raise_built=true })
+    local landing_scout = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = {200, 0} })
 
-    surface.create_entity({name='erm_vanilla--biter-spawner--10', position={500,0}})
+    surface.create_entity({name="erm_vanilla--biter-spawner--10", position={500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    landing_scout.die('player')
+    landing_scout.die("player")
 
     local beacons, beacon_number
 
     after_ticks(180, function()
-        gun_turret.die('player')
+        gun_turret.die("player")
     end)
 
     after_ticks(300, function()
         beacons = surface.find_entities_filtered {
             name = AttackGroupBeaconProcessor.LAND_BEACON,
-            force = 'enemy',
+            force = "enemy",
             limit = 1
         }
         beacon_number = beacons[1].unit_number
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
-        AttackGroupProcessor.generate_group('erm_vanilla',game.forces['enemy'], 50)
+        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 50)
     end)
 
     after_ticks(3600, function()
         local final_check_beacons = surface.find_entities_filtered {
             name = AttackGroupBeaconProcessor.LAND_BEACON,
-            force = 'enemy',
+            force = "enemy",
             limit = 1
         }
-        assert(next(final_check_beacons) == nil, 'Enemy landing beacon entity should not exist')
-        assert(storage[AttackGroupBeaconProcessor.LAND_BEACON][1]['enemy'][beacon_number] == nil, 'Enemy landing beacon storage should not exist')
+        assert(next(final_check_beacons) == nil, "Enemy landing beacon entity should not exist")
+        assert(storage[AttackGroupBeaconProcessor.LAND_BEACON][1]["enemy"][beacon_number] == nil, "Enemy landing beacon storage should not exist")
         done()
     end)
 end)

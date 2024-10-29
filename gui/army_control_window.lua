@@ -3,19 +3,19 @@
 --- Created by heyqule.
 --- DateTime: 11/15/2022 9:44 PM
 ---
-local mod_gui = require('mod-gui')
-local String = require('__stdlib__/stdlib/utils/string')
+local mod_gui = require("mod-gui")
+local String = require("__stdlib__/stdlib/utils/string")
 
-local SharedGuiFunctions = require('__enemyracemanager__/gui/shared')
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
+local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 
-local UnitTab = require('__enemyracemanager__/gui/army_tabs/unit_control')
-local DeployerTab = require('__enemyracemanager__/gui/army_tabs/deployer_control')
-local CCTab = require('__enemyracemanager__/gui/army_tabs/cc_control')
-local HelpTab = require('__enemyracemanager__/gui/army_tabs/help')
-local SharedTabFunctions = require('__enemyracemanager__/gui/army_tabs/shared')
+local UnitTab = require("__enemyracemanager__/gui/army_tabs/unit_control")
+local DeployerTab = require("__enemyracemanager__/gui/army_tabs/deployer_control")
+local CCTab = require("__enemyracemanager__/gui/army_tabs/cc_control")
+local HelpTab = require("__enemyracemanager__/gui/army_tabs/help")
+local SharedTabFunctions = require("__enemyracemanager__/gui/army_tabs/shared")
 
 local Army_MainWindow = {
     require_update_all = false,
@@ -48,9 +48,9 @@ function Army_MainWindow.show(player)
         return
     end
     local main_window = gui.add {
-        type = 'frame',
+        type = "frame",
         name = SharedTabFunctions.root_name,
-        direction = 'vertical',
+        direction = "vertical",
     }
     main_window.force_auto_center()
 
@@ -59,46 +59,46 @@ function Army_MainWindow.show(player)
     main_window.style.maximal_height = Army_MainWindow.window_height * 1.55
     main_window.style.minimal_height = Army_MainWindow.window_height * 0.75
     -- Race Manager Title
-    local title_flow = main_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
+    local title_flow = main_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = Army_MainWindow.window_width
     title_flow.style.maximal_width = Army_MainWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'header-title', caption = { 'gui-army.control-title' }, style = 'caption_label' }
+    local title = title_flow.add { type = "label", name = "header-title", caption = { "gui-army.control-title" }, style = "caption_label" }
 
-    local pusher = title_flow.add { type = 'empty-widget', name = 'header-pusher', style = 'draggable_space_header' }
+    local pusher = title_flow.add { type = "empty-widget", name = "header-pusher", style = "draggable_space_header" }
     pusher.style.width = Army_MainWindow.window_width - 24 - 250
     pusher.style.height = 24
     pusher.drag_target = main_window
 
-    local close_button = title_flow.add { type = 'sprite-button',
-                                          name = 'erm_army_close_button',
-                                          sprite = 'utility/close',
-                                          style = 'frame_action_button',
-                                          tooltip = { 'gui-army.close-button' }
+    local close_button = title_flow.add { type = "sprite-button",
+                                          name = "erm_army_close_button",
+                                          sprite = "utility/close",
+                                          style = "frame_action_button",
+                                          tooltip = { "gui-army.close-button" }
     }
     close_button.style.width = 24
     close_button.style.height = 24
-    close_button.style.horizontal_align = 'right'
+    close_button.style.horizontal_align = "right"
 
-    local tabbed_pane = main_window.add { type = 'tabbed-pane', name = 'main-tab' }
-    local tab1 = tabbed_pane.add { type = 'tab', caption = 'Army Stats', name = 'army-stats-tab' }
-    local tab2 = tabbed_pane.add { type = 'tab', caption = 'Deployers', name = 'deployer-tab' }
-    local tab3 = tabbed_pane.add { type = 'tab', caption = 'Command Center', name = 'command-center-tab' }
-    local tab4 = tabbed_pane.add { type = 'tab', caption = 'Help', name = 'help-tab' }
+    local tabbed_pane = main_window.add { type = "tabbed-pane", name = "main-tab" }
+    local tab1 = tabbed_pane.add { type = "tab", caption = "Army Stats", name = "army-stats-tab" }
+    local tab2 = tabbed_pane.add { type = "tab", caption = "Deployers", name = "deployer-tab" }
+    local tab3 = tabbed_pane.add { type = "tab", caption = "Command Center", name = "command-center-tab" }
+    local tab4 = tabbed_pane.add { type = "tab", caption = "Help", name = "help-tab" }
 
-    local army_stats_pane = tabbed_pane.add { type = 'flow', name = UnitTab.name, direction = 'vertical' }
+    local army_stats_pane = tabbed_pane.add { type = "flow", name = UnitTab.name, direction = "vertical" }
     army_stats_pane.style.margin = 5
     army_stats_pane.style.width = Army_MainWindow.window_width - 40
 
-    local deployer_pane = tabbed_pane.add { type = 'flow', name = DeployerTab.name, direction = 'vertical' }
+    local deployer_pane = tabbed_pane.add { type = "flow", name = DeployerTab.name, direction = "vertical" }
     deployer_pane.style.margin = 5
     deployer_pane.style.width = Army_MainWindow.window_width - 40
 
-    local command_center_pane = tabbed_pane.add { type = 'flow', name = CCTab.name, direction = 'vertical' }
+    local command_center_pane = tabbed_pane.add { type = "flow", name = CCTab.name, direction = "vertical" }
     command_center_pane.style.margin = 5
     command_center_pane.style.width = Army_MainWindow.window_width - 40
 
-    local help_pane = tabbed_pane.add { type = 'scroll-pane', name = HelpTab.name, direction = 'vertical' }
+    local help_pane = tabbed_pane.add { type = "scroll-pane", name = HelpTab.name, direction = "vertical" }
     help_pane.style.margin = 5
     help_pane.style.width = Army_MainWindow.window_width - 40
 
@@ -184,10 +184,10 @@ function Army_MainWindow.toggle_main_window(owner)
         end
 
         if Army_MainWindow.is_hidden(owner) then
-            button_flow.erm_army_control_toggle.tooltip = { 'gui-army.show-control' }
+            button_flow.erm_army_control_toggle.tooltip = { "gui-army.show-control" }
             Army_MainWindow.open_tab(owner)
         else
-            button_flow.erm_army_control_toggle.tooltip = { 'gui-army.hide-control' }
+            button_flow.erm_army_control_toggle.tooltip = { "gui-army.hide-control" }
             Army_MainWindow.hide(owner)
         end
     end
@@ -196,7 +196,7 @@ end
 function Army_MainWindow.toggle_close(owner)
     if owner then
         local button_flow = mod_gui.get_button_flow(owner)
-        button_flow.erm_army_control_toggle.tooltip = { 'gui-army.show-control' }
+        button_flow.erm_army_control_toggle.tooltip = { "gui-army.show-control" }
         Army_MainWindow.hide(owner)
     end
 end
@@ -205,11 +205,11 @@ function Army_MainWindow.update_overhead_button(player_index)
     local owner = game.players[player_index]
     local button_flow = mod_gui.get_button_flow(owner)
 
-    if owner and button_flow and not button_flow['erm_army_control_toggle'] then
-        if game.item_prototypes['erm_terran/command-center'] then
-            button_flow.add { type = 'sprite-button', name = 'erm_army_control_toggle', tooltip = { 'gui-army.show-control' }, sprite = 'item/erm_terran/command-center' }
+    if owner and button_flow and not button_flow["erm_army_control_toggle"] then
+        if game.item_prototypes["erm_terran/command-center"] then
+            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { "gui-army.show-control" }, sprite = "item/erm_terran/command-center" }
         else
-            button_flow.add { type = 'sprite-button', name = 'erm_army_control_toggle', tooltip = { 'gui-army.show-control' }, sprite = 'item/submachine-gun' }
+            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { "gui-army.show-control" }, sprite = "item/submachine-gun" }
         end
     end
 end
@@ -239,7 +239,7 @@ function Army_MainWindow.set_selected_cc(player, cc_selector, cc_name)
         end
     end
 
-    Army_MainWindow.open_tab(player, 'command-center-pane')
+    Army_MainWindow.open_tab(player, "command-center-pane")
 end
 
 function Army_MainWindow.start_link(player)
@@ -248,9 +248,9 @@ function Army_MainWindow.start_link(player)
     local to_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.to)
     if from_cc and to_cc then
         ArmyTeleportationProcessor.link(from_cc, to_cc)
-        player_data.success_message = { 'gui-army.cc_linked_with', player_data.selected_cc.from, player_data.selected_cc.to }
+        player_data.success_message = { "gui-army.cc_linked_with", player_data.selected_cc.from, player_data.selected_cc.to }
     else
-        player_data.error_message = { 'gui-army.cc_linked_with_error' }
+        player_data.error_message = { "gui-army.cc_linked_with_error" }
     end
     Army_MainWindow.update_command_centers()
 end
@@ -259,10 +259,10 @@ function Army_MainWindow.stop_link(player)
     local player_data = SharedTabFunctions.get_player_tab_data(player)
     local force = player.force
     if storage.army_entrance_teleporters[force.index] then
-        player_data.success_message = { 'gui-army.cc_unlinked_with', player_data.selected_cc.from, player_data.selected_cc.to }
+        player_data.success_message = { "gui-army.cc_unlinked_with", player_data.selected_cc.from, player_data.selected_cc.to }
         ArmyTeleportationProcessor.unlink(force)
     else
-        player_data.error_message = { 'gui-army.cc_unlinked_with_error' }
+        player_data.error_message = { "gui-army.cc_unlinked_with_error" }
     end
     Army_MainWindow.update_command_centers()
 end
@@ -316,7 +316,7 @@ function Army_MainWindow.update_army_planner(player, element)
     if player and player.valid and element and element.valid then
         local unit_count = math.abs(tonumber(element.text))
         local force = player.force
-        local name = string.gsub(element.name, 'army_deployer/planner/', '')
+        local name = string.gsub(element.name, "army_deployer/planner/", "")
         if ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count) then
             Army_MainWindow.update_army_stats()
         end

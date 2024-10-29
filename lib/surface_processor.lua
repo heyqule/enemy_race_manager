@@ -1,11 +1,11 @@
 ---
 --- Created by heyqule.
 --- DateTime: 03/27/2021 3:16 PM
---- require('__enemyracemanager__/lib/global_config')
+--- require("__enemyracemanager__/lib/global_config")
 ---
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
 local SurfaceProcessor = {}
 
@@ -87,7 +87,7 @@ function SurfaceProcessor.wander_unit_clean_up()
     for _, surface in pairs(game.surfaces) do
         if surface.valid then
             local units = surface.find_entities_filtered({
-                type = 'unit',
+                type = "unit",
                 force = ForceHelper.get_enemy_forces(),
             })
             for _, unit in pairs(units) do
@@ -106,8 +106,8 @@ function SurfaceProcessor.wander_unit_clean_up()
         end
     end
     profiler.stop()
-    game.print({ '', 'Clean up orphan wandering units. Refunded units to attack meter if applicable.', profiler })
-    game.print({ '', 'Checked: ' .. checked_count .. ' / Removed:' .. unit_count .. ' ' })
+    game.print({ "", "Clean up orphan wandering units. Refunded units to attack meter if applicable.", profiler })
+    game.print({ "", "Checked: " .. checked_count .. " / Removed:" .. unit_count .. " " })
 end
 
 function SurfaceProcessor.get_enemy_on(surface_name)
@@ -120,7 +120,7 @@ function SurfaceProcessor.get_enemy_on(surface_name)
 end
 
 function SurfaceProcessor.get_gps_message(x, y, surface_name)
-    return '[gps=' .. x .. ',' .. y .. ',' .. surface_name .. ']'
+    return "[gps=" .. x .. "," .. y .. "," .. surface_name .. "]"
 end
 
 function SurfaceProcessor.get_attackable_surfaces()

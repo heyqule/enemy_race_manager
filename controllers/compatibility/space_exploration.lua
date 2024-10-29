@@ -3,16 +3,16 @@
 --- Created by heyqule.
 --- DateTime: 7/4/2024 12:25 AM
 ---
-if not script.active_mods['space-exploration'] then
+if not script.active_mods["space-exploration"] then
     return
 end
 
-local Event = require('__stdlib__/stdlib/event/event')
-local Config = require('__enemyracemanager__/lib/global_config')
-local UniverseRaw = require('__space-exploration__/scripts/universe-raw')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local Event = require("__stdlib__/stdlib/event/event")
+local Config = require("__enemyracemanager__/lib/global_config")
+local UniverseRaw = require("__space-exploration__/scripts/universe-raw")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 --- Pull from SE once every hour
 local cache_time = hour
@@ -27,7 +27,7 @@ end
 local update_attackable_zone_data = function(surface_name)
     local surface_profiler = game.create_profiler()
     local surface = game.surfaces[surface_name]
-    local zone_data = remote.call('space-exploration', 'get_zone_from_surface_index', {surface_index = surface.index})
+    local zone_data = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = surface.index})
     if surface and zone_data then
         local data = {}
         data.radius = math.floor(zone_data.radius)
@@ -59,7 +59,7 @@ local update_attackable_zone_data = function(surface_name)
         InterplanetaryAttacks.set_intel(surface.index, data)
     end
     surface_profiler.stop()
-    log({ '', 'CTRL.COMP.SE.update_attackable_zone_data: '..surface_name, surface_profiler })
+    log({ "", "CTRL.COMP.SE.update_attackable_zone_data: "..surface_name, surface_profiler })
 end
 
 Event.register(Event.generate_event_name(Config.EVENT_FLUSH_GLOBAL), function(event)

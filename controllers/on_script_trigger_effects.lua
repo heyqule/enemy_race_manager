@@ -3,23 +3,23 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:47 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
-require('__enemyracemanager__/global')
+require("__enemyracemanager__/global")
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 
-local CustomAttacks = require('__enemyracemanager__/prototypes/base-units/custom_attacks')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local EnvironmentalAttacks = require('__enemyracemanager__/lib/environmental_attacks')
-local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
+local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
-local ArmyDeployer = require('__enemyracemanager__/lib/army_deployment_processor')
-local RallyPointUI = require('__enemyracemanager__/gui/deployer_attachment')
+local ArmyDeployer = require("__enemyracemanager__/lib/army_deployment_processor")
+local RallyPointUI = require("__enemyracemanager__/gui/deployer_attachment")
 
 -- Player super weapon attacks functions
 local process_attack_point_event = function(event, attack_point)
@@ -128,9 +128,9 @@ local script_functions = {
             ArmyPopulation.add_unit_count(unit)
         else
             if unit.last_user then
-                unit.last_user.print('You need additional Follower Count Research!')
+                unit.last_user.print("You need additional Follower Count Research!")
                 unit.last_user.insert { name = unit.name, count = 1 }
-                unit.last_user.play_sound({ path = 'erm-army-full-population' })
+                unit.last_user.play_sound({ path = "erm-army-full-population" })
             end
             unit.destroy()
             ArmyControlUI.update_army_stats()
@@ -140,7 +140,7 @@ local script_functions = {
         local unit = event.source_entity
         if unit and unit.valid then
             ArmyPopulation.remove_unit_count(unit)
-            unit.force.play_sound({ path = 'erm-army-force-under-attack-by-chance' })
+            unit.force.play_sound({ path = "erm-army-force-under-attack-by-chance" })
             ArmyControlUI.update_army_stats()
         end
     end,

@@ -3,13 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 11/7/2022 10:25 PM
 ---
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local BASE_MAX_UNIT = 150
 
 local ArmyPopulationProcessor = {}
 
 local get_max_pop = function(maximum_following_robot_count)
-    return  math.floor((BASE_MAX_UNIT + maximum_following_robot_count) * settings.global['enemyracemanager-army-limit-multiplier'].value)
+    return  math.floor((BASE_MAX_UNIT + maximum_following_robot_count) * settings.global["enemyracemanager-army-limit-multiplier"].value)
 end
 
 local set_default_values = function(force)
@@ -22,11 +22,11 @@ local set_default_values = function(force)
     }
 
     for name, value in pairs(storage.army_registered_units) do
-        if not default_values['unit_types'][name] then
-            default_values['unit_types'][name] = { pop_count = 0, unit_count = 0 }
+        if not default_values["unit_types"][name] then
+            default_values["unit_types"][name] = { pop_count = 0, unit_count = 0 }
         end
 
-        default_values['auto_deploy'][name] = math.floor(50 / value)
+        default_values["auto_deploy"][name] = math.floor(50 / value)
     end
 
     return default_values
@@ -36,7 +36,7 @@ local init_force_data = function(force, force_reset)
     force_reset = force_reset or false
     local preserve_auto_deploy
     if storage.army_populations[force.name] and force_reset then
-        preserve_auto_deploy = storage.army_populations[force.name]['auto_deploy']
+        preserve_auto_deploy = storage.army_populations[force.name]["auto_deploy"]
     end
 
     if not storage.army_populations[force.name] or force_reset then
@@ -44,7 +44,7 @@ local init_force_data = function(force, force_reset)
     end
 
     if preserve_auto_deploy then
-        storage.army_populations[force.name]['auto_deploy'] = preserve_auto_deploy
+        storage.army_populations[force.name]["auto_deploy"] = preserve_auto_deploy
     end
 end
 
@@ -78,7 +78,7 @@ function ArmyPopulationProcessor.index()
     for _, surface in pairs(game.surfaces) do
         if surface.valid then
             local units = surface.find_entities_filtered({
-                type = 'unit',
+                type = "unit",
                 force = ForceHelper.get_player_forces()
             })
             for _, unit in pairs(units) do
@@ -89,19 +89,19 @@ function ArmyPopulationProcessor.index()
         end
     end
     profiler.stop()
-    game.print({ '', 'Rebuild Player Army Index: ', profiler })
+    game.print({ "", "Rebuild Player Army Index: ", profiler })
 end
 
 function ArmyPopulationProcessor.calculate_max_units(force)
     init_force_data(force)
-    storage.army_populations[force.name]['max_pop'] = get_max_pop(force.maximum_following_robot_count)
-    force.print('Max Army Population: ' .. storage.army_populations[force.name]['max_pop'])
+    storage.army_populations[force.name]["max_pop"] = get_max_pop(force.maximum_following_robot_count)
+    force.print("Max Army Population: " .. storage.army_populations[force.name]["max_pop"])
 end
 
 function ArmyPopulationProcessor.can_place_unit(unit)
     local unit_force = unit.force
     init_force_data(unit_force)
-    return storage.army_populations[unit_force.name]['max_pop'] >= (storage.army_populations[unit_force.name]['pop_count'] + storage.army_registered_units[unit.name])
+    return storage.army_populations[unit_force.name]["max_pop"] >= (storage.army_populations[unit_force.name]["pop_count"] + storage.army_registered_units[unit.name])
 
 end
 
@@ -115,10 +115,10 @@ function ArmyPopulationProcessor.add_unit_count(unit)
 
         local pop = army_registered_units[unit_name]
         local force_name = unit_force.name
-        army_pop[force_name]['pop_count'] = army_pop[force_name]['pop_count'] + pop
-        army_pop[force_name]['unit_count'] = army_pop[force_name]['unit_count'] + 1
-        army_pop[force_name]['unit_types'][unit_name]['unit_count'] = army_pop[force_name]['unit_types'][unit_name]['unit_count'] + 1
-        army_pop[force_name]['unit_types'][unit_name]['pop_count'] = army_pop[force_name]['unit_types'][unit_name]['pop_count'] + pop
+        army_pop[force_name]["pop_count"] = army_pop[force_name]["pop_count"] + pop
+        army_pop[force_name]["unit_count"] = army_pop[force_name]["unit_count"] + 1
+        army_pop[force_name]["unit_types"][unit_name]["unit_count"] = army_pop[force_name]["unit_types"][unit_name]["unit_count"] + 1
+        army_pop[force_name]["unit_types"][unit_name]["pop_count"] = army_pop[force_name]["unit_types"][unit_name]["pop_count"] + pop
     end
 end
 
@@ -130,10 +130,10 @@ function ArmyPopulationProcessor.remove_unit_count(unit)
     if unit_force and army_registered_units[unit_name] then
         local pop = army_registered_units[unit_name]
         local force_name = unit_force.name
-        army_pop[force_name]['pop_count'] = army_pop[force_name]['pop_count'] - pop
-        army_pop[force_name]['unit_count'] = army_pop[force_name]['unit_count'] - 1
-        army_pop[force_name]['unit_types'][unit_name]['unit_count'] = army_pop[force_name]['unit_types'][unit_name]['unit_count'] - 1
-        army_pop[force_name]['unit_types'][unit_name]['pop_count'] = army_pop[force_name]['unit_types'][unit_name]['pop_count'] - pop
+        army_pop[force_name]["pop_count"] = army_pop[force_name]["pop_count"] - pop
+        army_pop[force_name]["unit_count"] = army_pop[force_name]["unit_count"] - 1
+        army_pop[force_name]["unit_types"][unit_name]["unit_count"] = army_pop[force_name]["unit_types"][unit_name]["unit_count"] - 1
+        army_pop[force_name]["unit_types"][unit_name]["pop_count"] = army_pop[force_name]["unit_types"][unit_name]["pop_count"] - pop
     end
 end
 
@@ -172,7 +172,7 @@ function ArmyPopulationProcessor.unit_count(force)
 end
 
 function ArmyPopulationProcessor.unit_count_by_name(force, name)
-    return storage.army_populations[force.name]['unit_types'][name]['unit_count']
+    return storage.army_populations[force.name]["unit_types"][name]["unit_count"]
 end
 
 function ArmyPopulationProcessor.unit_population(name)
@@ -181,15 +181,15 @@ end
 
 function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count)
     if unit_count < 1 then
-        player.print('You can not set deploy planner to fewer than 1 unit.')
+        player.print("You can not set deploy planner to fewer than 1 unit.")
         return false
     end
-    storage.army_populations[force.name]['auto_deploy'][name] = unit_count
+    storage.army_populations[force.name]["auto_deploy"][name] = unit_count
     return true
 end
 
 function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
-    return storage.army_populations[force.name]['auto_deploy'][name]
+    return storage.army_populations[force.name]["auto_deploy"][name]
 end
 
 function ArmyPopulationProcessor.is_under_max_pop(force)

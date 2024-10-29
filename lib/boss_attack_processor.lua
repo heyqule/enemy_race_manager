@@ -6,13 +6,13 @@
 
 
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local BossAttackProcessor = {}
 
@@ -22,7 +22,7 @@ BossAttackProcessor.TYPE_BEAM = 2
 local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
 local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
-local type_name = { 'projectile', 'beam' }
+local type_name = { "projectile", "beam" }
 
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
@@ -95,11 +95,11 @@ local pick_near_by_player_entity_position = function(artillery_mode)
 end
 
 local queue_attack = function(data)
-    for i = 1, data['spread'] do
+    for i = 1, data["spread"] do
         local position, artillery_mode = pick_near_by_player_entity_position()
-        data['artillery_mode'] = artillery_mode
-        data['position'] = position
-        Cron.add_boss_queue('BossAttackProcessor.process_attack', table.deepcopy(data))
+        data["artillery_mode"] = artillery_mode
+        data["position"] = position
+        Cron.add_boss_queue("BossAttackProcessor.process_attack", table.deepcopy(data))
     end
 end
 
@@ -116,35 +116,35 @@ end
 local select_attack = function(mod_name, attacks, tier)
     local data
     local boss = storage.boss
-    for i, value in pairs(attacks['projectile_name']) do
-        if can_spawn(attacks['projectile_chance'][i]) then
+    for i, value in pairs(attacks["projectile_name"]) do
+        if can_spawn(attacks["projectile_chance"][i]) then
             data = {
-                entity_name = mod_name .. '--' .. value .. '-' .. type_name[attacks['projectile_type'][i]] .. '-t' .. tier,
-                count = attacks['projectile_count'][i],
-                spread = attacks['projectile_spread'][i],
-                type = attacks['projectile_type'][i],
+                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["projectile_type"][i]] .. "-t" .. tier,
+                count = attacks["projectile_count"][i],
+                spread = attacks["projectile_spread"][i],
+                type = attacks["projectile_type"][i],
             }
 
-            if attacks['projectile_use_multiplier'][i] then
-                data['count'] = math.floor(data['count'] * attacks['projectile_count_multiplier'][i][tier])
-                data['spread'] = math.floor(data['spread'] * attacks['projectile_spread_multiplier'][i][tier])
+            if attacks["projectile_use_multiplier"][i] then
+                data["count"] = math.floor(data["count"] * attacks["projectile_count_multiplier"][i][tier])
+                data["spread"] = math.floor(data["spread"] * attacks["projectile_spread_multiplier"][i][tier])
             end
 
-            data = set_optional_data(data, attacks, i, 'projectile_speed')
-            data = set_optional_data(data, attacks, i, 'projectile_range')
+            data = set_optional_data(data, attacks, i, "projectile_speed")
+            data = set_optional_data(data, attacks, i, "projectile_range")
 
             break
         end
     end
-    data['entity_position'] = boss.entity_position
-    data['surface'] = boss.surface
-    data['entity_force'] = boss.force
+    data["entity_position"] = boss.entity_position
+    data["surface"] = boss.surface
+    data["entity_force"] = boss.force
     return data
 end
 
 local fetch_attack_data = function(race_name)
     if not storage.boss.attack_cache then
-        storage.boss.attack_cache = remote.call(race_name .. '_boss_attacks', 'get_attack_data')
+        storage.boss.attack_cache = remote.call(race_name .. "_boss_attacks", "get_attack_data")
     end
 end
 
@@ -160,60 +160,60 @@ local get_despawn_attack = function()
     local race_name = storage.boss.race_name
     local tier = storage.boss.boss_tier
     fetch_attack_data(race_name)
-    local data = select_attack(race_name, storage.boss.attack_cache['despawn_attacks'], tier)
+    local data = select_attack(race_name, storage.boss.attack_cache["despawn_attacks"], tier)
     return data
 end
 
 local process_attack = function(data, unique_position)
     unique_position = unique_position or false
-    data['artillery_mode'] = data['artillery_mode'] or false
+    data["artillery_mode"] = data["artillery_mode"] or false
 
-    local surface = data['surface']
-    local entity_force = data['entity_force']
-    if not (surface and surface.valid and entity_force and entity_force.valid) or data['position'] == nil then
-        DebugHelper.print('not valid surface / force / position')
+    local surface = data["surface"]
+    local entity_force = data["entity_force"]
+    if not (surface and surface.valid and entity_force and entity_force.valid) or data["position"] == nil then
+        DebugHelper.print("not valid surface / force / position")
         return
     end
     local start_position = {
-        data['entity_position']['x']  + math.random(-8, 8),
-        data['entity_position']['y'] + math.random(-8, 8)
+        data["entity_position"]["x"]  + math.random(-8, 8),
+        data["entity_position"]["y"] + math.random(-8, 8)
     }
-    local entity_name = data['entity_name']
+    local entity_name = data["entity_name"]
 
-    if data['artillery_mode'] then
-        data['speed'] = 1
-        data['range'] = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
+    if data["artillery_mode"] then
+        data["speed"] = 1
+        data["range"] = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
     end
 
-    for i = 1, data['count'] do
+    for i = 1, data["count"] do
         -- First shot always accurate, subsequent shot varies
-        local position = data['position']
+        local position = data["position"]
         if i > 1 then
             if unique_position then
-                position = pick_near_by_player_entity_position(data['artillery_mode'])
+                position = pick_near_by_player_entity_position(data["artillery_mode"])
             end
 
-            if data['artillery_mode'] then
-                position['x'] = position['x'] + math.random(-16, 16)
-                position['y'] = position['y'] + math.random(-16, 16)
+            if data["artillery_mode"] then
+                position["x"] = position["x"] + math.random(-16, 16)
+                position["y"] = position["y"] + math.random(-16, 16)
             else
-                position['x'] = position['x'] + math.random(-8, 8)
-                position['y'] = position['y'] + math.random(-8, 8)
+                position["x"] = position["x"] + math.random(-8, 8)
+                position["y"] = position["y"] + math.random(-8, 8)
             end
         end
 
-        if data['type'] == BossAttackProcessor.TYPE_PROJECTILE then
+        if data["type"] == BossAttackProcessor.TYPE_PROJECTILE then
             surface.create_entity({
                 name = entity_name,
                 position = start_position,
                 target = position,
-                speed = data['speed'] or 0.3,
-                max_range = data['range'] or 96,
+                speed = data["speed"] or 0.3,
+                max_range = data["range"] or 96,
                 create_build_effect_smoke = false,
                 raise_built = false,
                 force = entity_force
             })
-        elseif data['type'] == BossAttackProcessor.TYPE_BEAM then
+        elseif data["type"] == BossAttackProcessor.TYPE_BEAM then
             --- target_position
             --- source_position
             --- duration
@@ -235,15 +235,15 @@ function BossAttackProcessor.unset_attackable_entities_cache()
 end
 
 function BossAttackProcessor.exec_basic()
-    prepare_attack('basic_attacks')
+    prepare_attack("basic_attacks")
 end
 
 function BossAttackProcessor.exec_advanced()
-    prepare_attack('advanced_attacks')
+    prepare_attack("advanced_attacks")
 end
 
 function BossAttackProcessor.exec_super()
-    prepare_attack('super_attacks')
+    prepare_attack("super_attacks")
 end
 
 function BossAttackProcessor.exec_phase()
@@ -251,19 +251,19 @@ function BossAttackProcessor.exec_phase()
 end
 
 function BossAttackProcessor.process_despawn_attack()
-    DebugHelper.print('Despawn Attack...')
+    DebugHelper.print("Despawn Attack...")
     BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
-    for i = 1, data['spread'] do
+    for i = 1, data["spread"] do
         local position, artillery_mode = pick_near_by_player_entity_position(true)
-        data['artillery_mode'] = artillery_mode
-        data['position'] = position
-        Cron.add_quick_queue('BossAttackProcessor.process_attack', table.deepcopy(data), true)
+        data["artillery_mode"] = artillery_mode
+        data["position"] = position
+        Cron.add_quick_queue("BossAttackProcessor.process_attack", table.deepcopy(data), true)
     end
 end
 
 function BossAttackProcessor.process_attack(data, force)
-    if (force ~= true and (data == nil or not storage.boss or not storage.boss.entity or not storage.boss.entity.valid or not data['position'])) then
+    if (force ~= true and (data == nil or not storage.boss or not storage.boss.entity or not storage.boss.entity.valid or not data["position"])) then
         return
     end
 

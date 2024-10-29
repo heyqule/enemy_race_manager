@@ -3,16 +3,16 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 5:42 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local Config = require('__enemyracemanager__/lib/global_config')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local Config = require("__enemyracemanager__/lib/global_config")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 
 local InterplanetaryAttacks = {}
 
@@ -30,7 +30,7 @@ end
 function InterplanetaryAttacks.init_globals()
     --- storage.interplanetary_intel[surface_index] = {
     ---     radius,
-    ---     type={'moon','planet',etc},
+    ---     type={"moon","planet",etc},
     ---     has_player_entities=true,
     ---     defense=0
     --- }
@@ -46,7 +46,7 @@ end
 function InterplanetaryAttacks.get_default_intel()
     return {
         radius = 900000,
-        type = 'planet',
+        type = "planet",
         updated = game.tick,
         defense = 0,
         has_player_entities = false,
@@ -93,7 +93,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     local max_unit_number = Config.max_group_size()
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
-    --- If it's a build group, 20 units use for building on spot, the rest will attack.
+    --- If it"s a build group, 20 units use for building on spot, the rest will attack.
      local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or storage.override_interplanetary_attack_build_base
     if build_home then
         group_unit_number = group_unit_number - home_group_size
@@ -141,7 +141,7 @@ end
 function InterplanetaryAttacks.queue_scan()
     for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
         local surface = game.surfaces[surface_name]
-        Cron.add_quick_queue('InterplanetaryAttacks.scan', surface)
+        Cron.add_quick_queue("InterplanetaryAttacks.scan", surface)
     end
 end
 
@@ -159,7 +159,7 @@ function InterplanetaryAttacks.scan(surface)
             surface = surface
         })
 
-        --- Scan planet for dropzone only if it's occupied
+        --- Scan planet for dropzone only if it"s occupied
         if intel and intel.has_player_entities then
             local max_planet_radius
             if intel.radius then
@@ -172,8 +172,8 @@ function InterplanetaryAttacks.scan(surface)
 end
 
 function InterplanetaryAttacks.set_intel(surface_index, data)
-    if data and not type(data) == 'table' then
-        error('data must be a table')
+    if data and not type(data) == "table" then
+        error("data must be a table")
         return
     end
 

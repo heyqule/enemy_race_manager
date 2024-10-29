@@ -3,15 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 11/7/2022 10:55 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
 local isFollowResearch = function(research)
-    return string.find(research.name, 'follower-robot-count-', 1, true)
+    return string.find(research.name, "follower-robot-count-", 1, true)
 end
 
 

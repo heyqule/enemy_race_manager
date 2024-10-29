@@ -4,18 +4,18 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 
-local Event = require('__stdlib__/stdlib/event/event')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local Event = require("__stdlib__/stdlib/event/event")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ArmyFunctions = require("__enemyracemanager__/lib/army_functions")
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 
 local ArmyDeploymentProcessor = {}
 --- Internal unit spawn cooldown for each deployer (in tick)
 local spawn_cooldown = 300
 --- Internal retry before removing the deployer from active list
-local retry_threshold = settings.startup['enemyracemanager-unit-framework-timeout'].value * 12
+local retry_threshold = settings.startup["enemyracemanager-unit-framework-timeout"].value * 12
 
-local start_with_auto_deploy = settings.startup['enemyracemanager-unit-framework-start-auto-deploy'].value
+local start_with_auto_deploy = settings.startup["enemyracemanager-unit-framework-start-auto-deploy"].value
 
 local process_deployer_queue = function(event)
     ArmyDeploymentProcessor.deploy()
@@ -127,7 +127,7 @@ end
 
 local draw_flag = function(rallypoint)
     return rendering.draw_sprite({
-        sprite = 'utility/spawn_flag',
+        sprite = "utility/spawn_flag",
         target = rallypoint.position,
         surface = rallypoint.surface,
         forces = {rallypoint.force},
@@ -160,9 +160,9 @@ function ArmyDeploymentProcessor.start_event(reload)
 end
 
 local add_to_active_data = function(force, unit_number)
-    storage.army_active_deployers[force.index]['deployers'][unit_number] = storage.army_built_deployers[force.index][unit_number]
-    storage.army_active_deployers[force.index]['deployers'][unit_number]['idle_retry'] = 0
-    storage.army_active_deployers[force.index]['deployers'][unit_number]['next_tick'] = game.tick + spawn_cooldown
+    storage.army_active_deployers[force.index]["deployers"][unit_number] = storage.army_built_deployers[force.index][unit_number]
+    storage.army_active_deployers[force.index]["deployers"][unit_number]["idle_retry"] = 0
+    storage.army_active_deployers[force.index]["deployers"][unit_number]["next_tick"] = game.tick + spawn_cooldown
     storage.army_active_deployers[force.index].total = storage.army_active_deployers[force.index].total + 1
 end
 
@@ -237,8 +237,8 @@ function ArmyDeploymentProcessor.add_to_active(entity)
 end
 
 function ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
-    if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]['deployers'][unit_number] then
-        storage.army_active_deployers[force_index]['deployers'][unit_number] = nil
+    if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]["deployers"][unit_number] then
+        storage.army_active_deployers[force_index]["deployers"][unit_number] = nil
         storage.army_active_deployers[force_index].total = storage.army_active_deployers[force_index].total - 1
     end
 end
@@ -259,17 +259,17 @@ end
 
 function ArmyDeploymentProcessor.set_build_only(force_index, unit_number, build_only)
     unit_number = tonumber(unit_number)
-    if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]['deployers'][unit_number] then
-        storage.army_active_deployers[force_index]['deployers'][unit_number]['build_only'] = build_only
+    if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]["deployers"][unit_number] then
+        storage.army_active_deployers[force_index]["deployers"][unit_number]["build_only"] = build_only
     end
 
     if storage.army_built_deployers[force_index] and storage.army_built_deployers[force_index][unit_number] then
-        storage.army_built_deployers[force_index][unit_number]['build_only'] = build_only
+        storage.army_built_deployers[force_index][unit_number]["build_only"] = build_only
     end
 end
 
 function ArmyDeploymentProcessor.process_retry(force_index, unit_number)
-    if (storage.army_active_deployers[force_index]['deployers'][unit_number].idle_retry == retry_threshold) then
+    if (storage.army_active_deployers[force_index]["deployers"][unit_number].idle_retry == retry_threshold) then
         ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
     end
 end
@@ -284,7 +284,7 @@ function ArmyDeploymentProcessor.deploy()
             local force = game.forces[force_index]
             if force and force.valid then
                 if ArmyPopulationProcessor.is_under_max_pop(force) then
-                    for unit_number, deployer_data in pairs(force_data['deployers']) do
+                    for unit_number, deployer_data in pairs(force_data["deployers"]) do
                         if deployer_data.entity and deployer_data.entity.valid then
                             if current_tick > deployer_data.next_tick then
                                 local success = spawn_unit(deployer_data)
@@ -301,7 +301,7 @@ function ArmyDeploymentProcessor.deploy()
                         end
                     end
                 else
-                    for unit_number, deployer_data in pairs(force_data['deployers']) do
+                    for unit_number, deployer_data in pairs(force_data["deployers"]) do
                         deployer_data.idle_retry = deployer_data.idle_retry + 1
                         deployer_data.next_tick = current_tick + spawn_cooldown
                         ArmyDeploymentProcessor.process_retry(force_index, unit_number)

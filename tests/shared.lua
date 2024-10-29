@@ -4,13 +4,13 @@
 --- DateTime: 1/6/2024 6:34 PM
 ---
 
-local Queue = require('__stdlib__/stdlib/misc/queue')
+local Queue = require("__stdlib__/stdlib/misc/queue")
 
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local LevelManager = require('__enemyracemanager__/lib/level_processor')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local LevelManager = require("__enemyracemanager__/lib/level_processor")
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 
 local TestShared = {}
 
@@ -80,7 +80,7 @@ end
 
 function TestShared.reset_surfaces()
     for key, surface in pairs(game.surfaces) do
-        if string.find(surface.name,'test') then
+        if string.find(surface.name,"test") then
             game.delete_surface(surface)
         end
     end
@@ -88,7 +88,7 @@ end
 
 function TestShared.reset_forces()
     for key, force in pairs(game.forces) do
-        if string.find(force.name,'test') then
+        if string.find(force.name,"test") then
             game.merge_forces(force, game.forces[1])
         end
     end
@@ -96,7 +96,7 @@ end
 
 function TestShared.reset_lab_tile(radius)
     local surface = game.surfaces[1]
-    local tile_types = { 'lab-dark-2','lab-dark-1' }
+    local tile_types = { "lab-dark-2","lab-dark-1" }
     local tiles = {}
     local radius = radius or 320
     for x = (radius * -1), radius, 1 do

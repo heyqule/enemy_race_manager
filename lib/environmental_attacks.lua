@@ -4,11 +4,11 @@
 --- DateTime: 7/1/2024 5:42 PM
 ---
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
 local is_valid = function(surface, target_position, force_spawn)
     local valid = Config.environmental_attack_enable() and surface and surface.valid and target_position

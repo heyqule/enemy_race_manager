@@ -3,21 +3,21 @@
 --- Created by heyqule.
 --- DateTime: 11/1/2021 8:29 PM
 ---
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local PlayerUnitHelper = {}
 
 local RATIO = 0.5
 
 function PlayerUnitHelper.get_health_multiplier()
-    return 10 + ((settings.startup['enemyracemanager-max-hitpoint-multipliers'].value - 10) * (RATIO + 0.3))
+    return 10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 10) * (RATIO + 0.3))
 end
 
 function PlayerUnitHelper.get_speed_multiplier()
-    return 1 + ((settings.startup['enemyracemanager-running-speed-multipliers'].value - 1) * RATIO)
+    return 1 + ((settings.startup["enemyracemanager-running-speed-multipliers"].value - 1) * RATIO)
 end
 
 function PlayerUnitHelper.get_damage_multiplier()
-    return 1 + ((settings.startup['enemyracemanager-damage-multipliers'].value - 1) * (RATIO + 0.5))
+    return 1 + ((settings.startup["enemyracemanager-damage-multipliers"].value - 1) * (RATIO + 0.5))
 end
 
 function PlayerUnitHelper.get_attack_range(ratio, value)

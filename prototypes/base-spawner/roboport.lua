@@ -12,21 +12,21 @@
 
 
 
-require('util')
+require("util")
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
-local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
-local ERM_Sound = require('__base__/prototypes/entity/sounds')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
+local ERM_UnitTint = require("__enemyracemanager__/lib/rig/unit_tint")
+local ERM_Sound = require("__base__/prototypes/entity/sounds")
+local ERM_DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local enemy_autoplace = require ('__enemyracemanager__/prototypes/enemy-autoplace')
-local name = 'roboport'
+local enemy_autoplace = require ("__enemyracemanager__/prototypes/enemy-autoplace")
+local name = "roboport"
 
 -- Hitpoints
 
 local hitpoint = 400
-local max_hitpoint_multiplier = settings.startup['enemyracemanager-max-hitpoint-multipliers'].value * 2
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 2
 
 
 -- Handles acid and poison resistance
@@ -56,13 +56,13 @@ local max_friends_around_to_spawn = 5
 local spawn_table = function(level)
     local res = {}
     --Tire 1
-    res[1] = { MOD_NAME .. '--defender--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
-    res[2] = { MOD_NAME .. '--distractor--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
-    res[3] = { MOD_NAME .. '--destroyer--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
-    res[4] = { MOD_NAME .. '--logistic-robot--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
-    res[5] = { MOD_NAME .. '--construction-robot--' .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
-    res[6] = { MOD_NAME .. '--small-biter--' .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
-    res[7] = { MOD_NAME .. '--medium-biter--' .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[1] = { MOD_NAME .. "--defender--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
+    res[2] = { MOD_NAME .. "--distractor--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
+    res[3] = { MOD_NAME .. "--destroyer--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
+    res[4] = { MOD_NAME .. "--logistic-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
+    res[5] = { MOD_NAME .. "--construction-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
+    res[6] = { MOD_NAME .. "--small-biter--" .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[7] = { MOD_NAME .. "--medium-biter--" .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
 
     return res
 end
@@ -76,42 +76,42 @@ function make_roboport(level)
 
     data:extend({
         {
-            type = 'unit-spawner',
-            name = MOD_NAME .. '--' .. name .. '--' .. level,
-            localised_name = { 'entity-name.' .. MOD_NAME .. '--' .. name, tostring(level) },
-            order = 'b-d-c',
-            icon = '__base__/graphics/icons/roboport.png',
+            type = "unit-spawner",
+            name = MOD_NAME .. "--" .. name .. "--" .. level,
+            localised_name = { "entity-name." .. MOD_NAME .. "--" .. name, tostring(level) },
+            order = "b-d-c",
+            icon = "__base__/graphics/icons/roboport.png",
             icons = {
                 {
-                    icon = '__base__/graphics/icons/roboport.png',
+                    icon = "__base__/graphics/icons/roboport.png",
                     icon_size = 64,
                 },
                 {
-                    icon = '__base__/graphics/icons/signal/signal_red.png',
+                    icon = "__base__/graphics/icons/signal/signal_red.png",
                     icon_size = 64,
                     scale = 0.2,
                     shift = { -9, -9 }
                 },
             },
-            flags = { 'placeable-player', 'placeable-enemy' },
-            corpse = 'roboport-remnants',
-            dying_explosion = 'roboport-explosion',
+            flags = { "placeable-player", "placeable-enemy" },
+            corpse = "roboport-remnants",
+            dying_explosion = "roboport-explosion",
             collision_box = collision_box,
             map_generator_bounding_box = map_generator_bounding_box,
             selection_box = selection_box,
             max_health = ERM_UnitHelper.get_building_health(hitpoint, hitpoint * max_hitpoint_multiplier, level),
-            order = MOD_NAME .. '-' .. name,
-            subgroup = 'enemies',
+            order = MOD_NAME .. "-" .. name,
+            subgroup = "enemies",
             vehicle_impact_sound = ERM_Sound.generic_impact,
             resistances = {
-                { type = 'acid', percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
-                { type = 'poison', percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
-                { type = 'physical', percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
-                { type = 'fire', percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-                { type = 'explosion', percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-                { type = 'laser', percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-                { type = 'electric', percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-                { type = 'cold', percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
+                { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+                { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
+                { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
+                { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+                { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
+                { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+                { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
+                { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
             },
             healing_per_tick = ERM_UnitHelper.get_building_healing(hitpoint, max_hitpoint_multiplier, level),
             absorptions_per_second = {
@@ -123,14 +123,14 @@ function make_roboport(level)
                 animations = {
                     layers = {
                         {
-                            filename = '__base__/graphics/entity/roboport/roboport-base.png',
+                            filename = "__base__/graphics/entity/roboport/roboport-base.png",
                             width = 228,
                             height = 277,
                             shift = util.by_pixel(2, -2.25),
                             scale = 0.5
                         },
                         {
-                            filename = '__base__/graphics/entity/worm/worm-folded.png',
+                            filename = "__base__/graphics/entity/worm/worm-folded.png",
                             width = 130,
                             height = 120,
                             direction_count = 1,
@@ -138,7 +138,7 @@ function make_roboport(level)
                             shift = util.by_pixel(0, -15),
                         },
                         {
-                            filename = '__base__/graphics/entity/roboport/roboport-shadow.png',
+                            filename = "__base__/graphics/entity/roboport/roboport-shadow.png",
                             width = 294,
                             height = 201,
                             draw_as_shadow = true,
@@ -151,14 +151,14 @@ function make_roboport(level)
             integration = {
                 layers = {
                     {
-                        filename = '__base__/graphics/entity/roboport/roboport-base.png',
+                        filename = "__base__/graphics/entity/roboport/roboport-base.png",
                         width = 228,
                         height = 277,
                         shift = util.by_pixel(2, 7.75),
                         scale = 0.5
                     },
                     {
-                        filename = '__base__/graphics/entity/worm/worm-folded.png',
+                        filename = "__base__/graphics/entity/worm/worm-folded.png",
                         width = 130,
                         height = 120,
                         direction_count = 1,
@@ -166,7 +166,7 @@ function make_roboport(level)
                         shift = util.by_pixel(0, -15),
                     },
                     {
-                        filename = '__base__/graphics/entity/roboport/roboport-shadow.png',
+                        filename = "__base__/graphics/entity/roboport/roboport-shadow.png",
                         width = 294,
                         height = 201,
                         draw_as_shadow = true,
@@ -183,16 +183,16 @@ function make_roboport(level)
             max_spawn_shift = 0,
             max_richness_for_spawn_shift = 100,
             -- distance_factor used to be 1, but Twinsen says:
-            -- 'The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty).'
+            -- "The number or spitter spwners should be roughly equal to the number of biter spawners(regardless of difficulty)."
             -- (2018-12-07)
             -- @TODO noise expression fix
             autoplace = enemy_autoplace.enemy_spawner_autoplace({
-                probability_expression = 'enemy_autoplace_base(0, 100)',
+                probability_expression = "enemy_autoplace_base(0, 100)",
                 force = FORCE_NAME,
             }),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
-            map_color = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
+            map_color = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
         }
     })
 end

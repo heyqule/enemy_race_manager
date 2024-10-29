@@ -4,8 +4,8 @@
 --- DateTime: 7/6/2024 4:02 PM
 ---
 --- Spawn location scanner, pick an area far from player entity.
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local SpawnLocationScanner = {}
 
@@ -14,7 +14,7 @@ local chunk_size = 32
 local radius = distance * chunk_size
 local angle_division = 15
 
-local reference_unit_name = 'erm_vanilla--behemoth-biter--1'
+local reference_unit_name = "erm_vanilla--behemoth-biter--1"
 
 local floor = math.floor
 local rad = math.rad
@@ -179,7 +179,7 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
 
     local tracker_data = storage.spawn_locations_tracker[surface_index]
 
-    --- only track new trunk when it's not hitting the border, and the trunk is generated
+    --- only track new trunk when it"s not hitting the border, and the trunk is generated
     if not using_max_radius and new_chunk_is_generated then
         tracker_data.last_chunk_position[current_direction] = new_chunk
     elseif using_max_radius then

@@ -4,9 +4,9 @@
 --- DateTime: 8/18/2023 10:39 AM
 ---
 
-if mods['bobenemies'] then
+if mods["bobenemies"] then
     table.insert(data.erm_spawn_specs, {
-        mod_name = 'bob-',
+        mod_name = "bob-",
         force_name = FORCE_NAME,
         moisture = 1, -- 1 = Dry and 2 = Wet
         aux = 2, -- 1 = red desert, 2 = sand

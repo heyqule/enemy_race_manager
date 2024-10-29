@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 2/5/2023 12:09 AM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
+local Event = require("__stdlib__/stdlib/event/event")
 
 local max_min = {}
 local max_min_by_tile = {}
@@ -21,11 +21,11 @@ local print_chunk_tile_details = function(event)
     end
 
     local results = surface.calculate_tile_properties({
-        'elevation',
-        'temperature',
-        'moisture',
-        'aux',
-        'enemy_base_probability'
+        "elevation",
+        "temperature",
+        "moisture",
+        "aux",
+        "enemy_base_probability"
     }, tiles)
 
     local tile_entity
@@ -69,10 +69,10 @@ local print_chunk_tile_details = function(event)
     runs = runs + 1
 
     if runs % 1000 == 0 then
-        print('saving to disk...')
+        print("saving to disk...")
         table.sort(max_min_by_tile)
-        helpers.write_file('enemyracemanager/erm-tiles-data.lua','tile = '..serpent.block(max_min_by_tile))
-        helpers.write_file('enemyracemanager/erm-world-data.lua','world = '..serpent.block(max_min))
+        helpers.write_file("enemyracemanager/erm-tiles-data.lua","tile = "..serpent.block(max_min_by_tile))
+        helpers.write_file("enemyracemanager/erm-world-data.lua","world = "..serpent.block(max_min))
     end
 end
 
@@ -81,18 +81,18 @@ local print_chunk_player_details = function(event)
     local surface = player.surface
     local tile_pos = { x = player.position.x, y = player.position.y }
     local results = surface.calculate_tile_properties({
-        'elevation',
-        'temperature',
-        'moisture',
-        'aux',
-        'enemy_base_probability'
+        "elevation",
+        "temperature",
+        "moisture",
+        "aux",
+        "enemy_base_probability"
     }, { tile_pos })
 
     local tile_entity = surface.get_tile(tile_pos.x, tile_pos.y)
 
-    print(tile_entity.name .. ' -- ' .. tile_entity.position.x .. ' -- ' .. tile_entity.position.y)
+    print(tile_entity.name .. " -- " .. tile_entity.position.x .. " -- " .. tile_entity.position.y)
     for name, result in pairs(results) do
-        print('name: ' .. name .. '/' .. result[1])
+        print("name: " .. name .. "/" .. result[1])
     end
 end
 

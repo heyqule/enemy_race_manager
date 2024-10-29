@@ -5,11 +5,11 @@
 ---
 data:extend {
     {
-        type = 'color-setting',
-        name = 'enemyracemanager-cold_biter_map_color',
-        description = 'enemyracemanager-cold_biter_map_color',
-        setting_type = 'startup',
+        type = "color-setting",
+        name = "enemyracemanager-cold_biter_map_color",
+        description = "enemyracemanager-cold_biter_map_color",
+        setting_type = "startup",
         default_value = { r = 56, g = 140, b = 204, a = 255 },
-        order = 'enemyracemanager-1003'
+        order = "enemyracemanager-1003"
     },
 }
