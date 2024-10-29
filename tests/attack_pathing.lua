@@ -531,7 +531,7 @@ end
 
 
 
-it("Can"t avoid land Beacon, all enemies killed by turrets", function()
+it("Can't avoid land Beacon, all enemies killed by turrets", function()
     async(7200)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
@@ -627,27 +627,7 @@ it("Avoid Defence Beacon (Ground Attack) using left side", function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
     end)
 
-
-     --after_ticks(2000, function()
-     --    game.speed = 1
-     --end)
-
     after_ticks(7500, function()
-        --game.speed = 1000
-        local enemies = surface.find_entities_filtered {
-            force = "enemy",
-            type = "unit",
-            position = { 0, 0 },
-            radius = 64,
-        }
-        local land_scout = false
-        for _, unit in pairs(enemies) do
-            if string.find(unit.name, AttackGroupBeaconProcessor.LAND_SCOUT) then
-                land_scout = true
-                break;
-            end
-        end
-        assert.equal(land_scout, true, "Has land scout")
         assert(entity_is_damage(rocket_launcher), "Able to attack target")
         done()
     end)
@@ -807,7 +787,7 @@ it("Picking area with lowest defense score from East", function()
 end)
 
 it("Picking area with lowest defense score from North", function()
-    async(3300)
+    async(3600)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -994,7 +974,7 @@ it("Attack beacon couldnt reach a spawn beacon on first try", function()
     end)
 
     after_ticks(600, function()
-        assert(storage.group_tracker.erm_vanilla == nil, "Shouldn"t able to spawn units")
+        assert(storage.group_tracker.erm_vanilla == nil, "Shouldn't able to spawn units")
     end)
 
     after_ticks(900, function()

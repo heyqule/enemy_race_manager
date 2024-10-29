@@ -361,7 +361,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
         local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_zerg", target_force, true)
         storage.override_ask_friend = false
         assert( picked_surface == nil, "Couldnt pick surface, asking for friend")
-        --- Check friend"s attack points.
+        --- Check friend"attack points.
         assert(RaceSettingsHelper.get_attack_meter("erm_vanilla") > RaceSettingsHelper.get_attack_meter("erm_zerg"), "erm_vanilla needs attack point")
         assert(RaceSettingsHelper.get_attack_meter("erm_zerg") < RaceSettingsHelper.get_attack_meter("erm_vanilla"), "erm_zerg needs give out points")
 

@@ -6,7 +6,7 @@
 --- require("__enemyracemanager__/lib/helper/force_helper")
 ---
 
-local String = require("__stdlib__/stdlib/utils/string")
+require('util')
 
 local ForceHelper = {
     default_mod_name = "erm_vanilla"
@@ -39,7 +39,7 @@ function ForceHelper.extract_race_name_from(force_name)
 
     if string.find(force_name, "enemy_") ~= nil then
         if storage.force_race_name_cache[force_name] == nil then
-            local unverified_race_name = String.gsub(force_name, "enemy_", "")
+            local unverified_race_name = string.gsub(force_name, "enemy_", "")
             if storage.race_settings[unverified_race_name] then
                 storage.force_race_name_cache[force_name] = unverified_race_name
                 return storage.force_race_name_cache[force_name]
@@ -70,7 +70,7 @@ end
 
 function ForceHelper.set_friends(game, force_name, is_friend)
     for name, force in pairs(game.forces) do
-        if String.find(force.name, "enemy", 1, true) then
+        if string.find(force.name, "enemy", 1, true) then
             force.set_friend(force_name, is_friend);
             force.set_friend("enemy", is_friend);
             force.set_cease_fire(force_name, is_friend);
@@ -91,7 +91,7 @@ function ForceHelper.set_neutral_force(game, force_name)
 end
 
 function ForceHelper.split_name(name)
-    return String.split(name, "--")
+    return util.split(name, "--")
 end
 
 function ForceHelper.get_name_token(name)
@@ -104,7 +104,7 @@ function ForceHelper.get_name_token(name)
     end
 
     if storage.force_entity_name_cache[name] == nil then
-        if String.find(name, "--", 1, true) then
+        if string.find(name, "--", 1, true) then
             storage.force_entity_name_cache[name] = ForceHelper.split_name(name)
         else
             storage.force_entity_name_cache[name] = { ForceHelper.default_mod_name, name, "1" }
@@ -132,7 +132,7 @@ function ForceHelper.refresh_all_enemy_forces()
     storage.player_forces = {}
     storage.enemy_force_check = {}
     for _, force in pairs(game.forces) do
-        if force.name == "enemy" or (String.find(force.name, "enemy", 1, true) and script.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
+        if force.name == "enemy" or (string.find(force.name, "enemy", 1, true) and script.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
             table.insert(storage.enemy_force_cache, force.name)
             storage.enemy_force_check[force.name] = true
             table.insert(storage.non_player_forces, force.name)
@@ -162,7 +162,7 @@ function ForceHelper.refresh_all_enemy_forces()
 end
 
 -- Whether a surface can assign enemy
--- Based off Rampant 3.0"s surface exclusion
+-- Based off Rampant 3.0"surface exclusion
 function ForceHelper.can_have_enemy_on(surface)
     if surface.valid then
         local surface_name = surface.name

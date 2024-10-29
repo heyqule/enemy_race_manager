@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 10/23/2021 1:07 PM
 ---
-local String = require("__stdlib__/stdlib/utils/string")
+
 local WeaponHelper = require("prototypes.helper.weapon")
 
 local projectiles = {

@@ -3,9 +3,8 @@
 --- Created by heyqule.
 --- DateTime: 11/5/2022 11:19 AM
 ---
-
+require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local String = require("__stdlib__/stdlib/utils/string")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 --- Boss Details Windows
@@ -139,7 +138,7 @@ end
 
 function BossDetailsWindow.update_data_box(element, owner)
     if owner and element then
-        local nameToken = String.split(element.name, "/")
+        local nameToken = util.split(element.name, "/")
         local boss_log = storage.boss_logs[nameToken[1]]
         local total_entries = #boss_log.entries
         local detail_element = element.parent[nameToken[1] .. "/erm_boss_detail_data_box"]

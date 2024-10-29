@@ -9,7 +9,7 @@
 local ERM_UnitHelper = {}
 
 
-local String = require("__stdlib__/stdlib/utils/string")
+require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
@@ -175,7 +175,7 @@ function ERM_UnitHelper.format_team_color(color, tint_strength)
 end
 
 function ERM_UnitHelper.is_erm_unit(dataItem)
-    local nameToken = String.split(dataItem.name, "--")
+    local nameToken = util.split(dataItem.name, "--")
     return (data.erm_registered_race and data.erm_registered_race[nameToken[1]]) or false
 end
 

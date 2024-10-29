@@ -196,11 +196,58 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             return
         end
 
+        --- Reapply chain command if group moving has stale and command is wiped by spider AI.
+        ---
+        --- Rseding91 — 2024/10/28 at 4:02 PM
+        --- The group members are not within the collection area of the unit group. so it makes new commands to pack them closer together.
+        --- Those commands finish, which then marks the group command as done
+        ---
+        --- Oh there goes some performance to copy group lol.
+        if event_result ==  defines.behavior_result.fail and
+                was_distracted == false and
+                group.command == nil and
+            (erm_unit_group.commands) and erm_unit_group.commands.type ==  defines.command.compound and
+           (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
+        then
+            local commands = erm_unit_group.commands
+            local new_command
+            -- try go to last stop if the group stuck
+            if group.moving_state == defines.moving_state.stuck then
+                new_command = commands.commands[table_size(commands)]
+            else
+                local remove_upto
+                for index, command in pairs(commands.commands) do
+                    if command.destination and util.distance(group.position, command.destination) < CHUNK_SIZE * 2 then
+                        remove_upto = index
+                        break
+                    end
+                end
+
+                if remove_upto then
+                    for index = remove_upto, 1, -1 do
+                        table.remove(commands.commands,index)                    
+                    end                        
+                end
+
+                new_command = commands
+            end
+            local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
+            for _, member in pairs(group.members) do
+                new_group.add_member(member)
+            end
+
+            new_group.set_command(erm_unit_group.commands)
+            storage.erm_unit_group[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
+            storage.erm_unit_group[new_group.unique_id].commands = new_command
+            storage.erm_unit_group[new_group.unique_id].group = new_group
+            storage.erm_unit_group[group.unique_id] = nil
+        end
+
         if event_result == defines.behavior_result.success and was_distracted == false then
             erm_unit_group.has_completed_command = true
         end
 
-        if event_result == defines.behavior_result.failure or
+        if event_result == defines.behavior_result.fail or
                 erm_unit_group.nearby_retry >= nearby_retry
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then

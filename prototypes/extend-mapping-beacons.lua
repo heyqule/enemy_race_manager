@@ -27,7 +27,7 @@ data:extend({
         },
         map_color = nil,
     },
-    --- Aerial beacon marks player"s defense location via air
+    --- Aerial beacon marks player"defense location via air
     {
         type = "simple-entity-with-owner",
         name = "erm_aerial_beacon",
@@ -46,7 +46,7 @@ data:extend({
         },
         map_color = nil,
     },
-    --- Land beacon marks player"s defense location via land
+    --- Land beacon marks player"defense location via land
     {
         type = "simple-entity-with-owner",
         name = "erm_land_beacon",

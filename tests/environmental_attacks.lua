@@ -81,7 +81,7 @@ it("Build Base", function()
     end)
 end)
 
-it("Can"t spawn", function()
+it("Can't spawn", function()
     async(900)
     local surface = game.surfaces[1]
     local rocket_launcher = surface.create_entity(

@@ -93,7 +93,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     local max_unit_number = Config.max_group_size()
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
-    --- If it"s a build group, 20 units use for building on spot, the rest will attack.
+    --- If it"a build group, 20 units use for building on spot, the rest will attack.
      local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or storage.override_interplanetary_attack_build_base
     if build_home then
         group_unit_number = group_unit_number - home_group_size
@@ -159,7 +159,7 @@ function InterplanetaryAttacks.scan(surface)
             surface = surface
         })
 
-        --- Scan planet for dropzone only if it"s occupied
+        --- Scan planet for dropzone only if it"occupied
         if intel and intel.has_player_entities then
             local max_planet_radius
             if intel.radius then

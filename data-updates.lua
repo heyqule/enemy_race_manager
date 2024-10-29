@@ -38,10 +38,9 @@ require("prototypes/extend-scout-units")
 
 require("prototypes/extend-creep-removal")
 
---if not feature_flags.space_travel then
---    require("prototypes/extend-default-autoplace")
---end
-require("prototypes/extend-default-autoplace")
+if not feature_flags.space_travel then
+    require("prototypes/extend-default-autoplace")
+end
 
 require("prototypes/map-generation.lua")
 
