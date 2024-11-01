@@ -13,7 +13,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
-local LevelProcessor = require("__enemyracemanager__/lib/level_processor")
+--local LevelProcessor = require("__enemyracemanager__/lib/level_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
@@ -105,11 +105,11 @@ function Debug_RemoteAPI.set_accumulated_attack_meter(name, value)
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "level_up", 20)
-function Debug_RemoteAPI.level_up(level)
-    for race_name, _ in pairs(storage.race_settings) do
-        LevelProcessor.level_by_command(storage.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
-    end
-end
+--function Debug_RemoteAPI.level_up(level)
+--    for race_name, _ in pairs(storage.race_settings) do
+--        LevelProcessor.level_by_command(storage.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
+--    end
+--end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_evolution_factor", 0.5)
 function Debug_RemoteAPI.set_evolution_factor(value)
@@ -222,7 +222,7 @@ end
 function Debug_RemoteAPI.create_land_scout(mod_name, position)
    local surface = game.player.surface
     surface.create_entity({
-        name = mod_name.."/land-scout/1",
+        name = mod_name.."--land-scout--1",
         position = position,
         force = ForceHelper.get_force_name_from(mod_name)
     })
@@ -232,7 +232,7 @@ end
 function Debug_RemoteAPI.create_air_scout(mod_name, position)
     local surface = game.player.surface
     surface.create_entity({
-        name = mod_name.."/aerial-scout/1",
+        name = mod_name.."--aerial-scout--1",
         position = position,
         force = ForceHelper.get_force_name_from(mod_name)
     })

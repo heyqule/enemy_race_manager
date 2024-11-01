@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 1/5/2024 9:03 PM
 ---
-local Position = require("__erm_libs__/stdlib/area/position")
+local Position = require("__erm_libs__/stdlib/position")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")

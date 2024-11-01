@@ -23,11 +23,6 @@ local tier_map = { 0.4, 0.8 }
 -- Evolution point for leveling
 local evolution_points = { 1, 3, 6, 10, 15, 21, 28, 38, 50, 70, 100, 150, 210, 280, 360, 450, 550, 700, 1000 }
 
-if settings.startup["enemyracemanager-evolution-point-ll-express"].value == LEVEL_MODE_EXPRESS then
-    evolution_points = {1, 2, 4, 7, 12, 18, 26, 36, 48, 66, 94, 140, 190, 255, 330, 420, 530, 666, 900}
-elseif settings.startup["enemyracemanager-evolution-point-ll-express"].value == LEVEL_MODE_SHINKANSEN then
-    evolution_points = {1, 2, 3, 5, 10, 16, 23, 31, 42, 55, 69, 105, 160, 225, 320, 420, 530, 666, 800}
-end
 
 local level_up_tier = function(current_tier, race_settings, race_name)
     race_settings[race_name].tier = current_tier + 1

@@ -25,13 +25,13 @@ for _, unit in pairs(data.raw["unit"]) do
         end
 
         if (type(unit.created_effect) == "table") then
-            table.insert(unit["created_effect"]["action_delivery"]["target_effects"], increase_pop)
+            table.insert(unit["created_effect"]["action_delivery"]["source_effects"], increase_pop)
         else
             unit.created_effect = {
                 type = "direct",
                 action_delivery = {
                     type = "instant",
-                    target_effects = increase_pop
+                    source_effects = increase_pop
                 }
             }
         end

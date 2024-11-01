@@ -6,7 +6,7 @@
 
 require("util")
 require("global")
-local Position = require("__erm_libs__/stdlib/area/position")
+local Position = require("__erm_libs__/stdlib/position")
 local Event = require("__stdlib__/stdlib/event/event")
 
 local Config = require("__enemyracemanager__/lib/global_config")
@@ -152,7 +152,8 @@ end
 local add_an_unit_to_group = function(surface, group, force, race_name, unit_name, is_elite)
     local unit_full_name
     if is_elite then
-        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name) + Config.elite_squad_level())
+        -- @TODO refactor elite group to use top applicable quality tier.
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
     else
         unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
     end

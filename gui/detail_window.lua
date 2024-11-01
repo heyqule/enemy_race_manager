@@ -7,8 +7,7 @@
 require('util')
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local LevelManager = require("__enemyracemanager__/lib/level_processor")
-local ReplacementProcessor = require("__enemyracemanager__/lib/replacement_processor")
+
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
@@ -83,8 +82,8 @@ function DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { "gui.evolution_column" } }
     item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
 
-    item_table.add { type = "label", caption = { "gui.evolution_factor_column" } }
-    item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(race_setting.race)) }
+    --item_table.add { type = "label", caption = { "gui.evolution_factor_column" } }
+    --item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(race_setting.race)) }
 
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = race_setting.attack_meter .. " / " .. race_setting.next_attack_threshold }
@@ -118,35 +117,35 @@ function DetailWindow.show(player, race_setting)
         local add_confirm_button = false
 
         --- LEVEL SLIDER ---
-        local level_slider_flow = setting_flow.add { type = "flow", name = "level_slider_flow", direction = "horizontal" }
-        local current_level = LevelManager.get_calculated_current_level(race_setting)
-        local max_level = GlobalConfig.get_max_level()
-
-        if current_level < max_level then
-            level_slider_flow.add { type = "label",
-                                    caption = { "gui.level_up_slider" },
-                                    tooltip = { "gui.level_up_slider_tooltip" }
-            }
-            local level_slider = level_slider_flow.add { type = "slider",
-                                                         name = race_setting.race .. "/" .. DetailWindow.levelup_slider_name,
-                                                         tooltip = { "gui.level_up_slider_tooltip" },
-                                                         minimum_value = current_level,
-                                                         maximum_value = max_level,
-                                                         value_step = 0.01,
-                                                         style = "notched_slider"
-            }
-            level_slider.slider_value = current_level
-            level_slider.set_slider_value_step(1)
-            level_slider.style.vertical_align = "bottom"
-            level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.levelup_value_name, caption = race_setting.level }
-            add_confirm_button = true
-        else
-            level_slider_flow.add { type = "label",
-                                    caption = { "gui.level_up_slider" },
-                                    tooltip = { "gui.level_up_slider_tooltip" }
-            }
-            level_slider_flow.add { type = "label", name = "level_slider_not_settable_description", caption = { "gui.not_settable_description" } }
-        end
+        --local level_slider_flow = setting_flow.add { type = "flow", name = "level_slider_flow", direction = "horizontal" }
+        --local current_level = LevelManager.get_calculated_current_level(race_setting)
+        --local max_level = GlobalConfig.get_max_level()
+        --
+        --if current_level < max_level then
+        --    level_slider_flow.add { type = "label",
+        --                            caption = { "gui.level_up_slider" },
+        --                            tooltip = { "gui.level_up_slider_tooltip" }
+        --    }
+        --    local level_slider = level_slider_flow.add { type = "slider",
+        --                                                 name = race_setting.race .. "/" .. DetailWindow.levelup_slider_name,
+        --                                                 tooltip = { "gui.level_up_slider_tooltip" },
+        --                                                 minimum_value = current_level,
+        --                                                 maximum_value = max_level,
+        --                                                 value_step = 0.01,
+        --                                                 style = "notched_slider"
+        --    }
+        --    level_slider.slider_value = current_level
+        --    level_slider.set_slider_value_step(1)
+        --    level_slider.style.vertical_align = "bottom"
+        --    level_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.levelup_value_name, caption = race_setting.level }
+        --    add_confirm_button = true
+        --else
+        --    level_slider_flow.add { type = "label",
+        --                            caption = { "gui.level_up_slider" },
+        --                            tooltip = { "gui.level_up_slider_tooltip" }
+        --    }
+        --    level_slider_flow.add { type = "label", name = "level_slider_not_settable_description", caption = { "gui.not_settable_description" } }
+        --end
         --- END LEVEL UP SLIDER ---
 
         --- EVOLUTION FACTOR SLIDER ---
@@ -161,11 +160,12 @@ function DetailWindow.show(player, race_setting)
                                                                            minimum_value = 0,
                                                                            maximum_value = 100
         }
-        local evolution_factor_value = math.floor(LevelManager.get_evolution_factor(race_setting.race) * 100)
-        evolution_factor_slider.slider_value = evolution_factor_value
-        evolution_factor_slider.style.vertical_align = "bottom"
-        evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
-        evolution_factor_slider_flow.add { type = "label", caption = "%" }
+        -- TODO change it to do from another class
+        --local evolution_factor_value = math.floor(LevelManager.get_evolution_factor(race_setting.race) * 100)
+        --evolution_factor_slider.slider_value = evolution_factor_value
+        --evolution_factor_slider.style.vertical_align = "bottom"
+        --evolution_factor_slider_flow.add { type = "label", name = race_setting.race .. "/" .. DetailWindow.evolution_factor_value_name, caption = evolution_factor_value }
+        --evolution_factor_slider_flow.add { type = "label", caption = "%" }
         --- END EVOLUTION FACTOR SLIDER ---
 
         local gap = setting_flow.add { type = "empty-widget" }
@@ -177,11 +177,6 @@ function DetailWindow.show(player, race_setting)
 
         local action_flow = right_flow.add { type = "flow", name = "action_flow", direction = "vertical" }
         action_flow.add { type = "label", name = "action_description", caption = { "gui.action_description" } }
-        local pass_new_race = race_setting.race ~= MOD_NAME
-        local pass_biter_race = race_setting.race == MOD_NAME and settings.startup["enemyracemanager-enable-bitters"].value == true
-        if pass_new_race or pass_biter_race then
-            action_flow.add { type = "button", name = race_setting.race .. "/replace_enemy", caption = { "gui.replace_enemy" }, tooltip = { "gui.replace_enemy_tooltip" } }
-        end
 
         local center_gap = right_flow.add { type = "empty-widget" }
         center_gap.style.height = 16
@@ -203,14 +198,6 @@ function DetailWindow.update_slider_text(event, slider_name, slider_value)
     end
 end
 
-local process_level_slider = function(element, race_name)
-    local level_slider_name = race_name .. "/" .. DetailWindow.levelup_slider_name
-    local level = tonumber(element.parent["level_slider_flow"][level_slider_name].slider_value)
-    if level ~= storage.race_settings[race_name].level then
-        LevelManager.level_by_command(storage.race_settings, race_name, level)
-    end
-end
-
 local process_evolution_factor_slider = function(element, race_name)
     local evolution_slider_name = race_name .. "/" .. DetailWindow.evolution_factor_slider_name
     local evolution_factor = tonumber(element.parent["evolution_factor_slider_flow"][evolution_slider_name].slider_value) / 100
@@ -219,14 +206,8 @@ local process_evolution_factor_slider = function(element, race_name)
 end
 
 function DetailWindow.confirm(owner, nameToken, element)
-    process_level_slider(element, nameToken[1])
     process_evolution_factor_slider(element, nameToken[1])
     DetailWindow.hide(owner)
-end
-
-function DetailWindow.replace_enemy(owner, nameToken)
-    SurfaceProcessor.assign_race(owner.surface, nameToken[1])
-    ReplacementProcessor.rebuild_map(owner.surface, storage.race_settings, nameToken[1])
 end
 
 function DetailWindow.hide(player)

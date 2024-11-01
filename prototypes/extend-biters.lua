@@ -38,7 +38,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
 
     biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], tostring(level) }
     biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
-    biter["max_health"] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
+    biter["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier / health_cut_ratio, level)
     biter["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -62,26 +62,26 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         biter["attack_parameters"]["min_attack_distance"] = attack_range - 4
     end
     ERM_UnitHelper.modify_biter_damage(biter, level)
-    biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"], level)
     biter["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
 
     return biter
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelEnemy(i, "small-biter") })
 
     data:extend({ makeLevelEnemy(i, "small-spitter") })
 
-    data:extend({ makeLevelEnemy(i, "medium-biter", 0.33) })
+    data:extend({ makeLevelEnemy(i, "medium-biter", 2) })
 
-    data:extend({ makeLevelEnemy(i, "medium-spitter", 0.33) })
+    data:extend({ makeLevelEnemy(i, "medium-spitter", 2) })
 
-    data:extend({ makeLevelEnemy(i, "big-biter") })
+    data:extend({ makeLevelEnemy(i, "big-biter", 4) })
 
-    data:extend({ makeLevelEnemy(i, "big-spitter") })
+    data:extend({ makeLevelEnemy(i, "big-spitter",4 ) })
 
     data:extend({ makeLevelEnemy(i, "behemoth-biter", 8) })
 

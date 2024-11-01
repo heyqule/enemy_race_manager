@@ -48,7 +48,7 @@ end)
                 type="unit-spawner",
                 force="enemy"
             })
-            assert.equal("erm_vanilla--biter-spawner--10",entities[1].name, "Correct updated unit spawner")
+            assert.equal("erm_vanilla--biter-spawner--5",entities[1].name, "Correct updated unit spawner")
         end)
     end)
 

@@ -47,7 +47,7 @@ it("Interplanetary Attack: Attack Target", function()
     for i=1,24,1 do
         InterplanetaryAttacks.scan(surface)
     end
-    storage.race_settings[race_name].level = 20
+    storage.race_settings[race_name].level = 5
     storage.race_settings[race_name].tier = 3
     storage.race_settings[race_name].attack_meter = 3000
     storage.race_settings[race_name].next_attack_threshold = 3000
@@ -94,7 +94,7 @@ it("Interplanetary Attack: No friends, have to launch attack", function()
     for i=1,24,1 do
         InterplanetaryAttacks.scan(surface)
     end
-    storage.race_settings[race_name].level = 20
+    storage.race_settings[race_name].level = 5
     storage.race_settings[race_name].tier = 3
     storage.race_settings[race_name].attack_meter = 3000
     storage.race_settings[race_name].next_attack_threshold = 3000

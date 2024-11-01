@@ -14,9 +14,9 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         "tests/attack_pathing",
         "tests/attack_meter",
         "tests/scouts",
-        "tests/level_and_tier",
         "tests/surface_manager",
         "tests/environmental_attacks",
+        "tests/quality_system"
     }
 
     if script.active_mods["erm_zerg"] and script.active_mods["erm_toss"] then

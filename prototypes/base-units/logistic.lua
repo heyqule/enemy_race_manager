@@ -93,7 +93,7 @@ function makeLogisticRobot(level)
     robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-dropship-enemies"
     robot["has_belt_immunity"] = true
-    robot["max_health"] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier, level)
+    robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier, level)
     robot["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -157,7 +157,7 @@ function makeLogisticRobot(level)
     return robot
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLogisticRobot(i) })

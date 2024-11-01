@@ -58,8 +58,14 @@ GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = "erm_interplanatary_attack_exec"
 GlobalConfig.RACE_SETTING_UPDATE = "erm_race_setting_update"
 GlobalConfig.PREPARE_WORLD = "erm_prepare_world"
 
-GlobalConfig.MAX_LEVELS = 20
-GlobalConfig.MAX_ELITE_LEVELS = 5
+--- Quality system attributes
+GlobalConfig.MAX_LEVELS = 5
+GlobalConfig.MAX_BY_EPIC = 1
+GlobalConfig.MAX_BY_RARE = 2
+GlobalConfig.BASE_QUALITY_MULITPLIER = 0.5
+GlobalConfig.QUALITY_MAPPING = {
+    'normal', 'uncommon', 'rare', 'epic', 'legendary', 'heirloom'
+}
 
 GlobalConfig.BOSS_MAX_TIERS = 5
 -- 5 Tiers of boss and their properties
@@ -106,8 +112,6 @@ GlobalConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 320
 local refreshable_settings = {
     startup = {
         "enemyracemanager-max-attack-range",
-        "enemyracemanager-max-level",
-        "enemyracemanager-mapping-method",
         "enemyracemanager-environmental-raids",
     },
     global = {
@@ -115,7 +119,6 @@ local refreshable_settings = {
         "enemyracemanager-max-group-size",
         "enemyracemanager-build-style",
         "enemyracemanager-build-formation",
-        "enemyracemanager-evolution-point-multipliers",
         "enemyracemanager-evolution-point-spawner-kills-deduction",
         "enemyracemanager-attack-meter-enable",
         "enemyracemanager-attack-meter-threshold",
@@ -158,6 +161,7 @@ local get_selected_race_value = function(value)
     return value
 end
 
+--- @deprecated
 local convert_max_level = function(setting_value)
     local current_level_setting = 10;
 
@@ -200,9 +204,8 @@ end
 
 function GlobalConfig.refresh_config()
     for _, setting_name in pairs(refreshable_settings.startup) do
-        if setting_name == "enemyracemanager-max-level" then
-            storage.settings[setting_name] = convert_max_level(settings.startup[setting_name].value)
-        elseif setting_name == "enemyracemanager-max-attack-range" then
+
+        if setting_name == "enemyracemanager-max-attack-range" then
             storage.settings[setting_name] = settings.startup[setting_name].value
         else
             storage.settings[setting_name] = settings.startup[setting_name].value
@@ -215,20 +218,7 @@ function GlobalConfig.refresh_config()
 end
 
 function GlobalConfig.get_max_level()
-    local current_level_setting
-    if global_setting_exists() then
-        current_level_setting = storage.settings["enemyracemanager-max-level"]
-    end
-
-    if current_level_setting == nil then
-        current_level_setting = convert_max_level(settings.startup["enemyracemanager-max-level"].value)
-
-        if global_setting_exists() then
-            storage.settings["enemyracemanager-max-level"] = current_level_setting
-        end
-    end
-
-    return current_level_setting
+    return GlobalConfig.MAX_LEVELS
 end
 
 function GlobalConfig.get_max_attack_range()
@@ -454,9 +444,8 @@ end
 
 function GlobalConfig.initialize_races_data()
     storage.installed_races = { MOD_NAME }
-    if settings.startup["enemyracemanager-enable-bitters"].value then
-        storage.active_races = { [MOD_NAME] = true }
-    end
+    storage.active_races = { [MOD_NAME] = true }
+
 
     for name, _ in pairs(script.active_mods) do
         if check_register_erm_race(name) then

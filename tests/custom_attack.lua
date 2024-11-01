@@ -20,7 +20,7 @@ it("Dropship", function()
     local enemy_force = game.forces["enemy"]
     local player_force = game.forces["player"]
     local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
-    local overlord = surface.create_entity({ name = "erm_zerg--overlord--20", force = enemy_force, position = { 10, 10 } })
+    local overlord = surface.create_entity({ name = "erm_zerg--overlord--1", force = enemy_force, position = { 10, 10 } })
 
     after_ticks(300, function()
         local unit_count = surface.count_entities_filtered({
@@ -35,7 +35,7 @@ it("Builder", function()
     local enemy_force = game.forces["enemy"]
     local player_force = game.forces["player"]
     local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
-    local overlord = surface.create_entity({ name = "erm_zerg--drone--20", force = enemy_force, position = { 10, 10 } })
+    local overlord = surface.create_entity({ name = "erm_zerg--drone--1", force = enemy_force, position = { 10, 10 } })
 
     after_ticks(600, function()
         local building_count = surface.count_entities_filtered({

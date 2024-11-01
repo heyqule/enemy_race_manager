@@ -8,7 +8,6 @@ local Event = require("__stdlib__/stdlib/event/event")
 require("__enemyracemanager__/global")
 require("util")
 
-local ReplacementProcessor = require("__enemyracemanager__/lib/replacement_processor")
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
@@ -45,10 +44,11 @@ local onBiterBaseBuilt = function(event)
     if entity and entity.valid then
         local race_name = ForceHelper.extract_race_name_from(entity.force.name)
         if Config.race_is_active(race_name) then
-            local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, storage.race_settings, entity.force.name)
-            if replaced_entity and replaced_entity.valid then
-                BaseBuildProcessor.exec(replaced_entity)
-            end
+            --@TODO To be update to use Quality system
+            --local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, storage.race_settings, entity.force.name)
+            --if replaced_entity and replaced_entity.valid then
+            --    BaseBuildProcessor.exec(replaced_entity)
+            --end
         end
 
         AttackGroupBeaconProcessor.create_spawn_beacon(entity)
@@ -122,10 +122,10 @@ local onUnitFinishGathering = function(event)
         }
     end
 
-    local scount_unit_name = storage.scout_unit_name[group.unique_id]
+    local scout_unit_name = storage.scout_unit_name[group.unique_id]
     if  ForceHelper.is_enemy_force(group_force) and
         (group.is_script_driven == false or is_erm_group) and
-        scount_unit_name
+        scout_unit_name
     then
         local surface = group.surface
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
@@ -133,13 +133,13 @@ local onUnitFinishGathering = function(event)
             position =  group.position,
             surface = surface,
             force = group_force,
-            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scount_unit_name.scout_type]),
+            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scout_unit_name.scout_type]),
             count = 1
         })
         group.add_member(scout);
     end
 
-    if scount_unit_name then
+    if scout_unit_name then
         storage.scout_unit_name[group.unique_id] = nil
     end
 end

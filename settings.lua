@@ -4,14 +4,6 @@ require("setting-constants")
 data:extend {
     --- Biter related
     {
-        type = "bool-setting",
-        name = "enemyracemanager-enable-bitters",
-        description = "enemyracemanager-enable-bitters",
-        setting_type = "startup",
-        default_value = true,
-        order = "enemyracemanager-100"
-    },
-    {
         type = "int-setting",
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
@@ -39,52 +31,34 @@ data:extend {
         default_value = VANILLA_MAP_COLOR,
         order = "enemyracemanager-1001"
     },
-    --- startup: Menu unit replacement
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-menu-replacement-framework",
-        description = "enemyracemanager-menu-replacement-framework",
-        setting_type = "startup",
-        default_value = true,
-        order = "enemyracemanager-1060"
-    },
-    --- Startup: Leveling
-    {
-        type = "string-setting",
-        name = "enemyracemanager-max-level",
-        description = "enemyracemanager-max-level",
-        setting_type = "startup",
-        default_value = MAX_LEVEL_10,
-        allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-        order = "enemyracemanager-110"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-evolution-point-ll-express",
-        description = "enemyracemanager-evolution-point-ll-express",
-        setting_type = "startup",
-        order = "enemyracemanager-111",
-        default_value = LEVEL_MODE_REGULAR,
-        allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-level-multipliers",
-        description = "enemyracemanager-level-multipliers",
-        setting_type = "startup",
-        default_value = 5,
-        minimum_value = 3,
-        maximum_value = 20,
-        order = "enemyracemanager-112"
-    },
+    --- @deprecated
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-max-level",
+    --    description = "enemyracemanager-max-level",
+    --    setting_type = "startup",
+    --    default_value = MAX_LEVEL_10,
+    --    allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
+    --    order = "enemyracemanager-110"
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-evolution-point-ll-express",
+    --    description = "enemyracemanager-evolution-point-ll-express",
+    --    setting_type = "startup",
+    --    order = "enemyracemanager-111",
+    --    default_value = LEVEL_MODE_REGULAR,
+    --    allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
+    --},
+
     {
         type = "int-setting",
         name = "enemyracemanager-max-hitpoint-multipliers",
         description = "enemyracemanager-max-hitpoint-multipliers",
         setting_type = "startup",
-        default_value = 10,
-        minimum_value = 5,
-        maximum_value = 100,
+        default_value = 25,
+        minimum_value = 10,
+        maximum_value = 250,
         order = "enemyracemanager-114"
     },
     {
@@ -335,6 +309,24 @@ data:extend {
         allowed_values = { 1, 1.25, 1.33, 1.5, 2, 2.5, 3, 4, 5 },
         order = "enemyracemanager-003"
     },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-difficulty",
+        description = "enemyracemanager-difficulty",
+        setting_type = "runtime-global",
+        default_value = QUALITY_NORMAL,
+        allowed_values = { QUALITY_CASUAL, QUALITY_NORMAL, QUALITY_ADVANCED, QUALITY_HARDCORE, QUALITY_FIGHTER, QUALITY_CRUSADER, QUALITY_THEONE },
+        order = "enemyracemanager-004"
+    },
+    {
+        type = "double-setting",
+        name = "enemyracemanager-advancement",
+        description = "enemyracemanager-advancement",
+        setting_type = "runtime-global",
+        default_value = 1,
+        allowed_values = { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 },
+        order = "enemyracemanager-005"
+    },
     --- Custom base style
     {
         type = "string-setting",
@@ -366,16 +358,16 @@ data:extend {
         order = "enemyracemanager-101"
     },
     --- Evolution Point and level up ---
-    {
-        type = "double-setting",
-        name = "enemyracemanager-evolution-point-multipliers",
-        description = "enemyracemanager-evolution-point-multipliers",
-        setting_type = "runtime-global",
-        default_value = 1,
-        minimum_value = 0.1,
-        maximum_value = 10,
-        order = "enemyracemanager-201"
-    },
+    --{
+    --    type = "double-setting",
+    --    name = "enemyracemanager-evolution-point-multipliers",
+    --    description = "enemyracemanager-evolution-point-multipliers",
+    --    setting_type = "runtime-global",
+    --    default_value = 1,
+    --    minimum_value = 0.1,
+    --    maximum_value = 10,
+    --    order = "enemyracemanager-201"
+    --},
     {
         type = "bool-setting",
         name = "enemyracemanager-evolution-point-spawner-kills-deduction",

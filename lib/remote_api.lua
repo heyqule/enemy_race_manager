@@ -304,22 +304,18 @@ function RemoteAPI.override_attack_strategy(strategy_id)
 end
 
 function RemoteAPI.milestones_preset_addons()
-    if settings.startup["enemyracemanager-enable-bitters"].value then
-        return {
-            ["enemyracemanager"] = {
-                required_mods = { "enemyracemanager" },
-                milestones = {
-                    { type = "group", name = "Kills" },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/5", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/10", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/15", quantity = 1 },
-                    { type = "kill", name = "erm_vanilla/biter-spawner/20", quantity = 1, next = "x10" },
-                }
+    return {
+        ["enemyracemanager"] = {
+            required_mods = { "enemyracemanager" },
+            milestones = {
+                { type = "group", name = "Kills" },
+                { type = "kill", name = "erm_vanilla/biter-spawner/5", quantity = 1 },
+                { type = "kill", name = "erm_vanilla/biter-spawner/10", quantity = 1 },
+                { type = "kill", name = "erm_vanilla/biter-spawner/15", quantity = 1 },
+                { type = "kill", name = "erm_vanilla/biter-spawner/20", quantity = 1, next = "x10" },
             }
         }
-    end
-
-    return {}
+    }
 end
 
 --- remote.call("enemyracemanager", "get_event_name", GlobalConfig.EVENT_TIER_WENT_UP)

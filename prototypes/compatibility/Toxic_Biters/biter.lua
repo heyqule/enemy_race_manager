@@ -38,7 +38,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
 
     biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], tostring(level) }
     biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
-    biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, level)
+    biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
     biter["resistances"] = {
         { type = "acid", percent = 95 },
         { type = "poison", percent = 95 },
@@ -61,7 +61,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     end
 
     ERM_UnitHelper.modify_biter_damage(biter, level)
-    biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"], level)
 
     biter["absorptions_to_join_attack"] = {
         pollution= ERM_UnitHelper.get_pollution_attack(biter.absorptions_to_join_attack.pollution, level)
@@ -71,7 +71,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     return biter
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     -- (org: 15)
