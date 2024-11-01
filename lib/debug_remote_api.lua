@@ -13,7 +13,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
---local LevelProcessor = require("__enemyracemanager__/lib/level_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
@@ -104,12 +104,6 @@ function Debug_RemoteAPI.set_accumulated_attack_meter(name, value)
     RaceSettingsHelper.set_accumulated_attack_meter(name, value)
 end
 
---- Usage: remote.call("enemyracemanager_debug", "level_up", 20)
---function Debug_RemoteAPI.level_up(level)
---    for race_name, _ in pairs(storage.race_settings) do
---        LevelProcessor.level_by_command(storage.race_settings, race_name, math.min(level, GlobalConfig.get_max_level()))
---    end
---end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_evolution_factor", 0.5)
 function Debug_RemoteAPI.set_evolution_factor(value)
@@ -142,7 +136,6 @@ function Debug_RemoteAPI.reset_level()
         storage.race_settings[race_name].evolution_base_point = 0
         storage.race_settings[race_name].evolution_point = 0
         storage.race_settings[race_name].tier = 1
-        LevelProcessor.level_by_command(storage.race_settings, race_name, 1)
         game.forces[ForceHelper.get_force_name_from(race_name)].set_evolution_factor(0)
     end
 end
@@ -170,9 +163,8 @@ function Debug_RemoteAPI.wander_clean_up()
     SurfaceProcessor.wander_unit_clean_up()
 end
 
---- Usage: remote.call("enemyracemanager_debug", "check_race_level_curve")
-function Debug_RemoteAPI.check_race_level_curve()
-    LevelProcessor.print_level_curve_table()
+function Debug_RemoteAPI.calculate_quality_points()
+    QualityProcessor.calculate_quality_points()
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_evolution_base_point"，‘erm_zerg", 100)

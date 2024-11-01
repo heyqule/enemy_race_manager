@@ -136,7 +136,9 @@ local onUnitFinishGathering = function(event)
             name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scout_unit_name.scout_type]),
             count = 1
         })
-        group.add_member(scout);
+        if scout then
+            group.add_member(scout);
+        end
     end
 
     if scout_unit_name then

@@ -123,7 +123,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
-            if entity.type == "unit" then
+            if entity and entity.type == "unit" then
                 entity.commandable.set_command({
                     type = defines.command.attack_area,
                     destination = { x = position.x, y = position.y },

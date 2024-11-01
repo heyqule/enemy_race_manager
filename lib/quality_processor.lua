@@ -110,7 +110,9 @@ local calculate_chance_cache = function(planet_data, time)
         local next_rate = planet_data.spawn_rates[index + 1]
         if next_rate and next_rate == 0 then
             planet_data.lowest_allowed_tier = spawn_rates_size - (index - 1)
-            break
+            if not planet_data.spawn_rates[index + 2] or planet_data.spawn_rates[index + 2] == 0 then
+                break
+            end                
         end
     end
     return planet_data
@@ -183,7 +185,7 @@ function QualityProcessor.roll(entity)
     local force = entity.force
     local surface = entity.surface
 
-    if not storage.quality_on_planet[force.name][surface.name] then
+    if not storage.quality_on_planet[force.name] then
         QualityProcessor.calculate_quality_points()
     end
 
@@ -193,7 +195,7 @@ function QualityProcessor.roll(entity)
     local lowest_tier = planet_data.lowest_allowed_tier
 
     --- no need to reroll if unit is already higher than lowest tier or it's attached to spawner.
-    if unit_tier >= lowest_tier or entity.spawner then
+    if unit_tier >= lowest_tier or (entity.commandable and entity.commandable.spawner) then
         return
     end
 
@@ -230,9 +232,9 @@ function QualityProcessor.roll(entity)
         }
 
         -- Join group if needed
-        if entity.commandable.is_unit_group then
-            new_unit.add_member(new_unit)
-        end
+        --if entity.commandable.is_unit_group then
+        --    new_unit.add_member(new_unit)
+        --end
 
         -- destroy and doesn't raise any events since it's replacement.
         entity.destroy()

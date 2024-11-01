@@ -21,6 +21,7 @@ SAMPLE_TILE_MODE = false
 DEBUG_BY_PASS_QUALITY = false
 
 --- Enable this flag to by pass quality roll on unit you need to preserve during a test as the system may kill your unit.
+--- set this in before_each and after_each function
 TEST_BY_PASS_QUALITY = false
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 
