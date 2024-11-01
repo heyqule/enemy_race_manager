@@ -19,25 +19,23 @@ data.erm_spawn_specs = data.erm_spawn_specs or {}
 data.erm_land_scout = data.erm_land_scout or {}
 data.erm_aerial_scout = data.erm_aerial_scout or {}
 
-if settings.startup["enemyracemanager-enable-bitters"].value then
-    -- This set of data is used for set up default autoplace calculation.
+-- This set of data is used for set up default autoplace calculation.
 
-    data.erm_registered_race[MOD_NAME] = true
-    table.insert(data.erm_spawn_specs, {
-        mod_name = MOD_NAME,
-        force_name = FORCE_NAME,
-        moisture = 2, -- 1 = Dry and 2 = Wet
-        aux = 1, -- 1 = red desert, 2 = sand
-        elevation = 1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
-        temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
-    })
+data.erm_registered_race[MOD_NAME] = true
+table.insert(data.erm_spawn_specs, {
+    mod_name = MOD_NAME,
+    force_name = FORCE_NAME,
+    moisture = 2, -- 1 = Dry and 2 = Wet
+    aux = 1, -- 1 = red desert, 2 = sand
+    elevation = 1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+    temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
+})
 
-    --require("prototypes/compatibility/BobsEnemies/spawn_spec")
-    --require("prototypes/compatibility/NaturalEvolutionEnemies/spawn_spec")
+--require("prototypes/compatibility/BobsEnemies/spawn_spec")
+--require("prototypes/compatibility/NaturalEvolutionEnemies/spawn_spec")
 
-    data.erm_land_scout[MOD_NAME] = "small-biter"
-    data.erm_aerial_scout[MOD_NAME] = "defender"
-end
+data.erm_land_scout[MOD_NAME] = "small-biter"
+data.erm_aerial_scout[MOD_NAME] = "defender"
 
 require "prototypes.extend-mapping-beacons"
 require "prototypes.extend-rallypoint"

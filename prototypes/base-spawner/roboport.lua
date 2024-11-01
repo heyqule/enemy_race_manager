@@ -26,7 +26,7 @@ local name = "roboport"
 -- Hitpoints
 
 local hitpoint = 400
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 2
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 
 -- Handles acid and poison resistance
@@ -99,7 +99,7 @@ function make_roboport(level)
             collision_box = collision_box,
             map_generator_bounding_box = map_generator_bounding_box,
             selection_box = selection_box,
-            max_health = ERM_UnitHelper.get_building_health(hitpoint, hitpoint * max_hitpoint_multiplier, level),
+            max_health = ERM_UnitHelper.get_building_health(hitpoint, max_hitpoint_multiplier, level),
             order = MOD_NAME .. "-" .. name,
             subgroup = "enemies",
             vehicle_impact_sound = ERM_Sound.generic_impact,

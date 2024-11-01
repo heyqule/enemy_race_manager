@@ -83,6 +83,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["fluid-wagon"]["fluid-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
     data.raw["artillery-wagon"]["artillery-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
 
+    --- Add additional rails
     data.raw["straight-rail"]["straight-rail"]["resistances"] = rails_change_resistance()
     data.raw["curved-rail"]["curved-rail"]["resistances"] = rails_change_resistance()
 

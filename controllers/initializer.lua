@@ -9,8 +9,6 @@ local Event = require("__stdlib__/stdlib/event/event")
 require("__enemyracemanager__/global")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local MapProcessor = require("__enemyracemanager__/lib/map_processor")
-local LevelProcessor = require("__enemyracemanager__/lib/level_processor")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -135,9 +133,9 @@ local prepare_world = function()
     SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
-    if table_size(storage.race_settings) > 0 then
-        LevelProcessor.calculate_multiple_levels()
-    end
+    --if table_size(storage.race_settings) > 0 then
+    --    LevelProcessor.calculate_multiple_levels()
+    --end
 
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
@@ -188,14 +186,14 @@ local init_globals = function()
     storage.active_races_num = 1
     storage.is_multi_planets_game = false
 
-    --- SE or DLC
-    if script.active_mods["space-exploration"] then
+    --- SE or Space Age
+    if script.active_mods["space-exploration"] or game.planets['vulcanus'] then
         storage.is_multi_planets_game = true
     end
 
     SurfaceProcessor.init_globals()
     AttackMeterProcessor.init_globals()
-    MapProcessor.init_globals()
+    --MapProcessor.init_globals()
     ForceHelper.init_globals()
     Cron.init_globals()
     AttackGroupProcessor.init_globals()
@@ -227,7 +225,7 @@ Event.on_init(function(event)
 end)
 
 Event.on_load(function(event)
-    MapProcessor.rebuild_queue()
+
     Cron.rebuild_queue()
     conditional_events()
 end)

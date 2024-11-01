@@ -3,6 +3,16 @@ MAP_GEN_2_RACES_SPLIT = "2 Races Split"
 MAP_GEN_4_RACES_SPLIT = "4 Races Split"
 MAP_GEN_1_RACE_PER_SURFACE = "1 Race / Surface"
 
+QUALITY_CASUAL = "Casual"
+QUALITY_NORMAL = "Normal"
+QUALITY_ADVANCED = "Advanced"
+QUALITY_HARDCORE = "Hardcore"
+QUALITY_FIGHTER = "Fighter"
+QUALITY_CRUSADER = "Crusader"
+QUALITY_THEONE = "The One"
+
+
+
 MAX_LEVEL_5 = "Casual - Max L5"
 MAX_LEVEL_10 = "Normal - Max L10"
 MAX_LEVEL_15 = "Advanced - Max L15"

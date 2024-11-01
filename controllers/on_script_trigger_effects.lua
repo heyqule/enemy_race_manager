@@ -11,6 +11,7 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
@@ -186,6 +187,14 @@ local script_functions = {
     [CREEP_REMOVAL] = function(event)
         remove_creep(event.source_entity)
     end,
+
+    [QUALITY_DICE_ROLL] = function(event)
+        QualityProcessor.roll(event.source_entity)
+    end,
+
+    [QUALITY_TALLY_POINT] = function(event)
+        print('Running QUALITY_TALLY_POINT')
+    end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)
     if script_functions[event.effect_id] then

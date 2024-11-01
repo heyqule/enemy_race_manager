@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 10:06 PM
 ---
-require('util')
+local String = require('__erm_libs__/stdlib/string')
 local Event = require("__stdlib__/stdlib/event/event")
 
 require("__enemyracemanager__/global")
@@ -44,7 +44,7 @@ EventGui.on_click(".*/more_action", function(event)
 
     local owner = game.players[element.player_index]
     if owner then
-        local nameToken = util.split(event.element.name, "/")
+        local nameToken = String.split(event.element.name, "/")
         GuiContainer.detail_window.show(owner, storage.race_settings[nameToken[1]])
     end
 end)
@@ -79,7 +79,7 @@ EventGui.on_click(".*/" .. GuiContainer.detail_window.confirm_name, function(eve
 
     local owner = game.players[element.player_index]
     if owner then
-        local nameToken = util.split(element.name, "/")
+        local nameToken = String.split(element.name, "/")
         GuiContainer.detail_window.confirm(owner, nameToken, element)
         GuiContainer.main_window.show(owner)
         GuiContainer.main_window.update_all()
@@ -92,7 +92,7 @@ EventGui.on_click(".*/replace_enemy", function(event)
         return
     end
 
-    local nameToken = util.split(element.name, "/")
+    local nameToken = String.split(element.name, "/")
     if (game.forces["enemy_" .. nameToken[1]] or nameToken[1] == MOD_NAME) and storage.race_settings[nameToken[1]] then
         local owner = game.players[element.player_index]
         GuiContainer.detail_window.replace_enemy(owner, nameToken)
@@ -106,7 +106,7 @@ EventGui.on_click(".*/boss_details", function(event)
         return
     end
 
-    local nameToken = util.split(element.name, "/")
+    local nameToken = String.split(element.name, "/")
     local owner = game.players[element.player_index]
     GuiContainer.boss_detail_window.show(owner, nameToken[1], storage.boss_logs[nameToken[1]])
 end)
@@ -128,7 +128,7 @@ EventGui.on_click(".*/victory_dialog_tier_confirm", function(event)
         return
     end
 
-    local nameToken = util.split(element.name, "/")
+    local nameToken = String.split(element.name, "/")
     local owner = game.players[element.player_index]
     GuiContainer.victory_dialog.confirm(nameToken[1])
     GuiContainer.victory_dialog.hide(owner)
@@ -328,7 +328,7 @@ local deployer_switch = function(event)
 
     local player = game.players[element.player_index]
     if player and player.valid then
-        local nameToken = util.split(element.name, "/")
+        local nameToken = String.split(element.name, "/")
         local army_control_window = GuiContainer.army_control_window
         if nameToken[2] == "auto_deploy" then
             if element.switch_state == "left" then
@@ -356,7 +356,7 @@ EventGui.on_click("army_deployer/all/.*", function(event)
 
     local player = game.players[element.player_index]
     if player and player.valid then
-        local nameToken = util.split(element.name, "/")
+        local nameToken = String.split(element.name, "/")
         local army_window = GuiContainer.army_control_window
         if nameToken[3] == "on" then
             army_window.deployer_turn_all_on(player)
@@ -375,7 +375,7 @@ EventGui.on_click("army_deployer/filter_type/.*", function(event)
 
     local player = game.players[element.player_index]
     if player and player.valid then
-        local nameToken = util.split(element.name, "/")
+        local nameToken = String.split(element.name, "/")
         local army_window = GuiContainer.army_control_window
         local filter = storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3].."/"..nameToken[4]]
         if filter then
@@ -397,7 +397,7 @@ EventGui.on_click("army_deployer/open_map/.*", function(event)
 
     local player = game.players[element.player_index]
     if player and player.valid then
-        local nameToken = util.split(element.name, "/")
+        local nameToken = String.split(element.name, "/")
         local deployers = storage.army_built_deployers[player.force.index]
         local unit_number = tonumber(nameToken[3])
         if deployers and deployers[unit_number] and deployers[unit_number].entity.valid then

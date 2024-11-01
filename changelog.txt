@@ -4,21 +4,32 @@ Date: ????-??-??
 
   Major Features:
     - Updated to Factorio 2.0
-    - This mod now focuses on interplanetary war logistic.  Support for base game is limited.
-    - Replaced Level system with Quality System.
+    - This mod now focuses on interplanetary war logistics. Support for base game may be limited.
+    - Replaced leveling system with quality spawning system. [Details: {url goes here}]
 
-  Features
-    - Updated autoplace handlers.
+  Features:
+    - Updated autoplace handlers based on 2.0 specifications.
+    - Boss mode is temporary offline for major overhaul.
 
 
   Changes:
+    - [Unit Properties]
+    - HP and damage algo changes to balance quality ammunitions.  Enemy have higher stats when quality module is enabled.
+    - Movement and attack speed reach max at rare tier.
+    - When quality module is enabled, each tier will add one range to the max range.
+
     - PSI Emitter Satellite for boss is now only used for base game. Bosses in [space-age] spawn in their respective planet.
-    - Added a free for all planet.  Utilizing 2 way split autoplace to spawn enemy.  Your goal is to bring "peace" on that planet. \nRace can be configured in startup settings.
+    - Enhanced defense items are removed in flavor of [space-age]'s quality system.
+    - Added a free for all planet when free for all option is enabled. The planet utilizing 2 or 4 ways split autoplace to spawn enemy.  Your goal is to bring "peace" on that planet. \nRaces can be configured in startup settings.
     - Removed dependency of stdlib.
-    - Removed all compatibility supports for 1.1 mods.
-    - Removed menu biter replacement.
+    - Removed most compatibility supports for 1.1 mods.  2.0 mods compatibility will be done in ERM 2.1+.
+    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported.
+    - Removed menu biter replacement, add a few menu simulations.
     - Removed Spawner generation methods. On nauvis, you can have to pick your race in start up setting. Default to Biters.  In base game, it will use the old default mapping technic.
-    - Removed 4 way splits.
+    - Tentitive, Removed 2 way and 4 way splits map generator.
+    - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis enemy" option.
+    - Removed ERM enhanced defense items in flavor of SA's quality item.  Enemy damage will be slightly lowered for base game players.
+    - Non defensive structure automatically get a health bump to a minimum of 500HP.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6

@@ -7,10 +7,11 @@
 local Queue = require("__stdlib__/stdlib/misc/queue")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local LevelManager = require("__enemyracemanager__/lib/level_processor")
+--local LevelManager = require("__enemyracemanager__/lib/level_processor")
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local TestShared = {}
 
@@ -24,9 +25,11 @@ function TestShared.prepare_the_factory()
         end
     end
 
-    LevelManager.reset_all_progress()
+    --LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
+    QualityProcessor.reset_globals()
+    QualityProcessor.calculate_quality_points()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
 end
@@ -40,9 +43,10 @@ function TestShared.reset_the_factory()
         end
     end
 
-    LevelManager.reset_all_progress()
+    --LevelManager.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
+    QualityProcessor.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
 end

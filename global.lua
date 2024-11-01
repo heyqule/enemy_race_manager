@@ -17,6 +17,7 @@ BEACON_SELECTABLE = true
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
 
+DEBUG_BY_PASS_QUALITY = false
 
 CONSTRUCTION_ATTACK = "embtr-con"
 LOGISTIC_ATTACK = "embtr-log"
@@ -47,5 +48,10 @@ ALL_PLANETS = "All Planets"
 ENVIRONMENTAL_ATTACK = "emev-atk"
 
 CREEP_REMOVAL = "em-crprm"
+
+--- Roll dice when unit/spawner/turrets spawns
+QUALITY_DICE_ROLL = "em-dcrll"
+--- Tall point on unit death
+QUALITY_TALLY_POINT = "em-tllpt"
 
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }

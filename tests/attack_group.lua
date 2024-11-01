@@ -21,8 +21,8 @@ after_each(function()
     storage.erm_unit_groups = {}
 end)
 
-local command_center = "erm_zerg--hive--20"
-local ultralisk = "erm_zerg--ultralisk--20"
+local command_center = "erm_zerg--hive--5"
+local ultralisk = "erm_zerg--ultralisk--5"
 local force_name = "enemy_erm_zerg"
 local race_name = "erm_zerg"
 local PLAYER = "player"
@@ -58,7 +58,7 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
         AttackGroupBeaconProcessor.init_index()
 
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         storage.race_settings[race_name].tier = 3
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
@@ -78,7 +78,7 @@ end
 
             local member = group.members[5]
             local nameToken = ForceHelper.get_name_token(member.name)
-            assert.equal(20, tonumber(nameToken[3]), "Check Group Level")
+            assert.equal(5, tonumber(nameToken[3]), "Check Group Level")
             done()
         end)
     end)
@@ -91,7 +91,7 @@ end
         AttackGroupBeaconProcessor.init_index()
 
         storage.erm_unit_groups = {}
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         storage.race_settings[race_name].tier = 3
         storage.race_settings[race_name].attack_meter = 3000
         storage.race_settings[race_name].next_attack_threshold = 3000
@@ -115,7 +115,7 @@ end
 
     it("Superweapon revenge", function()
         async(7300)
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
@@ -224,7 +224,7 @@ end
 
     it("Featured Group", function()
         async(7300)
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
@@ -262,7 +262,7 @@ end
 
     it("Featured Flyer Group", function()
         async(7300)
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
@@ -300,7 +300,7 @@ end
 
     it("Group Killed during generation", function()
         async(1900)
-        storage.race_settings[race_name].level = 20
+        storage.race_settings[race_name].level = 5
         storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]

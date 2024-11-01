@@ -4,8 +4,6 @@
 --- DateTime: 12/21/2020 3:16 PM
 --- require("__enemyracemanager__/lib/global_config")
 ---
-require("__enemyracemanager__/setting-constants")
-
 
 local DataHelper = {}
 

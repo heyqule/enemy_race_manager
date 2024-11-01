@@ -105,7 +105,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot["type"] = "unit"
     robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], tostring(level) }
     robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
-    robot["max_health"] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier / health_cut_ratio, level)
+    robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier / health_cut_ratio, level)
     robot["subgroup"] = "erm-flying-enemies"
     robot["has_belt_immunity"] = true
     robot["resistances"] = {
@@ -146,7 +146,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     return robot
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLevelCombatRobots(i, "destroyer") })

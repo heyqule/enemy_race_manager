@@ -7,6 +7,7 @@
 ---
 
 require('util')
+local String = require('__erm_libs__/stdlib/string')
 
 local ForceHelper = {
     default_mod_name = "erm_vanilla"
@@ -91,7 +92,7 @@ function ForceHelper.set_neutral_force(game, force_name)
 end
 
 function ForceHelper.split_name(name)
-    return util.split(name, "--")
+    return String.split(name, "--")
 end
 
 function ForceHelper.get_name_token(name)
@@ -155,10 +156,6 @@ function ForceHelper.refresh_all_enemy_forces()
         end
     end
     storage.total_player_forces = #storage.player_forces
-
-    if settings.startup["enemyracemanager-enable-bitters"].value == false then
-        storage.enemy_force_check["enemy"] = nil
-    end
 end
 
 -- Whether a surface can assign enemy

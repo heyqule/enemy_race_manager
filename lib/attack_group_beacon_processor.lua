@@ -10,7 +10,7 @@ local RaceSettingsHelper = require("helper/race_settings_helper")
 local Configs = require("global_config")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 
-local Position = require("__erm_libs__/stdlib/area/position")
+local Position = require("__erm_libs__/stdlib/position")
 local Event = require("__stdlib__/stdlib/event/event")
 
 local AttackGroupBeaconProcessor = {}

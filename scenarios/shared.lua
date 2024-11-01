@@ -104,7 +104,7 @@ end
 
 function ScenarioHelper.set_enemy_params(level, tier, factor)
     remote.call("enemyracemanager_debug", "set_evolution_factor", factor)
-    remote.call("enemyracemanager_debug", "level_up", level)
+    --remote.call("enemyracemanager_debug", "level_up", level)
     remote.call("enemyracemanager_debug", "set_tier", tier)
     remote.call("enemyracemanager_debug", "attack_group_beacon_index")
 end

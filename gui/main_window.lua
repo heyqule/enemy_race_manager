@@ -8,8 +8,6 @@ local mod_gui = require("mod-gui")
 local String = require("__stdlib__/stdlib/utils/string")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local LevelManager = require("__enemyracemanager__/lib/level_processor")
-local ReplacementProcessor = require("__enemyracemanager__/lib/replacement_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
@@ -76,26 +74,22 @@ function MainWindow.show(player)
         scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
     end
 
-    local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
+    local item_table = scroll.add { type = "table", column_count = 5, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
-    item_table.add { type = "label", caption = { "gui.level_column" } }
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = { "gui.evolution_column" } }
-    item_table.add { type = "label", caption = { "gui.evolution_factor_column" } }
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = { "gui.action_column" } }
 
-    LevelManager.calculate_evolution_points(storage.race_settings, game.forces, settings)
+    --LevelManager.calculate_evolution_points(storage.race_settings, game.forces, settings)
 
     for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
             item_table.add { type = "label", caption = race_setting.label }
-            item_table.add { type = "label", caption = race_setting.level }
             item_table.add { type = "label", caption = race_setting.tier }
             item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
-            item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(name)) }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }
             action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { "gui.more_action" }, tooltip = { "gui.more_action_tooltip" } }
@@ -104,10 +98,6 @@ function MainWindow.show(player)
 
     if admin then
         local bottom_flow = main_window.add { type = "flow", direction = "horizontal" }
-        bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { "gui.reset_biter" }, tooltip = { "gui.reset_biter_tooltip" }, style = "red_button" }
-        local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
-        button_pusher.style.width = 300
-        button_pusher.style.height = 24
         bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { "gui.clean_idle_biter" }, tooltip = { "gui.clean_idle_biter_tooltip" }, style = "red_button" }
     end
 end
@@ -161,16 +151,6 @@ function MainWindow.toggle_close(owner)
         button_flow.erm_toggle.tooltip = { "gui.show-enemy-stats" }
         MainWindow.hide(owner)
     end
-end
-
-function MainWindow.reset_default(event)
-    local profiler = game.create_profiler()
-    for _, surface in pairs(game.surfaces) do
-        ReplacementProcessor.resetDefault(surface, storage.race_settings, "enemy")
-        MainWindow.update_all()
-    end
-    profiler.stop()
-    game.print({ "", "Reset enemies to default: ", profiler })
 end
 
 function MainWindow.kill_idle_units(event)

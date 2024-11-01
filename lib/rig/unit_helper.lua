@@ -10,6 +10,7 @@ local ERM_UnitHelper = {}
 
 
 require('util')
+local String = require('__erm_libs__/stdlib/string')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 -- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
@@ -17,19 +18,18 @@ local max_resistance_percentage = 95
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15
 
-local get_damage_multiplier = function()
-    return settings.startup["enemyracemanager-damage-multipliers"].value
+-- New tier in percentage
+local multipliers = {15, 35, 65, 100}
+local get_damage_multiplier = function(incremental_damage, level)
+    return (multipliers[level-1] / 100) * incremental_damage * settings.startup["enemyracemanager-damage-multipliers"].value
 end
 
-local get_strength_multiplier = function()
-    return settings.startup["enemyracemanager-level-multipliers"].value
+local get_quality_multiplier = function(level)
+    return (1 + GlobalConfig.BASE_QUALITY_MULITPLIER * level)
 end
 
-local get_strength_percentage = function(level, multiplier, not_overflow)
-    if not_overflow then
-        return math.min(100, level * multiplier) / 100
-    end
-    return level * multiplier / 100
+local get_health_mutiplier = function( incremental_health, level)
+    return (multipliers[level-1] / 100) * incremental_health
 end
 
 -- Unit Health
@@ -37,52 +37,60 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
     if level == 1 then
         return base_health
     end
-    local internal_multiplier = math.log(level) / 2.3965 * get_strength_percentage(level, get_strength_multiplier())
-
-    local extra_health = 0
-    if level <= 5 then
-        extra_health = level * 10 * level * 0.8
-    elseif level <= 10 then
-        extra_health = level * 40 - level * 40 * (level * 3 / 100)
-    elseif level <= 15 then
-        extra_health = level * 35 - level * 35 * (level * 4 / 100)
-    elseif level < 20 then
-        extra_health = level * 50 - level * 50 * (level * 5 / 100)
+    local multiplier = get_health_mutiplier(incremental_health, level)
+    local final_health = math.floor(base_health * multiplier)
+    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
+        final_health = final_health * (multipliers[level-1] / 100) * get_quality_multiplier(level)
     end
-
-    return math.floor(base_health + (incremental_health * internal_multiplier) + extra_health)
+    return final_health
 end
 
 -- Unit Health
-function ERM_UnitHelper.get_building_health(base_health, incremental_health, level)
+function ERM_UnitHelper.get_building_health(base_health, incremental_health, level, reduce_effect)
     if level == 1 then
         return base_health
     end
-    return math.floor(base_health + (incremental_health * get_strength_percentage(level, get_strength_multiplier())))
+    --- Spawner has evolution based health increase, turrets don't
+    local reduce_effect_value = 1
+    if reduce_effect then
+        reduce_effect_value = 2
+    end
+    local multiplier = math.max(get_health_mutiplier(incremental_health, level) / reduce_effect_value, 2)
+    local final_health = math.floor(base_health * multiplier)
+    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
+        final_health = final_health * (multipliers[level-1] / 100) * get_quality_multiplier(level)
+    end
+    return final_health
 end
 
 
 -- Percentage Based Resistance
--- base_resistance + incremental_resistance is the maximum resistance
-function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance, level)
+-- base_resistance + incremental_resistance is the maximum resistance, reach max by epic tier.
+function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance , level, bypass_max_resist)
     if level == 1 then
         return base_resistance
     end
-    return math.min(math.floor(base_resistance + (incremental_resistance * (level * get_strength_multiplier() * 1.75 / 100))), base_resistance + incremental_resistance, max_resistance_percentage)
+    local max_resist = bypass_max_resist or max_resistance_percentage
+    return math.min(math.floor(base_resistance + (incremental_resistance * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC)))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
 -- Attack Damage
-function ERM_UnitHelper.get_damage(base_dmg, incremental_dmg, level)
+function ERM_UnitHelper.get_damage(base_dmg, incremental_damage, level)
     local damage = 0
     if level == 1 then
         damage = base_dmg
     else
-        damage = (base_dmg + (incremental_dmg * get_strength_percentage(level, get_strength_multiplier())) * get_damage_multiplier())
+        damage = base_dmg * get_damage_multiplier(incremental_damage, level)
     end
 
     if settings.startup["enemyracemanager-free-for-all"].value then
         damage = damage * GlobalConfig.FFA_MULTIPLIER
     end
+
+    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
+        damage = damage * get_quality_multiplier(level)
+    end
+
     return damage
 end
 
@@ -91,26 +99,26 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return math.max(base_speed - (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)), max_attack_speed)
+    return math.max(base_speed - (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))), max_attack_speed)
 end
 
--- Movement Speed, reach max at level 5
+-- Movement Speed, reach max at rare tier
 function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * get_strength_percentage(level * 5, get_strength_multiplier(), true)) * settings.startup["enemyracemanager-running-speed-multipliers"].value
+    return base_speed + (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_RARE)))
 end
 
 -- unit healing (full heal in 120s)
 function ERM_UnitHelper.get_healing(base_health, max_hitpoint_multiplier, level)
     return 0
-    --return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (2 * minute)
+    --return ERM_UnitHelper.get_health(base_health, max_hitpoint_multiplier, level) / (2 * minute)
 end
 
 -- building healing (full heal in 300s)
 function ERM_UnitHelper.get_building_healing(base_health, max_hitpoint_multiplier, level)
-    return ERM_UnitHelper.get_health(base_health, base_health * max_hitpoint_multiplier, level) / (5 * minute)
+    return ERM_UnitHelper.get_health(base_health, max_hitpoint_multiplier, level) / (5 * minute)
 end
 
 function ERM_UnitHelper.modify_biter_damage(biter, level)
@@ -142,11 +150,16 @@ function ERM_UnitHelper.get_vision_distance(attack_range)
     return attack_range + 8
 end
 
+--- Reach max attack range by rare tier.
 function ERM_UnitHelper.get_attack_range(level, ratio)
     ratio = ratio or 1
     local attack_range = GlobalConfig.get_max_attack_range()
-    if level < 5 then
+    if level < GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_RARE then
         attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25
+    end
+
+    if feature_flags.quality then
+        attack_range = attack_range + level
     end
 
     return math.ceil(attack_range * ratio)
@@ -175,7 +188,7 @@ function ERM_UnitHelper.format_team_color(color, tint_strength)
 end
 
 function ERM_UnitHelper.is_erm_unit(dataItem)
-    local nameToken = util.split(dataItem.name, "--")
+    local nameToken = String.split(dataItem.name, "--")
     return (data.erm_registered_race and data.erm_registered_race[nameToken[1]]) or false
 end
 

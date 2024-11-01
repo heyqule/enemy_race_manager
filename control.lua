@@ -10,7 +10,6 @@ require("global")
 
 require("testcase")
 
-local LevelProcessor = require("__enemyracemanager__/lib/level_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
@@ -32,6 +31,9 @@ remote.add_interface("enemyracemanager", RemoteApi)
 
 local DebugRemoteApi = require("__enemyracemanager__/lib/debug_remote_api")
 remote.add_interface("enemyracemanager_debug", DebugRemoteApi)
+
+handler = require("event_handler")
+handler.add_lib(require("__enemyracemanager__/lib/quality_processor"))
 
 -- Register Cron Functions
 cron_switch = {
@@ -134,11 +136,13 @@ cron_switch = {
     ["InterplanetaryAttacks.scan"] = function(args)
         InterplanetaryAttacks.scan(unpack(args))
     end,
-    --LevelProcessor
-    ["LevelProcessor.calculate_multiple_levels"] = function(args)
-        LevelProcessor.calculate_multiple_levels()
-    end,
+    ----LevelProcessor
+    --["LevelProcessor.calculate_multiple_levels"] = function(args)
+    --    LevelProcessor.calculate_multiple_levels()
+    --end,
 }
+
+
 
 require("__enemyracemanager__/controllers/initializer")
 
@@ -178,14 +182,16 @@ require("__enemyracemanager__/controllers/on_script_trigger_effects")
 --- On Rocket Launch Events
 require("__enemyracemanager__/controllers/on_rocket_launch")
 
-require("__enemyracemanager__/controllers/debug_events")
+
+
+--require("__enemyracemanager__/controllers/debug_events")
 
 -- Commands
-require("__enemyracemanager__/controllers/commands")
+--require("__enemyracemanager__/controllers/commands")
 
 -- Compatibility
-require("__enemyracemanager__/controllers/compatibility/k2")
-
-require("__enemyracemanager__/controllers/compatibility/mining_drone")
-
-require("__enemyracemanager__/controllers/compatibility/space_exploration")
+--require("__enemyracemanager__/controllers/compatibility/k2")
+--
+--require("__enemyracemanager__/controllers/compatibility/mining_drone")
+--
+--require("__enemyracemanager__/controllers/compatibility/space_exploration")
