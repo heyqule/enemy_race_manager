@@ -132,10 +132,14 @@ function RaceSettingsHelper.get_attack_meter(target_race)
 end
 
 function RaceSettingsHelper.add_to_attack_meter(target_race, value)
-    storage.race_settings[target_race].attack_meter = math.min(storage.race_settings[target_race].attack_meter + value, 999999)
+    storage.race_settings[target_race].attack_meter = math.max( math.min(storage.race_settings[target_race].attack_meter + value, 999999),  0)
     if (value > 0) then
         RaceSettingsHelper.set_accumulated_attack_meter(target_race, storage.race_settings[target_race].attack_meter_total + math.min(value, 999999))
     end
+end
+
+function RaceSettingsHelper.add_accumulated_attack_meter(target_race, value)
+    storage.race_settings[target_race].attack_meter_total =  math.max( storage.race_settings[target_race].attack_meter_total + math.min(value, 999999), 0)
 end
 
 function RaceSettingsHelper.get_next_attack_threshold(target_race)

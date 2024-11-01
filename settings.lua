@@ -87,8 +87,8 @@ data:extend {
         name = "enemyracemanager-pollution-to-attack-multipliers",
         description = "enemyracemanager-pollution-to-attack-multipliers",
         setting_type = "startup",
-        default_value = 0.025,
-        allowed_values = { 0, 0.01, 0.025, 0.05 },
+        default_value = 0.2,
+        allowed_values = { 0, 0.05, 0.1, 0.2 },
         order = "enemyracemanager-117"
     },
     --- Startup: Map Generation
@@ -212,15 +212,6 @@ data:extend {
         default_value = true,
         order = "enemyracemanager-300"
     },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-attack-meter-group-interval",
-        description = "enemyracemanager-attack-meter-group-interval",
-        setting_type = "startup",
-        default_value = 3,
-        order = "enemyracemanager-500",
-        allowed_values = { 1, 2, 3, 4, 5, 6, 7, 10 }
-    },
     --- Startup: Free for All
     {
         type = "bool-setting",
@@ -324,7 +315,7 @@ data:extend {
         description = "enemyracemanager-advancement",
         setting_type = "runtime-global",
         default_value = 1,
-        allowed_values = { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 },
+        allowed_values = { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 },
         order = "enemyracemanager-005"
     },
     --- Custom base style

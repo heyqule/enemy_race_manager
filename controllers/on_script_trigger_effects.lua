@@ -11,10 +11,11 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
-local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
 local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
@@ -193,7 +194,7 @@ local script_functions = {
     end,
 
     [QUALITY_TALLY_POINT] = function(event)
-        print('Running QUALITY_TALLY_POINT')
+        AttackMeterProcessor.calculate_points(event.source_entity)
     end
 }
 Event.register(defines.events.on_script_trigger_effect, function(event)

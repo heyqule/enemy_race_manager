@@ -4,7 +4,7 @@
 --- DateTime: 1/6/2024 6:34 PM
 ---
 
-local Queue = require("__stdlib__/stdlib/misc/queue")
+local Queue = require("__erm_libs__/stdlib/queue")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 --local LevelManager = require("__enemyracemanager__/lib/level_processor")
@@ -32,6 +32,8 @@ function TestShared.prepare_the_factory()
     QualityProcessor.calculate_quality_points()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
+    TestShared.reset_forces()
+    TEST_BY_PASS_QUALITY = true
 end
 
 function TestShared.reset_the_factory()
@@ -49,6 +51,7 @@ function TestShared.reset_the_factory()
     QualityProcessor.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
+    TEST_BY_PASS_QUALITY = false
 end
 --- Clear cron and its trackers
 function TestShared.CleanCron()
@@ -94,6 +97,9 @@ function TestShared.reset_forces()
     for key, force in pairs(game.forces) do
         if string.find(force.name,"test") then
             game.merge_forces(force, game.forces[1])
+        end
+        for key, surface in pairs(game.surfaces) do
+            force.set_evolution_factor(0, surface)
         end
     end
 end

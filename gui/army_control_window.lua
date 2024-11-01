@@ -4,7 +4,7 @@
 --- DateTime: 11/15/2022 9:44 PM
 ---
 local mod_gui = require("mod-gui")
-local String = require("__stdlib__/stdlib/utils/string")
+
 
 local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")

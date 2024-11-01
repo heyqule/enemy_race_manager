@@ -7,7 +7,7 @@ require("util")
 
 
 local Event = require("__stdlib__/stdlib/event/event")
-local StdIs = require("__stdlib__/stdlib/utils/is")
+local Position = require("__erm_libs__/stdlib/position")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -397,7 +397,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
             return
         end
 
-        if not StdIs.position(spawn_position) then
+        if not Position.is_position(spawn_position) then
             local target_chunk_data = storage.boss_spawnable_index.chunks[math.random(1, storage.boss_spawnable_index.size)]
             spawn_position = target_chunk_data.spawn_position
             storage.boss.target_position = target_chunk_data.turret_position

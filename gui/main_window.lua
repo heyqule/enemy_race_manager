@@ -5,7 +5,7 @@
 ---
 
 local mod_gui = require("mod-gui")
-local String = require("__stdlib__/stdlib/utils/string")
+
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")

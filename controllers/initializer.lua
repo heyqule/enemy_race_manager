@@ -192,7 +192,6 @@ local init_globals = function()
     end
 
     SurfaceProcessor.init_globals()
-    AttackMeterProcessor.init_globals()
     --MapProcessor.init_globals()
     ForceHelper.init_globals()
     Cron.init_globals()

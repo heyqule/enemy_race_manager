@@ -11,10 +11,12 @@ local QualityProcessor = require('lib/quality_processor')
 
 before_each(function()
     TestShared.prepare_the_factory()
+    TEST_BY_PASS_QUALITY = false
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
+    TEST_BY_PASS_QUALITY = true
 end)
 
 local enemy = 'enemy'
@@ -41,11 +43,11 @@ it("Test quality calculate_chance_cache", function()
     assert(spawn_rate[1] == 0, "Legendary = 0")
     assert(spawn_rate[2] == 0.15, "Epic = 0.15")
     assert(spawn_rate[3] == 0.6, "Rare = 0.6")
-    assert(spawn_rate[4] == 0.15, "Uncommon = 0.15")
+    assert(spawn_rate[4] == 0.25, "Uncommon = 0.25")
     assert(spawn_rate[5] == 0, "Normal = 0")
 end)
 
-it('Test when unit spawn, it should roll', function()
+it('Test when applicable entities spawn, it should roll', function()
     local nauvis = game.surfaces[1]
 
     game.forces[enemy].set_evolution_factor(1)
@@ -115,4 +117,42 @@ it('Test when unit spawn at higher tier, it should not re-roll', function()
     local unit = units[1]
     local unit_name = ForceHelper.get_name_token(unit.name)
     assert(tonumber(unit_name[3]) == 5, 'Turret is able to swap to higher tier')
-end) 
+end)
+
+it('Test when generate a group, whether it respect the ratio. However exceptions may happen, depends on RNG god', function()
+    local nauvis = game.surfaces[1]
+    game.forces[enemy].set_evolution_factor(1)
+    storage.race_settings.erm_vanilla.attack_meter_total = 2000001
+    QualityProcessor.calculate_quality_points()
+
+    for i = 1, 100, 1 do
+        nauvis.create_entity {
+            name = 'erm_vanilla--big-biter--1',
+            position = {0, 0}
+        }
+    end
+
+    local units = nauvis.find_entities_filtered {
+        type = 'unit',
+        radius = 32,
+        position = {0,0}
+    }
+
+    local total_two = 0
+    local total_three = 0
+    local total_four = 0
+    local total_switch = {
+        ['2'] = function() total_two = total_two + 1  end,
+        ['3'] = function() total_three = total_three + 1  end,
+        ['4'] = function() total_four = total_four + 1  end
+    }
+    for _, unit in pairs(units) do
+        local unit_name_token = ForceHelper.get_name_token(unit.name)
+        if total_switch[unit_name_token[3]] then
+            total_switch[unit_name_token[3]]()
+        end
+    end
+
+    assert(total_two < total_three, 'Uncommon < Rare')
+    assert(total_four < total_three, 'Epic < Rare')
+end)

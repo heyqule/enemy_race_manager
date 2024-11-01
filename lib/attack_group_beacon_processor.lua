@@ -1122,7 +1122,9 @@ AttackGroupBeaconProcessor.remove_merged_force = function(force_name)
             end
         end
 
-        storage[CONTROL_DATA][surface.index][force_name] = nil
+        if storage[CONTROL_DATA][surface.index] then
+            storage[CONTROL_DATA][surface.index][force_name] = nil
+        end
     end
 
     AttackGroupBeaconProcessor.init_index()

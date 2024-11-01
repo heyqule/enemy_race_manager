@@ -12,9 +12,6 @@ require("__enemyracemanager__/global")
 local Config = require("__enemyracemanager__/lib/global_config")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 
-Event.on_nth_tick(Config.ATTACK_POINT_CALCULATION, function(event)
-    AttackMeterProcessor.exec()
-end)
 
 Event.on_nth_tick(Config.ATTACK_GROUP_GATHERING_CRON, function(event)
     AttackMeterProcessor.add_form_group_cron()

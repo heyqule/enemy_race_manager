@@ -11,9 +11,9 @@ local QualityProcessor = {}
 --- normal, uncommon, rare, epic, legendary
 local max_difficulties = {
     [QUALITY_CASUAL] = {0, 0.65, 0.35, 0.5, 0},
-    [QUALITY_NORMAL] = {0, 0.15, 0.60, 0.15, 0},
-    [QUALITY_ADVANCED] = {0, 0, 0.6, 0.30, 0.1},
-    [QUALITY_HARDCORE] = {0, 0, 0.30, 0.45, 0.25},
+    [QUALITY_NORMAL] = {0, 0.25, 0.60, 0.15, 0},
+    [QUALITY_ADVANCED] = {0, 0, 0.6, 0.35, 0.05},
+    [QUALITY_HARDCORE] = {0, 0, 0.25, 0.6, 0.15},
     [QUALITY_FIGHTER] = {0, 0, 0, 0.50, 0.50},
     [QUALITY_CRUSADER] = {0, 0, 0, 0.20, 0.80},
     [QUALITY_THEONE] = {0, 0, 0, 0, 100},
@@ -99,14 +99,13 @@ local calculate_chance_cache = function(planet_data, time)
     end
     planet_data.spawn_table = spawn_table
     planet_data.difficulty = setting_difficulty
-    planet_data.spawn_rates = {
-        get_interpolated_value(spawn_table[1], time),
-        get_interpolated_value(spawn_table[2], time),
-        get_interpolated_value(spawn_table[3], time),
-        get_interpolated_value(spawn_table[4], time),
-        get_interpolated_value(spawn_table[5], time),
-    }
+    planet_data.spawn_rates = {}
+    for index, value_set in pairs(spawn_table) do
+        planet_data.spawn_rates[index] = get_interpolated_value(value_set, time)
+    end
     local spawn_rates_size = table_size(planet_data.spawn_rates)
+    planet_data.spawn_rates_size = spawn_rates_size
+
     for index, _ in pairs(planet_data.spawn_rates) do
         local next_rate = planet_data.spawn_rates[index + 1]
         if next_rate and next_rate == 0 then
@@ -138,6 +137,8 @@ function QualityProcessor.calculate_quality_points()
 
                     local quality_points = ( math.min((force.get_evolution_factor(planet.surface.name) + evolution_rich_padding), 1) ) * evolution_target +
                             math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
+
+                    quality_points = quality_points * setting_advancement
 
                     data.points = quality_points
                     if quality_points >= max_out_target then
@@ -171,12 +172,14 @@ function QualityProcessor.reset_globals()
 end
 
 function QualityProcessor.roll(entity)
-    if is_running_roll then
-        is_running_roll = false  
+    --- Unit from spawner doesn't need to roll.
+    if TEST_BY_PASS_QUALITY or is_running_roll then
+        is_running_roll = false
         return
-    end        
+    end
 
     local name_token = ForceHelper.get_name_token(entity.name)
+    local unit_tier = tonumber(name_token[3])
     local force = entity.force
     local surface = entity.surface
 
@@ -186,8 +189,14 @@ function QualityProcessor.roll(entity)
 
     local planet_data = storage.quality_on_planet[force.name][surface.name]
     local spawn_rates = planet_data.spawn_rates
-    local spawn_rates_size = table_size(spawn_rates)
+    local spawn_rates_size = planet_data.spawn_rates_size
     local lowest_tier = planet_data.lowest_allowed_tier
+
+    --- no need to reroll if unit is already higher than lowest tier or it's attached to spawner.
+    if unit_tier >= lowest_tier or entity.spawner then
+        return
+    end
+
     local can_spawn = false
     local selected_tier
     for index, spawn_rate in pairs(spawn_rates) do
@@ -205,7 +214,7 @@ function QualityProcessor.roll(entity)
         end
     end
 
-    --- no need to swap if selected tier is lower than unit's tier.
+    --- no need to swap if unit is already higher than selected.
     if tonumber(name_token[3]) >= selected_tier then
         return
     end 
@@ -213,22 +222,21 @@ function QualityProcessor.roll(entity)
     if can_spawn then
         local position = entity.position
         is_running_roll = true
-        surface.create_entity {
+        local new_unit = surface.create_entity {
             name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
             force = entity.force,
             position = position,
             create_build_effect_smoke = false,
-            quality = "legendary",
-            cause = entity
         }
+
+        -- Join group if needed
+        if entity.commandable.is_unit_group then
+            new_unit.add_member(new_unit)
+        end
 
         -- destroy and doesn't raise any events since it's replacement.
         entity.destroy()
     end
-end
-
-function QualityProcessor.tally_attack_point(entity)
-
 end
 
 --- Register events
