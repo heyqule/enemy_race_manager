@@ -107,10 +107,11 @@ function ScenarioHelper.set_enemy_params(level, tier, factor)
     --remote.call("enemyracemanager_debug", "level_up", level)
     remote.call("enemyracemanager_debug", "set_tier", tier)
     remote.call("enemyracemanager_debug", "attack_group_beacon_index")
+    remote.call("enemyracemanager_debug", "calculate_quality_points")
 end
 
 function ScenarioHelper.set_attack_points()
-    remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 1000000)
+    remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 2000000)
 end
 
 function ScenarioHelper.set_boss_tier(tier)

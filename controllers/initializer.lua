@@ -14,7 +14,7 @@ local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
-local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
@@ -206,6 +206,7 @@ local init_globals = function()
     GuiContainer.init_globals()
     SpawnLocationScanner.init_globals()
     InterplanetaryAttacks.init_globals()
+    QualityProcessor.on_init()
 
 
     --- Wipe this cache due to cache pollution from previous version.
