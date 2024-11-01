@@ -4,8 +4,8 @@
 --- DateTime: 7/21/2021 5:34 PM
 ---
 
-local Type = require("__stdlib__/stdlib/utils/type")
-local Queue = require("__stdlib__/stdlib/misc/queue")
+local Type = require("__erm_libs__/stdlib/type")
+local Queue = require("__erm_libs__/stdlib/queue")
 
 local Event = require("__stdlib__/stdlib/event/event")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")

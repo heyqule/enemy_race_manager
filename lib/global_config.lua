@@ -10,18 +10,15 @@ require("__enemyracemanager__/setting-constants")
 local GlobalConfig = {}
 
 GlobalConfig.MAX_TIER = 3
-
-GlobalConfig.MAP_PROCESS_CHUNK_BATCH = 20
--- Processing Event Interval
-GlobalConfig.CHUNK_QUEUE_PROCESS_INTERVAL = 31
-
-GlobalConfig.LEVEL_PROCESS_INTERVAL = 10 * minute
-GlobalConfig.ATTACK_GROUP_GATHERING_CRON = settings.startup["enemyracemanager-attack-meter-group-interval"].value * minute + 1
+--- Tick base EVENTS
+GlobalConfig.RACE_SETTING_UPDATE_INTERVAL = 5 * minute
+GlobalConfig.ATTACK_GROUP_GATHERING_CRON = 1 * minute + 1
 GlobalConfig.ATTACK_POINT_CALCULATION = minute + 3
 GlobalConfig.BOSS_QUEUE_CRON = 11
 GlobalConfig.TELEPORT_QUEUE_CRON = 33
-GlobalConfig.AUTO_DEPLOY_CRON = 311
+GlobalConfig.AUTO_DEPLOY_CRON = 3 * second + 1
 GlobalConfig.SPAWN_SCOUTS_INTERVAL = 25301
+GlobalConfig.TIME_BASED_ATTACK_POINT_CRON = 1 * minute + 3
 
 -- +1 to spread the job across all ticks
 -- execute all job on designated tick

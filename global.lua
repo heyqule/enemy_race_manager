@@ -8,6 +8,7 @@
 MOD_NAME = "erm_vanilla"
 FORCE_NAME = "enemy"
 
+--- [ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 --- Enable this flag to enable debug features
 DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
@@ -18,6 +19,10 @@ BEACON_SELECTABLE = true
 SAMPLE_TILE_MODE = false
 
 DEBUG_BY_PASS_QUALITY = false
+
+--- Enable this flag to by pass quality roll on unit you need to preserve during a test as the system may kill your unit.
+TEST_BY_PASS_QUALITY = false
+--- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 
 CONSTRUCTION_ATTACK = "embtr-con"
 LOGISTIC_ATTACK = "embtr-log"

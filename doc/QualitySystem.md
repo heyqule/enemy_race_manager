@@ -9,35 +9,35 @@ This quality system will replace the old leveling system.
 
 When the enemy spawns/created, they will roll a chance to switch to a higher quality unit / spawners.  There are 5 tiers, using same terminology as [space-age]'s quality system.
 
-Appoximate stats for each tier, comparing to the old leveling system.  However, there are 2 set of attributes depends on quality module is used
+Here are the approximated stats for each tier, comparing to the old leveling system.  However, there are 2 set of attributes depends on whether quality module is used
 Set 1:
 - Normal = level 1
 - Uncommon = level 3-5
 - Rare = level 8-10
 - Epic = level 12-15
 - Legendary = level 20-25.
-- Heirloom, if legendary does not provide enough challenge
+- Heirloom, if legendary does not provide enough challenge (not yet implement)
 
-Set 2  Normal to Legendary (official 2.5x)
+Set 2  Normal to Legendary (gradually increase additional 2.5x on HP and Damage, balance will test with the following)
 - Normal = level 1, with normal weapons
-- Uncommon = level 3-5, with 75% normal and uncommon weapons (weapon 6)
-- Rare = level 8-10, with 75% uncommon and 25% rare weapons (weapon 10)
-- Epic = level 12-15, with 50% rare and epic weapons (weapon 13)
-- Legendary = level 20-25. with 50% epic and legendary weapon AND 100% legendary weapons. (weapon 16)
-- Heirloom, if legendary does not provide enough challenge
+- Uncommon = level 3-5, with 80% normal and uncommon weapons (bullet weapon 5)
+- Rare = level 8-10, with 50% Normal 25% uncommon and 25% rare weapons (bullet weapon 10)
+- Epic = level 12-15, with 30% normal, 30% uncommon, 30% rare and 10% epic weapons (bullet weapon 13)
+- Legendary = level 20-25. with 50% epic and legendary weapon @ bullet level 16)
+- Heirloom, if legendary does not provide enough challenge (not yet implement)
 
 Legendary units spawns in a new planet with new challenges which focus on war logistic.  Boss units may spawn on those planets.
 
-Game progression is based on player's accumulated attack points and planet's evolution.    
+Game progression is based on player's accumulated attack points and the planet's evolution.     
 
-Once you reach the certain attack points, the quality spawn chance will be using the highest quality based on your difficulty setting.
+Once you reach the certain attack points and evolution, the quality spawn chance will be using the highest quality based on your difficulty setting.
 
-For Example:
+### For Example:
 When the game start, normal units/spawners have 100% spawn rate.  
 
 As you progress to 0.5 planet evolution or/and kill 10000 units and spawners.  Normal unit may roll 70%, uncommon may roll 30%, rare may roll 5%
 
-In mid game, you can expect about 40% normal, 35% uncommon and 25% rare, 5% epic.
+In mid game, you may expect about 50% normal, 35% uncommon and 13% rare, 2% epic.
 
 In late game, the stats are 0% normal, 25% uncommon, 60% rare and 15% legendary.
 
@@ -52,8 +52,8 @@ There will be a difficulty setting to adjust with 2 options, they can be adjuste
 |------------|:--------------------------------------------:|
 | Casual     |             0 / 65 / 35 / 5 / 0              |
 | Normal     |             0 / 25 / 60 / 15 / 0             |
-| Advanced   |             0 / 0 / 60 / 30 / 10             |
-| Hardcore   |             0 / 0 / 30 / 45 / 25             |
+| Advanced   |             0 / 0 / 60 / 35 / 5              |
+| Hardcore   |             0 / 0 / 30 / 50 / 20             |
 | Fighter    |             0 / 0 / 0 / 50 / 50              |
 | Crusader   |             0 / 0 / 0 / 20 / 80              |
 | The One    |             0 / 0 / 0 / 0 / 100              |

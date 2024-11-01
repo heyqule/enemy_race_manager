@@ -159,31 +159,13 @@ function ForceHelper.refresh_all_enemy_forces()
 end
 
 -- Whether a surface can assign enemy
--- Based off Rampant 3.0"surface exclusion
 function ForceHelper.can_have_enemy_on(surface)
-    if surface.valid then
+    if surface.valid and surface.planet then
         local surface_name = surface.name
         if storage.surface_inclusion_list[surface_name] == nil and
             (storage.surface_exclusion_list[surface_name] == true or
-
-            string.find(surface_name, "Factory floor") or
-            string.find(surface_name, " Orbit") or
-            string.find(surface_name, "clonespace") or
-            string.find(surface_name, "BPL_TheLabplayer") or
-            string.find(surface_name, "starmap%-") or
-            string.find(surface_name, "NiceFill") or
-            string.find(surface_name, "Asteroid Belt") or
-            string.find(surface_name, "Vault ") or
-            string.find(surface_name, "spaceship") or
-            string.find(surface_name, "bpsb%-lab%-") or
-
-            (surface_name == "aai-signals") or
-            (surface_name == "RTStasisRealm") or
-            (surface_name == "minime_dummy_dungeon") or
-            (surface_name == "minime-preview-character") or
-            (surface_name == "pipelayer") or
-            (surface_name == "beltlayer")
-        )
+                not surface.planet
+            )
         then
             storage.surface_exclusion_list[surface_name] = true
             storage.enemy_surfaces[surface_name] = nil
