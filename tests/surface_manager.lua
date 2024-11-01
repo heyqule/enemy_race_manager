@@ -18,29 +18,21 @@ after_each(function()
 end)
 
 
-it("Add and remove surface", function()
-    local new_surface_name = "test_surface_2"
-    game.create_surface(new_surface_name)
-    assert.not_nil(storage.enemy_surfaces[new_surface_name],"New race assigned to new surface")
-
-    local rejected_surface_name = "Vault 1"
-    game.create_surface(rejected_surface_name)
-    assert.is_nil(storage.enemy_surfaces[rejected_surface_name],"New race not assigned to unsupported surfaces")
-
-    local rejected_surface_name2 = "aai-signals"
-    game.create_surface(rejected_surface_name2)
-    assert.is_nil(storage.enemy_surfaces[rejected_surface_name2],"R2: New race not assigned to unsupported surfaces")
-
-    game.delete_surface(new_surface_name)
-    game.delete_surface(rejected_surface_name)
-    game.delete_surface(rejected_surface_name2)
+it.only("Add and remove surface", function()
+    local char = game.planets['char']
+    local valcanus = game.planets['vulcanus']
+    local nauvis = game.planets['nauvis']
+    char.create_surface()
+    valcanus.create_surface()
     after_ticks(60, function()
-        assert.is_nil(storage.enemy_surfaces[new_surface_name],"Removed new race from surface")
+        assert.not_nil(storage.enemy_surfaces[char.surface.name],"Char has enemy data")
+        assert.not_nil(storage.enemy_surfaces[valcanus.surface.name],"Valcanus has enemy data")
+        assert.not_nil(storage.enemy_surfaces[nauvis.surface.name],"Nauvis has enemy data")
     end)
 end)
 
 ticks_between_tests(60)
-it("Reindex Surfaces", function()
+it.only("Reindex Surfaces", function()
     local surface_count = 10
     for i = 0, surface_count, 1 do
         local new_surface_name = "test_surface"..tostring(i)

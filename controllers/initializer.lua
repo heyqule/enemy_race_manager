@@ -129,7 +129,6 @@ local prepare_world = function()
 
     -- Race Cleanup
     RaceSettingsHelper.clean_up_race()
-    SurfaceProcessor.numeric_to_name_conversion()
     SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
