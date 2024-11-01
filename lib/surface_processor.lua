@@ -14,31 +14,40 @@ function SurfaceProcessor.init_globals()
     storage.total_enemy_surfaces = storage.total_enemy_surfaces or 0
 end
 
-function SurfaceProcessor.assign_race(surface, race_name)
+local surfix = '_enemy_base'
+function SurfaceProcessor.assign_race(surface)
 
     if not ForceHelper.can_have_enemy_on(surface) then
         return
     end
 
-    local races = GlobalConfig.get_enemy_races()
-    local max_num = table_size(races)
-    if max_num == 0 then
-        return
-    end
-
-    local race = nil
-    if race_name then
-        for k, v in pairs(races) do
-            if v == race_name then
-                race = v
-                break
+    local planet = surface.planet
+    if planet then
+        local prototype = planet.prototype
+        local races_by_name = {}
+        local races_by_key= {}
+        if prototype.map_gen_settings and prototype.map_gen_settings.autoplace_controls then
+            local autocontrols = prototype.map_gen_settings.autoplace_controls
+            for key, _ in pairs(autocontrols) do
+                if string.find(key, surfix) then
+                    local i, j = string.find(key, surfix)
+                    local enemy_race = string.sub(key, 0, i - 1)
+                    if enemy_race == FORCE_NAME then
+                        enemy_race = MOD_NAME
+                    end
+                    races_by_name[enemy_race] = true
+                    table.insert(races_by_key, enemy_race)
+                end
             end
         end
-    else
-        race = races[math.random(1, max_num)]
+
+        storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
+        storage.enemy_surfaces[surface.name] = {
+            races_by_name = races_by_name,
+            races_by_key = races_by_key,
+            size = table_size(races_by_key)
+        }
     end
-    storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
-    storage.enemy_surfaces[surface.name] = race
 end
 
 function SurfaceProcessor.remove_race(surface)
@@ -72,14 +81,6 @@ function SurfaceProcessor.rebuild_race()
     storage.total_enemy_surfaces = table_size(storage.enemy_surfaces)
 end
 
-function SurfaceProcessor.numeric_to_name_conversion()
-    local tmpSurfaces = {}
-    for surface_index, race in pairs(storage.enemy_surfaces) do
-        tmpSurfaces[game.surfaces[surface_index].name] = race
-    end
-    storage.enemy_surfaces = tmpSurfaces
-end
-
 function SurfaceProcessor.wander_unit_clean_up()
     local profiler = game.create_profiler()
     local unit_count = 0
@@ -110,13 +111,14 @@ function SurfaceProcessor.wander_unit_clean_up()
     game.print({ "", "Checked: " .. checked_count .. " / Removed:" .. unit_count .. " " })
 end
 
+--- Returns race name
 function SurfaceProcessor.get_enemy_on(surface_name)
-    if (GlobalConfig.mapgen_is_one_race_per_surface()) then
-        return storage.enemy_surfaces[surface_name]
+    local surface_race_data = storage.enemy_surfaces[surface_name]
+    if surface_race_data then
+        return surface_race_data.races_by_key[math.random(1, storage.enemy_surfaces[surface_name].size)]
     end
 
-    local races = GlobalConfig.get_enemy_races()
-    return races[math.random(1, GlobalConfig.get_enemy_races_total())]
+    return MOD_NAME
 end
 
 function SurfaceProcessor.get_gps_message(x, y, surface_name)

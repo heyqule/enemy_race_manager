@@ -8,11 +8,8 @@ local Event = require("__stdlib__/stdlib/event/event")
 
 require("__enemyracemanager__/global")
 
-local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
-local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
