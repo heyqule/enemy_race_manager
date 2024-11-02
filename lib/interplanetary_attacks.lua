@@ -3,8 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 5:42 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
-
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 local Config = require("__enemyracemanager__/lib/global_config")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -114,7 +112,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
                 race_name
         )
         if group then
-            Event.raise_event(Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),{
+            script.raise_event(Config.custom_event_handler[Config.EVENT_REQUEST_BASE_BUILD],{
                 group = group
             })
         end
@@ -154,7 +152,7 @@ function InterplanetaryAttacks.scan(surface)
     if surface and ForceHelper.can_have_enemy_on(surface) then
         --- Event to manipulate storage.interplanetary_intel
         local intel =  storage.interplanetary_intel[surface.index]
-        Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN),{
+        script.raise_event(Config.custom_event_handler[Config.EVENT_INTERPLANETARY_ATTACK_SCAN],{
             intel = intel,
             surface = surface
         })

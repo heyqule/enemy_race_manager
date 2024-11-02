@@ -136,7 +136,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot["attack_parameters"]["range"] = attack_range
     robot["attack_parameters"]["min_attack_distance"] = attack_range - 4
     robot["attack_parameters"]["animation"] = robot["run_animation"]
-    robot["attack_parameters"]["ammo-category"] = "erm-biter-damage"
+    robot["attack_parameters"]["ammo_category"] = "erm-biter-damage"
     robot["distance_per_frame"] = 0.17
     robot["movement_speed"] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
     robot["vision_distance"] = vision_distance

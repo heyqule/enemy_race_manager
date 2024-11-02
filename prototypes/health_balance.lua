@@ -8,6 +8,8 @@ local include_types = {
     'transport-belt',
     "mining-drill",
     "furnace",
+    "inserter",
+    ""
 }
 
 for _, prototype_type in pairs(prototypes) do

@@ -4,7 +4,7 @@
 --- DateTime: 10/23/2021 12:53 PM
 ---
 require("__enemyracemanager__/global")
-
+require('prototypes/finalize-factoriopedia')
 
 if DEBUG_MODE then
     data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15

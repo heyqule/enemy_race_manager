@@ -28,13 +28,13 @@ local unit_point_map = {
     ['unit-spawner'] = AttackMeterProcessor.SPAWNER_POINTS,
     ['turret'] = AttackMeterProcessor.TURRET_POINTS,
     ['spider-unit'] = AttackMeterProcessor.SPIDER_UNIT_POINTS,
-    ['segment-unit'] = AttackMeterProcessor.SEGMENT_UNIT_POINTS
+    ['segmented-unit'] = AttackMeterProcessor.SEGMENT_UNIT_POINTS
 }
 
 local unit_map = {
     ['unit'] = true,
     ['spider-unit'] = true,
-    ['segment-unit'] = true,
+    ['segmented-unit'] = true,
 }
 local structure_map = {
     ['unit-spawner'] = true,

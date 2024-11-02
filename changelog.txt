@@ -13,7 +13,7 @@ Date: ????-??-??
     - Removed 2 ways and 4 ways enemy generation on Nauvis due to incompatibility.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu.
     - NOTICE: Boss mode is temporary offline for major overhaul.
-    - Removed Enemy replacing system.
+    - Removed replacing enemy system.
     - Removed randomly assign enemy on a surface.  Enemies are now defined in planet prototype.
 
   Changes:

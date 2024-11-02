@@ -60,6 +60,7 @@ disable_normal_biters()
 --- Free up the number of autoplace entities.  Large number of autoplace entities lags the game when exploring new chunks
 DebugHelper.print("Disabling high level spawners autoplace and hide in factoriopedia:")
 
+
 for _, v in pairs(data.raw["unit-spawner"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
@@ -67,8 +68,6 @@ for _, v in pairs(data.raw["unit-spawner"]) do
         if level and level > 1 then
             DebugHelper.print("Disabling:" .. v.name)
             data.raw["unit-spawner"][v.name]["autoplace"] = nil_expression()
-            DebugHelper.print("Hiding:" .. v.name)
-            data.raw["unit-spawner"][v.name]["hidden_in_factoriopedia"] = true
         end
     end
 end
@@ -76,12 +75,11 @@ end
 for _, v in pairs(data.raw["turret"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
+        table.insert(v.flags, "get-by-unit-number")
         local level = tonumber(nameToken  [3])
         if level and level > 1 then
             DebugHelper.print("Disabling:" .. v.name)
             data.raw["turret"][v.name]["autoplace"] = nil_expression()
-            DebugHelper.print("Hiding:" .. v.name)
-            data.raw["turret"][v.name]["hidden_in_factoriopedia"] = true
         end
     end
 end
@@ -89,6 +87,7 @@ end
 for _, v in pairs(data.raw["unit"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
+        table.insert(v.flags, "get-by-unit-number")
         local level = tonumber(nameToken[3])
         if level and level > 1 then
             DebugHelper.print("Hiding:" .. v.name)
