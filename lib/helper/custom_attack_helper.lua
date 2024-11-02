@@ -94,7 +94,7 @@ end
 local add_member = function(final_unit_name, surface, drop_position, force_name, group)
     if drop_position then
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
-        if entity.type == "unit" then
+        if entity and entity.type == "unit" then
             if group.valid then
                 group.add_member(entity)
             end

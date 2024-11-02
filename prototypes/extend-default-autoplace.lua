@@ -43,7 +43,7 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
     if entity_filter ~= nil and string.find(v.name, entity_filter, 1, true) == nil then
         return
     end
-
+    ---@TODO instead of placing on unit. Try adding it to planet's property_expression_names?
     if is_turret then
         v.autoplace = AutoplaceUtil.enemy_worm_autoplace({
             probability_expression = v.autoplace.probability_expression,

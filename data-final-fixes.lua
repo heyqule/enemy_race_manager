@@ -5,6 +5,7 @@
 ---
 require("__enemyracemanager__/global")
 require('prototypes/finalize-factoriopedia')
+require('prototypes/health-balance')
 
 if DEBUG_MODE then
     data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15

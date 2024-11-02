@@ -10,7 +10,7 @@ end
 
 require("prototypes/extend-ground-fire-patches.lua")
 
---require("prototypes/extend-defense.lua")
+require("prototypes/extend-defense.lua")
 
 --require("prototypes/extend-reinforced-items")
 
