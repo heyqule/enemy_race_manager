@@ -30,14 +30,6 @@ local attack_point_divider = 2000000
 local is_running_roll
 
 local update_storages = function()
-    -- Store
-    --- {
-    ---    enemy_force_name = {
-    ---         planet_name =
-    ---              point = 0 - 10000 (max),
-    ---              max_out = true
-    ---
-    ---
     storage.quality_on_planet = storage.quality_on_planet or {}
     setting_difficulty = settings.global['enemyracemanager-difficulty'].value
     setting_advancement = settings.global['enemyracemanager-advancement'].value

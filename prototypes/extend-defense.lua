@@ -52,7 +52,9 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["armor"]["heavy-armor"]["resistances"] = armor_change_resistance(30, 10)
     data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(40, 15)
     data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(55, 20)
-    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(75, 20)
+    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(70, 25)
+    data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 30)
+
 
     -- Buff gun turret HP
     data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
@@ -70,12 +72,12 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     -- Buff vehicle gun
     data.raw["gun"]["vehicle-machine-gun"]["attack_parameters"]["damage_modifier"] = 2
     data.raw["gun"]["tank-machine-gun"]["attack_parameters"]["damage_modifier"] = 3
-    data.raw["gun"]["tank-flamethrower"]["attack_parameters"]["damage_modifier"] = 2
-    data.raw["gun"]["tank-cannon"]["attack_parameters"]["damage_modifier"] = 2
-    data.raw["gun"]["spidertron-rocket-launcher-1"]["attack_parameters"]["damage_modifier"] = 2
-    data.raw["gun"]["spidertron-rocket-launcher-2"]["attack_parameters"]["damage_modifier"] = 2
-    data.raw["gun"]["spidertron-rocket-launcher-3"]["attack_parameters"]["damage_modifier"] = 2
-    data.raw["gun"]["spidertron-rocket-launcher-4"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["tank-flamethrower"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["tank-cannon"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-1"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-2"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-3"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-4"]["attack_parameters"]["damage_modifier"] = 2
 
     -- Buff train
     data.raw["locomotive"]["locomotive"]["resistances"] = vehicle_change_resistance(75, 15)
@@ -84,8 +86,19 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["artillery-wagon"]["artillery-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
 
     --- Add additional rails
-    data.raw["straight-rail"]["straight-rail"]["resistances"] = rails_change_resistance()
-    data.raw["curved-rail"]["curved-rail"]["resistances"] = rails_change_resistance()
+    local rail_type = {
+        "straight-rail",
+        "half-diagonal-rail",
+        "curved-rail-a",
+        "curved-rail-b",
+        "elevated-straight-rail",
+        "elevated-half-diagonal-rail",
+        "elevated-curved-rail-a",
+        "elevated-curved-rail-b",
+    }
+    for _, rail_type in pairs(rail_type) do
+        data.raw[rail_type][rail_type]["resistances"] = rails_change_resistance()
+    end
 
     -- Buff Walls & Gates
     data.raw["wall"]["stone-wall"]["max_health"] = 500
