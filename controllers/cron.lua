@@ -3,7 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 10:16 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
 
 
 require("__enemyracemanager__/global")
@@ -133,7 +132,7 @@ cron_switch = {
 }
 
 --- Garbage Collection and Statistic aggregations, all calls are run by quick cron
-Event.on_nth_tick(Config.GC_AND_STATS, function(event)
+local garbage_and_stats = function(event)
     Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_erm_unit_groups")
     Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_scout_unit_name")
 
@@ -147,28 +146,36 @@ Event.on_nth_tick(Config.GC_AND_STATS, function(event)
     end
 
     Cron.add_quick_queue("InterplanetaryAttacks.queue_scan")
-end)
+end
 
-Event.on_nth_tick(Config.ONE_MINUTE_CRON, function(event)
-    Cron.process_1_min_queue()
-end)
+local CronController = {}
 
-Event.on_nth_tick(Config.FIFTEEN_SECONDS_CRON, function(event)
-    Cron.process_15_sec_queue()
-end)
+CronController.on_nth_tick = {
+    [Config.ONE_MINUTE_CRON] = function(event)
+        Cron.process_1_min_queue()
+    end,
 
-Event.on_nth_tick(Config.TEN_SECONDS_CRON, function(event)
-    Cron.process_10_sec_queue()
-end)
+    [Config.FIFTEEN_SECONDS_CRON] = function(event)
+        Cron.process_15_sec_queue()
+    end,
 
-Event.on_nth_tick(Config.TWO_SECONDS_CRON, function(event)
-    Cron.process_2_sec_queue()
-end)
+    [Config.TEN_SECONDS_CRON] = function(event)
+        Cron.process_10_sec_queue()
+    end,
 
-Event.on_nth_tick(Config.ONE_SECOND_CRON, function(event)
-    Cron.process_1_sec_queue()
-end)
+    [Config.TWO_SECONDS_CRON] = function(event)
+        Cron.process_2_sec_queue()
+    end,
 
-Event.on_nth_tick(Config.TIME_BASED_ATTACK_POINT_CRON, function(event)
-    AttackMeterProcessor.calculated_time_attack()
-end)
+    [Config.ONE_SECOND_CRON] = function(event)
+        Cron.process_1_sec_queue()
+    end,
+
+    [Config.TIME_BASED_ATTACK_POINT_CRON] = function(event)
+        AttackMeterProcessor.calculated_time_attack()
+    end,
+
+    [Config.GC_AND_STATS] = garbage_and_stats
+}
+
+return CronController

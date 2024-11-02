@@ -321,7 +321,7 @@ end
 --- remote.call("enemyracemanager", "get_event_name", GlobalConfig.EVENT_TIER_WENT_UP)
 --- script.on_event(event_name, function(event)
 function RemoteAPI.get_event_name(event_name)
-    return Event.get_event_name(event_name)
+    return GlobalConfig.custom_event_handler[event_name]
 end
 
 --- ForceHelper

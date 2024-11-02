@@ -20,13 +20,8 @@ remote.add_interface("enemyracemanager_debug", DebugRemoteApi)
 
 handler = require("event_handler")
 handler.add_lib(require("__enemyracemanager__/lib/quality_processor"))
-
---- CRON Events
-require("__enemyracemanager__/controllers/cron")
-
-
-
-require("__enemyracemanager__/controllers/initializer")
+handler.add_lib(require("__enemyracemanager__/controllers/cron"))
+handler.add_lib(require("__enemyracemanager__/controllers/initializer"))
 
 require("__enemyracemanager__/controllers/unit_control")
 

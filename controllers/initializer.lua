@@ -31,8 +31,6 @@ local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deploymen
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
-local Compat_NewGamePlus = require("__enemyracemanager__/lib/compatibility/new_game_plus")
-
 local addRaceSettings = function()
     local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
     if race_settings == nil then
@@ -99,15 +97,15 @@ local addRaceSettings = function()
         { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
     }
 
-    if script.active_mods["Krastorio2"] then
-        race_settings.enable_k2_creep = settings.startup["enemyracemanager-vanilla-k2-creep"].value
-    end
 
     RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
     remote.call("enemyracemanager", "register_race", race_settings)
 
-    Event.raise_event(Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE),{affected_race = MOD_NAME })
+    script.raise_event(
+            GlobalConfig.custom_event_handler[GlobalConfig.RACE_SETTING_UPDATE],
+            {affected_race = MOD_NAME }
+    )
 end
 
 local prepare_world = function()
@@ -140,16 +138,12 @@ local prepare_world = function()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
-    Event.raise_event(Event.get_event_name(GlobalConfig.PREPARE_WORLD),{})
+    script.raise_event(
+            GlobalConfig.custom_event_handler[GlobalConfig.PREPARE_WORLD], {}
+    )
 end
 
 local conditional_events = function()
-    if remote.interfaces["newgameplus"] then
-        Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
-            Compat_NewGamePlus.exec(event)
-        end)
-    end
-
     if storage.army_teleporter_event_running then
         ArmyTeleportationProcessor.start_event(true)
     end
@@ -159,11 +153,11 @@ local conditional_events = function()
     end
 
     if storage.quick_cron_is_running then
-        Event.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
+        script.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
     if storage.boss and storage.boss.entity then
-        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
+        script.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
     end
 end
 
@@ -211,25 +205,26 @@ local init_globals = function()
     --- Wipe this cache due to cache pollution from previous version.
     storage.force_race_name_cache = {}
 
-    Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL),{})
+    script.raise_event(
+        GlobalConfig.custom_event_handler[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
+    )
 end
 
 --- Init events
-Event.on_init(function(event)
+local on_init = function(event)
     init_globals()
     GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     conditional_events()
-end)
+end
 
-Event.on_load(function(event)
-
+local on_load = function(event)
     Cron.rebuild_queue()
     conditional_events()
-end)
+end
 
-Event.on_configuration_changed(function(event)
+local on_configuration_changed = function(event)
     init_globals()
     GlobalConfig.refresh_config()
     addRaceSettings()
@@ -237,7 +232,7 @@ Event.on_configuration_changed(function(event)
     for _, player in pairs(game.connected_players) do
         GuiContainer.main_window.update_overhead_button(player.index)
     end
-end)
+end
 
 ---Custom setting processors
 local setting_functions = {
@@ -255,7 +250,7 @@ local setting_functions = {
         end
     end
 }
-Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
+local on_runtime_mod_setting_changed = function(event)
     if event.setting_type == "runtime-global" and
             string.find(event.setting, "enemyracemanager", 1, true)
     then
@@ -265,18 +260,32 @@ Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
             setting_functions[event.setting](event)
         end
     end
-end)
+end
 
 --- Initialize event names
-Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP)
-Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP)
-Event.generate_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)
-Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ATTACK_METER)
-Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER)
-Event.generate_event_name(GlobalConfig.EVENT_BASE_BUILT)
-Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN)
-Event.generate_event_name(GlobalConfig.EVENT_REQUEST_PATH)
-Event.generate_event_name(GlobalConfig.EVENT_REQUEST_BASE_BUILD)
-Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC)
-Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE)
-Event.generate_event_name(GlobalConfig.PREPARE_WORLD)
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
+GlobalConfig.custom_event_handler[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
+
+
+local InitController = {}
+
+InitController.events =
+{
+    [defines.events.on_runtime_mod_setting_changed] = on_runtime_mod_setting_changed
+}
+
+InitController.on_configuration_changed = on_configuration_changed
+
+InitController.on_load = on_load
+
+InitController.on_init = on_init
+
+return InitController

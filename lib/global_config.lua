@@ -55,6 +55,9 @@ GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = "erm_interplanatary_attack_exec"
 GlobalConfig.RACE_SETTING_UPDATE = "erm_race_setting_update"
 GlobalConfig.PREPARE_WORLD = "erm_prepare_world"
 
+--- Store script.generate_event_name() IDs
+GlobalConfig.custom_event_handler = {}
+
 --- Quality system attributes
 GlobalConfig.MAX_LEVELS = 5
 GlobalConfig.MAX_BY_EPIC = 1

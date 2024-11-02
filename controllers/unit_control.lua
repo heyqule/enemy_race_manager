@@ -284,6 +284,16 @@ local onAiCompleted = function(event)
     handle_scouts(scout_unit_data)
 end
 
+--- @TODO 2.0 handle this with per planet statistic?
+local function is_unit_spawner(event)
+    return event.entity.type == "unit-spawner" and not ForceHelper.is_enemy_force(event.force)
+end
+
+local function handle_unit_spawner(event)
+    local dead_spawner = event.entity
+    AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), dead_spawner.surface.index, event.force.index)
+end
+
 --- Path finding
 Event.register(defines.events.on_script_path_request_finished, function(event)
     AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
@@ -302,16 +312,6 @@ Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
 Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
 
 Event.register(defines.events.on_ai_command_completed, onAiCompleted)
-
---- @TODO 2.0 handle this with per planet statistic?
-local function is_unit_spawner(event)
-    return event.entity.type == "unit-spawner" and not ForceHelper.is_enemy_force(event.force)
-end
-
-local function handle_unit_spawner(event)
-    local dead_spawner = event.entity
-    AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), dead_spawner.surface.index, event.force.index)
-end
 
 Event.register(defines.events.on_entity_died, handle_unit_spawner , is_unit_spawner)
 

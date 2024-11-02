@@ -5,10 +5,6 @@
 ---
 
 if TEST_MODE and script.active_mods["factorio-test"] then
-    -- To be remove in flavor of official event lib
-    local config = require("__stdlib__/stdlib/config")
-    config.skip_script_protections = true
-
     local tests = {
         "tests/data_check",
         "tests/attack_beacon",

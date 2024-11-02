@@ -35,7 +35,7 @@ Once you reach the certain attack points and evolution, the quality spawn chance
 ### For Example:
 When the game start, normal units/spawners have 100% spawn rate.  
 
-As you progress to 0.5 planet evolution or/and kill 10000 units and spawners.  Normal unit may roll 70%, uncommon may roll 30%, rare may roll 5%
+As you progress to 0.5 planet evolution or/and collect 100,000 attack points.  Normal unit may roll 70%, uncommon may roll 30%, rare may roll 5%
 
 In mid game, you may expect about 50% normal, 35% uncommon and 13% rare, 2% epic.
 
