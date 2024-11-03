@@ -45,7 +45,6 @@ handler.add_lib(require("__enemyracemanager__/controllers/attack_group_managemen
 handler.add_lib(require("__enemyracemanager__/controllers/attack_group_beacon"))
 
 
-
 --- On Rocket Launch Events
 handler.add_lib(require("__enemyracemanager__/controllers/on_rocket_launch"))
 
@@ -53,10 +52,9 @@ handler.add_lib(require("__enemyracemanager__/controllers/on_rocket_launch"))
 handler.add_lib(require("__enemyracemanager__/controllers/on_script_trigger_effects"))
 
 
-
 handler.add_lib(require("__enemyracemanager__/controllers/debug_events"))
 
---require("prototypes/compatibility/controls")
+require("prototypes/compatibility/controls")
 
 -- Compatibility
 --require("__enemyracemanager__/controllers/compatibility/k2")

@@ -4,7 +4,6 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 
-local Event = require("__stdlib__/stdlib/event/event")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ArmyFunctions = require("__enemyracemanager__/lib/army_functions")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
@@ -33,7 +32,7 @@ end
 
 local stop_event = function()
     if storage.army_deployer_event_running == true and can_stop_event() then
-        Event.remove(GlobalConfig.AUTO_DEPLOY_CRON * -1, process_deployer_queue)
+        script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
         storage.army_deployer_event_running = false
     end
 end
@@ -155,7 +154,7 @@ function ArmyDeploymentProcessor.start_event(reload)
         if not reload then
             storage.army_deployer_event_running = true
         end
-        Event.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
+        script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
     end
 end
 

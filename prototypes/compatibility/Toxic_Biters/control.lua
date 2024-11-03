@@ -1,4 +1,4 @@
-local Event = require("__stdlib__/stdlib/event/event")
+
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
@@ -32,9 +32,15 @@ end
 ---
 --- Inject race settings into existing race
 ---
-Event.register(Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE), function(event)
-    if (event.affected_race == MOD_NAME) then
-        modify_race_setting()
+local ToxicBiters = {}
+
+ToxicBiters.events = {
+    [GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE]] = function(event)
+        if (event.affected_race == MOD_NAME) then
+            modify_race_setting()
+        end
     end
-end)
+}
+
+return ToxicBiters
 

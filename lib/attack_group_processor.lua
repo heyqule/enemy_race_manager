@@ -7,7 +7,7 @@
 require("util")
 require("global")
 local Position = require("__erm_libs__/stdlib/position")
-local Event = require("__stdlib__/stdlib/event/event")
+
 
 local Config = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -386,8 +386,8 @@ local generate_unit_queue = function(
         is_aerial = is_aerial
     }
 
-    Event.raise_event(
-        Event.get_event_name(Config.EVENT_REQUEST_PATH),
+    script.raise_event(
+        Config.custom_event_handlers[Config.EVENT_REQUEST_PATH],
         {
             source_force = force,
             surface = surface,
@@ -552,7 +552,8 @@ function AttackGroupProcessor.generate_group(
                 if Config.interplanetary_attack_enable() and
                    RaceSettingsHelper.can_spawn(33)
                 then
-                    Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),
+                    script.raise_event(
+                            Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],
                             {
                                 race_name = race_name,
                                 target_force = target_force
@@ -579,16 +580,16 @@ function AttackGroupProcessor.generate_group(
 
         if bypass_attack_meter == false then
             if options.is_elite_attack then
-                Event.raise_event(
-                        Event.get_event_name(Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER),
+                script.raise_event(
+                        Config.custom_event_handlers[Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER],
                         {
                             race_name = race_name
                         }
                 )
             end
 
-            Event.raise_event(
-                Event.get_event_name(Config.EVENT_ADJUST_ATTACK_METER),
+            script.raise_event(
+                    Config.custom_event_handlers[Config.EVENT_ADJUST_ATTACK_METER],
                     {
                         race_name = race_name
                     }
@@ -736,8 +737,8 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
         --- Victory Expansion
         local erm_group_data = storage.erm_unit_groups[group.unique_id]
         if erm_group_data and erm_group_data.has_completed_command then
-            Event.raise_event(
-                    Event.get_event_name(Config.EVENT_REQUEST_BASE_BUILD),
+            script.raise_event(
+                    Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
                     {
                         group = group,
                         limit = 1

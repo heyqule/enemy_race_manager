@@ -4,9 +4,7 @@ local TestShared = require("shared")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
-local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local Event = require("__stdlib__/stdlib/event/event")
+
 
 before_each(function()
     TestShared.prepare_the_factory()

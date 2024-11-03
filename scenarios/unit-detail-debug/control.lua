@@ -2,10 +2,9 @@ require("util")
 local scenarios_helper = require("__enemyracemanager__/scenarios/shared.lua")
 
 
-local Event = require("__stdlib__/stdlib/event/event")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
-Event.on_init(function(event)
+script.on_init(function(event)
     game.map_settings.enemy_expansion.enabled = false
     local surface = game.surfaces[1]
     local mgs = surface.map_gen_settings
@@ -15,7 +14,7 @@ Event.on_init(function(event)
     game.surfaces[1].map_gen_settings = mgs
 end)
 
-Event.register(defines.events.on_player_created, function(event)
+script.on_event(defines.events.on_player_created, function(event)
     local surface = game.surfaces[1]
     local player = game.players[1]
     local force = player.force
@@ -76,7 +75,7 @@ Event.register(defines.events.on_player_created, function(event)
         if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], "%d") ~= 1 then
             local entity = surface.create_entity({
                 name = item.name,
-                force = "neutral",
+                force = "enemy",
                 position = { x, y }
             })
             entity.active = false
