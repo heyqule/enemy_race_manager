@@ -4,9 +4,6 @@
 --- DateTime: 2/15/2022 9:41 PM
 ---
 
-local Event = require("__stdlib__/stdlib/event/event")
-
-
 require("__enemyracemanager__/global")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
@@ -14,22 +11,27 @@ local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
-Event.register(defines.events.on_rocket_launched, function(event)
-    if GlobalConfig.rocket_attack_point_enable() then
-        local silo = event.rocket_silo
-        if silo.valid then
-            local race_name = SurfaceProcessor.get_enemy_on(silo.surface.name)
-            if race_name then
-                RaceSettingHelper.add_to_attack_meter(race_name, GlobalConfig.rocket_attack_points())
+local OnRocketLaunched = {}
+
+OnRocketLaunched.events = {
+    [defines.events.on_rocket_launched] = function(event)
+        if GlobalConfig.rocket_attack_point_enable() then
+            local silo = event.rocket_silo
+            if silo.valid then
+                local race_name = SurfaceProcessor.get_enemy_on(silo.surface.name)
+                if race_name then
+                    RaceSettingHelper.add_to_attack_meter(race_name, GlobalConfig.rocket_attack_points())
+                end
             end
         end
+
+        --local item = event.rocket.get_inventory(defines.inventory.rocket).find_item_stack("psi-tracking-satellite")
+        --if item and item.valid and item.name == "psi-tracking-satellite" then
+        --    local surface = event.rocket_silo.surface
+        --    surface.print("Psi Tracking Satellite Launched...")
+        --    BossProcessor.exec(event.rocket_silo)
+        --end
     end
+}
 
-    --local item = event.rocket.get_inventory(defines.inventory.rocket).find_item_stack("psi-tracking-satellite")
-    --if item and item.valid and item.name == "psi-tracking-satellite" then
-    --    local surface = event.rocket_silo.surface
-    --    surface.print("Psi Tracking Satellite Launched...")
-    --    BossProcessor.exec(event.rocket_silo)
-    --end
-
-end)
+return OnRocketLaunched

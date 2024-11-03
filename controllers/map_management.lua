@@ -3,9 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 10:29 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
-
-
 require("__enemyracemanager__/global")
 
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -14,34 +11,31 @@ local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
 
+local MapManagement = {}
 
-Event.register(defines.events.on_chunk_generated, function(event)
-    AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(event.surface, event.area)
-    AttackGroupBeaconProcessor.create_resource_beacon_from_trunk(event.surface, event.area)
-end)
+MapManagement.events = {
+    [defines.events.on_chunk_generated] = function(event)
+        AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(event.surface, event.area)
+        AttackGroupBeaconProcessor.create_resource_beacon_from_trunk(event.surface, event.area)
+    end,
+    [defines.events.on_surface_created] = function(event)
+        SurfaceProcessor.assign_race(game.surfaces[event.surface_index])
+        AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
+    end,
+    [defines.events.on_pre_surface_deleted] = function(event)
+        SurfaceProcessor.remove_race(game.surfaces[event.surface_index])
+        AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
+        AttackGroupHeatProcessor.remove_surface(event.surface_index)
+        AttackGroupHeatProcessor.remove_surface(event.surface_index)
+        InterplanetaryAttacks.remove_surface(event.surface_index)
+        SpawnLocationScanner.remove_surface(event.surface_index)
+    end,
+    [defines.events.on_pre_surface_cleared] = function(event)
+        AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
+        AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
+        InterplanetaryAttacks.remove_surface(event.surface_index)
+        SpawnLocationScanner.remove_surface(event.surface_index)
+    end,
+}
 
---- Surface Management
-Event.register(defines.events.on_surface_created, function(event)
-    SurfaceProcessor.assign_race(game.surfaces[event.surface_index])
-    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
-end)
-
-Event.register(defines.events.on_pre_surface_deleted, function(event)
-    SurfaceProcessor.remove_race(game.surfaces[event.surface_index])
-    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
-    AttackGroupHeatProcessor.remove_surface(event.surface_index)
-    AttackGroupHeatProcessor.remove_surface(event.surface_index)
-    InterplanetaryAttacks.remove_surface(event.surface_index)
-    SpawnLocationScanner.remove_surface(event.surface_index)
-end)
-
-Event.register(defines.events.on_pre_surface_cleared, function(event)
-    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
-    AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
-    InterplanetaryAttacks.remove_surface(event.surface_index)
-    SpawnLocationScanner.remove_surface(event.surface_index)
-end)
-
---Event.register(defines.events.on_surface_renamed, function(event)
---    AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
---end)
+return MapManagement

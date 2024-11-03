@@ -3,7 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 2/5/2023 12:09 AM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
 
 local max_min = {}
 local max_min_by_tile = {}
@@ -96,12 +95,15 @@ local print_chunk_player_details = function(event)
     end
 end
 
-if SAMPLE_TILE_MODE then
-    Event.register(defines.events.on_chunk_generated, function(event)
-        print_chunk_tile_details(event)
-    end)
+local DebugEvents = {}
 
-    Event.on_nth_tick(61, function(event)
-        print_chunk_player_details(event)
-    end)
+if SAMPLE_TILE_MODE then
+    DebugEvents.events = {
+        [defines.events.on_chunk_generated] = print_chunk_tile_details
+    }
+    DebugEvents.on_nth_tick = {
+        [61] = print_chunk_player_details
+    }
 end
+
+return DebugEvents

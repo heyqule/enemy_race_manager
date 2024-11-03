@@ -6,19 +6,20 @@ Date: ????-??-??
     - Updated to Factorio 2.0.  IT DOES NOT SUPPORT MIGRATION FROM 1.1.
     - This mod now focuses on interplanetary war logistics. Support for base game may be limited.
     - Removed leveling system.
-    - Added quality spawning system. Hail to RNG god. [Details in Tip and Trick]]
+    - Added quality spawning system. Hail to RNG god. [Details in Tip and Trick]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - Removed 2 ways and 4 ways enemy generation on Nauvis due to incompatibility.
-    - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu.
-    - NOTICE: Boss mode is temporary offline for major overhaul.
+    - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
+    - In 2.0 base game, it will use the mixed mode or you pick a race.
     - Removed replacing enemy system.
     - Removed randomly assign enemy on a surface.  Enemies are now defined in planet prototype.
 
   Changes:
     - [Unit Properties]
-    - HP and damage algo changes to balance quality ammunitions.  Enemy have higher stats when quality module is enabled.
+    - Changed HP and damage algo changes under the new quality system.  Enemies are tested against normal turrets and ammunition.
+    - Added "Additional Quality Balance" setting to give enemy higher stats when quality module is enabled.  Legendary enemies are tested against 50% epic and 50% legendary turret and ammunition. [Details in tip and tricks]
     - Movement and attack speed reach max at rare tier.
     - When quality is enabled, each tier will add one range to the max range.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
@@ -28,18 +29,22 @@ Date: ????-??-??
     - Calculation perform when applicable entity dies.
     - Spawner point reduction now affects attack points.  It's no longer dip into negative value.
     - Time based attack now starts when the enemy's evolution is over 0.5 on any planet.
-
+    - [Boss Mode]
     - PSI Emitter Satellite for boss is now only used for base game. Bosses in [space-age] will spawn in their home planet.
-    - Enhanced defense items are removed in flavor of [space-age]'s quality system.
+    - NOTICE: Boss mode is temporary offline for major overhaul.
+    - [Enhanced Defenses]
+    - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
+    - Non defensive structures automatically get a health bump to a minimum of 500HP.
+    - [Free for all]
     - Added a free for all planet when free for all option is enabled. The planet utilizing 2 or 4 ways split autoplace to spawn enemy.  Your goal is to bring "peace" on that planet. \nRaces can be configured in startup settings.
+    - [Others]
     - Removed dependency of stdlib.
-    - Removed most compatibility supports for 1.1 mods.  2.0 mods compatibility will be done in ERM 2.1+.
+    - Removed most compatibility supports for 1.1 mods.  2.0 mods compatibility will be done as the issue arise.
+    - If you experience with crash, please provide a bug report in my Discord.
     - Exceptions: Cold, Explosive, Toxic and Armour biters are supported.
     - Removed menu biter replacement, add a few menu simulations.
-    - Removed Spawner generation methods. On nauvis, you can have to pick your race in start up setting. Default to Biters.  In base game, it will use the old default mapping technic.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
-    - Removed ERM enhanced defense items in flavor of SA's quality item.  Enemy damage will be slightly lowered for base game players.
-    - Non defensive structures automatically get a health bump to a minimum of 500HP.
+
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6

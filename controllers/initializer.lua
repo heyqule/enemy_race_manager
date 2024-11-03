@@ -4,7 +4,6 @@
 --- DateTime: 2/15/2022 10:00 PM
 ---
 
-local Event = require("__stdlib__/stdlib/event/event")
 
 require("__enemyracemanager__/global")
 
@@ -103,7 +102,7 @@ local addRaceSettings = function()
     remote.call("enemyracemanager", "register_race", race_settings)
 
     script.raise_event(
-            GlobalConfig.custom_event_handler[GlobalConfig.RACE_SETTING_UPDATE],
+            GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
             {affected_race = MOD_NAME }
     )
 end
@@ -139,7 +138,7 @@ local prepare_world = function()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
     script.raise_event(
-            GlobalConfig.custom_event_handler[GlobalConfig.PREPARE_WORLD], {}
+            GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
     )
 end
 
@@ -206,7 +205,7 @@ local init_globals = function()
     storage.force_race_name_cache = {}
 
     script.raise_event(
-        GlobalConfig.custom_event_handler[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
+        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
     )
 end
 
@@ -263,16 +262,16 @@ local on_runtime_mod_setting_changed = function(event)
 end
 
 --- Initialize event names
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
-GlobalConfig.custom_event_handler[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
 
 
 local InitController = {}

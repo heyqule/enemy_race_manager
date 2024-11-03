@@ -3,8 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:56 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
-
 require("__enemyracemanager__/global")
 require("util")
 
@@ -39,7 +37,7 @@ local DEBUG_GROUP_STATES = {
 
 local CHUNK_SIZE = 32
 
-local onBiterBaseBuilt = function(event)
+local on_biter_base_build = function(event)
     local entity = event.entity
     if entity and entity.valid then
         local race_name = ForceHelper.extract_race_name_from(entity.force.name)
@@ -55,7 +53,7 @@ local onBiterBaseBuilt = function(event)
     end
 end
 
-local onUnitGroupCreated = function(event)
+local on_unit_group_created = function(event)
     local group = event.group
     local force = group.force
     local racename = ForceHelper.extract_race_name_from(force.name)
@@ -93,7 +91,7 @@ local checking_state = {
     [defines.group_state.finished] = true
 }
 
-local onUnitFinishGathering = function(event)
+local on_unit_finish_gathering = function(event)
     local group = event.group
     if not group.valid then
         return
@@ -273,7 +271,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
     end
 end
 
-local onAiCompleted = function(event)
+local on_ai_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
 
@@ -294,40 +292,42 @@ local function handle_unit_spawner(event)
     AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), dead_spawner.surface.index, event.force.index)
 end
 
---- Path finding
-Event.register(defines.events.on_script_path_request_finished, function(event)
-    AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
-end)
 
---- Initial path finder
-Event.register(Event.generate_event_name(Config.EVENT_REQUEST_PATH), function(event)
-    AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
-end)
+local UnitControl = {}
 
---- Unit processing events
-Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
+UnitControl.events = {
+    --- This event queue up to 5 batch of units.
+    [Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD]] = function(event)
+        local i = 0
+        local limit = event.limit or 5
+        if limit > 5 then
+            limit = 5
+        end
+        repeat
+            BaseBuildProcessor.build_formation(event.group)
+            i = i + 1
+        until #event.group.members == 0 or i == limit
+    end,
+    [Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC]] = function(event)
+        InterplanetaryAttacks.exec(event.race_name, event.target_force)
+    end,
+    [defines.events.on_entity_died] = function(event)
+        if is_unit_spawner(event) then
+            handle_unit_spawner(event)
+        end
+    end,
+    --- Path finding
+    [defines.events.on_script_path_request_finished] = function(event)
+        AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
+    end,
+    --- Init path finder
+    [Config.custom_event_handlers[Config.EVENT_REQUEST_PATH]] = function(event)
+        AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
+    end,
+    [defines.events.on_biter_base_built] = on_biter_base_build,
+    [defines.events.on_unit_group_created] = on_unit_group_created,
+    [defines.events.on_unit_group_created] = on_unit_finish_gathering,
+    [defines.events.on_ai_command_completed] = on_ai_completed,
+}
 
-Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
-
-Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
-
-Event.register(defines.events.on_ai_command_completed, onAiCompleted)
-
-Event.register(defines.events.on_entity_died, handle_unit_spawner , is_unit_spawner)
-
---- This event queue up to 5 batch of units.
-Event.register(Event.generate_event_name(Config.EVENT_REQUEST_BASE_BUILD), function(event)
-    local i = 0
-    local limit = event.limit or 5
-    if limit > 5 then
-        limit = 5
-    end
-    repeat
-        BaseBuildProcessor.build_formation(event.group)
-        i = i + 1
-    until #event.group.members == 0 or i == limit
-end)
-
-Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC), function(event)
-    InterplanetaryAttacks.exec(event.race_name, event.target_force)
-end)
+return UnitControl
