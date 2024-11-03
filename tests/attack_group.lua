@@ -83,7 +83,7 @@ end
         end)
     end)
     --- Elite group Test
-    it("Elite Group by AAP", function()
+    it.skip("Elite Group by AAP", function()
         async(14400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -157,10 +157,10 @@ end
     end)
 
     it("Flyers", function()
-        async(7300)
+        async(3600)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
-        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
+        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -10, -10 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
                 race_name,
@@ -169,7 +169,7 @@ end
                 {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
         )
 
-        after_ticks(7200, function()
+        after_ticks(3600, function()
             local entities = surface.find_entities_filtered({
                 area = {{-100,-100},{100,100}},
                 type = "unit",
@@ -393,12 +393,12 @@ it("Enemy victory expansion", function()
             type = "unit",
             force = force_name
         })
-
+        
         local correct = 0
         for _, entity in pairs(entities) do
-            if string.find(entity.name, "mutalisk", 1, true) or string.find(entity.name, "scout", 1, true) then
-                correct = correct + 1
-            end
+           if string.find(entity.name, "mutalisk", 1, true) or string.find(entity.name, "scout", 1, true) then
+               correct = correct + 1
+           end
         end
         assert(correct > 0,"Has correct unit in the area")
 

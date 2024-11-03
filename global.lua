@@ -18,9 +18,6 @@ BEACON_SELECTABLE = true
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
 
---- Enable this flag to by pass quality roll on unit you which need to preserve during a test as the system will destroy your unit after it rolls.
---- set this in before_each and after_each function
-TEST_BY_PASS_QUALITY = true
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 
 CONSTRUCTION_ATTACK = "embtr-con"

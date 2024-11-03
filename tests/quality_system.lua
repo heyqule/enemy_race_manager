@@ -11,12 +11,10 @@ local QualityProcessor = require('lib/quality_processor')
 
 before_each(function()
     TestShared.prepare_the_factory()
-    TEST_BY_PASS_QUALITY = false
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
-    TEST_BY_PASS_QUALITY = true
 end)
 
 local enemy = 'enemy'

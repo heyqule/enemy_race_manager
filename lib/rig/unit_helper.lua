@@ -39,10 +39,7 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
     end
     local multiplier = get_health_mutiplier(incremental_health, level)
     local final_health = math.floor(base_health * multiplier)
-    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
-        final_health = final_health * get_quality_multiplier(level)
-    end
-    return final_health
+    return math.max(final_health, base_health)
 end
 
 -- Unit Health
@@ -57,10 +54,7 @@ function ERM_UnitHelper.get_building_health(base_health, incremental_health, lev
     end
     local multiplier = math.max(get_health_mutiplier(incremental_health, level) / reduce_effect_value, 2)
     local final_health = math.floor(base_health * multiplier)
-    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
-        final_health = final_health * get_quality_multiplier(level)
-    end
-    return final_health
+    return math.max(final_health, base_health)
 end
 
 
@@ -85,10 +79,6 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_damage, level)
 
     if settings.startup["enemyracemanager-free-for-all"].value then
         damage = damage * GlobalConfig.FFA_MULTIPLIER
-    end
-
-    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
-        damage = damage * get_quality_multiplier(level)
     end
 
     return damage

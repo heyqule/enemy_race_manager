@@ -161,8 +161,8 @@ end)
 describe("Surfaces and Forces", function()
 
     it("Test surface create/clear/delete", function()
-        local surface_name = "test_surface_2"
-        local surface = game.create_surface(surface_name)
+        local planet_name = "vulcanus"
+        local surface = game.planets[planet_name].create_surface()
         local surface_index = surface.index
         assert(#game.surfaces == 2, "Surface Number Match")
 
@@ -185,7 +185,7 @@ describe("Surfaces and Forces", function()
         beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconProcessor.RESOURCE_BEACON, surface.index)
         assert.equal("table", type(beacon_data), "Valid Beacon Data")
 
-        game.delete_surface(surface_name)
+        game.delete_surface(planet_name)
         after_ticks(60, function()
             control_data = AttackGroupBeaconProcessor.get_control_data(surface_index)
             assert.equal(nil, control_data, "Surface data is nil")

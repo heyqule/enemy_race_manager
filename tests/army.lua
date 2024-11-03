@@ -300,7 +300,7 @@ describe("Army Teleport", function()
         async(7200)
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
-        local surface2 = game.create_surface("test_surface_2")
+        local surface2 = game.planets.vulcanus.create_surface()
 
         local force = game.forces["player"]
         local building = "erm_terran--command-center"

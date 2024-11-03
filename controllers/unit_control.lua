@@ -91,7 +91,7 @@ local checking_state = {
     [defines.group_state.finished] = true
 }
 
-local on_unit_finish_gathering = function(event)
+local on_unit_group_finished_gathering = function(event)
     local group = event.group
     if not group.valid then
         return
@@ -326,7 +326,7 @@ UnitControl.events = {
     end,
     [defines.events.on_biter_base_built] = on_biter_base_build,
     [defines.events.on_unit_group_created] = on_unit_group_created,
-    [defines.events.on_unit_group_created] = on_unit_finish_gathering,
+    [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,
     [defines.events.on_ai_command_completed] = on_ai_completed,
 }
 

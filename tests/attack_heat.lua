@@ -85,7 +85,7 @@ it("Heat aggregation with 2 races, 3 surfaces", function()
         ling.die("player")
     end
 
-    game.create_surface("test_surface_2")
+    game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 20, 1 do
         local biter = surface.create_entity({
@@ -94,7 +94,7 @@ it("Heat aggregation with 2 races, 3 surfaces", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface = game.surfaces[3]
     for i=1, 30, 1 do
         local ling = surface.create_entity({
@@ -166,7 +166,7 @@ it("Select a hottest surface with multiple surface", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 20, 1 do
         local biter = surface.create_entity({
@@ -175,7 +175,7 @@ it("Select a hottest surface with multiple surface", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface = game.surfaces[3]
     for i=1, 30, 1 do
         local ling = surface.create_entity({
@@ -191,7 +191,7 @@ it("Select a hottest surface with multiple surface", function()
 
     storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", game.forces["player"])
-    assert( picked_surface.name == game.surfaces["test_surface_3"].name, "Pick test_surface_3 as surface.  It picked "..picked_surface.name)
+    assert( picked_surface.name == game.surfaces["fulgora"].name, "Pick Fulgora as surface.  It picked "..picked_surface.name)
     storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
@@ -207,7 +207,7 @@ it("Select a hottest surface and force combo", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -223,7 +223,7 @@ it("Select a hottest surface and force combo", function()
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface = game.surfaces[3]
     for i=1, 15, 1 do
         local ling = surface.create_entity({
@@ -247,7 +247,7 @@ it("Select a hottest surface and force combo", function()
     local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
-    assert( picked_surface.name == game.surfaces["test_surface_2"].name, "Pick test_surface_2 as surface")
+    assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
     storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
@@ -263,7 +263,7 @@ it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. B
         biter.die("player")
     end
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -279,7 +279,7 @@ it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. B
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface = game.surfaces[3]
     for i=1, 15, 1 do
         local ling = surface.create_entity({
@@ -303,7 +303,7 @@ it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. B
     local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
-    assert( picked_surface.name == game.surfaces["test_surface_2"].name, "Pick test_surface_2 as surface")
+    assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
     storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
@@ -318,7 +318,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -333,7 +333,7 @@ it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function(
         biter.die("player")
     end
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface = game.surfaces[3]
     for i=1, 15, 1 do
         local ling = surface.create_entity({
@@ -384,7 +384,7 @@ it("Remove Surface", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -400,7 +400,7 @@ it("Remove Surface", function()
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface3 = game.surfaces[3]
     for i=1, 15, 1 do
         local ling = surface3.create_entity({
@@ -421,9 +421,9 @@ it("Remove Surface", function()
     end
 
     local removed_surface_index = surface3.index
-    game.delete_surface("test_surface_3")
+    game.delete_surface("fulgora")
     after_ticks(900, function()
-        assert( storage.attack_heat["erm_vanilla"][removed_surface_index] == nil, "Surface 3 has attack heat data")
+        assert( storage.attack_heat["erm_vanilla"][removed_surface_index] == nil, "Fulgora has attack heat data")
         done()
     end)
 end)
@@ -441,7 +441,7 @@ it("Remove Player Force", function()
         biter.die("player")
     end
 
-    game.create_surface("test_surface_2")
+game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -457,7 +457,7 @@ it("Remove Player Force", function()
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    game.create_surface("test_surface_3")
+    game.planets.fulgora.create_surface()
     local surface3 = game.surfaces[3]
     for i=1, 15, 1 do
         local ling = surface3.create_entity({

@@ -16,15 +16,7 @@ Set 1:
 - Rare = level 8-10
 - Epic = level 12-15
 - Legendary = level 20-25.
-- Heirloom, if legendary does not provide enough challenge (not yet implement)
-
-Set 2  Normal to Legendary (gradually increase additional 2.5x on HP and Damage, balance will test with the following)
-- Normal = level 1, with normal weapons
-- Uncommon = level 3-5, with 80% normal and uncommon weapons (bullet weapon 5)
-- Rare = level 8-10, with 50% Normal 25% uncommon and 25% rare weapons (bullet weapon 10)
-- Epic = level 12-15, with 30% normal, 30% uncommon, 30% rare and 10% epic weapons (bullet weapon 13)
-- Legendary = level 20-25. with 50% epic and legendary weapon @ bullet level 16)
-- Heirloom, if legendary does not provide enough challenge (not yet implement)
+- Quality X2 challenge mode, if enemies scouts are killed by upgraded quality weapon, they may have a chance to spawn similar "SA quality" unit as well.  This bonus applies on top of ERM's quality stats changes. 
 
 Legendary units spawns in a new planet with new challenges which focus on war logistic.  Boss units may spawn on those planets.
 
@@ -64,7 +56,7 @@ The values are subjected to change based on player feedback.
 #### Progression control.  
 The progression is tracked per planet on top of accumulated attack points.
 The quality points are 40% based on evolution, 60% based on attack points.
-You will reach top quality spawns once the progression reach 100%.
+You will reach the above spawns rate once the progression reach 100%.
 You can set a multiplier to adjust the advancement speed. Range: 0.2x to 5x
 
 Lower tier may stop spawning based on your difficulty.
