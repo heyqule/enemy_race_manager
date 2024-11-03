@@ -7,7 +7,6 @@ if not script.active_mods["space-exploration"] then
     return
 end
 
-local Event = require("__stdlib__/stdlib/event/event")
 local Config = require("__enemyracemanager__/lib/global_config")
 local UniverseRaw = require("__space-exploration__/scripts/universe-raw")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -62,22 +61,26 @@ local update_attackable_zone_data = function(surface_name)
     log({ "", "CTRL.COMP.SE.update_attackable_zone_data: "..surface_name, surface_profiler })
 end
 
-Event.register(Event.generate_event_name(Config.EVENT_FLUSH_GLOBAL), function(event)
-    add_exclusion_surfaces(event)
 
-    for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
-        update_attackable_zone_data(surface_name)
-    end
-end)
+local SpaceExploration = {}
 
-Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_SCAN), function(event)
-    local surface = event.surface
-    local intel = event.intel
-    if surface and intel and
-            tonumber(intel.updated) + cache_time < event.tick
-    then
-        update_attackable_zone_data(surface.name)
-        intel.updated = event.tick
-    end
-end)
+SpaceExploration.events = {
+    [Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_SCAN]] = function(event)
+        local surface = event.surface
+        local intel = event.intel
+        if surface and intel and
+                tonumber(intel.updated) + cache_time < event.tick
+        then
+            update_attackable_zone_data(surface.name)
+            intel.updated = event.tick
+        end
+    end,
+    [Config.custom_event_handlers[Config.EVENT_FLUSH_GLOBAL]] = function(event)
+        add_exclusion_surfaces(event)
+
+        for surface_name, _ in pairs(SurfaceProcessor.get_attackable_surfaces()) do
+            update_attackable_zone_data(surface_name)
+        end
+    end,
+}
 

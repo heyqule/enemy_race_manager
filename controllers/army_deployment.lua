@@ -4,23 +4,10 @@
 --- DateTime: 11/21/2022 11:48 PM
 ---
 
-local Event = require("__stdlib__/stdlib/event/event")
-
 
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
-local add_deployer = function(event)
-    local entity = event.created_entity or event.entity
-    ArmyDeploymentProcessor.add_entity(entity)
-    ArmyControlUI.update_deployers()
-end
-
-local remove_deployer = function(event)
-    local entity = event.created_entity or event.entity
-    ArmyDeploymentProcessor.remove_entity(entity.force.index, entity.unit_number)
-    ArmyControlUI.update_deployers()
-end
 
 local is_valid_deployer = function(event)
     local entity = event.created_entity or event.entity
@@ -32,12 +19,31 @@ local is_valid_deployer = function(event)
     return nil
 end
 
-Event.register(defines.events.script_raised_revive, add_deployer, is_valid_deployer)
-Event.register(defines.events.script_raised_built, add_deployer, is_valid_deployer)
-Event.register(defines.events.on_built_entity, add_deployer, is_valid_deployer)
-Event.register(defines.events.on_robot_built_entity, add_deployer, is_valid_deployer)
+local add_deployer = function(event)
+    if is_valid_deployer(event) then
+        local entity = event.created_entity or event.entity
+        ArmyDeploymentProcessor.add_entity(entity)
+        ArmyControlUI.update_deployers()
+    end
+end
 
-Event.register(defines.events.on_entity_died, remove_deployer, is_valid_deployer)
-Event.register(defines.events.script_raised_destroy, remove_deployer, is_valid_deployer)
-Event.register(defines.events.on_player_mined_entity, remove_deployer, is_valid_deployer)
-Event.register(defines.events.on_robot_mined_entity, remove_deployer, is_valid_deployer)
+local remove_deployer = function(event)
+    if is_valid_deployer(event) then
+        local entity = event.created_entity or event.entity
+        ArmyDeploymentProcessor.remove_entity(entity.force.index, entity.unit_number)
+        ArmyControlUI.update_deployers()
+    end
+end
+
+local ArmyDeployment = {}
+ArmyDeployment.events = {
+    [defines.events.script_raised_revive] = add_deployer,
+    [defines.events.script_raised_built] = add_deployer,
+    [defines.events.on_built_entity] = add_deployer,
+    [defines.events.on_robot_built_entity] = add_deployer,
+    [defines.events.on_entity_died] = remove_deployer,
+    [defines.events.script_raised_destroy] = remove_deployer,
+    [defines.events.on_player_mined_entity] = remove_deployer,
+    [defines.events.on_robot_mined_entity] = remove_deployer,
+}
+return ArmyDeployment

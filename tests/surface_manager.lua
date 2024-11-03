@@ -18,7 +18,7 @@ after_each(function()
 end)
 
 
-it.only("Add and remove surface", function()
+it("Add and remove surface", function()
     local char = game.planets['char']
     local valcanus = game.planets['vulcanus']
     local nauvis = game.planets['nauvis']
@@ -32,7 +32,7 @@ it.only("Add and remove surface", function()
 end)
 
 ticks_between_tests(60)
-it.only("Reindex Surfaces", function()
+it("Reindex Surfaces", function()
     local surface_count = 10
     for i = 0, surface_count, 1 do
         local new_surface_name = "test_surface"..tostring(i)

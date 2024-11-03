@@ -3,8 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 11/17/2022 9:11 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
-
 
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 local MainWindow = require("__enemyracemanager__/gui/main_window")
@@ -25,11 +23,6 @@ local valid_erm_left_click = {
     end,
 }
 
-Event.register("erm-left-click", function(event)
-    if event.selected_prototype and valid_erm_left_click[event.selected_prototype.derived_type] then
-        valid_erm_left_click[event.selected_prototype.derived_type](event)
-    end
-end)
 
 local valid_erm_alt_left_click = {
     ["radar"] = function(event)
@@ -46,21 +39,30 @@ local valid_erm_alt_left_click = {
     end
 }
 
-Event.register("erm-alt-left-click", function(event)
-    if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
-        valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
-    end
-end)
+local CustomInput = {}
 
-Event.register("erm-open-army-window", function(event)
-    if game.players[event.player_index] then
-        ArmyControlUI.toggle_main_window(game.players[event.player_index])
-    end
-end)
 
-Event.register("erm-open-stat-window", function(event)
-    if game.players[event.player_index] then
-        MainWindow.toggle_main_window(game.players[event.player_index])
+CustomInput.events = {
+    ["erm-left-click"] = function(event)
+        if event.selected_prototype and valid_erm_left_click[event.selected_prototype.derived_type] then
+            valid_erm_left_click[event.selected_prototype.derived_type](event)
+        end
+    end,
+    ["erm-alt-left-click"] = function(event)
+        if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
+            valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
+        end
+    end,
+    ["erm-open-army-window"] = function(event)
+        if game.players[event.player_index] then
+            ArmyControlUI.toggle_main_window(game.players[event.player_index])
+        end
+    end,
+    ["erm-open-stat-window"] = function(event)
+        if game.players[event.player_index] then
+            MainWindow.toggle_main_window(game.players[event.player_index])
+        end
     end
-end)
+}
 
+return CustomInput

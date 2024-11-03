@@ -95,6 +95,10 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
         "elevated-half-diagonal-rail",
         "elevated-curved-rail-a",
         "elevated-curved-rail-b",
+        "rail-support",
+        "rail-ramp",
+        "rail-signal",
+        "rail-chain-signal"
     }
     for _, rail_type in pairs(rail_type) do
         data.raw[rail_type][rail_type]["resistances"] = rails_change_resistance()

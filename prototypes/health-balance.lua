@@ -16,6 +16,7 @@ local include_types = {
     "container",
     "electric-pole",
     "furnace",
+    "agricultural-tower",
 }
 
 

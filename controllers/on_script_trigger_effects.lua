@@ -197,8 +197,14 @@ local script_functions = {
         AttackMeterProcessor.calculate_points(event.source_entity)
     end
 }
-Event.register(defines.events.on_script_trigger_effect, function(event)
-    if script_functions[event.effect_id] then
-        script_functions[event.effect_id](event)
+
+local TriggerEffects = {}
+
+TriggerEffects.events = {
+    [defines.events.on_script_trigger_effect] =  function(event)
+        if script_functions[event.effect_id] then
+            script_functions[event.effect_id](event)
+        end
     end
-end)
+}
+return TriggerEffects

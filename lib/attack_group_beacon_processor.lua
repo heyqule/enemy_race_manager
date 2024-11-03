@@ -42,7 +42,8 @@ local ATTACKABLE_ENTITY_TYPES = {
     "furnace",
     "rocket-silo",
     "artillery-turret",
-    "lab"
+    "lab",
+    "agricultural-tower",
 }
 local INDEXABLE_ATTACKABLE_ENTITY_TYPES = {
     "rocket-silo",
