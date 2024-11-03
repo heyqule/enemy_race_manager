@@ -179,8 +179,12 @@ local init_globals = function()
     storage.is_multi_planets_game = false
 
     --- SE or Space Age
-    if script.active_mods["space-exploration"] or game.planets['vulcanus'] then
+    if script.active_mods["space-exploration"] or script.active_mods['space-age'] then
         storage.is_multi_planets_game = true
+    end
+
+    if script.active_mods['quality'] then
+        storage.is_using_quality = true
     end
 
     SurfaceProcessor.init_globals()

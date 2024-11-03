@@ -5,21 +5,19 @@ Date: ????-??-??
   Major Features:
     - Updated to Factorio 2.0.  IT DOES NOT SUPPORT MIGRATION FROM 1.1.
     - This mod now focuses on interplanetary war logistics. Support for base game may be limited.
-    - Removed leveling system.
-    - Added quality spawning system. Hail to RNG god. [Details in Tip and Trick]
+    - Replaced leveling system with quality spawning system based on planet evolution and attack points. [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - Removed 2 ways and 4 ways enemy generation on Nauvis due to incompatibility.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
     - In 2.0 base game, it will use the mixed mode or you pick a race.
-    - Removed replacing enemy system.
-    - Removed randomly assign enemy on a surface.  Enemies are now defined in planet prototype.
+    - Added a few tip and tricks records
+    - Added "Quality x2 Challenge" setting.  When quality module is enabled, enemy may have a chance to spawn higher quality enemy on top of quality spawning system.  This gives additional 50% boost from uncommon to legendary.  Legendary enemies are appox 2.5x stronger.
 
   Changes:
     - [Unit Properties]
     - Changed HP and damage algo changes under the new quality system.  Enemies are tested against normal turrets and ammunition.
-    - Added "Quality Module Balance" setting to give enemy higher stats when quality module is enabled.  This gives additional 50% boost from uncommon to legendary.  Legendary enemies are appox 2.5x stronger.
     - Movement and attack speed reach max at rare tier.
     - When quality is enabled, each tier will add one range to the max range.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
@@ -35,8 +33,6 @@ Date: ????-??-??
     - [Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
     - Non defensive structures automatically get a health bump to a minimum of 500HP.
-    - [Free for all]
-    - Added a free for all planet when free for all option is enabled. The planet utilizing 2 or 4 ways split autoplace to spawn enemy.  Your goal is to bring "peace" on that planet. \nRaces can be configured in startup settings.
     - [Others]
     - Removed dependency of stdlib.
     - Removed most compatibility supports for 1.1 mods.  2.0 mods compatibility will be done as the issue arise.
@@ -44,6 +40,8 @@ Date: ????-??-??
     - Exceptions: Cold, Explosive, Toxic and Armour biters are supported.
     - Removed menu biter replacement, add a few menu simulations.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
+    - Removed replacing enemy system.
+    - Removed randomly assign enemy on a surface.  Enemies are now defined in planet prototype.
 
 
 ---------------------------------------------------------------------------------------------------

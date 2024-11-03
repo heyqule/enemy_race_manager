@@ -39,3 +39,4 @@ data.erm_aerial_scout[MOD_NAME] = "defender"
 
 require "prototypes.extend-mapping-beacons"
 require "prototypes.extend-rallypoint"
+require "prototypes.tips-and-tricks.prototypes"

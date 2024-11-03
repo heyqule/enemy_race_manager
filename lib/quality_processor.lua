@@ -165,8 +165,8 @@ function QualityProcessor.reset_globals()
 end
 
 function QualityProcessor.roll(entity)
-    --- Unit from spawner doesn't need to roll.
-    if not ForceHelper.is_enemy_force(entity.force) or TEST_BY_PASS_QUALITY or is_running_roll then
+
+    if not ForceHelper.is_enemy_force(entity.force) or is_running_roll or (entity.commandable and entity.commandable.spawner) then
         is_running_roll = false
         return
     end
@@ -176,18 +176,23 @@ function QualityProcessor.roll(entity)
     local force = entity.force
     local surface = entity.surface
 
-    if not storage.quality_on_planet[force.name]
+    if not storage.quality_on_planet[force.name] or storage.quality_on_planet[force.name][surface.name]
     then
         QualityProcessor.calculate_quality_points()
     end
 
     local planet_data = storage.quality_on_planet[force.name][surface.name]
+
+    if not planet_data then
+        is_running_roll = false
+        return
+    end        
     local spawn_rates = planet_data.spawn_rates
     local spawn_rates_size = planet_data.spawn_rates_size
     local lowest_tier = planet_data.lowest_allowed_tier
 
-    --- no need to reroll if unit is already higher than lowest tier or it's attached to spawner.
-    if unit_tier >= lowest_tier or (entity.commandable and entity.commandable.spawner) then
+    --- Unit from spawner doesn't need to roll.
+    if unit_tier >= lowest_tier then
         return
     end
 
@@ -231,6 +236,19 @@ function QualityProcessor.roll(entity)
         -- destroy and doesn't raise any events since it's replacement.
         entity.destroy()
     end
+end
+
+function QualityProcessor.reset_all_progress()
+    for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
+        local race_name = ForceHelper.extract_race_name_from(force_name)
+        storage.race_settings[race_name].level = 1
+        storage.race_settings[race_name].tier = 1
+        storage.race_settings[race_name].attack_meter = 0
+        storage.race_settings[race_name].accumulated_attack_meter = 0
+        local force = game.forces[force_name]
+        force.reset_evolution()
+    end
+    QualityProcessor.calculate_quality_points()
 end
 
 --- Register events

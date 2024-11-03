@@ -25,7 +25,7 @@ function TestShared.prepare_the_factory()
         end
     end
 
-    --LevelManager.reset_all_progress()
+    QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
@@ -33,7 +33,6 @@ function TestShared.prepare_the_factory()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
     TestShared.reset_forces()
-    TEST_BY_PASS_QUALITY = true
 end
 
 function TestShared.reset_the_factory()
@@ -45,13 +44,12 @@ function TestShared.reset_the_factory()
         end
     end
 
-    --LevelManager.reset_all_progress()
+    QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
-    TEST_BY_PASS_QUALITY = false
 end
 --- Clear cron and its trackers
 function TestShared.CleanCron()
@@ -87,7 +85,7 @@ end
 
 function TestShared.reset_surfaces()
     for key, surface in pairs(game.surfaces) do
-        if string.find(surface.name,"test") then
+        if not string.find(surface.name,"nauvis") then
             game.delete_surface(surface)
         end
     end

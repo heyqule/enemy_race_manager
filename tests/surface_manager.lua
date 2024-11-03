@@ -18,7 +18,7 @@ after_each(function()
 end)
 
 
-it("Add and remove surface", function()
+it("Add and remove surfaces", function()
     local char = game.planets['char']
     local valcanus = game.planets['vulcanus']
     local nauvis = game.planets['nauvis']
@@ -33,10 +33,8 @@ end)
 
 ticks_between_tests(60)
 it("Reindex Surfaces", function()
-    local surface_count = 10
-    for i = 0, surface_count, 1 do
-        local new_surface_name = "test_surface"..tostring(i)
-        game.create_surface(new_surface_name)
+    for _, planet in pairs(game.planets) do
+        planet.create_surface()
     end
 
     local old_list = table.deepcopy(storage.enemy_surfaces)
@@ -45,8 +43,5 @@ it("Reindex Surfaces", function()
     local new_list = table.deepcopy(storage.enemy_surfaces)
     assert.not_equal(old_list, new_list, "Both list should not be equal")
     assert.equal(table_size(new_list), storage.total_enemy_surfaces, "Total enemy surface and new list must be equal")
-    for i = 0, surface_count, 1 do
-        local new_surface_name = "test_surface"..tostring(i)
-        game.delete_surface(new_surface_name)
-    end
+    TestShared.reset_surfaces()
 end)

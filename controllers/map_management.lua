@@ -10,6 +10,7 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local MapManagement = {}
 
@@ -21,6 +22,7 @@ MapManagement.events = {
     [defines.events.on_surface_created] = function(event)
         SurfaceProcessor.assign_race(game.surfaces[event.surface_index])
         AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
+        QualityProcessor.calculate_quality_points()
     end,
     [defines.events.on_pre_surface_deleted] = function(event)
         SurfaceProcessor.remove_race(game.surfaces[event.surface_index])

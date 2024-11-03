@@ -77,7 +77,7 @@ end)
 it("Interplanetary Attack: No friends, have to launch attack", function()
     async(12000)
     local surface = game.surfaces[1]
-    local surface2 = game.create_surface("test_surface_2")
+    local surface2 = game.planets.vulcanus.create_surface()
     storage.interplanetary_intel[surface2.index]   = {
         radius = 900000,
         type = "planet",

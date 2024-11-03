@@ -22,6 +22,7 @@ function SurfaceProcessor.assign_race(surface)
     end
 
     local planet = surface.planet
+
     if planet then
         local prototype = planet.prototype
         local races_by_name = {}
