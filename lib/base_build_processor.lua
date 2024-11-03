@@ -5,7 +5,6 @@
 ---
 
 require('util')
-local Event = require("__stdlib__/stdlib/event/event")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -163,7 +162,8 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     if position then
         local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
 
-        Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_BASE_BUILT),
+        script.raise_event(
+                GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
             {
                 entity = built_entity
             }

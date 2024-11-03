@@ -39,8 +39,8 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
     end
     local multiplier = get_health_mutiplier(incremental_health, level)
     local final_health = math.floor(base_health * multiplier)
-    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
-        final_health = final_health * (multipliers[level-1] / 100) * get_quality_multiplier(level)
+    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
+        final_health = final_health * get_quality_multiplier(level)
     end
     return final_health
 end
@@ -57,8 +57,8 @@ function ERM_UnitHelper.get_building_health(base_health, incremental_health, lev
     end
     local multiplier = math.max(get_health_mutiplier(incremental_health, level) / reduce_effect_value, 2)
     local final_health = math.floor(base_health * multiplier)
-    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
-        final_health = final_health * (multipliers[level-1] / 100) * get_quality_multiplier(level)
+    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
+        final_health = final_health * get_quality_multiplier(level)
     end
     return final_health
 end
@@ -87,7 +87,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_damage, level)
         damage = damage * GlobalConfig.FFA_MULTIPLIER
     end
 
-    if feature_flags.quality and not DEBUG_BY_PASS_QUALITY then
+    if feature_flags.quality and not TEST_BY_PASS_QUALITY then
         damage = damage * get_quality_multiplier(level)
     end
 

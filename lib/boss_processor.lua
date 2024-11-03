@@ -6,7 +6,6 @@
 require("util")
 
 
-local Event = require("__stdlib__/stdlib/event/event")
 local Position = require("__erm_libs__/stdlib/position")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -125,11 +124,11 @@ local process_boss_queue = function(event)
 end
 
 local start_boss_event = function()
-    Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, process_boss_queue)
+    script.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, process_boss_queue)
 end
 
 local remove_boss_event = function()
-    Event.remove(GlobalConfig.BOSS_QUEUE_CRON * -1, process_boss_queue)
+    script.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, nil)
     Cron.empty_boss_queue()
 end
 

@@ -6,8 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-local Event = require("__stdlib__/stdlib/event/event")
-
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -17,9 +15,11 @@ local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processo
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local EnvironmentalAttack = require("__enemyracemanager__/lib/environmental_attacks")
 local InterplanetaryAttack = require("__enemyracemanager__/lib/interplanetary_attacks")
+
 
 local RemoteAPI = {}
 
@@ -341,5 +341,7 @@ RemoteAPI.army_deployer_register = ArmyDeploymentProcessor.register_building
 
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
+
+RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
 
 return RemoteAPI

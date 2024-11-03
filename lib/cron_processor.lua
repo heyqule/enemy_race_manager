@@ -7,7 +7,6 @@
 local Type = require("__erm_libs__/stdlib/type")
 local Queue = require("__erm_libs__/stdlib/queue")
 
-local Event = require("__stdlib__/stdlib/event/event")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 local CronProcessor = {}
@@ -112,7 +111,7 @@ function CronProcessor.add_quick_queue(request, ...)
 
     if storage.quick_cron_is_running == false then
         storage.quick_cron_is_running = true
-        Event.on_nth_tick(GlobalConfig.QUICK_CRON, CronProcessor.process_quick_queue)
+        script.on_nth_tick(GlobalConfig.QUICK_CRON, CronProcessor.process_quick_queue)
     end
 end
 
@@ -157,7 +156,7 @@ function CronProcessor.process_quick_queue()
 
      if storage.quick_cron_is_running == true and Queue.is_empty(storage.quick_cron) then
          storage.quick_cron_is_running = false
-         Event.remove(GlobalConfig.QUICK_CRON * -1, CronProcessor.process_quick_queue)
+         script.on_nth_tick(GlobalConfig.QUICK_CRON, nil)
      end
 end
 

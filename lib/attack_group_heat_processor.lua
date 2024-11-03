@@ -6,7 +6,6 @@
 ---
 
 require("util")
-local Event = require("__stdlib__/stdlib/event/event")
 
 local Config = require("__enemyracemanager__/lib/global_config")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
@@ -192,7 +191,7 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
             end
 
             if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
-                Event.raise_event(Event.get_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC),{
+                script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
                     race_name = race_name,
                     target_force = target_force
                 })

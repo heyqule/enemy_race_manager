@@ -1,4 +1,4 @@
-local Table = require("__stdlib__/stdlib/utils/table")
+local Table = require("__erm_libs__/stdlib/table")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local RaceSettingsHelper = {

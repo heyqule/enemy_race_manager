@@ -115,7 +115,6 @@ end
 --- Planet evolution takes 40%, accumulated attack point takes 60%
 function QualityProcessor.calculate_quality_points()
     update_storages()
-    --storage.quality_on_planet = storage.quality_on_planet or {}
     for _, force in pairs(game.forces) do
         if ForceHelper.is_enemy_force(force) then
             local race_name = ForceHelper.extract_race_name_from(force.name)
@@ -167,7 +166,7 @@ end
 
 function QualityProcessor.roll(entity)
     --- Unit from spawner doesn't need to roll.
-    if TEST_BY_PASS_QUALITY or is_running_roll then
+    if not ForceHelper.is_enemy_force(entity.force) or TEST_BY_PASS_QUALITY or is_running_roll then
         is_running_roll = false
         return
     end
@@ -177,7 +176,8 @@ function QualityProcessor.roll(entity)
     local force = entity.force
     local surface = entity.surface
 
-    if not storage.quality_on_planet[force.name] then
+    if not storage.quality_on_planet[force.name]
+    then
         QualityProcessor.calculate_quality_points()
     end
 

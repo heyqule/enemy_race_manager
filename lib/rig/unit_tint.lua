@@ -6,7 +6,7 @@
 --- To change this template use File | Settings | File Templates.
 --- require("__enemyracemanager__/lib/rig/unit_tint")
 ---
-require("__stdlib__/stdlib/utils/defines/color")
+
 local ERM_UnitTint = {}
 
 function ERM_UnitTint.tint_shadow()

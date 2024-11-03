@@ -19,7 +19,7 @@ Date: ????-??-??
   Changes:
     - [Unit Properties]
     - Changed HP and damage algo changes under the new quality system.  Enemies are tested against normal turrets and ammunition.
-    - Added "Additional Quality Balance" setting to give enemy higher stats when quality module is enabled.  Legendary enemies are tested against 50% epic and 50% legendary turret and ammunition. [Details in tip and tricks]
+    - Added "Quality Module Balance" setting to give enemy higher stats when quality module is enabled.  This gives additional 50% boost from uncommon to legendary.  Legendary enemies are appox 2.5x stronger.
     - Movement and attack speed reach max at rare tier.
     - When quality is enabled, each tier will add one range to the max range.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.

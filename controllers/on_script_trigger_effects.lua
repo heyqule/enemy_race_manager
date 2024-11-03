@@ -3,8 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:47 PM
 ---
-local Event = require("__stdlib__/stdlib/event/event")
-
 require("__enemyracemanager__/global")
 
 local Config = require("__enemyracemanager__/lib/global_config")

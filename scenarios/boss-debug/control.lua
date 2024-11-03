@@ -1,11 +1,9 @@
 require("util")
 local scenarios_helper = require("__enemyracemanager__/scenarios/shared.lua")
 
-local Event = require("__stdlib__/stdlib/event/event")
-
 local spawned
 
-Event.on_init(function(event)
+script.on_init(function(event)
     game.map_settings.enemy_expansion.enabled = false
     local surface = game.surfaces[1]
     local mgs = surface.map_gen_settings
@@ -19,7 +17,7 @@ Event.on_init(function(event)
     end
 end)
 
-Event.register(defines.events.on_player_created, function(event)
+script.on_event(defines.events.on_player_created, function(event)
     local surface = game.surfaces[1]
     local player = game.players[1]
     local force = player.force
