@@ -232,9 +232,6 @@ local on_configuration_changed = function(event)
     GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
-    for _, player in pairs(game.connected_players) do
-        GuiContainer.main_window.update_overhead_button(player.index)
-    end
 end
 
 ---Custom setting processors

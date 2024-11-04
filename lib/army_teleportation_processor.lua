@@ -102,7 +102,7 @@ function ArmyTeleportationProcessor.add_entity(entity)
     }
 end
 
-function ArmyTeleportationProcessor.getObjectByName(backer_name)
+function ArmyTeleportationProcessor.get_object_by_name(backer_name)
     local name_map = storage.army_teleporters_name_mapping[backer_name]
     if name_map then
         return storage.army_built_teleporters[name_map.force_id][name_map.surface_id][name_map.unit_number]
@@ -110,7 +110,7 @@ function ArmyTeleportationProcessor.getObjectByName(backer_name)
 end
 
 function ArmyTeleportationProcessor.getEntityByName(backer_name)
-    local teleport_object = ArmyTeleportationProcessor.getObjectByName(backer_name)
+    local teleport_object = ArmyTeleportationProcessor.get_object_by_name(backer_name)
     if teleport_object then
         return teleport_object.entity
     end

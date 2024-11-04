@@ -170,7 +170,7 @@ function DetailWindow.show(player, race_setting)
 
         local gap = setting_flow.add { type = "empty-widget" }
         gap.style.height = 4
-        setting_flow.add { type = "button", name = race_setting.race .. "/" .. DetailWindow.confirm_name, caption = { "gui.confirm" }, style = "green_button" }
+        setting_flow.add { type = "button", name = race_setting.race .. "/" .. DetailWindow.confirm_name, tags={filter_pattern=".*/" .. DetailWindow.confirm_name}, caption = { "gui.confirm" }, style = "green_button" }
 
         local center_gap = right_flow.add { type = "empty-widget" }
         center_gap.style.height = 16
@@ -184,7 +184,7 @@ function DetailWindow.show(player, race_setting)
 
     local boss_flow = right_flow.add { type = "flow", name = "boss_flow", direction = "vertical" }
     boss_flow.add { type = "label", name = "boss_flow_description", caption = { "gui.boss_flow_description" } }
-    boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", caption = { "gui.boss_details" } }
+    boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", tags={filter_pattern=".*/boss_details"}, caption = { "gui.boss_details" } }
 end
 
 function DetailWindow.update_slider_text(event, slider_name, slider_value)

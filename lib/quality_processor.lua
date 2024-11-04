@@ -10,10 +10,10 @@ local QualityProcessor = {}
 --- When a player reaches higher quality points.  The following will be the spawn rate of each tier
 --- normal, uncommon, rare, epic, legendary
 local max_difficulties = {
-    [QUALITY_CASUAL] = {0, 0.65, 0.35, 0.5, 0},
+    [QUALITY_CASUAL] = {0, 0.7, 0.3, 0, 0},
     [QUALITY_NORMAL] = {0, 0.25, 0.60, 0.15, 0},
-    [QUALITY_ADVANCED] = {0, 0, 0.6, 0.35, 0.05},
-    [QUALITY_HARDCORE] = {0, 0, 0.25, 0.6, 0.15},
+    [QUALITY_ADVANCED] = {0, 0, 0.60, 0.35, 0.05},
+    [QUALITY_HARDCORE] = {0, 0, 0.25, 0.5, 0.25},
     [QUALITY_FIGHTER] = {0, 0, 0, 0.50, 0.50},
     [QUALITY_CRUSADER] = {0, 0, 0, 0.20, 0.80},
     [QUALITY_THEONE] = {0, 0, 0, 0, 100},

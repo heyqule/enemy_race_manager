@@ -54,30 +54,31 @@ for _, v in pairs(data.raw["unit"]) do
     end
 end
 
-for _, v in pairs(data.raw["spider-unit"]) do
-    if string.find(v.name, "--", 1, true) then
-        table.insert(v.flags, "get-by-unit-number")
-        local nameToken = String.split(v.name, "--")
-        local level = tonumber(nameToken[3])
-        if level and level > 1 then
-            DebugHelper.print("Hiding Factoriopedia:" .. v.name)
-            data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
+if mods['space-age'] then
+    for _, v in pairs(data.raw["spider-unit"]) do
+        if string.find(v.name, "--", 1, true) then
+            table.insert(v.flags, "get-by-unit-number")
+            local nameToken = String.split(v.name, "--")
+            local level = tonumber(nameToken[3])
+            if level and level > 1 then
+                DebugHelper.print("Hiding Factoriopedia:" .. v.name)
+                data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
+            end
+        end
+    end
+
+    for _, v in pairs(data.raw["segmented-unit"]) do
+        if string.find(v.name, "--", 1, true) then
+            table.insert(v.flags, "get-by-unit-number")
+            local nameToken = String.split(v.name, "--")
+            local level = tonumber(nameToken[3])
+            if level and level > 1 then
+                DebugHelper.print("Hiding Factoriopedia:" .. v.name)
+                data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
+            end
         end
     end
 end
-
-for _, v in pairs(data.raw["segmented-unit"]) do
-    if string.find(v.name, "--", 1, true) then
-        table.insert(v.flags, "get-by-unit-number")
-        local nameToken = String.split(v.name, "--")
-        local level = tonumber(nameToken[3])
-        if level and level > 1 then
-            DebugHelper.print("Hiding Factoriopedia:" .. v.name)
-            data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
-        end
-    end
-end
-
 -- Remove all other ERM entities from factoriopedia
 for _, type in pairs({"explosion","projectile","corpse","smoke-with-trigger", "sticker", "stream", "ammo-category"}) do
     for _, v in pairs(data.raw[type]) do

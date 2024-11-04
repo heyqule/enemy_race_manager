@@ -38,13 +38,13 @@ function BossVictoryDialog.show(player, race_setting)
     center_gap.style.height = 16
 
     local bottom_flow = main_flow.add { type = "flow", direction = "horizontal" }
-    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_cancel", caption = { "gui.victory_dialog_tier_cancel" }, style = "red_button" }
+    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_cancel", tags={filter_pattern=".*/victory_dialog_tier_cancel"}, caption = { "gui.victory_dialog_tier_cancel" }, style = "red_button" }
 
     local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
     button_pusher.style.width = 150
     button_pusher.style.height = 24
 
-    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_confirm", caption = { "gui.victory_dialog_tier_confirm" }, style = "green_button" }
+    bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_confirm", tags={filter_pattern=".*/victory_dialog_tier_confirm"}, caption = { "gui.victory_dialog_tier_confirm" }, style = "green_button" }
 end
 
 function BossVictoryDialog.hide(player)
