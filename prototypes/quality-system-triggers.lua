@@ -57,12 +57,23 @@ local is_excluded_from_quality = function(name)
     return false
 end
 
-local types = {"unit-spawner", "turret", "unit", "segmented-unit", "spider-unit"}
+local types = {"unit-spawner", "turret", "unit"}
 
 for _, type in pairs(types) do
     for _, entity in pairs(data.raw[type]) do
         if is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
             register_trigger(entity)
+        end
+    end
+end
+
+if mods['space-age'] then
+    local types = {"segmented-unit", "spider-unit"}
+    for _, type in pairs(types) do
+        for _, entity in pairs(data.raw[type]) do
+            if is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
+                register_trigger(entity)
+            end
         end
     end
 end

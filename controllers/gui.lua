@@ -234,9 +234,6 @@ end
 Event.register(defines.events.on_gui_opened, onGuiOpen)
 
 --- On Value Change Events
-EventGui.on_value_changed(GuiContainer.detail_window.levelup_slider_name, function(event)
-    GuiContainer.detail_window.update_slider_text(event, GuiContainer.detail_window.levelup_slider_name, GuiContainer.detail_window.levelup_value_name)
-end)
 
 EventGui.on_value_changed(GuiContainer.detail_window.evolution_factor_slider_name, function(event)
     GuiContainer.detail_window.update_slider_text(event, GuiContainer.detail_window.evolution_factor_slider_name, GuiContainer.detail_window.evolution_factor_value_name)

@@ -56,9 +56,9 @@ data:extend {
         name = "enemyracemanager-max-hitpoint-multipliers",
         description = "enemyracemanager-max-hitpoint-multipliers",
         setting_type = "startup",
-        default_value = 25,
+        default_value = 20,
         minimum_value = 10,
-        maximum_value = 250,
+        maximum_value = 100,
         order = "enemyracemanager-114"
     },
     {

@@ -4,8 +4,6 @@
 --- DateTime: 11/5/2022 11:16 AM
 ---
 
-local mod_gui = require("mod-gui")
-
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -92,7 +90,7 @@ function MainWindow.show(player)
             item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }
-            action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { "gui.more_action" }, tooltip = { "gui.more_action_tooltip" } }
+            action_flow.add { type = "button", name = race_setting.race .. "/more_action", tags={filter_pattern=".*/more_action"}, caption = { "gui.more_action" }, tooltip = { "gui.more_action_tooltip" } }
         end
     end
 
@@ -133,13 +131,9 @@ end
 
 function MainWindow.toggle_main_window(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-
         if MainWindow.is_hidden(owner) then
-            button_flow.erm_toggle.tooltip = { "gui.hide-enemy-stats" }
             MainWindow.show(owner)
         else
-            button_flow.erm_toggle.tooltip = { "gui.show-enemy-stats" }
             MainWindow.hide(owner)
         end
     end
@@ -147,8 +141,6 @@ end
 
 function MainWindow.toggle_close(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-        button_flow.erm_toggle.tooltip = { "gui.show-enemy-stats" }
         MainWindow.hide(owner)
     end
 end
@@ -157,13 +149,5 @@ function MainWindow.kill_idle_units(event)
     SurfaceProcessor.wander_unit_clean_up()
 end
 
-function MainWindow.update_overhead_button(player_index)
-    local owner = game.players[player_index]
-    local button_flow = mod_gui.get_button_flow(owner)
-
-    if owner and button_flow and not button_flow["erm_toggle"] then
-        button_flow.add { type = "sprite-button", name = "erm_toggle", tooltip = { "gui.show-enemy-stats" }, sprite = "utility/force_editor_icon" }
-    end
-end
 
 return MainWindow

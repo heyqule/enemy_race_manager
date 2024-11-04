@@ -3,16 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 7/24/2021 6:52 PM
 ---
-
-
 require("__enemyracemanager__/setting-constants")
-
-
 require("util")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local Table = require("__erm_libs__/stdlib/table")
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -20,6 +17,19 @@ local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
 local FEATURE_RACE_SPAWN_CACHE = 4
 local FEATURE_RACE_SPAWN_CACHE_SIZE = 5
+
+local rock_names = {
+    "big-rock",
+    "big-sand-rock",
+    "huge-rock",
+}
+if script.active_mods['space-age'] then
+    rock_names = Table.array_combine(rock_names, {
+        "big-volcanic-rock",
+        "huge-volcanic-rock",
+        "big-fulgora-rock"
+    })
+end
 
 local get_name_token = function(name)
     if storage.force_entity_name_cache and storage.force_entity_name_cache[name] then
@@ -348,18 +358,10 @@ local try_kill_a_tree_or_rock = function(units)
             then
                 local surface = entity.surface
                 local idx, target_entity
-
                 local entities = surface.find_entities_filtered({
                     position = entity.position,
                     radius = 32,
-                    name = {
-                        "big-rock",
-                        "big-sand-rock",
-                        "huge-rock",
-                        "big-volcanic-rock",
-                        "huge-volcanic-rock",
-                        "big-fulgora-rock"
-                    },
+                    name = rock_names,
                     limit = 1,
                 })
 

@@ -16,7 +16,6 @@ local include_types = {
     "container",
     "electric-pole",
     "furnace",
-    "agricultural-tower",
 }
 
 
@@ -33,3 +32,15 @@ for _, type in pairs(include_types) do
     end
 end
 
+if mods['space-age'] then
+    local expansion_types = {
+        "agricultural-tower"
+    }
+    for _, type in pairs(expansion_types) do
+        for _, entity in pairs(data.raw[type]) do
+            if entity.max_health and entity.max_health < 1000 then
+                entity.max_health = math.max(entity.max_health * 2.5, 500)
+            end
+        end
+    end
+end

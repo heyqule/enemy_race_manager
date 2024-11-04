@@ -4,44 +4,50 @@ Date: ????-??-??
 
   Major Features:
     - Updated to Factorio 2.0.  IT DOES NOT SUPPORT MIGRATION FROM 1.1.
-    - This mod now focuses on interplanetary war logistics. Support for base game may be limited.
-    - Replaced leveling system with quality spawning system based on planet evolution and attack points. [Details in Tips and Tricks]
+    - This mod now focuses on interplanetary war logistics in Space Age.  Support for base game will be limited to crashes.
+    - Replaced leveling system with "Quality Spawning" system based on planet evolution and accumulated attack points. [Details in Tips and Tricks]
+    - Home planets invasion. None-biter race now have a home planet. [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
-    - Removed 2 ways and 4 ways enemy generation on Nauvis due to incompatibility.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
     - In 2.0 base game, it will use the mixed mode or you pick a race.
-    - Added a few tip and tricks records
-    - Added "Quality x2 Challenge" setting.  When quality module is enabled, enemy may have a chance to spawn higher quality enemy on top of quality spawning system.  This gives additional 50% boost from uncommon to legendary.  Legendary enemies are appox 2.5x stronger.
+    - Added some tip and tricks records
 
   Changes:
-    - [Unit Properties]
-    - Changed HP and damage algo changes under the new quality system.  Enemies are tested against normal turrets and ammunition.
+    - [Section: Unit Properties]
+    - Changed HP and damage algo under the new ERM quality system.  Enemies stats are tested against normal turrets and ammunition.
+    - Added "Quality x2 Challenge" setting.  When enemy scout sees higher quality turrets are being used.  They may have a chance to spawn higher quality enemy on top of the quality spawning system.  Quality enhanced legendary enemies are appox 2.5x stronger than regular legendary enemy.
     - Movement and attack speed reach max at rare tier.
-    - When quality is enabled, each tier will add one range to the max range.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
-    - Unit tier is now independent for each planet.  Zerg in planet A evolve differently than planet B.
-    - [Attack Meter Changes]
+    - Unit tier is now independent for each planet.  Biters in planet A spawn differently than those on planet B until they reach max evolution.
+    - Unit-spawner resistance lower to 35% maximum from 75% to balance the +900% evolution HP scaling.  Units and turrets are not affected.
+    - [Section: Attack Meter Changes]
     - Changed custom attack group check to performance every minute, instead of three minutes.
     - Calculation perform when applicable entity dies.
-    - Spawner point reduction now affects attack points.  It's no longer dip into negative value.
-    - Time based attack now starts when the enemy's evolution is over 0.5 on any planet.
-    - [Boss Mode]
+    - Spawner point reduction now affects attack points, which affect custom attack group generation.
+    - Time based attack now starts when the enemy's evolution is over 0.35 on any planet.
+    - [Section: Custom attack group changes]
+    - The group forming check run every one, instead of three minutes by default previously. Its setting has been removed.
+    -
+    - [Section: Boss Mode]
+    - Boss mode is temporary offline for major overhaul.
     - PSI Emitter Satellite for boss is now only used for base game. Bosses in [space-age] will spawn in their home planet.
-    - NOTICE: Boss mode is temporary offline for major overhaul.
-    - [Enhanced Defenses]
+    - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
-    - Non defensive structures automatically get a health bump to a minimum of 500HP.
-    - [Others]
+    - Player's defensive structures automatically get a health bump to a minimum of 500HP.
+    - [Section: GUI]
+    - Main screen buttons are now under shortcuts, instead of top left buttons.
+    - [Section: Removals]
     - Removed dependency of stdlib.
-    - Removed most compatibility supports for 1.1 mods.  2.0 mods compatibility will be done as the issue arise.
-    - If you experience with crash, please provide a bug report in my Discord.
-    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported.
+    - Removed enemy leveling and its subsystems.
+    - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as the issue arise.
+    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported. If you experience with crash, please provide a bug report in my Discord.
     - Removed menu biter replacement, add a few menu simulations.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
-    - Removed replacing enemy system.
-    - Removed randomly assign enemy on a surface.  Enemies are now defined in planet prototype.
+    - Removed enemy replacement system.
+    - Removed randomly assign enemy on a surface/planet.  Enemies are now defined in planet prototype.
+    - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to incompatibility.
 
 
 ---------------------------------------------------------------------------------------------------

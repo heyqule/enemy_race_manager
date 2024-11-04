@@ -24,10 +24,6 @@ local get_damage_multiplier = function(incremental_damage, level)
     return (multipliers[level-1] / 100) * incremental_damage * settings.startup["enemyracemanager-damage-multipliers"].value
 end
 
-local get_quality_multiplier = function(level)
-    return (1 + GlobalConfig.BASE_QUALITY_MULITPLIER * level)
-end
-
 local get_health_mutiplier = function( incremental_health, level)
     return (multipliers[level-1] / 100) * incremental_health
 end

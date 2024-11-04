@@ -3,7 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 11/15/2022 9:44 PM
 ---
-local mod_gui = require("mod-gui")
 
 
 local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
@@ -177,17 +176,9 @@ end
 
 function Army_MainWindow.toggle_main_window(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-
-        if button_flow.erm_army_control_toggle == nil then
-            return
-        end
-
         if Army_MainWindow.is_hidden(owner) then
-            button_flow.erm_army_control_toggle.tooltip = { "gui-army.show-control" }
             Army_MainWindow.open_tab(owner)
         else
-            button_flow.erm_army_control_toggle.tooltip = { "gui-army.hide-control" }
             Army_MainWindow.hide(owner)
         end
     end
@@ -195,22 +186,7 @@ end
 
 function Army_MainWindow.toggle_close(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-        button_flow.erm_army_control_toggle.tooltip = { "gui-army.show-control" }
         Army_MainWindow.hide(owner)
-    end
-end
-
-function Army_MainWindow.update_overhead_button(player_index)
-    local owner = game.players[player_index]
-    local button_flow = mod_gui.get_button_flow(owner)
-
-    if owner and button_flow and not button_flow["erm_army_control_toggle"] then
-        if game.item_prototypes["erm_terran/command-center"] then
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { "gui-army.show-control" }, sprite = "item/erm_terran/command-center" }
-        else
-            button_flow.add { type = "sprite-button", name = "erm_army_control_toggle", tooltip = { "gui-army.show-control" }, sprite = "item/submachine-gun" }
-        end
     end
 end
 
@@ -244,8 +220,8 @@ end
 
 function Army_MainWindow.start_link(player)
     local player_data = SharedTabFunctions.get_player_tab_data(player)
-    local from_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.from)
-    local to_cc = ArmyTeleportationProcessor.getObjectByName(player_data.selected_cc.to)
+    local from_cc = ArmyTeleportationProcessor.get_object_by_name(player_data.selected_cc.from)
+    local to_cc = ArmyTeleportationProcessor.get_object_by_name(player_data.selected_cc.to)
     if from_cc and to_cc then
         ArmyTeleportationProcessor.link(from_cc, to_cc)
         player_data.success_message = { "gui-army.cc_linked_with", player_data.selected_cc.from, player_data.selected_cc.to }

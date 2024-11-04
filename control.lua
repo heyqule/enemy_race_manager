@@ -29,7 +29,7 @@ handler.add_lib(require("__enemyracemanager__/controllers/army_teleportation"))
 handler.add_lib(require("__enemyracemanager__/controllers/army_deployment"))
 
 --- GUIs
---require("__enemyracemanager__/controllers/gui")
+handler.add_lib(require("__enemyracemanager__/gui/events"))
 
 handler.add_lib(require("__enemyracemanager__/controllers/custom-input"))
 

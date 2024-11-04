@@ -53,7 +53,6 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(40, 15)
     data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(55, 20)
     data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(70, 25)
-    data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 30)
 
 
     -- Buff gun turret HP
@@ -151,3 +150,8 @@ data.raw["construction-robot"]["construction-robot"]["resistances"] = armor_chan
 data.raw["construction-robot"]["construction-robot"]["resistances"][4]["percent"] = 100
 data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resistance(75, 0)
 data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
+
+
+if mods['space-age'] then
+    data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 30)
+end

@@ -96,7 +96,8 @@ function BossDetailsWindow.show(player, race_name, boss_log)
     local entries_horizontal_flow = entries_top_flow.add { type = "flow", name = "entries_main_flow", direction = "horizontal", style = "inset_frame_container_horizontal_flow" }
     local list_box = entries_horizontal_flow.add {
         type = "list-box",
-        name = race_name .. "/erm_boss_detail_list_box"
+        name = race_name .. "/erm_boss_detail_list_box",
+        tags={filter_pattern=".*/erm_boss_detail_list_box"}
     }
     list_box.style.width = BossDetailsWindow.window_width * 0.35
     list_box.style.height = BossDetailsWindow.window_height - 80

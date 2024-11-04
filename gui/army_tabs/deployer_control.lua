@@ -79,6 +79,7 @@ function DeployerControlGUI.update(player)
         local sprite = filters.add {
             type = "sprite-button",
             name="army_deployer/filter_type/"..name,
+            tags={filter_pattern="army_deployer/filter_type/.*"},
             sprite = "recipe/" .. name,
             style = "frame_button",
             auto_toggle = true,
@@ -126,6 +127,7 @@ function DeployerControlGUI.update(player)
             sprite = deployer_table.add {
                 type = "sprite-button",
                 name = "army_deployer/open_map/"..unit_number,
+                tags={filter_pattern="army_deployer/open_map/.*"},
                 sprite = "recipe/" .. entity.name,
                 tooltip = { "gui-army.deployer_name_click",
                             entity.localised_name }
@@ -174,6 +176,7 @@ function DeployerControlGUI.update(player)
         local switch = deployer_table.add {
             type = "switch",
             name = "army_deployer/build_only/" .. entity.unit_number,
+            tags = {filter_pattern="army_deployer/build_only/.*"},
             allow_none_state = false,
             left_label_caption = "B/D",
             left_label_tooltip = { "gui-army.deployer_bd_tooltip" },
@@ -205,10 +208,10 @@ function DeployerControlGUI.update(player)
     batch_label.style.left_margin = 10
 
     local deploy_buttons = batch_options.add { type = "flow", direction = "horizontal" }
-    local turn_all_on = deploy_buttons.add { type = "button", name = "army_deployer/all/on", caption = { "gui-army.deployer_all_on" }, style = "green_button", tooltip = { "gui-army.deployer_all_on_tooltip" } }
+    local turn_all_on = deploy_buttons.add { type = "button", name = "army_deployer/all/on", tags={filter_pattern="army_deployer/all/.*"}, caption = { "gui-army.deployer_all_on" }, style = "green_button", tooltip = { "gui-army.deployer_all_on_tooltip" } }
     turn_all_on.style.left_margin = 10
     turn_all_on.style.width = 80
-    local turn_all_off = deploy_buttons.add { type = "button", name = "army_deployer/all/off", caption = { "gui-army.deployer_all_off" }, style = "red_button", tooltip = { "gui-army.deployer_all_off_tooltip" } }
+    local turn_all_off = deploy_buttons.add { type = "button", name = "army_deployer/all/off", tags={filter_pattern="army_deployer/all/.*"}, caption = { "gui-army.deployer_all_off" }, style = "red_button", tooltip = { "gui-army.deployer_all_off_tooltip" } }
     turn_all_off.style.left_margin = 10
     turn_all_off.style.width = 80
 end

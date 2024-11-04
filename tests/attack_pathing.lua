@@ -207,7 +207,7 @@ local function buildBaseWithWestDefense(options)
             surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
@@ -257,7 +257,7 @@ local function buildBaseWithWestDefenseNorthOpen(options)
             surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
@@ -307,7 +307,7 @@ local function buildBaseWithWestDefenseSouthOpen(options)
             surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.north
         end
         if y%2 == 0 then
@@ -357,7 +357,7 @@ local function buildBaseWithWestDefenseForBrutalForce(options)
             surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
@@ -407,7 +407,7 @@ local function buildBaseWithNorthDefenseForBrutalForce(options)
             surface.create_entity({name="gun-turret",position={x, (dimension * -1)+8}, force = "player"})
         end
         if x%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={x,(dimension * -1)+9}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={x,(dimension * -1)+9}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if x%2 == 0 then
@@ -452,7 +452,7 @@ local function buildBaseWithWestAerialDefenseForBrutalForce()
             surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+39,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then
@@ -501,7 +501,7 @@ local function buildBaseWithBackdoorOpen()
             surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
         end
         if y%2 == 0 then
-            local inserter = surface.create_entity({name="stack-inserter",position={(dimension * -1)+39,y}, force = "player"})
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
             inserter.direction = defines.direction.east
         end
         if y%2 == 0 then

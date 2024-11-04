@@ -94,7 +94,7 @@ end)
 it("Time base attack", function()
     async(10800)
     local force = game.forces['enemy']
-    force.set_evolution_factor(0.5, game.surfaces[1])
+    force.set_evolution_factor(0.35, game.surfaces[1])
     AttackGroupBeaconProcessor.init_index()
     local last_minute = 0
 

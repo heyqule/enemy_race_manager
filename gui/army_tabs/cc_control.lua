@@ -106,6 +106,7 @@ function CommandCenterControlGUI.update(player)
     local left_surface_filter = left_listing.add {
         type = "drop-down",
         name="army_cc/filter_from_surface",
+        tags={filter_pattern="army_cc/filter_.*_surface"},
         items = windows_tab_data.cc_surfaces_selection,
         selected_index = windows_tab_data.cc_surfaces_select_from_index or 1,
     }
@@ -113,7 +114,8 @@ function CommandCenterControlGUI.update(player)
 
     local cc_from = left_listing.add {
         type = "list-box",
-        name = "army_cc/cc_select_from"
+        name = CommandCenterControlGUI.cc_to_selector,
+        tags={filter_pattern="army_cc/cc_select_.*"}
     }
     cc_from.style.width = 175
     cc_from.items = from_commandcenters
@@ -214,10 +216,10 @@ function CommandCenterControlGUI.update(player)
         direction = "horizontal"
     }
 
-    local unlink_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.stop_link_button, caption = { "gui-army.cc_unlink" }, style = "red_button" }
+    local unlink_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.stop_link_button, tags={filter_pattern="army_cc/.*_link"}, caption = { "gui-army.cc_unlink" }, style = "red_button" }
     unlink_button.tooltip = "Stop Communication"
 
-    local link_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.start_link_button, caption = { "gui-army.cc_link" }, style = "green_button" }
+    local link_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.start_link_button, tags={filter_pattern="army_cc/.*_link"}, caption = { "gui-army.cc_link" }, style = "green_button" }
     link_button.style.left_margin = 165
     link_button.tooltip = "Start Communication"
 
@@ -306,6 +308,7 @@ function CommandCenterControlGUI.update(player)
     local right_surface_filter = right_listing.add {
         type = "drop-down",
         name="army_cc/filter_to_surface",
+        tags={filter_pattern="army_cc/filter_.*_surface"},
         items = windows_tab_data.cc_surfaces_selection,
         selected_index = windows_tab_data.cc_surfaces_select_to_index or 1,
     }
@@ -313,7 +316,8 @@ function CommandCenterControlGUI.update(player)
 
     local cc_to = right_listing.add {
         type = "list-box",
-        name = CommandCenterControlGUI.cc_to_selector
+        name = CommandCenterControlGUI.cc_to_selector,
+        tags={filter_pattern="army_cc/cc_select_.*"}
     }
     cc_to.style.width = 175
     cc_to.items = to_commandcenters
