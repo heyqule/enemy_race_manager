@@ -2,6 +2,23 @@ require "global"
 require("setting-constants")
 
 data:extend {
+    {
+        type = "string-setting",
+        name = "enemyracemanager-nauvis-enemy",
+        description = "enemyracemanager-nauvis-enemy",
+        setting_type = "startup",
+        default_value = 'erm_vanilla',
+        allowed_values = { NAUVIS_MIXED, 'erm_vanilla' },
+        order = "enemyracemanager-100"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-factoriopedia-level",
+        default_value = 1,
+        setting_type = "startup",
+        allowed_values = { 1, 2, 3, 4, 5 },
+        order = "enemyracemanager-101"
+    },
     --- Biter related
     {
         type = "int-setting",
@@ -73,15 +90,6 @@ data:extend {
         order = "enemyracemanager-117"
     },
     --- Startup: Map Generation
-    {
-        type = "string-setting",
-        name = "enemyracemanager-nauvis-enemy",
-        description = "enemyracemanager-nauvis-enemy",
-        setting_type = "startup",
-        default_value = 'erm_vanilla',
-        allowed_values = { NAUVIS_MIXED, 'erm_vanilla' },
-        order = "enemyracemanager-201"
-    },
 
     --
     --{

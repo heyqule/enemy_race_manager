@@ -12,7 +12,7 @@ require "prototypes.base-units.distractor"
 require "prototypes.base-units.construction"
 require "prototypes.base-units.logistic"
 
---require "prototypes.base-spawner.roboport"
+require "prototypes.base-spawner.roboport"
 
 data.erm_registered_race = data.erm_registered_race or {}
 data.erm_spawn_specs = data.erm_spawn_specs or {}

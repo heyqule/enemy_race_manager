@@ -98,3 +98,8 @@ if settings.startup["enemyracemanager-enable-bitters"].value and settings.startu
         entity_filter = "cold",
     })
 end
+
+
+if GlobalConfig.nauvis_enemy_is_biter() then
+    data.raw.planet.nauvis.map_gen_settings.autoplace_controls['enemy-base'] = {}
+end

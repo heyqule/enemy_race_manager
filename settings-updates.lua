@@ -16,3 +16,7 @@ if mods['space-age'] then
         end
     end
 end
+
+if DEBUG_MODE then
+    data.raw["int-setting"]['enemyracemanager-factoriopedia-level'].default_value = 5
+end

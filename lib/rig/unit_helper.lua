@@ -39,14 +39,14 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
 end
 
 -- Unit Health
-function ERM_UnitHelper.get_building_health(base_health, incremental_health, level, reduce_effect)
+function ERM_UnitHelper.get_building_health(base_health, incremental_health, level, is_turret)
     if level == 1 then
         return base_health
     end
     --- Spawner has evolution based health increase, turrets don't
-    local reduce_effect_value = 1
-    if reduce_effect then
-        reduce_effect_value = 2
+    local reduce_effect_value = 2
+    if is_turret then
+        reduce_effect_value = 1
     end
     local multiplier = math.max(get_health_mutiplier(incremental_health, level) / reduce_effect_value, 2)
     local final_health = math.floor(base_health * multiplier)
@@ -60,7 +60,7 @@ function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance ,
     if level == 1 then
         return base_resistance
     end
-    local max_resist = bypass_max_resist or max_resistance_percentage
+
     return math.min(math.floor(base_resistance + (incremental_resistance * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC)))), base_resistance + incremental_resistance, max_resistance_percentage)
 end
 
@@ -70,11 +70,11 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_damage, level)
     if level == 1 then
         damage = base_dmg
     else
-        damage = base_dmg * get_damage_multiplier(incremental_damage, level)
+        damage = base_dmg + get_damage_multiplier(incremental_damage, level)
     end
 
     if settings.startup["enemyracemanager-free-for-all"].value then
-        damage = damage * GlobalConfig.FFA_MULTIPLIER
+        damage = damage + GlobalConfig.FFA_MULTIPLIER
     end
 
     return damage
@@ -112,7 +112,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, level)
         biter["attack_parameters"]["damage_modifier"] = 1
     end
 
-    biter["attack_parameters"]["damage_modifier"] = ERM_UnitHelper.get_damage(biter["attack_parameters"]["damage_modifier"], biter["attack_parameters"]["damage_modifier"], level)
+    biter["attack_parameters"]["damage_modifier"] = ERM_UnitHelper.get_damage(biter["attack_parameters"]["damage_modifier"], 0.5, level)
 
     if settings.startup["enemyracemanager-free-for-all"].value then
         biter["attack_parameters"]["damage_modifier"] = biter["attack_parameters"]["damage_modifier"] * (GlobalConfig.FFA_MULTIPLIER / 10)

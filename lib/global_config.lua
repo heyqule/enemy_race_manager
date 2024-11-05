@@ -117,6 +117,8 @@ local refreshable_settings = {
     global = {
         "enemyracemanager-max-gathering-groups",
         "enemyracemanager-max-group-size",
+        "enemyracemanager-difficulty",
+        "enemyracemanager-advancement",
         "enemyracemanager-build-style",
         "enemyracemanager-build-formation",
         "enemyracemanager-attack-point-spawner-kills-deduction",

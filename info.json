@@ -8,12 +8,10 @@
   "factorio_version": "2.0",
   "dependencies": [
     "base >= 2.0.0",
-    "stdlib >= 2.0.0",
     "enemyracemanager_assets >= 2.0.0",
     "erm_libs >= 2.0.0",
     "~zerm_postprocess >= 2.0.0",
     "?Krastorio2",
-    "?IndustrialRevolution",
     "?IndustrialRevolution3",
     "?ArmouredBiters",
     "?Explosive_biters",

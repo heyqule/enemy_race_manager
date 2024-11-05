@@ -32,6 +32,7 @@ if GlobalConfig.nauvis_enemy_is_biter() then
             nauvis_autocontrols[key] = nil
         end
     end
+
     nauvis_autocontrols['enemy-base'] = {}
 
     print('ERM_VANILLA: Nauvis AutoControl:')

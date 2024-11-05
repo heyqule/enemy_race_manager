@@ -54,7 +54,6 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         pollution= ERM_UnitHelper.get_pollution_attack(biter["absorptions_to_join_attack"]["pollution"], level)
     }
     if string.find(type, "spitter") then
-        biter["attack_parameters"]["damage_modifier"] = 0.33 * biter["attack_parameters"]["damage_modifier"]
         local attack_range = ERM_UnitHelper.get_attack_range(level)
         local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
         biter["attack_parameters"]["range"] = attack_range
@@ -75,15 +74,15 @@ for i = 1, max_level do
 
     data:extend({ makeLevelEnemy(i, "small-spitter") })
 
-    data:extend({ makeLevelEnemy(i, "medium-biter", 2) })
+    data:extend({ makeLevelEnemy(i, "medium-biter" ) })
 
-    data:extend({ makeLevelEnemy(i, "medium-spitter", 2) })
+    data:extend({ makeLevelEnemy(i, "medium-spitter") })
 
-    data:extend({ makeLevelEnemy(i, "big-biter", 4) })
+    data:extend({ makeLevelEnemy(i, "big-biter", 3) })
 
-    data:extend({ makeLevelEnemy(i, "big-spitter",4 ) })
+    data:extend({ makeLevelEnemy(i, "big-spitter",3 ) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-biter", 5) })
+    data:extend({ makeLevelEnemy(i, "behemoth-biter", 6) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 5) })
+    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 6) })
 end

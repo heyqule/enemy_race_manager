@@ -17,13 +17,14 @@ for _, size in pairs({"behemoth","big","medium","small"}) do
     data.raw["unit"][size.."-spitter"]["hidden_in_factoriopedia"] = true
 end
 
+local factoriopedia_level = settings.startup["enemyracemanager-factoriopedia-level"].value
+
 --- Add "get-by-unit-number" flag and remove high level enities from factoriopedia
 for _, v in pairs(data.raw["unit-spawner"]) do
     if string.find(v.name, "--", 1, true) then
-        table.insert(v.flags, "get-by-unit-number")
         local nameToken = String.split(v.name, "--")
         local level = tonumber(nameToken[3])
-        if level and level > 1 then
+        if level and level ~= factoriopedia_level then
             DebugHelper.print("Hiding Factoriopedia:" .. v.name)
             data.raw["unit-spawner"][v.name]["hidden_in_factoriopedia"] = true
         end
@@ -33,9 +34,8 @@ end
 for _, v in pairs(data.raw["turret"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
-        table.insert(v.flags, "get-by-unit-number")
         local level = tonumber(nameToken  [3])
-        if level and level > 1 then
+        if level and level ~= factoriopedia_level then
             DebugHelper.print("Hiding Factoriopedia:" .. v.name)
             data.raw["turret"][v.name]["hidden_in_factoriopedia"] = true
         end
@@ -45,9 +45,8 @@ end
 for _, v in pairs(data.raw["unit"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
-        table.insert(v.flags, "get-by-unit-number")
         local level = tonumber(nameToken[3])
-        if level and level > 1 then
+        if level and level ~= factoriopedia_level then
             DebugHelper.print("Hiding Factoriopedia:" .. v.name)
             data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
         end
@@ -60,7 +59,7 @@ if mods['space-age'] then
             table.insert(v.flags, "get-by-unit-number")
             local nameToken = String.split(v.name, "--")
             local level = tonumber(nameToken[3])
-            if level and level > 1 then
+            if level and level ~= factoriopedia_level then
                 DebugHelper.print("Hiding Factoriopedia:" .. v.name)
                 data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
             end
@@ -69,10 +68,9 @@ if mods['space-age'] then
 
     for _, v in pairs(data.raw["segmented-unit"]) do
         if string.find(v.name, "--", 1, true) then
-            table.insert(v.flags, "get-by-unit-number")
             local nameToken = String.split(v.name, "--")
             local level = tonumber(nameToken[3])
-            if level and level > 1 then
+            if level and level ~= factoriopedia_level then
                 DebugHelper.print("Hiding Factoriopedia:" .. v.name)
                 data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
             end

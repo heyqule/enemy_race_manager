@@ -17,7 +17,7 @@ local enemy_autoplace = require ("__enemyracemanager__/prototypes/enemy-autoplac
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
-local max_worm_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
+local max_worm_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
 
 
 -- Handles acid and poison resistance
@@ -191,8 +191,8 @@ for i = 1, max_level do
 
     data:extend({ makeLevelWorm(i, "small-worm-turret", 2, 0) })
     data:extend({ makeLevelWorm(i, "medium-worm-turret", 1, 2) })
-    data:extend({ makeLevelWorm(i, "big-worm-turret", 2, 5) })
-    data:extend({ makeLevelWorm(i, "behemoth-worm-turret", 1, 8) })
+    data:extend({ makeLevelWorm(i, "big-worm-turret", 3, 5) })
+    data:extend({ makeLevelWorm(i, "behemoth-worm-turret", 4, 8) })
 
-    data:extend({ makeShortRangeLevelWorm(i, "big-worm-turret", 2) })
+    data:extend({ makeShortRangeLevelWorm(i, "big-worm-turret", 5) })
 end

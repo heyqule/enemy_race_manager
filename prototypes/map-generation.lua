@@ -84,18 +84,6 @@ for _, v in pairs(data.raw["turret"]) do
     end
 end
 
-for _, v in pairs(data.raw["unit"]) do
-    if string.find(v.name, "--", 1, true) then
-        local nameToken = String.split(v.name, "--")
-        table.insert(v.flags, "get-by-unit-number")
-        local level = tonumber(nameToken[3])
-        if level and level > 1 then
-            DebugHelper.print("Hiding:" .. v.name)
-            data.raw["unit"][v.name]["hidden_in_factoriopedia"] = true
-        end
-    end
-end
-
 
 --- Handle 2 way and 4 way split.  To be refactor
 
