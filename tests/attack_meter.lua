@@ -69,7 +69,7 @@ end)
 
 it("Base evolution - kills-deduction true", function()
     async(7200)
-    storage.settings["enemyracemanager-evolution-point-spawner-kills-deduction"] = true
+    storage.settings["enemyracemanager-attack-point-spawner-kills-deduction"] = true
     local surface = game.surfaces[1]
     AttackGroupBeaconProcessor.init_index()
 
@@ -86,7 +86,7 @@ it("Base evolution - kills-deduction true", function()
         --- technically it's -25000. But it doesn't dip into negative territory.
         --- anything under 1000 as rounding error.
         assert(storage.race_settings[race_name].attack_meter_total < 1000,"spawner-kills-deduction true")
-        storage.settings["enemyracemanager-evolution-point-spawner-kills-deduction"] = false
+        storage.settings["enemyracemanager-attack-point-spawner-kills-deduction"] = false
         done()
     end)
 end)

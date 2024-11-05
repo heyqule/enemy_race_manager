@@ -119,7 +119,7 @@ local refreshable_settings = {
         "enemyracemanager-max-group-size",
         "enemyracemanager-build-style",
         "enemyracemanager-build-formation",
-        "enemyracemanager-evolution-point-spawner-kills-deduction",
+        "enemyracemanager-attack-point-spawner-kills-deduction",
         "enemyracemanager-attack-meter-enable",
         "enemyracemanager-attack-meter-threshold",
         "enemyracemanager-attack-meter-threshold-deviation",
@@ -333,7 +333,7 @@ function GlobalConfig.super_weapon_counter_attack_enable()
 end
 
 function GlobalConfig.spawner_kills_deduct_evolution_points()
-    return get_global_setting_value("enemyracemanager-evolution-point-spawner-kills-deduction")
+    return get_global_setting_value("enemyracemanager-attack-point-spawner-kills-deduction")
 end
 
 function GlobalConfig.environmental_attack_enable()

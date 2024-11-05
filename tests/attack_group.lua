@@ -62,12 +62,7 @@ end
         storage.race_settings[race_name].tier = 3
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
-        -- @TODO remove test speed changes
-        --after_ticks(10000, function()
-        --    game.speed = 1
-        --end)
         after_ticks(14400, function()
-            --game.speed = 1000
             assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
 
             local key = next(storage.erm_unit_groups)

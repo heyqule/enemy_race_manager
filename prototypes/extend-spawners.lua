@@ -37,6 +37,23 @@ local base_cold_resistance = 25
 local incremental_cold_resistance = 50
 
 
+-- Handles acid and poison resistance
+local spawner_base_acid_resistance = 25
+local spawner_incremental_acid_resistance = 15
+-- Handles physical resistance
+local spawner_base_physical_resistance = 0
+local spawner_incremental_physical_resistance = 45
+-- Handles fire and explosive resistance
+local spawner_base_fire_resistance = 10
+local spawner_incremental_fire_resistance = 30
+-- Handles laser and electric resistance
+local spawner_base_electric_resistance = 0
+local spawner_incremental_electric_resistance = 40
+-- Handles cold resistance
+local spawner_base_cold_resistance = 20
+local spawner_incremental_cold_resistance = 15
+
+
 -- Add new spawners
 function makeLevelSpawners(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
@@ -47,14 +64,14 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_hitpoint_multiplier / health_cut_ratio, level)
     spawner["resistances"] = {
-        { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
-        { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
-        { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
-        { type = "fire", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-        { type = "explosion", percent = ERM_UnitHelper.get_resistance(base_fire_resistance, incremental_fire_resistance, level) },
-        { type = "laser", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-        { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
-        { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
+        { type = "acid", percent = ERM_UnitHelper.get_resistance(spawner_base_acid_resistance, spawner_incremental_acid_resistance, level) },
+        { type = "poison", percent = ERM_UnitHelper.get_resistance(spawner_base_acid_resistance, spawner_incremental_acid_resistance, level) },
+        { type = "physical", percent = ERM_UnitHelper.get_resistance(spawner_base_physical_resistance, spawner_incremental_physical_resistance, level) },
+        { type = "fire", percent = ERM_UnitHelper.get_resistance(spawner_base_fire_resistance, spawner_incremental_fire_resistance, level) },
+        { type = "explosion", percent = ERM_UnitHelper.get_resistance(spawner_base_fire_resistance, spawner_incremental_fire_resistance, level) },
+        { type = "laser", percent = ERM_UnitHelper.get_resistance(spawner_base_electric_resistance, spawner_incremental_electric_resistance, level) },
+        { type = "electric", percent = ERM_UnitHelper.get_resistance(spawner_base_electric_resistance, spawner_incremental_electric_resistance, level) },
+        { type = "cold", percent = ERM_UnitHelper.get_resistance(spawner_base_cold_resistance, spawner_incremental_cold_resistance, level) }
     }
     spawner["healing_per_tick"] = ERM_UnitHelper.get_building_healing(original_hitpoint, max_hitpoint_multiplier, level)
     spawner["spawning_cooldown"] = { 600, 300 }
