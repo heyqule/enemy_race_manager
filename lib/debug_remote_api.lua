@@ -94,8 +94,10 @@ end
 
 --- Usage: remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 500000)
 function Debug_RemoteAPI.add_points_to_attack_meter(value)
-    for name, _ in pairs(storage.race_settings) do
-        RaceSettingsHelper.add_to_attack_meter(name, value)
+    for name, settings in pairs(storage.race_settings) do
+        if settings.attack_meter then
+            RaceSettingsHelper.add_to_attack_meter(name, value)
+        end            
     end
 end
 

@@ -21,8 +21,7 @@ local DOUBLE_BOX_WIDTH = 64;
 
 local unset_indicator = function(teleport)
     if teleport and teleport.indicator then
-        rendering.destroy(teleport.indicator)
-        teleport.indicator = nil
+        teleport.indicator.destroy()
     end
 end
 

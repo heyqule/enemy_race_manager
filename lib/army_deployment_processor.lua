@@ -42,7 +42,7 @@ local add_statistic = function(entity, item_name, count)
     local force = entity.force;
     if force then
         if statistics[force.name] == nil then
-            statistics[force.name] = force.item_production_statistics
+            statistics[force.name] = force.get_item_production_statistics(entity.surface)
         end
         statistics[force.name].on_flow(item_name, count * -1)
     end
@@ -58,7 +58,9 @@ local spawn_unit = function(deployer_data)
         if entity.energy > entity.electric_buffer_size * 0.9 then
             local inventory = entity.get_inventory(defines.inventory.assembling_machine_output)
             local contents = inventory.get_contents()
-            for unit_name, count in pairs(contents) do
+            for key, data in pairs(contents) do
+                local unit_name = data.name
+                local count = data.count
                 if registered_units[unit_name] and count > 0 and
                         ArmyPopulationProcessor.pop_count(force) + registered_units[unit_name] <= ArmyPopulationProcessor.max_pop(force) and
                         ArmyPopulationProcessor.is_under_max_auto_deploy(force, unit_name)
@@ -99,13 +101,11 @@ local init_active_data = function(force)
 end
 
 local remove_rallypoint_drawing = function(data)
-    if data.rally_draw_link and rendering.is_valid(data.rally_draw_link) then
-        rendering.destroy(data.rally_draw_link)
-        data.rally_draw_link = nil
+    if data.rally_draw_link then
+        data.rally_draw_link.destroy()
     end
-    if data.rally_draw_flag and rendering.is_valid(data.rally_draw_flag) then
-        rendering.destroy(data.rally_draw_flag)
-        data.rally_draw_flag = nil
+    if data.rally_draw_flag then
+        data.rally_draw_flag.destroy()
     end
 end
 
@@ -176,9 +176,9 @@ function ArmyDeploymentProcessor.add_entity(entity)
         build_only = false,
         -- hold position
         rally_point = nil,
-        -- holds draw_line ID, remove when unset
+        -- holds draw_line luaRenderObj, remove when unset
         rally_draw_link = nil,
-        -- holds draw_sprite ID, remove when unset
+        -- holds draw_sprite luaRenderObj, remove when unset
         rally_draw_flag = nil
     }
 
