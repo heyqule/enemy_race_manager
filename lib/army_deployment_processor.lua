@@ -12,9 +12,9 @@ local ArmyDeploymentProcessor = {}
 --- Internal unit spawn cooldown for each deployer (in tick)
 local spawn_cooldown = 300
 --- Internal retry before removing the deployer from active list
-local retry_threshold = settings.startup["enemyracemanager-unit-framework-timeout"].value * 12
+local retry_threshold = settings.startup["enemyracemanager-unit-deployer-timeout"].value * 12
 
-local start_with_auto_deploy = settings.startup["enemyracemanager-unit-framework-start-auto-deploy"].value
+local start_with_auto_deploy = settings.startup["enemyracemanager-unit-deployer-auto-start"].value
 
 local process_deployer_queue = function(event)
     ArmyDeploymentProcessor.deploy()

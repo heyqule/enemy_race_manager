@@ -25,9 +25,25 @@ local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 require("global")
 
-if GlobalConfig.mapgen_is_mixed() == false then
+if GlobalConfig.nauvis_enemy_is_biter() then
+    local nauvis_autocontrols = data.raw.planet.nauvis.map_gen_settings.autoplace_controls
+    for key, autoplace in pairs(nauvis_autocontrols) do
+        if string.find(key,"enemy_base", 1, true) or string.find(key,"enemy-base", 1, true)then
+            nauvis_autocontrols[key] = nil
+        end
+    end
+    nauvis_autocontrols['enemy-base'] = {}
+
+    print('ERM_VANILLA: Nauvis AutoControl:')
+    print(serpent.block(data.raw.planet.nauvis.map_gen_settings.autoplace_controls))    
+
     return false
+elseif GlobalConfig.nauvis_enemy_is_mixed() == false then
+        print('ERM_VANILLA: Nauvis AutoControl IS NOT MIXED')
+        return false
 end
+
+print('ERM_VANILLA: Nauvis AutoControl IS MIXED')
 
 local statistic_separator = "::";
 

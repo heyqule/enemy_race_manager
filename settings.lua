@@ -31,25 +31,6 @@ data:extend {
         default_value = VANILLA_MAP_COLOR,
         order = "enemyracemanager-1001"
     },
-    --- @deprecated
-    --{
-    --    type = "string-setting",
-    --    name = "enemyracemanager-max-level",
-    --    description = "enemyracemanager-max-level",
-    --    setting_type = "startup",
-    --    default_value = MAX_LEVEL_10,
-    --    allowed_values = { MAX_LEVEL_5, MAX_LEVEL_10, MAX_LEVEL_15, MAX_LEVEL_20 },
-    --    order = "enemyracemanager-110"
-    --},
-    --{
-    --    type = "string-setting",
-    --    name = "enemyracemanager-evolution-point-ll-express",
-    --    description = "enemyracemanager-evolution-point-ll-express",
-    --    setting_type = "startup",
-    --    order = "enemyracemanager-111",
-    --    default_value = LEVEL_MODE_REGULAR,
-    --    allowed_values = { LEVEL_MODE_REGULAR, LEVEL_MODE_EXPRESS, LEVEL_MODE_SHINKANSEN},
-    --},
 
     {
         type = "int-setting",
@@ -94,106 +75,117 @@ data:extend {
     --- Startup: Map Generation
     {
         type = "string-setting",
-        name = "enemyracemanager-mapping-method",
-        description = "enemyracemanager-mapping-method",
+        name = "enemyracemanager-nauvis-enemy",
+        description = "enemyracemanager-nauvis-enemy",
         setting_type = "startup",
-        default_value = MAP_GEN_DEFAULT,
-        allowed_values = { MAP_GEN_DEFAULT, MAP_GEN_2_RACES_SPLIT, MAP_GEN_4_RACES_SPLIT, MAP_GEN_1_RACE_PER_SURFACE },
+        default_value = 'erm_vanilla',
+        allowed_values = { NAUVIS_MIXED, 'erm_vanilla' },
         order = "enemyracemanager-201"
     },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-2way-group-enemy-orientation",
-        description = "enemyracemanager-2way-group-enemy-orientation",
-        setting_type = "startup",
-        default_value = X_AXIS,
-        order = "enemyracemanager-205",
-        allowed_values = { X_AXIS, Y_AXIS }
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-2way-group-split-point",
-        description = "enemyracemanager-2way-group-split-point",
-        setting_type = "startup",
-        default_value = 0,
-        minimum_value = -900000,
-        maximum_value = 900000,
-        order = "enemyracemanager-206",
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-2way-group-enemy-positive",
-        description = "enemyracemanager-2way-group-enemy-positive",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-207",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-2way-group-enemy-negative",
-        description = "enemyracemanager-2way-group-enemy-negative",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-208",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-4way-x-axis",
-        description = "enemyracemanager-4way-x-axis",
-        setting_type = "startup",
-        default_value = 0,
-        minimum_value = -900000,
-        maximum_value = 900000,
-        order = "enemyracemanager-220",
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-4way-y-axis",
-        description = "enemyracemanager-4way-y-axis",
-        setting_type = "startup",
-        default_value = 0,
-        minimum_value = -900000,
-        maximum_value = 900000,
-        order = "enemyracemanager-221",
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-4way-top-left",
-        description = "enemyracemanager-4way-top-left",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-222",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-4way-top-right",
-        description = "enemyracemanager-4way-top-right",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-223",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-4way-bottom-right",
-        description = "enemyracemanager-4way-bottom-right",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-224",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-4way-bottom-left",
-        description = "enemyracemanager-4way-bottom-left",
-        setting_type = "startup",
-        default_value = MOD_NAME,
-        order = "enemyracemanager-225",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
-    },
+
+    --
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-mapping-method",
+    --    description = "enemyracemanager-mapping-method",
+    --    setting_type = "startup",
+    --    default_value = MAP_GEN_DEFAULT,
+    --    allowed_values = { MAP_GEN_DEFAULT, MAP_GEN_2_RACES_SPLIT, MAP_GEN_4_RACES_SPLIT, MAP_GEN_1_RACE_PER_SURFACE },
+    --    order = "enemyracemanager-201"
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-2way-group-enemy-orientation",
+    --    description = "enemyracemanager-2way-group-enemy-orientation",
+    --    setting_type = "startup",
+    --    default_value = X_AXIS,
+    --    order = "enemyracemanager-205",
+    --    allowed_values = { X_AXIS, Y_AXIS }
+    --},
+    --{
+    --    type = "int-setting",
+    --    name = "enemyracemanager-2way-group-split-point",
+    --    description = "enemyracemanager-2way-group-split-point",
+    --    setting_type = "startup",
+    --    default_value = 0,
+    --    minimum_value = -900000,
+    --    maximum_value = 900000,
+    --    order = "enemyracemanager-206",
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-2way-group-enemy-positive",
+    --    description = "enemyracemanager-2way-group-enemy-positive",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-207",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-2way-group-enemy-negative",
+    --    description = "enemyracemanager-2way-group-enemy-negative",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-208",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
+    --{
+    --    type = "int-setting",
+    --    name = "enemyracemanager-4way-x-axis",
+    --    description = "enemyracemanager-4way-x-axis",
+    --    setting_type = "startup",
+    --    default_value = 0,
+    --    minimum_value = -900000,
+    --    maximum_value = 900000,
+    --    order = "enemyracemanager-220",
+    --},
+    --{
+    --    type = "int-setting",
+    --    name = "enemyracemanager-4way-y-axis",
+    --    description = "enemyracemanager-4way-y-axis",
+    --    setting_type = "startup",
+    --    default_value = 0,
+    --    minimum_value = -900000,
+    --    maximum_value = 900000,
+    --    order = "enemyracemanager-221",
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-4way-top-left",
+    --    description = "enemyracemanager-4way-top-left",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-222",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-4way-top-right",
+    --    description = "enemyracemanager-4way-top-right",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-223",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-4way-bottom-right",
+    --    description = "enemyracemanager-4way-bottom-right",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-224",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
+    --{
+    --    type = "string-setting",
+    --    name = "enemyracemanager-4way-bottom-left",
+    --    description = "enemyracemanager-4way-bottom-left",
+    --    setting_type = "startup",
+    --    default_value = MOD_NAME,
+    --    order = "enemyracemanager-225",
+    --    allowed_values = { RACE_EMPTY, MOD_NAME }
+    --},
 
     --- Startup: Defense
     {
@@ -252,8 +244,8 @@ data:extend {
     --- Startup: RTS Unit framework
     {
         type = "int-setting",
-        name = "enemyracemanager-unit-framework-timeout",
-        description = "enemyracemanager-unit-framework-timeout",
+        name = "enemyracemanager-unit-deployer-timeout",
+        description = "enemyracemanager-unit-deployer-timeout",
         setting_type = "startup",
         default_value = 15,
         allowed_values = { 5, 15, 30, 60, 1440, 43200 },
@@ -261,7 +253,7 @@ data:extend {
     },
     {
         type = "bool-setting",
-        name = "enemyracemanager-unit-framework-start-auto-deploy",
+        name = "enemyracemanager-unit-deployer-auto-start",
         description = "enemyracemanager-unit-start-auto-deploy",
         setting_type = "startup",
         default_value = false,
