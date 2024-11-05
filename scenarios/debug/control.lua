@@ -23,6 +23,8 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.build_base(surface, blueprint_string, -50, -50)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_attack_points()
+    scenarios_helper.set_attack_points()
+    scenarios_helper.set_attack_points()
     scenarios_helper.set_enemy_params(enemy_level, 3, 1)
     scenarios_helper.set_game_speed(1)
 

@@ -35,8 +35,8 @@ local remove_deployer = function(event)
     end
 end
 
-local ArmyDeployment = {}
-ArmyDeployment.events = {
+local ArmyDeploymentController = {}
+ArmyDeploymentController.events = {
     [defines.events.script_raised_revive] = add_deployer,
     [defines.events.script_raised_built] = add_deployer,
     [defines.events.on_built_entity] = add_deployer,
@@ -46,4 +46,4 @@ ArmyDeployment.events = {
     [defines.events.on_player_mined_entity] = remove_deployer,
     [defines.events.on_robot_mined_entity] = remove_deployer,
 }
-return ArmyDeployment
+return ArmyDeploymentController

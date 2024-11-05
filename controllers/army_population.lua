@@ -22,7 +22,7 @@ end
 
 local ArmyPopulationController = {}
 
-ArmyPopulation.event = {
+ArmyPopulationController.events = {
     [defines.events.on_research_finished] = reseach_pop_update,
     [defines.events.on_research_reversed] = reseach_pop_update,
     [defines.events.script_raised_destroy] = function(event)

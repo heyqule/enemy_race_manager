@@ -36,8 +36,8 @@ local remove_command_center = function(event)
 end
 
 
-local ArmyTeleportation = {}
-ArmyTeleportation.events = {
+local ArmyTeleportationController = {}
+ArmyTeleportationController.events = {
     [defines.events.script_raised_revive] = add_command_center,
     [defines.events.script_raised_built] = add_command_center,
     [defines.events.on_built_entity] = add_command_center,
@@ -47,4 +47,4 @@ ArmyTeleportation.events = {
     [defines.events.on_player_mined_entity] = remove_command_center,
     [defines.events.on_robot_mined_entity] = remove_command_center,
 }
-return ArmyTeleportation
+return ArmyTeleportationController

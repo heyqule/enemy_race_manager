@@ -180,7 +180,7 @@ function QualityProcessor.roll(entity)
     local force = entity.force
     local surface = entity.surface
 
-    if not storage.quality_on_planet[force.name] or storage.quality_on_planet[force.name][surface.name]
+    if not storage.quality_on_planet[force.name] or not storage.quality_on_planet[force.name][surface.name]
     then
         QualityProcessor.calculate_quality_points()
     end
@@ -224,21 +224,23 @@ function QualityProcessor.roll(entity)
 
     if can_spawn then
         local position = entity.position
+        local force = entity.force
+        local origin_commandable = entity.commandable
+        -- destroy and doesn't raise any events since it's replacement.
+        entity.destroy()
+
         is_running_roll = true
         local new_unit = surface.create_entity {
             name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
-            force = entity.force,
+            force = force,
             position = position,
             create_build_effect_smoke = false,
         }
 
-        -- Join group if needed
-        --if entity.commandable.is_unit_group then
-        --    new_unit.add_member(new_unit)
-        --end
-
-        -- destroy and doesn't raise any events since it's replacement.
-        entity.destroy()
+        --Join group if needed
+        if origin_commandable and origin_commandable.is_unit_group then
+            origin_commandable.add_member(new_unit)
+        end
     end
 end
 
