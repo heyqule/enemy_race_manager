@@ -83,7 +83,7 @@ for i = 1, max_level do
 
     data:extend({ makeLevelEnemy(i, "big-spitter",4 ) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-biter", 8) })
+    data:extend({ makeLevelEnemy(i, "behemoth-biter", 5) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 8) })
+    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 5) })
 end

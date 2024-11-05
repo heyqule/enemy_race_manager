@@ -340,25 +340,6 @@ data:extend {
         },
         order = "enemyracemanager-101"
     },
-    --- Evolution Point and level up ---
-    --{
-    --    type = "double-setting",
-    --    name = "enemyracemanager-evolution-point-multipliers",
-    --    description = "enemyracemanager-evolution-point-multipliers",
-    --    setting_type = "runtime-global",
-    --    default_value = 1,
-    --    minimum_value = 0.1,
-    --    maximum_value = 10,
-    --    order = "enemyracemanager-201"
-    --},
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-evolution-point-spawner-kills-deduction",
-        description = "enemyracemanager-evolution-point-spawner-kills-deduction",
-        setting_type = "runtime-global",
-        default_value = false,
-        order = "enemyracemanager-202"
-    },
     --- Attack Meters and custom attack groups ---
     {
         type = "bool-setting",
@@ -399,6 +380,14 @@ data:extend {
     },
     {
         type = "bool-setting",
+        name = "enemyracemanager-attack-point-spawner-kills-deduction",
+        description = "enemyracemanager-attack-point-spawner-kills-deduction",
+        setting_type = "runtime-global",
+        default_value = false,
+        order = "enemyracemanager-304"
+    },
+    {
+        type = "bool-setting",
         name = "enemyracemanager-rocket-attack-point-enable",
         description = "enemyracemanager-rocket-attack-point-enable",
         setting_type = "runtime-global",
@@ -410,8 +399,8 @@ data:extend {
         name = "enemyracemanager-rocket-attack-point",
         description = "enemyracemanager-rocket-attack-point",
         setting_type = "runtime-global",
-        default_value = 200,
-        minimum_value = 100,
+        default_value = 50,
+        minimum_value = 10,
         maximum_value = 1000,
         order = "enemyracemanager-311"
     },

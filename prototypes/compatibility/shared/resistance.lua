@@ -15,6 +15,16 @@ local damage_types = {
     { "plasma", 5, 85 }
 }
 
+local spawner_damage_types = {
+    -- K2
+    { "kr-explosion", 10, 30 },
+    { "radioactive", 5, 35 },
+    -- Bob Warfare
+    { "bob-pierce", 10, 30 },
+    { "plasma", 5, 30 }
+}
+
+
 -- max resist 75
 local controlable_subgroups = {
     ["erm_controllable_units"] = true
@@ -39,6 +49,19 @@ local set_resistance = function(unit)
     end
 end
 
+local set_spawner_resistance = function(unit)
+    if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
+        local name = ForceHelper.split_name(unit.name)
+        for _, damage_type in pairs(spawner_damage_types) do
+            if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
+                table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            end
+        end
+    end
+end
+
+
+
 for _, unit in pairs(data.raw["unit"]) do
     set_resistance(unit)
 end
@@ -48,7 +71,7 @@ for _, unit in pairs(data.raw["turret"]) do
 end
 
 for _, unit in pairs(data.raw["unit-spawner"]) do
-    set_resistance(unit)
+    set_spawner_resistance(unit)
 end
 
 for _, unit in pairs(data.raw.unit) do
