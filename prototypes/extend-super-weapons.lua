@@ -133,7 +133,7 @@ if mods["AtomicArtillery"] and data.raw["artillery-projectile"]["atomic-artiller
     data:extend({ entity })
 end
 
-if mods["IndustrialRevolution"] and data.raw["artillery-projectile"]["atomic-artillery-projectile"] then
+if mods["IndustrialRevolution3"] and data.raw["artillery-projectile"]["atomic-artillery-projectile"] then
     local entity = util.table.deepcopy(data.raw["artillery-projectile"]["atomic-artillery-projectile"])
     table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_attack_points)
     table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_counter_attack)
@@ -157,13 +157,13 @@ if mods["Krastorio2"] then
     table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_counter_attack)
     data:extend({ entity })
 end
-
-if mods["PlutoniumEnergy"] then
-    local entity = util.table.deepcopy(data.raw["projectile"]["plutonium-atomic-rocket"])
-    table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_attack_points)
-    table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_counter_attack)
-    data:extend({ entity })
-end
+-- plutonium-atomic-rocket removed to be replace with new projectile.
+--if mods["PlutoniumEnergy"] then
+--    local entity = util.table.deepcopy(data.raw["projectile"]["plutonium-atomic-rocket"])
+--    table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_attack_points)
+--    table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_counter_attack)
+--    data:extend({ entity })
+--end
 
 
 

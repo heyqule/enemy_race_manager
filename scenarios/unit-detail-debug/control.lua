@@ -8,9 +8,7 @@ script.on_init(function(event)
     game.map_settings.enemy_expansion.enabled = false
     local surface = game.surfaces[1]
     local mgs = surface.map_gen_settings
-    mgs.autoplace_controls["enemy-base"].frequency = 0
-    mgs.autoplace_controls["enemy-base"].size = 0
-    mgs.autoplace_controls["enemy-base"].richness = 0
+    mgs.autoplace_controls["enemy-base"] = nil
     game.surfaces[1].map_gen_settings = mgs
 end)
 
