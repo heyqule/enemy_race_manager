@@ -32,8 +32,7 @@ it("Attack Target", function()
     storage.override_environmental_attack_can_spawn = 1
     storage.override_environmental_attack_spawn_home = -1
 
-    local meteor = surface.create_entity(
-{ name = "erm-test-meteor",
+    local meteor = surface.create_entity({ name = "erm-test-meteor",
          force = "neutral",
          position = { 100, 100 },
          target = {50, 50},

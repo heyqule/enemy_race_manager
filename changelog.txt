@@ -11,7 +11,7 @@ Date: ????-??-??
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
-    - In 2.0 base game, it will use the mixed mode or you pick a race.
+    - In 2.0 base game, it can use the mixed mode or you pick a race.
     - Added some tip and tricks records
 
   Changes:

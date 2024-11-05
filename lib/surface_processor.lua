@@ -14,7 +14,7 @@ function SurfaceProcessor.init_globals()
     storage.total_enemy_surfaces = storage.total_enemy_surfaces or 0
 end
 
-local surfix = '_enemy_base'
+local surfix = "enemy-base"
 function SurfaceProcessor.assign_race(surface)
 
     if not ForceHelper.can_have_enemy_on(surface) then
@@ -30,24 +30,33 @@ function SurfaceProcessor.assign_race(surface)
         if prototype.map_gen_settings and prototype.map_gen_settings.autoplace_controls then
             local autocontrols = prototype.map_gen_settings.autoplace_controls
             for key, _ in pairs(autocontrols) do
-                if string.find(key, surfix) then
-                    local i, j = string.find(key, surfix)
-                    local enemy_race = string.sub(key, 0, i - 1)
-                    if enemy_race == FORCE_NAME then
+                if string.find(key, surfix, 1, true) then
+                    local index = string.find(key, surfix, 1, true)
+                    local enemy_race
+                      
+
+                    if key == surfix then                    
                         enemy_race = MOD_NAME
+                    elseif index then
+                        enemy_race = string.sub(key, 0, string.len(surfix) + 1 * -1)                        
                     end
-                    races_by_name[enemy_race] = true
-                    table.insert(races_by_key, enemy_race)
+
+                    if enemy_race then
+                        races_by_name[enemy_race] = true
+                        table.insert(races_by_key, enemy_race)
+                    end
                 end
             end
         end
 
-        storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
-        storage.enemy_surfaces[surface.name] = {
-            races_by_name = races_by_name,
-            races_by_key = races_by_key,
-            size = table_size(races_by_key)
-        }
+        if table_size(races_by_key) then
+            storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
+            storage.enemy_surfaces[surface.name] = {
+                races_by_name = races_by_name,
+                races_by_key = races_by_key,
+                size = table_size(races_by_key)
+            }
+        end
     end
 end
 
