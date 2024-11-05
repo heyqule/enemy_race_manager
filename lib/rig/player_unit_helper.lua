@@ -9,15 +9,15 @@ local PlayerUnitHelper = {}
 local RATIO = 0.5
 
 function PlayerUnitHelper.get_health_multiplier()
-    return 10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 10) * (RATIO + 0.3))
+    return math.max((10 + ((settings.startup["enemyracemanager-max-hitpoint-multipliers"].value - 20) * (RATIO + 0.3))), 10)
 end
 
 function PlayerUnitHelper.get_speed_multiplier()
-    return 1 + ((settings.startup["enemyracemanager-running-speed-multipliers"].value - 1) * RATIO)
+    return math.max(1 + ((settings.startup["enemyracemanager-running-speed-multipliers"].value - 1) * RATIO), 1)
 end
 
 function PlayerUnitHelper.get_damage_multiplier()
-    return 1 + ((settings.startup["enemyracemanager-damage-multipliers"].value - 1) * (RATIO + 0.5))
+    return math.max(1 + ((settings.startup["enemyracemanager-damage-multipliers"].value - 1) * (RATIO + 0.5)), 1)
 end
 
 function PlayerUnitHelper.get_attack_range(ratio, value)
