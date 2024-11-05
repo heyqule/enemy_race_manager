@@ -150,32 +150,6 @@ local refreshable_settings = {
     }
 }
 
----
---- Only assign empty as erm_vanilla in control phase
----
-local get_selected_race_value = function(value)
-    if (value == "empty" and storage) then
-        return "erm_vanilla"
-    end
-
-    return value
-end
-
---- @deprecated
-local convert_max_level = function(setting_value)
-    local current_level_setting = 10;
-
-    if setting_value == MAX_LEVEL_20 then
-        current_level_setting = 20
-    elseif setting_value == MAX_LEVEL_15 then
-        current_level_setting = 15
-    elseif setting_value == MAX_LEVEL_5 then
-        current_level_setting = 5
-    end
-
-    return current_level_setting
-end
-
 local get_global_setting_value = function(setting_name)
     local setting_value = storage.settings[setting_name]
     if setting_value == nil then
@@ -242,76 +216,20 @@ function GlobalConfig.get_max_projectile_range(multiplier)
     return 64 * multiplier
 end
 
-function GlobalConfig.get_mapping_method()
-    local mapping_method
-    if global_setting_exists() then
-        mapping_method = storage.settings["enemyracemanager-mapping-method"]
-    end
-
-    if mapping_method == nil then
-        mapping_method = settings.startup["enemyracemanager-mapping-method"].value
-
-        if global_setting_exists() then
-            storage.settings["enemyracemanager-mapping-method"] = mapping_method
-        end
-    end
-    return mapping_method
-end
-
-function GlobalConfig.mapgen_is_mixed()
-    if GlobalConfig.get_mapping_method() == MAP_GEN_DEFAULT then
+function GlobalConfig.nauvis_enemy_is_mixed()
+    if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_MIXED then
         return true
     end
 
     return false
 end
 
-function GlobalConfig.mapgen_is_2_races_split()
-    if GlobalConfig.get_mapping_method() == MAP_GEN_2_RACES_SPLIT then
+function GlobalConfig.nauvis_enemy_is_biter()
+    if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
         return true
     end
 
     return false
-end
-
-function GlobalConfig.mapgen_is_4_races_split()
-    if GlobalConfig.get_mapping_method() == MAP_GEN_4_RACES_SPLIT then
-        return true
-    end
-
-    return false
-end
-
-function GlobalConfig.mapgen_is_one_race_per_surface()
-    if GlobalConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
-        return true
-    end
-
-    return false
-end
-
-function GlobalConfig.positive_axis_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-2way-group-enemy-positive"].value)
-end
-
-function GlobalConfig.negative_axis_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-2way-group-enemy-negative"].value)
-end
-
-function GlobalConfig.top_left_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-4way-top-left"].value)
-end
-
-function GlobalConfig.top_right_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-4way-top-right"].value)
-end
-
-function GlobalConfig.bottom_left_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-4way-bottom-left"].value)
-end
-
-function GlobalConfig.bottom_right_race()
-    return get_selected_race_value(settings.startup["enemyracemanager-4way-bottom-right"].value)
 end
 
 function GlobalConfig.build_style()
@@ -453,23 +371,9 @@ function GlobalConfig.initialize_races_data()
         end
     end
 
-    if GlobalConfig.mapgen_is_2_races_split() then
-        storage.active_races = {
-            [GlobalConfig.positive_axis_race()] = true,
-            [GlobalConfig.negative_axis_race()] = true
-        }
-    elseif GlobalConfig.mapgen_is_4_races_split() then
-        storage.active_races = {
-            [GlobalConfig.top_left_race()] = true,
-            [GlobalConfig.top_right_race()] = true,
-            [GlobalConfig.bottom_left_race()] = true,
-            [GlobalConfig.bottom_right_race()] = true
-        }
-    else
-        for name, _ in pairs(script.active_mods) do
-            if check_register_erm_race(name) then
-                storage.active_races[name] = true
-            end
+    for name, _ in pairs(script.active_mods) do
+        if check_register_erm_race(name) then
+            storage.active_races[name] = true
         end
     end
 

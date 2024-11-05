@@ -1,7 +1,5 @@
-MAP_GEN_DEFAULT = "Default"
-MAP_GEN_2_RACES_SPLIT = "2 Races Split"
-MAP_GEN_4_RACES_SPLIT = "4 Races Split"
-MAP_GEN_1_RACE_PER_SURFACE = "1 Race / Surface"
+NAUVIS_MIXED = "Mixed Races"
+
 
 QUALITY_CASUAL = "Casual"
 QUALITY_NORMAL = "Normal"
@@ -11,16 +9,6 @@ QUALITY_FIGHTER = "Fighter"
 QUALITY_CRUSADER = "Crusader"
 QUALITY_THEONE = "The One"
 
-
-
-MAX_LEVEL_5 = "Casual - Max L5"
-MAX_LEVEL_10 = "Normal - Max L10"
-MAX_LEVEL_15 = "Advanced - Max L15"
-MAX_LEVEL_20 = "Hardcore - Max L20"
-
-LEVEL_MODE_REGULAR = "Regular"
-LEVEL_MODE_EXPRESS = "Express"
-LEVEL_MODE_SHINKANSEN = "Shinkansen"
 
 ATTACK_RANGE_14 = 14
 ATTACK_RANGE_20 = 20

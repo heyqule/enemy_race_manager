@@ -189,10 +189,8 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", game.forces["player"])
     assert( picked_surface.name == game.surfaces["fulgora"].name, "Pick Fulgora as surface.  It picked "..picked_surface.name)
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
 it("Select a hottest surface and force combo", function()
@@ -243,12 +241,10 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
     assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
 it("Dude wiped planet 3, but his force doesn't have attack beacon on planet 3. But attackable on planet 2", function()
@@ -299,12 +295,10 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_1_RACE_PER_SURFACE
     local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
     local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
     assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
-    storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
 end)
 
 it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
@@ -355,7 +349,6 @@ game.planets.vulcanus.create_surface()
     RaceSettingsHelper.add_to_attack_meter("erm_zerg", 1000)
     after_ticks(300, function()
         storage.override_ask_friend = true
-        storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_1_RACE_PER_SURFACE
         local target_force = AttackGroupHeatProcessor.pick_target("erm_zerg")
         storage.override_ask_friend = true
         local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_zerg", target_force, true)
@@ -365,7 +358,6 @@ game.planets.vulcanus.create_surface()
         assert(RaceSettingsHelper.get_attack_meter("erm_vanilla") > RaceSettingsHelper.get_attack_meter("erm_zerg"), "erm_vanilla needs attack point")
         assert(RaceSettingsHelper.get_attack_meter("erm_zerg") < RaceSettingsHelper.get_attack_meter("erm_vanilla"), "erm_zerg needs give out points")
 
-        storage.settings["enemyracemanager-mapping-method"] = MAP_GEN_DEFAULT
         storage.override_ask_friend = false
         done()
     end)

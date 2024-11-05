@@ -34,17 +34,17 @@ local vanilla_structures = {
 }
 
 local process_one_race_per_surface_mapping = function(surface, entity, nameToken)
-    if GlobalConfig.get_mapping_method() == MAP_GEN_1_RACE_PER_SURFACE then
-        local enemy_surface = storage.enemy_surfaces[surface.name]
-        if enemy_surface and nameToken[1] ~= enemy_surface then
-            nameToken[1] = enemy_surface
-            if entity.type == "turret" then
-                nameToken[2] = RaceSettingHelper.pick_a_turret(enemy_surface)
-            else
-                nameToken[2] = RaceSettingHelper.pick_a_spawner(enemy_surface)
-            end
+
+    local enemy_surface = storage.enemy_surfaces[surface.name]
+    if enemy_surface and nameToken[1] ~= enemy_surface then
+        nameToken[1] = enemy_surface
+        if entity.type == "turret" then
+            nameToken[2] = RaceSettingHelper.pick_a_turret(enemy_surface)
+        else
+            nameToken[2] = RaceSettingHelper.pick_a_spawner(enemy_surface)
         end
     end
+
 
     return nameToken
 end

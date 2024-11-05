@@ -64,13 +64,14 @@ function MainWindow.show(player)
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
     scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", player.surface.name }, style = "caption_label" }
-    if GlobalConfig.mapgen_is_one_race_per_surface() and storage.enemy_surfaces[player.surface.name] then
-        scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_1_race", storage.enemy_surfaces[player.surface.name] } }
-    elseif GlobalConfig.mapgen_is_2_races_split() then
-        scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_2_races", GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
-    else
-        scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
-    end
+    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
+    --if GlobalConfig.mapgen_is_one_race_per_surface() and storage.enemy_surfaces[player.surface.name] then
+    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_1_race", storage.enemy_surfaces[player.surface.name] } }
+    --elseif GlobalConfig.mapgen_is_2_races_split() then
+    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_2_races", GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
+    --else
+    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
+    --end
 
     local item_table = scroll.add { type = "table", column_count = 5, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false

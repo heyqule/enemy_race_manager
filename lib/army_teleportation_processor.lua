@@ -14,7 +14,7 @@ local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_populatio
 local ArmyTeleportationProcessor = {}
 
 -- Disable link if cc is idle.
-local MAX_RETRY = settings.startup["enemyracemanager-unit-framework-timeout"].value * 4;
+local MAX_RETRY = settings.startup["enemyracemanager-unit-deployer-timeout"].value * 4;
 
 local BOX_WIDTH = 48;
 local DOUBLE_BOX_WIDTH = 64;

@@ -166,7 +166,11 @@ end
 
 function QualityProcessor.roll(entity)
 
-    if not ForceHelper.is_enemy_force(entity.force) or is_running_roll or (entity.commandable and entity.commandable.spawner) then
+    if is_running_roll or
+       (entity.commandable and entity.commandable.spawner) or
+       not ForceHelper.is_enemy_force(entity.force) or
+       not ForceHelper.is_erm_unit(entity)
+    then
         is_running_roll = false
         return
     end

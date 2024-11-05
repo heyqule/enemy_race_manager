@@ -16,9 +16,9 @@ function ArmyHelpGUI.update(player)
     SharedTabFunctions.clear_tab(main_tab, name)
 
     local pane = main_tab[name]
-    local timeout = settings.startup["enemyracemanager-unit-framework-timeout"].value
+    local timeout = settings.startup["enemyracemanager-unit-deployer-timeout"].value
     local auto_deploy = "off"
-    if settings.startup["enemyracemanager-unit-framework-start-auto-deploy"].value then
+    if settings.startup["enemyracemanager-unit-deployer-auto-start"].value then
         auto_deploy = "on"
     end
 

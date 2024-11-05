@@ -40,9 +40,7 @@ require("prototypes/extend-creep-removal")
 
 require('prototypes/quality-system-triggers')
 
-if not feature_flags.space_travel then
-    require("prototypes/extend-default-autoplace")
-end
+require("prototypes/extend-default-autoplace")
 
 require("prototypes/map-generation.lua")
 

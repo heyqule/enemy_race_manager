@@ -271,7 +271,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             end
             surface.pollute(position, pollution_deduction)
         else
-            --group.set_autonomous()
+            group.set_autonomous()
             surface.pollute({0, 0}, pollution_deduction)
         end
 
@@ -745,7 +745,7 @@ function AttackGroupProcessor.process_attack_position(group, distraction, find_n
                     }
             )
         end
-        --group.set_autonomous()
+        group.set_autonomous()
     end
 end
 

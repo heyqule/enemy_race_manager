@@ -38,7 +38,7 @@ function ForceHelper.extract_race_name_from(force_name)
         return storage.force_race_name_cache[force_name]
     end
 
-    if string.find(force_name, "enemy_") ~= nil then
+    if string.find(force_name, "enemy_",1, true) ~= nil then
         if storage.force_race_name_cache[force_name] == nil then
             local unverified_race_name = string.gsub(force_name, "enemy_", "")
             if storage.race_settings[unverified_race_name] then
