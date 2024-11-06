@@ -37,7 +37,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = util.table.deepcopy(data.raw["unit"][type])
     local original_hitpoint = biter["max_health"]
 
-    biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], tostring(level) }
+    biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
     biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
     biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
     biter["resistances"] = {

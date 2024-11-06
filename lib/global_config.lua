@@ -64,7 +64,11 @@ GlobalConfig.MAX_BY_EPIC = 1
 GlobalConfig.MAX_BY_RARE = 2
 GlobalConfig.BASE_QUALITY_MULITPLIER = 0.5
 GlobalConfig.QUALITY_MAPPING = {
-    'normal', 'uncommon', 'rare', 'epic', 'legendary', 'heirloom'
+    {"quality_mapping.normal"},
+    {"quality_mapping.great"},
+    {"quality_mapping.exceptional"},
+    {"quality_mapping.epic"},
+    {"quality_mapping.legendary"},
 }
 
 GlobalConfig.BOSS_MAX_TIERS = 5

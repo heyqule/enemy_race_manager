@@ -78,7 +78,7 @@ function make_roboport(level)
         {
             type = "unit-spawner",
             name = MOD_NAME .. "--" .. name .. "--" .. level,
-            localised_name = { "entity-name." .. MOD_NAME .. "--" .. name, tostring(level) },
+            localised_name = { "entity-name." .. MOD_NAME .. "--" .. name, GlobalConfig.QUALITY_MAPPING[level] },
             order = "b-d-c",
             icon = "__base__/graphics/icons/roboport.png",
             icons = {

@@ -81,7 +81,7 @@ script.on_event(defines.events.on_player_created, function(event)
             local y_offset = 0
 
             rendering.draw_text({
-                text=entity.prototype.name,
+                text=entity.prototype.localised_name,
                 color = { r = 1, g = 1, b = 1, a = 1 },
                 target={ x+2, y + y_offset},
                 surface=entity.surface,

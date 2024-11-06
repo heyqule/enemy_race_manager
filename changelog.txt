@@ -6,12 +6,12 @@ Date: ????-??-??
     - Updated to Factorio 2.0.  IT DOES NOT SUPPORT MIGRATION FROM 1.1.
     - This mod now focuses on interplanetary war logistics in Space Age.  Support for base game will be limited to crashes.
     - Replaced leveling system with "Quality Spawning" system based on planet evolution and accumulated attack points. [Details in Tips and Tricks]
-    - Home planets invasion. Zerg and Protoss race now have a home planet. Are you able to invade them? [Details in Tips and Tricks]
+    - Home planets invasion. Zerg and Protoss race have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
-    - In 2.0 base game, it can use the mixed mode or you pick a race.
+    - In 2.0 non-[space-age] game, Nauvis can use the mixed mode.
     - Added some tip and tricks records
 
   Changes:
@@ -37,6 +37,8 @@ Date: ????-??-??
     - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
     - Player's defensive structures automatically get a health bump to a minimum of 500HP.
+    - [Section: Free For All]
+    - Other forces may invade the planet you visited to pick fights.
     - [Section: GUI]
     - Main screen buttons are now under shortcuts, instead of top left buttons.
     - [Section: Removals]
@@ -48,7 +50,7 @@ Date: ????-??-??
     - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
     - Removed enemy replacement system.
     - Removed randomly assign enemy on a surface/planet.  Enemies are now defined in planet prototype.
-    - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to incompatibility.
+    - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to autoplace changes.
 
 
 ---------------------------------------------------------------------------------------------------
