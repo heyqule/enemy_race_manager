@@ -114,7 +114,7 @@ it('Test when unit spawn at higher tier, it should not re-roll', function()
     }
     local unit = units[1]
     local unit_name = ForceHelper.get_name_token(unit.name)
-    assert(tonumber(unit_name[3]) == 5, 'Turret is able to swap to higher tier')
+    assert(tonumber(unit_name[3]) == 5, 'Biter should not able to swap to lower tier')
 end)
 
 it('Test when generate a group, whether it respect the ratio. However exceptions may happen, depends on RNG god', function()
@@ -153,4 +153,36 @@ it('Test when generate a group, whether it respect the ratio. However exceptions
 
     assert(total_two < total_three, 'Uncommon < Rare')
     assert(total_four < total_three, 'Epic < Rare')
+end)
+
+it.only('Home planet test', function()
+    local nauvis = game.surfaces[1]
+    local char = game.planets.char.create_surface()
+    QualityProcessor.calculate_quality_points()
+
+    nauvis.create_entity {
+        name = 'erm_zerg--zergling--1',
+        position = {0, 0}
+    }
+
+    char.create_entity {
+        name = 'erm_zerg--zergling--1',
+        position = {0, 0}
+    }
+
+    local nauvis_units = nauvis.find_entities_filtered {
+        type = 'unit',
+        radius = 32,
+        position = {0,0}
+    }
+
+    local char_units = nauvis.find_entities_filtered {
+        type = 'unit',
+        radius = 32,
+        position = {0,0}
+    }
+    local nauvis_unit_name_token = ForceHelper.get_name_token(nauvis_units[1].name)
+    local char_unit_name_token = ForceHelper.get_name_token(char_units[1].name)
+    assert(tonumber(nauvis_unit_name_token[3]) == 1, 'Nauvis must be 1, yours:'..tostring(nauvis_unit_name_token[3]))
+    assert(tonumber(char_unit_name_token[3]) == 1, 'Char must be 5, your:'..tostring(char_unit_name_token[3]))
 end)
