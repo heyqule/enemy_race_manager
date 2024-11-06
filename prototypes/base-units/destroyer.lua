@@ -13,7 +13,7 @@ require("util")
 
 require("__enemyracemanager__/global")
 
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.75
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 
 -- Handles acid and poison resistance
@@ -33,7 +33,7 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
 local electric_modifier = 5
-local incremental_electric_modifier = 15
+local incremental_electric_modifier = 10
 
 -- Handles Attack Speed
 
@@ -78,7 +78,7 @@ robot_animations.destroyer = {
                 frame_count = 1,
                 direction_count = 32,
                 shift = util.by_pixel(2.5, -7),
-                tint = { r = 0.5, g = 0, b = 1, a = 1 },
+                tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
                 scale = 0.5
             }
         }

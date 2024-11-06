@@ -12,7 +12,7 @@ require("util")
 
 require("__enemyracemanager__/global")
 
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.5
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 
 -- Handles acid and poison resistance
@@ -31,8 +31,8 @@ local incremental_electric_resistance = 90
 local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
-local physical_modifier = 2
-local incremental_physical_modifier = 4
+local physical_modifier = 1
+local incremental_physical_modifier = 2.5
 
 -- Handles Attack Speed
 
@@ -82,7 +82,7 @@ robot_animations.defender = {
                 animation_speed = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, -4.75),
-                tint = { r = 0.5, g = 0, b = 1, a = 1 },
+                tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
                 y = 21,
                 scale = 0.5
             }
@@ -106,7 +106,7 @@ robot_animations.defender = {
 function makeLevelCombatRobots(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
     local robot = util.table.deepcopy(data.raw["combat-robot"][type])
-    local original_health = robot["max_health"] * 3
+    local original_health = robot["max_health"] * 2
 
     robot["type"] = "unit"
     robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
