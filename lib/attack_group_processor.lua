@@ -827,6 +827,10 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         position = spawn_location
     })
 
+    if scout == nil then
+        return nil
+    end
+
     scout.commandable.set_command({
         type = defines.command.go_to_location,
         destination = target_beacon.position,
