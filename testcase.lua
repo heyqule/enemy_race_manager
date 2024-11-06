@@ -13,10 +13,10 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         "tests/scouts",
         "tests/surface_manager",
         "tests/environmental_attacks",
-        "tests/quality_system"
     }
 
     if script.active_mods["erm_zerg"] and script.active_mods["erm_toss"] then
+        table.insert(tests,"tests/quality_system")
         table.insert(tests,"tests/attack_group")
         table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")

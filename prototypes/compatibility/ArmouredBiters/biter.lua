@@ -69,9 +69,9 @@ for i = 1, max_level do
     -- 1, 100 - 10, 350 - 20, 600 (org: 200)
     data:extend({ makeLevelEnemy(i, "medium-armoured-biter", 2) })
     -- 1, 400 - 10, 1400 - 20, 2400 (org: 800)
-    data:extend({ makeLevelEnemy(i, "big-armoured-biter", 2) })
+    data:extend({ makeLevelEnemy(i, "big-armoured-biter", 3) })
     -- 1, 2000 - 10, 7000 - 20, 12000 (org: 6000)
-    data:extend({ makeLevelEnemy(i, "behemoth-armoured-biter", 3) })
+    data:extend({ makeLevelEnemy(i, "behemoth-armoured-biter", 5) })
     -- 1, 4500 - 10, 15750 - 20, 27000 (org: 18000)
-    data:extend({ makeLevelEnemy(i, "leviathan-armoured-biter", 4) })
+    data:extend({ makeLevelEnemy(i, "leviathan-armoured-biter", 5) })
 end

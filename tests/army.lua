@@ -152,7 +152,7 @@ it("Army Deployment", function()
     game.speed = 1000
 end)
 
-it.only("Army Deployment with rally point", function()
+it("Army Deployment with rally point", function()
     AttackGroupBeaconProcessor.init_index()
     local surface = game.surfaces[1]
     local force = game.forces["player"]

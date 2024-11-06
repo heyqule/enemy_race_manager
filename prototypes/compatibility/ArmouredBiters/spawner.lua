@@ -101,16 +101,16 @@ for i = 1, max_level do
     end
 end
 
-if settings.startup["enemyracemanager-enable-bitters"].value and settings.startup["ab-enable-moisture-check"].value == true then
-    -- This set of data is used for set up default autoplace calculation.
-    data.erm_spawn_specs = data.erm_spawn_specs or {}
-    table.insert(data.erm_spawn_specs, {
-        mod_name = MOD_NAME,
-        force_name = FORCE_NAME,
-        moisture = 1, -- 1 = Dry and 2 = Wet
-        aux = 1, -- 1 = red desert, 2 = sand
-        elevation = 3, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
-        temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
-        entity_filter = "armoured",
-    })
-end
+--if  settings.startup["ab-enable-moisture-check"].value == true then
+--    -- This set of data is used for set up default autoplace calculation.
+--    data.erm_spawn_specs = data.erm_spawn_specs or {}
+--    table.insert(data.erm_spawn_specs, {
+--        mod_name = MOD_NAME,
+--        force_name = FORCE_NAME,
+--        moisture = 1, -- 1 = Dry and 2 = Wet
+--        aux = 1, -- 1 = red desert, 2 = sand
+--        elevation = 3, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
+--        temperature = 2, --1,2,3 (1 cold, 2. normal, 3 hot)
+--        entity_filter = "armoured",
+--    })
+--end
