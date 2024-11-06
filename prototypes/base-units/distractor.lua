@@ -13,7 +13,7 @@ require("util")
 
 require("__enemyracemanager__/global")
 
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.75
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.2
 
 
 -- Handles acid and poison resistance
@@ -32,8 +32,8 @@ local incremental_electric_resistance = 90
 local base_cold_resistance = 10
 local incremental_cold_resistance = 75
 
-local laser_modifier = 3
-local incremental_laser_modifier = 4.5
+local laser_modifier = 2
+local incremental_laser_modifier = 6
 
 -- Handles Attack Speed
 
@@ -79,7 +79,7 @@ robot_animations.distractor = {
                 frame_count = 1,
                 direction_count = 16,
                 shift = util.by_pixel(0, -6.25),
-                tint = { r = 0.5, g = 0, b = 1, a = 1 },
+                tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
                 y = 37,
                 scale = 0.5
             }

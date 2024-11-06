@@ -69,7 +69,7 @@ robot_animations["construction-robot"] = {
         frame_count = 1,
         shift = util.by_pixel(0, -4.5),
         direction_count = 16,
-        tint = { r = 0.5, g = 0, b = 1, a = 1 },
+        tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
         y = 76,
         scale = 0.5
     },
