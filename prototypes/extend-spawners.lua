@@ -60,7 +60,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     local spawner = util.table.deepcopy(data.raw["unit-spawner"][type])
     local original_hitpoint = spawner["max_health"]
 
-    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], tostring(level) }
+    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
     spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_hitpoint_multiplier / health_cut_ratio, level)
     spawner["resistances"] = {
@@ -126,7 +126,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     local original_hitpoint = worm["max_health"]
 
 
-    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], tostring(level) }
+    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
     worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
     worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_worm_hitpoint_multiplier / health_cut_ratio, level)
     worm["resistances"] = {
@@ -157,7 +157,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
 
     worm["name"] = "short-range-" .. worm["name"]
 
-    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], tostring(level) }
+    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
     worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
     worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_worm_hitpoint_multiplier / health_cut_ratio, level)
     worm["resistances"] = {

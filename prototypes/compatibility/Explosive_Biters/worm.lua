@@ -36,7 +36,7 @@ function makeLevelTurrets(level, type, distance)
 
     local original_hitpoint = turret["max_health"]
 
-    turret["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. turret["name"], tostring(level) }
+    turret["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. turret["name"], GlobalConfig.QUALITY_MAPPING[level] }
     turret["name"] = MOD_NAME .. "--" .. turret["name"] .. "--" .. level;
     turret["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier, level, true)
     turret["resistances"] = {

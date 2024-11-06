@@ -109,7 +109,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     local original_health = robot["max_health"] * 3
 
     robot["type"] = "unit"
-    robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], tostring(level) }
+    robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
     robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-flying-enemies"
     robot["has_belt_immunity"] = true

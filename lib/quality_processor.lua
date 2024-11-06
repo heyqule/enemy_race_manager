@@ -11,20 +11,21 @@ local QualityProcessor = {}
 --- normal, uncommon, rare, epic, legendary
 local max_difficulties = {
     [QUALITY_CASUAL] = {0, 0.7, 0.3, 0, 0},
-    [QUALITY_NORMAL] = {0, 0.25, 0.60, 0.15, 0},
-    [QUALITY_ADVANCED] = {0, 0, 0.60, 0.35, 0.05},
-    [QUALITY_HARDCORE] = {0, 0, 0.25, 0.5, 0.25},
-    [QUALITY_FIGHTER] = {0, 0, 0, 0.50, 0.50},
-    [QUALITY_CRUSADER] = {0, 0, 0, 0.20, 0.80},
-    [QUALITY_THEONE] = {0, 0, 0, 0, 100},
+    [QUALITY_NORMAL] = {0, 0.3, 0.60, 0.1, 0},
+    [QUALITY_ADVANCED] = {0, 0, 0.70, 0.25, 0.05},
+    [QUALITY_HARDCORE] = {0, 0, 0.3, 0.5, 0.2},
+    [QUALITY_FIGHTER] = {0, 0, 0, 0.5, 0.5},
+    [QUALITY_CRUSADER] = {0, 0, 0, 0.2, 0.8},
+    [QUALITY_THEONE] = {0, 0, 0, 0, 1},
 }
 local setting_difficulty, setting_advancement
 
 local max_out_target = 10000
-local evolution_target = 4000
+local evolution_target = 3000
 local evolution_rich_padding = 0.05
-local attack_point_target = 6000
+local attack_point_target = 7000
 local attack_point_divider = 2000000
+local top_tier = 5
 
 -- a flag to check whether re-roll is running to prevent firing another re-oll on same unit.
 local is_running_roll
@@ -179,48 +180,60 @@ function QualityProcessor.roll(entity)
     local unit_tier = tonumber(name_token[3])
     local force = entity.force
     local surface = entity.surface
+    local race_name = ForceHelper.extract_race_name_from(force.name)
+    local race_settings = storage.race_settings[race_name]
 
-    if not storage.quality_on_planet[force.name] or not storage.quality_on_planet[force.name][surface.name]
-    then
-        QualityProcessor.calculate_quality_points()
-    end
-
-    local planet_data = storage.quality_on_planet[force.name][surface.name]
-
-    if not planet_data then
-        is_running_roll = false
-        return
-    end        
-    local spawn_rates = planet_data.spawn_rates
-    local spawn_rates_size = planet_data.spawn_rates_size
-    local lowest_tier = planet_data.lowest_allowed_tier
-
-    --- Unit from spawner doesn't need to roll.
-    if unit_tier >= lowest_tier then
-        return
-    end
-
-    local can_spawn = false
     local selected_tier
-    for index, spawn_rate in pairs(spawn_rates) do
-        if spawn_rate > 0 then
-            selected_tier = spawn_rates_size - (index - 1)
-            if selected_tier == lowest_tier then
-                can_spawn = true
-            else
-                can_spawn = RaceSettingsHelper.can_spawn(spawn_rate)                
-            end
+    local can_spawn = false
+    --- Home planet spawns, always use the top tier
+    if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
+    then
+        selected_tier = top_tier
+        can_spawn = true
+    end
 
-            if can_spawn then
-                break
-            end    
+    if not can_spawn then
+        if not storage.quality_on_planet[force.name] or not storage.quality_on_planet[force.name][surface.name]
+        then
+            QualityProcessor.calculate_quality_points()
+        end
+
+        local planet_data = storage.quality_on_planet[force.name][surface.name]
+
+        if not planet_data then
+            is_running_roll = false
+            return
+        end
+        local spawn_rates = planet_data.spawn_rates
+        local spawn_rates_size = planet_data.spawn_rates_size
+        local lowest_tier = planet_data.lowest_allowed_tier
+
+        --- Unit from spawner doesn't need to roll.
+        if unit_tier >= lowest_tier then
+            return
+        end
+
+
+        for index, spawn_rate in pairs(spawn_rates) do
+            if spawn_rate > 0 then
+                selected_tier = spawn_rates_size - (index - 1)
+                if selected_tier == lowest_tier then
+                    can_spawn = true
+                else
+                    can_spawn = RaceSettingsHelper.can_spawn(spawn_rate)
+                end
+
+                if can_spawn then
+                    break
+                end
+            end
         end
     end
 
-    --- no need to swap if unit is already higher than selected.
+    --- no need to swap if unit is already at the same or higher than selected tier.
     if tonumber(name_token[3]) >= selected_tier then
         return
-    end 
+    end
 
     if can_spawn then
         local position = entity.position

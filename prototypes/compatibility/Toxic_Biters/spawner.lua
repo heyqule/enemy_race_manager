@@ -36,7 +36,7 @@ function makeLevelSpawners(level, type)
 
     local original_hitpoint = spawner["max_health"]
 
-    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], tostring(level) }
+    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
     spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier, level)
     spawner["resistances"] = {
