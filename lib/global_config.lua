@@ -34,9 +34,7 @@ GlobalConfig.QUICK_CRON = 11
 -- Run garbage collection and statistics on each nauvis day
 GlobalConfig.GC_AND_STATS = 25000
 
--- EVENTS
-GlobalConfig.EVENT_TIER_WENT_UP = "erm_tier_went_up"
-GlobalConfig.EVENT_LEVEL_WENT_UP = "erm_level_went_up"
+
 
 GlobalConfig.EVENT_FLUSH_GLOBAL = "erm_flush_global"
 GlobalConfig.EVENT_ADJUST_ATTACK_METER = "erm_adjust_attack_meter"

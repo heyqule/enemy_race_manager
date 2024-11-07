@@ -17,7 +17,6 @@ Date: ????-??-??
   Changes:
     - [Section: Unit Properties]
     - Changed HP and damage algo under the new ERM quality system.  Enemies stats are tested against normal turrets and ammunition.
-    - Added "Quality x2 Challenge" setting.  When enemy scout sees higher quality turrets are being used.  They may have a chance to spawn higher quality enemy on top of the quality spawning system.  Quality enhanced legendary enemies are appox 2.5x stronger than regular legendary enemy.
     - Movement and attack speed reach max at rare tier.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
     - Unit tier is now independent for each planet.  Biters in planet A spawn differently than those on planet B until they reach max evolution.

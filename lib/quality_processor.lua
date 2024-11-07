@@ -32,6 +32,7 @@ local is_running_roll
 
 local update_storages = function()
     storage.quality_on_planet = storage.quality_on_planet or {}
+    storage.skip_quality_rolling = false
     setting_difficulty = settings.global['enemyracemanager-difficulty'].value
     setting_advancement = settings.global['enemyracemanager-advancement'].value
 end
@@ -113,7 +114,7 @@ end
 
 
 ---
---- Planet evolution takes 40%, accumulated attack point takes 60%
+--- Planet evolution takes 30%, accumulated attack point takes 70%
 function QualityProcessor.calculate_quality_points()
     update_storages()
     for _, force in pairs(game.forces) do
@@ -134,11 +135,19 @@ function QualityProcessor.calculate_quality_points()
 
                     quality_points = quality_points * setting_advancement
 
-                    data.points = quality_points
+                    data.points = math.floor(quality_points)
                     if quality_points >= max_out_target then
                         data.max_out = true
                     else
                         data.max_out = false
+                    end
+
+                    if quality_points <= 2000 then
+                        data.tier = 1
+                    elseif quality_points > 2000 and quality_points < 4000 then
+                        data.tier = 2
+                    else
+                        data.tier = 3
                     end
 
                     quality_data[planet.name] = calculate_chance_cache(data, quality_points)
@@ -159,7 +168,15 @@ end
 
 function QualityProcessor.get_spawn_rate(force, planet)
     return storage.quality_on_planet[force][planet].spawn_rates
-end    
+end
+
+--- Tier mapping.
+--- Tier 1 is under 2000 points
+--- Tier 2 is between 2000 - 4000 points
+--- Tier 3 is 4000+ points
+function QualityProcessor.get_tier(force, planet)     
+    return storage.quality_on_planet[force][planet].tier
+end
 
 function QualityProcessor.reset_globals()
     storage.quality_on_planet = {}
@@ -167,11 +184,12 @@ end
 
 function QualityProcessor.roll(entity)
 
-    if is_running_roll or
+    if is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
        not ForceHelper.is_enemy_force(entity.force) or
        not ForceHelper.is_erm_unit(entity)
     then
+        storage.skip_quality_rolling = false
         is_running_roll = false
         return
     end
