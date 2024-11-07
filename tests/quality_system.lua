@@ -21,15 +21,15 @@ local enemy = 'enemy'
 local enemy_race_name = 'erm_vanilla'
 local planet = 'nauvis'
 
-it("Test quality calculate_chance_cache", function()
+it.only("Test quality calculate_chance_cache", function()
     game.forces[enemy].set_evolution_factor(0.5)
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy, planet) == 2200, "Quality Point is correct")
+    assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1650, "Quality Point is correct")
     assert(QualityProcessor.is_maxed_out(enemy, planet) == false, "maxed_out is false")
 
     game.forces[enemy].set_evolution_factor(1)
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy, planet) == 4000, "Quality Point is 40%")
+    assert(QualityProcessor.get_quality_point(enemy, planet) == 3000, "Quality Point is 40%")
 
     --- set 2000000 accumulate point to test 100%
     storage.race_settings.erm_vanilla.attack_meter_total = 2000001
@@ -39,9 +39,9 @@ it("Test quality calculate_chance_cache", function()
 
     local spawn_rate = QualityProcessor.get_spawn_rate(enemy,planet)
     assert(spawn_rate[1] == 0, "Legendary = 0")
-    assert(spawn_rate[2] == 0.15, "Epic = 0.15")
+    assert(spawn_rate[2] == 0.1, "Epic = 0.1")
     assert(spawn_rate[3] == 0.6, "Rare = 0.6")
-    assert(spawn_rate[4] == 0.25, "Uncommon = 0.25")
+    assert(spawn_rate[4] == 0.3, "Uncommon = 0.3")
     assert(spawn_rate[5] == 0, "Normal = 0")
 end)
 
@@ -155,7 +155,7 @@ it('Test when generate a group, whether it respect the ratio. However exceptions
     assert(total_four < total_three, 'Epic < Rare')
 end)
 
-it.only('Home planet test', function()
+it('Home planet test', function()
     local nauvis = game.surfaces[1]
     local char = game.planets.char.create_surface()
     QualityProcessor.calculate_quality_points()

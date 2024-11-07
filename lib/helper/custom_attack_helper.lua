@@ -103,6 +103,7 @@ end
 
 local add_member = function(final_unit_name, surface, drop_position, force_name, group)
     if drop_position then
+        storage.skip_quality_rolling = true
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
         if entity and entity.type == "unit" then
             if group.valid then
@@ -132,6 +133,7 @@ local drop_unit = function(event, race_name, unit_name, count, position)
     if position then
         local idx = 0;
         while idx < count do
+            storage.skip_quality_rolling = true
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
             if entity and entity.type == "unit" then
                 entity.commandable.set_command({

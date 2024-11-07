@@ -18,6 +18,7 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 
 local Cron = require("__enemyracemanager__/lib/cron_processor")
@@ -163,6 +164,7 @@ local add_an_unit_to_group = function(surface, group, force, race_name, unit_nam
     local entity
 
     if position then
+        storage.skip_quality_rolling = true
         entity = surface.create_entity({
             name = unit_full_name,
             position = position,
@@ -318,7 +320,7 @@ local generate_unit_queue = function(
         tiers = AttackGroupProcessor.GROUP_TIERS[1]
         is_precision_attack = true
     else
-        tiers = AttackGroupProcessor.GROUP_TIERS[RaceSettingsHelper.get_tier(race_name)]
+        tiers = AttackGroupProcessor.GROUP_TIERS[QualityProcessor.get_tier(force.name, surface.name)]
     end
     local tiers_units = {}
     for index, tier in pairs(tiers) do
@@ -430,9 +432,13 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
         return false
     end
 
+    local target_force = AttackGroupHeatProcessor.pick_target(race_name)
+    local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
+    local tier =  QualityProcessor.get_tier(force.name, surface.name)
+
     local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and RaceSettingsHelper.get_level(race_name) > 1
-    local spawn_as_featured_squad = RaceSettingsHelper.can_spawn(Config.featured_squad_chance()) and RaceSettingsHelper.get_tier(race_name) == 3
+    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and tier > 2
+    local spawn_as_featured_squad = RaceSettingsHelper.can_spawn(Config.featured_squad_chance()) and tier == 3
 
     --- Try flying Squad. starts at level 2 and max tier at level 4
     if flying_enabled and spawn_as_flying_squad then
@@ -446,6 +452,8 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             return AttackGroupProcessor.generate_group(
                 race_name, force, units_number,
                 { group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
+                  target_force=target_force,
+                  surface=surface,
                  featured_group_id = squad_id}
             )
         elseif dropship_enabled and spawn_as_dropship_squad then
@@ -453,14 +461,20 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
                 race_name, force, units_number,
-                { group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP }
+                { group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP,
+                  target_force=target_force,
+                  surface=surface,
+                }
             )
         else
             --- Regular Flying Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
                     race_name, force, units_number,
-                    { group_type = AttackGroupProcessor.GROUP_TYPE_FLYING }
+                    { group_type = AttackGroupProcessor.GROUP_TYPE_FLYING,
+                      target_force=target_force,
+                      surface=surface
+                    }
             )
         end
     else
@@ -472,13 +486,18 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
                 race_name, force, units_number,
                 {
                   group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
-                  featured_group_id = squad_id
+                  featured_group_id = squad_id,
+                  target_force=target_force,
+                  surface=surface
                 }
             )
         else
             --- Mixed Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
-            return AttackGroupProcessor.generate_group(race_name, force, units_number)
+            return AttackGroupProcessor.generate_group(race_name, force, units_number, {
+                target_force=target_force,
+                surface=surface,
+            })
         end
     end
 end
@@ -821,6 +840,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         return nil
     end
 
+    storage.skip_quality_rolling = true
     local scout = surface.create_entity({
         name = scout_name,
         force = source_force,

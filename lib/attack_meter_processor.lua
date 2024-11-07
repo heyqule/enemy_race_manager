@@ -12,6 +12,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 
@@ -145,7 +146,7 @@ function AttackMeterProcessor.form_group(race_name, force)
         local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
         local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
         local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
-        if GlobalConfig.elite_squad_enable() and RaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
+        if GlobalConfig.elite_squad_enable() and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
             AttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
         else
             AttackGroupProcessor.exec(race_name, force, next_attack_threshold)

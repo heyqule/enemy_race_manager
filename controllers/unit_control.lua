@@ -127,6 +127,7 @@ local on_unit_group_finished_gathering = function(event)
     then
         local surface = group.surface
         local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        storage.skip_quality_rolling = true
         local scout = surface.create_entity({
             position =  group.position,
             surface = surface,
