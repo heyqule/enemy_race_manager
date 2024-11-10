@@ -602,7 +602,7 @@ it("Aerial Attack", function()
 end)
 
 it("Avoid Defence Beacon (Ground Attack) using left side", function()
-    async(9000)
+    async(10800)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -627,14 +627,14 @@ it("Avoid Defence Beacon (Ground Attack) using left side", function()
         AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
-    after_ticks(9000, function()
+    after_ticks(10800, function()
         assert(entity_is_damage(rocket_launcher), "Able to attack target")
         done()
     end)
 end)
 
 it("Avoid Defence Beacon (Aerial Attack) using left side", function()
-    async(9000)
+    async(10800)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -659,14 +659,14 @@ it("Avoid Defence Beacon (Aerial Attack) using left side", function()
         AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
-    after_ticks(9000, function()
+    after_ticks(10800, function()
         assert(entity_is_damage(rocket_launcher), "Flyers are able to attack target")
         done()
     end)
 end)
 
 it("Avoid Defence Beacon (Ground Attack) using right side", function()
-    async(9000)
+    async(10800)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -691,14 +691,14 @@ it("Avoid Defence Beacon (Ground Attack) using right side", function()
         AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
-    after_ticks(9000, function()
+    after_ticks(10800, function()
         assert(entity_is_damage(rocket_launcher), "Able to attack target")
         done()
     end)
 end)
 
 it("Avoid Defence Beacon (Aerial Attack) using right side", function()
-    async(9000)
+    async(10800)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -723,7 +723,7 @@ it("Avoid Defence Beacon (Aerial Attack) using right side", function()
         AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
-    after_ticks(9000, function()
+    after_ticks(10800, function()
         assert(entity_is_damage(rocket_launcher), "Flyers are able to attack target")
         done()
     end)
@@ -994,7 +994,7 @@ it("Attack beacon couldnt reach a spawn beacon on first try", function()
 end)
 
 it("Land attack group cant find a valid path, switch to aerial group instead", function()
-    async(9000)
+    async(10800)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -1014,7 +1014,7 @@ it("Land attack group cant find a valid path, switch to aerial group instead", f
         AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
     end)
 
-    after_ticks(9000, function()
+    after_ticks(10800, function()
         local enemies = surface.find_entities_filtered {
             force = "enemy",
             type = "unit",

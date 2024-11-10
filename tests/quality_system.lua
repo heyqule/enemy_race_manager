@@ -21,7 +21,10 @@ local enemy = 'enemy'
 local enemy_race_name = 'erm_vanilla'
 local planet = 'nauvis'
 
-it.only("Test quality calculate_chance_cache", function()
+it("Test quality calculate_chance_cache", function()
+
+    assert(settings.global['enemyracemanager-difficulty'].value == QUALITY_NORMAL, "Difficulty Setting is not correct. Please use Normal to test")
+
     game.forces[enemy].set_evolution_factor(0.5)
     QualityProcessor.calculate_quality_points()
     assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1650, "Quality Point is correct")

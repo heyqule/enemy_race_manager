@@ -195,7 +195,7 @@ function RaceSettingsHelper.get_colliding_unit(race_name)
     return RaceSettingsHelper.get_race_entity_name(
             race_name,
             collide_unit_name,
-            storage.race_settings[race_name].level
+      1
     )
 end
 

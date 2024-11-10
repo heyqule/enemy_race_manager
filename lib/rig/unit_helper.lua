@@ -18,8 +18,9 @@ local max_resistance_percentage = 95
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15
 
--- New tier in percentage
-local multipliers = {15, 35, 65, 100}
+-- New tier in percentage of max increased attribute.
+-- 2x, 3x, 6x, 10x
+local multipliers = {10, 30, 60, 100}
 local get_damage_multiplier = function(incremental_damage, level)
     return (multipliers[level-1] / 100) * incremental_damage * settings.startup["enemyracemanager-damage-multipliers"].value
 end
