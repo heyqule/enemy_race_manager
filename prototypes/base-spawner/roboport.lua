@@ -192,7 +192,7 @@ function make_roboport(level)
             }),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,
-            map_color = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
+            map_color = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
         }
     })
 end

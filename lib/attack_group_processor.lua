@@ -164,7 +164,7 @@ local add_an_unit_to_group = function(surface, group, force, race_name, unit_nam
     local entity
 
     if position then
-        storage.skip_quality_rolling = true
+        --storage.skip_quality_rolling = true
         entity = surface.create_entity({
             name = unit_full_name,
             position = position,
@@ -844,7 +844,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         return nil
     end
 
-    storage.skip_quality_rolling = true
+    --storage.skip_quality_rolling = true
     local scout = surface.create_entity({
         name = scout_name,
         force = source_force,
@@ -901,27 +901,27 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
         local group_size = table_size(group.members)
         local group_force = group.force
         local group_number = group.unique_id
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        local force_name = group_force.name
         local refund_points = AttackGroupProcessor.destroy_members(group)
 
         --- Hardcoded chance to spawn half size aerial group
         if (RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and group_size >= MIN_GROUP_SIZE) or TEST_MODE then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
-            local target_force =  AttackGroupHeatProcessor.pick_target(race_name)
-            local surface =  AttackGroupHeatProcessor.pick_surface(race_name, target_force)
+            local target_force =  AttackGroupHeatProcessor.pick_target(force_name)
+            local surface =  AttackGroupHeatProcessor.pick_surface(force_name, target_force)
 
             AttackGroupPathingProcessor.remove_node(group_number)
             --- This call needs to bypass attack meters calculations
             Cron.add_2_sec_queue("AttackGroupProcessor.generate_group",
-                race_name, group_force, math.max(math.ceil(group_size / 2), 10),
+                    force_name, group_force, math.max(math.ceil(group_size / 2), 10),
                 { group_type=group_type,
                   target_force = target_force,
                   surface=surface,
                   bypass_attack_meter=true
                 }
             )
-        elseif Config.race_is_active(race_name) then
-            RaceSettingsHelper.add_to_attack_meter(race_name, refund_points)
+        elseif Config.race_is_active(force_name) then
+            RaceSettingsHelper.add_to_attack_meter(force_name, refund_points)
         end
     end
 end

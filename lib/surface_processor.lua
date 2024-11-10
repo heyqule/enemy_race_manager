@@ -107,9 +107,9 @@ function SurfaceProcessor.wander_unit_clean_up()
                    unit.commandable and unit.commandable.spawner == nil and
                    unit.commandable.command and unit.commandable.command.type == defines.command.wander then
                     unit_count = unit_count + 1
-                    local race_name = ForceHelper.extract_race_name_from(unit.force.name)
-                    if race_name and storage.race_settings[race_name] and storage.race_settings[race_name].attack_meter then
-                        storage.race_settings[race_name].attack_meter = storage.race_settings[race_name].attack_meter + 1
+                    local force_name = unit.force.name
+                    if force_name and storage.race_settings[force_name] and storage.race_settings[force_name].attack_meter then
+                        storage.race_settings[force_name].attack_meter = storage.race_settings[force_name].attack_meter + 1
                     end
                     unit.destroy()
                 end

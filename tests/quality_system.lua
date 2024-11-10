@@ -18,7 +18,6 @@ after_each(function()
 end)
 
 local enemy = 'enemy'
-local enemy_race_name = 'erm_vanilla'
 local planet = 'nauvis'
 
 it("Test quality calculate_chance_cache", function()
@@ -27,20 +26,20 @@ it("Test quality calculate_chance_cache", function()
 
     game.forces[enemy].set_evolution_factor(0.5)
     QualityProcessor.calculate_quality_points()
-    assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1650, "Quality Point is correct")
-    assert(QualityProcessor.is_maxed_out(enemy, planet) == false, "maxed_out is false")
+    assert(math.floor(QualityProcessor.get_quality_point(enemy.name, planet.name)) == 1650, "Quality Point is correct")
+    assert(QualityProcessor.is_maxed_out(enemy.name, planet.name) == false, "maxed_out is false")
 
     game.forces[enemy].set_evolution_factor(1)
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy, planet) == 3000, "Quality Point is 40%")
+    assert(QualityProcessor.get_quality_point(enemy.name, planet.name) == 3000, "Quality Point is 40%")
 
     --- set 2000000 accumulate point to test 100%
-    storage.race_settings.erm_vanilla.attack_meter_total = 2000001
+    storage.race_settings.enemy.attack_meter_total = 2000001
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy, planet) == 10000, "Quality Point is 100%")
-    assert(QualityProcessor.is_maxed_out(enemy, planet) == true, "maxed_out is true")
+    assert(QualityProcessor.get_quality_point(enemy.name, planet.name) == 10000, "Quality Point is 100%")
+    assert(QualityProcessor.is_maxed_out(enemy.name, planet.name) == true, "maxed_out is true")
 
-    local spawn_rate = QualityProcessor.get_spawn_rate(enemy,planet)
+    local spawn_rate = QualityProcessor.get_spawn_rate(enemy.name, planet.name)
     assert(spawn_rate[1] == 0, "Legendary = 0")
     assert(spawn_rate[2] == 0.1, "Epic = 0.1")
     assert(spawn_rate[3] == 0.6, "Rare = 0.6")
@@ -52,11 +51,11 @@ it('Test when applicable entities spawn, it should roll', function()
     local nauvis = game.surfaces[1]
 
     game.forces[enemy].set_evolution_factor(1)
-    storage.race_settings.erm_vanilla.attack_meter_total = 2000001
+    storage.race_settings.enemy.attack_meter_total = 2000001
     QualityProcessor.calculate_quality_points()
 
     local entity = nauvis.create_entity {
-        name = 'erm_vanilla--big-biter--1',
+        name = 'enemy--big-biter--1',
         position = {32, 32}
     }
 
@@ -70,7 +69,7 @@ it('Test when applicable entities spawn, it should roll', function()
     assert(tonumber(unit_name[3]) > 1, 'Unit is able to swap to higher tier')
 
     local entity = nauvis.create_entity {
-        name = 'erm_vanilla--biter-spawner--1',
+        name = 'enemy--biter-spawner--1',
         position = {-32, -32}
     }
 
@@ -84,7 +83,7 @@ it('Test when applicable entities spawn, it should roll', function()
     assert(tonumber(unit_name[3]) > 1, 'Spawner is able to swap to higher tier')
 
     local entity = nauvis.create_entity {
-        name = 'erm_vanilla--big-worm-turret--1',
+        name = 'enemy--big-worm-turret--1',
         position = {-32, -32}
     }
 
@@ -102,11 +101,11 @@ it('Test when unit spawn at higher tier, it should not re-roll', function()
     local nauvis = game.surfaces[1]
 
     game.forces[enemy].set_evolution_factor(1)
-    storage.race_settings.erm_vanilla.attack_meter_total = 2000001
+    storage.race_settings.enemy.attack_meter_total = 2000001
     QualityProcessor.calculate_quality_points()
 
     local entity = nauvis.create_entity {
-        name = 'erm_vanilla--big-biter--5',
+        name = 'enemy--big-biter--5',
         position = {32, 32}
     }
 
@@ -123,12 +122,12 @@ end)
 it('Test when generate a group, whether it respect the ratio. However exceptions may happen, depends on RNG god', function()
     local nauvis = game.surfaces[1]
     game.forces[enemy].set_evolution_factor(1)
-    storage.race_settings.erm_vanilla.attack_meter_total = 2000001
+    storage.race_settings.enemy.attack_meter_total = 2000001
     QualityProcessor.calculate_quality_points()
 
     for i = 1, 100, 1 do
         nauvis.create_entity {
-            name = 'erm_vanilla--big-biter--1',
+            name = 'enemy--big-biter--1',
             position = {0, 0}
         }
     end

@@ -35,16 +35,16 @@ if GlobalConfig.nauvis_enemy_is_biter() then
 
     nauvis_autocontrols['enemy-base'] = {}
 
-    print('ERM_VANILLA: Nauvis AutoControl:')
+    print('ENEMY: Nauvis AutoControl:')
     print(serpent.block(data.raw.planet.nauvis.map_gen_settings.autoplace_controls))    
 
     return false
 elseif GlobalConfig.nauvis_enemy_is_mixed() == false then
-        print('ERM_VANILLA: Nauvis AutoControl IS NOT MIXED')
+        print('ENEMY: Nauvis AutoControl IS NOT MIXED')
         return false
 end
 
-print('ERM_VANILLA: Nauvis AutoControl IS MIXED')
+print('ENEMY: Nauvis AutoControl IS MIXED')
 
 local statistic_separator = "::";
 

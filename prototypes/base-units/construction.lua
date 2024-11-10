@@ -161,7 +161,7 @@ function makeConstructionRobot(level)
     robot["collision_box"] = collision_box
     robot["selection_box"] = selection_box
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
-    robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
+    robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
     return robot
 end

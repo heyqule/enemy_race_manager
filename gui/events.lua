@@ -293,10 +293,10 @@ SelectionStateChanged.cc_filter_surface = function(event)
         surface_name = nil
     end
 
-    if string.find(element.name, "from") then
+    if string.find(element.name, "from", 1, true) then
         window_tab_data.cc_surfaces_select_from = surface_name
         window_tab_data.cc_surfaces_select_from_index = element.selected_index
-    elseif string.find(element.name, "to") then
+    elseif string.find(element.name, "to", 1, true) then
         window_tab_data.cc_surfaces_select_to = surface_name
         window_tab_data.cc_surfaces_select_to_index = element.selected_index
     end
@@ -304,10 +304,27 @@ SelectionStateChanged.cc_filter_surface = function(event)
     GuiContainer.army_control_window.update_command_centers()
 end
 
+SelectionStateChanged.deployer_surface_dropdown = function(event)
+    local element = event.element
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local index = element.selected_index
+        local surface_name = element.get_item(index)
+        if surface_name == ALL_PLANETS then
+            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
+        else
+            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name
+        end
+
+        GuiContainer.army_control_window.update_deployers()
+    end
+end
+
 SelectionStateChanged.events = {
     [".*/erm_boss_detail_list_box"] = SelectionStateChanged.erm_boss_detail_list_box,
     ["army_cc/cc_select_.*"] = SelectionStateChanged.cc_selection,
     ["army_cc/filter_.*_surface"] = SelectionStateChanged.cc_filter_surface,
+    ["army_deployer/filter_surface"] = SelectionStateChanged.deployer_surface_dropdown
 }
 
 SelectionStateChanged.on_selection_state_changed = function(event)
@@ -337,7 +354,7 @@ local gui_open_switch = {
 }
 
 local on_gui_opened = function(event)
-    if is_valid_element(event) and gui_open_switch[event.gui_type] then
+    if gui_open_switch[event.gui_type] then
         gui_open_switch[event.gui_type](event)
     end
 end
@@ -453,34 +470,6 @@ local on_gui_switch_state_changed = function(event)
 end
 
 
-local deployer_surface_dropdown = function(event)
-    local element = event.element
-    local player = game.players[element.player_index]
-    if player and player.valid then
-        local index = element.selected_index
-        local surface_name = element.get_item(index)
-        if surface_name == ALL_PLANETS then
-            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
-        else
-            storage.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name
-        end
-
-        GuiContainer.army_control_window.update_deployers()
-    end
-end
-
-
-local selection_state_changed_handler = {
-    ["army_deployer/filter_surface"] = deployer_surface_dropdown
-}
-
-local on_gui_selection_state_changed = function(event)
-    local element = event.element
-    if is_valid_element(event) and selection_state_changed_handler[element.name] then
-        gui_tab_handlers[element.name](event)
-    end
-end
-
 local shortcut_handlers = {
     ["erm-detail-window-toggle"] = function(event)
         local owner = game.players[event.player_index]
@@ -513,7 +502,6 @@ GuiEvent.events = {
     [defines.events.on_gui_selected_tab_changed] = on_gui_selected_tab_changed,
     [defines.events.on_gui_confirmed] = on_gui_confirmed,
     [defines.events.on_gui_switch_state_changed] = on_gui_switch_state_changed,
-    [defines.events.on_gui_selection_state_changed] = on_gui_selection_state_changed,
     [defines.events.on_lua_shortcut] = on_lua_shortcut
 }
 

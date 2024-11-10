@@ -69,9 +69,8 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     end
 
     local force_name = entity.force.name
-    local race_name = ForceHelper.extract_race_name_from(force_name)
 
-    if not GlobalConfig.race_is_active(race_name) then
+    if not GlobalConfig.race_is_active(force_name) then
         return
     end
 

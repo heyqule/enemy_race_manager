@@ -43,12 +43,12 @@ AttackGroupBeacon.on_nth_tick = {
 
         for _, force_name in pairs(force_names) do
             local source_force = game.forces[force_name]
-            local race_name = ForceHelper.extract_race_name_from(force_name)
-            if Config.race_is_active(race_name) then
-                local target_force = AttackGroupHeatProcessor.pick_target(race_name)
-                local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force)
+
+            if Config.race_is_active(force_name) then
+                local target_force = AttackGroupHeatProcessor.pick_target(force_name)
+                local surface = AttackGroupHeatProcessor.pick_surface(force_name, target_force)
                 if target_force and surface then
-                    Cron.add_10_sec_queue("AttackGroupProcessor.spawn_scout", race_name, source_force, surface, target_force)
+                    Cron.add_10_sec_queue("AttackGroupProcessor.spawn_scout", force_name, source_force, surface, target_force)
                 end
             end
         end

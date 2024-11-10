@@ -9,6 +9,7 @@ require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local Cron = require("__enemyracemanager__/lib/cron_processor")
@@ -49,9 +50,9 @@ function BaseBuildProcessor.exec(entity)
 end
 
 function BaseBuildProcessor.process_on_cmd(entity)
-    local nameToken = ForceHelper.get_name_token(entity.name)
-    local race_name = ForceHelper.extract_race_name_from(entity.force.name)
-    if GlobalConfig.race_is_active(race_name) and RaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
+    local name_token = ForceHelper.get_name_token(entity.name)
+    local force_name = entity.force.name
+    if GlobalConfig.race_is_active(force_name) and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(unit_group, true)
@@ -99,10 +100,9 @@ end
 
 function BaseBuildProcessor.build_formation(unit_group, has_cc)
     local force_name = unit_group.force.name
-    local race_name = ForceHelper.extract_race_name_from(force_name)
 
-    if race_name == nil then
-        return
+    if not GlobalConfig.race_is_active(force_name) then
+        return nil
     end
 
     local members = unit_group.members
@@ -124,13 +124,13 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     for _, unit in pairs(members) do
         local name = nil
         if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, "cc")
+            name = BaseBuildProcessor.getBuildingName(force_name, "cc")
             cc = cc + 1
         elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, "support")
+            name = BaseBuildProcessor.getBuildingName(force_name, "support")
             support = support + 1
         elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, "turret")
+            name = BaseBuildProcessor.getBuildingName(force_name, "turret")
             turret = turret + 1
         else
             return

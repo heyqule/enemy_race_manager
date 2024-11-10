@@ -28,10 +28,10 @@ after_each(function()
     reset_scout_global()
 end)
 
-local race_name = "erm_vanilla"
+local race_name = "enemy"
 local player = "player"
 local enemy = "enemy"
-local biter_spawner = "erm_vanilla--biter-spawner--1"
+local biter_spawner = "enemy--biter-spawner--1"
 
     it("Spawn Scout", function()
         async(900)
@@ -172,7 +172,7 @@ local biter_spawner = "erm_vanilla--biter-spawner--1"
             storage["erm_spawn_beacon"][surface.index][enemy.name][i] = { beacon = entity }
         end
 
-        local entity = surface.create_entity({ name = "erm_vanilla--biter-spawner--1", position = { 50,50 } })
+        local entity = surface.create_entity({ name = "enemy--biter-spawner--1", position = { 50,50 } })
 
         storage["erm_spawn_beacon"][surface.index][enemy.name][6].beacon.destroy()
 

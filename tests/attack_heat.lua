@@ -22,7 +22,7 @@ after_each(function()
     storage.is_multi_planets_game = false
 end)
 
-local biter_spawner = "erm_vanilla--biter-spawner--1"
+local biter_spawner = "enemy--biter-spawner--1"
 local zerg_spawner = "erm_zerg--hatchery--1"
 
 
@@ -38,7 +38,7 @@ it("When a unit killed, point adds to heat", function()
     })
     ling.die("player")
 
-    assert(storage.attack_heat["erm_vanilla"][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, "Vanilla calculated heat incorrect")
+    assert(storage.attack_heat["enemy"][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, "Vanilla calculated heat incorrect")
     assert(storage.attack_heat["erm_zerg"][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE, "Zerg calculated heat incorrect")
 end)
 
@@ -63,9 +63,9 @@ it("Heat aggregation with 2 races", function()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    assert(storage.attack_heat_by_surfaces["erm_vanilla"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated surface value incorrect")
+    assert(storage.attack_heat_by_surfaces["enemy"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated surface value incorrect")
     assert(storage.attack_heat_by_surfaces["erm_zerg"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, "Zerg aggregated surface value incorrect")
-    assert(storage.attack_heat_by_forces["erm_vanilla"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated forces value incorrect")
+    assert(storage.attack_heat_by_forces["enemy"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated forces value incorrect")
     assert(storage.attack_heat_by_forces["erm_zerg"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, "Zerg aggregated forces value incorrect")
 end)
 
@@ -109,20 +109,20 @@ it("Heat aggregation with 2 races, 3 surfaces", function()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    assert(storage.attack_heat_by_surfaces["erm_vanilla"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated surface 1 value incorrect")
-    assert(storage.attack_heat_by_surfaces["erm_vanilla"][2].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 10, "Vanilla aggregated surface 2 value incorrect")
+    assert(storage.attack_heat_by_surfaces["enemy"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 20, "Vanilla aggregated surface 1 value incorrect")
+    assert(storage.attack_heat_by_surfaces["enemy"][2].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 10, "Vanilla aggregated surface 2 value incorrect")
     assert(storage.attack_heat_by_surfaces["erm_zerg"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, "Zerg aggregated surface 1 value incorrect")
     assert(storage.attack_heat_by_surfaces["erm_zerg"][2].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 10, "Zerg aggregated surface 3 value incorrect")
-    assert(storage.attack_heat_by_forces["erm_vanilla"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, "Vanilla aggregated forces value incorrect")
+    assert(storage.attack_heat_by_forces["enemy"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 30, "Vanilla aggregated forces value incorrect")
     assert(storage.attack_heat_by_forces["erm_zerg"][1].heat == AttackGroupHeatProcessor.DEFAULT_VALUE * 40, "Zerg aggregated forces value incorrect")
 
-    assert(storage.attack_heat["erm_vanilla"][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 1 Cooldown is working: "..storage.attack_heat["erm_vanilla"][1][1].."--".. AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
-    assert(storage.attack_heat["erm_vanilla"][2][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 2 Cooldown is working" .. storage.attack_heat["erm_vanilla"][2][1].."--".. AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
+    assert(storage.attack_heat["enemy"][1][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 1 Cooldown is working: "..storage.attack_heat["enemy"][1][1].."--".. AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
+    assert(storage.attack_heat["enemy"][2][1] == AttackGroupHeatProcessor.DEFAULT_VALUE * 20 - AttackGroupHeatProcessor.COOLDOWN_VALUE, "Surface 2 Cooldown is working" .. storage.attack_heat["enemy"][2][1].."--".. AttackGroupHeatProcessor.DEFAULT_VALUE * 10 - AttackGroupHeatProcessor.COOLDOWN_VALUE)
 end)
 
 it("Select a default surface and force", function()
-    assert(AttackGroupHeatProcessor.pick_surface("erm_vanilla") == game.surfaces[1], "Pick default surface")
-    assert(AttackGroupHeatProcessor.pick_target("erm_vanilla") == game.forces[1], "Pick default target")
+    assert(AttackGroupHeatProcessor.pick_surface("enemy") == game.surfaces[1], "Pick default surface")
+    assert(AttackGroupHeatProcessor.pick_target("enemy") == game.forces[1], "Pick default target")
 end)
 
 it("Select a hottest force with multiple heat on a surface", function()
@@ -153,7 +153,7 @@ it("Select a hottest force with multiple heat on a surface", function()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
+    local picked_force = AttackGroupHeatProcessor.pick_target("enemy")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
 end)
 
@@ -189,7 +189,7 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", game.forces["player"])
+    local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy", game.forces["player"])
     assert( picked_surface.name == game.surfaces["fulgora"].name, "Pick Fulgora as surface.  It picked "..picked_surface.name)
 end)
 
@@ -241,9 +241,9 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
+    local picked_force = AttackGroupHeatProcessor.pick_target("enemy")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
-    local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
+    local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy", picked_force)
     assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
 end)
 
@@ -295,13 +295,13 @@ game.planets.vulcanus.create_surface()
         AttackGroupHeatProcessor.cooldown_heat(active_race)
     end
 
-    local picked_force = AttackGroupHeatProcessor.pick_target("erm_vanilla")
+    local picked_force = AttackGroupHeatProcessor.pick_target("enemy")
     assert( picked_force.name == game.forces["test_player_3"].name, "Pick test_player_3 target")
-    local picked_surface = AttackGroupHeatProcessor.pick_surface("erm_vanilla", picked_force)
+    local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy", picked_force)
     assert( picked_surface.name == game.surfaces["vulcanus"].name, "Pick vulcanus as surface")
 end)
 
-it("Ask friend, Zerg can't attack, ask erm_vanilla to raid Surface 1", function()
+it("Ask friend, Zerg can't attack, ask enemy to raid Surface 1", function()
     async(900)
     local surface = game.surfaces[1]
     for i=1, 10, 1 do
@@ -355,8 +355,8 @@ game.planets.vulcanus.create_surface()
         storage.override_ask_friend = false
         assert( picked_surface == nil, "Couldnt pick surface, asking for friend")
         --- Check friend"attack points.
-        assert(RaceSettingsHelper.get_attack_meter("erm_vanilla") > RaceSettingsHelper.get_attack_meter("erm_zerg"), "erm_vanilla needs attack point")
-        assert(RaceSettingsHelper.get_attack_meter("erm_zerg") < RaceSettingsHelper.get_attack_meter("erm_vanilla"), "erm_zerg needs give out points")
+        assert(RaceSettingsHelper.get_attack_meter("enemy") > RaceSettingsHelper.get_attack_meter("erm_zerg"), "enemy needs attack point")
+        assert(RaceSettingsHelper.get_attack_meter("erm_zerg") < RaceSettingsHelper.get_attack_meter("enemy"), "erm_zerg needs give out points")
 
         storage.override_ask_friend = false
         done()
@@ -415,7 +415,7 @@ game.planets.vulcanus.create_surface()
     local removed_surface_index = surface3.index
     game.delete_surface("fulgora")
     after_ticks(900, function()
-        assert( storage.attack_heat["erm_vanilla"][removed_surface_index] == nil, "Fulgora has attack heat data")
+        assert( storage.attack_heat["enemy"][removed_surface_index] == nil, "Fulgora has attack heat data")
         done()
     end)
 end)
@@ -473,7 +473,7 @@ game.planets.vulcanus.create_surface()
     game.merge_forces("test_player_2", "test_player_3" )
 
     after_ticks(900, function()
-        assert( storage.attack_heat["erm_vanilla"][surface3.index][force2_index] == nil, "Force 2 has attack heat data")
+        assert( storage.attack_heat["enemy"][surface3.index][force2_index] == nil, "Force 2 has attack heat data")
         done()
     end)
 end)

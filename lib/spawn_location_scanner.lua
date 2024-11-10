@@ -14,7 +14,7 @@ local chunk_size = 32
 local radius = distance * chunk_size
 local angle_division = 15
 
-local reference_unit_name = "erm_vanilla--behemoth-biter--1"
+local reference_unit_name = "enemy--behemoth-biter--1"
 
 local floor = math.floor
 local rad = math.rad

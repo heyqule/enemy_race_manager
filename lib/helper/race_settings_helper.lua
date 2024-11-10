@@ -2,7 +2,7 @@ local Table = require("__erm_libs__/stdlib/table")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local RaceSettingsHelper = {
-    default_mod_name = "erm_vanilla"
+    default_mod_name = "enemy"
 }
 
 local FEATURE_RACE_NAME = 1
@@ -19,9 +19,11 @@ function RaceSettingsHelper.clean_up_race()
     end
 
     for _, item in pairs(storage.race_settings) do
-        if item.race ~= RaceSettingsHelper.default_mod_name and script.active_mods[item.race] == nil then
+        if item.race ~= RaceSettingsHelper.default_mod_name and script.active_mods[string.gsub(item.race,"enemy_","")] == nil then
             storage.race_settings = Table.remove_keys(storage.race_settings, { item.race })
-            game.merge_forces("enemy_" .. item.race, "enemy")
+            if game.forces["enemy_" .. item.race] then
+                game.merge_forces("enemy_" .. item.race, "enemy")
+            end
         end
     end
 end

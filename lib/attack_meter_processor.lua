@@ -64,9 +64,8 @@ function AttackMeterProcessor.add_form_group_cron()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
-        local race_name = ForceHelper.extract_race_name_from(force_name)
-        if GlobalConfig.race_is_active(race_name) then
-            Cron.add_10_sec_queue("AttackMeterProcessor.form_group", race_name, force)
+        if GlobalConfig.race_is_active(force_name) then
+            Cron.add_10_sec_queue("AttackMeterProcessor.form_group", force_name, force)
         end
     end
 end
@@ -77,9 +76,9 @@ function AttackMeterProcessor.calculate_points(entity)
     local entity_name = entity.name
     local force = entity.force
     local surface = entity.surface
-    local race_name = ForceHelper.extract_race_name_from(force.name)
+    local force_name = force.name
     local attack_meter_points = unit_point_map[entity_type]
-    if not GlobalConfig.race_is_active(race_name) or not attack_meter_points then
+    if not GlobalConfig.race_is_active(force_name) or not attack_meter_points then
         return
     end
 
@@ -91,11 +90,11 @@ function AttackMeterProcessor.calculate_points(entity)
     end
 
     if unit_map[entity_type] then
-        RaceSettingsHelper.add_killed_units_count(race_name, 1)
+        RaceSettingsHelper.add_killed_units_count(force_name, 1)
     end
 
     if structure_map[entity_type] then
-        RaceSettingsHelper.add_killed_structure_count(race_name, 1)
+        RaceSettingsHelper.add_killed_structure_count(force_name, 1)
     end
 
     attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
@@ -105,23 +104,23 @@ function AttackMeterProcessor.calculate_points(entity)
             attack_meter_points = attack_meter_points * 2
         else
             local deduction_attack_meter_points = attack_meter_points * -6
-            RaceSettingsHelper.add_to_attack_meter(race_name, deduction_attack_meter_points)
-            RaceSettingsHelper.add_accumulated_attack_meter(race_name, deduction_attack_meter_points)
+            RaceSettingsHelper.add_to_attack_meter(force_name, deduction_attack_meter_points)
+            RaceSettingsHelper.add_accumulated_attack_meter(force_name, deduction_attack_meter_points)
         end
     end
 
-    RaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
+    RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(attack_meter_points))
 end
 
 -- Calculate every minutes
 function AttackMeterProcessor.calculated_time_attack()
     for _, force in pairs(game.forces) do
-        if ForceHelper.is_enemy_force(force) then
-            local race_name = ForceHelper.extract_race_name_from(force.name)
+        local force_name = force.name
+        if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_active(force_name) then
             for _, planet in pairs(game.planets) do
                 if GlobalConfig.time_base_attack_enabled() and planet.surface and force.get_evolution_factor(planet.surface) > 0.35 then
-                    local extra_points = RaceSettingsHelper.get_next_attack_threshold(race_name) * (GlobalConfig.time_base_attack_points() / 100)
-                    RaceSettingsHelper.add_to_attack_meter(race_name, math.floor(extra_points))
+                    local extra_points = RaceSettingsHelper.get_next_attack_threshold(force_name) * (GlobalConfig.time_base_attack_points() / 100)
+                    RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(extra_points))
                     break
                 end
             end

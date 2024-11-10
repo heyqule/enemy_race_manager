@@ -28,7 +28,7 @@ function DeployerAttachement.show(player, unit_number)
             unit_number = unit_number
         }
     }
-    container.style.vertically_stretchable = "stretch_and_expand"
+    container.style.vertically_stretchable = false
 
     container.add { type = "label", caption = { "gui-rallypoint.current_location" } }
 
