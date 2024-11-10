@@ -142,7 +142,7 @@ function AttackMeterProcessor.form_group(race_name, force)
 
     local current_attack_value = RaceSettingsHelper.get_attack_meter(race_name)
     -- Process attack point group
-    if current_attack_value > next_attack_threshold then
+    if current_attack_value >= next_attack_threshold then
         local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
         local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
         local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0

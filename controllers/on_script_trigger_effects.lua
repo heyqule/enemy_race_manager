@@ -188,7 +188,16 @@ local script_functions = {
     end,
 
     [QUALITY_DICE_ROLL] = function(event)
-        QualityProcessor.roll(event.source_entity)
+        local origin_commandable = event.source_entity.commandable
+        local entity = QualityProcessor.roll(event.source_entity)
+
+        --Join group if needed
+        if origin_commandable and
+            origin_commandable.is_unit_group and
+            entity.commandable.unique_id ~= origin_commandable.unique_id
+        then
+                origin_commandable.add_member(entity)
+        end
     end,
 
     [QUALITY_TALLY_POINT] = function(event)

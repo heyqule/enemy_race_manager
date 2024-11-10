@@ -534,7 +534,7 @@ function BossProcessor.get_pathing_entity_name(race_name)
     return RaceSettingsHelper.get_race_entity_name(
             race_name,
             storage.race_settings[race_name].pathing_unit,
-            storage.race_settings[race_name].level
+            1
     )
 end
 

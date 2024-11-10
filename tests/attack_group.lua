@@ -58,8 +58,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
         AttackGroupBeaconProcessor.init_index()
 
-        storage.race_settings[race_name].level = 5
-        storage.race_settings[race_name].tier = 3
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
         after_ticks(14400, function()
@@ -86,8 +84,6 @@ end
         AttackGroupBeaconProcessor.init_index()
 
         storage.erm_unit_groups = {}
-        storage.race_settings[race_name].level = 5
-        storage.race_settings[race_name].tier = 3
         storage.race_settings[race_name].attack_meter = 3000
         storage.race_settings[race_name].next_attack_threshold = 3000
         storage.race_settings[race_name].attack_meter_total = 60000
@@ -110,7 +106,6 @@ end
 
     it("Superweapon revenge", function()
         async(7300)
-        storage.race_settings[race_name].level = 5
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
@@ -219,8 +214,6 @@ end
 
     it("Featured Group", function()
         async(7300)
-        storage.race_settings[race_name].level = 5
-        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -257,8 +250,6 @@ end
 
     it("Featured Flyer Group", function()
         async(7300)
-        storage.race_settings[race_name].level = 5
-        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -295,8 +286,6 @@ end
 
     it("Group Killed during generation", function()
         async(1900)
-        storage.race_settings[race_name].level = 5
-        storage.race_settings[race_name].tier = 1
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)

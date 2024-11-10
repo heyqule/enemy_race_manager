@@ -434,6 +434,10 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
 
     local target_force = AttackGroupHeatProcessor.pick_target(race_name)
     local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
+    if target_force == nil or surface == nil then
+        return false
+    end
+
     local tier =  QualityProcessor.get_tier(force.name, surface.name)
 
     local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)

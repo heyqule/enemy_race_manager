@@ -12,7 +12,7 @@ local QualityProcessor = {}
 local max_difficulties = {
     [QUALITY_CASUAL] = {0, 0.7, 0.3, 0, 0},
     [QUALITY_NORMAL] = {0, 0.3, 0.60, 0.1, 0},
-    [QUALITY_ADVANCED] = {0, 0, 0.70, 0.25, 0.05},
+    [QUALITY_ADVANCED] = {0, 0, 0.7, 0.25, 0.05},
     [QUALITY_HARDCORE] = {0, 0, 0.3, 0.5, 0.2},
     [QUALITY_FIGHTER] = {0, 0, 0, 0.5, 0.5},
     [QUALITY_CRUSADER] = {0, 0, 0, 0.2, 0.8},
@@ -191,7 +191,7 @@ function QualityProcessor.roll(entity)
     then
         storage.skip_quality_rolling = false
         is_running_roll = false
-        return
+        return entity
     end
 
     local name_token = ForceHelper.get_name_token(entity.name)
@@ -220,7 +220,7 @@ function QualityProcessor.roll(entity)
 
         if not planet_data then
             is_running_roll = false
-            return
+            return entity
         end
         local spawn_rates = planet_data.spawn_rates
         local spawn_rates_size = planet_data.spawn_rates_size
@@ -228,7 +228,7 @@ function QualityProcessor.roll(entity)
 
         --- Unit from spawner doesn't need to roll.
         if unit_tier >= lowest_tier then
-            return
+            return entity
         end
 
 
@@ -250,36 +250,39 @@ function QualityProcessor.roll(entity)
 
     --- no need to swap if unit is already at the same or higher than selected tier.
     if tonumber(name_token[3]) >= selected_tier then
-        return
+        return entity
     end
 
     if can_spawn then
-        local position = entity.position
         local force = entity.force
-        local origin_commandable = entity.commandable
+        local position = surface.find_non_colliding_position(entity.name, entity.position,
+               16, 2)
+
         -- destroy and doesn't raise any events since it's replacement.
-        entity.destroy()
 
-        is_running_roll = true
-        local new_unit = surface.create_entity {
-            name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
-            force = force,
-            position = position,
-            create_build_effect_smoke = false,
-        }
 
-        --Join group if needed
-        if origin_commandable and origin_commandable.is_unit_group then
-            origin_commandable.add_member(new_unit)
+        if position then
+            is_running_roll = true
+            local new_unit = surface.create_entity {
+                name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
+                force = force,
+                position = position,
+                create_build_effect_smoke = false,
+            }
+
+            if new_unit then
+                entity.destroy()
+                return new_unit
+            end
         end
     end
+
+    return entity
 end
 
 function QualityProcessor.reset_all_progress()
     for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
         local race_name = ForceHelper.extract_race_name_from(force_name)
-        storage.race_settings[race_name].level = 1
-        storage.race_settings[race_name].tier = 1
         storage.race_settings[race_name].attack_meter = 0
         storage.race_settings[race_name].accumulated_attack_meter = 0
         local force = game.forces[force_name]

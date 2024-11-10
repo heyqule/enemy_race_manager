@@ -58,8 +58,9 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
 
     local surface_id, intel = next(storage.interplanetary_intel, storage.interplanetary_tracker.surface_id)
     if not surface_id or not intel then
-        storage.interplanetary_tracker.surface_id = nil
-        return false
+        storage.interplanetary_tracker.surface_id = 1
+        surface_id = 1
+        intel = storage.interplanetary_intel[1]
     end
     local surface = game.surfaces[surface_id]
 
