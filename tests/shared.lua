@@ -75,11 +75,8 @@ end
 function TestShared.reset_attack_meter()
     for key, force in pairs(game.forces) do
         local force_name = force.name
-        local race_name = ForceHelper.extract_race_name_from(force_name)
-        if race_name then
-            storage.race_settings[race_name].attack_meter = 0
-            storage.race_settings[race_name].attack_meter_total = 0
-        end
+        storage.race_settings[force_name].attack_meter = 0
+        storage.race_settings[force_name].attack_meter_total = 0
     end
 end
 

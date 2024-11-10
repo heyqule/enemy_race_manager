@@ -51,6 +51,8 @@ Date: ????-??-??
     - Removed randomly assign enemy on a surface/planet.  Enemies are now defined in planet prototype.
     - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to autoplace changes.
 
+  Bugfixes:
+    - Fixed interplanetary attack picking a nil surface. It now picks Nauvis as default.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6
@@ -459,7 +461,7 @@ Date: 2023-08-26
   Bugfixes:
     - Fixed an issue that armoured biter spawn spec were not included.
     - Fixed an issue where race caches in race mods are not updated when race levels up.
-    - Fixed ForceHelper.extract_race_name_from() get 'erm_vanilla' for non-enemy force.
+    - Fixed ForceHelper.extract_race_name_from() get 'enemy' for non-enemy force.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.19.2
@@ -1532,7 +1534,7 @@ Date: 06. 27. 2021
 
   Features:
     - --- Added a command to override race level ---
-    - Usage: /ERM_levelup erm_vanilla,5
+    - Usage: /ERM_levelup enemy,5
     - Overriding level must be equal or higher than the level calculated by evolution points.
 
   Changes:

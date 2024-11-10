@@ -5,7 +5,7 @@
 ```json
 {
   "attack_group_surface_data": {
-     "erm_vanilla": {
+     "enemy": {
        "current_planet_pointer": null,
        "current_planet_name": "name",
        "current_cycle": 0

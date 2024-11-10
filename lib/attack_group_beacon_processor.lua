@@ -832,8 +832,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     if target_beacon and cache.bypass_scanner == nil then
         --- @TODO comment out for production
         if DEBUG_MODE then
-            local race_name = ForceHelper.extract_race_name_from(source_force.name)
-            local color = settings.startup[race_name.."-map-color"].value
+            local force_name = source_force.name
+            local color = settings.startup[force_name.."-map-color"].value
             color.a = 0.1
             rendering.draw_rectangle({
                 force="player",

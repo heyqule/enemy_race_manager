@@ -20,7 +20,7 @@
 #### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 
 - All biters, worms and spawners support leveling.
-- They join default enemy force, erm_vanilla.
+- They join default enemy force, enemy.
 - The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
 
 #### Rampant AI (limited, may have interferences)

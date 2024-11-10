@@ -545,15 +545,15 @@ it("Can't avoid land Beacon, all enemies killed by turrets", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(7200, function()
@@ -574,11 +574,11 @@ it("Aerial Attack", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
     
     after_ticks(7200, function()
@@ -615,16 +615,16 @@ it("Avoid Defence Beacon (Ground Attack) using left side", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(10800, function()
@@ -647,16 +647,16 @@ it("Avoid Defence Beacon (Aerial Attack) using left side", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_LT
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
     after_ticks(10800, function()
@@ -679,16 +679,16 @@ it("Avoid Defence Beacon (Ground Attack) using right side", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(10800, function()
@@ -711,16 +711,16 @@ it("Avoid Defence Beacon (Aerial Attack) using right side", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-500,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200, 40 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_RT
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
     after_ticks(10800, function()
@@ -748,24 +748,24 @@ it("Picking area with lowest defense score from East", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-720,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-720,0}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -200 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, -200 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, -120 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, 40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, 120 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -485, 200 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -485, 200 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(3300, function()
@@ -804,24 +804,24 @@ it("Picking area with lowest defense score from North", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={0,-720}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={0,-720}})
     AttackGroupBeaconProcessor.init_index()
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -200,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -200,-485 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -120,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -120,-485 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { -40,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { -40,-485 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 40,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { 40,-485 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 120,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { 120,-485 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { 200,-485 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { 200,-485 } })
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(3300, function()
@@ -858,24 +858,24 @@ it("Picking aerial area with lowest defense score from East", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-620,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
 
     local x = -175
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -200 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -200 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -120 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, 40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, 120 } })
 
 
     after_ticks(300, function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
 
     after_ticks(3900, function()
@@ -913,23 +913,23 @@ it("When inserted waypoint is unreachable, enemies should still able to route to
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-620,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-620,0}})
     AttackGroupBeaconProcessor.init_index()
 
     local x = -170
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -200 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -200 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -120 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, -40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, -40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 40 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, 40 } })
 
-    local entity = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = { x, 120 } })
+    local entity = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = { x, 120 } })
 
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(9600, function()
@@ -966,25 +966,25 @@ it("Attack beacon couldnt reach a spawn beacon on first try", function()
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-350,350}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-350,350}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(600, function()
-        assert(storage.group_tracker.erm_vanilla == nil, "Shouldn't able to spawn units")
+        assert(storage.group_tracker.enemy == nil, "Shouldn't able to spawn units")
     end)
 
     after_ticks(900, function()
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -500, 0 } })
         local success = AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk(surface, { { -510, -20 }, { -490, 20 } })
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(1200, function()
-        assert(storage.group_tracker.erm_vanilla.current_size > 0, "Able to spawn units")
+        assert(storage.group_tracker.enemy.current_size > 0, "Able to spawn units")
         done()
     end)
 
@@ -1007,11 +1007,11 @@ it("Land attack group cant find a valid path, switch to aerial group instead", f
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={-250,-250}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={-250,-250}})
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(300, function()
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 100)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 100)
     end)
 
     after_ticks(10800, function()
@@ -1046,9 +1046,9 @@ it("Unable to find enemy near scout beacon during path finding, removing scout b
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
     local gun_turret = surface.create_entity({ name = "gun-turret", force = "player", position = { 200, 10 }, raise_built=true })
-    local landing_scout = surface.create_entity({ name = "erm_vanilla--land_scout--1", force = "enemy", position = {200, 0} })
+    local landing_scout = surface.create_entity({ name = "enemy--land_scout--1", force = "enemy", position = {200, 0} })
 
-    surface.create_entity({name="erm_vanilla--biter-spawner--5", position={500,0}})
+    surface.create_entity({name="enemy--biter-spawner--5", position={500,0}})
     AttackGroupBeaconProcessor.init_index()
 
     landing_scout.die("player")
@@ -1067,7 +1067,7 @@ it("Unable to find enemy near scout beacon during path finding, removing scout b
         }
         beacon_number = beacons[1].unit_number
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
-        AttackGroupProcessor.generate_group("erm_vanilla",game.forces["enemy"], 50)
+        AttackGroupProcessor.generate_group("enemy",game.forces["enemy"], 50)
     end)
 
     after_ticks(3600, function()

@@ -16,7 +16,7 @@ simulations.general =
         game.simulation.camera_player = player
         game.simulation.camera_position = {0, 0}
         game.simulation.camera_player_cursor_position = player.position
-        biter1 = game.surfaces[1].create_entity { name="erm_vanilla--small-biter--1", position={0, 0} }
+        biter1 = game.surfaces[1].create_entity { name="enemy--small-biter--1", position={0, 0} }
         if script.active_mods['erm_zerg'] then
             biter2 = game.surfaces[1].create_entity { name="erm_zerg--zergling--1", position={-3, 0} }
         end
@@ -63,7 +63,7 @@ simulations.quality_system =
         game.simulation.camera_player = player
         game.simulation.camera_position = {0, 0}
         game.simulation.camera_player_cursor_position = player.position
-        biter1 = game.surfaces[1].create_entity { name="erm_vanilla--small-biter--1", position={0, 0} }
+        biter1 = game.surfaces[1].create_entity { name="enemy--small-biter--1", position={0, 0} }
         biter1.active = false
         if script.active_mods['erm_zerg'] then
             biter2 = game.surfaces[1].create_entity { name="erm_zerg--zergling--1", position={-3, 0} }

@@ -11,6 +11,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local InterplanetaryAttacks = {}
 
@@ -88,7 +89,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
     end
 
     local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and RaceSettingsHelper.get_level(race_name) > 1
+    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and QualityProcessor.get_tier_by_racename(race_name, surface.name)
     local max_unit_number = Config.max_group_size()
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 

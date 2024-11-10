@@ -80,14 +80,14 @@ end
 function AttackGroupPathingProcessor.request_path(surface, source_force, start, goal, is_aerial, group_number)
 
     local bounding_box, collision_mask
-    local race_name = ForceHelper.extract_race_name_from(source_force.name)
+    local force_name = source_force.name
     collision_mask = {layers={},not_colliding_with_itself=true}
 
     local scout_name
     if is_aerial then
-        scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.AERIAL_SCOUT)
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
     else
-        scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name,AttackGroupBeaconProcessor.LAND_SCOUT)
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.LAND_SCOUT)
     end
 
     local data_table = prototypes.get_entity_filtered({{

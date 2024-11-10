@@ -40,15 +40,6 @@ local CHUNK_SIZE = 32
 local on_biter_base_build = function(event)
     local entity = event.entity
     if entity and entity.valid then
-        local race_name = ForceHelper.extract_race_name_from(entity.force.name)
-        if Config.race_is_active(race_name) then
-            --@TODO To be update to use Quality system
-            --local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, storage.race_settings, entity.force.name)
-            --if replaced_entity and replaced_entity.valid then
-            --    BaseBuildProcessor.exec(replaced_entity)
-            --end
-        end
-
         AttackGroupBeaconProcessor.create_spawn_beacon(entity)
     end
 end
@@ -56,17 +47,17 @@ end
 local on_unit_group_created = function(event)
     local group = event.group
     local force = group.force
-    local racename = ForceHelper.extract_race_name_from(force.name)
-    local is_erm_group = storage.group_tracker and storage.group_tracker[racename]
+    local force_name = force.name
+    local is_erm_group = storage.group_tracker and storage.group_tracker[force_name]
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_erm_group then
-            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[racename].group_type] then
+            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
-        elseif (UtilHelper.can_spawn(75) or TEST_MODE) then
+        elseif UtilHelper.can_spawn(75) or TEST_MODE then
             scout_unit_name = 1
         end
 
@@ -106,8 +97,7 @@ local on_unit_group_finished_gathering = function(event)
         checking_state[group.state] and
         #group.members > 10
     then
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
-        local target = AttackGroupHeatProcessor.pick_target(race_name)
+        local target = AttackGroupHeatProcessor.pick_target(group_force.name)
         AttackGroupProcessor.process_attack_position(group, nil, nil, target)
         storage.erm_unit_groups[group.unique_id] = {
             group = group,
@@ -126,13 +116,13 @@ local on_unit_group_finished_gathering = function(event)
         scout_unit_name
     then
         local surface = group.surface
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        local force_name = group_force.name
         storage.skip_quality_rolling = true
         local scout = surface.create_entity({
             position =  group.position,
             surface = surface,
             force = group_force,
-            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scout_unit_name.scout_type]),
+            name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_type[scout_unit_name.scout_type]),
             count = 1
         })
         if scout then
@@ -238,10 +228,10 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             end
 
             new_group.set_command(erm_unit_group.commands)
-            storage.erm_unit_group[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
-            storage.erm_unit_group[new_group.unique_id].commands = new_command
-            storage.erm_unit_group[new_group.unique_id].group = new_group
-            storage.erm_unit_group[group.unique_id] = nil
+            storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
+            storage.erm_unit_groups[new_group.unique_id].commands = new_command
+            storage.erm_unit_groups[new_group.unique_id].group = new_group
+            storage.erm_unit_groups[group.unique_id] = nil
         end
 
         if event_result == defines.behavior_result.success and was_distracted == false then
@@ -290,7 +280,7 @@ end
 
 local function handle_unit_spawner(event)
     local dead_spawner = event.entity
-    AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), dead_spawner.surface.index, event.force.index)
+    AttackGroupHeatProcessor.calculate_heat(dead_spawner.force.name, dead_spawner.surface.index, event.force.index)
 end
 
 

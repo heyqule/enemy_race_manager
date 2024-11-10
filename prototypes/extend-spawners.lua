@@ -115,7 +115,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
         probability_expression = "enemy_autoplace_base(0, 6)",
         force = FORCE_NAME,
     })
-    spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
+    spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
     return spawner
 end
@@ -145,7 +145,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     worm["autoplace"] = enemy_autoplace.enemy_worm_autoplace({
         probability_expression = "enemy_autoplace_base("..distance..", 3)", force = FORCE_NAME
     })
-    worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
+    worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
     return worm
 end
@@ -177,7 +177,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
     worm["attack_parameters"]["range"] = GlobalConfig.get_max_attack_range()
     worm["prepare_range"] = 24
     worm["autoplace"] = nil
-    worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["erm_vanilla-map-color"].value)
+    worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
     return worm
 end

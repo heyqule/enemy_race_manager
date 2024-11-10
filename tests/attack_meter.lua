@@ -9,11 +9,11 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local TestShared = require("shared")
 
 
-local biter_name = "erm_vanilla--medium-biter--1" -- 1 points
-local turret_name = "erm_vanilla--medium-worm-turret--1" -- 10 points
-local spawner_name = "erm_vanilla--biter-spawner--1" -- 50 points
+local biter_name = "enemy--medium-biter--1" -- 1 points
+local turret_name = "enemy--medium-worm-turret--1" -- 10 points
+local spawner_name = "enemy--biter-spawner--1" -- 50 points
 local force_name = "enemy"
-local race_name = "erm_vanilla"
+local race_name = "enemy"
 
 before_each(function()
     TestShared.prepare_the_factory()

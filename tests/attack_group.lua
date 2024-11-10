@@ -39,7 +39,7 @@ local function spawn_regular_unit_group(surface, position, is_auto)
     local group = surface.create_unit_group {position = position, force = "enemy"}
     for i = 0, 50, 1 do
         local entity = surface.create_entity({
-            name = "erm_vanilla--small-biter--1",
+            name = "enemy--small-biter--1",
             position = position
         })
         group.add_member(entity)
@@ -68,10 +68,6 @@ end
 
             local group = storage.erm_unit_groups[key].group
             assert.truthy(storage.erm_unit_groups[key].group.valid, "Check Unit Group valid")
-
-            local member = group.members[5]
-            local nameToken = ForceHelper.get_name_token(member.name)
-            assert.equal(5, tonumber(nameToken[3]), "Check Group Level")
             done()
         end)
     end)

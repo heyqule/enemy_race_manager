@@ -7,8 +7,8 @@ data:extend {
         name = "enemyracemanager-nauvis-enemy",
         description = "enemyracemanager-nauvis-enemy",
         setting_type = "startup",
-        default_value = 'erm_vanilla',
-        allowed_values = { NAUVIS_MIXED, 'erm_vanilla' },
+        default_value = 'enemy',
+        allowed_values = { NAUVIS_MIXED, 'enemy' },
         order = "enemyracemanager-100"
     },
     {
@@ -42,8 +42,8 @@ data:extend {
     --- Range 1000 to 1019 reserve for map color changes
     {
         type = "color-setting",
-        name = "erm_vanilla-map-color",
-        description = "erm_vanilla-map-color",
+        name = "enemy-map-color",
+        description = "enemy-map-color",
         setting_type = "startup",
         default_value = VANILLA_MAP_COLOR,
         order = "enemyracemanager-1001"

@@ -5,7 +5,7 @@
 ---
 
 -- FOR VANILLA ENEMIES / enemy forces.
-MOD_NAME = "erm_vanilla"
+MOD_NAME = "enemy"
 FORCE_NAME = "enemy"
 
 --- [ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]

@@ -114,7 +114,7 @@ function CommandCenterControlGUI.update(player)
 
     local cc_from = left_listing.add {
         type = "list-box",
-        name = CommandCenterControlGUI.cc_to_selector,
+        name = CommandCenterControlGUI.cc_from_selector,
         tags={filter_pattern="army_cc/cc_select_.*"}
     }
     cc_from.style.width = 175

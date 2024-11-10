@@ -119,9 +119,8 @@ function QualityProcessor.calculate_quality_points()
     update_storages()
     for _, force in pairs(game.forces) do
         if ForceHelper.is_enemy_force(force) then
-            local race_name = ForceHelper.extract_race_name_from(force.name)
             local quality_data = storage.quality_on_planet[force.name] or {}
-            local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
+            local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force.name)
             for _, planet in pairs(game.planets) do
                 if planet.surface then
                     local data = quality_data[planet.name] or {}
@@ -158,24 +157,59 @@ function QualityProcessor.calculate_quality_points()
     end
 end
 
-function QualityProcessor.get_quality_point(force, planet)
-    return storage.quality_on_planet[force][planet].points
+function QualityProcessor.get_quality_point(force_name, planet_name)
+    return storage.quality_on_planet[force_name][planet_name].points
 end
 
-function QualityProcessor.is_maxed_out(force, planet)
-    return  storage.quality_on_planet[force][planet].max_out
+function QualityProcessor.is_maxed_out(force_name, planet_name)
+    return  storage.quality_on_planet[force_name][planet_name].max_out
 end
 
-function QualityProcessor.get_spawn_rate(force, planet)
-    return storage.quality_on_planet[force][planet].spawn_rates
+function QualityProcessor.get_spawn_rates(force_name, planet_name)
+    return storage.quality_on_planet[force_name][planet_name].spawn_rates
+end
+
+function QualityProcessor.roll_a_rate(force_name, surface_name)
+    if not storage.quality_on_planet[force_name] or not storage.quality_on_planet[force_name][surface_name]
+    then
+        QualityProcessor.calculate_quality_points()
+    end
+
+    local planet_data = storage.quality_on_planet[force_name][surface_name]
+    local spawn_rates = planet_data.spawn_rates
+    local spawn_rates_size = planet_data.spawn_rates_size
+    local lowest_tier = planet_data.lowest_allowed_tier
+    local selected_tier, can_spawn
+
+    for index, spawn_rate in pairs(spawn_rates) do
+        if spawn_rate > 0 then
+            selected_tier = spawn_rates_size - (index - 1)
+            if selected_tier == lowest_tier then
+                can_spawn = true
+            else
+                can_spawn = RaceSettingsHelper.can_spawn(spawn_rate)
+            end
+
+            if can_spawn then
+                break
+            end
+        end
+    end
+
+    return selected_tier
 end
 
 --- Tier mapping.
 --- Tier 1 is under 2000 points
 --- Tier 2 is between 2000 - 4000 points
 --- Tier 3 is 4000+ points
-function QualityProcessor.get_tier(force, planet)     
-    return storage.quality_on_planet[force][planet].tier
+function QualityProcessor.get_tier(force_name, surface_name)
+    return storage.quality_on_planet[force_name][surface_name].tier
+end
+
+function QualityProcessor.get_tier_by_racename(race_name, surface_name)
+    local force_name = ForceHelper.get_force_name_from(race_name)
+    return storage.quality_on_planet[force_name][surface_name].tier
 end
 
 function QualityProcessor.reset_globals()
@@ -198,8 +232,7 @@ function QualityProcessor.roll(entity)
     local unit_tier = tonumber(name_token[3])
     local force = entity.force
     local surface = entity.surface
-    local race_name = ForceHelper.extract_race_name_from(force.name)
-    local race_settings = storage.race_settings[race_name]
+    local race_settings = storage.race_settings[force.name]
 
     local selected_tier
     local can_spawn = false
@@ -282,9 +315,8 @@ end
 
 function QualityProcessor.reset_all_progress()
     for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
-        local race_name = ForceHelper.extract_race_name_from(force_name)
-        storage.race_settings[race_name].attack_meter = 0
-        storage.race_settings[race_name].accumulated_attack_meter = 0
+        storage.race_settings[force_name].attack_meter = 0
+        storage.race_settings[force_name].accumulated_attack_meter = 0
         local force = game.forces[force_name]
         force.reset_evolution()
     end

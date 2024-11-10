@@ -10,7 +10,7 @@ require('util')
 local String = require('__erm_libs__/stdlib/string')
 
 local ForceHelper = {
-    default_mod_name = "erm_vanilla"
+    default_mod_name = "enemy"
 }
 
 local NEUTRAL_FORCES = {
@@ -133,7 +133,7 @@ function ForceHelper.refresh_all_enemy_forces()
     storage.player_forces = {}
     storage.enemy_force_check = {}
     for _, force in pairs(game.forces) do
-        if force.name == "enemy" or (string.find(force.name, "enemy", 1, true) and script.active_mods[ForceHelper.extract_race_name_from(force.name)] ~= nil) then
+        if force.name == "enemy" or (string.find(force.name, "enemy", 1, true) and script.active_mods[string.gsub(force.name,"enemy_","")] ~= nil) then
             table.insert(storage.enemy_force_cache, force.name)
             storage.enemy_force_check[force.name] = true
             table.insert(storage.non_player_forces, force.name)

@@ -20,12 +20,12 @@ AttackGroupHeatProcessor.DEFAULT_VALUE = 5
 local PLAYER = 1
 local NAUVIS = 1
 
-local init_data = function(race_name, surface_index)
-    if  storage.attack_heat[race_name] == nil or
-        storage.attack_heat[race_name][surface_index] == nil
+local init_data = function(force_name, surface_index)
+    if  storage.attack_heat[force_name] == nil or
+        storage.attack_heat[force_name][surface_index] == nil
     then
-        storage.attack_heat[race_name] = storage.attack_heat[race_name] or {}
-        storage.attack_heat[race_name][surface_index] = storage.attack_heat[race_name][surface_index] or {}
+        storage.attack_heat[force_name] = storage.attack_heat[force_name] or {}
+        storage.attack_heat[force_name][surface_index] = storage.attack_heat[force_name][surface_index] or {}
     end
 end
 
@@ -67,19 +67,19 @@ AttackGroupHeatProcessor.remove_force = function(attacker_index)
     end
 end
 
-AttackGroupHeatProcessor.calculate_heat = function(race_name, surface_index, attacker_index, heat_points)
-    if race_name == nil then
+AttackGroupHeatProcessor.calculate_heat = function(force_name, surface_index, attacker_index, heat_points)
+    if force_name == nil then
         return
     end
-    init_data(race_name, surface_index)
-    local points = storage.attack_heat[race_name][surface_index][attacker_index] or 0
+    init_data(force_name, surface_index)
+    local points = storage.attack_heat[force_name][surface_index][attacker_index] or 0
     heat_points = heat_points or AttackGroupHeatProcessor.DEFAULT_VALUE
     points = points + heat_points
-    storage.attack_heat[race_name][surface_index][attacker_index] = points
+    storage.attack_heat[force_name][surface_index][attacker_index] = points
 end
 
-AttackGroupHeatProcessor.cooldown_heat = function(race_name)
-    local attack_heat = storage.attack_heat[race_name]
+AttackGroupHeatProcessor.cooldown_heat = function(force_name)
+    local attack_heat = storage.attack_heat[force_name]
     if attack_heat == nil then
         return nil
     end
@@ -97,10 +97,10 @@ AttackGroupHeatProcessor.cooldown_heat = function(race_name)
     end
 end
 
-AttackGroupHeatProcessor.aggregate_heat = function(race_name)
-    if storage.attack_heat[race_name] == nil then
-        storage.attack_heat_by_surfaces[race_name] = nil
-        storage.attack_heat_by_forces[race_name] = nil
+AttackGroupHeatProcessor.aggregate_heat = function(force_name)
+    if storage.attack_heat[force_name] == nil then
+        storage.attack_heat_by_surfaces[force_name] = nil
+        storage.attack_heat_by_forces[force_name] = nil
         return nil
     end
 
@@ -108,7 +108,7 @@ AttackGroupHeatProcessor.aggregate_heat = function(race_name)
     local attack_heat_by_forces = {}
 
     --- Aggregate
-    for surface_index, surface_data in pairs(storage.attack_heat[race_name]) do
+    for surface_index, surface_data in pairs(storage.attack_heat[force_name]) do
         local surface_heat = attack_heat_by_surfaces[surface_index] or { surface_index = surface_index, heat = 0 }
         for attacker_index, points in pairs(surface_data) do
             local force_heat = attack_heat_by_forces[attacker_index] or { attacker_index = attacker_index, heat = 0 }
@@ -138,13 +138,13 @@ AttackGroupHeatProcessor.aggregate_heat = function(race_name)
     table.sort(sorted_forces, function(a, b) return a.heat > b.heat  end)
 
     --- Assign storage
-    storage.attack_heat_by_surfaces[race_name] = sorted_surfaces
-    storage.attack_heat_by_forces[race_name] = sorted_forces
+    storage.attack_heat_by_surfaces[force_name] = sorted_surfaces
+    storage.attack_heat_by_forces[force_name] = sorted_forces
 end
 
-AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_friend)
+AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_friend)
     target_force = target_force or game.forces[PLAYER]
-    local surface_data = storage.attack_heat_by_surfaces[race_name]
+    local surface_data = storage.attack_heat_by_surfaces[force_name]
     local return_surface = nil
     if storage.is_multi_planets_game and
         surface_data and
@@ -182,8 +182,8 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
                         then
 
                             --- AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
-                            RaceSettingsHelper.add_to_attack_meter(friend_race_name, RaceSettingsHelper.get_next_attack_threshold(race_name))
-                            RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
+                            RaceSettingsHelper.add_to_attack_meter(friend_race_name, RaceSettingsHelper.get_next_attack_threshold(force_name))
+                            RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
                             return nil
                         end
                     end
@@ -192,7 +192,7 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
 
             if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
                 script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
-                    race_name = race_name,
+                    race_name = force_name,
                     target_force = target_force
                 })
                 return nil
@@ -203,9 +203,9 @@ AttackGroupHeatProcessor.pick_surface = function(race_name, target_force, ask_fr
     return return_surface or game.surfaces[NAUVIS]
 end
 
-AttackGroupHeatProcessor.pick_target = function(race_name)
+AttackGroupHeatProcessor.pick_target = function(force_name)
     --- If the game has multiple player forces, pick from heat list
-    local attack_heat_by_forces = storage.attack_heat_by_forces[race_name]
+    local attack_heat_by_forces = storage.attack_heat_by_forces[force_name]
     local total_player_forces = storage.total_player_forces
 
     if total_player_forces > 1 and

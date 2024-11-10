@@ -212,7 +212,7 @@ function Debug_RemoteAPI.forces_relation()
     end
 end
 
---- Usage: remote.call("enemyracemanager_debug", "create_land_scout", "erm_vanilla", {x=100,y=100})
+--- Usage: remote.call("enemyracemanager_debug", "create_land_scout", "enemy", {x=100,y=100})
 function Debug_RemoteAPI.create_land_scout(mod_name, position)
    local surface = game.player.surface
     surface.create_entity({
@@ -222,7 +222,7 @@ function Debug_RemoteAPI.create_land_scout(mod_name, position)
     })
 end
 
---- Usage: remote.call("enemyracemanager_debug", "create_air_scout", "erm_vanilla", {x=100,y=100})
+--- Usage: remote.call("enemyracemanager_debug", "create_air_scout", "enemy", {x=100,y=100})
 function Debug_RemoteAPI.create_air_scout(mod_name, position)
     local surface = game.player.surface
     surface.create_entity({
@@ -244,7 +244,7 @@ function Debug_RemoteAPI.interplanetary_attacks_scan()
     InterplanetaryAttacks.queue_scan()
 end
 
---- remote.call("enemyracemanager_debug", "interplanetary_attacks_exec","erm_vanilla","players")
+--- remote.call("enemyracemanager_debug", "interplanetary_attacks_exec","enemy","players")
 function Debug_RemoteAPI.interplanetary_attacks_exec(race_name, target_force, drop_location)
     InterplanetaryAttacks.exec(race_name, target_force, drop_location)
 end
