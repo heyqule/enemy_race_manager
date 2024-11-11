@@ -175,14 +175,14 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
 
             -- Transfer all attack points to a friend that can attack.
             if ask_friend and ask_friend_roll then
-                for friend_race_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
+                for friend_force_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
                     for surface_index, surface in pairs(race_surface_data) do
                         if surface and surface.has_attack_beacon and
-                                storage.attack_heat[friend_race_name][surface_index] ~= nil
+                                storage.attack_heat[friend_force_name][surface_index] ~= nil
                         then
 
-                            --- AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
-                            RaceSettingsHelper.add_to_attack_meter(friend_race_name, RaceSettingsHelper.get_next_attack_threshold(force_name))
+                            --- AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
+                            RaceSettingsHelper.add_to_attack_meter(friend_force_name, RaceSettingsHelper.get_next_attack_threshold(force_name))
                             RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
                             return nil
                         end
@@ -192,7 +192,7 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
 
             if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
                 script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
-                    race_name = force_name,
+                    force_name = force_name,
                     target_force = target_force
                 })
                 return nil

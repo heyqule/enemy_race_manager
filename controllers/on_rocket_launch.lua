@@ -18,9 +18,9 @@ OnRocketLaunched.events = {
         if GlobalConfig.rocket_attack_point_enable() then
             local silo = event.rocket_silo
             if silo.valid then
-                local race_name = SurfaceProcessor.get_enemy_on(silo.surface.name)
-                if race_name then
-                    RaceSettingHelper.add_to_attack_meter(race_name, GlobalConfig.rocket_attack_points())
+                local force_name = SurfaceProcessor.get_enemy_on(silo.surface.name)
+                if force_name then
+                    RaceSettingHelper.add_to_attack_meter(force_name, GlobalConfig.rocket_attack_points())
                 end
             end
         end

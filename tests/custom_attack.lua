@@ -20,7 +20,7 @@ it("Dropship", function()
     local enemy_force = game.forces["enemy"]
     local player_force = game.forces["player"]
     local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
-    local overlord = surface.create_entity({ name = "erm_zerg--overlord--1", force = enemy_force, position = { 10, 10 } })
+    local overlord = surface.create_entity({ name = "enemy_erm_zerg--overlord--1", force = enemy_force, position = { 10, 10 } })
 
     after_ticks(300, function()
         local unit_count = surface.count_entities_filtered({
@@ -35,7 +35,7 @@ it("Builder", function()
     local enemy_force = game.forces["enemy"]
     local player_force = game.forces["player"]
     local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
-    local overlord = surface.create_entity({ name = "erm_zerg--drone--1", force = enemy_force, position = { 10, 10 } })
+    local overlord = surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = { 10, 10 } })
 
     after_ticks(600, function()
         local building_count = surface.count_entities_filtered({
@@ -51,18 +51,18 @@ it("Timed units", function()
     local enemy_force = game.forces["enemy"]
     local player_force = game.forces["player"]
     local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
-    local queen = surface.create_entity({ name = "erm_zerg--queen--1", force = enemy_force, position = { 10, 10 } })
+    local queen = surface.create_entity({ name = "enemy_erm_zerg--queen--1", force = enemy_force, position = { 10, 10 } })
 
     after_ticks(300, function()
         local unit_count = surface.count_entities_filtered({
-            name = "erm_zerg--broodling--1"
+            name = "enemy_erm_zerg--broodling--1"
         })
         assert(unit_count >= 1, "Has time to live unit spawned")
     end)
 
     after_ticks(14000, function()
         local unit_count = surface.count_entities_filtered({
-            name = "erm_zerg--broodling--1"
+            name = "enemy_erm_zerg--broodling--1"
         })
         assert(unit_count == 0, "time to live unit expired")
         done()
@@ -74,7 +74,7 @@ it("Protoss: Time Unit Tree/Stone blockage test", function()
     local surface = game.surfaces[1]
     local enemy_force = game.forces["enemy_erm_protoss"]
     local player_force = game.forces["player"]
-    local reaver = surface.create_entity({ name = "erm_toss--reaver--1", force = enemy_force, position = { 10, 10 } })
+    local reaver = surface.create_entity({ name = "enemy_erm_toss--reaver--1", force = enemy_force, position = { 10, 10 } })
     local stone = surface.create_entity({ name = "big-sand-rock", force = "neutral", position = { 0, 0 } })
 
     reaver.commandable.set_command({
@@ -83,7 +83,7 @@ it("Protoss: Time Unit Tree/Stone blockage test", function()
     })
     after_ticks(180, function()
         local unit_count = surface.count_entities_filtered({
-            name = "erm_toss--scarab--1"
+            name = "enemy_erm_toss--scarab--1"
         })
         assert(unit_count >= 1, "Has time to live unit spawned")
     end)

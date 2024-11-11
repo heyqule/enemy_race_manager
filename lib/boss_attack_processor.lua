@@ -142,25 +142,25 @@ local select_attack = function(mod_name, attacks, tier)
     return data
 end
 
-local fetch_attack_data = function(race_name)
+local fetch_attack_data = function(force_name)
     if not storage.boss.attack_cache then
-        storage.boss.attack_cache = remote.call(race_name .. "_boss_attacks", "get_attack_data")
+        storage.boss.attack_cache = remote.call(force_name .. "_boss_attacks", "get_attack_data")
     end
 end
 
 local prepare_attack = function(type)
-    local race_name = storage.boss.race_name
+    local force_name = storage.boss.force_name
     local tier = storage.boss.boss_tier
-    fetch_attack_data(race_name)
-    local data = select_attack(race_name, storage.boss.attack_cache[type], tier)
+    fetch_attack_data(force_name)
+    local data = select_attack(force_name, storage.boss.attack_cache[type], tier)
     queue_attack(data)
 end
 
 local get_despawn_attack = function()
-    local race_name = storage.boss.race_name
+    local force_name = storage.boss.force_name
     local tier = storage.boss.boss_tier
-    fetch_attack_data(race_name)
-    local data = select_attack(race_name, storage.boss.attack_cache["despawn_attacks"], tier)
+    fetch_attack_data(force_name)
+    local data = select_attack(force_name, storage.boss.attack_cache["despawn_attacks"], tier)
     return data
 end
 

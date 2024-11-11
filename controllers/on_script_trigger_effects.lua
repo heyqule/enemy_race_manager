@@ -23,9 +23,9 @@ local RallyPointUI = require("__enemyracemanager__/gui/deployer_attachment")
 
 -- Player super weapon attacks functions
 local process_attack_point_event = function(event, attack_point)
-    local race_name = SurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
-    if race_name then
-        RaceSettingHelper.add_to_attack_meter(race_name, attack_point)
+    local force_name = SurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
+    if force_name then
+        RaceSettingHelper.add_to_attack_meter(force_name, attack_point)
     end
 end
 
@@ -188,16 +188,7 @@ local script_functions = {
     end,
 
     [QUALITY_DICE_ROLL] = function(event)
-        local origin_commandable = event.source_entity.commandable
-        local entity = QualityProcessor.roll(event.source_entity)
-
-        --Join group if needed
-        if origin_commandable and
-            origin_commandable.is_unit_group and
-            entity.commandable.unique_id ~= origin_commandable.unique_id
-        then
-                origin_commandable.add_member(entity)
-        end
+        QualityProcessor.roll(event.source_entity)
     end,
 
     [QUALITY_TALLY_POINT] = function(event)

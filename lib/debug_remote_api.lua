@@ -77,19 +77,19 @@ function Debug_RemoteAPI.print_calculate_attack_points()
     log(helpers.table_to_json(table))
 end
 
---- Usage: remote.call("enemyracemanager_debug", "exec_attack_group", "erm_zerg")
-function Debug_RemoteAPI.exec_attack_group(race_name)
+--- Usage: remote.call("enemyracemanager_debug", "exec_attack_group", "enemy_erm_zerg")
+function Debug_RemoteAPI.exec_attack_group(force_name)
     AttackGroupProcessor.exec(
-            race_name,
-            game.forces[ForceHelper.get_force_name_from(race_name)],
+            force_name,
+            game.forces[force_name],
             3000
     )
 end
 
---- Usage: remote.call("enemyracemanager_debug", "exec_elite_group", "erm_zerg")
-function Debug_RemoteAPI.exec_elite_group(race_name, attack_points)
+--- Usage: remote.call("enemyracemanager_debug", "exec_elite_group", "enemy_erm_zerg")
+function Debug_RemoteAPI.exec_elite_group(force_name, attack_points)
     attack_points = attack_points or 3000
-    AttackGroupProcessor.exec_elite_group(race_name, game.forces[ForceHelper.get_force_name_from(race_name)], attack_points)
+    AttackGroupProcessor.exec_elite_group(force_name, game.forces[force_name], attack_points)
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 500000)
@@ -101,16 +101,16 @@ function Debug_RemoteAPI.add_points_to_attack_meter(value)
     end
 end
 
---- Usage: remote.call("enemyracemanager_debug", "set_accumulated_attack_meter", "erm_zerg", 500000)
-function Debug_RemoteAPI.set_accumulated_attack_meter(name, value)
-    RaceSettingsHelper.set_accumulated_attack_meter(name, value)
+--- Usage: remote.call("enemyracemanager_debug", "set_accumulated_attack_meter", "enemy_erm_zerg", 500000)
+function Debug_RemoteAPI.set_accumulated_attack_meter(force_name, value)
+    RaceSettingsHelper.set_accumulated_attack_meter(force_name, value)
 end
 
 
 --- Usage: remote.call("enemyracemanager_debug", "set_evolution_factor", 0.5)
 function Debug_RemoteAPI.set_evolution_factor(value)
-    for race_name, _ in pairs(storage.race_settings) do
-        local force = game.forces[ForceHelper.get_force_name_from(race_name)]
+    for force_name, _ in pairs(storage.race_settings) do
+        local force = game.forces[force_name]
         if force then
             force.set_evolution_factor(math.min(value, 1))
         end
@@ -119,26 +119,26 @@ end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_tier", 1)
 function Debug_RemoteAPI.set_tier(value)
-    for race_name, _ in pairs(storage.race_settings) do
-        storage.race_settings[race_name].tier = math.min(value, 3)
-        RaceSettingsHelper.refresh_current_tier(race_name)
+    for force_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[force_name].tier = math.min(value, 3)
+        RaceSettingsHelper.refresh_current_tier(force_name)
     end
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_boss_tier", 1)
 function Debug_RemoteAPI.set_boss_tier(value)
-    for race_name, _ in pairs(storage.race_settings) do
-        storage.race_settings[race_name].boss_tier = math.max(1, math.min(value, 5))
+    for force_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[force_name].boss_tier = math.max(1, math.min(value, 5))
     end
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "reset_level")
 function Debug_RemoteAPI.reset_level()
-    for race_name, _ in pairs(storage.race_settings) do
-        storage.race_settings[race_name].evolution_base_point = 0
-        storage.race_settings[race_name].evolution_point = 0
-        storage.race_settings[race_name].tier = 1
-        game.forces[ForceHelper.get_force_name_from(race_name)].set_evolution_factor(0)
+    for force_name, _ in pairs(storage.race_settings) do
+        storage.race_settings[force_name].evolution_base_point = 0
+        storage.race_settings[force_name].evolution_point = 0
+        storage.race_settings[force_name].tier = 1
+        game.forces[force_name].set_evolution_factor(0)
     end
 end
 
@@ -170,8 +170,8 @@ function Debug_RemoteAPI.calculate_quality_points()
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "set_evolution_base_point"，‘erm_zerg", 100)
-function Debug_RemoteAPI.set_evolution_base_point(race_name, value)
-    storage.race_settings[race_name].evolution_base_point = value
+function Debug_RemoteAPI.set_evolution_base_point(force_name, value)
+    storage.race_settings[force_name].evolution_base_point = value
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "spawn_boss", {x=100,y=100})
@@ -213,22 +213,22 @@ function Debug_RemoteAPI.forces_relation()
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "create_land_scout", "enemy", {x=100,y=100})
-function Debug_RemoteAPI.create_land_scout(mod_name, position)
+function Debug_RemoteAPI.create_land_scout(force_name, position)
    local surface = game.player.surface
     surface.create_entity({
-        name = mod_name.."--land-scout--1",
+        name = force_name.."--land-scout--1",
         position = position,
-        force = ForceHelper.get_force_name_from(mod_name)
+        force = force_name
     })
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "create_air_scout", "enemy", {x=100,y=100})
-function Debug_RemoteAPI.create_air_scout(mod_name, position)
+function Debug_RemoteAPI.create_air_scout(force_name, position)
     local surface = game.player.surface
     surface.create_entity({
-        name = mod_name.."--aerial-scout--1",
+        name = force_name.."--aerial-scout--1",
         position = position,
-        force = ForceHelper.get_force_name_from(mod_name)
+        force = force_name
     })
 end
 
@@ -245,8 +245,8 @@ function Debug_RemoteAPI.interplanetary_attacks_scan()
 end
 
 --- remote.call("enemyracemanager_debug", "interplanetary_attacks_exec","enemy","players")
-function Debug_RemoteAPI.interplanetary_attacks_exec(race_name, target_force, drop_location)
-    InterplanetaryAttacks.exec(race_name, target_force, drop_location)
+function Debug_RemoteAPI.interplanetary_attacks_exec(force_name, target_force, drop_location)
+    InterplanetaryAttacks.exec(force_name, target_force, drop_location)
 end
 
 return Debug_RemoteAPI

@@ -46,11 +46,11 @@ local custom_units_points = {
 
 }
 
-local calculateNextThreshold = function(race_name)
+local calculateNextThreshold = function(force_name)
     local threshold = GlobalConfig.attack_meter_threshold() * GlobalConfig.max_group_size() * AttackGroupProcessor.MIXED_UNIT_POINTS
     local derivative = GlobalConfig.attack_meter_deviation()
     RaceSettingsHelper.set_next_attack_threshold(
-            race_name,
+            force_name,
             threshold + threshold * (math.random(derivative * -1, derivative) / 100)
     )
 end
@@ -128,44 +128,44 @@ function AttackMeterProcessor.calculated_time_attack()
     end
 end
 
-function AttackMeterProcessor.form_group(race_name, force)
-    if not GlobalConfig.race_is_active(race_name) then
+function AttackMeterProcessor.form_group(force_name, force)
+    if not GlobalConfig.race_is_active(force_name) then
         return
     end
 
-    local next_attack_threshold = RaceSettingsHelper.get_next_attack_threshold(race_name)
+    local next_attack_threshold = RaceSettingsHelper.get_next_attack_threshold(force_name)
     if next_attack_threshold == 0 then
-        calculateNextThreshold(race_name)
+        calculateNextThreshold(force_name)
         return
     end
 
-    local current_attack_value = RaceSettingsHelper.get_attack_meter(race_name)
+    local current_attack_value = RaceSettingsHelper.get_attack_meter(force_name)
     -- Process attack point group
     if current_attack_value >= next_attack_threshold then
         local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
-        local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
-        local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
+        local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force_name)
+        local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(force_name) or 0
         if GlobalConfig.elite_squad_enable() and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
-            AttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
+            AttackGroupProcessor.exec_elite_group(force_name, force, next_attack_threshold)
         else
-            AttackGroupProcessor.exec(race_name, force, next_attack_threshold)
+            AttackGroupProcessor.exec(force_name, force, next_attack_threshold)
         end
     end
 end
 
-function AttackMeterProcessor.adjust_attack_meter(race_name)
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
-    calculateNextThreshold(race_name)
+function AttackMeterProcessor.adjust_attack_meter(force_name)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
+    calculateNextThreshold(force_name)
 end
 
-function AttackMeterProcessor.adjust_last_accumulated_attack_meter(race_name)
-    RaceSettingsHelper.set_last_accumulated_attack_meter(race_name, RaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
+function AttackMeterProcessor.adjust_last_accumulated_attack_meter(force_name)
+    RaceSettingsHelper.set_last_accumulated_attack_meter(force_name, RaceSettingsHelper.get_last_accumulated_attack_meter(force_name))
 end
 
-function AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(friend_race_name))
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
-    calculateNextThreshold(race_name)
+function AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(friend_force_name))
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
+    calculateNextThreshold(force_name)
 end
 
 return AttackMeterProcessor

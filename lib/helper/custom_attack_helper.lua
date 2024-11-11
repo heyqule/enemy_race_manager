@@ -51,33 +51,33 @@ local get_name_token = function(name)
     return storage.force_entity_name_cache[name]
 end
 
-local get_race_settings = function(race_name, reload)
+local get_race_settings = function(force_name, reload)
     if storage.custom_attack_race_settings == nil then
         storage.custom_attack_race_settings = {}
     end
 
-    if storage.custom_attack_race_settings[race_name] == nil or
-        storage.custom_attack_race_settings[race_name].tick == nil
+    if storage.custom_attack_race_settings[force_name] == nil or
+        storage.custom_attack_race_settings[force_name].tick == nil
     then
-        storage.custom_attack_race_settings[race_name] = {
+        storage.custom_attack_race_settings[force_name] = {
             tick = 0
         }
     end
 
-    if storage.custom_attack_race_settings[race_name] and
+    if storage.custom_attack_race_settings[force_name] and
         not reload and
-        game.tick < storage.custom_attack_race_settings[race_name].tick
+        game.tick < storage.custom_attack_race_settings[force_name].tick
     then
-        return storage.custom_attack_race_settings[race_name]
+        return storage.custom_attack_race_settings[force_name]
     end
 
-    storage.custom_attack_race_settings[race_name] = remote.call("enemyracemanager", "get_race", race_name)
-    storage.custom_attack_race_settings[race_name].tick = game.tick + minute * GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
-    return storage.custom_attack_race_settings[race_name]
+    storage.custom_attack_race_settings[force_name] = remote.call("enemyracemanager", "get_race", force_name)
+    storage.custom_attack_race_settings[force_name].tick = game.tick + minute * GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
+    return storage.custom_attack_race_settings[force_name]
 end
 
-local get_low_tier_flying_unit = function(race_name)
-    local race_settings = get_race_settings(race_name)
+local get_low_tier_flying_unit = function(force_name)
+    local race_settings = get_race_settings(force_name)
     if type(race_settings["flying_units"][1][1]) ~= nil then
         return race_settings["flying_units"][1][1]
     end
@@ -85,15 +85,15 @@ local get_low_tier_flying_unit = function(race_name)
     return nil
 end
 
-local get_drop_position = function(final_unit_name, surface, position, race_name, level)
+local get_drop_position = function(final_unit_name, surface, position, force_name, level)
     local drop_position = position
     if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
         drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 16, 3, true)
 
         if drop_position == nil then
-            local low_tier_flyer_name = get_low_tier_flying_unit(race_name)
+            local low_tier_flyer_name = get_low_tier_flying_unit(force_name)
             if low_tier_flyer_name then
-                final_unit_name = race_name .. "--" .. low_tier_flyer_name .."--" .. tostring(level)
+                final_unit_name = force_name .. "--" .. low_tier_flyer_name .."--" .. tostring(level)
                 drop_position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
             end
         end
@@ -113,18 +113,17 @@ local add_member = function(final_unit_name, surface, drop_position, force_name,
     end
 end
 
-local drop_unit = function(event, race_name, unit_name, count, position)
+local drop_unit = function(event, force_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
     local source_entity = event.source_entity
-    local race_settings = get_race_settings(race_name)
+    local race_settings = get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
-    local force_name = ForceHelper.get_force_name_from(race_name)
 
     position.x = position.x + 2
 
-    local final_unit_name = race_name .. "--" .. unit_name .. "--" .. level
+    local final_unit_name = force_name .. "--" .. unit_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
@@ -157,13 +156,13 @@ local drop_unit = function(event, race_name, unit_name, count, position)
     end
 end
 
-local drop_player_unit = function(event, race_name, unit_name, count, position)
+local drop_player_unit = function(event, force_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
-    local race_settings = get_race_settings(race_name)
+    local race_settings = get_race_settings(force_name)
     local force = event.source_entity.force or "player"
     local surface = game.surfaces[event.surface_index]
 
-    local final_unit_name = race_name .. "--" .. unit_name
+    local final_unit_name = force_name .. "--" .. unit_name
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
@@ -190,19 +189,19 @@ local CustomAttackHelper = {}
 
 CustomAttackHelper.can_spawn = UtilHelper.can_spawn
 
-function CustomAttackHelper.get_race_settings(race_name, force)
-    local settings = get_race_settings(race_name, force)
+function CustomAttackHelper.get_race_settings(force_name, force)
+    local settings = get_race_settings(force_name, force)
     return settings
 end
 
-function CustomAttackHelper.valid(event, race_name)
+function CustomAttackHelper.valid(event, force_name)
     return (event.source_entity and
-            string.find(event.source_entity.name, race_name, 1, true) ~= nil) or
+            string.find(event.source_entity.name, force_name, 1, true) ~= nil) or
             string.find(event.effect_id, "-bs", 1, true) ~= nil
 end
 
-function CustomAttackHelper.get_unit(race_name, unit_type)
-    local race_settings = get_race_settings(race_name)
+function CustomAttackHelper.get_unit(force_name, unit_type)
+    local race_settings = get_race_settings(force_name)
 
     if race_settings == nil or race_settings[unit_type] == nil then
         return
@@ -216,29 +215,29 @@ end
 ---
 --- Process single type of unit drops
 ---
-function CustomAttackHelper.drop_player_unit(event, race_name, unit_name, count)
-    drop_player_unit(event, race_name, unit_name, count)
+function CustomAttackHelper.drop_player_unit(event, force_name, unit_name, count)
+    drop_player_unit(event, force_name, unit_name, count)
 end
 
 ---
 --- Process single type of unit drops
 ---
-function CustomAttackHelper.drop_unit_at_target(event, race_name, unit_name, count)
-    drop_unit(event, race_name, unit_name, count, event.target_position)
+function CustomAttackHelper.drop_unit_at_target(event, force_name, unit_name, count)
+    drop_unit(event, force_name, unit_name, count, event.target_position)
 end
 
 ---
 --- Process single type of unit drops
 ---
-function CustomAttackHelper.drop_unit(event, race_name, unit_name, count)
-    drop_unit(event, race_name, unit_name, count)
+function CustomAttackHelper.drop_unit(event, force_name, unit_name, count)
+    drop_unit(event, force_name, unit_name, count)
 end
 
 ---
 --- Process batch unit drops
 ---
-function CustomAttackHelper.drop_batch_units(event, race_name, count)
-    local race_settings = get_race_settings(race_name)
+function CustomAttackHelper.drop_batch_units(event, force_name, count)
+    local race_settings = get_race_settings(force_name)
 
     if race_settings == nil then
         return
@@ -248,7 +247,6 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     local surface = game.surfaces[event.surface_index]
     local level = race_settings.level
     local source_entity = event.source_entity
-    local force_name = ForceHelper.get_force_name_from(race_name)
 
     local position = event.target_position or event.target_entity.position
     position.x = position.x + 2
@@ -268,9 +266,9 @@ function CustomAttackHelper.drop_batch_units(event, race_name, count)
     end
 
     repeat
-        local final_unit_name = race_name .. "--" .. CustomAttackHelper.get_unit(race_name, "droppable_units") .. "--" .. level
+        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--" .. level
         local drop_position
-        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
+        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, force_name, level)
         add_member(final_unit_name, surface, drop_position, force_name, group)
         i = i + 1
     until i == count
@@ -290,7 +288,7 @@ end
 ---
 --- Process Boss Attack Group
 ---
-function CustomAttackHelper.drop_boss_units(event, race_name, count)
+function CustomAttackHelper.drop_boss_units(event, force_name, count)
     count = count or 10
     local boss_data = remote.call("enemyracemanager", "get_boss_data")
     if boss_data == nil then
@@ -309,9 +307,9 @@ function CustomAttackHelper.drop_boss_units(event, race_name, count)
         position = position, force = boss_data.force
     }
     repeat
-        local final_unit_name = race_name .. "--" .. CustomAttackHelper.get_unit(race_name, "droppable_units") .. "--" .. tostring(level)
+        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--" .. tostring(level)
         local drop_position
-        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, race_name, level)
+        final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, force_name, level)
         add_member(final_unit_name, surface, drop_position, boss_data.force, group)
         i = i + 1
     until i == count

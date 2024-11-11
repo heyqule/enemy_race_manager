@@ -19,44 +19,11 @@ local NEUTRAL_FORCES = {
 
 function ForceHelper.init_globals()
     storage.force_entity_name_cache = storage.force_entity_name_cache or {}
-    storage.force_race_name_cache = storage.force_race_name_cache or {}
+    storage.force_force_name_cache = storage.force_force_name_cache or {}
     storage.enemy_force_cache = storage.enemy_force_cache or {}
     storage.surface_exclusion_list = storage.surface_exclusion_list or {}
     storage.surface_inclusion_list = storage.surface_inclusion_list or {}
     storage.enemy_force_check = storage.enemy_force_check or {}
-end
-
----
---- Cache force name that is one of the ERM races.
----
-function ForceHelper.extract_race_name_from(force_name)
-    if force_name == "enemy" then
-        return ForceHelper.default_mod_name
-    end
-
-    if storage.force_race_name_cache[force_name] then
-        return storage.force_race_name_cache[force_name]
-    end
-
-    if string.find(force_name, "enemy_",1, true) ~= nil then
-        if storage.force_race_name_cache[force_name] == nil then
-            local unverified_race_name = string.gsub(force_name, "enemy_", "")
-            if storage.race_settings[unverified_race_name] then
-                storage.force_race_name_cache[force_name] = unverified_race_name
-                return storage.force_race_name_cache[force_name]
-            end
-        end
-    end
-
-    storage.force_race_name_cache[force_name] = nil
-    return storage.force_race_name_cache[force_name]
-end
-
-function ForceHelper.get_force_name_from(race_name)
-    if race_name == ForceHelper.default_mod_name then
-        return "enemy"
-    end
-    return "enemy_" .. race_name
 end
 
 -- Checks enemy_erm_ prefix
@@ -133,7 +100,11 @@ function ForceHelper.refresh_all_enemy_forces()
     storage.player_forces = {}
     storage.enemy_force_check = {}
     for _, force in pairs(game.forces) do
-        if force.name == "enemy" or (string.find(force.name, "enemy", 1, true) and script.active_mods[string.gsub(force.name,"enemy_","")] ~= nil) then
+        if force.name == "enemy" or
+            (string.find(force.name, "enemy", 1, true) and
+            script.active_mods[string.gsub(force.name,"enemy_","")] ~= nil) and
+            storage.race_settings[force.name]
+        then
             table.insert(storage.enemy_force_cache, force.name)
             storage.enemy_force_check[force.name] = true
             table.insert(storage.non_player_forces, force.name)

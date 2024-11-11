@@ -9,8 +9,8 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 local K2Creep = {}
 
 function K2Creep.generate_creep(surface, entity)
-    local race_name = ForceHelper.extract_race_name_from(entity.force.name)
-    local k2_enable = RaceSettingsHelper.k2_creep_enabled(race_name)
+    local force_name = ForceHelper.extract_force_name_from(entity.force.name)
+    local k2_enable = RaceSettingsHelper.k2_creep_enabled(force_name)
     if k2_enable then
         remote.call("kr-creep", "spawn_creep_at_position", surface, entity.position)
     end

@@ -53,7 +53,7 @@ local boss_setting_default = function()
         silo_position = { x = 0, y = 0 },
         surface = nil,
         surface_name = "",
-        race_name = "",
+        force_name = "",
         force = nil,
         force_name = "",
         boss_tier = 1,
@@ -193,11 +193,11 @@ local spawn_building = function()
     for i = 1, GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
         local building_name
         if RaceSettingsHelper.can_spawn(7) then
-            building_name = BaseBuildProcessor.getBuildingName(boss.race_name, "cc")
+            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "cc")
         elseif RaceSettingsHelper.can_spawn(45) then
-            building_name = BaseBuildProcessor.getBuildingName(boss.race_name, "support")
+            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "support")
         else
-            building_name = BaseBuildProcessor.getBuildingName(boss.race_name, "turret")
+            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "turret")
         end
 
         BaseBuildProcessor.build(
@@ -288,13 +288,13 @@ local draw_time = function(boss, current_tick)
     })
 end
 
-local initialize_result_log = function(race_name, difficulty, squad_size)
+local initialize_result_log = function(force_name, difficulty, squad_size)
     local default_best_record = {
         tier = 1,
         time = -1,
     }
-    if storage.boss_logs[race_name] == nil then
-        storage.boss_logs[race_name] = {
+    if storage.boss_logs[force_name] == nil then
+        storage.boss_logs[force_name] = {
             difficulty = difficulty,
             squad_size = squad_size,
             best_record = default_best_record,
@@ -302,27 +302,27 @@ local initialize_result_log = function(race_name, difficulty, squad_size)
         }
     end
 
-    if not storage.boss_logs[race_name].difficulty == difficulty or
-            not storage.boss_logs[race_name].difficulty == squad_size then
-        storage.boss_logs[race_name]["difficulty"] = difficulty
-        storage.boss_logs[race_name]["squad_size"] = squad_size
-        storage.boss_logs[race_name].best_record = default_best_record
+    if not storage.boss_logs[force_name].difficulty == difficulty or
+            not storage.boss_logs[force_name].difficulty == squad_size then
+        storage.boss_logs[force_name]["difficulty"] = difficulty
+        storage.boss_logs[force_name]["squad_size"] = squad_size
+        storage.boss_logs[force_name].best_record = default_best_record
     end
 end
 
 local has_better_record = function(current_best_record, record)
-    local race_name = record.race
+    local force_name = record.race
     return record.tier == current_best_record.tier and
-            ((storage.boss_logs[race_name].best_record.time == -1) or
-                    (record.last_tick - record.spawn_tick) < storage.boss_logs[race_name].best_record.time)
+            ((storage.boss_logs[force_name].best_record.time == -1) or
+                    (record.last_tick - record.spawn_tick) < storage.boss_logs[force_name].best_record.time)
 end
 
 local update_best_time = function(record)
-    local race_name = record.race
-    local current_best_record = storage.boss_logs[race_name].best_record
+    local force_name = record.race
+    local current_best_record = storage.boss_logs[force_name].best_record
     if record.victory and (record.tier > current_best_record.tier or has_better_record(current_best_record, record)) then
-        storage.boss_logs[race_name].best_record.tier = record.tier
-        storage.boss_logs[race_name].best_record.time = record.last_tick - record.spawn_tick
+        storage.boss_logs[force_name].best_record.tier = record.tier
+        storage.boss_logs[force_name].best_record.time = record.last_tick - record.spawn_tick
     end
 end
 
@@ -331,10 +331,10 @@ local write_result_log = function(victory)
     local difficulty = settings.startup["enemyracemanager-boss-difficulty"].value
     local squad_size = settings.startup["enemyracemanager-boss-unit-spawn-size"].value
 
-    initialize_result_log(boss.race_name, difficulty, squad_size)
+    initialize_result_log(boss.force_name, difficulty, squad_size)
 
     local record = {
-        race = boss.race_name,
+        race = boss.force_name,
         tier = boss.boss_tier,
         victory = victory,
         surface = boss.surface_name,
@@ -344,7 +344,7 @@ local write_result_log = function(victory)
         spawn_tick = boss.spawned_tick,
         last_tick = game.tick
     }
-    table.insert(storage.boss_logs[boss.race_name].entries, record)
+    table.insert(storage.boss_logs[boss.force_name].entries, record)
 
     update_best_time(record)
 end
@@ -365,27 +365,26 @@ function BossProcessor.exec(rocket_silo, spawn_position)
             (storage.boss.entity == nil or storage.boss.entity.valid == false) then
         storage.boss.loading = true
         local surface = rocket_silo.surface
-        local race_name = SurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
+        local force_name = SurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
 
-        if race_name == nil then
+        if force_name == nil then
             return nil
         end
 
-        if not RaceSettingsHelper.has_boss(race_name) then
-            game.print("Unable to spawn boss on unsupported race: " .. race_name)
+        if not RaceSettingsHelper.has_boss(force_name) then
+            game.print("Unable to spawn boss on unsupported race: " .. force_name)
             return nil
         end
 
-        local force = game.forces[ForceHelper.get_force_name_from(race_name)]
+        local force = game.forces[force_name]
         DebugHelper.print("BossProcessor: Data setup...")
-        storage.boss.race_name = race_name
         storage.boss.force = force
         storage.boss.force_name = force.name
         storage.boss.surface = surface
         storage.boss.surface_name = surface.name
         storage.boss.silo_position = rocket_silo.position
         storage.boss.spawned_tick = game.tick
-        storage.boss.boss_tier = RaceSettingsHelper.boss_tier(storage.boss.race_name)
+        storage.boss.boss_tier = RaceSettingsHelper.boss_tier(storage.boss.force_name)
         storage.boss.despawn_at_tick = game.tick + (minute * GlobalConfig.BOSS_DESPAWN_TIMER[storage.boss.boss_tier])
         BossProcessor.index_turrets(surface)
         DebugHelper.print("BossProcessor: Indexed positions: " .. storage.boss_spawnable_index.size)
@@ -416,9 +415,9 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         end
 
         DebugHelper.print("BossProcessor: Creating Boss Base...")
-        DebugHelper.print(BossProcessor.get_boss_name(race_name))
+        DebugHelper.print(BossProcessor.get_boss_name(force_name))
         local boss_entity = surface.create_entity {
-            name = BossProcessor.get_boss_name(race_name),
+            name = BossProcessor.get_boss_name(force_name),
             position = spawn_position,
             force = force,
             spawn_decorations = true
@@ -457,7 +456,7 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         })
 
         DebugHelper.print("BossProcessor: Create Pathing Unit...")
-        local pathing_entity_name = BossProcessor.get_pathing_entity_name(race_name)
+        local pathing_entity_name = BossProcessor.get_pathing_entity_name(force_name)
         local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, chunkSize, 2, true)
         local pathing_entity = surface.create_entity {
             name = pathing_entity_name,
@@ -518,11 +517,11 @@ function BossProcessor.check_pathing()
     Cron.add_2_sec_queue("BossProcessor.check_pathing")
 end
 
-function BossProcessor.get_boss_name(race_name)
-    if storage.race_settings[race_name].boss_building then
+function BossProcessor.get_boss_name(force_name)
+    if storage.race_settings[force_name].boss_building then
         return RaceSettingsHelper.get_race_entity_name(
-                race_name,
-                storage.race_settings[race_name].boss_building,
+                force_name,
+                storage.race_settings[force_name].boss_building,
                 GlobalConfig.BOSS_LEVELS[storage.boss.boss_tier]
         )
     end
@@ -530,16 +529,16 @@ function BossProcessor.get_boss_name(race_name)
     return nil
 end
 
-function BossProcessor.get_pathing_entity_name(race_name)
+function BossProcessor.get_pathing_entity_name(force_name)
     return RaceSettingsHelper.get_race_entity_name(
-            race_name,
-            storage.race_settings[race_name].pathing_unit,
+            force_name,
+            storage.race_settings[force_name].pathing_unit,
             1
     )
 end
 
 local display_victory_dialog = function(boss)
-    if storage.race_settings[boss.race_name].boss_tier >= GlobalConfig.BOSS_MAX_TIERS then
+    if storage.race_settings[boss.force_name].boss_tier >= GlobalConfig.BOSS_MAX_TIERS then
         return
     end
 
@@ -561,7 +560,7 @@ local display_victory_dialog = function(boss)
     end
 
     if targetPlayer then
-        GuiContainer.victory_dialog.show(targetPlayer, storage.race_settings[boss.race_name])
+        GuiContainer.victory_dialog.show(targetPlayer, storage.race_settings[boss.force_name])
     end
 end
 
@@ -571,7 +570,7 @@ function BossProcessor.heartbeat()
     local max_attacks = GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT[boss.boss_tier]
     if boss.victory then
         -- start reward process
-        storage.race_settings[boss.race_name].boss_kill_count = storage.race_settings[boss.race_name].boss_kill_count + 1
+        storage.race_settings[boss.force_name].boss_kill_count = storage.race_settings[boss.force_name].boss_kill_count + 1
         write_result_log(true)
         display_victory_dialog(boss)
         BossRewardProcessor.exec()
