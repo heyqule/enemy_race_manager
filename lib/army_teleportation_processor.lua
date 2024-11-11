@@ -155,7 +155,7 @@ function ArmyTeleportationProcessor.link(from, to)
     entrance = storage.army_entrance_teleporters[force.index]
     exit = storage.army_exit_teleporters[force.index]
 
-    if entrance and entrance.indicator == nil then
+    if entrance and (entrance.indicator == nil or entrance.indicator.valid == false) then
         local from_entity = from.entity
         local from_position = from_entity.position
         entrance.indicator = rendering.draw_rectangle({
@@ -170,7 +170,7 @@ function ArmyTeleportationProcessor.link(from, to)
         })
     end
 
-    if exit and exit.indicator == nil then
+    if exit and (exit.indicator == nil or exit.indicator.valid == false) then
         local to_entity = to.entity
         local to_position = to_entity.position
         exit.indicator = rendering.draw_rectangle({
