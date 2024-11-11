@@ -9,6 +9,7 @@ local ForceHelper = require("helper/force_helper")
 local RaceSettingsHelper = require("helper/race_settings_helper")
 local Configs = require("global_config")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local Position = require("__erm_libs__/stdlib/position")
 
@@ -1296,8 +1297,11 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
     end
 end
 
-AttackGroupBeaconProcessor.get_scout_name = function(force_name, type)
-    return force_name..type..RaceSettingsHelper.get_level(force_name)
+AttackGroupBeaconProcessor.get_scout_name = function(force_name, type, surface_name)
+    if not surface_name then
+        surface_name = 'nauvis'
+    end
+    return force_name..type..QualityProcessor.roll_quality(force_name, surface_name)
 end
 
 AttackGroupBeaconProcessor.get_max_tiers = function()

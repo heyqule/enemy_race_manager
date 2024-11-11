@@ -124,13 +124,13 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     for _, unit in pairs(members) do
         local name = nil
         if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "cc")
+            name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
             cc = cc + 1
         elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "support")
+            name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name)
             support = support + 1
         elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "turret")
+            name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name)
             turret = turret + 1
         else
             return
@@ -147,10 +147,10 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 end
 
-function BaseBuildProcessor.getBuildingName(force_name, type)
+function BaseBuildProcessor.getBuildingName(force_name, type, surface_name)
     local func = building_switch[type]
 
-    return force_name .. "--" .. func(force_name) .. "--" .. RaceSettingsHelper.get_level(force_name)
+    return force_name .. "--" .. func(force_name) .. "--" .. QualityProcessor.roll_quality(force_name, surface_name)
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)

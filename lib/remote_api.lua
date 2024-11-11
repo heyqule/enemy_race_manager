@@ -337,4 +337,6 @@ RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_
 
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
 
+RemoteAPI.roll_quality = QualityProcessor.roll_quality
+
 return RemoteAPI

@@ -73,9 +73,6 @@ function DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { "gui.race_column" } }
     item_table.add { type = "label", caption = race_setting.race }
 
-    item_table.add { type = "label", caption = { "gui.level_column" } }
-    item_table.add { type = "label", caption = race_setting.level }
-
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = race_setting.tier }
 

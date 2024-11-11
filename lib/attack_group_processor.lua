@@ -101,13 +101,6 @@ local set_group_tracker = function(force_name, value, field)
     end
 end
 
-local get_unit_level_for_tier = function(force_name)
-    local level = RaceSettingsHelper.get_level(force_name) - 1
-    if level == 0 then
-        level = 1
-    end
-    return level
-end
 
 local get_unit_name_by_group_type = {
     [AttackGroupProcessor.GROUP_TYPE_MIXED] = function(force_name, current_tier, group_tracker)
@@ -153,10 +146,9 @@ end
 local add_an_unit_to_group = function(surface, group, force, force_name, unit_name, is_elite)
     local unit_full_name
     if is_elite then
-        -- @TODO refactor elite group to use top applicable quality tier.
-        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, RaceSettingsHelper.get_level(force_name))
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, QualityProcessor.roll_quality(force_name, surface.name, true))
     else
-        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, RaceSettingsHelper.get_level(force_name))
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, QualityProcessor.roll_quality(force_name, surface.name))
     end
 
     local position = surface.find_non_colliding_position(unit_full_name, group.position,
@@ -164,7 +156,7 @@ local add_an_unit_to_group = function(surface, group, force, force_name, unit_na
     local entity
 
     if position then
-        --storage.skip_quality_rolling = true
+        storage.skip_quality_rolling = true
         entity = surface.create_entity({
             name = unit_full_name,
             position = position,
@@ -308,7 +300,7 @@ local generate_unit_queue = function(
     local tiers = nil
     local is_precision_attack = false
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        tiers = AttackGroupProcessor.GROUP_TIERS[math.min(get_unit_level_for_tier(force_name), Config.MAX_TIER)]
+        tiers = AttackGroupProcessor.GROUP_TIERS[math.min(QualityProcessor.get_tier(force_name, surface.name), Config.MAX_TIER)]
 
         local flying_unit_precision_enabled = Config.flying_squad_precision_enabled()
         local spawn_as_flying_unit_precision = RaceSettingsHelper.can_spawn(Config.flying_squad_precision_chance())
@@ -842,7 +834,7 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
         return nil
     end
 
-    --storage.skip_quality_rolling = true
+    storage.skip_quality_rolling = true
     local scout = surface.create_entity({
         name = scout_name,
         force = source_force,

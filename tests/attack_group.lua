@@ -72,11 +72,11 @@ end
         end)
     end)
     --- Elite group Test
-    it.skip("Elite Group by AAP", function()
+    it("Elite Group by AAP", function()
         async(14400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
-        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
+        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -10, -10 } })
         AttackGroupBeaconProcessor.init_index()
 
         storage.erm_unit_groups = {}
@@ -93,9 +93,24 @@ end
             local group = storage.erm_unit_groups[key].group
             assert.truthy(storage.erm_unit_groups[key].group.valid, "Check Unit Group valid")
 
-            local member = group.members[3]
-            local nameToken = ForceHelper.get_name_token(member.name)
-            assert.equal(22, tonumber(nameToken[3]), "Check Group Level")
+            local total_two = 0
+            local total_three = 0
+            local total_four = 0
+            local total_switch = {
+                ['2'] = function() total_two = total_two + 1  end,
+                ['3'] = function() total_three = total_three + 1  end,
+                ['4'] = function() total_four = total_four + 1  end
+            }
+
+            local has_epic_member = false
+            for _, member in pairs(group.members) do
+                local name_token = ForceHelper.get_name_token(member.name)
+                if tonumber(name_token[3]) == 4 then
+                    has_epic_member = true
+                    break
+                end
+            end
+            assert.equal(has_epic_member, true, "Check Group Level")
             done()
         end)
     end)
