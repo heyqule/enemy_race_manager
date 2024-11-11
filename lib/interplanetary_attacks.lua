@@ -52,7 +52,7 @@ function InterplanetaryAttacks.get_default_intel()
     }
 end
 
-function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
+function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     if not can_perform_attack() then
         return false
     end
@@ -76,7 +76,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
 
     if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false and
         not storage.override_interplanetary_attack_roll_bypass then
-        AttackMeterProcessor.adjust_attack_meter(race_name)
+        AttackMeterProcessor.adjust_attack_meter(force_name)
         return false
     end
 
@@ -88,8 +88,8 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
         return false
     end
 
-    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
-    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and QualityProcessor.get_tier_by_racename(race_name, surface.name)
+    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
+    local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and QualityProcessor.get_tier(force_name, surface.name)
     local max_unit_number = Config.max_group_size()
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
@@ -111,7 +111,7 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
                 game.surfaces[storage.interplanetary_tracker.surface_id],
                 drop_location,
                 home_group_size,
-                race_name
+                force_name
         )
         if group then
             script.raise_event(Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],{
@@ -126,14 +126,14 @@ function InterplanetaryAttacks.exec(race_name, target_force, drop_location)
         always_angry = false
     }
     AttackGroupProcessor.generate_group_via_quick_queue(
-            race_name,
+            force_name,
             target_force,
             group_unit_number,
             surface,
             drop_location,
             options
     )
-    AttackMeterProcessor.adjust_attack_meter(race_name)
+    AttackMeterProcessor.adjust_attack_meter(force_name)
 
     return true
 end

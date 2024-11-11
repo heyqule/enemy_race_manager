@@ -77,32 +77,32 @@ local DEBUG_GROUP_STATES = {
 --- Track unit group, each race should only have 1 active group generator.
 --- Units in a group seems considered active units and they have performance penalty.
 ---
-local get_group_tracker = function(race_name)
+local get_group_tracker = function(force_name)
     if storage.group_tracker == nil then
         return nil
     end
 
     --- Expire after 25000 ticks to prevent stuck
-    if storage.group_tracker[race_name] and
-       game.tick > storage.group_tracker[race_name].tick + DAY_TICK
+    if storage.group_tracker[force_name] and
+       game.tick > storage.group_tracker[force_name].tick + DAY_TICK
     then
-        storage.group_tracker[race_name] = nil
+        storage.group_tracker[force_name] = nil
         return nil
     end
 
-    return storage.group_tracker[race_name] or nil
+    return storage.group_tracker[force_name] or nil
 end
 
-local set_group_tracker = function(race_name, value, field)
+local set_group_tracker = function(force_name, value, field)
     if field then
-        storage.group_tracker[race_name][field] = value
+        storage.group_tracker[force_name][field] = value
     else
-        storage.group_tracker[race_name] = value
+        storage.group_tracker[force_name] = value
     end
 end
 
-local get_unit_level_for_tier = function(race_name)
-    local level = RaceSettingsHelper.get_level(race_name) - 1
+local get_unit_level_for_tier = function(force_name)
+    local level = RaceSettingsHelper.get_level(force_name) - 1
     if level == 0 then
         level = 1
     end
@@ -110,32 +110,32 @@ local get_unit_level_for_tier = function(race_name)
 end
 
 local get_unit_name_by_group_type = {
-    [AttackGroupProcessor.GROUP_TYPE_MIXED] = function(race_name, current_tier, group_tracker)
-        return RaceSettingsHelper.pick_an_unit_from_tier(race_name, current_tier), false
+    [AttackGroupProcessor.GROUP_TYPE_MIXED] = function(force_name, current_tier, group_tracker)
+        return RaceSettingsHelper.pick_an_unit_from_tier(force_name, current_tier), false
     end,
-    [AttackGroupProcessor.GROUP_TYPE_FLYING] = function(race_name, current_tier, group_tracker)
-        return RaceSettingsHelper.pick_a_flying_unit_from_tier(race_name, current_tier), false
+    [AttackGroupProcessor.GROUP_TYPE_FLYING] = function(force_name, current_tier, group_tracker)
+        return RaceSettingsHelper.pick_a_flying_unit_from_tier(force_name, current_tier), false
     end,
-    [AttackGroupProcessor.GROUP_TYPE_DROPSHIP] = function(race_name, current_tier, group_tracker)
-        return RaceSettingsHelper.pick_dropship_unit(race_name, current_tier), false
+    [AttackGroupProcessor.GROUP_TYPE_DROPSHIP] = function(force_name, current_tier, group_tracker)
+        return RaceSettingsHelper.pick_dropship_unit(force_name, current_tier), false
     end,
-    [AttackGroupProcessor.GROUP_TYPE_FEATURED] = function(race_name, current_tier, group_tracker)
-        return RaceSettingsHelper.pick_featured_unit(race_name, group_tracker.featured_group_id), true
+    [AttackGroupProcessor.GROUP_TYPE_FEATURED] = function(force_name, current_tier, group_tracker)
+        return RaceSettingsHelper.pick_featured_unit(force_name, group_tracker.featured_group_id), true
     end,
-    [AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING] = function(race_name, current_tier, group_tracker)
-        return RaceSettingsHelper.pick_featured_flying_unit(race_name, group_tracker.featured_group_id), true
+    [AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING] = function(force_name, current_tier, group_tracker)
+        return RaceSettingsHelper.pick_featured_flying_unit(force_name, group_tracker.featured_group_id), true
     end,
 }
 
-local pick_an_unit = function(race_name)
-    local group_tracker = get_group_tracker(race_name)
+local pick_an_unit = function(force_name)
+    local group_tracker = get_group_tracker(force_name)
     local current_tier = group_tracker.current_tier
     local unit_name = nil
     local is_featured_group = false
 
-    unit_name, is_featured_group = get_unit_name_by_group_type[group_tracker.group_type](race_name, current_tier, group_tracker)
+    unit_name, is_featured_group = get_unit_name_by_group_type[group_tracker.group_type](force_name, current_tier, group_tracker)
     if unit_name == nil then
-        unit_name = RaceSettingsHelper.pick_an_unit(race_name)
+        unit_name = RaceSettingsHelper.pick_an_unit(force_name)
     end
 
     if not is_featured_group then
@@ -150,13 +150,13 @@ local pick_an_unit = function(race_name)
     return unit_name
 end
 
-local add_an_unit_to_group = function(surface, group, force, race_name, unit_name, is_elite)
+local add_an_unit_to_group = function(surface, group, force, force_name, unit_name, is_elite)
     local unit_full_name
     if is_elite then
         -- @TODO refactor elite group to use top applicable quality tier.
-        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, RaceSettingsHelper.get_level(force_name))
     else
-        unit_full_name = RaceSettingsHelper.get_race_entity_name(race_name, unit_name, RaceSettingsHelper.get_level(race_name))
+        unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, RaceSettingsHelper.get_level(force_name))
     end
 
     local position = surface.find_non_colliding_position(unit_full_name, group.position,
@@ -190,22 +190,22 @@ local alter_distraction = function(commands,distraction)
     end
 end
 
-local add_to_group = function(surface, group, force, race_name, unit_batch)
-    local group_tracker = get_group_tracker(race_name)
+local add_to_group = function(surface, group, force, force_name, unit_batch)
+    local group_tracker = get_group_tracker(force_name)
     if group.valid == false or group_tracker == nil then
-        set_group_tracker(race_name, nil)
+        set_group_tracker(force_name, nil)
         return
     end
     local i = 0
     repeat
-        local unit_name = pick_an_unit(race_name)
+        local unit_name = pick_an_unit(force_name)
 
         local is_elite = false
         if group_tracker.is_elite_attack then
             is_elite = true
         end
 
-        add_an_unit_to_group(surface, group, force, race_name, unit_name, is_elite)
+        add_an_unit_to_group(surface, group, force, force_name, unit_name, is_elite)
         group_tracker.current_size = group_tracker.current_size + 1
         i = i + 1
     until i == unit_batch
@@ -248,7 +248,7 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
                     local group_position = group.position
                     group.surface.print({
                         "description.message-incoming-precision-attack",
-                        race_name,
+                        force_name,
                         SurfaceProcessor.get_gps_message(
                                 group_position.x,
                                 group_position.y,
@@ -277,12 +277,12 @@ local add_to_group = function(surface, group, force, race_name, unit_batch)
             surface.pollute({0, 0}, pollution_deduction)
         end
 
-        set_group_tracker(race_name, nil)
+        set_group_tracker(force_name, nil)
     end
 end
 
 local generate_unit_queue = function(
-        surface, center_location, force, race_name,
+        surface, center_location, force, force_name,
         units_number, options
 )
     local group_type = options.group_type or AttackGroupProcessor.GROUP_TYPE_MIXED
@@ -308,7 +308,7 @@ local generate_unit_queue = function(
     local tiers = nil
     local is_precision_attack = false
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
-        tiers = AttackGroupProcessor.GROUP_TIERS[math.min(get_unit_level_for_tier(race_name), Config.MAX_TIER)]
+        tiers = AttackGroupProcessor.GROUP_TIERS[math.min(get_unit_level_for_tier(force_name), Config.MAX_TIER)]
 
         local flying_unit_precision_enabled = Config.flying_squad_precision_enabled()
         local spawn_as_flying_unit_precision = RaceSettingsHelper.can_spawn(Config.flying_squad_precision_chance())
@@ -327,7 +327,7 @@ local generate_unit_queue = function(
         tiers_units[index] = math.floor((units_number * tier) + 0.5)
     end
 
-    set_group_tracker(race_name, {
+    set_group_tracker(force_name, {
         size = units_number,
         current_size = 0,
         group_type = group_type,
@@ -347,8 +347,8 @@ local generate_unit_queue = function(
 
     local unit_group = surface.create_unit_group({ position = center_location, force = force })
 
-    set_group_tracker(race_name, unit_group, "group")
-    set_group_tracker(race_name, unit_group.unique_id, "unique_id")
+    set_group_tracker(force_name, unit_group, "group")
+    set_group_tracker(force_name, unit_group.unique_id, "unique_id")
 
     repeat
         local unit_batch = AttackGroupProcessor.UNIT_PER_BATCH
@@ -361,7 +361,7 @@ local generate_unit_queue = function(
                 surface,
                 unit_group,
                 force,
-                race_name,
+                force_name,
                 unit_batch
             )
         else
@@ -370,7 +370,7 @@ local generate_unit_queue = function(
                 surface,
                 unit_group,
                 force,
-                race_name,
+                force_name,
                 unit_batch
             )
         end
@@ -427,34 +427,34 @@ function AttackGroupProcessor.add_to_group_cron(arg)
     add_to_group(unpack(arg))
 end
 
-function AttackGroupProcessor.exec(race_name, force, attack_points)
-    if get_group_tracker(race_name) then
+function AttackGroupProcessor.exec(force_name, force, attack_points)
+    if get_group_tracker(force_name) then
         return false
     end
 
-    local target_force = AttackGroupHeatProcessor.pick_target(race_name)
-    local surface = AttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
+    local target_force = AttackGroupHeatProcessor.pick_target(force_name)
+    local surface = AttackGroupHeatProcessor.pick_surface(force_name, target_force, true)
     if target_force == nil or surface == nil then
         return false
     end
 
     local tier =  QualityProcessor.get_tier(force.name, surface.name)
 
-    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
+    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
     local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and tier > 2
     local spawn_as_featured_squad = RaceSettingsHelper.can_spawn(Config.featured_squad_chance()) and tier == 3
 
     --- Try flying Squad. starts at level 2 and max tier at level 4
     if flying_enabled and spawn_as_flying_squad then
-        local dropship_enabled = Config.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(race_name)
+        local dropship_enabled = Config.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(force_name)
         local spawn_as_dropship_squad = RaceSettingsHelper.can_spawn(Config.dropship_chance())
 
-        if spawn_as_featured_squad and RaceSettingsHelper.has_featured_flying_squad(race_name) then
+        if spawn_as_featured_squad and RaceSettingsHelper.has_featured_flying_squad(force_name) then
             --- Drop as featured flying group
-            local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
-            local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+            local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(force_name);
+            local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(force_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
-                race_name, force, units_number,
+                force_name, force, units_number,
                 { group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
                   target_force=target_force,
                   surface=surface,
@@ -464,7 +464,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             --- Dropship Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.DROPSHIP_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
-                race_name, force, units_number,
+                force_name, force, units_number,
                 { group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP,
                   target_force=target_force,
                   surface=surface,
@@ -474,7 +474,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             --- Regular Flying Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.FLYING_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
-                    race_name, force, units_number,
+                    force_name, force, units_number,
                     { group_type = AttackGroupProcessor.GROUP_TYPE_FLYING,
                       target_force=target_force,
                       surface=surface
@@ -482,12 +482,12 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
             )
         end
     else
-        if spawn_as_featured_squad and RaceSettingsHelper.has_featured_squad(race_name) then
+        if spawn_as_featured_squad and RaceSettingsHelper.has_featured_squad(force_name) then
             --- Regular featured Group
-            local squad_id = RaceSettingsHelper.get_featured_squad_id(race_name);
-            local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+            local squad_id = RaceSettingsHelper.get_featured_squad_id(force_name);
+            local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(force_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
             return AttackGroupProcessor.generate_group(
-                race_name, force, units_number,
+                force_name, force, units_number,
                 {
                   group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
                   featured_group_id = squad_id,
@@ -498,7 +498,7 @@ function AttackGroupProcessor.exec(race_name, force, attack_points)
         else
             --- Mixed Group
             local units_number = math.min(math.ceil(attack_points / AttackGroupProcessor.MIXED_UNIT_POINTS), AttackGroupProcessor.MAX_GROUP_SIZE)
-            return AttackGroupProcessor.generate_group(race_name, force, units_number, {
+            return AttackGroupProcessor.generate_group(force_name, force, units_number, {
                 target_force=target_force,
                 surface=surface,
             })
@@ -509,7 +509,7 @@ end
 ---
 --- options={group_type, featured_group_id, is_elite_attack, target_force, surface, from_retry, bypass_attack_meter, spawn_location}
 function AttackGroupProcessor.generate_group(
-        race_name,
+        force_name,
         force,
         units_number,
         options
@@ -517,14 +517,14 @@ function AttackGroupProcessor.generate_group(
     options = options or {}
     local from_retry = tonumber(options.from_retry) or 0
     local bypass_attack_meter = options.bypass_attack_meter or false
-    local group_tracker = get_group_tracker(race_name)
+    local group_tracker = get_group_tracker(force_name)
 
     if from_retry == 0 and group_tracker then
         return false
     end
 
-    local target_force = options.target_force or AttackGroupHeatProcessor.pick_target(race_name)
-    local surface = options.surface or AttackGroupHeatProcessor.pick_surface(race_name, target_force, true)
+    local target_force = options.target_force or AttackGroupHeatProcessor.pick_target(force_name)
+    local surface = options.surface or AttackGroupHeatProcessor.pick_surface(force_name, target_force, true)
 
     if storage.override_interplanetary_attack_enabled or
        surface == nil or
@@ -533,7 +533,7 @@ function AttackGroupProcessor.generate_group(
         if group_tracker and
             not group_tracker.preserve_tracker
         then
-            set_group_tracker(race_name, nil)
+            set_group_tracker(force_name, nil)
         end
         return false
     end
@@ -566,10 +566,10 @@ function AttackGroupProcessor.generate_group(
                 --- Retry to find new beacons
                 options.from_retry = from_retry + 1
                 Cron.add_quick_queue("AttackGroupProcessor.generate_group",
-                        race_name, force, units_number, options)
+                        force_name, force, units_number, options)
             else
                 --- Drop current group if retry fails
-                set_group_tracker(race_name, nil)
+                set_group_tracker(force_name, nil)
 
                 --- Try roll a interplantary attack, 33% chance
                 if Config.interplanetary_attack_enable() and
@@ -578,7 +578,7 @@ function AttackGroupProcessor.generate_group(
                     script.raise_event(
                             Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],
                             {
-                                race_name = race_name,
+                                force_name = force_name,
                                 target_force = target_force
                             })
                 end
@@ -586,7 +586,7 @@ function AttackGroupProcessor.generate_group(
             return false
         end
 
-        local scout = AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT)
+        local scout = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.LAND_SCOUT)
         center_location = surface.find_non_colliding_position(
                 scout, spawn_beacon.position,
                 AttackGroupProcessor.GROUP_AREA, 1)
@@ -598,7 +598,7 @@ function AttackGroupProcessor.generate_group(
         options.attack_beacon = attack_beacon_data.beacon
         generate_unit_queue(
                 surface, center_location, force,
-                race_name, units_number, options
+                force_name, units_number, options
         )
 
         if bypass_attack_meter == false then
@@ -606,7 +606,7 @@ function AttackGroupProcessor.generate_group(
                 script.raise_event(
                         Config.custom_event_handlers[Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER],
                         {
-                            race_name = race_name
+                            force_name = force_name
                         }
                 )
             end
@@ -614,7 +614,7 @@ function AttackGroupProcessor.generate_group(
             script.raise_event(
                     Config.custom_event_handlers[Config.EVENT_ADJUST_ATTACK_METER],
                     {
-                        race_name = race_name
+                        force_name = force_name
                     }
             )
         end
@@ -678,33 +678,33 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius, so
 end
 
 --- Spawn Elite Group, requires race with featured groups
-function AttackGroupProcessor.exec_elite_group(race_name, force, attack_points)
-    if get_group_tracker(race_name) then
+function AttackGroupProcessor.exec_elite_group(force_name, force, attack_points)
+    if get_group_tracker(force_name) then
         return false
     end
 
-    if not RaceSettingsHelper.has_featured_flying_squad(race_name) and
-            not RaceSettingsHelper.has_featured_squad(race_name) then
+    if not RaceSettingsHelper.has_featured_flying_squad(force_name) and
+            not RaceSettingsHelper.has_featured_squad(force_name) then
         return false
     end
 
-    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
+    local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
     local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance())
 
-    if flying_enabled and spawn_as_flying_squad and RaceSettingsHelper.has_featured_flying_squad(race_name) then
-        local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
-        local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+    if flying_enabled and spawn_as_flying_squad and RaceSettingsHelper.has_featured_flying_squad(force_name) then
+        local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(force_name);
+        local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(force_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
         return AttackGroupProcessor.generate_group(
-            race_name, force, units_number,
+            force_name, force, units_number,
             {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
             featured_group_id = squad_id,
             is_elite_attack = true}
         )
-    elseif RaceSettingsHelper.has_featured_squad(race_name) then
-        local squad_id = RaceSettingsHelper.get_featured_squad_id(race_name);
-        local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(race_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
+    elseif RaceSettingsHelper.has_featured_squad(force_name) then
+        local squad_id = RaceSettingsHelper.get_featured_squad_id(force_name);
+        local units_number = math.min(math.ceil(attack_points / RaceSettingsHelper.get_featured_unit_cost(force_name, squad_id)), AttackGroupProcessor.MAX_GROUP_SIZE)
         return AttackGroupProcessor.generate_group(
-            race_name, force, units_number,
+            force_name, force, units_number,
             {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
              featured_group_id = squad_id,
              is_elite_attack = true
@@ -775,21 +775,20 @@ end
 ---
 --- Generate a group immediately without queue, without pathing.  Targets small groups, <= 50 units
 ---
-function AttackGroupProcessor.generate_immediate_group(surface, group_position, spawn_count, race_name)
+function AttackGroupProcessor.generate_immediate_group(surface, group_position, spawn_count, force_name)
     if spawn_count > 50 then
         spawn_count = 50
     end
 
-    local race_name = race_name or SurfaceProcessor.get_enemy_on(surface.name)
+    local force_name = force_name or SurfaceProcessor.get_enemy_on(surface.name)
 
-    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
     local group = surface.create_unit_group { position = group_position, force = force_name}
 
     local i = 0
     repeat
-        local unit_name =  RaceSettingsHelper.pick_an_unit(race_name)
-        add_an_unit_to_group(surface, group, force, race_name, unit_name, false)
+        local unit_name =  RaceSettingsHelper.pick_an_unit(force_name)
+        add_an_unit_to_group(surface, group, force, force_name, unit_name, false)
         i = i + 1
     until i == spawn_count
 
@@ -800,9 +799,8 @@ end
 --- Generate an unit via queue, without command.  Targets custom pathing via 3rd party conditions
 ---
 function AttackGroupProcessor.generate_group_via_quick_queue(
-    race_name, target_force, group_unit_number, surface, drop_location, options
+    force_name, target_force, group_unit_number, surface, drop_location, options
 )
-    local force_name = ForceHelper.get_force_name_from(race_name)
     local force = game.forces[force_name]
     local attack_beacon_data  = AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, force, target_force)
     if attack_beacon_data then
@@ -810,13 +808,13 @@ function AttackGroupProcessor.generate_group_via_quick_queue(
         options.as_quick_queue = true
         generate_unit_queue(
                 surface, drop_location, force,
-                race_name, group_unit_number, options
+                force_name, group_unit_number, options
         )
     end
 end
 
-function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, target_force)
-    if storage.scout_tracker[race_name] then
+function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, target_force)
+    if storage.scout_tracker[force_name] then
         return nil
     end
 
@@ -825,7 +823,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
     end
 
-    scout_name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_name)
+    scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_name)
 
     --local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
     local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, source_force, target_force, true)
@@ -862,7 +860,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
         distraction = defines.distraction.none
     })
 
-    storage.scout_tracker[race_name] = {
+    storage.scout_tracker[force_name] = {
         entity = scout,
         unit_number = scout.unit_number,
         position = scout.position,
@@ -872,7 +870,7 @@ function AttackGroupProcessor.spawn_scout(race_name, source_force, surface, targ
     }
     storage.scout_by_unit_number[scout.unit_number] = {
         entity = scout,
-        race_name = race_name,
+        force_name = force_name,
         can_repath = true
     }
 

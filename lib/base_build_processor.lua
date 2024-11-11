@@ -17,14 +17,14 @@ local Cron = require("__enemyracemanager__/lib/cron_processor")
 local BaseBuildProcessor = {}
 
 local building_switch = {
-    ["cc"] = function(race_name)
-        return RaceSettingsHelper.pick_a_command_center(race_name)
+    ["cc"] = function(force_name)
+        return RaceSettingsHelper.pick_a_command_center(force_name)
     end,
-    ["support"] = function(race_name)
-        return RaceSettingsHelper.pick_a_support_building(race_name)
+    ["support"] = function(force_name)
+        return RaceSettingsHelper.pick_a_support_building(force_name)
     end,
-    ["turret"] = function(race_name)
-        return RaceSettingsHelper.pick_a_turret(race_name)
+    ["turret"] = function(force_name)
+        return RaceSettingsHelper.pick_a_turret(force_name)
     end
 }
 
@@ -147,10 +147,10 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 end
 
-function BaseBuildProcessor.getBuildingName(race_name, type)
+function BaseBuildProcessor.getBuildingName(force_name, type)
     local func = building_switch[type]
 
-    return race_name .. "--" .. func(race_name) .. "--" .. RaceSettingsHelper.get_level(race_name)
+    return force_name .. "--" .. func(force_name) .. "--" .. RaceSettingsHelper.get_level(force_name)
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)

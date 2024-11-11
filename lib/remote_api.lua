@@ -105,71 +105,67 @@ function RemoteAPI.update_race_setting(race_setting)
 end
 
 --- Generate a mixed attack group
---- Usage: remote.call("enemyracemanager", "generate_attack_group", "erm_zerg", 100?)
-function RemoteAPI.generate_attack_group(race_name, units_number)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?)
+function RemoteAPI.generate_attack_group(force_name, units_number)
     local force = game.forces[force_name]
     units_number = tonumber(units_number)
 
     if force and units_number > 0 then
-        AttackGroupProcessor.generate_group(race_name, force, units_number)
+        AttackGroupProcessor.generate_group(force_name, force, units_number)
     end
 end
 
 --- Generate a flying attack group
---- Usage: remote.call("enemyracemanager", "generate_flying_group", "erm_zerg", 100?)
-function RemoteAPI.generate_flying_group(race_name, units_number)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?)
+function RemoteAPI.generate_flying_group(force_name, units_number)
     local force = game.forces[force_name]
-    local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(race_name)
+    local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 2)
 
     if force and flying_enabled and units_number > 0 then
         AttackGroupProcessor.generate_group(
-            race_name, force, units_number,
+                force_name, force, units_number,
             {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
         )
     end
 end
 
 --- Generate a dropship attack group
---- Usage: remote.call("enemyracemanager", "generate_dropship_group", "erm_zerg", 100?)
-function RemoteAPI.generate_dropship_group(race_name, units_number)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?)
+function RemoteAPI.generate_dropship_group(force_name, units_number)
     local force = game.forces[force_name]
-    local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(race_name)
+    local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(force_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 5)
 
     if force and dropship_enabled and units_number > 0 then
         AttackGroupProcessor.generate_group(
-                race_name, force, units_number,
+                force_name, force, units_number,
                 {group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP}
         )
     end
 end
 
-local is_valid_featured_squad = function(race_name, squad_id)
-    return RaceSettingsHelper.has_featured_squad(race_name) and
-            RaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
-            squad_id < RaceSettingsHelper.get_total_featured_squads(race_name)
+local is_valid_featured_squad = function(force_name, squad_id)
+    return RaceSettingsHelper.has_featured_squad(force_name) and
+            RaceSettingsHelper.get_total_featured_squads(force_name) > 0 and
+            squad_id < RaceSettingsHelper.get_total_featured_squads(force_name)
 end
 
-local is_valid_featured_flying_squad = function(race_name, squad_id)
-    return RaceSettingsHelper.has_featured_squad(race_name) and
-            RaceSettingsHelper.get_total_featured_squads(race_name) > 0 and
-            squad_id < RaceSettingsHelper.get_total_featured_squads(race_name)
+local is_valid_featured_flying_squad = function(force_name, squad_id)
+    return RaceSettingsHelper.has_featured_squad(force_name) and
+            RaceSettingsHelper.get_total_featured_squads(force_name) > 0 and
+            squad_id < RaceSettingsHelper.get_total_featured_squads(force_name)
 end
 
---- Usage: remote.call("enemyracemanager", "generate_featured_group", "erm_zerg", 100?, 1?)
-function RemoteAPI.generate_featured_group(race_name, size, squad_id)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_featured_group", "enemy_erm_zerg", 100?, 1?)
+function RemoteAPI.generate_featured_group(force_name, size, squad_id)
     local force = game.forces[force_name]
-    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
-    if force and is_valid_featured_squad(race_name, squad_id) then
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
+    if force and is_valid_featured_squad(force_name, squad_id) then
         size = size or GlobalConfig.max_group_size()
         AttackGroupProcessor.generate_group(
-                race_name,
-                game.forces[ForceHelper.get_force_name_from(race_name)],
+                force_name,
+                game.forces[force_name],
                 size,
                 {
                     group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
@@ -179,16 +175,15 @@ function RemoteAPI.generate_featured_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_featured_flying_group", "erm_zerg", 50?, 1?)
-function RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
+function RemoteAPI.generate_featured_flying_group(force_name, size, squad_id)
     local force = game.forces[force_name]
-    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
-    if force and is_valid_featured_flying_squad(race_name, squad_id) then
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
+    if force and is_valid_featured_flying_squad(force_name, squad_id) then
         size = size or (GlobalConfig.max_group_size() / 2)
         AttackGroupProcessor.generate_group(
-                race_name,
-                game.forces[ForceHelper.get_force_name_from(race_name)],
+                force_name,
+                game.forces[force_name],
                 size,
                 {
                     group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
@@ -198,18 +193,17 @@ function RemoteAPI.generate_featured_flying_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_elite_featured_group", "erm_zerg", 100?, 1?)
-function RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_elite_featured_group", "enemy_erm_zerg", 100?, 1?)
+function RemoteAPI.generate_elite_featured_group(force_name, size, squad_id)
     local force = game.forces[force_name]
-    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
     if force and GlobalConfig.elite_squad_enable() and
-            is_valid_featured_squad(race_name, squad_id)
+            is_valid_featured_squad(force_name, squad_id)
     then
         size = size or GlobalConfig.max_group_size()
         AttackGroupProcessor.generate_group(
-                race_name,
-                game.forces[ForceHelper.get_force_name_from(race_name)],
+                force_name,
+                game.forces[force_name],
                 size,
                 {
                     group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
@@ -220,18 +214,17 @@ function RemoteAPI.generate_elite_featured_group(race_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_elite_featured_flying_group", "erm_zerg", 50?, 1?)
-function RemoteAPI.generate_elite_featured_flying_group(race_name, size, squad_id)
-    local force_name = ForceHelper.get_force_name_from(race_name)
+--- Usage: remote.call("enemyracemanager", "generate_elite_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
+function RemoteAPI.generate_elite_featured_flying_group(force_name, size, squad_id)
     local force = game.forces[force_name]
-    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(race_name)
+    squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
     if force and GlobalConfig.elite_squad_enable() and
-            is_valid_featured_flying_squad(race_name, squad_id)
+            is_valid_featured_flying_squad(force_name, squad_id)
     then
         size = size or (GlobalConfig.max_group_size() / 2)
         AttackGroupProcessor.generate_group(
-                race_name,
-                game.forces[ForceHelper.get_force_name_from(race_name)],
+                force_name,
+                game.forces[force_name],
                 size,
                 {
                     group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
@@ -256,9 +249,9 @@ function RemoteAPI.spawn_environmental_attack(surface, target_position, force_sp
     EnvironmentalAttack.exec(surface_obj, target_position, force_spawn, force_spawn_base)
 end
 
---- Usage  remote.call("enemyracemanager", "spawn_interplanetary_attack", "erm_zerg", "players", {x=100,y=200})
-function RemoteAPI.spawn_interplanetary_attack(race_name, target_force, drop_location)
-    local race_settings = storage.race_settings[race_name]
+--- Usage  remote.call("enemyracemanager", "spawn_interplanetary_attack", "enemy_erm_zerg", "players", {x=100,y=200})
+function RemoteAPI.spawn_interplanetary_attack(force_name, target_force, drop_location)
+    local race_settings = storage.race_settings[force_name]
     if not race_settings then
         error("Race name is required / invalid")
     end

@@ -23,7 +23,7 @@ local replace_structures = function(surface, entity, race_settings)
     local position = entity.position
     local race_pick = storage.replacement_race_pick
     local base_name = RaceSettingHelper.pick_a_spawner(race_pick)
-    local new_force_name = ForceHelper.get_force_name_from(race_pick)
+    local new_force_name = race_pick
 
     local name = race_settings[race_pick].race .. "--" .. base_name .. "--" .. race_settings[race_pick].level
     entity.destroy()
@@ -101,7 +101,7 @@ function ReplacementProcessor.replace_entity(surface, entity, race_settings, tar
     end
 
     if surface then
-        local race_pick = ForceHelper.extract_race_name_from(target_force_name)
+        local race_pick = ForceHelper.extract_force_name_from(target_force_name)
 
         if not GlobalConfig.race_is_active(race_pick) then
             return

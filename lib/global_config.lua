@@ -168,12 +168,14 @@ local global_setting_exists = function()
 end
 
 local check_register_erm_race = function(mod_name)
-    if (remote.interfaces[mod_name] and
-            remote.interfaces[mod_name]["register_new_enemy_race"] and
-            remote.call(mod_name, "register_new_enemy_race") == true) then
-        return true
+    mod_name = string.gsub(mod_name,"enemy_","")
+
+    if remote.interfaces[mod_name] and
+       remote.interfaces[mod_name]["register_new_enemy_race"]
+    then
+        return remote.call(mod_name, "register_new_enemy_race")
     end
-    return false
+    return nil
 end
 
 function GlobalConfig.is_cache_expired(last_tick, length)
@@ -370,14 +372,16 @@ function GlobalConfig.initialize_races_data()
 
 
     for name, _ in pairs(script.active_mods) do
-        if check_register_erm_race(name) then
-            table.insert(storage.installed_races, name)
+        local register_id = check_register_erm_race(name)
+        if register_id then
+            storage.active_races[register_id] = true
         end
     end
 
     for name, _ in pairs(script.active_mods) do
-        if check_register_erm_race(name) then
-            storage.active_races[name] = true
+        local register_id = check_register_erm_race(name)
+        if register_id then
+            storage.installed_races[register_id] = true
         end
     end
 
@@ -396,8 +400,8 @@ function GlobalConfig.get_enemy_races_total()
     return storage.active_races_num
 end
 
-function GlobalConfig.race_is_active(race_name)
-    return storage.active_races[race_name] == true
+function GlobalConfig.race_is_active(force_name)
+    return storage.active_races[force_name] == true
 end
 
 function GlobalConfig.get_installed_races()

@@ -207,11 +207,6 @@ function QualityProcessor.get_tier(force_name, surface_name)
     return storage.quality_on_planet[force_name][surface_name].tier
 end
 
-function QualityProcessor.get_tier_by_racename(race_name, surface_name)
-    local force_name = ForceHelper.get_force_name_from(race_name)
-    return storage.quality_on_planet[force_name][surface_name].tier
-end
-
 function QualityProcessor.reset_globals()
     storage.quality_on_planet = {}
 end
@@ -287,11 +282,8 @@ function QualityProcessor.roll(entity)
     end
 
     if can_spawn then
-        local force = entity.force
         local position = surface.find_non_colliding_position(entity.name, entity.position,
                16, 2)
-
-        -- destroy and doesn't raise any events since it's replacement.
 
 
         if position then
@@ -304,6 +296,11 @@ function QualityProcessor.roll(entity)
             }
 
             if new_unit then
+                if new_unit and new_unit.commandable and storage.group_tracker[new_unit.force.name] then
+                    local group = storage.group_tracker[new_unit.force.name].group
+                    group.add_member(new_unit)
+                end
+
                 entity.destroy()
                 return new_unit
             end

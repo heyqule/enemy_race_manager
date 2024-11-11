@@ -21,10 +21,10 @@ after_each(function()
     storage.erm_unit_groups = {}
 end)
 
-local command_center = "erm_zerg--hive--5"
-local ultralisk = "erm_zerg--ultralisk--5"
+local command_center = "enemy_erm_zerg--hive--5"
+local ultralisk = "enemy_erm_zerg--ultralisk--5"
 local force_name = "enemy_erm_zerg"
-local race_name = "erm_zerg"
+local race_name = "enemy_erm_zerg"
 local PLAYER = "player"
 local SCOUT_NAME_PATTERN = "_scout--"
 
@@ -293,11 +293,11 @@ end
                 200
         )
         after_ticks(600, function()
-            local group = storage.group_tracker.erm_zerg.group
+            local group = storage.group_tracker.enemy_erm_zerg.group
             group.destroy()
         end)
         after_ticks(1800, function()
-            assert.equal(storage.group_tracker.erm_zerg, nil, "Remove record from group tracker")
+            assert.equal(storage.group_tracker.enemy_erm_zerg, nil, "Remove record from group tracker")
             done()
         end)
     end)

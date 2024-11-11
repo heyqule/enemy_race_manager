@@ -18,10 +18,10 @@ AttackGroupManagement.on_nth_tick = {
 }
 AttackGroupManagement.events = {
     [Config.custom_event_handlers[Config.EVENT_ADJUST_ATTACK_METER]] = function(event)
-        AttackMeterProcessor.adjust_attack_meter(event.race_name)
+        AttackMeterProcessor.adjust_attack_meter(event.force_name)
     end,
     [Config.custom_event_handlers[Config.EVENT_ADJUST_ACCUMULATED_ATTACK_METER]] = function(event)
-        AttackMeterProcessor.adjust_last_accumulated_attack_meter(event.race_name)
+        AttackMeterProcessor.adjust_last_accumulated_attack_meter(event.force_name)
     end
 }
 return AttackGroupManagement

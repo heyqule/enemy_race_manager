@@ -205,9 +205,6 @@ local init_globals = function()
     QualityProcessor.on_init()
 
 
-    --- Wipe this cache due to cache pollution from previous version.
-    storage.force_race_name_cache = {}
-
     script.raise_event(
         GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
     )

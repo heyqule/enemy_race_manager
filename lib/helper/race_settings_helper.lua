@@ -189,13 +189,13 @@ function RaceSettingsHelper.get_race_entity_name(target_race, name, level)
 end
 
 
-function RaceSettingsHelper.get_colliding_unit(race_name)
-    local collide_unit_name = storage.race_settings[race_name].colliding_unit
+function RaceSettingsHelper.get_colliding_unit(force_name)
+    local collide_unit_name = storage.race_settings[force_name].colliding_unit
     if not collide_unit_name then
-        collide_unit_name = storage.race_settings[race_name]["units"][1][1]
+        collide_unit_name = storage.race_settings[force_name]["units"][1][1]
     end
     return RaceSettingsHelper.get_race_entity_name(
-            race_name,
+            force_name,
             collide_unit_name,
       1
     )
@@ -215,8 +215,8 @@ function RaceSettingsHelper.add_killed_structure_count(target_race, count)
     storage.race_settings[target_race].structure_killed_count = storage.race_settings[target_race].structure_killed_count + count
 end
 
-function RaceSettingsHelper.refresh_current_tier(race_name)
-    local race_settings = storage.race_settings[race_name]
+function RaceSettingsHelper.refresh_current_tier(force_name)
+    local race_settings = storage.race_settings[force_name]
     local i = 1
 
     if race_settings.units == nil then
@@ -241,7 +241,7 @@ function RaceSettingsHelper.refresh_current_tier(race_name)
             race_settings.current_command_centers_tier,
             race_settings.current_support_structures_tier
     ))
-    storage.race_settings[race_name] = race_settings
+    storage.race_settings[force_name] = race_settings
 end
 
 local process_spawn_chance_cache = function(featured_group)

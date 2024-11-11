@@ -79,14 +79,14 @@ local level_up_enemy_structures = function(surface, entity, race_settings)
     nameToken = process_one_race_per_surface_mapping(surface, entity, nameToken)
     local position = entity.position
 
-    if race_name == nameToken[1] and tonumber(nameToken[3]) >= race_settings[nameToken[1]].level then
+    if force_name == nameToken[1] and tonumber(nameToken[3]) >= race_settings[nameToken[1]].level then
         return
     end
 
     local name = nameToken[1] .. "--" .. nameToken[2] .. "--" .. race_settings[nameToken[1]].level
 
     local new_force_name = entity.force.name
-    if nameToken[1] ~= race_name then
+    if nameToken[1] ~= force_name then
         new_force_name = ForceHelper.get_force_name_from(nameToken[1])
     end
 

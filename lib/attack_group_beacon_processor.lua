@@ -1189,12 +1189,12 @@ end
 
 AttackGroupBeaconProcessor.start_scout_scan = function()
     local should_repeat = false
-    for race_name, entity_data in pairs(storage.scout_tracker) do
+    for force_name, entity_data in pairs(storage.scout_tracker) do
         if entity_data.entity.valid then
             should_repeat = true
-            Cron.add_quick_queue("AttackGroupBeaconProcessor.scout_scan", race_name, entity_data)
+            Cron.add_quick_queue("AttackGroupBeaconProcessor.scout_scan", force_name, entity_data)
         else
-            storage.scout_tracker[race_name] = nil
+            storage.scout_tracker[force_name] = nil
             storage.scout_by_unit_number[entity_data.unit_number] = nil
         end
     end
@@ -1208,19 +1208,19 @@ AttackGroupBeaconProcessor.start_scout_scan = function()
     end
 end
 
-AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
+AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
     local entity = entity_data.entity
     if entity.valid then
         AttackGroupBeaconProcessor.create_attack_entity_beacon(entity)
 
-        local tracker = storage.scout_tracker[race_name]
+        local tracker = storage.scout_tracker[force_name]
         if tracker == nil then
             return
         end
 
         --- @TODO comment out for production
         if DEBUG_MODE then
-            local color = settings.startup[race_name.."-map-color"].value
+            local color = settings.startup[force_name.."-map-color"].value
             color.a = 0.25
             rendering.draw_circle({
                 force="player",
@@ -1242,7 +1242,7 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
         then
             entity.die("neutral")
             storage.scout_by_unit_number[tracker.unit_number] = nil
-            storage.scout_tracker[race_name] = nil
+            storage.scout_tracker[force_name] = nil
         elseif commandable.command.type == defines.command.go_to_location then
             tracker.position = entity.position
             tracker.update_tick = game.tick
@@ -1292,12 +1292,12 @@ AttackGroupBeaconProcessor.scout_scan = function(race_name, entity_data)
         end
     else
         storage.scout_by_unit_number[entity_data.unit_number] = nil
-        storage.scout_tracker[race_name] = nil
+        storage.scout_tracker[force_name] = nil
     end
 end
 
-AttackGroupBeaconProcessor.get_scout_name = function(race_name, type)
-    return race_name..type..RaceSettingsHelper.get_level(race_name)
+AttackGroupBeaconProcessor.get_scout_name = function(force_name, type)
+    return force_name..type..RaceSettingsHelper.get_level(force_name)
 end
 
 AttackGroupBeaconProcessor.get_max_tiers = function()

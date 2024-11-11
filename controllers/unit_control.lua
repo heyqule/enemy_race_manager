@@ -141,7 +141,7 @@ local handle_scouts = function(scout_unit_data)
         scout_unit_data.can_repath and
         scout_unit_data.entity.valid
     then
-        local tracker = storage.scout_tracker[scout_unit_data.race_name]
+        local tracker = storage.scout_tracker[scout_unit_data.force_name]
         if tracker then
             local entity = tracker.entity
             if util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
@@ -300,7 +300,7 @@ UnitControl.events = {
         until #event.group.members == 0 or i == limit
     end,
     [Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC]] = function(event)
-        InterplanetaryAttacks.exec(event.race_name, event.target_force)
+        InterplanetaryAttacks.exec(event.force_name, event.target_force)
     end,
     [defines.events.on_entity_died] = function(event)
         if is_unit_spawner(event) then

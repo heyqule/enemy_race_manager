@@ -26,20 +26,20 @@ it("Test quality calculate_chance_cache", function()
 
     game.forces[enemy].set_evolution_factor(0.5)
     QualityProcessor.calculate_quality_points()
-    assert(math.floor(QualityProcessor.get_quality_point(enemy.name, planet.name)) == 1650, "Quality Point is correct")
-    assert(QualityProcessor.is_maxed_out(enemy.name, planet.name) == false, "maxed_out is false")
+    assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1650, "Quality Point is correct")
+    assert(QualityProcessor.is_maxed_out(enemy, planet) == false, "maxed_out is false")
 
     game.forces[enemy].set_evolution_factor(1)
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy.name, planet.name) == 3000, "Quality Point is 40%")
+    assert(QualityProcessor.get_quality_point(enemy, planet) == 3000, "Quality Point is 40%")
 
     --- set 2000000 accumulate point to test 100%
     storage.race_settings.enemy.attack_meter_total = 2000001
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy.name, planet.name) == 10000, "Quality Point is 100%")
-    assert(QualityProcessor.is_maxed_out(enemy.name, planet.name) == true, "maxed_out is true")
+    assert(QualityProcessor.get_quality_point(enemy, planet) == 10000, "Quality Point is 100%")
+    assert(QualityProcessor.is_maxed_out(enemy, planet) == true, "maxed_out is true")
 
-    local spawn_rate = QualityProcessor.get_spawn_rate(enemy.name, planet.name)
+    local spawn_rate = QualityProcessor.get_spawn_rates(enemy, planet)
     assert(spawn_rate[1] == 0, "Legendary = 0")
     assert(spawn_rate[2] == 0.1, "Epic = 0.1")
     assert(spawn_rate[3] == 0.6, "Rare = 0.6")
@@ -163,12 +163,12 @@ it('Home planet test', function()
     QualityProcessor.calculate_quality_points()
 
     nauvis.create_entity {
-        name = 'erm_zerg--zergling--1',
+        name = 'enemy_erm_zerg--zergling--1',
         position = {0, 0}
     }
 
     char.create_entity {
-        name = 'erm_zerg--zergling--1',
+        name = 'enemy_erm_zerg--zergling--1',
         position = {0, 0}
     }
 

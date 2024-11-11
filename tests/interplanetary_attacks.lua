@@ -32,7 +32,7 @@ after_each(function()
 end)
 
 
-local race_name = "erm_zerg"
+local race_name = "enemy_erm_zerg"
 local enemy_force_name = "enemy_erm_zerg"
 
 it("Interplanetary Attack: Attack Target", function()

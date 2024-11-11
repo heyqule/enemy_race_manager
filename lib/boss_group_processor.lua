@@ -37,7 +37,7 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
     local boss = storage.boss
     local surface = boss.surface
     local force = boss.force
-    local center_location = surface.find_non_colliding_position(RaceSettingsHelper.get_colliding_unit(boss.race_name), boss.entity_position, chunkSize, 1, true)
+    local center_location = surface.find_non_colliding_position(RaceSettingsHelper.get_colliding_unit(boss.force_name), boss.entity_position, chunkSize, 1, true)
     if (center_location) then
         local group = surface.create_unit_group({ position = center_location, force = force })
 
@@ -67,20 +67,20 @@ local pick_featured_group = function()
     end
 
     local boss = storage.boss
-    local race_name = boss.race_name
-    if is_flying_only_boss() and RaceSettingsHelper.has_featured_flying_squad(race_name) then
-        local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
+    local force_name = boss.force_name
+    if is_flying_only_boss() and RaceSettingsHelper.has_featured_flying_squad(force_name) then
+        local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(force_name);
         storage.boss_group_spawn.featured_group_id = squad_id
         storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
         DebugHelper.print("BossGroupProcessor: Picked feature group..." .. tostring(FEATURE_GROUP_TYPE_FLYING) .. "/" .. tostring(squad_id))
     else
-        if RaceSettingsHelper.has_featured_flying_squad(race_name) and RaceSettingsHelper.can_spawn(33) then
-            local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(race_name);
+        if RaceSettingsHelper.has_featured_flying_squad(force_name) and RaceSettingsHelper.can_spawn(33) then
+            local squad_id = RaceSettingsHelper.get_featured_flying_squad_id(force_name);
             storage.boss_group_spawn.featured_group_id = squad_id
             storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_FLYING
             DebugHelper.print("BossGroupProcessor: Picked feature group..." .. tostring(FEATURE_GROUP_TYPE_FLYING) .. "/" .. tostring(squad_id))
-        elseif RaceSettingsHelper.has_featured_squad(race_name) then
-            local squad_id = RaceSettingsHelper.get_featured_squad_id(race_name);
+        elseif RaceSettingsHelper.has_featured_squad(force_name) then
+            local squad_id = RaceSettingsHelper.get_featured_squad_id(force_name);
             storage.boss_group_spawn.featured_group_id = squad_id
             storage.boss_group_spawn.featured_group_type = FEATURE_GROUP_TYPE_MIXED
             DebugHelper.print("BossGroupProcessor: Picked feature group..." .. tostring(FEATURE_GROUP_TYPE_MIXED) .. "/" .. tostring(squad_id))
@@ -105,15 +105,15 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     local i = 0
     repeat
         if spawn_data.featured_group_type == FEATURE_GROUP_TYPE_FLYING then
-            unit_name = RaceSettingsHelper.pick_featured_flying_unit(boss_data.race_name, spawn_data.featured_group_id)
+            unit_name = RaceSettingsHelper.pick_featured_flying_unit(boss_data.force_name, spawn_data.featured_group_id)
         elseif spawn_data.featured_group_type == FEATURE_GROUP_TYPE_MIXED then
-            unit_name = RaceSettingsHelper.pick_featured_unit(boss_data.race_name, spawn_data.featured_group_id)
+            unit_name = RaceSettingsHelper.pick_featured_unit(boss_data.force_name, spawn_data.featured_group_id)
         end
 
         local unit_full_name = RaceSettingsHelper.get_race_entity_name(
-                boss_data.race_name,
+                boss_data.force_name,
                 unit_name,
-                GlobalConfig.BOSS_LEVELS[storage.race_settings[boss_data.race_name].boss_tier]
+                GlobalConfig.BOSS_LEVELS[storage.race_settings[boss_data.force_name].boss_tier]
         )
 
         local position = surface.find_non_colliding_position(unit_full_name, group.position,
