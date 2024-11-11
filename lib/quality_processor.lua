@@ -141,13 +141,16 @@ function QualityProcessor.calculate_quality_points()
                         data.max_out = false
                     end
 
-                    if quality_points <= 2000 then
+                    if quality_points <= 1200 then
                         data.tier = 1
-                    elseif quality_points > 2000 and quality_points < 4000 then
+                    elseif quality_points > 1200 and quality_points <= 3000 then
                         data.tier = 2
                     else
                         data.tier = 3
                     end
+
+                    -- update custom group unit tier, using the highest tiers from any planet.
+                    RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
 
                     quality_data[planet.name] = calculate_chance_cache(data, quality_points)
                 end
@@ -169,17 +172,29 @@ function QualityProcessor.get_spawn_rates(force_name, planet_name)
     return storage.quality_on_planet[force_name][planet_name].spawn_rates
 end
 
-function QualityProcessor.roll_a_rate(force_name, surface_name)
+function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
+    is_elite = is_elite or false
     if not storage.quality_on_planet[force_name] or not storage.quality_on_planet[force_name][surface_name]
     then
         QualityProcessor.calculate_quality_points()
     end
 
     local planet_data = storage.quality_on_planet[force_name][surface_name]
-    local spawn_rates = planet_data.spawn_rates
-    local spawn_rates_size = planet_data.spawn_rates_size
-    local lowest_tier = planet_data.lowest_allowed_tier
-    local selected_tier, can_spawn
+
+    local spawn_rates, spawn_rates_size,
+          lowest_tier, selected_tier, can_spawn
+
+    if planet_data and is_elite == false then
+        spawn_rates = planet_data.spawn_rates
+        spawn_rates_size = planet_data.spawn_rates_size
+        lowest_tier = planet_data.lowest_allowed_tier
+    else
+        -- Roll at maximum at space platform?
+        -- or find a way to roll based on its closest planet?
+        spawn_rates = max_difficulties[setting_difficulty]
+        spawn_rates_size = 5
+        lowest_tier = 1
+    end
 
     for index, spawn_rate in pairs(spawn_rates) do
         if spawn_rate > 0 then
@@ -187,7 +202,7 @@ function QualityProcessor.roll_a_rate(force_name, surface_name)
             if selected_tier == lowest_tier then
                 can_spawn = true
             else
-                can_spawn = RaceSettingsHelper.can_spawn(spawn_rate)
+                can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier])
             end
 
             if can_spawn then
@@ -200,9 +215,9 @@ function QualityProcessor.roll_a_rate(force_name, surface_name)
 end
 
 --- Tier mapping.
---- Tier 1 is under 2000 points
---- Tier 2 is between 2000 - 4000 points
---- Tier 3 is 4000+ points
+--- Tier 1 is under 1200 points
+--- Tier 2 is between 1200 - 3000 points
+--- Tier 3 is 3000+ points
 function QualityProcessor.get_tier(force_name, surface_name)
     return storage.quality_on_planet[force_name][surface_name].tier
 end
@@ -266,7 +281,7 @@ function QualityProcessor.roll(entity)
                 if selected_tier == lowest_tier then
                     can_spawn = true
                 else
-                    can_spawn = RaceSettingsHelper.can_spawn(spawn_rate)
+                    can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier])
                 end
 
                 if can_spawn then

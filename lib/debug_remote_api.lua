@@ -135,9 +135,6 @@ end
 --- Usage: remote.call("enemyracemanager_debug", "reset_level")
 function Debug_RemoteAPI.reset_level()
     for force_name, _ in pairs(storage.race_settings) do
-        storage.race_settings[force_name].evolution_base_point = 0
-        storage.race_settings[force_name].evolution_point = 0
-        storage.race_settings[force_name].tier = 1
         game.forces[force_name].set_evolution_factor(0)
     end
 end
@@ -169,10 +166,6 @@ function Debug_RemoteAPI.calculate_quality_points()
     QualityProcessor.calculate_quality_points()
 end
 
---- Usage: remote.call("enemyracemanager_debug", "set_evolution_base_point"，‘erm_zerg", 100)
-function Debug_RemoteAPI.set_evolution_base_point(force_name, value)
-    storage.race_settings[force_name].evolution_base_point = value
-end
 
 --- Usage: remote.call("enemyracemanager_debug", "spawn_boss", {x=100,y=100})
 function Debug_RemoteAPI.spawn_boss(position)

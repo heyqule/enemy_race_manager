@@ -17,7 +17,6 @@ TEST_MODE = true
 BEACON_SELECTABLE = true
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
-
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 
 CONSTRUCTION_ATTACK = "embtr-con"

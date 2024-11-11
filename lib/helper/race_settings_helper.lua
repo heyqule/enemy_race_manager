@@ -168,26 +168,14 @@ function RaceSettingsHelper.set_last_accumulated_attack_meter(target_race, value
     storage.race_settings[target_race].last_attack_meter_total = value
 end
 
-function RaceSettingsHelper.get_evolution_base_point(target_race)
-    return storage.race_settings[target_race].evolution_base_point
-end
-
-function RaceSettingsHelper.add_to_evolution_base_point(target_race, value)
-    storage.race_settings[target_race].evolution_base_point = storage.race_settings[target_race].evolution_base_point + value
-end
-
-function RaceSettingsHelper.get_level(target_race)
-    return storage.race_settings[target_race].level
-end
-
-function RaceSettingsHelper.get_tier(target_race)
-    return storage.race_settings[target_race].tier
-end
-
 function RaceSettingsHelper.get_race_entity_name(target_race, name, level)
     return target_race .. "--" .. name .. "--" .. level
 end
 
+
+function RaceSettingsHelper.get_tier(target_race)
+    return storage.race_settings[target_race].tier
+end
 
 function RaceSettingsHelper.get_colliding_unit(force_name)
     local collide_unit_name = storage.race_settings[force_name].colliding_unit
@@ -197,27 +185,34 @@ function RaceSettingsHelper.get_colliding_unit(force_name)
     return RaceSettingsHelper.get_race_entity_name(
             force_name,
             collide_unit_name,
-      1
+            1
     )
 end
 
-function RaceSettingsHelper.add_killed_units_count(target_race, count)
+function RaceSettingsHelper.add_killed_units_count(target_race, surface_name, count)
     if storage.race_settings[target_race].unit_killed_count == nil then
         storage.race_settings[target_race].unit_killed_count = 0
     end
     storage.race_settings[target_race].unit_killed_count = storage.race_settings[target_race].unit_killed_count + count
 end
 
-function RaceSettingsHelper.add_killed_structure_count(target_race, count)
+function RaceSettingsHelper.add_killed_structure_count(target_race, surface_name, count)
     if storage.race_settings[target_race].structure_killed_count == nil then
         storage.race_settings[target_race].structure_killed_count = 0
     end
     storage.race_settings[target_race].structure_killed_count = storage.race_settings[target_race].structure_killed_count + count
 end
 
-function RaceSettingsHelper.refresh_current_tier(force_name)
+function RaceSettingsHelper.refresh_current_tier(force_name, tier)
     local race_settings = storage.race_settings[force_name]
     local i = 1
+    tier = tier or 1
+    if race_settings.tier and
+        tier <= race_settings.tier and
+        race_settings.current_units_tier ~= nil
+    then
+        return
+    end
 
     if race_settings.units == nil then
         return
@@ -229,7 +224,7 @@ function RaceSettingsHelper.refresh_current_tier(force_name)
     race_settings.current_support_structures_tier = {}
     race_settings.current_building_tier = {}
 
-    while i <= race_settings.tier do
+    while i <= tier do
         race_settings.current_units_tier = Table.array_combine(race_settings.current_units_tier, race_settings.units[i])
         race_settings.current_turrets_tier = Table.array_combine(race_settings.current_turrets_tier, race_settings.turrets[i])
         race_settings.current_command_centers_tier = Table.array_combine(race_settings.current_command_centers_tier, race_settings.command_centers[i])

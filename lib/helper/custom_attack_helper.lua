@@ -9,6 +9,7 @@ require("util")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+
 local Table = require("__erm_libs__/stdlib/table")
 
 local ATTACK_CHUNK_SIZE = 32
@@ -103,7 +104,7 @@ end
 
 local add_member = function(final_unit_name, surface, drop_position, force_name, group)
     if drop_position then
-        --storage.skip_quality_rolling = true
+        storage.skip_quality_rolling = true
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
         if entity and entity.type == "unit" then
             if group.valid then
@@ -119,7 +120,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     local source_entity = event.source_entity
     local race_settings = get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
-    local level = race_settings.level
+    local level = remote.call("enemyracemanager", "roll_quality", force_name, surface.name)
 
     position.x = position.x + 2
 
@@ -132,7 +133,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     if position then
         local idx = 0;
         while idx < count do
-            --storage.skip_quality_rolling = true
+            storage.skip_quality_rolling = true
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
             if entity and entity.type == "unit" then
                 entity.commandable.set_command({
@@ -245,7 +246,7 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
 
     count = count or 10
     local surface = game.surfaces[event.surface_index]
-    local level = race_settings.level
+    local level = remote.call("enemyracemanager", "roll_quality", force_name, surface.name)
     local source_entity = event.source_entity
 
     local position = event.target_position or event.target_entity.position

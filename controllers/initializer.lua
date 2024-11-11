@@ -37,11 +37,8 @@ local addRaceSettings = function()
     end
 
     race_settings.race = race_settings.race or MOD_NAME
-    race_settings.label = { "gui.label-biters" }
-    race_settings.level = race_settings.level or 1
     race_settings.tier = race_settings.tier or 1
-    race_settings.evolution_point = race_settings.evolution_point or 0
-    race_settings.evolution_base_point = race_settings.evolution_base_point or 0
+    race_settings.label = { "gui.label-biters" }
     race_settings.attack_meter = race_settings.attack_meter or 0
     race_settings.attack_meter_total = race_settings.attack_meter_total or 0
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0

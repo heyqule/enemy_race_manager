@@ -74,9 +74,9 @@ function AttackMeterProcessor.calculate_points(entity)
     local force = entity.force
     local entity_type = entity.type
     local entity_name = entity.name
-    local force = entity.force
     local surface = entity.surface
     local force_name = force.name
+    local surface_name = surface.name
     local attack_meter_points = unit_point_map[entity_type]
     if not GlobalConfig.race_is_active(force_name) or not attack_meter_points then
         return
@@ -90,11 +90,11 @@ function AttackMeterProcessor.calculate_points(entity)
     end
 
     if unit_map[entity_type] then
-        RaceSettingsHelper.add_killed_units_count(force_name, 1)
+        RaceSettingsHelper.add_killed_units_count(force_name, surface_name, 1)
     end
 
     if structure_map[entity_type] then
-        RaceSettingsHelper.add_killed_structure_count(force_name, 1)
+        RaceSettingsHelper.add_killed_structure_count(force_name, surface_name, 1)
     end
 
     attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
