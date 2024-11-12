@@ -43,12 +43,19 @@ local ATTACKABLE_ENTITY_TYPES = {
     "rocket-silo",
     "artillery-turret",
     "lab",
-    "agricultural-tower",
 }
+if script.active_mods['space-age'] then
+    table.insert(ATTACKABLE_ENTITY_TYPES, "agricultural-tower")
+    table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
+end
+
 local INDEXABLE_ATTACKABLE_ENTITY_TYPES = {
     "rocket-silo",
     "artillery-turret",
 }
+if script.active_mods['space-age'] then
+    table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
+end
 
 local CONTROL_DATA = "cdata"
 local ATTACK_ENTITIES_CURRENT_KEY = "aeck"

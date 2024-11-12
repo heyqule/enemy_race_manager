@@ -338,12 +338,5 @@ function RaceSettingsHelper.boss_tier(target_race)
     return storage.race_settings[target_race]["boss_tier"] or 1
 end
 
-function RaceSettingsHelper.k2_creep_enabled(target_race)
-    if target_race == nil or storage.race_settings[target_race] == nil or storage.race_settings[target_race]["enable_k2_creep"] == false then
-        return false
-    end
-
-    return true
-end
 
 return RaceSettingsHelper
