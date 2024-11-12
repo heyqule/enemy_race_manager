@@ -76,12 +76,6 @@ function DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = race_setting.tier }
 
-    item_table.add { type = "label", caption = { "gui.evolution_column" } }
-    item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
-
-    --item_table.add { type = "label", caption = { "gui.evolution_factor_column" } }
-    --item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(race_setting.race)) }
-
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = race_setting.attack_meter .. " / " .. race_setting.next_attack_threshold }
 

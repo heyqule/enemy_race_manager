@@ -55,10 +55,3 @@ handler.add_lib(require("__enemyracemanager__/controllers/on_script_trigger_effe
 handler.add_lib(require("__enemyracemanager__/controllers/debug_events"))
 
 require("prototypes/compatibility/controls")
-
--- Compatibility
---require("__enemyracemanager__/controllers/compatibility/k2")
---
---require("__enemyracemanager__/controllers/compatibility/mining_drone")
---
---require("__enemyracemanager__/controllers/compatibility/space_exploration")

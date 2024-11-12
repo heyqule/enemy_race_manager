@@ -93,15 +93,6 @@ end
             local group = storage.erm_unit_groups[key].group
             assert.truthy(storage.erm_unit_groups[key].group.valid, "Check Unit Group valid")
 
-            local total_two = 0
-            local total_three = 0
-            local total_four = 0
-            local total_switch = {
-                ['2'] = function() total_two = total_two + 1  end,
-                ['3'] = function() total_three = total_three + 1  end,
-                ['4'] = function() total_four = total_four + 1  end
-            }
-
             local has_epic_member = false
             for _, member in pairs(group.members) do
                 local name_token = ForceHelper.get_name_token(member.name)

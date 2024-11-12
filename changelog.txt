@@ -3,8 +3,8 @@ Version: 2.0.0
 Date: ????-??-??
 
   Major Features:
-    - Updated to Factorio 2.0.  IT DOES NOT SUPPORT MIGRATION FROM 1.1.
-    - This mod now focuses on interplanetary war logistics in Space Age.  Support for base game will be limited to crashes.
+    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1.
+    - This mod now focuses on interplanetary war logistics in [space-age].  Support for base game will be limited to crashes.
     - Replaced leveling system with "Quality Spawning" system based on planet evolution and accumulated attack points. [Details in Tips and Tricks]
     - Home planets invasion. Zerg and Protoss race have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
@@ -12,7 +12,7 @@ Date: ????-??-??
     - Updated autoplace handlers based on 2.0 specifications.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
     - In 2.0 non-[space-age] game, Nauvis can use the mixed mode.
-    - Added some tip and tricks records
+    - Added some tips and tricks
 
   Changes:
     - [Section: Unit Properties]
@@ -26,28 +26,28 @@ Date: ????-??-??
     - Calculation perform when applicable entity dies.
     - Spawner point reduction now affects attack points, which affect custom attack group generation.
     - Attack point by rocket default to 50 points per rocket, instead of 200.
-    - Time based attack now starts when the enemy's evolution is over 0.35 on any planet.
+    - Time based attack now starts when the enemy's evolution is over 0.35 on their planet.
     - [Section: Custom attack group changes]
-    - The group forming check run every one, instead of three minutes by default previously. Its setting has been removed.
-    -
+    - The group forming check run every minutes, instead of three minutes by default previously. Its setting has been removed.
+    - Added "cargo landing pad" and "agricultural-tower" types to targeted entities.
     - [Section: Boss Mode]
     - Boss mode is temporary offline for major overhaul.
-    - PSI Emitter Satellite for boss is now only used for base game. Bosses in [space-age] will spawn in their home planet.
+    - PSI Emitter Satellite for boss will only used for base game. Bosses in [space-age] will spawn in their home planet under certain conditions.
     - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
-    - Player's defensive structures automatically get a health bump to a minimum of 500HP.
+    - Player's structures automatically get a health bump to a minimum of 500HP.
     - [Section: Free For All]
-    - Other forces may invade the planet you visited to pick fights.
+    - Only works in mixed mode in non [space-age] game.
     - [Section: GUI]
     - Main screen buttons are now under shortcuts, instead of top left buttons.
+    - Some stats are calculated on per planet basis.
     - [Section: Removals]
     - Removed dependency of stdlib.
-    - Removed enemy leveling and its subsystems.
+    - Removed enemy leveling and its entity replacement subsystems.
     - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as the issue arise.
-    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported. If you experience with crash, please provide a bug report in my Discord.
+    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported. However, using their autoplace control may have conflict with ERM's enemy generation.
     - Removed menu biter replacement, add a few menu simulations.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
-    - Removed enemy replacement system.
     - Removed randomly assign enemy on a surface/planet.  Enemies are now defined in planet prototype.
     - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to autoplace changes.
 
