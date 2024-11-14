@@ -75,7 +75,6 @@ end
 for _, v in pairs(data.raw["turret"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
-        table.insert(v.flags, "get-by-unit-number")
         local level = tonumber(nameToken  [3])
         if level and level > 1 then
             DebugHelper.print("Disabling:" .. v.name)

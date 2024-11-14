@@ -37,8 +37,6 @@ function SurfaceProcessor.assign_race(surface)
                     local index = string.find(key, surfix, 1, true)
                     local enemy_race
 
-                    print('>>>'..key)
-                      
                     if key == surfix or basegame_autoplaces[key] then
                         enemy_race = MOD_NAME
                     elseif index then

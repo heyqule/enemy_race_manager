@@ -8,7 +8,7 @@
 local DataHelper = {}
 
 DataHelper.getFlyingCollisionMask = function()
-    return {layers={player = true, object = true, flying_units = true}, not_colliding_with_itself = true}
+    return {layers={flying_units = true}, not_colliding_with_itself = true}
 end
 
 DataHelper.getFlyingLayerName = function()
