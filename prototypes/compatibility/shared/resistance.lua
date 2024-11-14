@@ -8,7 +8,6 @@ local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
     -- K2
-    { "kr-explosion", 10, 80 },
     { "radioactive", 5, 65 },
     -- Bob Warfare
     { "bob-pierce", 10, 80 },
@@ -17,7 +16,6 @@ local damage_types = {
 
 local spawner_damage_types = {
     -- K2
-    { "kr-explosion", 10, 30 },
     { "radioactive", 5, 35 },
     -- Bob Warfare
     { "bob-pierce", 10, 30 },
