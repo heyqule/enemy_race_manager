@@ -15,6 +15,9 @@ function SurfaceProcessor.init_globals()
 end
 
 local surfix = "enemy-base"
+local basegame_autoplaces = {
+    gleba_enemy_base = true
+}
 function SurfaceProcessor.assign_race(surface)
 
     if not ForceHelper.can_have_enemy_on(surface) then
@@ -30,15 +33,16 @@ function SurfaceProcessor.assign_race(surface)
         if prototype.map_gen_settings and prototype.map_gen_settings.autoplace_controls then
             local autocontrols = prototype.map_gen_settings.autoplace_controls
             for key, _ in pairs(autocontrols) do
-                if string.find(key, surfix, 1, true) then
+                if string.find(key, surfix, 1, true) or basegame_autoplaces[key] then
                     local index = string.find(key, surfix, 1, true)
                     local enemy_race
-                      
 
-                    if key == surfix then                    
+                    print('>>>'..key)
+                      
+                    if key == surfix or basegame_autoplaces[key] then
                         enemy_race = MOD_NAME
                     elseif index then
-                        enemy_race = string.sub(key, 0, string.len(surfix) + 1 * -1)                        
+                        enemy_race = string.sub(key, 0, (string.len(surfix) + 2) * -1)
                     end
 
                     if enemy_race then
@@ -124,8 +128,8 @@ end
 --- Returns race name
 function SurfaceProcessor.get_enemy_on(surface_name)
     local surface_race_data = storage.enemy_surfaces[surface_name]
-    if surface_race_data then
-        return surface_race_data.races_by_key[math.random(1, storage.enemy_surfaces[surface_name].size)]
+    if surface_race_data and surface_race_data.size > 0 then
+        return surface_race_data.races_by_key[math.random(1, surface_race_data.size)]
     end
 
     return MOD_NAME

@@ -41,9 +41,11 @@ ArmyDeploymentController.events = {
     [defines.events.script_raised_built] = add_deployer,
     [defines.events.on_built_entity] = add_deployer,
     [defines.events.on_robot_built_entity] = add_deployer,
+    [defines.events.on_space_platform_built_entity] = add_deployer,
     [defines.events.on_entity_died] = remove_deployer,
     [defines.events.script_raised_destroy] = remove_deployer,
     [defines.events.on_player_mined_entity] = remove_deployer,
     [defines.events.on_robot_mined_entity] = remove_deployer,
+    [defines.events.on_space_platform_mined_entity] = remove_deployer,
 }
 return ArmyDeploymentController

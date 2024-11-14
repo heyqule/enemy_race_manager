@@ -1,6 +1,3 @@
--- May not needed for 2.0
--- require "prototypes.extend-collision"
-
 require "prototypes.noise-functions"
 require "prototypes.extend-types"
 require "prototypes.extend-biters"

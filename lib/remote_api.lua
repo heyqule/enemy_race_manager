@@ -73,7 +73,7 @@ function RemoteAPI.get_boss_data()
 end
 
 --- Add points to attack meter of a race
---- Usage: remote.call("enemyracemanager", "add_points_to_attack_meter", "erm_zerg", 5000)
+--- Usage: remote.call("enemyracemanager", "add_points_to_attack_meter", "enemy_erm_zerg", 5000)
 function RemoteAPI.add_points_to_attack_meter(race, value)
     local races = GlobalConfig.get_enemy_races()
     race = race or races[math.random(1, GlobalConfig.get_enemy_races_total())]
