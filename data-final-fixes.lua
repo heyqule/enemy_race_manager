@@ -4,7 +4,7 @@
 --- DateTime: 10/23/2021 12:53 PM
 ---
 require("__enemyracemanager__/global")
-require('prototypes/finalize-factoriopedia')
+require('prototypes/finalize-unit-prototypes')
 require('prototypes/health-balance')
 
 if DEBUG_MODE then

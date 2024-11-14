@@ -251,7 +251,7 @@ function ArmyTeleportationProcessor.scan_units()
             teleporter.idle_retry = teleporter.idle_retry + 1
         end
 
-        if teleporter and teleporter.idle_retry > MAX_RETRY then
+        if teleporter and teleporter.idle_retry > MAX_RETRY and teleporter.entity.valid then
             ArmyTeleportationProcessor.unlink(teleporter.entity.force)
         end
     end
