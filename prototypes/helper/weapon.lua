@@ -18,7 +18,7 @@ end
 function ERM_WeaponDataHelper.add_air_layer_to_projectile(projectile)
     local air_layer = ERMDataHelper.getFlyingLayerName()
     if projectile.hit_collision_mask == nil then
-        projectile.hit_collision_mask = { layers = { train = true, player = true, flying_units = true } }
+        projectile.hit_collision_mask = { layers = { train = true, player = true, is_object=true, flying_units = true } }
     else
         projectile.hit_collision_mask.flying_units = true
     end

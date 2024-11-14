@@ -166,7 +166,8 @@ function ArmyTeleportationProcessor.link(from, to)
             forces = { from_entity.force.name },
             filled = false,
             draw_on_ground = true,
-            width = 8
+            width = 8,
+            only_in_alt_mode = true,
         })
     end
 
@@ -181,7 +182,8 @@ function ArmyTeleportationProcessor.link(from, to)
             forces = { to_entity.force.name },
             filled = false,
             draw_on_ground = true,
-            width = 8
+            width = 8,
+            only_in_alt_mode = true,
         })
     end
 

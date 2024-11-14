@@ -12,8 +12,6 @@ require("prototypes/extend-ground-fire-patches.lua")
 
 require("prototypes/extend-defense.lua")
 
---require("prototypes/extend-reinforced-items")
-
 require("prototypes/extend-weapons.lua")
 
 require("prototypes/extend-super-weapons.lua")
@@ -39,6 +37,8 @@ require("prototypes/extend-scout-units")
 require("prototypes/extend-creep-removal")
 
 require('prototypes/quality-system-triggers')
+
+require("prototypes/extend-resistances")
 
 require("prototypes/extend-default-autoplace")
 

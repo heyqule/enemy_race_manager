@@ -5,13 +5,13 @@ Date: ????-??-??
   Major Features:
     - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1.
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for base game will be limited to crashes.
-    - Replaced leveling system with "Quality Spawning" system based on planet evolution and accumulated attack points. [Details in Tips and Tricks]
+    - Replaced leveling system with "Quality Spawning" system. It's based on planet's evolution and accumulated attack points. [Details in Tips and Tricks]
     - Home planets invasion. Zerg and Protoss race have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
-    - In 2.0 non-[space-age] game, Nauvis can use the mixed mode.
+    - In 2.0 non-[space-age] game, Nauvis can use the mixed mode, which multiple races can spawner on nauvis.
     - Added some tips and tricks
 
   Changes:
@@ -22,34 +22,32 @@ Date: ????-??-??
     - Unit tier is now independent for each planet.  Biters in planet A spawn differently than those on planet B until they reach max evolution.
     - Unit-spawner resistance lower from 75% to 35-45% to balance the +900% evolution HP scaling.  Units and turrets are not affected.
     - [Section: Attack Meter Changes]
-    - Changed custom attack group check to performance every minute, instead of three minutes.
-    - Calculation perform when applicable entity dies.
-    - Spawner point reduction now affects attack points, which affect custom attack group generation.
-    - Attack point by rocket default to 50 points per rocket, instead of 200.
-    - Time based attack now starts when the enemy's evolution is over 0.35 on their planet.
+    - Point calculation perform when applicable entity dies.
+    - Point reduction by killing spawners now affects attack points, which affects custom attack group generation.
+    - Attack point gained by launching rocket now default to 50 points, instead of 200.  Adjustable by setting.
+    - Time based attack starts when the enemy's evolution is over 0.35 on their planet.
     - [Section: Custom attack group changes]
-    - The group forming check run every minutes, instead of three minutes by default previously. Its setting has been removed.
-    - Added "cargo landing pad" and "agricultural-tower" types to targeted entities.
+    - The group forming check runs every minute, instead of three minutes by default previously. Its setting has been removed.
+    - Added "cargo-landing-pad" and "agricultural-tower" types to targeted entities.
     - [Section: Boss Mode]
     - Boss mode is temporary offline for major overhaul.
-    - PSI Emitter Satellite for boss will only used for base game. Bosses in [space-age] will spawn in their home planet under certain conditions.
     - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
     - Player's structures automatically get a health bump to a minimum of 500HP.
     - [Section: Free For All]
-    - Only works in mixed mode in non [space-age] game.
+    - Only works with mixed mode in non [space-age] game at the moment.
     - [Section: GUI]
-    - Main screen buttons are now under shortcuts, instead of top left buttons.
+    - Main screen buttons are now under shortcuts, instead of using top left buttons (modUI).
     - Some stats are calculated on per planet basis.
+    - Army teleportation indicators only draw in alt mode.
     - [Section: Removals]
     - Removed dependency of stdlib.
-    - Removed enemy leveling and its entity replacement subsystems.
-    - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as the issue arise.
+    - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as any issue arise.
     - Exceptions: Cold, Explosive, Toxic and Armour biters are supported. However, using their autoplace control may have conflict with ERM's enemy generation.
     - Removed menu biter replacement, add a few menu simulations.
-    - Removed "enable biter" option.  They are always enabled.  You can change your race on nauvis under "Nauvis' enemy" in startup option.
+    - Removed "enable biter" option.  They are always enabled.  You can change your race on Nauvis under "Nauvis' enemy" in startup option.
     - Removed randomly assign enemy on a surface/planet.  Enemies are now defined in planet prototype.
-    - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to autoplace changes.
+    - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to incompatibility.
 
   Bugfixes:
     - Fixed interplanetary attack picking a nil surface. It now picks Nauvis as default.
