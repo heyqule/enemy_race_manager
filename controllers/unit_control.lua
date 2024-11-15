@@ -201,10 +201,10 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
            (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
         then
             local commands = erm_unit_group.commands
-            local new_command
+            local new_commands
             -- try go to last stop if the group stuck
             if group.moving_state == defines.moving_state.stuck then
-                new_command = commands.commands[table_size(commands)]
+                new_commands = commands.commands[table_size(commands)]
             else
                 local remove_upto
                 for index, command in pairs(commands.commands) do
@@ -220,16 +220,16 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
                     end                        
                 end
 
-                new_command = commands
+                new_commands = commands
             end
             local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
             for _, member in pairs(group.members) do
                 new_group.add_member(member)
             end
 
-            new_group.set_command(erm_unit_group.commands)
+            new_group.set_command(new_commands)
             storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
-            storage.erm_unit_groups[new_group.unique_id].commands = new_command
+            storage.erm_unit_groups[new_group.unique_id].commands = new_commands
             storage.erm_unit_groups[new_group.unique_id].group = new_group
             storage.erm_unit_groups[group.unique_id] = nil
         end

@@ -64,21 +64,14 @@ function MainWindow.show(player)
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
     scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", player.surface.name }, style = "caption_label" }
-    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
-    --if GlobalConfig.mapgen_is_one_race_per_surface() and storage.enemy_surfaces[player.surface.name] then
-    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_1_race", storage.enemy_surfaces[player.surface.name] } }
-    --elseif GlobalConfig.mapgen_is_2_races_split() then
-    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_2_races", GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
-    --else
-    --    scroll.add { type = "label", name = "surface_race_name", caption = { "gui.mapgen_mixed_races" } }
-    --end
 
-    local item_table = scroll.add { type = "table", column_count = 4, style = "bordered_table" }
+    local item_table = scroll.add { type = "table", column_count = 5, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = { "gui.attack_column" } }
+    item_table.add { type = "label", caption = { "gui.total_attack_column" } }
     item_table.add { type = "label", caption = { "gui.action_column" } }
 
     for name, race_setting in pairs(storage.race_settings) do
@@ -86,8 +79,9 @@ function MainWindow.show(player)
             item_table.add { type = "label", caption = race_setting.label }
             item_table.add { type = "label", caption = race_setting.tier }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
+            item_table.add { type = "label", caption = race_setting.attack_meter_total }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }
-            action_flow.add { type = "button", name = race_setting.race .. "/more_action", tags={filter_pattern=".*/more_action"}, caption = { "gui.more_action" }, tooltip = { "gui.more_action_tooltip" } }
+            action_flow.add { type = "button", name = race_setting.race .. "/detail_action", tags={filter_pattern=".*/detail_action"}, caption = { "gui.detail_action" }, tooltip = { "gui.detail_action_tooltip" } }
         end
     end
 

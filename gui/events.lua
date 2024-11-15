@@ -51,7 +51,7 @@ Click.erm_close_button = function(event)
     GuiContainer.main_window.toggle_close(owner)
 end
 
-Click.more_action = function(event)
+Click.detail_action = function(event)
     local element = event.element
     local owner = game.players[element.player_index]
     if owner then
@@ -224,7 +224,7 @@ Click.events = {
     --- Enemy Main window clicks ---
     ["erm_toggle"] = Click.erm_toggle,
     ["erm_close_button"] = Click.erm_close_button,
-    [".*/more_action"] = Click.more_action,
+    [".*/detail_action"] = Click.detail_action,
     ["erm_clean_idle_biter"] = Click.erm_clean_idle_biter,
     ["erm_reset_default_bitter"] = Click.erm_reset_default_bitter,
 

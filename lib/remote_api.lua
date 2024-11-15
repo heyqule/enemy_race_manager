@@ -16,6 +16,7 @@ local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_populatio
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
 local EnvironmentalAttack = require("__enemyracemanager__/lib/environmental_attacks")
 local InterplanetaryAttack = require("__enemyracemanager__/lib/interplanetary_attacks")
@@ -335,6 +336,10 @@ RemoteAPI.army_deployer_register = ArmyDeploymentProcessor.register_building
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
 
+--- Base build processor
+RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
+
+--- Quality Points
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
 
 RemoteAPI.roll_quality = QualityProcessor.roll_quality
