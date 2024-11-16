@@ -59,7 +59,11 @@ function ForceHelper.set_neutral_force(game, force_name)
 end
 
 function ForceHelper.split_name(name)
-    return String.split(name, "--")
+    if storage and storage.force_entity_name_cache and storage.force_entity_name_cache[name] then
+        return storage.force_entity_name_cache[name]
+    else
+        return String.split(name, '--')
+    end
 end
 
 function ForceHelper.get_name_token(name)

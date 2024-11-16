@@ -214,6 +214,8 @@ function RaceSettingsHelper.refresh_current_tier(force_name, tier)
         return
     end
 
+    storage.race_settings[force_name].tier = tier
+
     if race_settings.units == nil then
         return
     end

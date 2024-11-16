@@ -6,8 +6,9 @@
 
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 ---- Main Window
 local MainWindow = {
@@ -65,19 +66,22 @@ function MainWindow.show(player)
 
     scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", player.surface.name }, style = "caption_label" }
 
-    local item_table = scroll.add { type = "table", column_count = 5, style = "bordered_table" }
+    local item_table = scroll.add { type = "table", column_count = 6, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
     item_table.add { type = "label", caption = { "gui.tier_column" } }
+    item_table.add { type = "label", caption = { "gui.progress_column" } }
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = { "gui.total_attack_column" } }
     item_table.add { type = "label", caption = { "gui.action_column" } }
 
     for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
+            local points = QualityProcessor.get_quality_point(race_setting.race, player.surface.name) or 0
             item_table.add { type = "label", caption = race_setting.label }
             item_table.add { type = "label", caption = race_setting.tier }
+            item_table.add { type = "label", caption = "[space-location="..player.surface.name.."] "..(points / 100) .. "%" }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
             item_table.add { type = "label", caption = race_setting.attack_meter_total }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }

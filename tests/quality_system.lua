@@ -26,7 +26,7 @@ it("Test quality calculate_chance_cache", function()
 
     game.forces[enemy].set_evolution_factor(0.5)
     QualityProcessor.calculate_quality_points()
-    assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1650, "Quality Point is correct")
+    assert(math.floor(QualityProcessor.get_quality_point(enemy, planet)) == 1500, "Quality Point is correct")
     assert(QualityProcessor.is_maxed_out(enemy, planet) == false, "maxed_out is false")
 
     game.forces[enemy].set_evolution_factor(1)

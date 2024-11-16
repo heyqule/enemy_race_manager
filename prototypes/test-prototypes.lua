@@ -7,10 +7,12 @@ require("util")
 local rocket_silo_test = util.table.deepcopy(data.raw["rocket-silo"]["rocket-silo"])
 rocket_silo_test.name = "erm-rocket-silo-test"
 rocket_silo_test.max_health = 99999999
+rocket_silo_test.hidden_in_factoriopedia = true
 
 local gun_turret_test = util.table.deepcopy(data.raw["ammo-turret"]["gun-turret"])
 gun_turret_test.name = "erm-gun-turret-test"
 gun_turret_test.max_health = 99999999
+gun_turret_test.hidden_in_factoriopedia = true
 
 data:extend({
     rocket_silo_test,
@@ -20,6 +22,7 @@ data:extend({
         name = "erm-test-meteor",
         acceleration = 0,
         rotatable = false,
+        hidden_in_factoriopedia = true,
         pictures =
         {
             {

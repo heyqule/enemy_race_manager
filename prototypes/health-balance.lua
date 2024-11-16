@@ -16,23 +16,39 @@ local include_types = {
     "container",
     "electric-pole",
     "furnace",
+    "assembling-machine",
+    "radar",
+    "pump",
+    "roboport",
+    "storage-tank",
+    "straight-rail",
+    "curved-rail-a",
+    "curved-rail-b",
+    "half-diagonal-rail",
+    "elevated-curved-rail-a",
+    "elevated-curved-rail-b",
+    "elevated-half-diagonal-rail",
+    "elevated-straight-rail",
+    "rail-chain-signal",
+    "rail-signal",
+    "loader-1x1",
+    "loader",
+    "lightning-attractor"
 }
 
 
 
 for _, type in pairs(include_types) do
     for _, entity in pairs(data.raw[type]) do
-        if entity.max_health and entity.max_health < 1000 then
-            entity.max_health = math.max(entity.max_health * 2.5, 500)
-        end
-
-        if entity.type == "container" or entity.type == "logistic-container" then
+        if entity.max_health and (entity.type == "container" or entity.type == "logistic-container") then
             entity.max_health = math.max(entity.max_health * 3, 500)
+        elseif entity.max_health and entity.max_health < 500 then
+            entity.max_health = math.max(entity.max_health * 2.5, 500)
         end
     end
 end
 
-if mods['space-age'] then
+if feature_flags.space_travel then
     local expansion_types = {
         "agricultural-tower"
     }

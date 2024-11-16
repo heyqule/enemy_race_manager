@@ -110,8 +110,8 @@ function ScenarioHelper.set_enemy_params(level, tier, factor)
     remote.call("enemyracemanager_debug", "calculate_quality_points")
 end
 
-function ScenarioHelper.set_attack_points()
-    remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 2000000)
+function ScenarioHelper.set_attack_points(points)
+    remote.call("enemyracemanager_debug", "add_points_to_attack_meter", points)
 end
 
 function ScenarioHelper.set_boss_tier(tier)

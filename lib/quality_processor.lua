@@ -8,31 +8,34 @@ local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local QualityProcessor = {}
 
 --- When a player reaches higher quality points.  The following will be the spawn rate of each tier
---- normal, uncommon, rare, epic, legendary
+--- legendary, epic, exceptional, great, normal
 local max_difficulties = {
-    [QUALITY_CASUAL] = {0, 0.7, 0.3, 0, 0},
-    [QUALITY_NORMAL] = {0, 0.3, 0.60, 0.1, 0},
-    [QUALITY_ADVANCED] = {0, 0, 0.7, 0.25, 0.05},
-    [QUALITY_HARDCORE] = {0, 0, 0.3, 0.5, 0.2},
-    [QUALITY_FIGHTER] = {0, 0, 0, 0.5, 0.5},
-    [QUALITY_CRUSADER] = {0, 0, 0, 0.2, 0.8},
-    [QUALITY_THEONE] = {0, 0, 0, 0, 1},
+    [QUALITY_CASUAL] = {0, 0, 0.3, 0.7, 0},
+    [QUALITY_NORMAL] = {0, 0.1, 0.60, 0.3, 0},
+    [QUALITY_ADVANCED] = {0.05, 0.25, 0.7, 0, 0},
+    [QUALITY_HARDCORE] = {0.2, 0.3, 0.5, 0, 0},
+    [QUALITY_FIGHTER] = {0.5, 0.5, 0, 0, 0},
+    [QUALITY_CRUSADER] = {0.75, 0.25, 0, 0, 0},
+    [QUALITY_THEONE] = {1, 0, 0, 0, 0},
 }
 local setting_difficulty, setting_advancement
 
 local max_out_target = 10000
 local evolution_target = 3000
-local evolution_rich_padding = 0.05
 local attack_point_target = 7000
 local attack_point_divider = 2000000
 local top_tier = 5
+local SCAN_RADIUS = 64
 
 -- a flag to check whether re-roll is running to prevent firing another re-oll on same unit.
 local is_running_roll
 
 local update_storages = function()
-    storage.quality_on_planet = storage.quality_on_planet or {}
-    storage.skip_quality_rolling = false
+    if storage.quality_on_planet == nil then
+        storage.quality_on_planet = storage.quality_on_planet or {}
+        storage.skip_quality_rolling = false
+    end
+
     setting_difficulty = settings.global['enemyracemanager-difficulty'].value
     setting_advancement = settings.global['enemyracemanager-advancement'].value
 end
@@ -72,19 +75,19 @@ end
 --- Table arrange from legendary to normal.  Leg roll first, normal roll last
 local build_quality_table = function(difficulties)
     return {
-        { { 9000, 0  }, { 10000, difficulties[5] } },
-        { { 7500, 0  }, { 10000, difficulties[4] } },
-        { { 4000, 0 }, { 6500, math.min(math.max(difficulties[3] * 2, 1), 0.5) }, { 9000, difficulties[3] }, { 10000, difficulties[3] } },
-        { { 2000, 0 }, { 4500, math.min(math.max(difficulties[2] * 2, 1), 0.5) }, { 7000, difficulties[2] }, { 10000, difficulties[2] } },
-        { { 0, 1 }, { 4000, 1 }, { 5000, difficulties[1] } }
+        { { 8000, 0  }, { 10000, difficulties[1] } },
+        { { 6000, 0  }, { 8000, difficulties[2] * 0.75 } , { 10000, difficulties[2] } },
+        { { 4000, 0 }, { 6500, math.max(math.min(difficulties[3] * 1.5, 1), 0.66) }, { 9000, difficulties[3] }, { 10000, difficulties[3] } },
+        { { 2000, 0 }, { 4500, math.max(math.min(difficulties[4] * 1.5, 1), 0.75) }, { 7000, difficulties[4] }, { 10000, difficulties[4] } },
+        { { 0, 1 }, { 4000, 1 }, { 5000, difficulties[5] } }
     }
 end
 ----
 --- Normal start at 100% from QP = 0 - 5000
 --- Uncommon start at QP = 2000 - 7000
 --- Rare start at QP = 4000 - 9000
---- Epic start at QP = 7500
---- Legendary start at QP = 9000
+--- Epic start at QP = 60%
+--- Legendary start at QP = 80%
 local calculate_chance_cache = function(planet_data, time)
     local selected_difficulties = max_difficulties[setting_difficulty]
     local spawn_table = planet_data.spawn_table or {}
@@ -102,13 +105,13 @@ local calculate_chance_cache = function(planet_data, time)
 
     for index, _ in pairs(planet_data.spawn_rates) do
         local next_rate = planet_data.spawn_rates[index + 1]
-        if next_rate and next_rate == 0 then
-            planet_data.lowest_allowed_tier = spawn_rates_size - (index - 1)
-            if not planet_data.spawn_rates[index + 2] or planet_data.spawn_rates[index + 2] == 0 then
-                break
-            end                
+        if next_rate and next_rate ~= 0 then
+            planet_data.lowest_allowed_tier = index + 1
         end
     end
+
+    planet_data.spawn_rates[planet_data.lowest_allowed_tier] = 1
+
     return planet_data
 end
 
@@ -125,11 +128,7 @@ function QualityProcessor.calculate_quality_points()
                 if planet.surface then
                     local data = quality_data[planet.name] or {}
 
-                    if data.max_out then
-                        break;
-                    end
-
-                    local quality_points = ( math.min((force.get_evolution_factor(planet.surface.name) + evolution_rich_padding), 1) ) * evolution_target +
+                    local quality_points = ( math.min((force.get_evolution_factor(planet.surface.name)), 1) ) * evolution_target +
                             math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
 
                     quality_points = quality_points * setting_advancement
@@ -161,18 +160,40 @@ function QualityProcessor.calculate_quality_points()
 end
 
 function QualityProcessor.get_quality_point(force_name, planet_name)
+    if storage.quality_on_planet[force_name][planet_name] == nil then
+        QualityProcessor.calculate_quality_points()
+    end
+
     return storage.quality_on_planet[force_name][planet_name].points
 end
 
 function QualityProcessor.is_maxed_out(force_name, planet_name)
+    if storage.quality_on_planet[force_name][planet_name] == nil then
+        QualityProcessor.calculate_quality_points()
+    end
+
     return  storage.quality_on_planet[force_name][planet_name].max_out
 end
 
 function QualityProcessor.get_spawn_rates(force_name, planet_name)
+    if storage.quality_on_planet[force_name][planet_name] == nil then
+        QualityProcessor.calculate_quality_points()
+    end
+
     return storage.quality_on_planet[force_name][planet_name].spawn_rates
 end
 
+function QualityProcessor.get_data_set(force_name)
+    if storage.quality_on_planet[force_name] == nil then
+        QualityProcessor.calculate_quality_points()
+    end
+    return storage.quality_on_planet[force_name]
+end
+
 function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
+    if setting_difficulty == nil then
+        update_storages()
+    end
     is_elite = is_elite or false
     if not storage.quality_on_planet[force_name] or not storage.quality_on_planet[force_name][surface_name]
     then
@@ -193,12 +214,13 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
         -- or find a way to roll based on its closest planet?
         spawn_rates = max_difficulties[setting_difficulty]
         spawn_rates_size = 5
-        lowest_tier = 1
+        lowest_tier = spawn_rates_size
     end
 
-    for index, spawn_rate in pairs(spawn_rates) do
+    selected_tier = spawn_rates_size
+
+    for selected_tier, spawn_rate in pairs(spawn_rates) do
         if spawn_rate > 0 then
-            selected_tier = spawn_rates_size - (index - 1)
             if selected_tier == lowest_tier then
                 can_spawn = true
             else
@@ -227,7 +249,10 @@ function QualityProcessor.reset_globals()
 end
 
 function QualityProcessor.roll(entity)
-
+    -- is_running_roll to prevent recursive roll on create entity event
+    -- storage.skip_quality_rolling allows bypassing roll manually
+    -- unit from spawner doesn't need to roll
+    -- unit which is not from enemy force or not erm units doesn't need to roll.
     if is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
        not ForceHelper.is_enemy_force(entity.force) or
@@ -244,7 +269,7 @@ function QualityProcessor.roll(entity)
     local surface = entity.surface
     local race_settings = storage.race_settings[force.name]
 
-    local selected_tier
+    local selected_tier, spawn_rates_size
     local can_spawn = false
     --- Home planet spawns, always use the top tier
     if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
@@ -266,18 +291,18 @@ function QualityProcessor.roll(entity)
             return entity
         end
         local spawn_rates = planet_data.spawn_rates
-        local spawn_rates_size = planet_data.spawn_rates_size
+        spawn_rates_size = planet_data.spawn_rates_size
         local lowest_tier = planet_data.lowest_allowed_tier
 
-        --- Unit from spawner doesn't need to roll.
-        if unit_tier >= lowest_tier then
+        --- Unit from higher tier doesn't need to roll.
+        if unit_tier > lowest_tier then
             return entity
         end
 
 
         for index, spawn_rate in pairs(spawn_rates) do
             if spawn_rate > 0 then
-                selected_tier = spawn_rates_size - (index - 1)
+                selected_tier = index
                 if selected_tier == lowest_tier then
                     can_spawn = true
                 else
@@ -292,7 +317,7 @@ function QualityProcessor.roll(entity)
     end
 
     --- no need to swap if unit is already at the same or higher than selected tier.
-    if tonumber(name_token[3]) >= selected_tier then
+    if tonumber(unit_tier) >= selected_tier then
         return entity
     end
 
@@ -304,7 +329,7 @@ function QualityProcessor.roll(entity)
         if position then
             is_running_roll = true
             local new_unit = surface.create_entity {
-                name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
+                name = name_token[1]..'--'..name_token[2]..'--'..(spawn_rates_size - selected_tier + 1),
                 force = force,
                 position = position,
                 create_build_effect_smoke = false,
@@ -313,7 +338,11 @@ function QualityProcessor.roll(entity)
             if new_unit then
                 if new_unit and new_unit.commandable and storage.group_tracker[new_unit.force.name] then
                     local group = storage.group_tracker[new_unit.force.name].group
-                    group.add_member(new_unit)
+                    if group.surface.index == new_unit.surface.index and
+                       util.distance(group.position, new_unit.position) < SCAN_RADIUS
+                    then
+                        group.add_member(new_unit)
+                    end
                 end
 
                 entity.destroy()
@@ -327,6 +356,7 @@ end
 
 function QualityProcessor.reset_all_progress()
     for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
+        storage.race_settings[force_name].tier = 1
         storage.race_settings[force_name].attack_meter = 0
         storage.race_settings[force_name].accumulated_attack_meter = 0
         local force = game.forces[force_name]
@@ -338,7 +368,7 @@ end
 --- Register events
 QualityProcessor.events =
 {
-    [defines.events.on_runtime_mod_setting_changed] = update_storages
+    [defines.events.on_runtime_mod_setting_changed] = update_storages()
 }
 
 QualityProcessor.on_tick = {

@@ -105,6 +105,22 @@ Click.erm_boss_detail_close_button = function(event)
     end
 end
 
+Click.quality_points_detail = function(event)
+    local element = event.element
+    local nameToken = String.split(element.name, "/")
+    local owner = game.players[element.player_index]
+    GuiContainer.quality_points_window.show(owner, nameToken[1])
+end
+
+Click.erm_quality_points_detail_close_button = function(event)
+    local element = event.element
+    local owner = game.players[element.player_index]
+    if owner then
+        GuiContainer.quality_points_window.toggle_close(owner)
+        GuiContainer.main_window.show(owner)
+    end
+end
+
 Click.victory_dialog_tier_cancel = function(event)
     local owner = game.players[element.element.player_index]
     GuiContainer.victory_dialog.hide(owner)
@@ -197,7 +213,7 @@ Click.army_cc_link = function(event)
 end
 
 -- Rally point handling
-Click.erm_rally_point_set = function(event)
+Click.erm_rallypoint_set = function(event)
     local player = game.players[event.player_index]
     if player and player.valid then
         GuiContainer.deployer_attachment.set_cursor(player)
@@ -211,7 +227,7 @@ Click.erm_rallypoint_map = function(event)
     end
 end
 
-Click.erm_rally_point_unset = function(event)
+Click.erm_rallypoint_unset = function(event)
     local player = game.players[event.player_index]
     if player and player.valid then
         GuiContainer.deployer_attachment.remove_rallypoint(player)
@@ -220,6 +236,7 @@ end
 
 Click.events = {
     --- setup: ['click_elememt_name_pattern'] = function_name(event)
+    --- UI setup: Add filter pattern tag: tags={filter_pattern=".*/detail_action"}
 
     --- Enemy Main window clicks ---
     ["erm_toggle"] = Click.erm_toggle,
@@ -230,11 +247,14 @@ Click.events = {
 
     --- Enemy Detail window clicks ---
     ["erm_detail_close_button"] = Click.erm_detail_close_button,
-    [".*/" .. GuiContainer.detail_window.confirm_name] = Click.detail_setting_confirm,
 
     --- Boss Detail window clicks ---
     [".*/boss_details"] = Click.boss_detail,
     ["erm_boss_detail_close_button"] = Click.erm_boss_detail_close_button,
+
+    --- Boss Detail window clicks ---
+    [".*/quality_points_details"] = Click.quality_points_detail,
+    ["erm_quality_points_detail_close_button"] = Click.erm_quality_points_detail_close_button,
 
     --- Boss Victory dialog tier upgrade confirmation ---
     [".*/victory_dialog_tier_cancel"] = Click.victory_dialog_tier_cancel,
@@ -253,9 +273,9 @@ Click.events = {
     ["army_cc/.*_link"] = Click.army_cc_link,
 
     --- Army RallyPoint ---
-    ["erm_rally_point_set"] = Click.erm_rally_point_set,
+    ["erm_rally_point_set"] = Click.erm_rallypoint_set,
     ["erm_rallypoint_map"] = Click.erm_rallypoint_map,
-    ["erm_rally_point_unset"] = Click.erm_rally_point_unset
+    ["erm_rally_point_unset"] = Click.erm_rallypoint_unset
 }
 --- handle all ERM on_click function calls
 Click.on_click_event = function(event)
@@ -493,7 +513,6 @@ end
 
 local GuiEvent = {}
 GuiEvent.events = {
-    [defines.events.on_player_created] = on_player_created,
     [defines.events.on_gui_click] = Click.on_click_event,
     [defines.events.on_gui_selection_state_changed] = SelectionStateChanged.on_selection_state_changed,
     [defines.events.on_gui_opened] = on_gui_opened,

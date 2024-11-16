@@ -56,7 +56,7 @@ for _, v in pairs(data.raw["unit"]) do
     end
 end
 
-if mods['space-age'] then
+if feature_flags.space_travel then
     for _, v in pairs(data.raw["spider-unit"]) do
         if string.find(v.name, "--", 1, true) then
             --table.insert(v.flags, "get-by-unit-number")
@@ -83,9 +83,9 @@ if mods['space-age'] then
 end
 
 -- Remove all other ERM entities from factoriopedia
-for _, type in pairs({"explosion","projectile","corpse","smoke-with-trigger", "sticker", "stream", "ammo-category"}) do
+for _, type in pairs({"explosion","projectile","corpse","smoke-with-trigger", "sticker", "stream", "ammo-category","simple-entity-with-owner"}) do
     for _, v in pairs(data.raw[type]) do
-        if util.string_starts_with(v.name, "erm-") or util.string_starts_with(v.name, "erm_") then
+        if string.find(v.name, "enemy_erm_",1, true) or util.string_starts_with(v.name, "erm-") or util.string_starts_with(v.name, "erm_") then
             DebugHelper.print("Hiding Factoriopedia:" .. v.name)
             data.raw[type][v.name]["hidden_in_factoriopedia"] = true
         end

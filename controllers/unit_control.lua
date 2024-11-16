@@ -222,16 +222,19 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
 
                 new_commands = commands
             end
-            local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
-            for _, member in pairs(group.members) do
-                new_group.add_member(member)
-            end
 
-            new_group.set_command(new_commands)
-            storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
-            storage.erm_unit_groups[new_group.unique_id].commands = new_commands
-            storage.erm_unit_groups[new_group.unique_id].group = new_group
-            storage.erm_unit_groups[group.unique_id] = nil
+            if table_size(new_commands.commands) >= 1 then
+                local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
+                for _, member in pairs(group.members) do
+                    new_group.add_member(member)
+                end
+
+                new_group.set_command(new_commands)
+                storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
+                storage.erm_unit_groups[new_group.unique_id].commands = new_commands
+                storage.erm_unit_groups[new_group.unique_id].group = new_group
+                storage.erm_unit_groups[group.unique_id] = nil
+            end
         end
 
         if event_result == defines.behavior_result.success and was_distracted == false then

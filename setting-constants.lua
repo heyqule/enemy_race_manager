@@ -1,6 +1,5 @@
 NAUVIS_MIXED = "Mixed Races"
 
-
 QUALITY_CASUAL = "Casual"
 QUALITY_NORMAL = "Normal"
 QUALITY_ADVANCED = "Advanced"

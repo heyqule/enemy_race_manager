@@ -67,7 +67,7 @@ for _, type in pairs(types) do
     end
 end
 
-if mods['space-age'] then
+if feature_flags.space_travel then
     local types = {"segmented-unit", "spider-unit"}
     for _, type in pairs(types) do
         for _, entity in pairs(data.raw[type]) do

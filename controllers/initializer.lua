@@ -176,7 +176,7 @@ local init_globals = function()
     storage.is_multi_planets_game = false
 
     --- SE or Space Age
-    if script.active_mods["space-exploration"] or script.active_mods['space-age'] then
+    if script.active_mods["space-exploration"] or script.feature_flags.space_travel then
         storage.is_multi_planets_game = true
     end
 

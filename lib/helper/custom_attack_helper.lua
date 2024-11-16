@@ -24,7 +24,7 @@ local rock_names = {
     "big-sand-rock",
     "huge-rock",
 }
-if script.active_mods['space-age'] then
+if script.feature_flags.space_travel then
     rock_names = Table.array_combine(rock_names, {
         "big-volcanic-rock",
         "huge-volcanic-rock",
@@ -107,7 +107,7 @@ local add_member = function(final_unit_name, surface, drop_position, force_name,
         storage.skip_quality_rolling = true
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
         if entity and entity.type == "unit" then
-            if group.valid then
+            if group.valid and group.is_unit_group then
                 group.add_member(entity)
             end
         end
@@ -120,7 +120,8 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     local source_entity = event.source_entity
     local race_settings = get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
-    local level = remote.call("enemyracemanager", "roll_quality", force_name, surface.name)
+    local name_tokens = get_name_token(source_entity.name)
+    local level = name_tokens[3]
 
     position.x = position.x + 2
 
@@ -246,7 +247,7 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
 
     count = count or 10
     local surface = game.surfaces[event.surface_index]
-    local level = remote.call("enemyracemanager", "roll_quality", force_name, surface.name)
+    local level
     local source_entity = event.source_entity
 
     local position = event.target_position or event.target_entity.position
@@ -259,11 +260,19 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
     if source_entity and source_entity.commandable then
         group = source_entity.commandable
         force_name = source_entity.force.name
+        local name_tokens = get_name_token(source_entity.name)
+        if name_tokens[3] then
+            level = name_tokens[3]
+        end
     else
         group = surface.create_unit_group {
             position = position, force = force_name
         }
         new_group = true
+    end
+
+    if level == nil then
+        level = remote.call("enemyracemanager", "roll_quality", force_name, surface.name)
     end
 
     repeat

@@ -4,8 +4,8 @@ Date: ????-??-??
 
   Major Features:
     - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1.
-    - This mod now focuses on interplanetary war logistics in [space-age].  Support for base game will be limited to crashes.
-    - Replaced leveling system with "Quality Spawning" system. It's based on planet's evolution and accumulated attack points. [Details in Tips and Tricks]
+    - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and ERM core functionalities.
+    - Replaced leveling system with "Quality Spawning" system. It's based on a planet's evolution and accumulated attack points. [Details in Tips and Tricks]
     - Home planets invasion. Zerg and Protoss race have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
   Features:

@@ -54,7 +54,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(60, 20)
     data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(75, 20)
 
-    if mods['space-age'] then
+    if feature_flags.space_travel then
         data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 20)
     end
 
@@ -67,7 +67,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["car"]["car"]["max_health"] = data.raw["car"]["car"]["max_health"] * 5
     data.raw["car"]["car"]["resistances"] = vehicle_change_resistance(50, 5)
     data.raw["car"]["tank"]["max_health"] = data.raw["car"]["tank"]["max_health"] * 3
-    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(70, 15)
+    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(70, 10)
     data.raw["spider-vehicle"]["spidertron"]["max_health"] = data.raw["spider-vehicle"]["spidertron"]["max_health"] * 2
     data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(70, 10)
 

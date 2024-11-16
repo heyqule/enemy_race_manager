@@ -122,15 +122,16 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 
     for _, unit in pairs(members) do
+        local unit_name_token = ForceHelper.get_name_token(unit.name)
         local name = nil
         if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
+            name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name, unit_name_token[3])
             cc = cc + 1
         elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name)
+            name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name, unit_name_token[3])
             support = support + 1
         elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name)
+            name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name, unit_name_token[3])
             turret = turret + 1
         else
             return
@@ -147,10 +148,11 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 end
 
-function BaseBuildProcessor.getBuildingName(force_name, type, surface_name)
+function BaseBuildProcessor.getBuildingName(force_name, type, surface_name, tier)
     local func = building_switch[type]
+    tier = tier or QualityProcessor.roll_quality(force_name, surface_name)
 
-    return force_name .. "--" .. func(force_name) .. "--" .. QualityProcessor.roll_quality(force_name, surface_name)
+    return force_name .. "--" .. func(force_name) .. "--" .. tier
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)
@@ -162,12 +164,14 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     if position then
         local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
 
-        script.raise_event(
-                GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
-            {
-                entity = built_entity
-            }
-        )
+        if built_entity then
+            script.raise_event(
+                    GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
+                    {
+                        entity = built_entity
+                    }
+            )
+        end
     end
 end
 

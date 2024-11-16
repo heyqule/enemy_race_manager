@@ -44,7 +44,7 @@ local ATTACKABLE_ENTITY_TYPES = {
     "artillery-turret",
     "lab",
 }
-if script.active_mods['space-age'] then
+if script.feature_flags.space_travel then
     table.insert(ATTACKABLE_ENTITY_TYPES, "agricultural-tower")
     table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
 end
@@ -53,7 +53,7 @@ local INDEXABLE_ATTACKABLE_ENTITY_TYPES = {
     "rocket-silo",
     "artillery-turret",
 }
-if script.active_mods['space-age'] then
+if script.feature_flags.space_travel then
     table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
 end
 
