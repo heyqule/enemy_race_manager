@@ -7,7 +7,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local QualityProcessor = {}
 
---- When a player reaches higher quality points.  The following will be the spawn rate of each tier
+--- The following is the spawn rate of each tier under different difficulty
 --- legendary, epic, exceptional, great, normal
 local max_difficulties = {
     [QUALITY_CASUAL] = {0, 0, 0.3, 0.7, 0},
@@ -26,6 +26,7 @@ local attack_point_target = 7000
 local attack_point_divider = 2000000
 local top_tier = 5
 local SCAN_RADIUS = 64
+local can_spawn_as_decimal = true
 
 -- a flag to check whether re-roll is running to prevent firing another re-oll on same unit.
 local is_running_roll
@@ -110,7 +111,9 @@ local calculate_chance_cache = function(planet_data, time)
         end
     end
 
-    planet_data.spawn_rates[planet_data.lowest_allowed_tier] = 1
+    if planet_data.spawn_rates[planet_data.lowest_allowed_tier] ~= 0 then
+        planet_data.spawn_rates[planet_data.lowest_allowed_tier] = 1
+    end        
 
     return planet_data
 end
@@ -214,17 +217,18 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
         -- or find a way to roll based on its closest planet?
         spawn_rates = max_difficulties[setting_difficulty]
         spawn_rates_size = 5
-        lowest_tier = spawn_rates_size
+        lowest_tier = planet_data.lowest_allowed_tier
     end
 
-    selected_tier = spawn_rates_size
+    selected_tier = lowest_tier
 
-    for selected_tier, spawn_rate in pairs(spawn_rates) do
+    for index, spawn_rate in pairs(spawn_rates) do
         if spawn_rate > 0 then
+            selected_tier = index
             if selected_tier == lowest_tier then
                 can_spawn = true
             else
-                can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier])
+                can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier], can_spawn_as_decimal)
             end
 
             if can_spawn then
@@ -233,7 +237,7 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
         end
     end
 
-    return selected_tier
+    return (spawn_rates_size - selected_tier + 1)
 end
 
 --- Tier mapping.
@@ -306,7 +310,7 @@ function QualityProcessor.roll(entity)
                 if selected_tier == lowest_tier then
                     can_spawn = true
                 else
-                    can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier])
+                    can_spawn = RaceSettingsHelper.can_spawn(spawn_rates[selected_tier], can_spawn_as_decimal)
                 end
 
                 if can_spawn then
@@ -314,31 +318,34 @@ function QualityProcessor.roll(entity)
                 end
             end
         end
-    end
 
-    --- no need to swap if unit is already at the same or higher than selected tier.
-    if tonumber(unit_tier) >= selected_tier then
-        return entity
+        -- Tier conversion
+        selected_tier = (spawn_rates_size - selected_tier + 1)
+        --- no need to swap if unit is already at the same or higher than selected tier.
+        if tonumber(unit_tier) >= selected_tier then
+            return entity
+        end
     end
 
     if can_spawn then
         local position = surface.find_non_colliding_position(entity.name, entity.position,
                16, 2)
 
-
         if position then
             is_running_roll = true
             local new_unit = surface.create_entity {
-                name = name_token[1]..'--'..name_token[2]..'--'..(spawn_rates_size - selected_tier + 1),
+                name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
                 force = force,
                 position = position,
                 create_build_effect_smoke = false,
+                spawn_decorations = true
             }
 
             if new_unit then
                 if new_unit and new_unit.commandable and storage.group_tracker[new_unit.force.name] then
                     local group = storage.group_tracker[new_unit.force.name].group
-                    if group.surface.index == new_unit.surface.index and
+                    if group and group.valid and
+                       group.surface.index == new_unit.surface.index and
                        util.distance(group.position, new_unit.position) < SCAN_RADIUS
                     then
                         group.add_member(new_unit)

@@ -6,7 +6,7 @@ Date: ????-??-??
     - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1.
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and ERM core functionalities.
     - Replaced leveling system with "Quality Spawning" system. It's based on a planet's evolution and accumulated attack points. [Details in Tips and Tricks]
-    - Home planets invasion. Zerg and Protoss race have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
+    - Home planets invasion. Zerg and Protoss now have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
@@ -16,30 +16,31 @@ Date: ????-??-??
 
   Changes:
     - [Section: Unit Properties]
-    - Changed HP and damage algo under the new ERM quality system.  Enemies stats are tested against normal turrets and ammunition.
-    - Movement and attack speed reach max at rare tier.
+    - Maximum resistances reduced to 70%-80% from 85-95%. Lower tier units are adjusted accordingly.
+    - Movement and attack speed reach max at middle tier.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
-    - Unit tier is now independent for each planet.  Biters in planet A spawn differently than those on planet B until they reach max evolution.
-    - Unit-spawner resistance lower from 75% to 35-45% to balance the +900% evolution HP scaling.  Units and turrets are not affected.
+    - Enemy progress now independently for each planet.  Biters in planet A spawn differently than those on planet B.
+    - Unit-spawner resistance lower from 75% to 35-45% to balance the new +900% evolution HP scaling.  Units and turrets are not affected.
     - [Section: Attack Meter Changes]
     - Point calculation perform when applicable entity dies.
     - Point reduction by killing spawners now affects attack points, which affects custom attack group generation.
     - Attack point gained by launching rocket now default to 50 points, instead of 200.  Adjustable by setting.
     - Time based attack starts when the enemy's evolution is over 0.35 on their planet.
     - [Section: Custom attack group changes]
-    - The group forming check runs every minute, instead of three minutes by default previously. Its setting has been removed.
+    - The group forming check runs every minute, instead of three minutes by default previously.
     - Added "cargo-landing-pad" and "agricultural-tower" types to targeted entities.
     - [Section: Boss Mode]
     - Boss mode is temporary offline for major overhaul.
     - [Section: Enhanced Defenses]
-    - Removed ERM enhanced defense items in flavor of [space-age]'s quality item.
-    - Player's structures automatically get a health bump to a minimum of 500HP.
+    - Removed ERM enhanced defense items in flavor of [space-age]'s quality items.
+    - Most player's structures automatically get a health bump to a minimum of 500HP.
     - [Section: Free For All]
     - Only works with mixed mode in non [space-age] game at the moment.
     - [Section: GUI]
     - Main screen buttons are now under shortcuts, instead of using top left buttons (modUI).
     - Some stats are calculated on per planet basis.
     - Army teleportation indicators only draw in alt mode.
+    - Added changes for the quality spawning system.
     - [Section: Removals]
     - Removed dependency of stdlib.
     - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as any issue arise.

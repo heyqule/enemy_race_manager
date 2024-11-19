@@ -43,7 +43,7 @@ it("Test quality calculate_chance_cache", function()
     assert(spawn_rate[1] == 0, "Legendary = 0")
     assert(spawn_rate[2] == 0.1, "Epic = 0.1")
     assert(spawn_rate[3] == 0.6, "Rare = 0.6")
-    assert(spawn_rate[4] == 0.3, "Uncommon = 0.3")
+    assert(spawn_rate[4] == 1, "Uncommon = 1.0")
     assert(spawn_rate[5] == 0, "Normal = 0")
 end)
 

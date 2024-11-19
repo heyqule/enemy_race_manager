@@ -45,6 +45,12 @@ local rails_change_resistance = function()
     }
 end
 
+data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
+data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
+data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 800
+data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
+data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
+
 -- Enhance Vanilla Defenses
 if settings.startup["enemyracemanager-enhance-defense"].value == true then
     -- Buff Armor
@@ -58,18 +64,13 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
         data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 20)
     end
 
-
-    -- Buff gun turret HP
-    data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
-    data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
-
     -- Buff vehicles
     data.raw["car"]["car"]["max_health"] = data.raw["car"]["car"]["max_health"] * 5
     data.raw["car"]["car"]["resistances"] = vehicle_change_resistance(50, 5)
-    data.raw["car"]["tank"]["max_health"] = data.raw["car"]["tank"]["max_health"] * 3
-    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(70, 10)
-    data.raw["spider-vehicle"]["spidertron"]["max_health"] = data.raw["spider-vehicle"]["spidertron"]["max_health"] * 2
-    data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(70, 10)
+    data.raw["car"]["tank"]["max_health"] = data.raw["car"]["tank"]["max_health"] * 4
+    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(66, 8)
+    data.raw["spider-vehicle"]["spidertron"]["max_health"] = data.raw["spider-vehicle"]["spidertron"]["max_health"] * 3
+    data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(66, 8)
 
 
     -- Buff vehicle gun
@@ -138,13 +139,10 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
             { type = "cold", percent = 50, decrease = 0 }
         }
     end
-
-    data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
-    data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
 end
 
 -- Buff Robots, immune fire, bump all other resist to 75
--- Construction bots are no longer repairable to preserve construction bot queue. They repair themselve in roboport
+-- Construction bots are no longer repairable to preserve construction bot queue. They repair themselves in roboport
 for name, entity in pairs(data.raw["construction-robot"]) do
     data.raw["construction-robot"][name]["max_health"] = entity.max_health * 2
     table.insert(data.raw["construction-robot"][name]["flags"], "not-repairable")

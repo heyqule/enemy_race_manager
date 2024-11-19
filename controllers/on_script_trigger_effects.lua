@@ -188,7 +188,7 @@ local script_functions = {
     end,
 
     [QUALITY_DICE_ROLL] = function(event)
-        QualityProcessor.roll(event.source_entity)
+        return QualityProcessor.roll(event.source_entity)
     end,
 
     [QUALITY_TALLY_POINT] = function(event)

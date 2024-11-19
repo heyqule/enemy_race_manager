@@ -13,12 +13,12 @@ require('util')
 local String = require('__erm_libs__/stdlib/string')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
--- Resistance cap, 95% diablo style lol.  But uranium bullets tear them like butter anyway.
-local max_resistance_percentage = 95
+local max_resistance_percentage = 80
+
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15
 
--- New tier in percentage of max increased attribute.
+-- New tier in percentage of max HP.
 -- 2x, 3x, 6x, 10x
 local multipliers = {10, 30, 60, 100}
 local get_damage_multiplier = function(incremental_damage, level)

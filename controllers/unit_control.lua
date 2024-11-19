@@ -122,7 +122,7 @@ local on_unit_group_finished_gathering = function(event)
             position =  group.position,
             surface = surface,
             force = group_force,
-            name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_type[scout_unit_name.scout_type], surface),
+            name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_type[scout_unit_name.scout_type], surface.name),
             count = 1
         })
         if scout then

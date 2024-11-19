@@ -9,8 +9,8 @@ local UtilHelper = {}
 local floor = math.floor
 local random = math.random
 
-function UtilHelper.can_spawn(chance_value)
-    if chance_value < 1 then
+function UtilHelper.can_spawn(chance_value, as_zero_one_range)
+    if as_zero_one_range then
         chance_value = chance_value * 100
     end
     return random(1, 100) > (100 - chance_value)
