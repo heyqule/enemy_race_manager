@@ -194,6 +194,11 @@ function RaceSettingsHelper.add_killed_units_count(target_race, surface_name, co
         storage.race_settings[target_race].unit_killed_count = 0
     end
     storage.race_settings[target_race].unit_killed_count = storage.race_settings[target_race].unit_killed_count + count
+
+    if storage.race_settings[target_race].unit_killed_count_by_planet[surface_name] == nil then
+        storage.race_settings[target_race].unit_killed_count_by_planet[surface_name] = 0
+    end
+    storage.race_settings[target_race].unit_killed_count_by_planet[surface_name] = storage.race_settings[target_race].unit_killed_count_by_planet[surface_name] + count
 end
 
 function RaceSettingsHelper.add_killed_structure_count(target_race, surface_name, count)
@@ -201,6 +206,11 @@ function RaceSettingsHelper.add_killed_structure_count(target_race, surface_name
         storage.race_settings[target_race].structure_killed_count = 0
     end
     storage.race_settings[target_race].structure_killed_count = storage.race_settings[target_race].structure_killed_count + count
+
+    if storage.race_settings[target_race].structure_killed_count_by_planet[surface_name] == nil then
+        storage.race_settings[target_race].structure_killed_count_by_planet[surface_name] = 0
+    end
+    storage.race_settings[target_race].structure_killed_count_by_planet[surface_name] = storage.race_settings[target_race].structure_killed_count_by_planet[surface_name] + count
 end
 
 function RaceSettingsHelper.refresh_current_tier(force_name, tier)

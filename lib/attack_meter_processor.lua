@@ -159,7 +159,7 @@ function AttackMeterProcessor.adjust_attack_meter(force_name)
 end
 
 function AttackMeterProcessor.adjust_last_accumulated_attack_meter(force_name)
-    RaceSettingsHelper.set_last_accumulated_attack_meter(force_name, RaceSettingsHelper.get_last_accumulated_attack_meter(force_name))
+    RaceSettingsHelper.set_last_accumulated_attack_meter(force_name, RaceSettingsHelper.get_accumulated_attack_meter(force_name))
 end
 
 function AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)

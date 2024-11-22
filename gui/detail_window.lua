@@ -16,8 +16,6 @@ local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local DetailWindow = {
     root_name = "erm_races_manager_detail",
     window_width = 680,
-    evolution_factor_slider_name = "evolution_factor_slider",
-    evolution_factor_value_name = "evolution_factor_value",
 }
 
 

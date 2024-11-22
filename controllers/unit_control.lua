@@ -193,7 +193,10 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
         --- The group members are not within the collection area of the unit group. so it makes new commands to pack them closer together.
         --- Those commands finish, which then marks the group command as done
         ---
-        --- Oh there goes some performance to copy group lol.
+        --- Issue tracking:
+        --- https://forums.factorio.com/viewtopic.php?f=182&t=118082&p=626929#p626929
+        ---
+        --- and there goes some performance to copy group lol.
         if event_result ==  defines.behavior_result.fail and
                 was_distracted == false and
                 group.command == nil and
@@ -236,6 +239,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
                 storage.erm_unit_groups[group.unique_id] = nil
             end
         end
+        --- End Bug workaround
 
         if event_result == defines.behavior_result.success and was_distracted == false then
             erm_unit_group.has_completed_command = true

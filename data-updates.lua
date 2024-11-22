@@ -38,6 +38,8 @@ require("prototypes/extend-creep-removal")
 
 require('prototypes/quality-system-triggers')
 
+require( 'prototypes/extend-trigger-mask')
+
 require("prototypes/extend-resistances")
 
 require("prototypes/extend-default-autoplace")

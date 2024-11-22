@@ -33,7 +33,7 @@ function QualityPointWindow.show(player, force_name)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = QualityPointWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_detail_window", race_name }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", race_name }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.width = QualityPointWindow.window_width - 24 - 175
@@ -51,7 +51,7 @@ function QualityPointWindow.show(player, force_name)
     close_button.style.horizontal_align = "right"
 
     local main_flow = detail_window.add { type = "flow", direction = "vertical" }
-    local item_table = main_flow.add { type = "table", column_count = 7, style = "bordered_table" }
+    local item_table = main_flow.add { type = "table", column_count = 9, style = "bordered_table" }
     item_table.style.horizontally_stretchable = true
 
     item_table.add { type = "label", caption = { "gui.surface_title" } }
@@ -61,8 +61,12 @@ function QualityPointWindow.show(player, force_name)
     item_table.add { type = "label", caption = { "gui.exceptional_quality_title" } }
     item_table.add { type = "label", caption = { "gui.epic_quality_title" } }
     item_table.add { type = "label", caption = { "gui.legendary_quality_title" } }
+    item_table.add { type = "label", caption = { "gui.planet_unit_kill_count" } }
+    item_table.add { type = "label", caption = { "gui.planet_structure_kill_count" } }
 
     local dataset = QualityProcessor.get_data_set(force_name)
+    local structure_kills = storage.race_settings[force_name].structure_killed_count_by_planet
+    local unit_kills = storage.race_settings[force_name].unit_killed_count_by_planet
     for surface_name, data in pairs(dataset) do
         local calculated_rates = {0, 0, 0, 0, 0}
         local surface_str = "[space-location="..surface_name.."] "..surface_name
@@ -84,6 +88,8 @@ function QualityPointWindow.show(player, force_name)
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[3]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[2]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[1]) .. "%" }
+        item_table.add { type = "label", caption = (unit_kills[surface_name] or 0) }
+        item_table.add { type = "label", caption = (structure_kills[surface_name] or 0) }
     end
     main_flow.add { type = "label", name = "quality_points_home_planet_description", caption = { "gui.quality_points_home_planet_description" } }
 

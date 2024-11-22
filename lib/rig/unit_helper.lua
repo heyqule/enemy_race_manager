@@ -13,7 +13,7 @@ require('util')
 local String = require('__erm_libs__/stdlib/string')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
-local max_resistance_percentage = 80
+local max_resistance_percentage = 99
 
 -- Attack speed cap @ 15 ticks, 0.25s / hit
 local max_attack_speed = 15

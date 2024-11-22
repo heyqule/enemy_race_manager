@@ -17,19 +17,19 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 -- Handles acid and poison resistance
 local base_acid_resistance = 10
-local incremental_acid_resistance = 80
+local incremental_acid_resistance = 65
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 95
+local incremental_physical_resistance = 80
 -- Handles fire and explosive resistance
 local base_fire_resistance = 10
-local incremental_fire_resistance = 80
+local incremental_fire_resistance = 65
 -- Handles laser and electric resistance
 local base_electric_resistance = 0
-local incremental_electric_resistance = 90
+local incremental_electric_resistance = 70
 -- Handles cold resistance
 local base_cold_resistance = 10
-local incremental_cold_resistance = 80
+local incremental_cold_resistance = 60
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
@@ -78,11 +78,11 @@ for i = 1, max_level do
 
     data:extend({ makeLevelEnemy(i, "medium-spitter") })
 
-    data:extend({ makeLevelEnemy(i, "big-biter", 3) })
+    data:extend({ makeLevelEnemy(i, "big-biter", 2) })
 
-    data:extend({ makeLevelEnemy(i, "big-spitter",3 ) })
+    data:extend({ makeLevelEnemy(i, "big-spitter", 2) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-biter", 6) })
+    data:extend({ makeLevelEnemy(i, "behemoth-biter", 3) })
 
-    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 6) })
+    data:extend({ makeLevelEnemy(i, "behemoth-spitter", 3) })
 end

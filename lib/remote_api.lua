@@ -149,13 +149,13 @@ end
 local is_valid_featured_squad = function(force_name, squad_id)
     return RaceSettingsHelper.has_featured_squad(force_name) and
             RaceSettingsHelper.get_total_featured_squads(force_name) > 0 and
-            squad_id < RaceSettingsHelper.get_total_featured_squads(force_name)
+            squad_id <= RaceSettingsHelper.get_total_featured_squads(force_name)
 end
 
 local is_valid_featured_flying_squad = function(force_name, squad_id)
     return RaceSettingsHelper.has_featured_squad(force_name) and
             RaceSettingsHelper.get_total_featured_squads(force_name) > 0 and
-            squad_id < RaceSettingsHelper.get_total_featured_squads(force_name)
+            squad_id <= RaceSettingsHelper.get_total_featured_squads(force_name)
 end
 
 --- Usage: remote.call("enemyracemanager", "generate_featured_group", "enemy_erm_zerg", 100?, 1?)

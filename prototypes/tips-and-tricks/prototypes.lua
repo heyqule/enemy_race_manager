@@ -19,53 +19,80 @@ data:extend(
             category = "enemyracemanager",
             order = "a",
             is_title = true,
-            trigger =
-            {
-                type = "or",
-                triggers =
-                {
-                    {
-                        type = "shoot",
-                        target = "enemy"
-                    },
-                    {
-                        type = "shoot",
-                        target = "entity"
-                    },
-                    {
-                        type = "time-elapsed",
-                        ticks = 5 * second
-                    }
-                }
-            },
+            starting_status = "suggested",
             simulation = simulations.general
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-quality-system",
+            name = "enemyracemanager-enemy-difficulty",
             category = "enemyracemanager",
-            order = "a",
+            order = "b",
             indent = 1,
-            trigger =
-            {
-                type = "or",
-                triggers =
-                {
-                    {
-                        type = "shoot",
-                        target = "enemy"
-                    },
-                    {
-                        type = "shoot",
-                        target = "entity"
-                    },
-                    {
-                        type = "time-elapsed",
-                        ticks = 5 * second
-                    }
-                }
-            },
-            simulation = simulations.quality_system
+            starting_status = "suggested",
+            simulation = simulations.enemy_difficulty
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-new-enemy-types",
+            category = "enemyracemanager",
+            order = "c",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.new_enemy_types
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-attack-points",
+            category = "enemyracemanager",
+            order = "d",
+            indent = 1,
+            starting_status = "suggested",
+            image = "__enemyracemanager_assets__/graphics/tips/attack_points.jpg"
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-custom_attack_groups",
+            category = "enemyracemanager",
+            order = "e",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.custom_attack_groups
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-home-planets",
+            category = "enemyracemanager",
+            order = "f",
+            indent = 1,
+            starting_status = "suggested",
+            image = "__enemyracemanager_assets__/graphics/tips/home_planets.jpg"
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-base-expansion",
+            category = "enemyracemanager",
+            order = "g",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.base_expansions
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-free_for_all",
+            category = "enemyracemanager",
+            order = "h",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.free_for_all
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-free_for_all",
+            category = "enemyracemanager",
+            order = "h",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.free_for_all
         },
     }
 )

@@ -402,21 +402,6 @@ local on_gui_closed = function(event)
     end
 end
 
----  defines.event.on_value_changed
-local on_value_changed_switch = {
-    [GuiContainer.detail_window.evolution_factor_slider_name] = function(event)
-        GuiContainer.detail_window.update_slider_text(event, GuiContainer.detail_window.evolution_factor_slider_name, GuiContainer.detail_window.evolution_factor_value_name)
-    end
-}
-
-local on_value_changed = function(event)
-    if is_valid_element(event) then
-        local element = event.element
-        if element.name == GuiContainer.detail_window.evolution_factor_slider_name then
-            on_value_changed_switch[GuiContainer.detail_window.evolution_factor_slider_name](event)
-        end
-    end
-end
 
 ---  defines.event.on_gui_selected_tab_changed
 local gui_tab_handlers = {
