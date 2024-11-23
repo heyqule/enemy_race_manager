@@ -43,9 +43,6 @@ cron_switch = {
         AttackGroupProcessor.clear_invalid_scout_unit_name()
     end,
     -- AttackMeterProcessor
-    ["AttackMeterProcessor.calculate_points"] = function(args)
-        AttackMeterProcessor.calculate_points(unpack(args))
-    end,
     ["AttackMeterProcessor.form_group"] = function(args)
         AttackMeterProcessor.form_group(unpack(args))
     end,

@@ -85,7 +85,7 @@ local boss_spawn_size = {
     [BOSS_SPAWN_PATROL] = 10,
     [BOSS_SPAWN_PLATOON] = 20,
 }
-GlobalConfig.boss_spawn_size = boss_spawn_size[settings.startup["enemyracemanager-boss-unit-spawn-size"].value]
+GlobalConfig.boss_spawn_size = boss_spawn_size[settings.startup["enemyracemanager-attacks-unit-spawn-size"].value]
 GlobalConfig.BOSS_BUILDING_HITPOINT = { 10000000, 20000000, 32000000, 50000000, 75000000 }
 
 --if DEBUG_MODE then

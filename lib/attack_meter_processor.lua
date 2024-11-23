@@ -18,7 +18,7 @@ local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local AttackMeterProcessor = {}
 
-AttackMeterProcessor.SEGMENT_UNIT_POINTS = 1000;
+AttackMeterProcessor.SEGMENTED_UNIT_POINTS = 5000;
 AttackMeterProcessor.SPIDER_UNIT_POINTS = 1;
 AttackMeterProcessor.SPAWNER_POINTS = 50;
 AttackMeterProcessor.TURRET_POINTS = 10;
@@ -29,7 +29,7 @@ local unit_point_map = {
     ['unit-spawner'] = AttackMeterProcessor.SPAWNER_POINTS,
     ['turret'] = AttackMeterProcessor.TURRET_POINTS,
     ['spider-unit'] = AttackMeterProcessor.SPIDER_UNIT_POINTS,
-    ['segmented-unit'] = AttackMeterProcessor.SEGMENT_UNIT_POINTS
+    ['segmented-unit'] = AttackMeterProcessor.SEGMENTED_UNIT_POINTS
 }
 
 local unit_map = {

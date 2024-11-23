@@ -329,7 +329,7 @@ end
 local write_result_log = function(victory)
     local boss = storage.boss
     local difficulty = settings.startup["enemyracemanager-boss-difficulty"].value
-    local squad_size = settings.startup["enemyracemanager-boss-unit-spawn-size"].value
+    local squad_size = settings.startup["enemyracemanager-attacks-unit-spawn-size"].value
 
     initialize_result_log(boss.force_name, difficulty, squad_size)
 

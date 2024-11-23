@@ -11,6 +11,8 @@ local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+
 local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
@@ -50,18 +52,6 @@ function RemoteAPI.get_race_tier(race)
             storage.race_settings[race] and storage.race_settings[race].tier then
 
         return storage.race_settings[race].tier
-    end
-    return 1
-end
-
---- Return race level
---- Usage: remote.call("enemyracemanager", "get_race_level", "erm_zerg")
-function RemoteAPI.get_race_level(race)
-    if storage.race_settings and
-            storage.race_settings[race] and
-            storage.race_settings[race].level then
-
-        return storage.race_settings[race].level
     end
     return 1
 end
@@ -106,43 +96,43 @@ function RemoteAPI.update_race_setting(race_setting)
 end
 
 --- Generate a mixed attack group
---- Usage: remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?)
-function RemoteAPI.generate_attack_group(force_name, units_number)
+--- Usage: remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?, options?)
+function RemoteAPI.generate_attack_group(force_name, units_number, options)
     local force = game.forces[force_name]
     units_number = tonumber(units_number)
+    options = options or {}
+    options.group_type =  AttackGroupProcessor.GROUP_TYPE_MIXED
 
     if force and units_number > 0 then
-        AttackGroupProcessor.generate_group(force, units_number)
+        AttackGroupProcessor.generate_group(force, units_number,options)
     end
 end
 
 --- Generate a flying attack group
---- Usage: remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?)
-function RemoteAPI.generate_flying_group(force_name, units_number)
+--- Usage: remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?, options?)
+function RemoteAPI.generate_flying_group(force_name, units_number, options)
     local force = game.forces[force_name]
     local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 2)
+    options = options or {}
+    options.group_type =  AttackGroupProcessor.GROUP_TYPE_FLYING
 
     if force and flying_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(
-                force, units_number,
-            {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
-        )
+        AttackGroupProcessor.generate_group(force, units_number, options)
     end
 end
 
 --- Generate a dropship attack group
---- Usage: remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?)
-function RemoteAPI.generate_dropship_group(force_name, units_number)
+--- Usage: remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?, options?)
+function RemoteAPI.generate_dropship_group(force_name, units_number, options)
     local force = game.forces[force_name]
     local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(force_name)
     units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 5)
+    options = options or {}
+    options.group_type =  AttackGroupProcessor.GROUP_TYPE_DROPSHIP
 
     if force and dropship_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(
-                force, units_number,
-                {group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP}
-        )
+        AttackGroupProcessor.generate_group(force, units_number, options)
     end
 end
 
@@ -338,6 +328,8 @@ RemoteAPI.army_command_center_register = ArmyTeleportationProcessor.register_bui
 --- ArmyDeploymentProcessor
 RemoteAPI.army_deployer_register = ArmyDeploymentProcessor.register_building
 
+RemoteAPI.calculate_attack_points = AttackMeterProcessor.calculate_points
+
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
 
@@ -346,9 +338,10 @@ RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
 
 --- Quality Points
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
-
+RemoteAPI.get_quality_point = QualityProcessor.get_quality_point
 RemoteAPI.roll_quality = QualityProcessor.roll_quality
 
+--- AttackGroupProcessor
 RemoteAPI.process_attack_position = AttackGroupProcessor.process_attack_position
 
 

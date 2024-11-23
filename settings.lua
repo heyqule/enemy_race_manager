@@ -242,8 +242,8 @@ data:extend {
     },
     {
         type = "string-setting",
-        name = "enemyracemanager-boss-unit-spawn-size",
-        description = "enemyracemanager-boss-unit-spawn-size",
+        name = "enemyracemanager-attacks-unit-spawn-size",
+        description = "enemyracemanager-attacks-unit-spawn-size",
         setting_type = "startup",
         default_value = BOSS_SPAWN_SQUAD,
         allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },

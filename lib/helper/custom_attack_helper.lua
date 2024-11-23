@@ -285,7 +285,7 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
     until i == count
 
     if group.valid and new_group then
-        group.commandable.set_command({
+        group.set_command({
             type = defines.command.attack_area,
             destination = { x = position.x, y = position.y },
             radius = ATTACK_CHUNK_SIZE,
@@ -331,7 +331,7 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         target_position = boss_data.silo_position
     end
 
-    group.commandable.set_command({
+    group.set_command({
         type = defines.command.attack_area,
         destination = { x = target_position.x, y = target_position.y },
         radius = ATTACK_CHUNK_SIZE,

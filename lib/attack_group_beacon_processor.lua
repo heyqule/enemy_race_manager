@@ -691,7 +691,7 @@ end
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
     local selected_key = storage[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
     local attack_beacons = storage[ATTACK_ENTITIES_BEACON][surface.index][target_force.name]
-    if not selected_key or attack_beacons[selected_key] == nil then
+    if not selected_key or attack_beacons == nil or attack_beacons[selected_key] == nil then
         return nil
     end
 
