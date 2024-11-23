@@ -18,19 +18,19 @@ local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-
 
 -- Handles acid and poison resistance
 local base_acid_resistance = 25
-local incremental_acid_resistance = 55
+local incremental_acid_resistance = 25
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 80
+local incremental_physical_resistance = 55
 -- Handles fire and explosive resistance
 local base_fire_resistance = 10
-local incremental_fire_resistance = 70
+local incremental_fire_resistance = 40
 -- Handles laser and electric resistance
 local base_electric_resistance = 0
-local incremental_electric_resistance = 80
+local incremental_electric_resistance = 50
 -- Handles cold resistance
 local base_cold_resistance = 25
-local incremental_cold_resistance = 55
+local incremental_cold_resistance = 25
 
 local setting_utils = require("__ArmouredBiters__/setting-utils")
 local s_r = setting_utils.getPositivePercentageOf("ab-small-armoured-biter-spawn-probability")

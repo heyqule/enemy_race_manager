@@ -20,7 +20,7 @@ local base_acid_resistance = 0
 local incremental_acid_resistance = 50
 -- Handles physical resistance
 local base_physical_resistance = 0
-local incremental_physical_resistance = 75
+local incremental_physical_resistance = 55
 -- Handles laser and electric resistance
 local base_electric_resistance = -50
 local incremental_electric_resistance = 100
