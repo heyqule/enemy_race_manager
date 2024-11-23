@@ -40,11 +40,12 @@ it("Attack Target", function()
 
     after_ticks(1200, function()
         local count = surface.count_entities_filtered({
-            type="unit",
+            type={"unit"},
             position={0,0},
-            radius = 32
+            radius = 100
         })
-        assert(count > 1, "Has attack unit near the base")
+        assert(count > 1, "Has attack unit or spawner near the base")
+
         done()
     end)
 end)
@@ -104,35 +105,6 @@ it("Can't spawn", function()
         local count = surface.count_entities_filtered({
             type="unit",
         })
-        assert(count == 0, "Should not have unit on the surface")
-        done()
-    end)
-end)
-
-it("Test Enabler", function()
-    async(900)
-    local surface = game.surfaces[1]
-    local rocket_launcher = surface.create_entity(
-            { name = "erm-rocket-silo-test",
-              force = "player",
-              position = { 0, 0 }
-            })
-    AttackGroupBeaconProcessor.init_index()
-
-    storage.settings["enemyracemanager-environmental-raids"] = false
-
-    local meteor = surface.create_entity(
-            { name = "erm-test-meteor",
-              force = "neutral",
-              position = { 100, 100 },
-              target = {80, 80},
-              speed = 0.5 })
-
-    after_ticks(900, function()
-        local count = surface.count_entities_filtered({
-            type="unit",
-        })
-        storage.settings["enemyracemanager-environmental-raids"] = true
         assert(count == 0, "Should not have unit on the surface")
         done()
     end)

@@ -89,10 +89,54 @@ data:extend(
             type = "tips-and-tricks-item",
             name = "enemyracemanager-free_for_all",
             category = "enemyracemanager",
-            order = "h",
+            order = "i",
             indent = 1,
             starting_status = "suggested",
             simulation = simulations.free_for_all
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-environmental-attacks",
+            category = "enemyracemanager",
+            order = "j",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.environmental_attacks
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-interplanetary-attacks",
+            category = "enemyracemanager",
+            order = "k",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.interplanetary_attacks
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-advance-army-control",
+            category = "enemyracemanager",
+            order = "l",
+            indent = 1,
+            starting_status = "suggested",
+            simulation = simulations.advance_army_control
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-bosses",
+            category = "enemyracemanager",
+            order = "m",
+            indent = 1,
+            starting_status = "suggested",
+            --simulation = simulations.bosses
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-other-faq",
+            category = "enemyracemanager",
+            order = "n",
+            indent = 1,
+            starting_status = "suggested",
         },
     }
 )

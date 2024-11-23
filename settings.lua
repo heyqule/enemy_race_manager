@@ -500,15 +500,6 @@ data:extend {
         order = "enemyracemanager-408"
     },
     {
-        type = "int-setting",
-        name = "enemyracemanager-elite-squad-level",
-        description = "enemyracemanager-elite-squad-level",
-        setting_type = "runtime-global",
-        default_value = 2,
-        allowed_values = {1,2,3,4,5},
-        order = "enemyracemanager-409"
-    },
-    {
         type = "bool-setting",
         name = "enemyracemanager-precision-strike-flying-unit-enable",
         description = "enemyracemanager-precision-strike-flying-unit-enable",
@@ -550,44 +541,6 @@ data:extend {
         default_value = 2,
         allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75 },
         order = "enemyracemanager-451"
-    },
-
-
-    --- Environmental Raids
-    {
-        type = "bool-setting",
-        name = "enemyracemanager-environmental-raids",
-        description = "enemyracemanager-environmental-raids",
-        setting_type = "startup",
-        default_value = true,
-        order = "enemyracemanager-900",
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-environmental-raids-units",
-        description = "enemyracemanager-environmental-raids-units",
-        setting_type = "runtime-global",
-        default_value = 5,
-        allowed_values = { 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50},
-        order = "enemyracemanager-900"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-environmental-raids-chance",
-        description = "enemyracemanager-environmental-raids-chance",
-        setting_type = "runtime-global",
-        default_value = 50,
-        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80},
-        order = "enemyracemanager-901"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-environmental-raids-build-base-chance",
-        description = "enemyracemanager-environmental-raid-build-base-chance",
-        setting_type = "runtime-global",
-        default_value = 25,
-        allowed_values = {0, 10, 20, 25, 33, 50, 66, 75},
-        order = "enemyracemanager-902"
     },
 
     --- Interplanetary Raids

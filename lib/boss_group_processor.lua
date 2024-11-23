@@ -142,7 +142,10 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
     if storage.boss_group_spawn.current_cycle == storage.boss_group_spawn.max_cycles or
             storage.boss_group_spawn.total_units >= storage.boss_group_spawn.max_units
     then
-        AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+        AttackGroupProcessor.process_attack_position({
+            group = group,
+            distraction = defines.distraction.by_anything,
+        })
 
         table.insert(storage.boss_attack_groups, spawn_data)
         storage.boss_group_spawn = BossGroupProcessor.get_default_data()
@@ -207,7 +210,10 @@ function BossGroupProcessor.process_attack_groups()
                 if group.command == nil or
                         group.state == defines.group_state.finished then
                     DebugHelper.print("BossGroupProcessor.process_attack_groups: New Target for " .. storage.boss_attack_groups[i].unique_id)
-                    AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything)
+                    AttackGroupProcessor.process_attack_position({
+                        group = group,
+                        distraction = defines.distraction.by_anything,
+                    })
                 end
             else
                 DebugHelper.print("BossGroupProcessor.process_attack_groups: Removing Group" .. storage.boss_attack_groups[i].unique_id)

@@ -33,11 +33,11 @@ function QualityPointWindow.show(player, force_name)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = QualityPointWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", race_name }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", force_name }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = QualityPointWindow.window_width - 24 - 175
-    pusher.style.height = 24
+    pusher.style.vertically_stretchable = true
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = detail_window
 
     local close_button = title_flow.add { type = "sprite-button",
@@ -51,11 +51,12 @@ function QualityPointWindow.show(player, force_name)
     close_button.style.horizontal_align = "right"
 
     local main_flow = detail_window.add { type = "flow", direction = "vertical" }
-    local item_table = main_flow.add { type = "table", column_count = 9, style = "bordered_table" }
+    local item_table = main_flow.add { type = "table", column_count = 10, style = "bordered_table" }
     item_table.style.horizontally_stretchable = true
 
     item_table.add { type = "label", caption = { "gui.surface_title" } }
     item_table.add { type = "label", caption = { "gui.progress_title" } }
+    item_table.add { type = "label", caption = { "gui.evolution_title" } }
     item_table.add { type = "label", caption = { "gui.normal_quality_title" } }
     item_table.add { type = "label", caption = { "gui.great_quality_title" } }
     item_table.add { type = "label", caption = { "gui.exceptional_quality_title" } }
@@ -83,6 +84,7 @@ function QualityPointWindow.show(player, force_name)
         --- Rolls from left(legendary) to right(normal)
         item_table.add { type = "label", caption = surface_str  }
         item_table.add { type = "label", caption = (data.points / 100) .. '%' }
+        item_table.add { type = "label", caption = string.format("%.2f", game.forces[force_name].get_evolution_factor(surface_name) * 100) .. '%' }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[5]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[4]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[3]) .. "%" }

@@ -35,7 +35,13 @@ function DetailWindow.show(player, race_setting)
     player.opened = detail_window
 
     local admin = player.admin
-    local points = QualityProcessor.get_quality_point(race_setting.race, player.surface.name) or 0
+    local surface_name = player.surface.name
+    --- fallback to nauvis if player is not on a planet.
+    if not game.planets[surface_name] then
+        surface_name = 'nauvis'
+    end
+
+    local points = QualityProcessor.get_quality_point(race_setting.race, surface_name) or 0
     -- Race Manager Title
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = DetailWindow.window_width
@@ -43,8 +49,8 @@ function DetailWindow.show(player, race_setting)
     local title = title_flow.add { type = "label", name = "title", caption = { "gui.detail_title", race_setting.race }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = DetailWindow.window_width - 24 - 175
-    pusher.style.height = 24
+    pusher.style.vertically_stretchable = true
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = detail_window
 
     local close_button = title_flow.add { type = "sprite-button",
@@ -70,8 +76,11 @@ function DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = race_setting.tier }
 
+    item_table.add { type = "label", caption = { "gui.evolution_column" } }
+    item_table.add { type = "label", caption = string.format("%.2f", game.forces[race_setting.race].get_evolution_factor(surface_name) * 100) .. "% @ [space-location="..surface_name.."]"  .. surface_name }
+
     item_table.add { type = "label", caption = { "gui.progress_column" } }
-    item_table.add { type = "label", caption = (points / 100) .. "% @ [space-location="..player.surface.name.."] " .. player.surface.name }
+    item_table.add { type = "label", caption = (points / 100) .. "% @ [space-location="..surface_name.."] " .. surface_name }
 
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = race_setting.attack_meter .. " / " .. race_setting.next_attack_threshold }

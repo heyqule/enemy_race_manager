@@ -70,8 +70,8 @@ function BossDetailsWindow.show(player, race_name, boss_log)
     local title = title_flow.add { type = "label", name = "title", caption = { "gui.boss_detail_title", race_name }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = BossDetailsWindow.window_width - 24 - 175
-    pusher.style.height = 24
+    pusher.style.vertically_stretchable = true
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = detail_window
 
     local close_button = title_flow.add { type = "sprite-button",

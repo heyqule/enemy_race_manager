@@ -87,7 +87,12 @@ local on_unit_group_finished_gathering = function(event)
     if not group.valid then
         return
     end
+
     local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.unique_id)
+    if is_erm_group and storage.erm_unit_groups[group.unique_id].scout_id then
+        return
+    end
+
     local group_force = group.force
 
     if ForceHelper.is_enemy_force(group_force) and
@@ -98,7 +103,11 @@ local on_unit_group_finished_gathering = function(event)
         #group.members > 10
     then
         local target = AttackGroupHeatProcessor.pick_target(group_force.name)
-        AttackGroupProcessor.process_attack_position(group, nil, nil, target)
+        AttackGroupProcessor.process_attack_position({
+            group = group,
+            target_force = target,
+        })
+
         storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,
@@ -127,6 +136,9 @@ local on_unit_group_finished_gathering = function(event)
         })
         if scout then
             group.add_member(scout);
+            if is_erm_group and not storage.erm_unit_groups[group.unique_id] then
+                storage.erm_unit_groups[group.unique_id].scout_id = scout.unit_number
+            end
         end
     end
 
@@ -249,9 +261,18 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
                 erm_unit_group.nearby_retry >= nearby_retry
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_force, true)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    distraction = defines.distraction.by_anything,
+                    target_force = erm_unit_group.attack_force,
+                    new_beacon = true
+                })
             else
-                AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_group.attack_force, true)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    target_force = erm_unit_group.attack_force,
+                    new_beacon = true
+                })
             end
             erm_unit_group.nearby_retry = 0
         elseif
@@ -260,9 +281,18 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             event_result == defines.behavior_result.success
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_force)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    distraction = defines.distraction.by_anything,
+                    target_force = erm_unit_group.attack_force,
+                    find_nearby = true
+                })
             else
-                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_group.attack_force)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    target_force = erm_unit_group.attack_force,
+                    find_nearby = true
+                })
             end
             erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end

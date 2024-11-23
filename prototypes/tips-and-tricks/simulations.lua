@@ -414,4 +414,176 @@ tip_story_init(story_table)
 ]]
 }
 
+simulations.environmental_attacks = {
+    init_update_count = 60,
+    init = [[
+require("__core__/lualib/story")
+
+if not script.active_mods['erm_zerg'] and not script.active_mods['erm_toss'] then
+    error("This scene requires ERM_ZERG and ERM_TOSS mods")
+end
+
+game.planets["vulcanus"].create_surface()
+local vulcanus_surface = game.surfaces["vulcanus"]
+vulcanus_surface.request_to_generate_chunks({0,0}, 2)
+vulcanus_surface.force_generate_chunk_requests()
+
+local sim = game.simulation
+player = sim.create_test_player{name = "you"}
+sim.camera_player = player
+sim.camera_position = {0, 0}
+sim.camera_zoom = 0.75
+sim.hide_cursor = true
+
+-- had to add tile manually >.>
+for x = -100, 100, 1 do
+    for y = -32, 32 do
+        game.surfaces[1].set_tiles{{position = {x, y}, name = "grass-1"}}
+    end
+end
+
+game.planets["fulgora"].create_surface()
+local fulgora_surface = game.surfaces["fulgora"]
+fulgora_surface.request_to_generate_chunks({0,0}, 2)
+fulgora_surface.force_generate_chunk_requests()
+
+local story_table =
+{
+    {
+        {
+            name = "start",
+            init = function()
+                local entities = vulcanus_surface.find_entities_filtered {type={"unit","segmented-unit"}}
+                for _, ent in pairs(entities) do
+                    ent.destroy()
+                end
+                player.teleport({0,0}, "vulcanus")
+                vulcanus_surface.create_entity { name="enemy_erm_zerg-small-demolisher", position={0, 0} }
+            end,
+        },
+        {
+            condition = story_elapsed_check(2),
+            action = function()
+                vulcanus_surface.create_entity { name="enemy_erm_zerg--zergling--3", position={-8, 0} }
+                vulcanus_surface.create_entity { name="enemy_erm_zerg--zergling--3", position={8, 0} }
+                vulcanus_surface.create_entity { name="enemy_erm_zerg--mutalisk--3", position={-8, 4} }
+                vulcanus_surface.create_entity { name="enemy_erm_zerg--mutalisk--3", position={8, 4} }
+            end
+        },
+        {
+            condition = story_elapsed_check(2),
+            action = function()
+                local entities = fulgora_surface.find_entities_filtered {type="unit"}
+                for _, ent in pairs(entities) do
+                    ent.destroy()
+                end
+                player.teleport({0,0}, "fulgora")
+                fulgora_surface.execute_lightning{name = "lightning", position = {0, 0}}
+            end
+        },
+        {
+            condition = story_elapsed_check(0.5),
+            action = function()
+                fulgora_surface.create_entity { name="enemy_erm_toss--recall-80-small", position={-2, 0}}
+            end
+        },
+        {
+            condition = story_elapsed_check(0.25),
+            action = function()
+                fulgora_surface.create_entity { name="enemy_erm_toss--zealot--3", position={-2, 0} }
+            end
+        },
+        {
+            condition = story_elapsed_check(3),
+            action = function()
+                story_jump_to(storage.story, "start")
+            end
+        }
+    }
+}
+tip_story_init(story_table)
+]]
+}
+
+simulations.bosses = {
+    init = [[
+require("__core__/lualib/story")
+
+if not script.active_mods['erm_zerg'] and not script.active_mods['erm_toss'] then
+    error("This scene requires ERM_ZERG and ERM_TOSS mods")
+end
+
+game.planets["vulcanus"].create_surface()
+local vulcanus_surface = game.surfaces["vulcanus"]
+vulcanus_surface.request_to_generate_chunks({0,0}, 2)
+vulcanus_surface.force_generate_chunk_requests()
+
+local sim = game.simulation
+player = sim.create_test_player{name = "you"}
+sim.camera_player = player
+sim.camera_position = {0, 0}
+sim.camera_zoom = 0.75
+sim.hide_cursor = true
+
+-- had to add tile manually >.>
+for x = -100, 100, 1 do
+    for y = -32, 32 do
+        game.surfaces[1].set_tiles{{position = {x, y}, name = "grass-1"}}
+    end
+end
+
+game.planets["fulgora"].create_surface()
+local fulgora_surface = game.surfaces["fulgora"]
+fulgora_surface.request_to_generate_chunks({0,0}, 2)
+fulgora_surface.force_generate_chunk_requests()
+
+local story_table =
+{
+    {
+        {
+            name = "start",
+            init = function()
+                local entities = vulcanus_surface.find_entities_filtered {type={"unit","segmented-unit"}}
+                for _, ent in pairs(entities) do
+                    ent.destroy()
+                end
+                player.teleport({0,0}, "vulcanus")
+                vulcanus_surface.create_entity { name="enemy_erm_zerg--overmind--3", position={0, 0} }
+            end,
+        },
+        {
+            condition = story_elapsed_check(3),
+            action = function()
+                local entities = fulgora_surface.find_entities_filtered {type="unit"}
+                for _, ent in pairs(entities) do
+                    ent.destroy()
+                end
+                player.teleport({0,0}, "fulgora")
+                fulgora_surface.create_entity { name="enemy_erm_toss--wrapgate--3", position={0, 0} }
+            end
+        },
+        {
+            condition = story_elapsed_check(0.5),
+            action = function()
+                fulgora_surface.create_entity { name="enemy_erm_toss--recall-80-small", position={-2, 0}}
+            end
+        },
+        {
+            condition = story_elapsed_check(0.25),
+            action = function()
+                fulgora_surface.create_entity { name="enemy_erm_toss--zealot--3", position={-2, 0} }
+            end
+        },
+        {
+            condition = story_elapsed_check(3),
+            action = function()
+                story_jump_to(storage.story, "start")
+            end
+        }
+    }
+}
+tip_story_init(story_table)
+]]
+}
+
 return simulations

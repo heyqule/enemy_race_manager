@@ -23,7 +23,7 @@ local group_variance = 20
 local home_group_size = 20
 
 local can_perform_attack = function()
-    return storage.is_multi_planets_game and Config.interplanetary_attack_enable()
+    return storage.is_multi_planets_game
 end
 
 function InterplanetaryAttacks.init_globals()
@@ -94,7 +94,7 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
     --- If it"a build group, 20 units use for building on spot, the rest will attack.
-     local build_home = RaceSettingsHelper.can_spawn(Config.interplanetary_attack_raid_build_base_chance()) or storage.override_interplanetary_attack_build_base
+     local build_home = RaceSettingsHelper.can_spawn(25) or storage.override_interplanetary_attack_build_base
     if build_home then
         group_unit_number = group_unit_number - home_group_size
     end
@@ -107,12 +107,12 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     end
 
    if build_home then
-        local group = AttackGroupProcessor.generate_immediate_group(
-                game.surfaces[storage.interplanetary_tracker.surface_id],
-                drop_location,
-                home_group_size,
-                force_name
-        )
+       local group = AttackGroupProcessor.generate_immediate_group({
+           surface = game.surfaces[storage.interplanetary_tracker.surface_id],
+           group_position = drop_location,
+           spawn_count = home_group_size,
+           force_name = force_name
+       })
         if group then
             script.raise_event(Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],{
                 group = group
@@ -121,18 +121,16 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     end
 
     local options = {
+        force_name = force_name,
+        target_force = target_force,
+        group_unit_number = group_unit_number,
+        surface = surface,
+        drop_location = drop_location,
         group_type = group_type,
         preserve_tracker = true,
         always_angry = false
     }
-    AttackGroupProcessor.generate_group_via_quick_queue(
-            force_name,
-            target_force,
-            group_unit_number,
-            surface,
-            drop_location,
-            options
-    )
+    AttackGroupProcessor.generate_group_via_quick_queue(options)
     AttackMeterProcessor.adjust_attack_meter(force_name)
 
     return true
@@ -161,7 +159,7 @@ function InterplanetaryAttacks.scan(surface)
 
         --- Scan planet for dropzone only if it"occupied
         if intel and intel.has_player_entities then
-            local max_planet_radius
+            local max_planet_radius = 3200
             if intel.radius then
                 max_planet_radius = intel.radius
             end

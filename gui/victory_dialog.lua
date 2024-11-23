@@ -41,8 +41,8 @@ function BossVictoryDialog.show(player, race_setting)
     bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_cancel", tags={filter_pattern=".*/victory_dialog_tier_cancel"}, caption = { "gui.victory_dialog_tier_cancel" }, style = "red_button" }
 
     local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    button_pusher.style.width = 150
     button_pusher.style.height = 24
+    button_pusher.style.horizontally_stretchable = true
 
     bottom_flow.add { type = "button", name = race_setting.race .. "/victory_dialog_tier_confirm", tags={filter_pattern=".*/victory_dialog_tier_confirm"}, caption = { "gui.victory_dialog_tier_confirm" }, style = "green_button" }
 end

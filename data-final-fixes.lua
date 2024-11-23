@@ -6,7 +6,7 @@
 require("__enemyracemanager__/global")
 require('prototypes/finalize-unit-prototypes')
 require('prototypes/health-balance')
-
+local String = require('__erm_libs__/stdlib/string')
 if DEBUG_MODE then
     data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15
     data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 15
@@ -23,7 +23,7 @@ if DEBUG_MODE then
             if entity.autoplace ~= nil then
                 autoplace_count = autoplace_count + 1
 
-                local nameToken = util.split(entity.name, "--")
+                local nameToken = String.split(entity.name, "--")
                 if table_size(nameToken) == 3 then
                     erm_prototype_count = erm_prototype_count + 1
                 end

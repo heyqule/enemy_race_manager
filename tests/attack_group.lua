@@ -10,6 +10,7 @@ local TestShared = require("shared")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local QualityProcessor = require('lib/quality_processor')
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -82,7 +83,9 @@ end
         storage.erm_unit_groups = {}
         storage.race_settings[race_name].attack_meter = 3000
         storage.race_settings[race_name].next_attack_threshold = 3000
-        storage.race_settings[race_name].attack_meter_total = 60000
+        storage.race_settings[race_name].attack_meter_total = 2000000
+        QualityProcessor.calculate_quality_points()
+
 
         after_ticks(14400, function()
             assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
@@ -155,7 +158,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -10, -10 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                race_name,
                 game.forces[force_name],
                 20,
                 {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
@@ -188,7 +190,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                race_name,
                 game.forces[force_name],
                 20,
                 {
@@ -222,7 +223,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                race_name,
                 game.forces[force_name],
                 20,
                 {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED,
@@ -258,7 +258,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                race_name,
                 game.forces[force_name],
                 20,
                 {group_type = AttackGroupProcessor.GROUP_TYPE_FEATURED_FLYING,
@@ -294,7 +293,6 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                race_name,
                 game.forces[force_name],
                 200
         )
@@ -367,7 +365,6 @@ it("Enemy victory expansion", function()
     local entity = spawn_cc(surface)
     AttackGroupBeaconProcessor.init_index()
     AttackGroupProcessor.generate_group(
-            race_name,
             game.forces[force_name],
             20,
             {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}

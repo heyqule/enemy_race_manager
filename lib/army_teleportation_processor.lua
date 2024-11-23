@@ -87,7 +87,17 @@ function ArmyTeleportationProcessor.add_entity(entity)
     if army_built_teleporters[force.index][surface.index] == nil then
         storage.army_built_teleporters[force.index][surface.index] = {}
     end
-    local name = surface.name .. ", X:" .. position.x .. ", Y:" .. position.y
+
+    local surface_name = ''
+    if surface.planet then
+        surface_name = surface.planet.name
+    elseif surface.platform then
+        surface_name = surface.platform.name
+    else
+        surface_name = surface.name
+    end
+
+    local name =  surface_name .. ", X:" .. position.x .. ", Y:" .. position.y
     entity.backer_name = name
     storage.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,

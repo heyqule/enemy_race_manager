@@ -165,8 +165,10 @@ local script_functions = {
         local target_position = event.target_position
 
         local force_spawn, force_spawn_home
+        local spawn_chance = 50
+        local spawn_count = 5
         if TEST_MODE then
-            force_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
+            force_spawn = RaceSettingHelper.can_spawn(spawn_chance)
             if storage.override_environmental_attack_can_spawn == 1 then
                 force_spawn = true
             elseif storage.override_environmental_attack_can_spawn == -1 then
@@ -179,8 +181,15 @@ local script_functions = {
                 force_spawn_home = false
             end
         end
-        
-        EnvironmentalAttacks.exec(surface, target_position, force_spawn, force_spawn_home)
+
+        EnvironmentalAttacks.exec({
+            surface = surface,
+            target_position = target_position,
+            force_spawn = force_spawn,
+            force_spawn_home = force_spawn_home,
+            spawn_count = spawn_count,
+            spawn_chance = spawn_chance
+        })
     end,
 
     [CREEP_REMOVAL] = function(event)

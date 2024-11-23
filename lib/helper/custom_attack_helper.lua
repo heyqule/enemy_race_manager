@@ -5,6 +5,7 @@
 ---
 require("__enemyracemanager__/setting-constants")
 require("util")
+local String = require('__erm_libs__/stdlib/string')
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -45,7 +46,7 @@ local get_name_token = function(name)
         if not string.find(name, "--", 1, true) then
             storage.force_entity_name_cache[name] = { MOD_NAME, name, "1" }
         else
-            storage.force_entity_name_cache[name] = util.split(name, "--")
+            storage.force_entity_name_cache[name] = String.split(name, "--")
         end
     end
 

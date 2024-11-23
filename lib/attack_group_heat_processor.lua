@@ -164,7 +164,8 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
 
         if not return_surface or storage.override_interplanetary_attack_enabled then
             local ask_friend_roll = nil
-            local interplanetary_attack_enable = Config.interplanetary_attack_enable()
+            --- @TODO to be refactor for interplanetary attacks.
+            local interplanetary_attack_enable = true
 
             if interplanetary_attack_enable then
                 ask_friend_roll = storage.override_ask_friend
@@ -190,13 +191,14 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
                 end
             end
 
-            if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
-                script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
-                    force_name = force_name,
-                    target_force = target_force
-                })
-                return nil
-            end
+            -- @TODO temporary disable interplanetary attack
+            --if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
+            --    script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
+            --        force_name = force_name,
+            --        target_force = target_force
+            --    })
+            --    return nil
+            --end
         end
     end
 

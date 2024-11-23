@@ -53,7 +53,7 @@ function Army_MainWindow.show(player)
     }
     main_window.force_auto_center()
 
-    main_window.style.maximal_width = Army_MainWindow.window_width
+    main_window.style.maximal_width = Army_MainWindow.window_width * 1.25
     main_window.style.minimal_width = Army_MainWindow.window_width
     main_window.style.maximal_height = Army_MainWindow.window_height * 1.55
     main_window.style.minimal_height = Army_MainWindow.window_height * 0.75
@@ -65,8 +65,9 @@ function Army_MainWindow.show(player)
     local title = title_flow.add { type = "label", name = "header-title", caption = { "gui-army.control-title" }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", name = "header-pusher", style = "draggable_space_header" }
-    pusher.style.width = Army_MainWindow.window_width - 24 - 250
+    --- not sure why vertically_stretchable = true causes to stretch in height, comparing to other windows.
     pusher.style.height = 24
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = main_window
 
     local close_button = title_flow.add { type = "sprite-button",

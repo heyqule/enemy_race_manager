@@ -33,6 +33,14 @@ function MainWindow.show(player)
     }
     main_window.force_auto_center()
     player.opened = main_window
+    local surface_name = player.surface.name
+
+    --- fallback to nauvis if player is not on a planet.
+    local is_planet = true
+    if not game.planets[surface_name] then
+        surface_name = 'nauvis'
+        is_planet = false
+    end
 
     local admin = player.admin
     main_window.style.maximal_width = MainWindow.maximal_width
@@ -46,8 +54,9 @@ function MainWindow.show(player)
     local title = title_flow.add { type = "label", name = "title", caption = { "gui.title" }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = MainWindow.window_width - 24 - 160
+    --- not sure why vertically_stretchable = true causes to stretch in height, comparing to other windows.
     pusher.style.height = 24
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = main_window
 
     local close_button = title_flow.add { type = "sprite-button",
@@ -64,13 +73,18 @@ function MainWindow.show(player)
     scroll.style.margin = 5
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
-    scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", player.surface.name }, style = "caption_label" }
+    if is_planet then
+        scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", "[space-location="..surface_name.."] " .. surface_name }, style = "caption_label" }
+    else
+        scroll.add { type = "label", name = "surface_name", caption = { "gui.not_on_planet" }, style = "caption_label" }
+    end
 
-    local item_table = scroll.add { type = "table", column_count = 6, style = "bordered_table" }
+    local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
     item_table.add { type = "label", caption = { "gui.tier_column" } }
+    item_table.add { type = "label", caption = { "gui.evolution_column" } }
     item_table.add { type = "label", caption = { "gui.progress_column" } }
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = { "gui.total_attack_column" } }
@@ -78,10 +92,11 @@ function MainWindow.show(player)
 
     for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
-            local points = QualityProcessor.get_quality_point(race_setting.race, player.surface.name) or 0
+            local points = QualityProcessor.get_quality_point(race_setting.race, surface_name) or 0
             item_table.add { type = "label", caption = race_setting.label }
             item_table.add { type = "label", caption = race_setting.tier }
-            item_table.add { type = "label", caption = "[space-location="..player.surface.name.."] "..(points / 100) .. "%" }
+            item_table.add { type = "label", caption = string.format("%.2f", game.forces[race_setting.race].get_evolution_factor(surface_name) * 100) .. '%' }
+            item_table.add { type = "label", caption = (points / 100) .. "%" }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
             item_table.add { type = "label", caption = race_setting.attack_meter_total }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }

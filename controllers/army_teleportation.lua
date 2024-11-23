@@ -47,6 +47,6 @@ ArmyTeleportationController.events = {
     [defines.events.script_raised_destroy] = remove_command_center,
     [defines.events.on_player_mined_entity] = remove_command_center,
     [defines.events.on_robot_mined_entity] = remove_command_center,
-    [defines.events.on_space_platform_mined_entity] = add_command_center,
+    [defines.events.on_space_platform_mined_entity] = remove_command_center,
 }
 return ArmyTeleportationController

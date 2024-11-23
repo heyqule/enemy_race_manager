@@ -31,7 +31,7 @@ it("Test quality calculate_chance_cache", function()
 
     game.forces[enemy].set_evolution_factor(1)
     QualityProcessor.calculate_quality_points()
-    assert(QualityProcessor.get_quality_point(enemy, planet) == 3000, "Quality Point is 40%")
+    assert(QualityProcessor.get_quality_point(enemy, planet) == 3000, "Quality Point is 30%")
 
     --- set 2000000 accumulate point to test 100%
     storage.race_settings.enemy.attack_meter_total = 2000001

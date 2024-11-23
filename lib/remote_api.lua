@@ -18,8 +18,8 @@ local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deploymen
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
-local EnvironmentalAttack = require("__enemyracemanager__/lib/environmental_attacks")
-local InterplanetaryAttack = require("__enemyracemanager__/lib/interplanetary_attacks")
+local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 
 local RemoteAPI = {}
@@ -112,7 +112,7 @@ function RemoteAPI.generate_attack_group(force_name, units_number)
     units_number = tonumber(units_number)
 
     if force and units_number > 0 then
-        AttackGroupProcessor.generate_group(force_name, force, units_number)
+        AttackGroupProcessor.generate_group(force, units_number)
     end
 end
 
@@ -125,7 +125,7 @@ function RemoteAPI.generate_flying_group(force_name, units_number)
 
     if force and flying_enabled and units_number > 0 then
         AttackGroupProcessor.generate_group(
-                force_name, force, units_number,
+                force, units_number,
             {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
         )
     end
@@ -140,7 +140,7 @@ function RemoteAPI.generate_dropship_group(force_name, units_number)
 
     if force and dropship_enabled and units_number > 0 then
         AttackGroupProcessor.generate_group(
-                force_name, force, units_number,
+                force, units_number,
                 {group_type = AttackGroupProcessor.GROUP_TYPE_DROPSHIP}
         )
     end
@@ -165,7 +165,6 @@ function RemoteAPI.generate_featured_group(force_name, size, squad_id)
     if force and is_valid_featured_squad(force_name, squad_id) then
         size = size or GlobalConfig.max_group_size()
         AttackGroupProcessor.generate_group(
-                force_name,
                 game.forces[force_name],
                 size,
                 {
@@ -183,7 +182,6 @@ function RemoteAPI.generate_featured_flying_group(force_name, size, squad_id)
     if force and is_valid_featured_flying_squad(force_name, squad_id) then
         size = size or (GlobalConfig.max_group_size() / 2)
         AttackGroupProcessor.generate_group(
-                force_name,
                 game.forces[force_name],
                 size,
                 {
@@ -203,7 +201,6 @@ function RemoteAPI.generate_elite_featured_group(force_name, size, squad_id)
     then
         size = size or GlobalConfig.max_group_size()
         AttackGroupProcessor.generate_group(
-                force_name,
                 game.forces[force_name],
                 size,
                 {
@@ -224,7 +221,6 @@ function RemoteAPI.generate_elite_featured_flying_group(force_name, size, squad_
     then
         size = size or (GlobalConfig.max_group_size() / 2)
         AttackGroupProcessor.generate_group(
-                force_name,
                 game.forces[force_name],
                 size,
                 {
@@ -236,8 +232,8 @@ function RemoteAPI.generate_elite_featured_flying_group(force_name, size, squad_
     end
 end
 
---- Usage  remote.call("enemyracemanager", "spawn_environmental_attack", "nauvis", {x=100,y=200}, false?, false?)
-function RemoteAPI.spawn_environmental_attack(surface, target_position, force_spawn, force_spawn_base)
+--- Usage  remote.call("enemyracemanager", "spawn_environmental_attack", "nauvis", {x=100,y=200}, false?, false?, 5?, 50?)
+function RemoteAPI.spawn_environmental_attack(surface, target_position, force_spawn, force_spawn_base, spawn_count, spawn_chance)
     local surface_obj = game.surfaces[surface]
     if not surface then
         error("Surface name is required")
@@ -247,7 +243,16 @@ function RemoteAPI.spawn_environmental_attack(surface, target_position, force_sp
     end
     force_spawn = force_spawn or false
     force_spawn_base = force_spawn_base or false
-    EnvironmentalAttack.exec(surface_obj, target_position, force_spawn, force_spawn_base)
+    spawn_count = spawn_count or 5
+    spawn_chance = spawn_chance or 5
+    EnvironmentalAttacks.exec({
+        surface = surface_obj,
+        target_position = target_position,
+        force_spawn = force_spawn,
+        force_spawn_home = force_spawn_base,
+        spawn_count = spawn_count,
+        spawn_chance = spawn_chance
+    })
 end
 
 --- Usage  remote.call("enemyracemanager", "spawn_interplanetary_attack", "enemy_erm_zerg", "players", {x=100,y=200})
@@ -260,7 +265,7 @@ function RemoteAPI.spawn_interplanetary_attack(force_name, target_force, drop_lo
     if not force then
         error("Target Force is required")
     end
-    EnvironmentalAttack.exec(race_settings.race, force, drop_location)
+    InterplanetaryAttacks.exec(race_settings.race, force, drop_location)
 end
 
 --- Usage: remote.call("enemyracemanager", "add_boss_attack_group")
@@ -343,5 +348,9 @@ RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
 
 RemoteAPI.roll_quality = QualityProcessor.roll_quality
+
+RemoteAPI.process_attack_position = AttackGroupProcessor.process_attack_position
+
+
 
 return RemoteAPI

@@ -114,7 +114,6 @@ GlobalConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 320
 local refreshable_settings = {
     startup = {
         "enemyracemanager-max-attack-range",
-        "enemyracemanager-environmental-raids",
     },
     global = {
         "enemyracemanager-max-gathering-groups",
@@ -140,17 +139,11 @@ local refreshable_settings = {
         "enemyracemanager-featured-squad-chance",
         "enemyracemanager-elite-squad-enable",
         "enemyracemanager-elite-squad-attack-points",
-        "enemyracemanager-elite-squad-level",
         "enemyracemanager-precision-strike-flying-unit-enable",
         "enemyracemanager-precision-strike-flying-unit-chance",
         "enemyracemanager-precision-strike-warning",
         "enemyracemanager-time-based-enable",
         "enemyracemanager-time-based-points",
-        "enemyracemanager-environmental-raids-units",
-        "enemyracemanager-environmental-raids-chance",
-        "enemyracemanager-environmental-raids-build-base-chance",
-        "enemyracemanager-interplanetary-raids",
-        "enemyracemanager-interplanetary-raids-build-base-chance"
     }
 }
 
@@ -290,10 +283,6 @@ function GlobalConfig.elite_squad_attack_points()
     return get_global_setting_value("enemyracemanager-elite-squad-attack-points")
 end
 
-function GlobalConfig.elite_squad_level()
-    return get_global_setting_value("enemyracemanager-elite-squad-level")
-end
-
 function GlobalConfig.flying_squad_precision_enabled()
     return get_global_setting_value("enemyracemanager-precision-strike-flying-unit-enable")
 end
@@ -340,30 +329,6 @@ end
 
 function GlobalConfig.spawner_kills_deduct_evolution_points()
     return get_global_setting_value("enemyracemanager-attack-point-spawner-kills-deduction")
-end
-
-function GlobalConfig.environmental_attack_enable()
-    return get_global_setting_value("enemyracemanager-environmental-raids")
-end
-
-function GlobalConfig.environmental_attack_units_count()
-    return get_global_setting_value("enemyracemanager-environmental-raids-units")
-end
-
-function GlobalConfig.environmental_attack_raid_chance()
-    return get_global_setting_value("enemyracemanager-environmental-raids-chance")
-end
-
-function GlobalConfig.environmental_attack_raid_build_base_chance()
-    return get_global_setting_value("enemyracemanager-environmental-raids-build-base-chance")
-end
-
-function GlobalConfig.interplanetary_attack_enable()
-    return get_global_setting_value("enemyracemanager-interplanetary-raids")
-end
-
-function GlobalConfig.interplanetary_attack_raid_build_base_chance()
-    return get_global_setting_value("enemyracemanager-interplanetary-raids-build-base-chance")
 end
 
 function GlobalConfig.initialize_races_data()

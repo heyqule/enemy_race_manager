@@ -3,11 +3,10 @@ Version: 2.0.0
 Date: ????-??-??
 
   Major Features:
-    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1.
+    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1. Note: 2.0.x are considered experimental versions.  2.1 will be the first stable release.
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
     - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. [Details in Tips and Tricks]
-    - Home planets invasion. Zerg and Protoss now have a home planet. Are you ready to invade them? [Details in Tips and Tricks]
-    - Note: 2.0.x are considered experimental versions.  2.1 will be the first stable release.
+    - Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? [Details in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
@@ -28,11 +27,11 @@ Date: ????-??-??
     - [Section: Attack Meter Changes]
     - Point calculation perform when applicable entity dies.
     - Point reduction by killing spawners now affects attack points, which affects custom attack group generation.
-    - Attack point gained by launching rocket now default to 50 points, instead of 200.  Adjustable by setting.
-    - Time based attack starts when the enemy's evolution is over 0.35 on their planet.
+    - Attack point gained by launching rocket now default to 20 points, instead of 200.  Adjustable in setting.
     - [Section: Custom attack group changes]
     - The group forming check runs every minute, instead of three minutes by default previously.
     - Added "cargo-landing-pad" and "agricultural-tower" types to targeted entities.
+    - Time based attack starts when the enemy's evolution is over 0.35 on their planet.
     - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality items.
     - Most player's structures automatically get a health bump to a minimum of 500HP.
@@ -42,15 +41,15 @@ Date: ????-??-??
     - Main screen buttons are now under shortcuts, instead of using top left buttons (modUI).
     - Some stats are calculated on per planet basis.
     - Army teleportation indicators only draw in alt mode.
-    - Added changes for the quality spawning system.
+    - Added new changes for the quality spawning system.
     - [Section: Temporary Offline Systems]
     - Boss mode is offline for major overhaul.
-    - Some environmental attacks have moved to race mods.
-    - Interplanetary attac
+    - Interplanetary attacks module is offline. It will be re-work for [space-age].  It was designed for Space Exploration.
+    - Environmental attacks module is being refactor for [space-age].  Some new environmental attacks are implemented in the ERM enemy mods.
     - [Section: Removals]
     - Removed dependency of stdlib.
     - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as any issue arise.
-    - Exceptions: Cold, Explosive, Toxic and Armour biters are supported. However, using their autoplace control may have conflict with ERM's enemy generation.
+    - Exceptions: Cold, Explosive, Toxic and Armour biters should work fine. However, using their autoplace control may have conflict with ERM's enemy generation.
     - Removed menu biter replacement, add a few menu simulations.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on Nauvis under "Nauvis' enemy" in startup option.
     - Removed randomly assign enemy on a surface/planet.  Enemies autoplaces are now defined in planet prototypes.
@@ -58,6 +57,7 @@ Date: ????-??-??
 
   Bugfixes:
     - Fixed interplanetary attack picking a nil surface. It now picks Nauvis as default.
+    - Fixed new scout spawned for the existing groups.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6
