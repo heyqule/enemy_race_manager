@@ -4,8 +4,10 @@
 --- DateTime: 11/13/2024 8:39 PM
 ---
 
---- Add acid and poison resistances to asteroids.
-for _, asteroid in pairs(data.raw.asteroid) do
-    table.insert(asteroid.resistances, { type = "acid", percent = 95 })
-    table.insert(asteroid.resistances, { type = "poison", percent = 100 })
+if feature_flags.space_travel then
+    --- Add acid and poison resistances to asteroids.
+    for _, asteroid in pairs(data.raw.asteroid) do
+        table.insert(asteroid.resistances, { type = "acid", percent = 95 })
+        table.insert(asteroid.resistances, { type = "poison", percent = 100 })
+    end
 end

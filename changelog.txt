@@ -3,10 +3,11 @@ Version: 2.0.0
 Date: ????-??-??
 
   Major Features:
-    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1. Note: 2.0.x are considered experimental releases.  2.1 will be the stable release.
+    - Updated to Factorio 2.0.  It does NOT support migration from 1.1. Note: 2.0.x are considered experimental releases.  2.1 will be the stable release.
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
     - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. ["Enemy difficulty" in Tips and Tricks]
-    - Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? ["Home planets" in Tips and Tricks]
+    - [space-age] Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? ["Home planets" in Tips and Tricks]
+    - [space-age] specific environmental attacks.
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.

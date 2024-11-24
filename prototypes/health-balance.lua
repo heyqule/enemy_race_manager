@@ -33,28 +33,19 @@ local include_types = {
     "rail-signal",
     "loader-1x1",
     "loader",
-    "lightning-attractor"
+    "lightning-attractor",
+    "agricultural-tower"
 }
 
 
 for _, type in pairs(include_types) do
-    for _, entity in pairs(data.raw[type]) do
-        if entity.max_health and (entity.type == "container" or entity.type == "logistic-container") then
-            entity.max_health = math.max(entity.max_health * 2.5, 500)
-        elseif entity.max_health and entity.max_health < 500 then
-            entity.max_health = math.max(entity.max_health * 2, 500)
-        end
-    end
-end
-
-if feature_flags.space_travel then
-    local expansion_types = {
-        "agricultural-tower"
-    }
-    for _, type in pairs(expansion_types) do
+    if data.raw[type] then
         for _, entity in pairs(data.raw[type]) do
-            if entity.max_health and entity.max_health < 1000 then
+
+            if entity.max_health and (entity.type == "container" or entity.type == "logistic-container") then
                 entity.max_health = math.max(entity.max_health * 2.5, 500)
+            elseif entity.max_health and entity.max_health < 500 then
+                entity.max_health = math.max(entity.max_health * 2, 500)
             end
         end
     end

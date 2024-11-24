@@ -41,7 +41,7 @@ local function volume_to_noise_expression(volume)
 
   if (volume["temperature_min"] and  volume["temperature_max"]) then
     local temperature_center = (volume["temperature_min"] + volume["temperature_max"]) / 2
-    local temperature_range = math.abs(volume["temperature_min"] - volume["temperature_max"]) / 2 + 0.005
+    local temperature_range = math.abs(volume["temperature_min"] - volume["temperature_max"]) / 2
     local temperature_fitness = "erm_plateau_peak_to_noise_expression(temperature,"..temperature_center..","..temperature_range..")"
     if(result == nil) then
       result = temperature_fitness
@@ -52,7 +52,7 @@ local function volume_to_noise_expression(volume)
 
   if (volume["elevation_min"] and  volume["elevation_max"]) then
     local elevation_center = (volume["elevation_min"] + volume["elevation_max"]) / 2
-    local elevation_range = math.abs(volume["elevation_min"] - volume["elevation_max"]) / 2 + 0.005
+    local elevation_range = math.abs(volume["elevation_min"] - volume["elevation_max"]) / 2
 
     local elevation_fitness = "erm_plateau_peak_to_noise_expression(elevation,"..elevation_center..","..elevation_range..")"
     if(result == nil) then

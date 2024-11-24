@@ -187,7 +187,7 @@ function make_roboport(level)
             -- (2018-12-07)
             -- @TODO noise expression fix
             autoplace = enemy_autoplace.enemy_spawner_autoplace({
-                probability_expression = "enemy_autoplace_base(0, 100)",
+                probability_expression = "enemy_autoplace_base(0, 9)",
                 force = FORCE_NAME,
             }),
             call_for_help_radius = 50,

@@ -47,7 +47,6 @@ end
 
 data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
 data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
-data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 800
 data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
 data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
 
@@ -105,7 +104,9 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
         "rail-chain-signal"
     }
     for _, rail_type in pairs(rail_type) do
-        data.raw[rail_type][rail_type]["resistances"] = rails_change_resistance()
+        if data.raw[rail_type][rail_type] then
+            data.raw[rail_type][rail_type]["resistances"] = rails_change_resistance()
+        end
     end
 
     -- Buff Walls & Gates
@@ -152,3 +153,7 @@ data.raw["construction-robot"]["construction-robot"]["resistances"] = armor_chan
 data.raw["construction-robot"]["construction-robot"]["resistances"][4]["percent"] = 100
 data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resistance(75, 0)
 data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
+
+if feature_flags.space_travel then
+    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 800
+end

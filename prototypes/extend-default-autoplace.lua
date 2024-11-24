@@ -22,6 +22,7 @@ require("util")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local AutoplaceUtil = require("__enemyracemanager__/prototypes/enemy-autoplace")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
+local String = require('__erm_libs__/stdlib/string')
 
 require("global")
 
@@ -53,7 +54,8 @@ local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, enti
         return
     end
 
-    if string.find(v.name, mod_name, 1, true) == nil then
+    local name_token = String.split(v.name, "--")
+    if name_token[1] ~= mod_name then
         return
     end
 
@@ -463,6 +465,7 @@ for key, race_data in pairs(updated_specs) do
         end
 
         DebugHelper.print(serpent.block(volume))
+        
         for _, v in pairs(data.raw["unit-spawner"]) do
             tune_autoplace(
                     v, false, volume,

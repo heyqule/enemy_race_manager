@@ -29,7 +29,6 @@ data:extend(
             order = "b",
             indent = 1,
             starting_status = "suggested",
-            simulation = simulations.enemy_difficulty
         },
         {
             type = "tips-and-tricks-item",

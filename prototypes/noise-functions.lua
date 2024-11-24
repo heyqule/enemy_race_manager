@@ -23,8 +23,8 @@ data:extend({
     type = "noise-function",
     name = "erm_peak_to_noise_expression",
     parameters = {"variable", "optimal", "range"},
-    expression = "min(range - ridge( variable - optimal, 0, 100000), 10)",
-    --expression = "range - ridge( variable - optimal, 0, 100000)",
+    --expression = "range - min(ridge( variable - optimal, 0, inf ), 10)",
+    expression = "range - ridge( variable - optimal, 0, 100000)",
   },
   {
     type = "noise-function",

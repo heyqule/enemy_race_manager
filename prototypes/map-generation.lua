@@ -65,6 +65,8 @@ for _, v in pairs(data.raw["unit-spawner"]) do
     if string.find(v.name, "--", 1, true) then
         local nameToken = String.split(v.name, "--")
         local level = tonumber(nameToken[3])
+        print("probability >> "..v.name)
+        print(serpent.block(data.raw["unit-spawner"][v.name]["autoplace"]["probability_expression"]))
         if level and level > 1 then
             DebugHelper.print("Disabling:" .. v.name)
             data.raw["unit-spawner"][v.name]["autoplace"] = nil_expression()
