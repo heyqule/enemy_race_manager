@@ -3,10 +3,10 @@ Version: 2.0.0
 Date: ????-??-??
 
   Major Features:
-    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1. Note: 2.0.x are considered experimental versions.  2.1 will be the first stable release.
+    - Updated to Factorio 2.0.  It DOES NOT support migration from 1.1. Note: 2.0.x are considered experimental releases.  2.1 will be the stable release.
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
-    - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. [Details in Tips and Tricks]
-    - Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? [Details in Tips and Tricks]
+    - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. ["Enemy difficulty" in Tips and Tricks]
+    - Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? ["Home planets" in Tips and Tricks]
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
@@ -15,26 +15,26 @@ Date: ????-??-??
     - Added some tips and tricks.
     - Added invisible-unit trigger mask type. They can only be target by certain turrets. Player and units can target them due to technical limitation.
     - Added per planet kill counts on ERM GUI.
+    - Enemy evolve independently for each planet. e.g Biters in planet A spawn different tiers than those on planet B.
 
   Changes:
     - [Section: Unit Properties]
     - HP and damage algo changes for quality spawning system.
     - Maximum resistances of Units and turrets reduced from 85-95% to 65%-85% with some exceptions. Lower tier units are adjusted accordingly.
     - Unit-spawner resistance lower from 75%-80% to 45-55%.
-    - Movement and attack speed reach max at middle (3rd) tier.
+    - Movement and attack speed should reach max at middle (3rd) tier.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
-    - Enemy progress now independently for each planet.  Biters in planet A spawn differently than those on planet B.
     - [Section: Attack Meter Changes]
     - Point calculation perform when applicable entity dies.
-    - Point reduction by killing spawners now affects attack points, which affects custom attack group generation.
+    - Point reduction by killing spawners now based on attack points, which affects custom attack group generation.
     - Attack point gained by launching rocket now default to 20 points, instead of 200.  Adjustable in setting.
     - [Section: Custom attack group changes]
     - The group forming check runs every minute, instead of three minutes by default previously.
     - Added "cargo-landing-pad" and "agricultural-tower" types to targeted entities.
-    - Time based attack starts when the enemy's evolution is over 0.35 on their planet.
+    - Time based attack starts when the enemy's evolution factor is over 0.3 on their planet.  Some planets may handle differently.
     - [Section: Enhanced Defenses]
     - Removed ERM enhanced defense items in flavor of [space-age]'s quality items.
-    - Most player's structures automatically get a health bump to a minimum of 500HP.
+    - Most player's structures get a bump to a minimum of 500HP.
     - [Section: Free For All]
     - Only works with mixed mode in non [space-age] game at the moment.
     - [Section: GUI]
@@ -50,7 +50,7 @@ Date: ????-??-??
     - Removed dependency of stdlib.
     - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as any issue arise.
     - Exceptions: Cold, Explosive, Toxic and Armour biters should work fine. However, using their autoplace control may have conflict with ERM's enemy generation.
-    - Removed menu biter replacement, add a few menu simulations.
+    - Removed menu biter replacement.
     - Removed "enable biter" option.  They are always enabled.  You can change your race on Nauvis under "Nauvis' enemy" in startup option.
     - Removed randomly assign enemy on a surface/planet.  Enemies autoplaces are now defined in planet prototypes.
     - Removed 2 ways and 4 ways enemy spawner generation on Nauvis due to incompatibility.
@@ -58,6 +58,7 @@ Date: ????-??-??
   Bugfixes:
     - Fixed interplanetary attack picking a nil surface. It now picks Nauvis as default.
     - Fixed new scout spawned for the existing groups.
+    - Fixed various issues.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.22.6

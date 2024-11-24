@@ -1315,4 +1315,8 @@ AttackGroupBeaconProcessor.get_max_tiers = function()
     return MAX_TIERS
 end
 
+AttackGroupBeaconProcessor.get_attackable_entity_types = function()
+    return ATTACKABLE_ENTITY_TYPES
+end
+
 return AttackGroupBeaconProcessor
