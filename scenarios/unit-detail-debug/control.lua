@@ -71,9 +71,13 @@ script.on_event(defines.events.on_player_created, function(event)
         x = -100 + i * gap
         local nameToken = ForceHelper.get_name_token(item.name)
         if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], "%d") ~= 1 then
+            local force_name = "enemy"
+            if nameToken[1] == "erm_terran" then
+                force_name = "player"
+            end
             local entity = surface.create_entity({
                 name = item.name,
-                force = "enemy",
+                force = force_name,
                 position = { x, y }
             })
             entity.active = false
@@ -101,7 +105,7 @@ script.on_event(defines.events.on_player_created, function(event)
 
             if entity.prototype.speed then
                 rendering.draw_text({
-                    text="Speed: "..entity.prototype.speed,
+                    text="Speed: ".. string.format('%.2f',entity.prototype.speed * 60 * 3600 / 1000)..'km/h',
                     color = { r = 1, g = 1, b = 1, a = 1 },
                     target={ x+2, y+y_offset },
                     surface=entity.surface,

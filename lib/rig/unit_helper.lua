@@ -94,7 +94,7 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return base_speed + (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_RARE)))
+    return math.min(base_speed + (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))), (base_speed + incremental_speed))
 end
 
 -- unit healing (full heal in 120s)
