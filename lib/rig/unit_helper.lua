@@ -62,7 +62,11 @@ function ERM_UnitHelper.get_resistance(base_resistance, incremental_resistance ,
         return base_resistance
     end
 
-    return math.min(math.floor(base_resistance + (incremental_resistance * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC)))), base_resistance + incremental_resistance, max_resistance_percentage)
+    return math.min(
+            math.floor(base_resistance + (incremental_resistance * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC)))),
+            base_resistance + incremental_resistance,
+            max_resistance_percentage
+    )
 end
 
 -- Attack Damage
@@ -86,7 +90,11 @@ function ERM_UnitHelper.get_attack_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return math.max(base_speed - (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))), max_attack_speed)
+    return math.max(
+        base_speed - (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))),
+        (base_speed - incremental_speed),
+        max_attack_speed
+    )
 end
 
 -- Movement Speed, reach max at rare tier
@@ -94,7 +102,10 @@ function ERM_UnitHelper.get_movement_speed(base_speed, incremental_speed, level)
     if level == 1 then
         return base_speed
     end
-    return math.min(base_speed + (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))), (base_speed + incremental_speed))
+    return math.min(
+            base_speed + (incremental_speed * (level / (GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_EPIC))),
+            base_speed + incremental_speed
+    )
 end
 
 -- unit healing (full heal in 120s)

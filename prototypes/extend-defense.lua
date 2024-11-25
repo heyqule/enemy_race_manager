@@ -110,34 +110,35 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     end
 
     -- Buff Walls & Gates
-    data.raw["wall"]["stone-wall"]["max_health"] = 500
     local walls = data.raw["wall"]
     for _, entity in pairs(walls) do
+        entity["max_health"] = entity["max_health"] * 2.5
         entity["resistances"] = {
-            { type = "acid", percent = 50, decrease = 0 },
+            { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
+            { type = "physical", percent = 40, decrease = 0 },
             { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = "explosion", percent = 40, decrease = 10 },
+            { type = "impact", percent = 40, decrease = 45 },
+            { type = "laser", percent = 40, decrease = 0 },
+            { type = "electric", percent = 40, decrease = 0 },
+            { type = "cold", percent = 40, decrease = 0 }
         }
     end
 
     local gates = data.raw["gate"]
     for _, entity in pairs(gates) do
+        entity["max_health"] = entity["max_health"] * 2.5
         entity["resistances"] = {
-            { type = "acid", percent = 50, decrease = 0 },
+            { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
+            { type = "physical", percent = 40, decrease = 0 },
             { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = "explosion", percent = 40, decrease = 10 },
+            { type = "impact", percent = 40, decrease = 45 },
+            { type = "laser", percent = 40, decrease = 0 },
+            { type = "electric", percent = 40, decrease = 0 },
+            { type = "cold", percent = 40, decrease = 0 }
         }
     end
 end

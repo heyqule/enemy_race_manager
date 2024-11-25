@@ -42,8 +42,8 @@ local incremental_attack_speed = 900
 
 local attack_range = 3
 
-local base_movement_speed = 0.15
-local incremental_movement_speed = 0.125
+local base_movement_speed = 0.2
+local incremental_movement_speed = 0.15
 
 -- Misc Settings
 local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
