@@ -4,63 +4,60 @@
 --- DateTime: 7/3/2021 10:21 PM
 ---
 
-local ERM_AnimationRig = {}
+local AnimationRig = {}
 
 local set_properties = function(layer, name, value)
     layer[name] = value
-    if layer['hr_version'] then
-        layer['hr_version'][name] = value
-    end
 end
 
-function ERM_AnimationRig.adjust_still_frame(layer, value)
-    set_properties(layer, 'still_frame', value)
+function AnimationRig.adjust_still_frame(layer, value)
+    set_properties(layer, "still_frame", value)
 end
 
-function ERM_AnimationRig.adjust_still_frame_all(layers, value)
+function AnimationRig.adjust_still_frame_all(layers, value)
     for i, layer in pairs(layers) do
-        ERM_AnimationRig.adjust_still_frame(layer, value)
+        AnimationRig.adjust_still_frame(layer, value)
     end
 end
 
-function ERM_AnimationRig.adjust_repeat_count(layer, value)
-    set_properties(layer, 'repeat_count', value)
+function AnimationRig.adjust_repeat_count(layer, value)
+    set_properties(layer, "repeat_count", value)
 end
 
-function ERM_AnimationRig.adjust_repeat_count_all(layers, value)
+function AnimationRig.adjust_repeat_count_all(layers, value)
     for i, layer in pairs(layers) do
-        ERM_AnimationRig.adjust_repeat_count(layer, value)
+        AnimationRig.adjust_repeat_count(layer, value)
     end
 end
 
-function ERM_AnimationRig.adjust_max_advance(layer, value)
-    set_properties(layer, 'max_advance', value)
+function AnimationRig.adjust_max_advance(layer, value)
+    set_properties(layer, "max_advance", value)
 end
 
-function ERM_AnimationRig.adjust_max_advance_all(layers, value)
+function AnimationRig.adjust_max_advance_all(layers, value)
     for i, layer in pairs(layers) do
-        ERM_AnimationRig.adjust_max_advance(layer, value)
+        AnimationRig.adjust_max_advance(layer, value)
     end
 end
 
-function ERM_AnimationRig.adjust_frame_count(layer, value)
-    set_properties(layer, 'frame_count', value)
+function AnimationRig.adjust_frame_count(layer, value)
+    set_properties(layer, "frame_count", value)
 end
 
-function ERM_AnimationRig.adjust_frame_count_all(layers, value)
+function AnimationRig.adjust_frame_count_all(layers, value)
     for i, layer in pairs(layers) do
-        ERM_AnimationRig.adjust_frame_count(layer, value)
+        AnimationRig.adjust_frame_count(layer, value)
     end
 end
 
-function ERM_AnimationRig.adjust_direction_count(layer, value)
-    set_properties(layer, 'direction_count', value)
+function AnimationRig.adjust_direction_count(layer, value)
+    set_properties(layer, "direction_count", value)
 end
 
-function ERM_AnimationRig.adjust_direction_count_all(layers, value)
+function AnimationRig.adjust_direction_count_all(layers, value)
     for i, layer in pairs(layers) do
-        ERM_AnimationRig.adjust_direction_count(layer, value)
+        AnimationRig.adjust_direction_count(layer, value)
     end
 end
 
-return ERM_AnimationRig
+return AnimationRig

@@ -4,10 +4,10 @@
 --- DateTime: 1/8/2024 9:30 PM
 ---
 
-local TestShared = require('shared')
-local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local TestShared = require("shared")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
-local enemy_force = 'enemy_erm_zerg'
+local enemy_force = "enemy_erm_zerg"
 local function spawn_units(surface,name)
     local unit_group = surface.create_unit_group {
         position={0,2},
@@ -38,12 +38,12 @@ end)
 
 
 it("Default", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_DEFAULT
+    storage.settings["enemyracemanager-build-style"] = BUILDING_DEFAULT
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = "enemy_erm_zerg--zergling--1"
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
-        position={0,0},
+        name="enemy_erm_zerg--hatchery--1",
+        position={10,10},
         force = enemy_force
     })
     spawn_units(surface,name)
@@ -54,21 +54,21 @@ it("Default", function()
             type="unit-spawner",
             force = enemy_force
         })
-        assert(count == 1, 'Only 1 spawner')
+        assert(count == 1, "Only 1 spawner")
     end)
 end)
 it("Command Center / Build a town", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_CMD
+    storage.settings["enemyracemanager-build-style"] = BUILDING_EXPAND_ON_CMD
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = "enemy_erm_zerg--zergling--1"
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name="enemy_erm_zerg--hatchery--1",
         position={0,0},
         force = enemy_force
     })
     local unit_group = spawn_units(surface,name)
     BaseBuildProcessor.exec(building)
-    after_ticks(3500, function()
+    after_ticks(3600, function()
         local count = surface.count_entities_filtered({
             type="unit-spawner",
             force = enemy_force
@@ -78,17 +78,17 @@ it("Command Center / Build a town", function()
             force = enemy_force
         })
         local unit_count = table_size(unit_group.members)
-        assert(count > 1, 'spawners spawned')
-        assert(turret_count > 1, 'turrets spawned')
-        assert(unit_count > 1, 'building units remained')
+        assert(count > 1, "spawners spawned")
+        assert(turret_count > 1, "turrets spawned")
+        assert(unit_count > 1, "building units remained")
     end)
 end)
 it("Build a town", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_A_TOWN
+    storage.settings["enemyracemanager-build-style"] = BUILDING_A_TOWN
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = "enemy_erm_zerg--zergling--1"
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name="enemy_erm_zerg--hatchery--1",
         position={20,20},
         force = enemy_force
     })
@@ -104,17 +104,17 @@ it("Build a town", function()
             force = enemy_force
         })
         local unit_count = table_size(unit_group.members)
-        assert(count > 1, 'spawners spawned')
-        assert(turret_count > 1, 'turrets spawned')
-        assert(unit_count > 1, 'building units remained')
+        assert(count > 1, "spawners spawned")
+        assert(turret_count > 1, "turrets spawned")
+        assert(unit_count > 1, "building units remained")
     end)
 end)
 it("Fully Expansion", function()
-    global.settings['enemyracemanager-build-style'] = BUILDING_EXPAND_ON_ARRIVAL
+    storage.settings["enemyracemanager-build-style"] = BUILDING_EXPAND_ON_ARRIVAL
     local surface = game.surfaces[1]
-    local name = 'erm_zerg/zergling/1'
+    local name = "enemy_erm_zerg--zergling--1"
     local building = surface.create_entity({
-        name='erm_zerg/hatchery/1',
+        name="enemy_erm_zerg--hatchery--1",
         position={0,0},
         force = enemy_force
     })
@@ -129,8 +129,8 @@ it("Fully Expansion", function()
             type="turret",
             force = enemy_force
         })
-        assert(count > 6, 'more than 6 spawner spawned')
-        assert(turret_count > 6, 'more than 6 turret spawned')
-        assert.falsy(unit_group.valid, 'builder group disbanded')
+        assert(count > 6, "more than 6 spawner spawned")
+        assert(turret_count > 6, "more than 6 turret spawned")
+        assert.falsy(unit_group.valid, "builder group disbanded")
     end)
 end)

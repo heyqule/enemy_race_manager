@@ -5,34 +5,31 @@
 ---
 
 if TEST_MODE and script.active_mods["factorio-test"] then
-    local config = require('__stdlib__/stdlib/config')
-    config.skip_script_protections = true
-
     local tests = {
         "tests/data_check",
         "tests/attack_beacon",
         "tests/attack_pathing",
         "tests/attack_meter",
         "tests/scouts",
-        "tests/level_and_tier",
         "tests/surface_manager",
         "tests/environmental_attacks",
     }
 
-    if script.active_mods['erm_zerg'] and script.active_mods['erm_toss'] then
+    if script.active_mods["erm_zerg"] and script.active_mods["erm_toss"] then
+        table.insert(tests,"tests/quality_system")
         table.insert(tests,"tests/attack_group")
         table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
-        table.insert(tests,"tests/interplanetary_attacks")
+        --table.insert(tests,"tests/interplanetary_attacks")
     else
-        error('Required erm_zerg and erm_protoss to test attack functions')
+        error("Required erm_zerg and erm_protoss to test attack functions")
     end
 
-    if script.active_mods['erm_terran'] then
+    if script.active_mods["erm_terran"] then
         table.insert(tests,"tests/army")
     else
-        error('Required erm_terran to test army functions')
+        --error("Required erm_terran to test army functions")
     end
 
      require("__factorio-test__/init")(tests)

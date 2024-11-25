@@ -4,27 +4,27 @@
 --- DateTime: 3/31/2021 8:54 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
-local Event = require('__stdlib__/stdlib/event/event')
+require('util')
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local BaseBuildProcessor = {}
 
 local building_switch = {
-    ['cc'] = function(race_name)
-        return RaceSettingsHelper.pick_a_command_center(race_name)
+    ["cc"] = function(force_name)
+        return RaceSettingsHelper.pick_a_command_center(force_name)
     end,
-    ['support'] = function(race_name)
-        return RaceSettingsHelper.pick_a_support_building(race_name)
+    ["support"] = function(force_name)
+        return RaceSettingsHelper.pick_a_support_building(force_name)
     end,
-    ['turret'] = function(race_name)
-        return RaceSettingsHelper.pick_a_turret(race_name)
+    ["turret"] = function(force_name)
+        return RaceSettingsHelper.pick_a_turret(force_name)
     end
 }
 
@@ -50,9 +50,9 @@ function BaseBuildProcessor.exec(entity)
 end
 
 function BaseBuildProcessor.process_on_cmd(entity)
-    local nameToken = ForceHelper.get_name_token(entity.name)
-    local race_name = ForceHelper.extract_race_name_from(entity.force.name)
-    if GlobalConfig.race_is_active(race_name) and RaceSettingsHelper.is_command_center(race_name, nameToken[2]) then
+    local name_token = ForceHelper.get_name_token(entity.name)
+    local force_name = entity.force.name
+    if GlobalConfig.race_is_active(force_name) and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(unit_group, true)
@@ -83,14 +83,16 @@ function BaseBuildProcessor.determine_build_group(entity)
         force = entity.force,
         position = entity.position,
         radius = 32,
-        type = 'unit',
+        type = "unit",
     }
     for _, unit in pairs(near_by_units) do
-        if unit.unit_group and
-                unit.unit_group.command and
-                unit.unit_group.command.type == defines.command.build_base
+        if  unit.commandable and
+            unit.commandable.is_entity and
+            unit.commandable.parent_group and
+            unit.commandable.parent_group.command and
+            unit.commandable.parent_group.command.type == defines.command.build_base
         then
-            return unit.unit_group
+            return unit.commandable.parent_group
         end
     end
     return nil
@@ -98,10 +100,9 @@ end
 
 function BaseBuildProcessor.build_formation(unit_group, has_cc)
     local force_name = unit_group.force.name
-    local race_name = ForceHelper.extract_race_name_from(force_name)
 
-    if race_name == nil then
-        return
+    if not GlobalConfig.race_is_active(force_name) then
+        return nil
     end
 
     local members = unit_group.members
@@ -114,29 +115,30 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 
     local formation = {}
-    if GlobalConfig.build_formation() == 'random' then
+    if GlobalConfig.build_formation() == "random" then
         formation = { 1, math.random(3, 8), math.random(5, 12) }
     else
-        formation = String.split(GlobalConfig.build_formation(), '-')
+        formation = util.split(GlobalConfig.build_formation(), "-")
     end
 
     for _, unit in pairs(members) do
+        local unit_name_token = ForceHelper.get_name_token(unit.name)
         local name = nil
         if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'cc')
+            name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name, unit_name_token[3])
             cc = cc + 1
         elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'support')
+            name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name, unit_name_token[3])
             support = support + 1
         elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(race_name, 'turret')
+            name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name, unit_name_token[3])
             turret = turret + 1
         else
             return
         end
 
         Cron.add_1_sec_queue(
-                'BaseBuildProcessor.build',
+                "BaseBuildProcessor.build",
                 unit.surface,
                 name,
                 force_name,
@@ -146,10 +148,11 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 end
 
-function BaseBuildProcessor.getBuildingName(race_name, type)
+function BaseBuildProcessor.getBuildingName(force_name, type, surface_name, tier)
     local func = building_switch[type]
+    tier = tier or QualityProcessor.roll_quality(force_name, surface_name)
 
-    return race_name .. '/' .. func(race_name) .. '/' .. RaceSettingsHelper.get_level(race_name)
+    return force_name .. "--" .. func(force_name) .. "--" .. tier
 end
 
 function BaseBuildProcessor.build(surface, name, force_name, position, radius)
@@ -161,11 +164,14 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     if position then
         local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
 
-        Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_BASE_BUILT),
-            {
-                entity = built_entity
-            }
-        )
+        if built_entity then
+            script.raise_event(
+                    GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
+                    {
+                        entity = built_entity
+                    }
+            )
+        end
     end
 end
 

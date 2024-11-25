@@ -4,13 +4,14 @@
 --- DateTime: 1/6/2024 6:34 PM
 ---
 
-local Queue = require('__stdlib__/stdlib/misc/queue')
+local Queue = require("__erm_libs__/stdlib/queue")
 
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local LevelManager = require('__enemyracemanager__/lib/level_processor')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+--local LevelManager = require("__enemyracemanager__/lib/level_processor")
 
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local TestShared = {}
 
@@ -24,11 +25,14 @@ function TestShared.prepare_the_factory()
         end
     end
 
-    LevelManager.reset_all_progress()
+    QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
+    QualityProcessor.reset_globals()
+    QualityProcessor.calculate_quality_points()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
+    TestShared.reset_forces()
 end
 
 function TestShared.reset_the_factory()
@@ -40,47 +44,47 @@ function TestShared.reset_the_factory()
         end
     end
 
-    LevelManager.reset_all_progress()
+    QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
+    QualityProcessor.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
 end
 --- Clear cron and its trackers
 function TestShared.CleanCron()
-    global.one_minute_cron = Queue()
-    global.fifteen_seconds_cron = Queue()
-    global.ten_seconds_cron = Queue()
-    global.two_seconds_cron = Queue()
-    global.one_second_cron = Queue()
+    storage.one_minute_cron = Queue()
+    storage.fifteen_seconds_cron = Queue()
+    storage.ten_seconds_cron = Queue()
+    storage.two_seconds_cron = Queue()
+    storage.one_second_cron = Queue()
 
     -- Conditional Crons
-    global.quick_cron = Queue()  -- Spawn
-    global.teleport_cron = {}
+    storage.quick_cron = Queue()  -- Spawn
+    storage.teleport_cron = {}
 
-    global.erm_unit_group = {}
-    global.group_tracker = {}
-    global.scout_tracker = {}
-    global.scout_by_unit_number = {}
-    global.scout_scanner = false
-    global.quick_cron_is_running = false
-    global.army_teleporter_event_running = false
+    storage.erm_unit_group = {}
+    storage.group_tracker = {}
+    storage.scout_tracker = {}
+    storage.scout_by_unit_number = {}
+    storage.scout_scanner = false
+    storage.quick_cron_is_running = false
+    storage.army_teleporter_event_running = false
 end
 
 function TestShared.reset_attack_meter()
     for key, force in pairs(game.forces) do
         local force_name = force.name
-        local race_name = ForceHelper.extract_race_name_from(force_name)
-        if race_name then
-            global.race_settings[race_name].attack_meter = 0
-            global.race_settings[race_name].attack_meter_total = 0
+        if ForceHelper.is_enemy_force(force) then
+            storage.race_settings[force_name].attack_meter = 0
+            storage.race_settings[force_name].attack_meter_total = 0
         end
     end
 end
 
 function TestShared.reset_surfaces()
     for key, surface in pairs(game.surfaces) do
-        if string.find(surface.name,'test') then
+        if not string.find(surface.name,"nauvis") then
             game.delete_surface(surface)
         end
     end
@@ -88,8 +92,11 @@ end
 
 function TestShared.reset_forces()
     for key, force in pairs(game.forces) do
-        if string.find(force.name,'test') then
+        if string.find(force.name,"test") then
             game.merge_forces(force, game.forces[1])
+        end
+        for key, surface in pairs(game.surfaces) do
+            force.set_evolution_factor(0, surface)
         end
     end
 end

@@ -4,9 +4,9 @@
 --- Date: 12/15/2020
 --- Time: 9:59 PM
 --- To change this template use File | Settings | File Templates.
---- require('__enemyracemanager__/lib/rig/unit_tint')
+--- require("__enemyracemanager__/lib/rig/unit_tint")
 ---
-require('__stdlib__/stdlib/utils/defines/color')
+
 local ERM_UnitTint = {}
 
 function ERM_UnitTint.tint_shadow()
@@ -74,12 +74,8 @@ function ERM_UnitTint.tint_purple()
 end
 
 function ERM_UnitTint.mask_tint(layer, color)
-    layer['tint'] = color
-    layer['apply_runtime_tint'] = false
-    if layer['hr_version'] then
-        layer['hr_version']['tint'] = color
-        layer['hr_version']['apply_runtime_tint'] = false
-    end
+    layer["tint"] = color
+    layer["apply_runtime_tint"] = false
 end
 
 return ERM_UnitTint

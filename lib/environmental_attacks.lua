@@ -4,15 +4,16 @@
 --- DateTime: 7/1/2024 5:42 PM
 ---
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
-local is_valid = function(surface, target_position, force_spawn)
-    local valid = Config.environmental_attack_enable() and surface and surface.valid and target_position
-    local can_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
+local is_valid = function(surface, target_position, force_spawn, spawn_chance)
+    local valid = surface and surface.valid and target_position
+    -- @TODO need a way to specify chance
+    local can_spawn = RaceSettingHelper.can_spawn(spawn_chance)
 
     if force_spawn ~= nil then
         can_spawn = force_spawn
@@ -26,26 +27,39 @@ end
 
 local EnvironmentalAttacks = {}
 
-function EnvironmentalAttacks.exec(surface, target_position,
-                                   force_spawn, force_spawn_base)
-    if is_valid(surface, target_position, force_spawn) and
+function EnvironmentalAttacks.exec(options)
+    local surface = options.surface
+    local target_position = options.target_position
+    local force_spawn = options.force_spawn
+    local force_spawn_base = options.force_spawn_base
+
+    local spawn_count = options.spawn_count or 5
+    local spawn_chance = options.spawn_chance or 33
+
+    if is_valid(surface, target_position, force_spawn, spawn_chance) and
        ForceHelper.can_have_enemy_on(surface)
     then
-        local spawn_count = Config.environmental_attack_units_count()
+        local group = AttackGroupProcessor.generate_immediate_group({
+            surface = surface,
+            group_position = target_position,
+            spawn_count = spawn_count
+        })
 
-        local group = AttackGroupProcessor.generate_immediate_group(surface, target_position, spawn_count)
+        local can_spawn_home = RaceSettingHelper.can_spawn(spawn_chance)
 
-        local can_spawn_home = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
-
-        if force_spawn_base ~= nil then
+        if force_spawn_base == true then
             can_spawn_home = force_spawn_base
         end
 
         if can_spawn_home then
             BaseBuildProcessor.build_formation(group)
         else
-            AttackGroupProcessor.process_attack_position(group, defines.distraction.by_enemy, true)
-            global.erm_unit_groups[group.group_number] = {
+            AttackGroupProcessor.process_attack_position({
+                group = group,
+                distraction = defines.distraction.by_anything,
+                find_nearby = true
+            })
+            storage.erm_unit_groups[group.unique_id] = {
                 group = group,
                 start_position = group.position,
                 always_angry = false,
@@ -59,8 +73,8 @@ function EnvironmentalAttacks.exec(surface, target_position,
 end
 
 function EnvironmentalAttacks.reset_global()
-    global.override_environmental_attack_spawn_home = nil
-    global.override_environmental_attack_can_spawn = nil
+    storage.override_environmental_attack_spawn_home = nil
+    storage.override_environmental_attack_can_spawn = nil
 end
 
 return EnvironmentalAttacks

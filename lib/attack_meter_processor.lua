@@ -4,68 +4,55 @@
 --- DateTime: 7/17/2021 1:51 PM
 ---
 
-local String = require('__stdlib__/stdlib/utils/string')
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local AttackMeterProcessor = {}
 
+AttackMeterProcessor.SEGMENTED_UNIT_POINTS = 5000;
+AttackMeterProcessor.SPIDER_UNIT_POINTS = 1;
 AttackMeterProcessor.SPAWNER_POINTS = 50;
 AttackMeterProcessor.TURRET_POINTS = 10;
 AttackMeterProcessor.UNIT_POINTS = 1;
 
-local get_statistic_cache = function(race_name, force)
-    if global.kill_count_statistics_cache[race_name] == nil then
-        global.kill_count_statistics_cache[race_name] = force.kill_count_statistics
-    end
-    return global.kill_count_statistics_cache[race_name]
-end
+local unit_point_map = {
+    ['unit'] = AttackMeterProcessor.UNIT_POINTS,
+    ['unit-spawner'] = AttackMeterProcessor.SPAWNER_POINTS,
+    ['turret'] = AttackMeterProcessor.TURRET_POINTS,
+    ['spider-unit'] = AttackMeterProcessor.SPIDER_UNIT_POINTS,
+    ['segmented-unit'] = AttackMeterProcessor.SEGMENTED_UNIT_POINTS
+}
 
-local calculatePoints = function(race_name, statistic,
-                                 entity_names, level, interval)
-    local points = 0
-    for _, name in pairs(entity_names) do
-        local count = statistic.get_flow_count {
-            name = race_name .. '/' .. name .. '/' .. level,
-            input = false,
-            precision_index = interval
-        }
-        points = points + count
-    end
+local unit_map = {
+    ['unit'] = true,
+    ['spider-unit'] = true,
+    ['segmented-unit'] = true,
+}
+local structure_map = {
+    ['unit-spawner'] = true,
+    ['turret'] = true,
+}
 
-    return points
-end
+local custom_units_points = {
 
-local calculateNextThreshold = function(race_name)
+}
+
+local calculateNextThreshold = function(force_name)
     local threshold = GlobalConfig.attack_meter_threshold() * GlobalConfig.max_group_size() * AttackGroupProcessor.MIXED_UNIT_POINTS
     local derivative = GlobalConfig.attack_meter_deviation()
     RaceSettingsHelper.set_next_attack_threshold(
-            race_name,
+            force_name,
             threshold + threshold * (math.random(derivative * -1, derivative) / 100)
     )
-end
-
-function AttackMeterProcessor.init_globals()
-    global.kill_count_statistics_cache = global.kill_count_statistics_cache or {}
-end
-
-function AttackMeterProcessor.exec()
-    if GlobalConfig.attack_meter_enabled() == false then
-        return
-    end
-
-    local force_names = ForceHelper.get_enemy_forces()
-
-    for _, name in pairs(force_names) do
-        AttackMeterProcessor.calculate_points(name)
-    end
 end
 
 function AttackMeterProcessor.add_form_group_cron()
@@ -77,107 +64,108 @@ function AttackMeterProcessor.add_form_group_cron()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
-        local race_name = ForceHelper.extract_race_name_from(force_name)
-        if GlobalConfig.race_is_active(race_name) then
-            Cron.add_10_sec_queue('AttackMeterProcessor.form_group', race_name, force)
+        if GlobalConfig.race_is_active(force_name) then
+            Cron.add_10_sec_queue("AttackMeterProcessor.form_group", force_name, force)
         end
     end
 end
 
-function AttackMeterProcessor.calculate_points(force_name)
-    local interval = defines.flow_precision_index.one_minute
-
-    local force = game.forces[force_name]
-    local race_name = ForceHelper.extract_race_name_from(force_name)
-    if not GlobalConfig.race_is_active(race_name) then
+function AttackMeterProcessor.calculate_points(entity)
+    local force = entity.force
+    local entity_type = entity.type
+    local entity_name = entity.name
+    local surface = entity.surface
+    local force_name = force.name
+    local surface_name = surface.name
+    local attack_meter_points = unit_point_map[entity_type]
+    if not GlobalConfig.race_is_active(force_name) or not attack_meter_points then
         return
     end
 
-    local statistic_cache = get_statistic_cache(race_name, force)
-    if statistic_cache == nil then
-        return
+    if custom_units_points[entity_name] then
+        local custom_points = tonumber(custom_units_points[entity_name])
+        if custom_points > 0 then
+            attack_meter_points = custom_points
+        end
     end
 
-    local level = RaceSettingsHelper.get_level(race_name)
+    if unit_map[entity_type] then
+        RaceSettingsHelper.add_killed_units_count(force_name, surface_name, 1)
+    end
 
-    local units = RaceSettingsHelper.get_current_unit_tier(race_name)
-    local unit_points = calculatePoints(race_name, statistic_cache, units, level, interval)
-
-    local buildings = RaceSettingsHelper.get_current_building_tier(race_name)
-    local building_points = calculatePoints(race_name, statistic_cache, buildings, level, interval)
-
-    local turrets = RaceSettingsHelper.get_current_turret_tier(race_name)
-    local turret_points = calculatePoints(race_name, statistic_cache, turrets, level, interval)
-
-    local attack_meter_points = unit_points * AttackMeterProcessor.UNIT_POINTS +
-            building_points * AttackMeterProcessor.SPAWNER_POINTS +
-            turret_points * AttackMeterProcessor.TURRET_POINTS
-
-    RaceSettingsHelper.add_killed_units_count(race_name, unit_points)
-    RaceSettingsHelper.add_killed_structure_count(race_name, building_points + turret_points)
+    if structure_map[entity_type] then
+        RaceSettingsHelper.add_killed_structure_count(force_name, surface_name, 1)
+    end
 
     attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
 
-    if GlobalConfig.time_base_attack_enabled() and level > 2 then
-        local extra_points = RaceSettingsHelper.get_next_attack_threshold(race_name) * (GlobalConfig.time_base_attack_points() / 100)
-        attack_meter_points = attack_meter_points + extra_points
-    end
-
-    RaceSettingsHelper.add_to_attack_meter(race_name, math.floor(attack_meter_points))
-
-    local spawner_destroy_factor = game.map_settings.enemy_evolution.destroy_factor
-    local unit_evolution_points = unit_points * 0.025 * spawner_destroy_factor
-    local turret_evolution_points = turret_points * 0.2 * spawner_destroy_factor
-    local spawner_evolution_points = 0
-
     if GlobalConfig.spawner_kills_deduct_evolution_points() then
-        unit_evolution_points = unit_points * 0.05 * spawner_destroy_factor
-        turret_evolution_points = turret_evolution_points * -0.5 * spawner_destroy_factor
-        spawner_evolution_points = building_points * -1.5 * spawner_destroy_factor
+        if unit_map[entity_type] then
+            attack_meter_points = attack_meter_points * 2
+        else
+            local deduction_attack_meter_points = attack_meter_points * -6
+            RaceSettingsHelper.add_to_attack_meter(force_name, deduction_attack_meter_points)
+            RaceSettingsHelper.add_accumulated_attack_meter(force_name, deduction_attack_meter_points)
+        end
     end
 
-    global.race_settings[race_name].evolution_base_point = global.race_settings[race_name].evolution_base_point + unit_evolution_points + turret_evolution_points + spawner_evolution_points
-
+    RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(attack_meter_points))
 end
 
-function AttackMeterProcessor.form_group(race_name, force)
-    if not GlobalConfig.race_is_active(race_name) then
-        return
-    end
-
-    local next_attack_threshold = RaceSettingsHelper.get_next_attack_threshold(race_name)
-    if next_attack_threshold == 0 then
-        calculateNextThreshold(race_name)
-        return
-    end
-
-    local current_attack_value = RaceSettingsHelper.get_attack_meter(race_name)
-    -- Process attack point group
-    if current_attack_value > next_attack_threshold then
-        local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
-        local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(race_name)
-        local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(race_name) or 0
-        if GlobalConfig.elite_squad_enable() and RaceSettingsHelper.get_tier(race_name) == 3 and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
-            AttackGroupProcessor.exec_elite_group(race_name, force, next_attack_threshold)
-        else
-            AttackGroupProcessor.exec(race_name, force, next_attack_threshold)
+-- Calculate every minutes
+function AttackMeterProcessor.calculated_time_attack()
+    for _, force in pairs(game.forces) do
+        local force_name = force.name
+        if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_active(force_name) then
+            for _, planet in pairs(game.planets) do
+                if GlobalConfig.time_base_attack_enabled() and planet.surface and force.get_evolution_factor(planet.surface) > 0.35 then
+                    local extra_points = RaceSettingsHelper.get_next_attack_threshold(force_name) * (GlobalConfig.time_base_attack_points() / 100)
+                    RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(extra_points))
+                    break
+                end
+            end
         end
     end
 end
 
-function AttackMeterProcessor.adjust_attack_meter(race_name)
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
-    calculateNextThreshold(race_name)
+function AttackMeterProcessor.form_group(force_name, force)
+    if not GlobalConfig.race_is_active(force_name) then
+        return
+    end
+
+    local next_attack_threshold = RaceSettingsHelper.get_next_attack_threshold(force_name)
+    if next_attack_threshold == 0 then
+        calculateNextThreshold(force_name)
+        return
+    end
+
+    local current_attack_value = RaceSettingsHelper.get_attack_meter(force_name)
+    -- Process attack point group
+    if current_attack_value >= next_attack_threshold then
+        local elite_attack_point_threshold = GlobalConfig.elite_squad_attack_points()
+        local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force_name)
+        local last_accumulated_attack_meter = RaceSettingsHelper.get_last_accumulated_attack_meter(force_name) or 0
+        if GlobalConfig.elite_squad_enable() and (accumulated_attack_meter - last_accumulated_attack_meter) > elite_attack_point_threshold then
+            AttackGroupProcessor.exec_elite_group(force_name, force, next_attack_threshold)
+        else
+            AttackGroupProcessor.exec(force_name, force, next_attack_threshold)
+        end
+    end
 end
 
-function AttackMeterProcessor.adjust_last_accumulated_attack_meter(race_name)
-    RaceSettingsHelper.set_last_accumulated_attack_meter(race_name, RaceSettingsHelper.get_last_accumulated_attack_meter(race_name))
+function AttackMeterProcessor.adjust_attack_meter(force_name)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
+    calculateNextThreshold(force_name)
 end
 
-function AttackMeterProcessor.transfer_attack_points(race_name, friend_race_name)
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(friend_race_name))
-    RaceSettingsHelper.add_to_attack_meter(race_name, RaceSettingsHelper.get_next_attack_threshold(race_name) * -1)
-    calculateNextThreshold(race_name)
+function AttackMeterProcessor.adjust_last_accumulated_attack_meter(force_name)
+    RaceSettingsHelper.set_last_accumulated_attack_meter(force_name, RaceSettingsHelper.get_accumulated_attack_meter(force_name))
+end
+
+function AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(friend_force_name))
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
+    calculateNextThreshold(force_name)
 end
 
 return AttackMeterProcessor

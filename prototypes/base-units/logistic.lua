@@ -3,15 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 1:22 AM
 ---
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
-local ERM_DataHelper = require('__enemyracemanager__/lib/rig/data_helper')
+local ERM_DataHelper = require("__enemyracemanager__/lib/rig/data_helper")
 
-require('util')
+require("util")
 
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+
+require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -42,8 +42,8 @@ local incremental_attack_speed = 900
 
 local attack_range = 3
 
-local base_movement_speed = 0.15
-local incremental_movement_speed = 0.125
+local base_movement_speed = 0.2
+local incremental_movement_speed = 0.15
 
 -- Misc Settings
 local vision_distance = ERM_UnitHelper.get_vision_distance(attack_range)
@@ -59,66 +59,42 @@ robot_animations["logistic-robot"] = {
         filename = "__base__/graphics/entity/logistic-robot/logistic-robot.png",
         priority = "high",
         line_length = 16,
-        width = 41,
-        height = 42,
+        width = 80,
+        height = 84,
         frame_count = 1,
         shift = util.by_pixel(0, -3),
         direction_count = 16,
         tint = { r = 0.5, g = 0, b = 1, a = 1 },
-        y = 126,
-        hr_version = {
-            filename = "__base__/graphics/entity/logistic-robot/hr-logistic-robot.png",
-            priority = "high",
-            line_length = 16,
-            width = 80,
-            height = 84,
-            frame_count = 1,
-            shift = util.by_pixel(0, -3),
-            direction_count = 16,
-            tint = { r = 0.5, g = 0, b = 1, a = 1 },
-            y = 252,
-            scale = 0.5
-        }
+        y = 252,
+        scale = 0.5
     },
     shadow_in_motion = {
         filename = "__base__/graphics/entity/logistic-robot/logistic-robot-shadow.png",
         priority = "high",
         line_length = 16,
-        width = 58,
-        height = 29,
+        width = 115,
+        height = 57,
         frame_count = 1,
-        shift = util.by_pixel(32, 19.5),
+        shift = util.by_pixel(31.75, 19.75),
         direction_count = 16,
-        y = 29,
-        draw_as_shadow = true,
-        hr_version = {
-            filename = "__base__/graphics/entity/logistic-robot/hr-logistic-robot-shadow.png",
-            priority = "high",
-            line_length = 16,
-            width = 115,
-            height = 57,
-            frame_count = 1,
-            shift = util.by_pixel(31.75, 19.75),
-            direction_count = 16,
-            y = 57 * 3,
-            scale = 0.5,
-            draw_as_shadow = true
-        }
+        y = 57 * 3,
+        scale = 0.5,
+        draw_as_shadow = true
     }
 }
 
 function makeLogisticRobot(level)
     local type = "logistic-robot"
     local robot = util.table.deepcopy(data.raw[type][type])
-    local original_health = robot['max_health'] * 3
+    local original_health = robot["max_health"] * 3
 
-    robot['type'] = 'unit'
-    robot['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. robot['name'], level }
-    robot['name'] = MOD_NAME .. '/' .. robot['name'] .. '/' .. level
+    robot["type"] = "unit"
+    robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-dropship-enemies"
-    robot['has_belt_immunity'] = true
-    robot['max_health'] = ERM_UnitHelper.get_health(original_health, original_health * max_hitpoint_multiplier, level)
-    robot['resistances'] = {
+    robot["has_belt_immunity"] = true
+    robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier, level)
+    robot["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
@@ -128,12 +104,13 @@ function makeLogisticRobot(level)
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
-    robot['healing_per_tick'] = 0
-    robot['attack_parameters'] = {
+    robot["healing_per_tick"] = 0
+    robot["attack_parameters"] = {
         type = "projectile",
         range = attack_range,
         min_attack_distance = attack_range - 4,
         warmup = 10,
+        ammo_category = "erm-biter-damage",
         cooldown = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, level),
         ammo_type = {
             category = "melee",
@@ -141,7 +118,7 @@ function makeLogisticRobot(level)
             action = {
                 type = "direct",
                 action_delivery = {
-                    type = 'instant',
+                    type = "instant",
                     source_effects = {
                         {
                             type = "script",
@@ -158,26 +135,29 @@ function makeLogisticRobot(level)
             }
         }
     }
-    robot['run_animation'] = {
+    robot["run_animation"] = {
         layers = {
             robot_animations[type].in_motion,
             robot_animations[type].shadow_in_motion,
         }
     }
-    robot['distance_per_frame'] = 0.17
-    robot['movement_speed'] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
-    robot['vision_distance'] = vision_distance
-    robot['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
-    robot['distraction_cooldown'] = distraction_cooldown
-    robot['collision_mask'] = ERM_DataHelper.getFlyingCollisionMask()
-    robot['collision_box'] = collision_box
-    robot['selection_box'] = selection_box
-    robot['flags'] = { "placeable-player", "placeable-enemy", "not-flammable" }
-    robot['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['erm_vanilla-map-color'].value)
+    robot["distance_per_frame"] = 0.17
+    robot["movement_speed"] = ERM_UnitHelper.get_movement_speed(base_movement_speed, incremental_movement_speed, level)
+    robot["vision_distance"] = vision_distance
+    robot["absorptions_to_join_attack"] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(pollution_to_join_attack, level)
+    }
+    robot["is_military_target"] = true
+    robot["distraction_cooldown"] = distraction_cooldown
+    robot["collision_mask"] = ERM_DataHelper.getFlyingCollisionMask()
+    robot["collision_box"] = collision_box
+    robot["selection_box"] = selection_box
+    robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
+    robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
     return robot
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     data:extend({ makeLogisticRobot(i) })

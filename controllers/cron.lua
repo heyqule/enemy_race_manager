@@ -3,47 +3,176 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 10:16 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
 
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local Config = require('__enemyracemanager__/lib/global_config')
+require("__enemyracemanager__/global")
+
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local Config = require("__enemyracemanager__/lib/global_config")
+
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
+local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
+local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
+local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
+
+-- Register Cron Functions
+cron_switch = {
+    -- AttackGroupProcessor
+    ["AttackGroupProcessor.add_to_group"] = function(args)
+        AttackGroupProcessor.add_to_group_cron(args)
+    end,
+    ["AttackGroupProcessor.generate_group"] = function(args)
+        AttackGroupProcessor.generate_group(unpack(args))
+    end,
+    ["AttackGroupProcessor.spawn_scout"] = function(args)
+        AttackGroupProcessor.spawn_scout(unpack(args))
+    end,
+    ["AttackGroupProcessor.clear_invalid_erm_unit_groups"] = function(args)
+        AttackGroupProcessor.clear_invalid_erm_unit_groups()
+    end,
+    ["AttackGroupProcessor.clear_invalid_scout_unit_name"] = function(args)
+        AttackGroupProcessor.clear_invalid_scout_unit_name()
+    end,
+    -- AttackMeterProcessor
+    ["AttackMeterProcessor.form_group"] = function(args)
+        AttackMeterProcessor.form_group(unpack(args))
+    end,
+    -- AttackGroupPathingProcessor
+    ["AttackGroupPathingProcessor.construct_side_attack_commands"] = function(args)
+        AttackGroupPathingProcessor.construct_side_attack_commands(unpack(args))
+    end,
+    ["AttackGroupPathingProcessor.construct_brutal_force_commands"] = function(args)
+        AttackGroupPathingProcessor.construct_brutal_force_commands(unpack(args))
+    end,
+    ["AttackGroupPathingProcessor.remove_old_nodes"] = function(args)
+        AttackGroupPathingProcessor.remove_old_nodes()
+    end,
+    --AttackGroupHeatProcessor
+    ["AttackGroupHeatProcessor.aggregate_heat"] = function(args)
+        AttackGroupHeatProcessor.aggregate_heat(unpack(args))
+    end,
+    ["AttackGroupHeatProcessor.cooldown_heat"] = function(args)
+        AttackGroupHeatProcessor.cooldown_heat(unpack(args))
+    end,
+    --AttackGroupBeaconProcessor
+    ["AttackGroupBeaconProcessor.start_scout_scan"] = function(args)
+        AttackGroupBeaconProcessor.start_scout_scan()
+    end,
+    ["AttackGroupBeaconProcessor.scout_scan"] = function(args)
+        AttackGroupBeaconProcessor.scout_scan(unpack(args))
+    end,
+    --ArmyTeleportationProcessor
+    ["ArmyTeleportationProcessor.teleport"] = function(args)
+        ArmyTeleportationProcessor.teleport(unpack(args))
+    end,
+    ["ArmyTeleportationProcessor.scan_units"] = function(args)
+        ArmyTeleportationProcessor.scan_units()
+    end,
+    --BaseBuildProcessor
+    ["BaseBuildProcessor.build"] = function(args)
+        BaseBuildProcessor.build(unpack(args))
+    end,
+    -- BossProcessor
+    ["BossProcessor.check_pathing"] = function(args)
+        BossProcessor.check_pathing()
+    end,
+    ["BossProcessor.heartbeat"] = function(args)
+        BossProcessor.heartbeat()
+    end,
+    ["BossProcessor.units_spawn"] = function(args)
+        BossProcessor.units_spawn()
+    end,
+    ["BossProcessor.support_structures_spawn"] = function(args)
+        BossProcessor.support_structures_spawn()
+    end,
+    ["BossProcessor.remove_boss_groups"] = function(args)
+        BossProcessor.remove_boss_groups(unpack(args))
+    end,
+    --BossAttackProcessor
+    ["BossAttackProcessor.process_attack"] = function(args)
+        BossAttackProcessor.process_attack(unpack(args))
+    end,
+    --BossGroupProcessor
+    ["BossGroupProcessor.generate_units"] = function(args)
+        BossGroupProcessor.generate_units(unpack(args))
+    end,
+    ["BossGroupProcessor.process_attack_groups"] = function(args)
+        BossGroupProcessor.process_attack_groups()
+    end,
+    -- BossRewardProcessor
+    ["BossRewardProcessor.clean_up"] = function(args)
+        BossRewardProcessor.clean_up()
+    end,
+    --ForceHelper
+    ["ForceHelper.refresh_all_enemy_forces"] = function(args)
+        ForceHelper.refresh_all_enemy_forces()
+    end,
+    ["InterplanetaryAttacks.queue_scan"] = function(args)
+        InterplanetaryAttacks.queue_scan()
+    end,
+    ["InterplanetaryAttacks.scan"] = function(args)
+        InterplanetaryAttacks.scan(unpack(args))
+    end,
+    ----LevelProcessor
+    --["LevelProcessor.calculate_multiple_levels"] = function(args)
+    --    LevelProcessor.calculate_multiple_levels()
+    --end,
+}
 
 --- Garbage Collection and Statistic aggregations, all calls are run by quick cron
-Event.on_nth_tick(Config.GC_AND_STATS, function(event)
-    Cron.add_quick_queue('AttackGroupProcessor.clear_invalid_erm_unit_groups')
-    Cron.add_quick_queue('AttackGroupProcessor.clear_invalid_scout_unit_name')
+local garbage_and_stats = function(event)
+    Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_erm_unit_groups")
+    Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_scout_unit_name")
 
-    Cron.add_quick_queue('AttackGroupPathingProcessor.remove_old_nodes')
+    Cron.add_quick_queue("AttackGroupPathingProcessor.remove_old_nodes")
 
-    Cron.add_quick_queue('BossRewardProcessor.clean_up')
+    Cron.add_quick_queue("BossRewardProcessor.clean_up")
 
-    for active_race, _ in pairs(global.active_races) do
-        Cron.add_quick_queue('AttackGroupHeatProcessor.aggregate_heat',active_race)
-        Cron.add_quick_queue('AttackGroupHeatProcessor.cooldown_heat',active_race)
+    for active_race, _ in pairs(storage.active_races) do
+        Cron.add_quick_queue("AttackGroupHeatProcessor.aggregate_heat",active_race)
+        Cron.add_quick_queue("AttackGroupHeatProcessor.cooldown_heat",active_race)
     end
 
-    Cron.add_quick_queue('InterplanetaryAttacks.queue_scan')
-end)
+    Cron.add_quick_queue("InterplanetaryAttacks.queue_scan")
+end
 
-Event.on_nth_tick(Config.ONE_MINUTE_CRON, function(event)
-    Cron.process_1_min_queue()
-end)
+local CronController = {}
 
-Event.on_nth_tick(Config.FIFTEEN_SECONDS_CRON, function(event)
-    Cron.process_15_sec_queue()
-end)
+CronController.on_nth_tick = {
+    [Config.ONE_MINUTE_CRON] = function(event)
+        Cron.process_1_min_queue()
+    end,
 
-Event.on_nth_tick(Config.TEN_SECONDS_CRON, function(event)
-    Cron.process_10_sec_queue()
-end)
+    [Config.FIFTEEN_SECONDS_CRON] = function(event)
+        Cron.process_15_sec_queue()
+    end,
 
-Event.on_nth_tick(Config.TWO_SECONDS_CRON, function(event)
-    Cron.process_2_sec_queue()
-end)
+    [Config.TEN_SECONDS_CRON] = function(event)
+        Cron.process_10_sec_queue()
+    end,
 
-Event.on_nth_tick(Config.ONE_SECOND_CRON, function(event)
-    Cron.process_1_sec_queue()
-end)
+    [Config.TWO_SECONDS_CRON] = function(event)
+        Cron.process_2_sec_queue()
+    end,
+
+    [Config.ONE_SECOND_CRON] = function(event)
+        Cron.process_1_sec_queue()
+    end,
+
+    [Config.TIME_BASED_ATTACK_POINT_CRON] = function(event)
+        AttackMeterProcessor.calculated_time_attack()
+    end,
+
+    [Config.GC_AND_STATS] = garbage_and_stats
+}
+
+return CronController

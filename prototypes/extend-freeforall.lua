@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 12/6/2022 7:38 PM
 ---
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
-if settings.startup['enemyracemanager-free-for-all'].value then
+if settings.startup["enemyracemanager-free-for-all"].value then
     for type_name, types in pairs(data.raw) do
         for entity_name, entity in pairs(types) do
-            if type(entity) == 'table' and entity.max_health and (entity.subgroup == nil or string.find(entity.subgroup, 'enemies') == nil) then
+            if type(entity) == "table" and entity.max_health and (entity.subgroup == nil or string.find(entity.subgroup, "enemies") == nil) then
                 -- Prevents a crash from some crazy mods that adds crazy high HP entity.  Ignore all health over 10 million
                 if entity.max_health <= 10000000 then
                     entity.max_health = entity.max_health * GlobalConfig.FFA_MULTIPLIER * 1.1
@@ -22,7 +22,7 @@ if settings.startup['enemyracemanager-free-for-all'].value then
             end
 
             -- Update vanilla energy shield and adaptive armour in SE
-            if type_name == 'energy-shield-equipment' and entity.max_shield_value then
+            if type_name == "energy-shield-equipment" and entity.max_shield_value then
                 entity.max_shield_value = entity.max_shield_value * GlobalConfig.FFA_MULTIPLIER
 
                 if entity.energy_per_shield then
@@ -33,8 +33,8 @@ if settings.startup['enemyracemanager-free-for-all'].value then
             end
 
             -- Updates medpack in SE
-            if string.find(entity_name, "medpack") ~= nil and entity['capsule_action'] then
-                entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] = entity['capsule_action']['attack_parameters']['ammo_type']['action']['action_delivery']['target_effects'][2]['damage']['amount'] * GlobalConfig.FFA_MULTIPLIER
+            if string.find(entity_name, "medpack") ~= nil and entity["capsule_action"] then
+                entity["capsule_action"]["attack_parameters"]["ammo_type"]["action"]["action_delivery"]["target_effects"][2]["damage"]["amount"] = entity["capsule_action"]["attack_parameters"]["ammo_type"]["action"]["action_delivery"]["target_effects"][2]["damage"]["amount"] * GlobalConfig.FFA_MULTIPLIER
             end
         end
     end

@@ -8,7 +8,7 @@ local ERM_UnitCapsuleHelper = {}
 
 function ERM_UnitCapsuleHelper.add_capsule(unit_name, cooldown, stack_size)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_' .. unit_name
+    local name = "erm_" .. unit_name
     data:extend({
         {
             type = "capsule",
@@ -86,7 +86,7 @@ end
 
 function ERM_UnitCapsuleHelper.add_recipe(unit_name, craft_time, ingredients)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_' .. unit_name
+    local name = "erm_" .. unit_name
     data:extend({
         {
             type = "recipe",
@@ -104,7 +104,7 @@ end
 
 function ERM_UnitCapsuleHelper.add_technology(unit_name, prerequisites, tech_unit)
     local base_entity = data.raw.unit[unit_name]
-    local name = 'erm_' .. unit_name
+    local name = "erm_" .. unit_name
     data:extend({
         {
             type = "technology",

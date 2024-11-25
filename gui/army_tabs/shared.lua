@@ -5,8 +5,8 @@
 ---
 
 local Shared = {
-    root_name = 'erm_army_main',
-    main_tab_name = 'main-tab',
+    root_name = "erm_army_main",
+    main_tab_name = "main-tab",
 }
 
 function Shared.get_main_tab(player)
@@ -25,14 +25,14 @@ end
 
 function Shared.get_player_tab_data(player)
     Shared.check_player_data(player)
-    return global.army_windows_tab_player_data[player.index]
+    return storage.army_windows_tab_player_data[player.index]
 end
 
 function Shared.check_player_data(player)
-    if global.army_windows_tab_player_data[player.index] == nil then
-        global.army_windows_tab_player_data[player.index] = {
+    if storage.army_windows_tab_player_data[player.index] == nil then
+        storage.army_windows_tab_player_data[player.index] = {
             active_tab_id = 1,
-            selected_cc = { from = '', to = '' },
+            selected_cc = { from = "", to = "" },
             error_message = nil,
             success_message = nil,
             --- deployer type selection filter
@@ -44,8 +44,8 @@ function Shared.check_player_data(player)
         }
 
 
-        for name, value in pairs(global.army_registered_deployers) do
-            global.army_windows_tab_player_data[player.index].deployer_type_filters[name] = true
+        for name, value in pairs(storage.army_registered_deployers) do
+            storage.army_windows_tab_player_data[player.index].deployer_type_filters[name] = true
         end
     end
 end

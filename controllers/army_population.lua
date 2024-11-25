@@ -3,38 +3,34 @@
 --- Created by heyqule.
 --- DateTime: 11/7/2022 10:55 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
 local isFollowResearch = function(research)
-    return string.find(research.name, 'follower-robot-count-', 1, true)
+    return string.find(research.name, "follower-robot-count-", 1, true)
+end
+
+local reseach_pop_update = function(event)
+    local research = event.research
+    if isFollowResearch(research) then
+        ArmyPopulation.calculate_max_units(research.force)
+        ArmyControlUI.update_army_stats()
+    end
 end
 
 
-Event.register(defines.events.on_research_finished, function(event)
-    local research = event.research
-    if isFollowResearch(research) then
-        ArmyPopulation.calculate_max_units(research.force)
-        ArmyControlUI.update_army_stats()
-    end
-end)
+local ArmyPopulationController = {}
 
-Event.register(defines.events.on_research_reversed, function(event)
-    local research = event.research
-    if isFollowResearch(research) then
-        ArmyPopulation.calculate_max_units(research.force)
-        ArmyControlUI.update_army_stats()
+ArmyPopulationController.events = {
+    [defines.events.on_research_finished] = reseach_pop_update,
+    [defines.events.on_research_reversed] = reseach_pop_update,
+    [defines.events.script_raised_destroy] = function(event)
+        local entity = event.entity
+        if entity and entity.valid and ArmyPopulation.is_army_unit(entity)then
+            ArmyPopulation.remove_unit_count(entity)
+            ArmyControlUI.update_army_stats()
+        end
     end
-end)
-
-Event.register(defines.events.script_raised_destroy, function(event)
-    local entity = event.entity
-    if entity and entity.valid and ArmyPopulation.is_army_unit(entity)then
-        ArmyPopulation.remove_unit_count(entity)
-        ArmyControlUI.update_army_stats()
-    end
-end)
+}
+return ArmyPopulationController

@@ -4,7 +4,7 @@
 --- DateTime: 3/17/2021 8:16 PM
 ---
 
-require('ArmouredBiters/control')
-require('Cold_Biters/control')
-require('Explosive_Biters/control')
-require('Toxic_Biters/control')
+handler.add_lib(require("ArmouredBiters/control"))
+handler.add_lib(require("Cold_Biters/control"))
+handler.add_lib(require("Explosive_Biters/control"))
+handler.add_lib(require("Toxic_Biters/control"))

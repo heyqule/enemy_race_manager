@@ -3,29 +3,29 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:47 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+require("__enemyracemanager__/global")
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local RaceSettingHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
+local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
-local CustomAttacks = require('__enemyracemanager__/prototypes/base-units/custom_attacks')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local EnvironmentalAttacks = require('__enemyracemanager__/lib/environmental_attacks')
-local ArmyPopulation = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
+local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
+local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
+local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
-local ArmyDeployer = require('__enemyracemanager__/lib/army_deployment_processor')
-local RallyPointUI = require('__enemyracemanager__/gui/deployer_attachment')
+local ArmyDeployer = require("__enemyracemanager__/lib/army_deployment_processor")
+local RallyPointUI = require("__enemyracemanager__/gui/deployer_attachment")
 
 -- Player super weapon attacks functions
 local process_attack_point_event = function(event, attack_point)
-    local race_name = SurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
-    if race_name then
-        RaceSettingHelper.add_to_attack_meter(race_name, attack_point)
+    local force_name = SurfaceProcessor.get_enemy_on(game.surfaces[event.surface_index].name)
+    if force_name then
+        RaceSettingHelper.add_to_attack_meter(force_name, attack_point)
     end
 end
 
@@ -39,6 +39,35 @@ end
 
 local is_valid_attack_for_counter_attack = function(event)
     return Config.super_weapon_counter_attack_enable() and game.surfaces[event.surface_index].valid
+end
+
+local remove_creep = function(entity)
+    local spawner = entity
+    if spawner and spawner.valid then
+        local spawner_name = spawner.name
+        local names
+        if storage.decorative_cache[spawner_name] then
+            names = storage.decorative_cache[spawner_name]
+        else
+            local prototype = spawner.prototype
+            local prototype_decos = prototype.spawn_decoration
+            names = {}
+            for i = 1, table_size(prototype_decos), 1 do
+                table.insert(names, prototype_decos[i].decorative)
+            end
+            storage.decorative_cache[spawner_name] = names
+        end
+
+        if names then
+            spawner.surface.destroy_decoratives({
+                name = names,
+                area = {
+                    left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
+                    right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
+                }
+            })
+        end
+    end
 end
 
 local script_functions = {
@@ -79,7 +108,7 @@ local script_functions = {
 
     --- Boss related
     [TRIGGER_BOSS_DIES] = function(args)
-        global.boss.victory = true
+        storage.boss.victory = true
     end,
 
     --- Attack group beacons
@@ -99,9 +128,9 @@ local script_functions = {
             ArmyPopulation.add_unit_count(unit)
         else
             if unit.last_user then
-                unit.last_user.print('You need additional Follower Count Research!')
+                unit.last_user.print("You need additional Follower Count Research!")
                 unit.last_user.insert { name = unit.name, count = 1 }
-                unit.last_user.play_sound({ path = 'erm-army-full-population' })
+                unit.last_user.play_sound({ path = "erm-army-full-population" })
             end
             unit.destroy()
             ArmyControlUI.update_army_stats()
@@ -111,7 +140,7 @@ local script_functions = {
         local unit = event.source_entity
         if unit and unit.valid then
             ArmyPopulation.remove_unit_count(unit)
-            unit.force.play_sound({ path = 'erm-army-force-under-attack-by-chance' })
+            unit.force.play_sound({ path = "erm-army-force-under-attack-by-chance" })
             ArmyControlUI.update_army_stats()
         end
     end,
@@ -136,55 +165,53 @@ local script_functions = {
         local target_position = event.target_position
 
         local force_spawn, force_spawn_home
+        local spawn_chance = 50
+        local spawn_count = 5
         if TEST_MODE then
-            force_spawn = RaceSettingHelper.can_spawn(Config.environmental_attack_raid_chance())
-            if global.override_environmental_attack_can_spawn == 1 then
+            force_spawn = RaceSettingHelper.can_spawn(spawn_chance)
+            if storage.override_environmental_attack_can_spawn == 1 then
                 force_spawn = true
-            elseif global.override_environmental_attack_can_spawn == -1 then
+            elseif storage.override_environmental_attack_can_spawn == -1 then
                 force_spawn = false
             end
 
-            if global.override_environmental_attack_spawn_home == 1 then
+            if storage.override_environmental_attack_spawn_home == 1 then
                 force_spawn_home = true
-            elseif global.override_environmental_attack_spawn_home == -1 then
+            elseif storage.override_environmental_attack_spawn_home == -1 then
                 force_spawn_home = false
             end
         end
-        
-        EnvironmentalAttacks.exec(surface, target_position, force_spawn, force_spawn_home)
+
+        EnvironmentalAttacks.exec({
+            surface = surface,
+            target_position = target_position,
+            force_spawn = force_spawn,
+            force_spawn_home = force_spawn_home,
+            spawn_count = spawn_count,
+            spawn_chance = spawn_chance
+        })
     end,
 
     [CREEP_REMOVAL] = function(event)
-        local spawner = event.source_entity
-        if spawner and spawner.valid then
-            local prototype = spawner.prototype
-            local prototype_name = prototype.name
-            local prototype_decos = prototype.spawn_decoration
-            local names
-            if global.decorative_cache[prototype_name] then
-                names = global.decorative_cache[prototype_name]
-            elseif prototype_decos then
-                names = {}
-                for i = 1, table_size(prototype_decos), 1 do
-                    table.insert(names, prototype_decos[i].decorative)
-                end
-                global.decorative_cache[prototype_name] = names
-            end
-
-            if names then
-                spawner.surface.destroy_decoratives({
-                    name = names,
-                    area = {
-                        left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
-                        right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
-                    }
-                })
-            end
-        end
+        remove_creep(event.source_entity)
     end,
-}
-Event.register(defines.events.on_script_trigger_effect, function(event)
-    if script_functions[event.effect_id] then
-        script_functions[event.effect_id](event)
+
+    [QUALITY_DICE_ROLL] = function(event)
+        return QualityProcessor.roll(event.source_entity)
+    end,
+
+    [QUALITY_TALLY_POINT] = function(event)
+        AttackMeterProcessor.calculate_points(event.source_entity)
     end
-end)
+}
+
+local TriggerEffects = {}
+
+TriggerEffects.events = {
+    [defines.events.on_script_trigger_effect] =  function(event)
+        if script_functions[event.effect_id] then
+            script_functions[event.effect_id](event)
+        end
+    end
+}
+return TriggerEffects

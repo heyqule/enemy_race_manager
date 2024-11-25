@@ -4,10 +4,10 @@
 --- DateTime: 9/25/2022 12:58 AM
 ---
 
-local BossAttackProcessor = require('__enemyracemanager__/lib/boss_attack_processor')
+local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
 
 
---- Punish player when they can't beat boss within the time limit.
+--- Punish player when they can"t beat boss within the time limit.
 --- Launch X amount of super attacks at various targetable places
 
 local BossDespawnProcessor = {}

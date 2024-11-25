@@ -3,12 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 12/10/2023 3:16 PM
 ---
-require('util')
+require("util")
 
 local BEACON_HEALTH_LIMIT = 200
 
 data:extend({
-    --- Spawn beacon marks an area with enemies' unit-spawners
+    --- Spawn beacon marks an area with enemies" unit-spawners
     {
         type = "simple-entity-with-owner",
         name = "erm_spawn_beacon",
@@ -17,7 +17,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_S.png",
@@ -27,7 +27,7 @@ data:extend({
         },
         map_color = nil,
     },
-    --- Aerial beacon marks player's defense location via air
+    --- Aerial beacon marks player"defense location via air
     {
         type = "simple-entity-with-owner",
         name = "erm_aerial_beacon",
@@ -36,7 +36,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_A.png",
@@ -46,7 +46,7 @@ data:extend({
         },
         map_color = nil,
     },
-    --- Land beacon marks player's defense location via land
+    --- Land beacon marks player"defense location via land
     {
         type = "simple-entity-with-owner",
         name = "erm_land_beacon",
@@ -55,7 +55,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_L.png",
@@ -74,7 +74,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_E.png",
@@ -93,7 +93,7 @@ data:extend({
         icon_size = 64,
         max_health = BEACON_HEALTH_LIMIT,
         collision_box = nil,
-        collision_mask = {},
+        collision_mask = {layers={}},
         flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
         picture = {
             filename = "__base__/graphics/icons/signal/signal_R.png",
@@ -108,24 +108,24 @@ data:extend({
 
 if DEBUG_MODE then
     --- Make it placable in campaign for testing purposes
-    for _, data in pairs(data.raw['simple-entity-with-owner']) do
-        if (data['subgroup'] == 'erm_ai_beacons') then
-            data['render_layer'] = 'air-object'
+    for _, data in pairs(data.raw["simple-entity-with-owner"]) do
+        if (data["subgroup"] == "erm_ai_beacons") then
+            data["render_layer"] = "air-object"
             if BEACON_SELECTABLE then
-                data['selection_box'] = { { -1, -1 }, { 1, 1 } }
+                data["selection_box"] = { { -1, -1 }, { 1, 1 } }
             end
             data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}
             data.map_color = {b=0,g=1,r=0,a=1}
-            data.order = 'aaaaa'
+            data.order = "aaaaa"
         end
     end
 else
     --- Replace picture with empty spite to hide it from view.
-    for _, data in pairs(data.raw['simple-entity-with-owner']) do
-        if (data['subgroup'] == 'erm_ai_beacons') then
-            data['selectable_in_game'] = false
-            data['pictures'] = util.empty_sprite()
-            data['selection_box'] = nil
+    for _, data in pairs(data.raw["simple-entity-with-owner"]) do
+        if (data["subgroup"] == "erm_ai_beacons") then
+            data["selectable_in_game"] = false
+            data["pictures"] = util.empty_sprite()
+            data["selection_box"] = nil
         end
     end
 end

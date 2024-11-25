@@ -3,78 +3,66 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:56 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
-require('util')
+require("__enemyracemanager__/global")
+require("util")
 
-local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
-local BaseBuildProcessor = require('__enemyracemanager__/lib/base_build_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local UtilHelper = require('__enemyracemanager__/lib/helper/util_helper')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 
-local Config = require('__enemyracemanager__/lib/global_config')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local Config = require("__enemyracemanager__/lib/global_config")
 
 local DEBUG_BEHAVIOUR_RESULTS = {
-    [defines.behavior_result.in_progress] = 'defines.behavior_result.in_progress',
-    [defines.behavior_result.fail] = 'defines.behavior_result.fail',
-    [defines.behavior_result.success] = 'defines.behavior_result.success',
-    [defines.behavior_result.deleted] = 'defines.behavior_result.deleted'
+    [defines.behavior_result.in_progress] = "defines.behavior_result.in_progress",
+    [defines.behavior_result.fail] = "defines.behavior_result.fail",
+    [defines.behavior_result.success] = "defines.behavior_result.success",
+    [defines.behavior_result.deleted] = "defines.behavior_result.deleted"
 }
 
 local DEBUG_GROUP_STATES = {
-    [defines.group_state.gathering] = 'defines.group_state.gathering',
-    [defines.group_state.moving] = 'defines.group_state.moving',
-    [defines.group_state.attacking_distraction] = 'defines.group_state.attacking_distraction',
-    [defines.group_state.attacking_target] = 'defines.group_state.attacking_target',
-    [defines.group_state.finished] = 'defines.group_state.finished',
-    [defines.group_state.pathfinding] = 'defines.group_state.pathfinding',
-    [defines.group_state.wander_in_group] = 'defines.group_state.wander_in_group'
+    [defines.group_state.gathering] = "defines.group_state.gathering",
+    [defines.group_state.moving] = "defines.group_state.moving",
+    [defines.group_state.attacking_distraction] = "defines.group_state.attacking_distraction",
+    [defines.group_state.attacking_target] = "defines.group_state.attacking_target",
+    [defines.group_state.finished] = "defines.group_state.finished",
+    [defines.group_state.pathfinding] = "defines.group_state.pathfinding",
+    [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
 }
 
 local CHUNK_SIZE = 32
 
-local onBiterBaseBuilt = function(event)
+local on_biter_base_build = function(event)
     local entity = event.entity
     if entity and entity.valid then
-        local race_name = ForceHelper.extract_race_name_from(entity.force.name)
-        if Config.race_is_active(race_name) then
-            local replaced_entity = ReplacementProcessor.replace_entity(entity.surface, entity, global.race_settings, entity.force.name)
-            if replaced_entity and replaced_entity.valid then
-                BaseBuildProcessor.exec(replaced_entity)
-            end
-        end
-
         AttackGroupBeaconProcessor.create_spawn_beacon(entity)
     end
 end
 
-local onUnitGroupCreated = function(event)
+local on_unit_group_created = function(event)
     local group = event.group
     local force = group.force
-    local racename = ForceHelper.extract_race_name_from(force.name)
-    local is_erm_group = global.group_tracker and global.group_tracker[racename]
+    local force_name = force.name
+    local is_erm_group = storage.group_tracker and storage.group_tracker[force_name]
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_erm_group then
-            if AttackGroupProcessor.FLYING_GROUPS[global.group_tracker[racename].group_type] then
+            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
-        elseif (UtilHelper.can_spawn(75) or TEST_MODE) then
+        elseif UtilHelper.can_spawn(75) or TEST_MODE then
             scout_unit_name = 1
         end
 
         if scout_unit_name then
-            global.scout_unit_name[group.group_number] = {
+            storage.scout_unit_name[group.unique_id] = {
                 entity = group,
                 scout_type = scout_unit_name,
                 tick = game.tick
@@ -94,12 +82,17 @@ local checking_state = {
     [defines.group_state.finished] = true
 }
 
-local onUnitFinishGathering = function(event)
+local on_unit_group_finished_gathering = function(event)
     local group = event.group
     if not group.valid then
         return
     end
-    local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.group_number)
+
+    local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.unique_id)
+    if is_erm_group and storage.erm_unit_groups[group.unique_id].scout_id then
+        return
+    end
+
     local group_force = group.force
 
     if ForceHelper.is_enemy_force(group_force) and
@@ -109,10 +102,13 @@ local onUnitFinishGathering = function(event)
         checking_state[group.state] and
         #group.members > 10
     then
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
-        local target = AttackGroupHeatProcessor.pick_target(race_name)
-        AttackGroupProcessor.process_attack_position(group, nil, nil, target)
-        global.erm_unit_groups[group.group_number] = {
+        local target = AttackGroupHeatProcessor.pick_target(group_force.name)
+        AttackGroupProcessor.process_attack_position({
+            group = group,
+            target_force = target,
+        })
+
+        storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,
             always_angry = false,
@@ -123,25 +119,31 @@ local onUnitFinishGathering = function(event)
         }
     end
 
-    local scount_unit_name = global.scout_unit_name[group.group_number]
+    local scout_unit_name = storage.scout_unit_name[group.unique_id]
     if  ForceHelper.is_enemy_force(group_force) and
         (group.is_script_driven == false or is_erm_group) and
-        scount_unit_name
+        scout_unit_name
     then
         local surface = group.surface
-        local race_name = ForceHelper.extract_race_name_from(group_force.name)
+        local force_name = group_force.name
+        storage.skip_quality_rolling = true
         local scout = surface.create_entity({
             position =  group.position,
             surface = surface,
             force = group_force,
-            name = AttackGroupBeaconProcessor.get_scout_name(race_name, scout_type[scount_unit_name.scout_type]),
+            name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_type[scout_unit_name.scout_type], surface.name),
             count = 1
         })
-        group.add_member(scout);
+        if scout then
+            group.add_member(scout);
+            if is_erm_group and not storage.erm_unit_groups[group.unique_id] then
+                storage.erm_unit_groups[group.unique_id].scout_id = scout.unit_number
+            end
+        end
     end
 
-    if scount_unit_name then
-        global.scout_unit_name[group.group_number] = nil
+    if scout_unit_name then
+        storage.scout_unit_name[group.unique_id] = nil
     end
 end
 
@@ -151,7 +153,7 @@ local handle_scouts = function(scout_unit_data)
         scout_unit_data.can_repath and
         scout_unit_data.entity.valid
     then
-        local tracker = global.scout_tracker[scout_unit_data.race_name]
+        local tracker = storage.scout_tracker[scout_unit_data.force_name]
         if tracker then
             local entity = tracker.entity
             if util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
@@ -169,9 +171,9 @@ local handle_scouts = function(scout_unit_data)
                         return
                     end
 
-                    tracker['final_destination'] = target_beacon.position
-                    tracker['update_tick'] = game.tick
-                    scout_unit_data.entity.set_command({
+                    tracker["final_destination"] = target_beacon.position
+                    tracker["update_tick"] = game.tick
+                    scout_unit_data.entity.commandable.set_command({
                         type = defines.command.go_to_location,
                         destination = target_beacon.position,
                         radius = 16,
@@ -187,27 +189,90 @@ local nearby_retry = 3
 --- handle ERM groups under ai complete
 local handle_erm_groups = function(unit_number, event_result, was_distracted)
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
-        local erm_unit_group = global.erm_unit_groups[unit_number]
+        local erm_unit_group = storage.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
 
         AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
 
         if group.valid == false then
-            global.erm_unit_groups[unit_number] = nil
+            storage.erm_unit_groups[unit_number] = nil
             return
         end
+
+        --- Reapply chain command if group moving has stale and command is wiped by spider AI.
+        ---
+        --- Rseding91 — 2024/10/28 at 4:02 PM
+        --- The group members are not within the collection area of the unit group. so it makes new commands to pack them closer together.
+        --- Those commands finish, which then marks the group command as done
+        ---
+        --- Issue tracking:
+        --- https://forums.factorio.com/viewtopic.php?f=182&t=118082&p=626929#p626929
+        ---
+        --- and there goes some performance to copy group lol.
+        if event_result ==  defines.behavior_result.fail and
+                was_distracted == false and
+                group.command == nil and
+            (erm_unit_group.commands) and erm_unit_group.commands.type ==  defines.command.compound and
+           (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
+        then
+            local commands = erm_unit_group.commands
+            local new_commands
+            -- try go to last stop if the group stuck
+            if group.moving_state == defines.moving_state.stuck then
+                new_commands = commands.commands[table_size(commands)]
+            else
+                local remove_upto
+                for index, command in pairs(commands.commands) do
+                    if command.destination and util.distance(group.position, command.destination) < CHUNK_SIZE * 2 then
+                        remove_upto = index
+                        break
+                    end
+                end
+
+                if remove_upto then
+                    for index = remove_upto, 1, -1 do
+                        table.remove(commands.commands,index)                    
+                    end                        
+                end
+
+                new_commands = commands
+            end
+
+            if table_size(new_commands.commands) >= 1 then
+                local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
+                for _, member in pairs(group.members) do
+                    new_group.add_member(member)
+                end
+
+                new_group.set_command(new_commands)
+                storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
+                storage.erm_unit_groups[new_group.unique_id].commands = new_commands
+                storage.erm_unit_groups[new_group.unique_id].group = new_group
+                storage.erm_unit_groups[group.unique_id] = nil
+            end
+        end
+        --- End Bug workaround
 
         if event_result == defines.behavior_result.success and was_distracted == false then
             erm_unit_group.has_completed_command = true
         end
 
-        if event_result == defines.behavior_result.failure or
+        if event_result == defines.behavior_result.fail or
                 erm_unit_group.nearby_retry >= nearby_retry
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, nil, erm_unit_group.attack_force, true)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    distraction = defines.distraction.by_anything,
+                    target_force = erm_unit_group.attack_force,
+                    new_beacon = true
+                })
             else
-                AttackGroupProcessor.process_attack_position(group, nil, nil, erm_unit_group.attack_force, true)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    target_force = erm_unit_group.attack_force,
+                    new_beacon = true
+                })
             end
             erm_unit_group.nearby_retry = 0
         elseif
@@ -216,70 +281,81 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             event_result == defines.behavior_result.success
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
-                AttackGroupProcessor.process_attack_position(group, defines.distraction.by_anything, true, erm_unit_group.attack_force)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    distraction = defines.distraction.by_anything,
+                    target_force = erm_unit_group.attack_force,
+                    find_nearby = true
+                })
             else
-                AttackGroupProcessor.process_attack_position(group, nil, true, erm_unit_group.attack_force)
+                AttackGroupProcessor.process_attack_position({
+                    group = group,
+                    target_force = erm_unit_group.attack_force,
+                    find_nearby = true
+                })
             end
             erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end
     end
 end
 
-local onAiCompleted = function(event)
+local on_ai_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
 
-    -- Hmm... Unit group doesn't call AI complete when all its units die.  its unit triggers behaviour fails tho.
+    -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
     handle_erm_groups(unit_number, event_result, event.was_distracted)
 
-    local scout_unit_data = global.scout_by_unit_number[unit_number]
+    local scout_unit_data = storage.scout_by_unit_number[unit_number]
     handle_scouts(scout_unit_data)
 end
 
---- Path finding
-Event.register(defines.events.on_script_path_request_finished, function(event)
-    AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
-end)
-
---- Initial path finder
-Event.register(Event.generate_event_name(Config.EVENT_REQUEST_PATH), function(event)
-    AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
-end)
-
---- Unit processing events
-Event.register(defines.events.on_biter_base_built, onBiterBaseBuilt)
-
-Event.register(defines.events.on_unit_group_created, onUnitGroupCreated)
-
-Event.register(defines.events.on_unit_group_finished_gathering, onUnitFinishGathering)
-
-Event.register(defines.events.on_ai_command_completed, onAiCompleted)
-
 --- @TODO 2.0 handle this with per planet statistic?
 local function is_unit_spawner(event)
-    return event.entity.type == 'unit-spawner' and not ForceHelper.is_enemy_force(event.force)
+    return event.entity.type == "unit-spawner" and not ForceHelper.is_enemy_force(event.force)
 end
 
 local function handle_unit_spawner(event)
     local dead_spawner = event.entity
-    AttackGroupHeatProcessor.calculate_heat(ForceHelper.extract_race_name_from(dead_spawner.force.name), dead_spawner.surface.index, event.force.index)
+    AttackGroupHeatProcessor.calculate_heat(dead_spawner.force.name, dead_spawner.surface.index, event.force.index)
 end
 
-Event.register(defines.events.on_entity_died, handle_unit_spawner , is_unit_spawner)
 
---- This event queue up to 5 batch of units.
-Event.register(Event.generate_event_name(Config.EVENT_REQUEST_BASE_BUILD), function(event)
-    local i = 0
-    local limit = event.limit or 5
-    if limit > 5 then
-        limit = 5
-    end
-    repeat
-        BaseBuildProcessor.build_formation(event.group)
-        i = i + 1
-    until #event.group.members == 0 or i == limit
-end)
+local UnitControl = {}
 
-Event.register(Event.generate_event_name(Config.EVENT_INTERPLANETARY_ATTACK_EXEC), function(event)
-    InterplanetaryAttacks.exec(event.race_name, event.target_force)
-end)
+UnitControl.events = {
+    --- This event queue up to 5 batch of units.
+    [Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD]] = function(event)
+        local i = 0
+        local limit = event.limit or 5
+        if limit > 5 then
+            limit = 5
+        end
+        repeat
+            BaseBuildProcessor.build_formation(event.group)
+            i = i + 1
+        until #event.group.members == 0 or i == limit
+    end,
+    [Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC]] = function(event)
+        InterplanetaryAttacks.exec(event.force_name, event.target_force)
+    end,
+    [defines.events.on_entity_died] = function(event)
+        if is_unit_spawner(event) then
+            handle_unit_spawner(event)
+        end
+    end,
+    --- Path finding
+    [defines.events.on_script_path_request_finished] = function(event)
+        AttackGroupPathingProcessor.on_script_path_request_finished(event.id, event.path, event.try_again_later)
+    end,
+    --- Init path finder
+    [Config.custom_event_handlers[Config.EVENT_REQUEST_PATH]] = function(event)
+        AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
+    end,
+    [defines.events.on_biter_base_built] = on_biter_base_build,
+    [defines.events.on_unit_group_created] = on_unit_group_created,
+    [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,
+    [defines.events.on_ai_command_completed] = on_ai_completed,
+}
+
+return UnitControl

@@ -4,14 +4,14 @@
 --- DateTime: 12/31/2020 1:56 PM
 ---
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
+local ERM_DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-require('util')
+require("util")
 
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
+
+require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
 
@@ -21,7 +21,7 @@ local base_acid_resistance = 10
 local incremental_acid_resistance = 80
 -- Handles physical resistance
 local base_physical_resistance = 20
-local incremental_physical_resistance = 75
+local incremental_physical_resistance = 65
 -- Handles fire and explosive resistance
 local base_fire_resistance = 10
 local incremental_fire_resistance = 80
@@ -34,13 +34,13 @@ local incremental_cold_resistance = 80
 
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
-    local biter = util.table.deepcopy(data.raw['unit'][type])
-    local original_hitpoint = biter['max_health']
+    local biter = util.table.deepcopy(data.raw["unit"][type])
+    local original_hitpoint = biter["max_health"]
 
-    biter['localised_name'] = { 'entity-name.' .. MOD_NAME .. '/' .. biter['name'], level }
-    biter['name'] = MOD_NAME .. '/' .. biter['name'] .. '/' .. level
-    biter['max_health'] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, original_hitpoint * max_hitpoint_multiplier / health_cut_ratio, level)
-    biter['resistances'] = {
+    biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
+    biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
+    biter["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "physical", percent = ERM_UnitHelper.get_resistance(base_physical_resistance, incremental_physical_resistance, level) },
@@ -50,26 +50,28 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
-    biter['healing_per_tick'] = 0
+    biter["healing_per_tick"] = 0
     ERM_UnitHelper.modify_biter_damage(biter, level)
-    biter['movement_speed'] = ERM_UnitHelper.get_movement_speed(biter['movement_speed'], biter['movement_speed'], settings.startup["enemyracemanager-level-multipliers"].value, level)
+    biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"], level)
 
-    biter['pollution_to_join_attack'] = ERM_UnitHelper.get_pollution_attack(biter['pollution_to_join_attack'], level)
-    biter['map_color'] = ERM_UnitHelper.format_map_color(settings.startup['enemyracemanager-armoured_biter_map_color'].value)
+    biter["absorptions_to_join_attack"] = {
+        pollution= ERM_UnitHelper.get_pollution_attack(biter.absorptions_to_join_attack.pollution, level)
+    }
+    biter["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-armoured_biter_map_color"].value)
     return biter
 end
 
-local max_level = GlobalConfig.MAX_LEVELS + GlobalConfig.MAX_ELITE_LEVELS
+local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     -- 1, 50 - 10, 175 - 20, 275 (org: 50)
-    data:extend({ makeLevelEnemy(i, 'small-armoured-biter') })
+    data:extend({ makeLevelEnemy(i, "small-armoured-biter") })
     -- 1, 100 - 10, 350 - 20, 600 (org: 200)
-    data:extend({ makeLevelEnemy(i, 'medium-armoured-biter', 2) })
+    data:extend({ makeLevelEnemy(i, "medium-armoured-biter", 2) })
     -- 1, 400 - 10, 1400 - 20, 2400 (org: 800)
-    data:extend({ makeLevelEnemy(i, 'big-armoured-biter', 2) })
+    data:extend({ makeLevelEnemy(i, "big-armoured-biter", 3) })
     -- 1, 2000 - 10, 7000 - 20, 12000 (org: 6000)
-    data:extend({ makeLevelEnemy(i, 'behemoth-armoured-biter', 3) })
+    data:extend({ makeLevelEnemy(i, "behemoth-armoured-biter", 5) })
     -- 1, 4500 - 10, 15750 - 20, 27000 (org: 18000)
-    data:extend({ makeLevelEnemy(i, 'leviathan-armoured-biter', 4) })
+    data:extend({ makeLevelEnemy(i, "leviathan-armoured-biter", 5) })
 end

@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 11/8/2022 10:28 PM
 ---
-require('__enemyracemanager__/global')
+require("__enemyracemanager__/global")
 
 local increase_pop = {
     type = "script",
@@ -14,8 +14,8 @@ local decrease_pop = {
     effect_id = ARMY_POPULATION_DECREASE
 }
 
-for _, unit in pairs(data.raw['unit']) do
-    if unit.subgroup == 'erm_controllable_units' then
+for _, unit in pairs(data.raw["unit"]) do
+    if unit.subgroup == "erm_controllable_units" then
         if (type(unit.dying_trigger_effect) == "table") then
             table.insert(unit.dying_trigger_effect, decrease_pop)
         else
@@ -25,13 +25,13 @@ for _, unit in pairs(data.raw['unit']) do
         end
 
         if (type(unit.created_effect) == "table") then
-            table.insert(unit['created_effect']['action_delivery']['target_effects'], increase_pop)
+            table.insert(unit["created_effect"]["action_delivery"]["source_effects"], increase_pop)
         else
             unit.created_effect = {
                 type = "direct",
                 action_delivery = {
                     type = "instant",
-                    target_effects = increase_pop
+                    source_effects = increase_pop
                 }
             }
         end

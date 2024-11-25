@@ -5,25 +5,23 @@
 ---
 
 --- It can teleport registered army units and base-game character
-local util = require('util')
-local Event = require('__stdlib__/stdlib/event/event')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local Cron = require('__enemyracemanager__/lib/cron_processor')
-local ArmyFunctions = require('__enemyracemanager__/lib/army_functions')
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
+local util = require("util")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local Cron = require("__enemyracemanager__/lib/cron_processor")
+local ArmyFunctions = require("__enemyracemanager__/lib/army_functions")
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 
 local ArmyTeleportationProcessor = {}
 
 -- Disable link if cc is idle.
-local MAX_RETRY = settings.startup['enemyracemanager-unit-framework-timeout'].value * 4;
+local MAX_RETRY = settings.startup["enemyracemanager-unit-deployer-timeout"].value * 4;
 
 local BOX_WIDTH = 48;
 local DOUBLE_BOX_WIDTH = 64;
 
 local unset_indicator = function(teleport)
     if teleport and teleport.indicator then
-        rendering.destroy(teleport.indicator)
-        teleport.indicator = nil
+        teleport.indicator.destroy()
     end
 end
 
@@ -32,18 +30,18 @@ local process_teleport_queue = function()
 end
 
 function ArmyTeleportationProcessor.start_event(reload)
-    if global.army_teleporter_event_running == false or reload then
+    if storage.army_teleporter_event_running == false or reload then
         if not reload then
             ArmyTeleportationProcessor.scan_units()
-            global.army_teleporter_event_running = true
+            storage.army_teleporter_event_running = true
         end
-        Event.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
+        script.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
 end
 
 local can_stop_event = function()
     local stopped = 0
-    local teleporters = global.army_entrance_teleporters
+    local teleporters = storage.army_entrance_teleporters
     for _, teleporter in pairs(teleporters) do
         if teleporter.idle_retry == nil then
             stopped = stopped + 1
@@ -53,65 +51,75 @@ local can_stop_event = function()
 end
 
 local stop_event = function()
-    if global.army_teleporter_event_running == true then
-        Event.remove(GlobalConfig.TELEPORT_QUEUE_CRON * -1, process_teleport_queue)
-        global.army_teleporter_event_running = false
+    if storage.army_teleporter_event_running == true then
+        script.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, nil)
+        storage.army_teleporter_event_running = false
     end
 end
 
 function ArmyTeleportationProcessor.init_globals()
-    global.army_entrance_teleporters = global.army_entrance_teleporters or {}
-    global.army_exit_teleporters = global.army_exit_teleporters or {}
-    global.army_built_teleporters = global.army_built_teleporters or {}
-    global.army_teleporters_name_mapping = global.army_teleporters_name_mapping or {}
-    global.army_registered_command_centers = global.army_registered_command_centers or {}
-    global.army_teleporter_event_running = global.army_teleporter_event_running or false
+    storage.army_entrance_teleporters = storage.army_entrance_teleporters or {}
+    storage.army_exit_teleporters = storage.army_exit_teleporters or {}
+    storage.army_built_teleporters = storage.army_built_teleporters or {}
+    storage.army_teleporters_name_mapping = storage.army_teleporters_name_mapping or {}
+    storage.army_registered_command_centers = storage.army_registered_command_centers or {}
+    storage.army_teleporter_event_running = storage.army_teleporter_event_running or false
 end
 
 function ArmyTeleportationProcessor.register_building(name)
-    if global.army_registered_command_centers == nil then
-        global.army_registered_command_centers = {}
+    if storage.army_registered_command_centers == nil then
+        storage.army_registered_command_centers = {}
     end
-    global.army_registered_command_centers[name] = true
+    storage.army_registered_command_centers[name] = true
 end
 
 function ArmyTeleportationProcessor.add_entity(entity)
-    local army_built_teleporters = global.army_built_teleporters
+    local army_built_teleporters = storage.army_built_teleporters
     local force = entity.force
     local surface = entity.surface
     local position = entity.position
     local unit_number = entity.unit_number
 
     if army_built_teleporters[force.index] == nil then
-        global.army_built_teleporters[force.index] = {}
+        storage.army_built_teleporters[force.index] = {}
     end
 
     if army_built_teleporters[force.index][surface.index] == nil then
-        global.army_built_teleporters[force.index][surface.index] = {}
+        storage.army_built_teleporters[force.index][surface.index] = {}
     end
-    local name = surface.name .. ', X:' .. position.x .. ', Y:' .. position.y
+
+    local surface_name = ''
+    if surface.planet then
+        surface_name = surface.planet.name
+    elseif surface.platform then
+        surface_name = surface.platform.name
+    else
+        surface_name = surface.name
+    end
+
+    local name =  surface_name .. ", X:" .. position.x .. ", Y:" .. position.y
     entity.backer_name = name
-    global.army_built_teleporters[force.index][surface.index][unit_number] = {
+    storage.army_built_teleporters[force.index][surface.index][unit_number] = {
         entity = entity,
         -- @Todo support rally points
         rally_point = nil
     }
-    global.army_teleporters_name_mapping[name] = {
+    storage.army_teleporters_name_mapping[name] = {
         force_id = force.index,
         surface_id = surface.index,
         unit_number = unit_number
     }
 end
 
-function ArmyTeleportationProcessor.getObjectByName(backer_name)
-    local name_map = global.army_teleporters_name_mapping[backer_name]
+function ArmyTeleportationProcessor.get_object_by_name(backer_name)
+    local name_map = storage.army_teleporters_name_mapping[backer_name]
     if name_map then
-        return global.army_built_teleporters[name_map.force_id][name_map.surface_id][name_map.unit_number]
+        return storage.army_built_teleporters[name_map.force_id][name_map.surface_id][name_map.unit_number]
     end
 end
 
 function ArmyTeleportationProcessor.getEntityByName(backer_name)
-    local teleport_object = ArmyTeleportationProcessor.getObjectByName(backer_name)
+    local teleport_object = ArmyTeleportationProcessor.get_object_by_name(backer_name)
     if teleport_object then
         return teleport_object.entity
     end
@@ -119,18 +127,18 @@ end
 
 function ArmyTeleportationProcessor.remove_entity(entity)
     local force = entity.force
-    global.army_built_teleporters[force.index][entity.surface.index][entity.unit_number] = nil
-    global.army_teleporters_name_mapping[entity.backer_name] = nil
+    storage.army_built_teleporters[force.index][entity.surface.index][entity.unit_number] = nil
+    storage.army_teleporters_name_mapping[entity.backer_name] = nil
 
-    local entrance = global.army_entrance_teleporters[force.index]
-    local exit = global.army_exit_teleporters[force.index]
+    local entrance = storage.army_entrance_teleporters[force.index]
+    local exit = storage.army_exit_teleporters[force.index]
 
     if (entrance and entrance.entity == entity) or
             (exit and exit.entity == entity) then
         unset_indicator(entrance)
         unset_indicator(exit)
-        global.army_entrance_teleporters[force.index] = nil
-        global.army_exit_teleporters[force.index] = nil
+        storage.army_entrance_teleporters[force.index] = nil
+        storage.army_exit_teleporters[force.index] = nil
     end
 end
 
@@ -140,24 +148,24 @@ function ArmyTeleportationProcessor.link(from, to)
     end
 
     local force = from.entity.force
-    local entrance = global.army_entrance_teleporters[force.index]
+    local entrance = storage.army_entrance_teleporters[force.index]
     if entrance then
         unset_indicator(entrance)
     end
 
-    local exit = global.army_exit_teleporters[force.index]
+    local exit = storage.army_exit_teleporters[force.index]
     if exit then
         unset_indicator(exit)
     end
 
-    global.army_entrance_teleporters[force.index] = from
-    global.army_entrance_teleporters[force.index].idle_retry = 0
-    global.army_exit_teleporters[force.index] = to
+    storage.army_entrance_teleporters[force.index] = from
+    storage.army_entrance_teleporters[force.index].idle_retry = 0
+    storage.army_exit_teleporters[force.index] = to
 
-    entrance = global.army_entrance_teleporters[force.index]
-    exit = global.army_exit_teleporters[force.index]
+    entrance = storage.army_entrance_teleporters[force.index]
+    exit = storage.army_exit_teleporters[force.index]
 
-    if entrance and entrance.indicator == nil then
+    if entrance and (entrance.indicator == nil or entrance.indicator.valid == false) then
         local from_entity = from.entity
         local from_position = from_entity.position
         entrance.indicator = rendering.draw_rectangle({
@@ -168,11 +176,12 @@ function ArmyTeleportationProcessor.link(from, to)
             forces = { from_entity.force.name },
             filled = false,
             draw_on_ground = true,
-            width = 8
+            width = 8,
+            only_in_alt_mode = true,
         })
     end
 
-    if exit and exit.indicator == nil then
+    if exit and (exit.indicator == nil or exit.indicator.valid == false) then
         local to_entity = to.entity
         local to_position = to_entity.position
         exit.indicator = rendering.draw_rectangle({
@@ -183,7 +192,8 @@ function ArmyTeleportationProcessor.link(from, to)
             forces = { to_entity.force.name },
             filled = false,
             draw_on_ground = true,
-            width = 8
+            width = 8,
+            only_in_alt_mode = true,
         })
     end
 
@@ -191,14 +201,14 @@ function ArmyTeleportationProcessor.link(from, to)
 end
 
 function ArmyTeleportationProcessor.unlink(force)
-    local entrance = global.army_entrance_teleporters[force.index]
-    local exit = global.army_exit_teleporters[force.index]
+    local entrance = storage.army_entrance_teleporters[force.index]
+    local exit = storage.army_exit_teleporters[force.index]
     if entrance or exit then
         unset_indicator(entrance)
         unset_indicator(exit)
         --- @todo render CC light overlay on entrance
-        global.army_entrance_teleporters[force.index] = nil
-        global.army_exit_teleporters[force.index] = nil
+        storage.army_entrance_teleporters[force.index] = nil
+        storage.army_exit_teleporters[force.index] = nil
     end
 
     if can_stop_event() then
@@ -207,14 +217,14 @@ function ArmyTeleportationProcessor.unlink(force)
 end
 
 function ArmyTeleportationProcessor.get_linked_entities(force)
-    if global.army_entrance_teleporters[force.index] then
-        return global.army_entrance_teleporters[force.index].entity, global.army_exit_teleporters[force.index].entity
+    if storage.army_entrance_teleporters[force.index] then
+        return storage.army_entrance_teleporters[force.index].entity, storage.army_exit_teleporters[force.index].entity
     end
 end
 
 local can_teleport = function(force_index)
-    local from = global.army_entrance_teleporters[force_index].entity
-    local to = global.army_exit_teleporters[force_index].entity
+    local from = storage.army_entrance_teleporters[force_index].entity
+    local to = storage.army_exit_teleporters[force_index].entity
     return from and from.valid and from.status == defines.entity_status.working and
             to and to.valid and to.status == defines.entity_status.working
 end
@@ -225,10 +235,10 @@ local unit_close_to_entrance = function(unit, target_entity)
 end
 
 function ArmyTeleportationProcessor.scan_units()
-    for force_index, teleporter in pairs(global.army_entrance_teleporters) do
+    for force_index, teleporter in pairs(storage.army_entrance_teleporters) do
         if can_teleport(force_index) then
             local from_entity = teleporter.entity
-            local to_entity = global.army_exit_teleporters[force_index].entity
+            local to_entity = storage.army_exit_teleporters[force_index].entity
             local surface = from_entity.surface
             local position = from_entity.position
             local units = surface.find_entities_filtered {
@@ -237,7 +247,7 @@ function ArmyTeleportationProcessor.scan_units()
                     right_bottom = { position.x + BOX_WIDTH, position.y + BOX_WIDTH }
                 },
                 force = from_entity.force,
-                type = 'unit',
+                type = "unit",
                 limit = 24
             }
 
@@ -251,7 +261,7 @@ function ArmyTeleportationProcessor.scan_units()
             teleporter.idle_retry = teleporter.idle_retry + 1
         end
 
-        if teleporter and teleporter.idle_retry > MAX_RETRY then
+        if teleporter and teleporter.idle_retry > MAX_RETRY and teleporter.entity.valid then
             ArmyTeleportationProcessor.unlink(teleporter.entity.force)
         end
     end
@@ -259,13 +269,13 @@ function ArmyTeleportationProcessor.scan_units()
     if can_stop_event() then
         stop_event()
     else
-        Cron.add_15_sec_queue('ArmyTeleportationProcessor.scan_units')
+        Cron.add_15_sec_queue("ArmyTeleportationProcessor.scan_units")
     end
 end
 
 function ArmyTeleportationProcessor.queue_units(units, from_entity, exit_entity)
     for _, unit in pairs(units) do
-        Cron.add_teleport_queue('ArmyTeleportationProcessor.teleport', unit, from_entity, exit_entity)
+        Cron.add_teleport_queue("ArmyTeleportationProcessor.teleport", unit, from_entity, exit_entity)
     end
 end
 

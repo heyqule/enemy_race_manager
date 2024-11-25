@@ -4,112 +4,106 @@
 --- DateTime: 2/15/2022 10:00 PM
 ---
 
-local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
-require('__enemyracemanager__/global')
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local MapProcessor = require('__enemyracemanager__/lib/map_processor')
-local LevelProcessor = require('__enemyracemanager__/lib/level_processor')
+require("__enemyracemanager__/global")
 
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
-local RaceSettingsHelper = require('__enemyracemanager__/lib/helper/race_settings_helper')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
-local AttackMeterProcessor = require('__enemyracemanager__/lib/attack_meter_processor')
-local AttackGroupProcessor = require('__enemyracemanager__/lib/attack_group_processor')
-local AttackGroupHeatProcessor = require('__enemyracemanager__/lib/attack_group_heat_processor')
-local AttackGroupBeaconProcessor = require('__enemyracemanager__/lib/attack_group_beacon_processor')
-local AttackGroupPathingProcessor = require('__enemyracemanager__/lib/attack_group_pathing_processor')
-local InterplanetaryAttacks = require('__enemyracemanager__/lib/interplanetary_attacks')
-local SpawnLocationScanner = require('__enemyracemanager__/lib/spawn_location_scanner')
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
-local Cron = require('__enemyracemanager__/lib/cron_processor')
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
+local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
 
-local BossProcessor = require('__enemyracemanager__/lib/boss_processor')
-local ArmyPopulationProcessor = require('__enemyracemanager__/lib/army_population_processor')
-local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ArmyDeploymentProcessor = require('__enemyracemanager__/lib/army_deployment_processor')
+local Cron = require("__enemyracemanager__/lib/cron_processor")
 
-local GuiContainer = require('__enemyracemanager__/gui/main')
+local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
+local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
+local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 
-local Compat_NewGamePlus = require('__enemyracemanager__/lib/compatibility/new_game_plus')
+local GuiContainer = require("__enemyracemanager__/gui/main")
 
 local addRaceSettings = function()
-    local race_settings = remote.call('enemyracemanager', 'get_race', MOD_NAME)
+    local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
     if race_settings == nil then
         race_settings = {}
     end
 
     race_settings.race = race_settings.race or MOD_NAME
-    race_settings.label = { 'gui.label-biters' }
-    race_settings.level = race_settings.level or 1
     race_settings.tier = race_settings.tier or 1
-    race_settings.evolution_point = race_settings.evolution_point or 0
-    race_settings.evolution_base_point = race_settings.evolution_base_point or 0
+    race_settings.label = { "gui.label-biters" }
     race_settings.attack_meter = race_settings.attack_meter or 0
     race_settings.attack_meter_total = race_settings.attack_meter_total or 0
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
 
     race_settings.units = {
-        { 'small-spitter', 'small-biter', 'medium-biter', 'defender' },
-        { 'medium-spitter', 'big-biter', 'big-spitter', 'distractor', 'logistic-robot' },
-        { 'behemoth-spitter', 'behemoth-biter', 'destroyer', 'construction-robot' },
+        { "small-spitter", "small-biter", "medium-biter", "defender" },
+        { "medium-spitter", "big-biter", "big-spitter", "distractor", "logistic-robot" },
+        { "behemoth-spitter", "behemoth-biter", "destroyer", "construction-robot" },
     }
     race_settings.turrets = {
-        { 'medium-worm-turret' },
-        { 'big-worm-turret' },
-        { 'behemoth-worm-turret' },
+        { "medium-worm-turret" },
+        { "big-worm-turret" },
+        { "behemoth-worm-turret" },
     }
     race_settings.command_centers = {
-        { 'spitter-spawner', 'biter-spawner' },
-        { 'roboport' },
+        { "spitter-spawner", "biter-spawner" },
+        { "roboport" },
         {}
     }
     race_settings.support_structures = {
-        { 'spitter-spawner', 'biter-spawner' },
-        { 'roboport' },
+        { "spitter-spawner", "biter-spawner" },
+        { "roboport" },
         {},
     }
     race_settings.flying_units = {
-        { 'defender' },
-        { 'distractor', 'logistic-robot' },
-        { 'destroyer' },
+        { "defender" },
+        { "distractor", "logistic-robot" },
+        { "destroyer" },
     }
-    race_settings.dropship = 'logistic-robot'
+    race_settings.dropship = "logistic-robot"
     race_settings.droppable_units = {
-        { {  'medium-spitter', 'medium-biter', 'defender' }, { 1, 2, 1 } },
-        { { 'big-spitter', 'big-biter', 'defender', 'distractor' }, { 2, 3, 1, 1 } },
-        { { 'behemoth-spitter', 'behemoth-biter', 'distractor', 'destroyer' }, { 2, 3, 1, 1 } },
+        { {  "medium-spitter", "medium-biter", "defender" }, { 1, 2, 1 } },
+        { { "big-spitter", "big-biter", "defender", "distractor" }, { 2, 3, 1, 1 } },
+        { { "behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 1 } },
     }
     race_settings.construction_buildings = {
-        { { 'biter-spawner', 'spitter-spawner' }, { 1, 1 } },
-        { { 'biter-spawner', 'spitter-spawner', 'short-range-big-worm-turret' }, { 1, 1, 1 } },
-        { { 'biter-spawner', 'spitter-spawner', 'roboport', 'short-range-big-worm-turret' }, { 1, 1, 1, 2 } }
+        { { "biter-spawner", "spitter-spawner" }, { 1, 1 } },
+        { { "biter-spawner", "spitter-spawner", "short-range-big-worm-turret" }, { 1, 1, 1 } },
+        { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        { { 'behemoth-biter', 'behemoth-spitter' }, { 5, 2 }, 30 },
-        { { 'behemoth-spitter', 'behemoth-biter' }, { 5, 2 }, 30 },
-        { { 'big-spitter', 'big-biter', 'behemoth-spitter', 'behemoth-biter' }, { 2, 1, 2, 1 }, 20 },
-        { { 'big-spitter', 'big-biter', 'behemoth-spitter', 'behemoth-biter' }, { 1, 2, 1, 2 }, 20 },
-        { { 'defender', 'distractor', 'destroyer', 'behemoth-spitter', 'behemoth-biter' }, { 2, 1, 1, 2, 2 }, 25 },
+        { { "behemoth-biter", "behemoth-spitter" }, { 5, 2 }, 30 },
+        { { "behemoth-spitter", "behemoth-biter" }, { 5, 2 }, 30 },
+        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 2, 1 }, 20 },
+        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 20 },
+        { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 },
     }
     race_settings.featured_flying_groups = {
-        { { 'distractor', 'destroyer' }, { 1, 1 }, 75 },
-        { { 'defender', 'distractor', 'destroyer' }, { 3, 1, 1 }, 75 },
-        { { 'logistic-robot', 'defender', 'distractor', 'destroyer' }, { 1, 2, 2, 1 }, 75 },
+        { { "distractor", "destroyer" }, { 1, 1 }, 75 },
+        { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
+        { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
     }
+    race_settings.structure_killed_count_by_planet = {}
+    race_settings.unit_killed_count_by_planet = {}
 
-    if script.active_mods['Krastorio2'] then
-        race_settings.enable_k2_creep = settings.startup['enemyracemanager-vanilla-k2-creep'].value
-    end
 
     RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
 
-    remote.call('enemyracemanager', 'register_race', race_settings)
+    remote.call("enemyracemanager", "register_race", race_settings)
 
-    Event.raise_event(Event.get_event_name(GlobalConfig.RACE_SETTING_UPDATE),{affected_race = MOD_NAME })
+    script.raise_event(
+            GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
+            {affected_race = MOD_NAME }
+    )
 end
 
 local prepare_world = function()
@@ -131,71 +125,69 @@ local prepare_world = function()
 
     -- Race Cleanup
     RaceSettingsHelper.clean_up_race()
-    SurfaceProcessor.numeric_to_name_conversion()
     SurfaceProcessor.rebuild_race()
 
     -- Calculate Biter Level
-    if table_size(global.race_settings) > 0 then
-        LevelProcessor.calculate_multiple_levels()
-    end
+    --if table_size(storage.race_settings) > 0 then
+    --    LevelProcessor.calculate_multiple_levels()
+    --end
 
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
-    Event.raise_event(Event.get_event_name(GlobalConfig.PREPARE_WORLD),{})
+    script.raise_event(
+            GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
+    )
 end
 
 local conditional_events = function()
-    if remote.interfaces["newgameplus"] then
-        Event.register(remote.call("newgameplus", "get_on_post_new_game_plus_event"), function(event)
-            Compat_NewGamePlus.exec(event)
-        end)
-    end
-
-    if global.army_teleporter_event_running then
+    if storage.army_teleporter_event_running then
         ArmyTeleportationProcessor.start_event(true)
     end
 
-    if global.army_deployer_event_running then
+    if storage.army_deployer_event_running then
         ArmyDeploymentProcessor.start_event(true)
     end
 
-    if global.quick_cron_is_running then
-        Event.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
+    if storage.quick_cron_is_running then
+        script.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
-    if global.boss and global.boss.entity then
-        Event.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
+    if storage.boss and storage.boss.entity then
+        script.on_nth_tick(GlobalConfig.BOSS_QUEUE_CRON, Cron.process_boss_queue)
     end
 end
 
 local init_globals = function()
     -- ID by mod name, each mod should have it own statistic out side of what force tracks.
-    global.race_settings = global.race_settings or {}
+    storage.race_settings = storage.race_settings or {}
 
     -- Move all cache to this to resolve desync issues.
     -- https://wiki.factorio.com/Desynchronization
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
-    global.settings = global.settings or {}
+    storage.settings = storage.settings or {}
 
     -- Use for decorative removal when building dies
-    global.decorative_cache = global.decorative_cache or {}
+    storage.decorative_cache = storage.decorative_cache or {}
 
-    global.installed_races = {}
-    global.active_races = {}
-    global.active_races_names = {}
-    global.active_races_num = 1
-    global.is_multi_planets_game = false
+    storage.installed_races = {}
+    storage.active_races = {}
+    storage.active_races_names = {}
+    storage.active_races_num = 1
+    storage.is_multi_planets_game = false
 
-    --- SE or DLC
-    if script.active_mods['space-exploration'] then
-        global.is_multi_planets_game = true
+    --- SE or Space Age
+    if script.active_mods["space-exploration"] or script.feature_flags.space_travel then
+        storage.is_multi_planets_game = true
+    end
+
+    if script.active_mods['quality'] then
+        storage.is_using_quality = true
     end
 
     SurfaceProcessor.init_globals()
-    AttackMeterProcessor.init_globals()
-    MapProcessor.init_globals()
+    --MapProcessor.init_globals()
     ForceHelper.init_globals()
     Cron.init_globals()
     AttackGroupProcessor.init_globals()
@@ -209,48 +201,44 @@ local init_globals = function()
     GuiContainer.init_globals()
     SpawnLocationScanner.init_globals()
     InterplanetaryAttacks.init_globals()
+    QualityProcessor.on_init()
 
 
-    --- Wipe this cache due to cache pollution from previous version.
-    global.force_race_name_cache = {}
-
-    Event.raise_event(Event.get_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL),{})
+    script.raise_event(
+        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
+    )
 end
 
 --- Init events
-Event.on_init(function(event)
+local on_init = function(event)
     init_globals()
     GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
     conditional_events()
-end)
+end
 
-Event.on_load(function(event)
-    MapProcessor.rebuild_queue()
+local on_load = function(event)
     Cron.rebuild_queue()
     conditional_events()
-end)
+end
 
-Event.on_configuration_changed(function(event)
+local on_configuration_changed = function(event)
     init_globals()
     GlobalConfig.refresh_config()
     addRaceSettings()
     prepare_world()
-    for _, player in pairs(game.connected_players) do
-        GuiContainer.main_window.update_overhead_button(player.index)
-    end
-end)
+end
 
 ---Custom setting processors
 local setting_functions = {
-    ['enemyracemanager-max-gathering-groups'] = function(event)
-        game.map_settings.unit_group.max_gathering_unit_groups = global.settings[event.setting]
+    ["enemyracemanager-max-gathering-groups"] = function(event)
+        game.map_settings.unit_group.max_gathering_unit_groups = storage.settings[event.setting]
     end,
-    ['enemyracemanager-max-group-size'] = function(event)
-        game.map_settings.unit_group.max_unit_group_size = global.settings[event.setting]
+    ["enemyracemanager-max-group-size"] = function(event)
+        game.map_settings.unit_group.max_unit_group_size = storage.settings[event.setting]
     end,
-    ['enemyracemanager-army-limit-multiplier'] = function(event)
+    ["enemyracemanager-army-limit-multiplier"] = function(event)
         for _, force in pairs(game.forces) do
             if ArmyPopulationProcessor.has_army_data(force) then
                 ArmyPopulationProcessor.calculate_max_units(force)
@@ -258,28 +246,42 @@ local setting_functions = {
         end
     end
 }
-Event.register(defines.events.on_runtime_mod_setting_changed, function(event)
-    if event.setting_type == 'runtime-global' and
-            string.find(event.setting, 'enemyracemanager', 1, true)
+local on_runtime_mod_setting_changed = function(event)
+    if event.setting_type == "runtime-global" and
+            string.find(event.setting, "enemyracemanager", 1, true)
     then
-        global.settings[event.setting] = settings.global[event.setting].value
+        storage.settings[event.setting] = settings.global[event.setting].value
 
         if setting_functions[event.setting] then
             setting_functions[event.setting](event)
         end
     end
-end)
+end
 
 --- Initialize event names
-Event.generate_event_name(GlobalConfig.EVENT_TIER_WENT_UP)
-Event.generate_event_name(GlobalConfig.EVENT_LEVEL_WENT_UP)
-Event.generate_event_name(GlobalConfig.EVENT_FLUSH_GLOBAL)
-Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ATTACK_METER)
-Event.generate_event_name(GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER)
-Event.generate_event_name(GlobalConfig.EVENT_BASE_BUILT)
-Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN)
-Event.generate_event_name(GlobalConfig.EVENT_REQUEST_PATH)
-Event.generate_event_name(GlobalConfig.EVENT_REQUEST_BASE_BUILD)
-Event.generate_event_name(GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC)
-Event.generate_event_name(GlobalConfig.RACE_SETTING_UPDATE)
-Event.generate_event_name(GlobalConfig.PREPARE_WORLD)
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
+GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
+
+
+local InitController = {}
+
+InitController.events =
+{
+    [defines.events.on_runtime_mod_setting_changed] = on_runtime_mod_setting_changed
+}
+
+InitController.on_configuration_changed = on_configuration_changed
+
+InitController.on_load = on_load
+
+InitController.on_init = on_init
+
+return InitController

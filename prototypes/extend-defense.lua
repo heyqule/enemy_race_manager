@@ -3,7 +3,49 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:23 PM
 ---
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+
+local copy_wall_entity = function(options)
+    local type = options['type'] or nil
+    local name = options['old_name'] or nil
+    local new_name = options['new_name'] or nil
+    local hp_multiplier = options['hp_multiplier'] or nil
+    local recipe_items = options['recipe_items'] or nil
+    local tech_name = options['tech_name'] or nil
+
+    if data.raw[type][new_name] then
+        return
+    end
+
+    local entity = util.table.deepcopy(data.raw[type][name])
+    entity.name = new_name
+    entity.localised_name = { 'entity-name.' .. new_name }
+    entity.max_health = entity.max_health * hp_multiplier
+    entity.minable.result = new_name
+
+    data:extend({ entity })
+
+    local item = util.table.deepcopy(data.raw["item"][name])
+    item.name = new_name
+    item.place_result = new_name
+    data:extend({ item })
+
+    local recipe = util.table.deepcopy(data.raw["recipe"][name])
+    recipe.name = new_name
+    recipe.ingredients = recipe_items
+    recipe.results = {{type="item", name=new_name, amount=1}}
+
+    data:extend({ recipe })
+
+    if tech_name then
+        local technology = data.raw["technology"][tech_name]
+        table.insert(technology.effects, {
+            type = "unlock-recipe",
+            recipe = new_name
+        })
+    end
+end
+
 -- Change resistance values on vanilla armors
 local armor_change_resistance = function(percentage_value, fixed_value)
     return {
@@ -34,102 +76,175 @@ end
 
 local rails_change_resistance = function()
     return {
-        { type = "acid", percent = 90 },
+        { type = "acid", percent = 75 },
         { type = "poison", percent = 100 },
-        { type = "physical", percent = 75 },
+        { type = "physical", percent = 66 },
         { type = "fire", percent = 100 },
-        { type = "explosion", percent = 75 },
-        { type = "laser", percent = 75 },
-        { type = "cold", percent = 90 },
-        { type = "electric", percent = 90 }
+        { type = "explosion", percent = 66 },
+        { type = "laser", percent = 66 },
+        { type = "cold", percent = 75 },
+        { type = "electric", percent = 75 }
     }
 end
 
--- Enhance Vanilla Defenses
-if settings.startup['enemyracemanager-enhance-defense'].value == true then
-    -- Buff Armor
-    data.raw['armor']['light-armor']['resistances'] = armor_change_resistance(25, 5)
-    data.raw['armor']['heavy-armor']['resistances'] = armor_change_resistance(30, 10)
-    data.raw['armor']['modular-armor']['resistances'] = armor_change_resistance(40, 15)
-    data.raw['armor']['power-armor']['resistances'] = armor_change_resistance(55, 20)
-    data.raw['armor']['power-armor-mk2']['resistances'] = armor_change_resistance(75, 20)
+data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
+data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
+data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
+data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
 
-    -- Buff gun turret HP
-    data.raw['ammo-turret']['gun-turret']['max_health'] = 800
-    data.raw['electric-turret']['laser-turret']['max_health'] = 1200
+-- Enhance Vanilla Defenses
+if settings.startup["enemyracemanager-enhance-defense"].value == true then
+    -- Buff Armor
+    data.raw["armor"]["light-armor"]["resistances"] = armor_change_resistance(15, 5)
+    data.raw["armor"]["heavy-armor"]["resistances"] = armor_change_resistance(20, 10)
+    data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(25, 15)
+    data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(35, 20)
+    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(45, 20)
+
+    if feature_flags.space_travel then
+        data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(60, 20)
+    end
 
     -- Buff vehicles
-    data.raw['car']['car']['max_health'] = data.raw['car']['car']['max_health'] * 5
-    data.raw['car']['car']['resistances'] = vehicle_change_resistance(50, 5)
-    data.raw['car']['tank']['max_health'] = data.raw['car']['tank']['max_health'] * 3
-    data.raw['car']['tank']['resistances'] = vehicle_change_resistance(70, 15)
-    data.raw['spider-vehicle']['spidertron']['max_health'] = data.raw['spider-vehicle']['spidertron']['max_health'] * 2
-    data.raw['spider-vehicle']['spidertron']['resistances'] = vehicle_change_resistance(70, 10)
+    data.raw["car"]["car"]["max_health"] = data.raw["car"]["car"]["max_health"] * 5
+    data.raw["car"]["car"]["resistances"] = vehicle_change_resistance(30, 5)
+    data.raw["car"]["tank"]["max_health"] = data.raw["car"]["tank"]["max_health"] * 4
+    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(60, 8)
+    data.raw["spider-vehicle"]["spidertron"]["max_health"] = data.raw["spider-vehicle"]["spidertron"]["max_health"] * 3
+    data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(50, 8)
 
 
     -- Buff vehicle gun
-    data.raw['gun']['vehicle-machine-gun']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['tank-machine-gun']['attack_parameters']['damage_modifier'] = 3
-    data.raw['gun']['tank-flamethrower']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['tank-cannon']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['spidertron-rocket-launcher-1']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['spidertron-rocket-launcher-2']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['spidertron-rocket-launcher-3']['attack_parameters']['damage_modifier'] = 2
-    data.raw['gun']['spidertron-rocket-launcher-4']['attack_parameters']['damage_modifier'] = 2
+    data.raw["gun"]["vehicle-machine-gun"]["attack_parameters"]["damage_modifier"] = 2
+    data.raw["gun"]["tank-machine-gun"]["attack_parameters"]["damage_modifier"] = 3
+    --data.raw["gun"]["tank-flamethrower"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["tank-cannon"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-1"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-2"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-3"]["attack_parameters"]["damage_modifier"] = 2
+    --data.raw["gun"]["spidertron-rocket-launcher-4"]["attack_parameters"]["damage_modifier"] = 2
 
     -- Buff train
-    data.raw['locomotive']['locomotive']['resistances'] = vehicle_change_resistance(75, 15)
-    data.raw['cargo-wagon']['cargo-wagon']['resistances'] = vehicle_change_resistance(75, 15)
-    data.raw['fluid-wagon']['fluid-wagon']['resistances'] = vehicle_change_resistance(75, 15)
-    data.raw['artillery-wagon']['artillery-wagon']['resistances'] = vehicle_change_resistance(75, 15)
+    data.raw["locomotive"]["locomotive"]["resistances"] = vehicle_change_resistance(75, 15)
+    data.raw["cargo-wagon"]["cargo-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
+    data.raw["fluid-wagon"]["fluid-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
+    data.raw["artillery-wagon"]["artillery-wagon"]["resistances"] = vehicle_change_resistance(75, 15)
 
-    data.raw['straight-rail']['straight-rail']['resistances'] = rails_change_resistance()
-    data.raw['curved-rail']['curved-rail']['resistances'] = rails_change_resistance()
+    --- Add additional rails
+    local rail_type = {
+        "straight-rail",
+        "half-diagonal-rail",
+        "curved-rail-a",
+        "curved-rail-b",
+        "elevated-straight-rail",
+        "elevated-half-diagonal-rail",
+        "elevated-curved-rail-a",
+        "elevated-curved-rail-b",
+        "rail-support",
+        "rail-ramp",
+        "rail-signal",
+        "rail-chain-signal"
+    }
+    for _, rail_type in pairs(rail_type) do
+        if data.raw[rail_type][rail_type] then
+            data.raw[rail_type][rail_type]["resistances"] = rails_change_resistance()
+        end
+    end
+
+    -- Add new walls
+    data.raw["wall"]["stone-wall"]["max_health"] = 500
+    copy_wall_entity({
+        type = "wall",
+        old_name = "stone-wall",
+        new_name = "concrete-wall",
+        hp_multiplier = 1.25,
+        recipe_items = {
+            {type="item", name="concrete", amount = 5},
+            {type="item", name="stone-wall", amount = 1}
+        },
+        tech_name = "concrete"
+    })
+    data.raw["wall"]["stone-wall"]["next_upgrade"] = "concrete-wall"
+
+    copy_wall_entity({
+        type = "wall",
+        old_name = "stone-wall",
+        new_name = "refined-concrete-wall",
+        hp_multiplier = 1.66,
+        recipe_items = {
+            {type="item", name="concrete-wall", amount = 1},
+            {type="item", name="refined-concrete", amount = 5}
+        },
+        tech_name = "concrete"
+    })
+    data.raw["wall"]["concrete-wall"]["next_upgrade"] = "refined-concrete-wall"
 
     -- Buff Walls & Gates
-    data.raw['wall']['stone-wall']['max_health'] = 500
-    local walls = data.raw['wall']
+    local walls = data.raw["wall"]
     for _, entity in pairs(walls) do
-        entity['resistances'] = {
-            { type = "acid", percent = 50, decrease = 0 },
+        entity["resistances"] = {
+            { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
-            { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = "physical", percent = 40, decrease = 0 },
+            { type = "fire", percent = 40, decrease = 0 },
+            { type = "explosion", percent = 40, decrease = 10 },
+            { type = "impact", percent = 40, decrease = 45 },
+            { type = "laser", percent = 40, decrease = 0 },
+            { type = "electric", percent = 40, decrease = 0 },
+            { type = "cold", percent = 40, decrease = 0 }
         }
     end
+    data.raw["wall"]["stone-wall"]["resistances"] = {
+        { type = "acid", percent = 25, decrease = 0 },
+        { type = "poison", percent = 100, decrease = 0 },
+        { type = "physical", percent = 25, decrease = 0 },
+        { type = "fire", percent = 100, decrease = 0 },
+        { type = "explosion", percent = 25, decrease = 10 },
+        { type = "impact", percent = 25, decrease = 45 },
+        { type = "laser", percent = 25, decrease = 0 },
+        { type = "electric", percent = 25, decrease = 0 },
+        { type = "cold", percent = 25, decrease = 0 }
+    }
+    data.raw["wall"]["refined-concrete-wall"]["resistances"] = {
+        { type = "acid", percent = 50, decrease = 0 },
+        { type = "poison", percent = 100, decrease = 0 },
+        { type = "physical", percent = 50, decrease = 0 },
+        { type = "fire", percent = 100, decrease = 0 },
+        { type = "explosion", percent = 50, decrease = 10 },
+        { type = "impact", percent = 50, decrease = 45 },
+        { type = "laser", percent = 50, decrease = 0 },
+        { type = "electric", percent = 50, decrease = 0 },
+        { type = "cold", percent = 50, decrease = 0 }
+    }
 
-    local gates = data.raw['gate']
+    local gates = data.raw["gate"]
     for _, entity in pairs(gates) do
-        entity['resistances'] = {
-            { type = "acid", percent = 50, decrease = 0 },
+        entity["resistances"] = {
+            { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
-            { type = "physical", percent = 50, decrease = 0 },
+            { type = "physical", percent = 40, decrease = 0 },
             { type = "fire", percent = 100, decrease = 0 },
-            { type = "explosion", percent = 50, decrease = 10 },
-            { type = "impact", percent = 50, decrease = 45 },
-            { type = "laser", percent = 50, decrease = 0 },
-            { type = "electric", percent = 50, decrease = 0 },
-            { type = "cold", percent = 50, decrease = 0 }
+            { type = "explosion", percent = 40, decrease = 10 },
+            { type = "impact", percent = 40, decrease = 45 },
+            { type = "laser", percent = 40, decrease = 0 },
+            { type = "electric", percent = 40, decrease = 0 },
+            { type = "cold", percent = 40, decrease = 0 }
         }
     end
-
-    data.raw['construction-robot']['construction-robot']['max_health'] = 250
-    data.raw['logistic-robot']['logistic-robot']['max_health'] = 250
 end
 
 -- Buff Robots, immune fire, bump all other resist to 75
--- Construction bots are no longer repairable to preserve construction bot queue. They repair themselve in roboport
-for name, entity in pairs(data.raw['construction-robot']) do
-    data.raw['construction-robot'][name]['max_health'] = entity.max_health * 2
-    table.insert(data.raw['construction-robot'][name]['flags'], 'not-repairable')
+-- Construction bots are no longer repairable to preserve construction bot queue. They repair themselves in roboport
+for name, entity in pairs(data.raw["construction-robot"]) do
+    data.raw["construction-robot"][name]["max_health"] = entity.max_health * 2
+    table.insert(data.raw["construction-robot"][name]["flags"], "not-repairable")
 end
 
-data.raw['construction-robot']['construction-robot']['resistances'] = armor_change_resistance(75, 0)
-data.raw['construction-robot']['construction-robot']['resistances'][4]['percent'] = 100
-data.raw['logistic-robot']['logistic-robot']['resistances'] = armor_change_resistance(75, 0)
-data.raw['logistic-robot']['logistic-robot']['resistances'][4]['percent'] = 100
+data.raw["construction-robot"]["construction-robot"]["resistances"] = armor_change_resistance(75, 0)
+data.raw["construction-robot"]["construction-robot"]["resistances"][4]["percent"] = 100
+data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resistance(75, 0)
+data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
+
+if feature_flags.space_travel then
+    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 800
+end

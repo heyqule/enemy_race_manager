@@ -3,39 +3,50 @@
 --- Created by heyqule.
 --- DateTime: 11/17/2022 10:19 PM
 ---
-local Event = require('__stdlib__/stdlib/event/event')
-require('__stdlib__/stdlib/utils/defines/time')
 
-local ArmyTeleportationProcessor = require('__enemyracemanager__/lib/army_teleportation_processor')
-local ArmyControlUI = require('__enemyracemanager__/gui/army_control_window')
 
-local add_command_center = function(event)
-    local entity = event.created_entity or event.entity
-    ArmyTeleportationProcessor.add_entity(entity)
-    ArmyControlUI.update_command_centers()
-end
+local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
-local remove_command_center = function(event)
-    local entity = event.created_entity or event.entity
-    ArmyTeleportationProcessor.remove_entity(entity)
-    ArmyControlUI.update_command_centers()
-end
 
 local is_valid_command_center = function(event)
     local entity = event.created_entity or event.entity
-    local cc = global.army_registered_command_centers
+    local cc = storage.army_registered_command_centers
     if entity and entity.valid and cc then
         return cc[entity.name]
     end
     return nil
 end
 
-Event.register(defines.events.script_raised_revive, add_command_center, is_valid_command_center)
-Event.register(defines.events.script_raised_built, add_command_center, is_valid_command_center)
-Event.register(defines.events.on_built_entity, add_command_center, is_valid_command_center)
-Event.register(defines.events.on_robot_built_entity, add_command_center, is_valid_command_center)
 
-Event.register(defines.events.on_entity_died, remove_command_center, is_valid_command_center)
-Event.register(defines.events.script_raised_destroy, remove_command_center, is_valid_command_center)
-Event.register(defines.events.on_player_mined_entity, remove_command_center, is_valid_command_center)
-Event.register(defines.events.on_robot_mined_entity, remove_command_center, is_valid_command_center)
+local add_command_center = function(event)
+    if is_valid_command_center(event) then
+        local entity = event.created_entity or event.entity
+        ArmyTeleportationProcessor.add_entity(entity)
+        ArmyControlUI.update_command_centers()
+    end
+end
+
+local remove_command_center = function(event)
+    if is_valid_command_center(event) then
+        local entity = event.created_entity or event.entity
+        ArmyTeleportationProcessor.remove_entity(entity)
+        ArmyControlUI.update_command_centers()
+    end
+end
+
+
+local ArmyTeleportationController = {}
+ArmyTeleportationController.events = {
+    [defines.events.script_raised_revive] = add_command_center,
+    [defines.events.script_raised_built] = add_command_center,
+    [defines.events.on_built_entity] = add_command_center,
+    [defines.events.on_robot_built_entity] = add_command_center,
+    [defines.events.on_space_platform_built_entity] = add_command_center,
+    [defines.events.on_entity_died] = remove_command_center,
+    [defines.events.script_raised_destroy] = remove_command_center,
+    [defines.events.on_player_mined_entity] = remove_command_center,
+    [defines.events.on_robot_mined_entity] = remove_command_center,
+    [defines.events.on_space_platform_mined_entity] = remove_command_center,
+}
+return ArmyTeleportationController

@@ -24,7 +24,7 @@ data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
 
 
 
-data.raw['gui-style']['default']['green_button_no_confirm'] =
+data.raw["gui-style"]["default"]["green_button_no_confirm"] =
 {
     type = "button_style",
     parent = "button",

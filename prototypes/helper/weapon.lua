@@ -3,37 +3,37 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 10:41 PM
 ---
-local ERMDataHelper = require('__enemyracemanager__/lib/rig/data_helper')
+local ERMDataHelper = require("__enemyracemanager__/lib/rig/data_helper")
 local ERM_WeaponDataHelper = {}
 
 -- Change rocket/cannon area explosives to hit all units
 function ERM_WeaponDataHelper.ignore_collision_for_area_damage(target_effects)
     for i, effect in pairs(target_effects) do
-        if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
-            effect['action']['ignore_collision_condition'] = true
+        if effect["type"] == "nested-result" and effect["action"]["type"] == "area" then
+            effect["action"]["ignore_collision_condition"] = true
         end
     end
 end
 
 function ERM_WeaponDataHelper.add_air_layer_to_projectile(projectile)
     local air_layer = ERMDataHelper.getFlyingLayerName()
-    if projectile['hit_collision_mask'] == nil then
-        projectile['hit_collision_mask'] = { 'train-layer', 'player-layer', air_layer }
+    if projectile.hit_collision_mask == nil then
+        projectile.hit_collision_mask = { layers = { train = true, player = true, is_object=true, flying_units = true } }
     else
-        projectile['hit_collision_mask'] = table.insert(projectile['hit_collision_mask'], air_layer)
+        projectile.hit_collision_mask.flying_units = true
     end
 end
 
 function ERM_WeaponDataHelper.change_piercing_damage(projectile, value)
-    projectile['piercing_damage'] = value
+    projectile["piercing_damage"] = value
 end
 
 local disable_friendly_fire = function(projectile, action_type)
     -- Single action
-    if projectile[action_type] and projectile[action_type]['action_delivery'] then
-        for _, effect in pairs(projectile[action_type]['action_delivery']['target_effects']) do
-            if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
-                effect['action']['force'] = 'not-same'
+    if projectile[action_type] and projectile[action_type]["action_delivery"] then
+        for _, effect in pairs(projectile[action_type]["action_delivery"]["target_effects"]) do
+            if effect["type"] == "nested-result" and effect["action"]["type"] == "area" then
+                effect["action"]["force"] = "not-same"
             end
         end
     end
@@ -41,13 +41,13 @@ local disable_friendly_fire = function(projectile, action_type)
     -- Multiple action
     if projectile[action_type] and #projectile[action_type] > 1 then
         for _, action in pairs(projectile[action_type]) do
-            if action['type'] == 'area' then
-                action['force'] = 'not-same'
+            if action["type"] == "area" then
+                action["force"] = "not-same"
             end
 
-            for _, effect in pairs(action['action_delivery']['target_effects']) do
-                if effect['type'] == "nested-result" and effect['action']['type'] == 'area' then
-                    effect['action']['force'] = 'not-same'
+            for _, effect in pairs(action["action_delivery"]["target_effects"]) do
+                if effect["type"] == "nested-result" and effect["action"]["type"] == "area" then
+                    effect["action"]["force"] = "not-same"
                 end
             end
         end
@@ -56,9 +56,9 @@ end
 
 
 function ERM_WeaponDataHelper.remove_friendly_fire(projectile)
-    projectile['force_condition'] = 'not-same'
-    disable_friendly_fire(projectile, 'action')
-    disable_friendly_fire(projectile, 'final_action')
+    projectile["force_condition"] = "not-same"
+    disable_friendly_fire(projectile, "action")
+    disable_friendly_fire(projectile, "final_action")
 end
 
 return ERM_WeaponDataHelper

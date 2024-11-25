@@ -3,29 +3,37 @@
 --- Created by heyqule.
 --- DateTime: 10/23/2021 1:26 PM
 
-local ForceHelper = require('lib.helper.force_helper')
-local UnitHelper = require('lib.rig.unit_helper')
+local ForceHelper = require("lib.helper.force_helper")
+local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
     -- K2
-    { 'kr-explosion', 10, 80 },
-    { 'radioactive', 5, 65 },
+    { "radioactive", 5, 65 },
     -- Bob Warfare
-    { 'bob-pierce', 10, 80 },
-    { 'plasma', 5, 85 }
+    { "bob-pierce", 10, 80 },
+    { "plasma", 5, 85 }
 }
+
+local spawner_damage_types = {
+    -- K2
+    { "radioactive", 5, 35 },
+    -- Bob Warfare
+    { "bob-pierce", 10, 30 },
+    { "plasma", 5, 30 }
+}
+
 
 -- max resist 75
 local controlable_subgroups = {
-    ['erm_controllable_units'] = true
+    ["erm_controllable_units"] = true
 }
 
 -- max resist 10 - 90
 local enemies_subgroups = {
-    ['enemies'] = true,
-    ['erm-flying-enemies'] = true,
-    ['erm-dropship-enemies'] = true,
-    ['erm-builder-enemies'] = true,
+    ["enemies"] = true,
+    ["erm-flying-enemies"] = true,
+    ["erm-dropship-enemies"] = true,
+    ["erm-builder-enemies"] = true,
 }
 
 local set_resistance = function(unit)
@@ -39,6 +47,19 @@ local set_resistance = function(unit)
     end
 end
 
+local set_spawner_resistance = function(unit)
+    if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
+        local name = ForceHelper.split_name(unit.name)
+        for _, damage_type in pairs(spawner_damage_types) do
+            if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
+                table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            end
+        end
+    end
+end
+
+
+
 for _, unit in pairs(data.raw["unit"]) do
     set_resistance(unit)
 end
@@ -48,7 +69,7 @@ for _, unit in pairs(data.raw["turret"]) do
 end
 
 for _, unit in pairs(data.raw["unit-spawner"]) do
-    set_resistance(unit)
+    set_spawner_resistance(unit)
 end
 
 for _, unit in pairs(data.raw.unit) do

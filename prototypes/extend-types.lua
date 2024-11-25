@@ -1,4 +1,3 @@
-local Sprites = require('__stdlib__/stdlib/data/modules/sprites')
 --- Damage Types
 data:extend(
         {
@@ -26,6 +25,13 @@ data:extend(
                 type = "trigger-target-type",
                 name = "air-unit"
             },
+            ---  Invisible unit can only target by laser and tesla turret.
+            ---  Players can't target them but they can be deal with AOE damage.
+            ---  Currently used by Protoss: invisible dark templar.
+            {
+                type = "trigger-target-type",
+                name = "invisible-unit"
+            }
         })
 --- Item Subgroup
 data:extend(
@@ -75,10 +81,10 @@ data:extend(
         })
 -- Recipe Category
 data:extend({
-    { type = "recipe-category", name = 'erm_controllable_infantry' },
-    { type = "recipe-category", name = 'erm_controllable_factory' },
-    { type = "recipe-category", name = 'erm_controllable_starport' },
-    { type = "recipe-category", name = 'erm_controllable_buildings' },
+    { type = "recipe-category", name = "erm_controllable_infantry" },
+    { type = "recipe-category", name = "erm_controllable_factory" },
+    { type = "recipe-category", name = "erm_controllable_starport" },
+    { type = "recipe-category", name = "erm_controllable_buildings" },
 })
 
 --- Ammo Category
@@ -89,13 +95,20 @@ data:extend({
     },
 })
 
+data:extend({
+    {
+        type = "collision-layer",
+        name = "flying_units",
+    }
+})
+
 --- Mod wide slow stickers
 data:extend({
     {
         type = "sticker",
         name = "5-075-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.75,
         vehicle_speed_modifier = 0.75,
@@ -104,7 +117,7 @@ data:extend({
         type = "sticker",
         name = "5-050-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.50,
         vehicle_speed_modifier = 0.50,
@@ -113,7 +126,7 @@ data:extend({
         type = "sticker",
         name = "5-025-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 5 * 60,
         target_movement_modifier = 0.25,
         vehicle_speed_modifier = 0.25,
@@ -122,7 +135,7 @@ data:extend({
         type = "sticker",
         name = "30-050-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 30 * 60,
         target_movement_modifier = 0.50,
         vehicle_speed_modifier = 0.50,
@@ -131,7 +144,7 @@ data:extend({
         type = "sticker",
         name = "10-025-slowdown-sticker",
         flags = { "not-on-map" },
-        animation = Sprites.empty_pictures(),
+        animation = util.empty_sprite(),
         duration_in_ticks = 10 * 60,
         target_movement_modifier = 0.25,
         vehicle_speed_modifier = 0.25,

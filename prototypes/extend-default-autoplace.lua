@@ -4,7 +4,7 @@
 --- DateTime: 8/4/2023 12:02 AM
 ---
 
---
+-- This is only affect nauvis by default.
 -- data.erm_spawn_specs = data.erm_spawn_specs or {}
 -- table.insert(data.erm_spawn_specs, {
 --    mod_name=MOD_NAME,
@@ -13,45 +13,70 @@
 --    aux=1, -- 1 = red desert, 2 = sand
 --    elevation=1, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)
 --    temperature=2, --1,2,3 (1 cold, 2. normal, 3 hot)
---    entity_filter = 'cold', -- this filter entities by string.find (this example is using "cold" prefix from cold-biters)
---    enforce_temperature = false, -- enforce temperature filter
+--    entity_filter = "cold", -- this filter entities by string.find (this example is using "cold" prefix from cold-biters)
 -- })
 --
 --
 
+require("util")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local AutoplaceUtil = require("__enemyracemanager__/prototypes/enemy-autoplace")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
+local String = require('__erm_libs__/stdlib/string')
 
-local noise = require("noise")
-local String = require('__stdlib__/stdlib/utils/string')
-local AutoplaceHelper = require('__enemyracemanager__/lib/helper/autoplace_helper')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local AutoplaceUtil = require('__enemyracemanager__/lib/enemy-autoplace-utils')
-local DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+require("global")
 
-require('global')
+if GlobalConfig.nauvis_enemy_is_biter() then
+    local nauvis_autocontrols = data.raw.planet.nauvis.map_gen_settings.autoplace_controls
+    for key, autoplace in pairs(nauvis_autocontrols) do
+        if string.find(key,"enemy_base", 1, true) or string.find(key,"enemy-base", 1, true)then
+            nauvis_autocontrols[key] = nil
+        end
+    end
 
-if GlobalConfig.mapgen_is_mixed() == false then
+    nauvis_autocontrols['enemy-base'] = {}
+
+    DebugHelper.print('ENEMY: Nauvis AutoControl:')
+    DebugHelper.print(serpent.block(data.raw.planet.nauvis.map_gen_settings.autoplace_controls))
+
     return false
+elseif GlobalConfig.nauvis_enemy_is_mixed() == false then
+        DebugHelper.print('ENEMY: Nauvis AutoControl IS NOT MIXED')
+        return false
 end
 
-local statistic_separator = '::';
+DebugHelper.print('ENEMY: Nauvis AutoControl IS MIXED')
+
+local statistic_separator = "::";
 
 local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, entity_filter, distance)
     if v.autoplace == nil then
         return
     end
 
-    if String.find(v.name, mod_name, 1, true) == nil then
+    local name_token = String.split(v.name, "--")
+    if name_token[1] ~= mod_name then
         return
     end
 
-    if entity_filter ~= nil and String.find(v.name, entity_filter, 1, true) == nil then
+    if entity_filter ~= nil and string.find(v.name, entity_filter, 1, true) == nil then
         return
     end
-
+    ---@TODO instead of placing on unit. Try adding it to planet's property_expression_names?
     if is_turret then
-        v.autoplace = AutoplaceUtil.enemy_worm_autoplace(distance, force_name, volume, 2)
+        v.autoplace = AutoplaceUtil.enemy_worm_autoplace({
+            probability_expression = v.autoplace.probability_expression,
+            force = force_name,
+            volume = volume,
+            control = v.autoplace.control
+        })
     else
-        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace(0, force_name, volume, 2)
+        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace({
+            probability_expression = v.autoplace.probability_expression,
+            force = force_name,
+            volume = volume,
+            control = v.autoplace.control
+        })
     end
 end
 
@@ -70,7 +95,7 @@ local get_distance = function(v, force_name)
     end
 
     for name, d in pairs(distances) do
-        if String.find(v.name, name, 1, true) then
+        if string.find(v.name, name, 1, true) then
             return d
         end
     end
@@ -147,13 +172,13 @@ local rearrange_specs = function()
         if race_data.entity_filter then
             dataset = dataset .. statistic_separator .. race_data.entity_filter
         end
-        table.insert(statistic['moisture_' .. race_data['moisture']], dataset)
-        table.insert(statistic['aux_' .. race_data['aux']], dataset)
-        table.insert(statistic['temperature_' .. race_data['temperature']], dataset)
-        table.insert(statistic['elevation_' .. race_data['elevation']], dataset)
+        table.insert(statistic["moisture_" .. race_data["moisture"]], dataset)
+        table.insert(statistic["aux_" .. race_data["aux"]], dataset)
+        table.insert(statistic["temperature_" .. race_data["temperature"]], dataset)
+        table.insert(statistic["elevation_" .. race_data["elevation"]], dataset)
     end
 
-    DebugHelper.print('Autoplace - statistic:')
+    DebugHelper.print("Autoplace - statistic:")
     DebugHelper.print(serpent.block(statistic))
 
     statistic.moisture_1, statistic.moisture_2 = rebalanceTables(statistic.moisture_1, statistic.moisture_2)
@@ -162,17 +187,17 @@ local rearrange_specs = function()
     --    rebalanceTables(statistic.temperature_1, statistic.temperature_2, statistic.temperature_3)
     statistic.elevation_1, statistic.elevation_2, statistic.elevation_3 = rebalanceTables(statistic.elevation_1, statistic.elevation_2, statistic.elevation_3)
 
-    DebugHelper.print('Autoplace - After rebalanced statistic:')
+    DebugHelper.print("Autoplace - After rebalanced statistic:")
     DebugHelper.print(serpent.block(statistic))
 
     local updated_specs = data.erm_spawn_specs
 
     for key, data in pairs(statistic) do
-        local token = String.split(key, '_')
+        local token = util.split(key, "_")
         local volume_type = token[1]
         local volume_index = token[2]
         for _, data_item in pairs(data) do
-            local datatoken = String.split(data_item, statistic_separator)
+            local datatoken = util.split(data_item, statistic_separator)
             local mod_name = datatoken[1]
             local mod_filter = datatoken[2]
             for spec_key, spec in pairs(updated_specs) do
@@ -183,7 +208,7 @@ local rearrange_specs = function()
         end
     end
 
-    DebugHelper.print('Autoplace - Updated Specs')
+    DebugHelper.print("Autoplace - Updated Specs")
     DebugHelper.print(serpent.block(updated_specs))
 
     return updated_specs, statistic
@@ -215,7 +240,7 @@ local balance_volumes_by_aux = function(data)
         end
     end
 
-    DebugHelper.print('Autoplace - uniqueMoisturePairs:')
+    DebugHelper.print("Autoplace - uniqueMoisturePairs:")
     DebugHelper.print(serpent.block(uniqueMoisturePairs))
 
     for uniqueIndex, element in pairs(uniqueMoisturePairs) do
@@ -261,7 +286,7 @@ local balance_volumes_by_temperature = function(data)
         end
     end
 
-    DebugHelper.print('Autoplace - uniqueTempPairs:')
+    DebugHelper.print("Autoplace - uniqueTempPairs:")
     DebugHelper.print(serpent.block(uniqueTempPairs))
 
     for uniqueIndex, element in pairs(uniqueTempPairs) do
@@ -283,8 +308,8 @@ end
 
 local match_temperature_filter = function(volume, statistics, i)
     return (volume.entity_filter and
-            statistics['temperature_' .. i][1] == volume.mod_name .. statistic_separator .. volume.entity_filter) or
-            statistics['temperature_' .. i][1] == volume.mod_name
+            statistics["temperature_" .. i][1] == volume.mod_name .. statistic_separator .. volume.entity_filter) or
+            statistics["temperature_" .. i][1] == volume.mod_name
 end
 
 local temperature_has_single_item = function(volume, statistics)
@@ -292,7 +317,7 @@ local temperature_has_single_item = function(volume, statistics)
     local is_single_item = false
 
     for i = 1, 3, 1 do
-        if table_size(statistics['temperature_' .. i]) == 1 and match_temperature_filter(volume, statistics, i)
+        if table_size(statistics["temperature_" .. i]) == 1 and match_temperature_filter(volume, statistics, i)
         then
             is_single_item = true
             break
@@ -320,19 +345,14 @@ end
 -------------
 local moisture_ranges = { { 0, 0.505 }, { 0.495, 1 } }
 local aux_ranges = { { 0, 0.505 }, { 0.495, 1 } }
-local temperature_ranges = { { 12, 14.01 }, { 13.99, 16.01 }, { 15.99, 18 } }
+local temperature_ranges = { { -25, 14.01 }, { 13.99, 16.01 }, { 15.99, 35 } }
 local elevation_ranges = { { -1, 25.5 }, { 24.5, 48.5 }, { 47.5, 70 } }
-if mods['alien-biomes'] then
-    DebugHelper.print('Autoplace - Using Alien Biomes')
+if mods["alien-biomes"] then
+    DebugHelper.print("Autoplace - Using Alien Biomes")
     temperature_ranges = { { -21, 34.75 }, { 33.25, 96.75 }, { 95.25, 151 } }
 end
 
-local enforce_temp = settings.startup['enemyracemanager-default_enforce_temperature'].value
 local balance_by_temperature = false
-
-if enforce_temp then
-    balance_by_temperature = true
-end
 
 local erm_race_data = data.erm_spawn_specs
 
@@ -344,7 +364,7 @@ end
 local total_active_specs = table_size(erm_race_data)
 local active_races = {}
 
-DebugHelper.print('Autoplace - Specs: ' .. tonumber(table_size(erm_race_data)))
+DebugHelper.print("Autoplace - Specs: " .. tonumber(table_size(erm_race_data)))
 DebugHelper.print(serpent.block(erm_race_data))
 
 for _, race in pairs(erm_race_data) do
@@ -353,7 +373,7 @@ end
 
 local total_active_races = table_size(active_races)
 
-DebugHelper.print('Autoplace - Active Races:' .. tonumber(table_size(active_races)))
+DebugHelper.print("Autoplace - Active Races:" .. tonumber(table_size(active_races)))
 DebugHelper.print(serpent.block(active_races))
 
 if total_active_races < 2 then
@@ -365,44 +385,38 @@ local updated_specs, statistics = rearrange_specs()
 local volumes = {}
 for key, race_data in pairs(updated_specs) do
     local volume = {}
-    volume['mod_name'] = race_data.mod_name
-    volume['entity_filter'] = race_data.entity_filter
+    volume["mod_name"] = race_data.mod_name
+    volume["entity_filter"] = race_data.entity_filter
 
     if total_active_races > 1 then
-        volume['moisture_min'] = moisture_ranges[race_data.moisture][1]
-        volume['moisture_max'] = moisture_ranges[race_data.moisture][2]
+        volume["moisture_min"] = moisture_ranges[race_data.moisture][1]
+        volume["moisture_max"] = moisture_ranges[race_data.moisture][2]
     end
 
     if total_active_races > 2 then
-        volume['aux_min'] = aux_ranges[race_data.aux][1]
-        volume['aux_max'] = aux_ranges[race_data.aux][2]
+        volume["aux_min"] = aux_ranges[race_data.aux][1]
+        volume["aux_max"] = aux_ranges[race_data.aux][2]
     end
 
     if total_active_races >= 4 then
         if total_active_specs >= 4 then
             balance_by_temperature = true
-            volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
-            volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
+            volume["temperature_min"] = temperature_ranges[race_data.temperature][1]
+            volume["temperature_max"] = temperature_ranges[race_data.temperature][2]
         end
 
         -- Enable elevation balancing only when there are more than two dozen spec.
-        -- The game doesn't really utilize elevation anyway.  Untested territory
+        -- The game doesn"t really utilize elevation anyway.  Untested territory
         if total_active_specs > 24 then
-            volume['elevation_min'] = elevation_ranges[race_data.elevation][1]
-            volume['elevation_max'] = elevation_ranges[race_data.elevation][2]
+            volume["elevation_min"] = elevation_ranges[race_data.elevation][1]
+            volume["elevation_max"] = elevation_ranges[race_data.elevation][2]
         end
-    end
-
-    if enforce_temp or race_data.enforce_temperature then
-        balance_by_temperature = true
-        volume['temperature_min'] = temperature_ranges[race_data.temperature][1]
-        volume['temperature_max'] = temperature_ranges[race_data.temperature][2]
     end
 
     volumes[key] = volume
 end
 
-DebugHelper.print('Autoplace - Volumes:')
+DebugHelper.print("Autoplace - Volumes:")
 DebugHelper.print(serpent.block(volumes))
 
 if balance_by_temperature and all_spec_have_temperature(volumes) then
@@ -411,7 +425,7 @@ else
     volumes = balance_volumes_by_aux(volumes)
 end
 
-DebugHelper.print('Autoplace - After Balancing Volumes:')
+DebugHelper.print("Autoplace - After Balancing Volumes:")
 DebugHelper.print(serpent.block(volumes))
 
 --- Fixed 3 race conditions with 3 autoplace specs
@@ -438,19 +452,20 @@ else
     end
 end
 
-DebugHelper.print('Autoplace - After Fine Tuned Volumes:')
+DebugHelper.print("Autoplace - After Fine Tuned Volumes:")
 DebugHelper.print(serpent.block(volumes))
 
 for key, race_data in pairs(updated_specs) do
     local volume = volumes[key]
     if volume then
         if race_data.entity_filter then
-            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. '/' .. race_data.entity_filter .. ' Volume:')
+            DebugHelper.print("Autoplace - " .. race_data.mod_name .. "--" .. race_data.entity_filter .. " Volume:")
         else
-            DebugHelper.print('Autoplace - ' .. race_data.mod_name .. ' Volume:')
+            DebugHelper.print("Autoplace - " .. race_data.mod_name .. " Volume:")
         end
 
         DebugHelper.print(serpent.block(volume))
+        
         for _, v in pairs(data.raw["unit-spawner"]) do
             tune_autoplace(
                     v, false, volume,

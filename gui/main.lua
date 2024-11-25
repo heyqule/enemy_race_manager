@@ -4,12 +4,13 @@
 --- DateTime: 1/2/2021 4:48 PM
 ---
 
-local MainWindow = require('__enemyracemanager__/gui/main_window')
-local DetailWindow = require('__enemyracemanager__/gui/detail_window')
-local BossVictoryDialog = require('__enemyracemanager__/gui/victory_dialog')
-local BossDetailWindow = require('__enemyracemanager__/gui/boss_detail_window')
-local ArmyControlWindow = require('__enemyracemanager__/gui/army_control_window')
-local DeployerAttachment = require('__enemyracemanager__/gui/deployer_attachment')
+local MainWindow = require("__enemyracemanager__/gui/main_window")
+local DetailWindow = require("__enemyracemanager__/gui/detail_window")
+local BossVictoryDialog = require("__enemyracemanager__/gui/victory_dialog")
+local BossDetailWindow = require("__enemyracemanager__/gui/boss_detail_window")
+local ArmyControlWindow = require("__enemyracemanager__/gui/army_control_window")
+local DeployerAttachment = require("__enemyracemanager__/gui/deployer_attachment")
+local QualityPointsWindow = require("__enemyracemanager__/gui/quality_point_window")
 
 local GUI = {
     main_window = MainWindow,
@@ -17,11 +18,12 @@ local GUI = {
     victory_dialog = BossVictoryDialog,
     boss_detail_window = BossDetailWindow,
     army_control_window = ArmyControlWindow,
-    deployer_attachment = DeployerAttachment
+    deployer_attachment = DeployerAttachment,
+    quality_points_window = QualityPointsWindow
 }
 
 function GUI.init_globals()
-    global.army_windows_tab_player_data = global.army_windows_tab_player_data or {}
+    storage.army_windows_tab_player_data = storage.army_windows_tab_player_data or {}
 end
 
 return GUI

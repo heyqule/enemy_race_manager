@@ -4,19 +4,16 @@
 --- DateTime: 11/5/2022 11:16 AM
 ---
 
-local mod_gui = require('mod-gui')
-local String = require('__stdlib__/stdlib/utils/string')
 
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local LevelManager = require('__enemyracemanager__/lib/level_processor')
-local ReplacementProcessor = require('__enemyracemanager__/lib/replacement_processor')
-local SurfaceProcessor = require('__enemyracemanager__/lib/surface_processor')
-local ForceHelper = require('__enemyracemanager__/lib/helper/force_helper')
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 ---- Main Window
 local MainWindow = {
     require_update_all = false,
-    root_name = 'erm_races_manager',
+    root_name = "erm_races_manager",
     window_width = 680,
     maximal_width = 1024,
     window_height = 400,
@@ -36,6 +33,14 @@ function MainWindow.show(player)
     }
     main_window.force_auto_center()
     player.opened = main_window
+    local surface_name = player.surface.name
+
+    --- fallback to nauvis if player is not on a planet.
+    local is_planet = true
+    if not game.planets[surface_name] then
+        surface_name = 'nauvis'
+        is_planet = false
+    end
 
     local admin = player.admin
     main_window.style.maximal_width = MainWindow.maximal_width
@@ -43,72 +48,65 @@ function MainWindow.show(player)
     main_window.style.maximal_height = MainWindow.window_height * 2
     main_window.style.minimal_height = MainWindow.maximal_height
     -- Race Manager Title
-    local title_flow = main_window.add { type = 'flow', name = 'title_flow', direction = 'horizontal' }
+    local title_flow = main_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = MainWindow.window_width
 
-    local title = title_flow.add { type = 'label', name = 'title', caption = { "gui.title" }, style = 'caption_label' }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.title" }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
-    pusher.style.width = MainWindow.window_width - 24 - 160
+    --- not sure why vertically_stretchable = true causes to stretch in height, comparing to other windows.
     pusher.style.height = 24
+    pusher.style.horizontally_stretchable = true
     pusher.drag_target = main_window
 
     local close_button = title_flow.add { type = "sprite-button",
-                                          name = 'erm_close_button',
-                                          sprite = "utility/close_white",
-                                          style = 'frame_action_button',
+                                          name = "erm_close_button",
+                                          sprite = "utility/close",
+                                          style = "frame_action_button",
                                           tooltip = { "gui.close-instruction" }
     }
     close_button.style.width = 24
     close_button.style.height = 24
-    close_button.style.horizontal_align = 'right'
+    close_button.style.horizontal_align = "right"
 
     local scroll = main_window.add { type = "scroll-pane", style = "scroll_pane_in_shallow_frame" }
     scroll.style.margin = 5
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
-    scroll.add { type = 'label', name = 'surface_name', caption = { 'gui.current_planet', player.surface.name }, style = 'caption_label' }
-    if GlobalConfig.mapgen_is_one_race_per_surface() and global.enemy_surfaces[player.surface.name] then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_1_race', global.enemy_surfaces[player.surface.name] } }
-    elseif GlobalConfig.mapgen_is_2_races_split() then
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_2_races', GlobalConfig.positive_axis_race(), GlobalConfig.negative_axis_race() } }
+    if is_planet then
+        scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", "[space-location="..surface_name.."] " .. surface_name }, style = "caption_label" }
     else
-        scroll.add { type = 'label', name = 'surface_race_name', caption = { 'gui.mapgen_mixed_races' } }
+        scroll.add { type = "label", name = "surface_name", caption = { "gui.not_on_planet" }, style = "caption_label" }
     end
 
     local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
-    item_table.add { type = "label", caption = { 'gui.race_column' } }
-    item_table.add { type = "label", caption = { 'gui.level_column' } }
-    item_table.add { type = "label", caption = { 'gui.tier_column' } }
-    item_table.add { type = "label", caption = { 'gui.evolution_column' } }
-    item_table.add { type = "label", caption = { 'gui.evolution_factor_column' } }
-    item_table.add { type = "label", caption = { 'gui.attack_column' } }
-    item_table.add { type = "label", caption = { 'gui.action_column' } }
+    item_table.add { type = "label", caption = { "gui.race_column" } }
+    item_table.add { type = "label", caption = { "gui.tier_column" } }
+    item_table.add { type = "label", caption = { "gui.evolution_column" } }
+    item_table.add { type = "label", caption = { "gui.progress_column" } }
+    item_table.add { type = "label", caption = { "gui.attack_column" } }
+    item_table.add { type = "label", caption = { "gui.total_attack_column" } }
+    item_table.add { type = "label", caption = { "gui.action_column" } }
 
-    LevelManager.calculate_evolution_points(global.race_settings, game.forces, settings)
-
-    for name, race_setting in pairs(global.race_settings) do
+    for name, race_setting in pairs(storage.race_settings) do
         if race_setting.label then
+            local points = QualityProcessor.get_quality_point(race_setting.race, surface_name) or 0
             item_table.add { type = "label", caption = race_setting.label }
-            item_table.add { type = "label", caption = race_setting.level }
             item_table.add { type = "label", caption = race_setting.tier }
-            item_table.add { type = "label", caption = string.format("%.4f", race_setting.evolution_point) }
-            item_table.add { type = "label", caption = string.format("%.4f", LevelManager.get_evolution_factor(name)) }
-            item_table.add { type = "label", caption = race_setting.attack_meter .. '/' .. race_setting.next_attack_threshold }
-            local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = 'vertical' }
-            action_flow.add { type = "button", name = race_setting.race .. "/more_action", caption = { 'gui.more_action' }, tooltip = { 'gui.more_action_tooltip' } }
+            item_table.add { type = "label", caption = string.format("%.2f", game.forces[race_setting.race].get_evolution_factor(surface_name) * 100) .. '%' }
+            item_table.add { type = "label", caption = (points / 100) .. "%" }
+            item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
+            item_table.add { type = "label", caption = race_setting.attack_meter_total }
+            local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }
+            action_flow.add { type = "button", name = race_setting.race .. "/detail_action", tags={filter_pattern=".*/detail_action"}, caption = { "gui.detail_action" }, tooltip = { "gui.detail_action_tooltip" } }
         end
     end
 
     if admin then
-        local bottom_flow = main_window.add { type = "flow", direction = 'horizontal' }
-        bottom_flow.add { type = "button", name = "erm_reset_default_bitter", caption = { 'gui.reset_biter' }, tooltip = { 'gui.reset_biter_tooltip' }, style = 'red_button' }
-        local button_pusher = bottom_flow.add { type = "empty-widget", style = "draggable_space_header" }
-        button_pusher.style.width = 300
-        button_pusher.style.height = 24
-        bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { 'gui.clean_idle_biter' }, tooltip = { 'gui.clean_idle_biter_tooltip' }, style = 'red_button' }
+        local bottom_flow = main_window.add { type = "flow", direction = "horizontal" }
+        bottom_flow.add { type = "button", name = "erm_clean_idle_biter", caption = { "gui.clean_idle_biter" }, tooltip = { "gui.clean_idle_biter_tooltip" }, style = "red_button" }
     end
 end
 
@@ -143,13 +141,9 @@ end
 
 function MainWindow.toggle_main_window(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-
         if MainWindow.is_hidden(owner) then
-            button_flow.erm_toggle.tooltip = { 'gui.hide-enemy-stats' }
             MainWindow.show(owner)
         else
-            button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
             MainWindow.hide(owner)
         end
     end
@@ -157,33 +151,13 @@ end
 
 function MainWindow.toggle_close(owner)
     if owner then
-        local button_flow = mod_gui.get_button_flow(owner)
-        button_flow.erm_toggle.tooltip = { 'gui.show-enemy-stats' }
         MainWindow.hide(owner)
     end
-end
-
-function MainWindow.reset_default(event)
-    local profiler = game.create_profiler()
-    for _, surface in pairs(game.surfaces) do
-        ReplacementProcessor.resetDefault(surface, global.race_settings, 'enemy')
-        MainWindow.update_all()
-    end
-    profiler.stop()
-    game.print({ '', 'Reset enemies to default: ', profiler })
 end
 
 function MainWindow.kill_idle_units(event)
     SurfaceProcessor.wander_unit_clean_up()
 end
 
-function MainWindow.update_overhead_button(player_index)
-    local owner = game.players[player_index]
-    local button_flow = mod_gui.get_button_flow(owner)
-
-    if owner and button_flow and not button_flow['erm_toggle'] then
-        button_flow.add { type = "sprite-button", name = "erm_toggle", tooltip = { 'gui.show-enemy-stats' }, sprite = 'utility/force_editor_icon' }
-    end
-end
 
 return MainWindow

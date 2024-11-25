@@ -4,6 +4,19 @@
 --- DateTime: 8/1/2023 10:55 PM
 ---
 
-require('global')
+require("global")
 
-require 'prototypes/compatibility/setting-updates.lua'
+require "prototypes/compatibility/setting-updates.lua"
+
+--- Remove mixed mode in space-age
+if feature_flags.space_travel then
+    for key, default_value in pairs(data.raw["string-setting"]['enemyracemanager-nauvis-enemy'].allowed_values) do
+        if default_value == NAUVIS_MIXED then
+            data.raw["string-setting"]['enemyracemanager-nauvis-enemy'].allowed_values[key] = nil
+        end
+    end
+end
+
+if DEBUG_MODE then
+    data.raw["int-setting"]['enemyracemanager-factoriopedia-level'].default_value = 5
+end

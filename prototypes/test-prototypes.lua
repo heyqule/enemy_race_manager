@@ -3,33 +3,34 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 4:56 PM
 ---
-require('util')
+require("util")
 local rocket_silo_test = util.table.deepcopy(data.raw["rocket-silo"]["rocket-silo"])
-rocket_silo_test.name = 'erm-rocket-silo-test'
+rocket_silo_test.name = "erm-rocket-silo-test"
 rocket_silo_test.max_health = 99999999
+rocket_silo_test.hidden_in_factoriopedia = true
+
+local gun_turret_test = util.table.deepcopy(data.raw["ammo-turret"]["gun-turret"])
+gun_turret_test.name = "erm-gun-turret-test"
+gun_turret_test.max_health = 99999999
+gun_turret_test.hidden_in_factoriopedia = true
 
 data:extend({
     rocket_silo_test,
+    gun_turret_test,
     { -- Falling meteor projectiles
         type = "projectile",
-        name = 'erm-test-meteor',
+        name = "erm-test-meteor",
         acceleration = 0,
         rotatable = false,
+        hidden_in_factoriopedia = true,
         pictures =
         {
             {
                 filename = "__base__/graphics/decorative/rock-big/rock-big-01.png",
-                width = 94,
-                height = 64,
-                shift = {-0.046875, 0.171875},
-                hr_version =
-                {
-                    filename = "__base__/graphics/decorative/rock-big/hr-rock-big-01.png",
-                    width = 188,
-                    height = 127,
-                    scale = 0.5,
-                    shift = {-0.046875, 0.171875}
-                }
+                width = 188,
+                height = 127,
+                scale = 0.5,
+                shift = {-0.046875, 0.171875}
             },
         },
         action = {
