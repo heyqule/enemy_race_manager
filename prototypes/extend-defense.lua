@@ -112,7 +112,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     -- Buff Walls & Gates
     local walls = data.raw["wall"]
     for _, entity in pairs(walls) do
-        entity["max_health"] = entity["max_health"] * 2.5
+        entity["max_health"] = entity["max_health"] * 2
         entity["resistances"] = {
             { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
@@ -128,7 +128,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
 
     local gates = data.raw["gate"]
     for _, entity in pairs(gates) do
-        entity["max_health"] = entity["max_health"] * 2.5
+        entity["max_health"] = entity["max_health"] * 2
         entity["resistances"] = {
             { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },

@@ -78,8 +78,8 @@ local build_quality_table = function(difficulties)
     return {
         { { 7500, 0  }, { 10000, difficulties[1] } },
         { { 5000, 0  }, { 8000, difficulties[2] * 0.75 } , { 10000, difficulties[2] } },
-        { { 3000, 0 }, { 5000, math.max(math.min(difficulties[3] * 1.5, 1), 0.5) }, { 7000, difficulties[3] } },
-        { { 1500, 0 }, { 3500, math.max(math.min(difficulties[4] * 1.5, 1), 0.75) }, { 5000, difficulties[4] } },
+        { { 3000, 0 }, { 5000, math.max(math.min(difficulties[3] * 1.5, 1), 0.5) }, { 7000, difficulties[3] }, { 10000, difficulties[3] } },
+        { { 1500, 0 }, { 3500, math.max(math.min(difficulties[4] * 1.5, 1), 0.75) }, { 5000, difficulties[4] }, { 10000, difficulties[4] } },
         { { 0, 1 }, { 4000, 1 }, { 5000, difficulties[5] } }
     }
 end
@@ -276,7 +276,8 @@ function QualityProcessor.roll(entity)
     local surface = entity.surface
     local race_settings = storage.race_settings[force.name]
 
-    local selected_tier, spawn_rates_size
+    local selected_tier
+    local spawn_rates_size
     local can_spawn = false
     --- Home planet spawns, always use the top tier
     if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
@@ -300,6 +301,7 @@ function QualityProcessor.roll(entity)
         local spawn_rates = planet_data.spawn_rates
         spawn_rates_size = planet_data.spawn_rates_size
         local lowest_tier = planet_data.lowest_allowed_tier
+        selected_tier = lowest_tier
 
         --- Unit from higher tier doesn't need to roll.
         if unit_tier > lowest_tier then
