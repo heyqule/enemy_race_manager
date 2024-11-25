@@ -14,7 +14,7 @@ DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
 TEST_MODE = true
 --- For debugging beacons
-BEACON_SELECTABLE = true
+BEACON_SELECTABLE = false
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]

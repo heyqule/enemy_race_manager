@@ -44,10 +44,10 @@ script.on_event(defines.events.on_player_created, function(event)
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-    if event.tick % 9999900 == 0 then
+    if event.tick % 900 == 0 then
         local surface = game.surfaces[1]
         --local invis_darktemplar = surface.create_entity({name="enemy_erm_toss--invis_darktemplar--5", force="enemy_erm_toss", position={-10,-10}})
-        local lings = surface.create_entity({name="enemy_erm_toss--nexus--1", force="enemy_erm_toss", position={-20,-20}})
+        local lings = surface.create_entity({name="enemy_erm_toss--invis_darktemplar--5", force="enemy_erm_toss", position={-20,-20}})
     end
 end)
 

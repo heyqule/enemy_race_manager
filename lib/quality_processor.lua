@@ -76,10 +76,10 @@ end
 --- Table arrange from legendary to normal.  Leg roll first, normal roll last
 local build_quality_table = function(difficulties)
     return {
-        { { 8000, 0  }, { 10000, difficulties[1] } },
-        { { 6000, 0  }, { 8000, difficulties[2] * 0.75 } , { 10000, difficulties[2] } },
-        { { 4000, 0 }, { 6500, math.max(math.min(difficulties[3] * 1.5, 1), 0.66) }, { 9000, difficulties[3] }, { 10000, difficulties[3] } },
-        { { 2000, 0 }, { 4500, math.max(math.min(difficulties[4] * 1.5, 1), 0.75) }, { 7000, difficulties[4] }, { 10000, difficulties[4] } },
+        { { 7500, 0  }, { 10000, difficulties[1] } },
+        { { 5000, 0  }, { 8000, difficulties[2] * 0.75 } , { 10000, difficulties[2] } },
+        { { 3000, 0 }, { 5000, math.max(math.min(difficulties[3] * 1.5, 1), 0.5) }, { 7000, difficulties[3] } },
+        { { 1500, 0 }, { 3500, math.max(math.min(difficulties[4] * 1.5, 1), 0.75) }, { 5000, difficulties[4] } },
         { { 0, 1 }, { 4000, 1 }, { 5000, difficulties[5] } }
     }
 end

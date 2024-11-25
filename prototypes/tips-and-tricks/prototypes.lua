@@ -11,7 +11,7 @@ data:extend(
         {
             type = "tips-and-tricks-item-category",
             name = "enemyracemanager",
-            order = "b-[enemyracemanager]"
+            order = "n00-[enemyracemanager]"
         },
         {
             type = "tips-and-tricks-item",
