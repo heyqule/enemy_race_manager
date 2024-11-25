@@ -1,10 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
-Date: ????-??-??
+Date: 2024-11-25
 
   Major Features:
     - Updated to Factorio 2.0.  It does NOT support migration from 1.1. Note: 2.0.x are considered experimental releases.  2.1 will be the stable release.
-    - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
+    - >> This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
     - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. ["Enemy difficulty" in Tips and Tricks]
     - [space-age] Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? ["Home planets" in Tips and Tricks]
     - [space-age] enhanced environmental attacks.
@@ -12,7 +12,7 @@ Date: ????-??-??
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
     - [space-age] only supports one race per planet. You can pick your nauvis race from startup menu. It defaults to biters.
-    - In 2.0 non-[space-age] game, Nauvis can use the mixed mode, which multiple races can spawner on nauvis.
+    - In 2.0 non-[space-age] game, Nauvis can use the mixed mode, which multiple races can spawn on Nauvis.
     - Added some tips and tricks.
     - Added invisible-unit trigger mask type. They can only be target by certain turrets. Player and units can target them due to technical limitation.
     - Added per planet kill counts on ERM GUI.
@@ -23,7 +23,6 @@ Date: ????-??-??
     - HP and damage algo changes for quality spawning system.
     - Maximum resistances of Units and turrets reduced from 85-95% to 65%-85% with some exceptions. Lower tier units are adjusted accordingly.
     - Unit-spawner resistance lower from 75%-80% to 45-55%.
-    - Movement and attack speed should reach max at middle (3rd) tier.
     - Pollution to attack algorithm changed. Each tier will take appox 20% more pollution by default than previous tier.
     - [Section: Attack Meter Changes]
     - Point calculation perform when applicable entity dies.
