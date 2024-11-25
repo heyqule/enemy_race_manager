@@ -11,16 +11,10 @@
     "enemyracemanager_assets >= 2.0.0",
     "erm_libs >= 2.0.0",
     "~zerm_postprocess >= 2.0.0",
-    "?Krastorio2",
-    "?IndustrialRevolution3",
     "?ArmouredBiters",
     "?Explosive_biters",
     "?Cold_biters",
     "?Toxic_biters",
-    "?space-exploration",
-    "?Kux-OrbitalIonCannon",
-    "?MIRV",
-    "?AtomicArtillery",
-    "?RibbonMaze018"
+    "?Kux-OrbitalIonCannon"
   ]
 }
