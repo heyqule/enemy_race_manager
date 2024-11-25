@@ -6,8 +6,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### Feature Videos:
 
-- ERM - 2.0 Features Reel:
-- ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
+- ERM - 2.0 Features Reel: Coming Soon
 
 ### 2.0 Changes
 - Support Factorio 2.0 and Space Age
@@ -27,12 +26,11 @@ Note 2: Support for base game will be limited to shared features and fixing cras
 
 These race mods are made as educational demos. You'll have to download them separately.
 
-Youtube: [https://youtu.be/phLRReAjxHA?t=180](https://youtu.be/phLRReAjxHA?t=180)
-
 New Enemy Races:
 * [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
 * [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss)
 
+##### The followings are not yet ready for Factorio 2.0
 WIP for 2.0:
 * [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 
@@ -41,20 +39,18 @@ Player Controllable Units: (WIP for 2.0)
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
 
 The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the remaster graphics!
-They have different spawn table and unit properties. They can play together with my version, e.g Zerg vs Zerg FFA :)
+They have different spawn table and unit properties. They can play together with my version
 
 * [Zerg - Jormungand Brood](https://mods.factorio.com/mod/erm_zerg_exp)
 * [Protoss - Velari Tribe](https://mods.factorio.com/mod/erm_toss_exp)
 * [Terran - United Earth Directorate](https://mods.factorio.com/mod/erm_terran_exp)
-
-ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 **Tips on defense:**
 
 - A LOT OF construction robots and repair kits. Automate repair network ASAP. Mix all turrets. Uranium bullets and flamethrowers are OP.
 - Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the damage turret with new one and build wall after it destroyed.
 
-Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/New-Race-DEV-README.md) and join my discord for additional help.
+Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/2.0-New-Race-Design.md) and join my discord for additional help.
 
 # New Features
 

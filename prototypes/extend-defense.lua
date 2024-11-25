@@ -4,6 +4,48 @@
 --- DateTime: 7/1/2021 1:23 PM
 ---
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+
+local copy_wall_entity = function(options)
+    local type = options['type'] or nil
+    local name = options['old_name'] or nil
+    local new_name = options['new_name'] or nil
+    local hp_multiplier = options['hp_multiplier'] or nil
+    local recipe_items = options['recipe_items'] or nil
+    local tech_name = options['tech_name'] or nil
+
+    if data.raw[type][new_name] then
+        return
+    end
+
+    local entity = util.table.deepcopy(data.raw[type][name])
+    entity.name = new_name
+    entity.localised_name = { 'entity-name.' .. new_name }
+    entity.max_health = entity.max_health * hp_multiplier
+    entity.minable.result = new_name
+
+    data:extend({ entity })
+
+    local item = util.table.deepcopy(data.raw["item"][name])
+    item.name = new_name
+    item.place_result = new_name
+    data:extend({ item })
+
+    local recipe = util.table.deepcopy(data.raw["recipe"][name])
+    recipe.name = new_name
+    recipe.ingredients = recipe_items
+    recipe.results = {{type="item", name=new_name, amount=1}}
+
+    data:extend({ recipe })
+
+    if tech_name then
+        local technology = data.raw["technology"][tech_name]
+        table.insert(technology.effects, {
+            type = "unlock-recipe",
+            recipe = new_name
+        })
+    end
+end
+
 -- Change resistance values on vanilla armors
 local armor_change_resistance = function(percentage_value, fixed_value)
     return {
@@ -34,14 +76,14 @@ end
 
 local rails_change_resistance = function()
     return {
-        { type = "acid", percent = 90 },
+        { type = "acid", percent = 75 },
         { type = "poison", percent = 100 },
-        { type = "physical", percent = 75 },
+        { type = "physical", percent = 66 },
         { type = "fire", percent = 100 },
-        { type = "explosion", percent = 75 },
-        { type = "laser", percent = 75 },
-        { type = "cold", percent = 90 },
-        { type = "electric", percent = 90 }
+        { type = "explosion", percent = 66 },
+        { type = "laser", percent = 66 },
+        { type = "cold", percent = 75 },
+        { type = "electric", percent = 75 }
     }
 end
 
@@ -53,23 +95,23 @@ data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
 -- Enhance Vanilla Defenses
 if settings.startup["enemyracemanager-enhance-defense"].value == true then
     -- Buff Armor
-    data.raw["armor"]["light-armor"]["resistances"] = armor_change_resistance(25, 5)
-    data.raw["armor"]["heavy-armor"]["resistances"] = armor_change_resistance(35, 10)
-    data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(45, 15)
-    data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(60, 20)
-    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(75, 20)
+    data.raw["armor"]["light-armor"]["resistances"] = armor_change_resistance(15, 5)
+    data.raw["armor"]["heavy-armor"]["resistances"] = armor_change_resistance(20, 10)
+    data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(25, 15)
+    data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(35, 20)
+    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(45, 20)
 
     if feature_flags.space_travel then
-        data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 20)
+        data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(60, 20)
     end
 
     -- Buff vehicles
     data.raw["car"]["car"]["max_health"] = data.raw["car"]["car"]["max_health"] * 5
-    data.raw["car"]["car"]["resistances"] = vehicle_change_resistance(50, 5)
+    data.raw["car"]["car"]["resistances"] = vehicle_change_resistance(30, 5)
     data.raw["car"]["tank"]["max_health"] = data.raw["car"]["tank"]["max_health"] * 4
-    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(66, 8)
+    data.raw["car"]["tank"]["resistances"] = vehicle_change_resistance(60, 8)
     data.raw["spider-vehicle"]["spidertron"]["max_health"] = data.raw["spider-vehicle"]["spidertron"]["max_health"] * 3
-    data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(66, 8)
+    data.raw["spider-vehicle"]["spidertron"]["resistances"] = vehicle_change_resistance(50, 8)
 
 
     -- Buff vehicle gun
@@ -109,15 +151,42 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
         end
     end
 
+    -- Add new walls
+    data.raw["wall"]["stone-wall"]["max_health"] = 500
+    copy_wall_entity({
+        type = "wall",
+        old_name = "stone-wall",
+        new_name = "concrete-wall",
+        hp_multiplier = 1.25,
+        recipe_items = {
+            {type="item", name="concrete", amount = 5},
+            {type="item", name="stone-wall", amount = 1}
+        },
+        tech_name = "concrete"
+    })
+    data.raw["wall"]["stone-wall"]["next_upgrade"] = "concrete-wall"
+
+    copy_wall_entity({
+        type = "wall",
+        old_name = "stone-wall",
+        new_name = "refined-concrete-wall",
+        hp_multiplier = 1.66,
+        recipe_items = {
+            {type="item", name="concrete-wall", amount = 1},
+            {type="item", name="refined-concrete", amount = 5}
+        },
+        tech_name = "concrete"
+    })
+    data.raw["wall"]["concrete-wall"]["next_upgrade"] = "refined-concrete-wall"
+
     -- Buff Walls & Gates
     local walls = data.raw["wall"]
     for _, entity in pairs(walls) do
-        entity["max_health"] = entity["max_health"] * 2
         entity["resistances"] = {
             { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },
             { type = "physical", percent = 40, decrease = 0 },
-            { type = "fire", percent = 100, decrease = 0 },
+            { type = "fire", percent = 40, decrease = 0 },
             { type = "explosion", percent = 40, decrease = 10 },
             { type = "impact", percent = 40, decrease = 45 },
             { type = "laser", percent = 40, decrease = 0 },
@@ -125,10 +194,31 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
             { type = "cold", percent = 40, decrease = 0 }
         }
     end
+    data.raw["wall"]["stone-wall"]["resistances"] = {
+        { type = "acid", percent = 25, decrease = 0 },
+        { type = "poison", percent = 100, decrease = 0 },
+        { type = "physical", percent = 25, decrease = 0 },
+        { type = "fire", percent = 100, decrease = 0 },
+        { type = "explosion", percent = 25, decrease = 10 },
+        { type = "impact", percent = 25, decrease = 45 },
+        { type = "laser", percent = 25, decrease = 0 },
+        { type = "electric", percent = 25, decrease = 0 },
+        { type = "cold", percent = 25, decrease = 0 }
+    }
+    data.raw["wall"]["refined-concrete-wall"]["resistances"] = {
+        { type = "acid", percent = 50, decrease = 0 },
+        { type = "poison", percent = 100, decrease = 0 },
+        { type = "physical", percent = 50, decrease = 0 },
+        { type = "fire", percent = 100, decrease = 0 },
+        { type = "explosion", percent = 50, decrease = 10 },
+        { type = "impact", percent = 50, decrease = 45 },
+        { type = "laser", percent = 50, decrease = 0 },
+        { type = "electric", percent = 50, decrease = 0 },
+        { type = "cold", percent = 50, decrease = 0 }
+    }
 
     local gates = data.raw["gate"]
     for _, entity in pairs(gates) do
-        entity["max_health"] = entity["max_health"] * 2
         entity["resistances"] = {
             { type = "acid", percent = 40, decrease = 0 },
             { type = "poison", percent = 100, decrease = 0 },

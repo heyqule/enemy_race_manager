@@ -7,7 +7,7 @@ Date: ????-??-??
     - This mod now focuses on interplanetary war logistics in [space-age].  Support for non [space-age] game will be limited to crashes and shared ERM core functionalities.
     - Replaced leveling (20 levels) system with "Quality Spawning" system (5 tiers). It's based on a planet's evolution and accumulated attack points. ["Enemy difficulty" in Tips and Tricks]
     - [space-age] Home planets invasion. erm_zerg and erm_toss now have their home planet. Are you ready to invade them? ["Home planets" in Tips and Tricks]
-    - [space-age] specific environmental attacks.
+    - [space-age] enhanced environmental attacks.
 
   Features:
     - Updated autoplace handlers based on 2.0 specifications.
@@ -34,8 +34,11 @@ Date: ????-??-??
     - Added "cargo-landing-pad" and "agricultural-tower" types to targeted entities.
     - Time based attack starts when the enemy's evolution factor is over 0.3 on their planet.  Some planets may handle differently.
     - [Section: Enhanced Defenses]
-    - Removed ERM enhanced defense items in flavor of [space-age]'s quality items.
+    - Removed ERM reinforced defense items in flavor of [space-age]'s quality items and recycler.
+    - Added concrete wall and refined concrete wall.
     - Most player's structures get a bump to a minimum of 500HP.
+    - Reduced resistances for enhanced entities.
+    - increase spidertron and tank HP by appox 20%.
     - [Section: Free For All]
     - Only works with mixed mode in non [space-age] game at the moment.
     - [Section: GUI]
@@ -45,8 +48,8 @@ Date: ????-??-??
     - Added new changes for the quality spawning system.
     - [Section: Temporary Offline Systems]
     - Boss mode is offline for major overhaul.
-    - Interplanetary attacks module is offline. It will be re-work for [space-age].  It was designed for Space Exploration.
-    - Environmental attacks module is being refactor for [space-age].  Some new environmental attacks are implemented in the ERM enemy mods.
+    - Interplanetary attacks module is offline. It will be re-work for [space-age] as it was designed for Space Exploration.
+    - Environmental attacks module is being refactor for [space-age].  ERM branded enemy mods has some unique environmental attacks.
     - [Section: Removals]
     - Removed dependency of stdlib.
     - Removed most compatibility supports for third party mods.  2.0 mods compatibility will be done as any issue arise.
