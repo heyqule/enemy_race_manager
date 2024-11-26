@@ -394,3 +394,25 @@ it("Enemy victory expansion", function()
         done()
     end)
 end)
+
+it("process_attack_position on an unit should be kill after one minute", function()
+    async(7210)
+    local surface = game.surfaces[1]
+    local entity = spawn_cc(surface)
+    AttackGroupBeaconProcessor.init_index()
+    local entity = surface.create_entity {name = 'enemy_erm_zerg--zergling--1', position={10,10}}
+    local entity = surface.create_entity {name = 'enemy_erm_zerg--zergling--2', position={10,10}}
+
+    after_ticks(7200, function()
+        local entities = surface.find_entities_filtered({
+            area = {{-100,-100},{100,100}},
+            type = "unit",
+            force = force_name
+        })
+
+        local correct = table_size(entities)
+        assert(correct == 0,"It should be killed")
+
+        done()
+    end)
+end)

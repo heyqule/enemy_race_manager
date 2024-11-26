@@ -47,7 +47,7 @@ local is_erm_unit = function(name)
 end
 
 local is_excluded_from_quality = function(name)
-    local words = {"land-scout", "aerial-scout"}
+    local words = {"land-scout", "aerial-scout", "demolisher"}
     for _, word in pairs(words) do
         if string.find(name, word, 1, true) then
             return true

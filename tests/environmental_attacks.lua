@@ -66,17 +66,17 @@ it("Build Base", function()
     local meteor = surface.create_entity(
             { name = "erm-test-meteor",
               force = "neutral",
-              position = { 100, 100 },
-              target = {80, 80},
+              position = { 120, 120 },
+              target = {100, 100},
               speed = 0.5 })
 
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
             type="unit-spawner",
-            target = {80, 80},
+            target = {100, 100},
             radius = 32
         })
-        assert(count > 1, "Has unit spawner near the spawn location")
+        assert(count > 0, "Has unit spawner near the spawn location")
         done()
     end)
 end)

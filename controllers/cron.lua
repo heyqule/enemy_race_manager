@@ -42,6 +42,9 @@ cron_switch = {
     ["AttackGroupProcessor.clear_invalid_scout_unit_name"] = function(args)
         AttackGroupProcessor.clear_invalid_scout_unit_name()
     end,
+    ["AttackGroupProcessor.cleanup_commandable"] = function(args)
+        AttackGroupProcessor.cleanup_commandable(unpack(args))
+    end,
     -- AttackMeterProcessor
     ["AttackMeterProcessor.form_group"] = function(args)
         AttackMeterProcessor.form_group(unpack(args))

@@ -764,14 +764,19 @@ function AttackGroupProcessor.process_attack_position(options)
         local erm_group_data = storage.erm_unit_groups[group.unique_id]
         if erm_group_data and erm_group_data.has_completed_command then
             script.raise_event(
-                    Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
-                    {
-                        group = group,
-                        limit = 1
-                    }
+                Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
+                {
+                    group = group,
+                    limit = 1
+                }
             )
         end
-        group.set_autonomous()
+
+        if group.is_unit_group then
+            group.set_autonomous()
+        else
+           AttackGroupProcessor.queue_for_destroy(group)
+        end
     end
 end
 
@@ -994,5 +999,16 @@ function AttackGroupProcessor.clear_invalid_scout_unit_name()
     end
 end
 
+function AttackGroupProcessor.queue_for_destroy(commandable)
+    Cron.add_1_min_queue("AttackGroupProcessor.generate_group", commandable)
+end
 
+--- Clean up unit without triggering dying effect
+function AttackGroupProcessor.cleanup_commandable(commandable)
+    if commandable and commandable.valid and commandable.members  then
+        for _, member in pairs(commandable.members) do
+            member.destory()
+        end
+    end
+end
 return AttackGroupProcessor

@@ -272,6 +272,12 @@ function QualityProcessor.roll(entity)
 
     local name_token = ForceHelper.get_name_token(entity.name)
     local unit_tier = tonumber(name_token[3])
+
+    -- Prevent roll if unit_tier not found
+    if unit_tier == nil then
+        return entity
+    end
+
     local force = entity.force
     local surface = entity.surface
     local race_settings = storage.race_settings[force.name]
