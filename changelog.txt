@@ -2,13 +2,13 @@
 Version: 2.0.1
 Date: 2024-11-26
 
-   Changes:
-     - Custom spawned units will destroy themselves after one minute when they couldn't acquire an attack target.
-     - Excluded demolishers from rolling quality
+  Changes:
+    - Custom spawned units will destroy themselves after one minute when they couldn't acquire an attack target.
+    - Excluded demolishers from rolling quality
 
-   Bugfixes:
-     - Fixed a crash when commandable is not a group and calls to set_autonomous().
-     - Fixed a crash when rolling quality on an non-tiered unit.
+  Bugfixes:
+    - Fixed a crash when commandable is not a group and calls to set_autonomous().
+    - Fixed a crash when rolling quality on an non-tiered unit.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
