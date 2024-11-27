@@ -15,7 +15,7 @@ after_each(function()
     storage.erm_unit_groups = {}
     EnvironmentalAttacks.reset_global()
     storage.override_environmental_attack_can_spawn = nil
-    storage.override_environmental_attack_spawn_home = nil
+    storage.override_environmental_attack_spawn_base = nil
 end)
 
 
@@ -29,8 +29,8 @@ it("Attack Target", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    storage.override_environmental_attack_can_spawn = 1
-    storage.override_environmental_attack_spawn_home = -1
+    storage.override_environmental_attack_can_spawn = true
+    storage.override_environmental_attack_spawn_base = false
 
     local meteor = surface.create_entity({ name = "erm-test-meteor",
          force = "neutral",
@@ -60,8 +60,8 @@ it("Build Base", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    storage.override_environmental_attack_can_spawn = 1
-    storage.override_environmental_attack_spawn_home = 1
+    storage.override_environmental_attack_can_spawn = true
+    storage.override_environmental_attack_spawn_base = true
 
     local meteor = surface.create_entity(
             { name = "erm-test-meteor",
@@ -91,8 +91,8 @@ it("Can't spawn", function()
             })
     AttackGroupBeaconProcessor.init_index()
 
-    storage.override_environmental_attack_can_spawn = -1
-    storage.override_environmental_attack_spawn_home = -1
+    storage.override_environmental_attack_can_spawn = false
+    storage.override_environmental_attack_spawn_base = false
 
     local meteor = surface.create_entity(
             { name = "erm-test-meteor",
@@ -105,7 +105,7 @@ it("Can't spawn", function()
         local count = surface.count_entities_filtered({
             type="unit",
         })
-        assert(count == 0, "Should not have unit on the surface")
+        assert(count == 0, "Should not have unit on the surface, you have: "..count)
         done()
     end)
 end)

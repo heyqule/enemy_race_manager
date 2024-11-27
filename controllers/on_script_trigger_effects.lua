@@ -164,21 +164,21 @@ local script_functions = {
         local surface = game.surfaces[event.surface_index]
         local target_position = event.target_position
 
-        local force_spawn, force_spawn_home
+        local force_spawn, force_spawn_base
         local spawn_chance = 50
         local spawn_count = 5
         if TEST_MODE then
             force_spawn = RaceSettingHelper.can_spawn(spawn_chance)
-            if storage.override_environmental_attack_can_spawn == 1 then
+            if storage.override_environmental_attack_can_spawn == true then
                 force_spawn = true
-            elseif storage.override_environmental_attack_can_spawn == -1 then
+            elseif storage.override_environmental_attack_can_spawn == false then
                 force_spawn = false
             end
 
-            if storage.override_environmental_attack_spawn_home == 1 then
-                force_spawn_home = true
-            elseif storage.override_environmental_attack_spawn_home == -1 then
-                force_spawn_home = false
+            if storage.override_environmental_attack_spawn_base == true then
+                force_spawn_base = true
+            elseif storage.override_environmental_attack_spawn_base == false then
+                force_spawn_base = false
             end
         end
 
@@ -186,7 +186,7 @@ local script_functions = {
             surface = surface,
             target_position = target_position,
             force_spawn = force_spawn,
-            force_spawn_home = force_spawn_home,
+            force_spawn_base = force_spawn_base,
             spawn_count = spawn_count,
             spawn_chance = spawn_chance
         })

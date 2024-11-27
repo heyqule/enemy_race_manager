@@ -44,6 +44,10 @@ function TestShared.reset_the_factory()
         end
     end
 
+    for key, surface in pairs(game.surfaces) do
+        game.delete_surface(surface)
+    end
+
     QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()

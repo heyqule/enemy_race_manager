@@ -190,7 +190,7 @@ it('Home planet test', function()
 end)
 
 
-it.only('Schedule update test', function()
+it('Schedule update test', function()
     async(3700)
     local nauvis = game.surfaces[1]
     local char = game.planets.char.create_surface()

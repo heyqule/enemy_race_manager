@@ -47,7 +47,7 @@ function EnvironmentalAttacks.exec(options)
 
         local can_spawn_home = RaceSettingHelper.can_spawn(spawn_chance)
 
-        if force_spawn_base == true then
+        if force_spawn then
             can_spawn_home = force_spawn_base
         end
 
@@ -73,7 +73,7 @@ function EnvironmentalAttacks.exec(options)
 end
 
 function EnvironmentalAttacks.reset_global()
-    storage.override_environmental_attack_spawn_home = nil
+    storage.override_environmental_attack_spawn_base = nil
     storage.override_environmental_attack_can_spawn = nil
 end
 
