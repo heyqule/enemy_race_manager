@@ -350,14 +350,6 @@ data:extend {
     },
     --- Attack Meters and custom attack groups ---
     {
-        type = "bool-setting",
-        name = "enemyracemanager-attack-meter-enable",
-        description = "enemyracemanager-attack-meter-enable",
-        setting_type = "runtime-global",
-        default_value = true,
-        order = "enemyracemanager-300"
-    },
-    {
         type = "double-setting",
         name = "enemyracemanager-attack-meter-threshold",
         description = "enemyracemanager-attack-meter-threshold",
@@ -365,7 +357,7 @@ data:extend {
         default_value = 1.25,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-301"
+        order = "enemyracemanager-300"
     },
     {
         type = "int-setting",
@@ -374,7 +366,7 @@ data:extend {
         setting_type = "runtime-global",
         default_value = 10,
         allowed_values = { 5, 10, 15, 20, 25 },
-        order = "enemyracemanager-302"
+        order = "enemyracemanager-301"
     },
     {
         type = "int-setting",
@@ -384,7 +376,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 10,
-        order = "enemyracemanager-303"
+        order = "enemyracemanager-302"
     },
     {
         type = "bool-setting",
@@ -392,7 +384,7 @@ data:extend {
         description = "enemyracemanager-attack-point-spawner-kills-deduction",
         setting_type = "runtime-global",
         default_value = false,
-        order = "enemyracemanager-304"
+        order = "enemyracemanager-303"
     },
     {
         type = "bool-setting",

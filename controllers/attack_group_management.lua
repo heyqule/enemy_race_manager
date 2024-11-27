@@ -8,11 +8,13 @@ require("__enemyracemanager__/global")
 
 local Config = require("__enemyracemanager__/lib/global_config")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 
 local AttackGroupManagement = {}
 AttackGroupManagement.on_nth_tick = {
     [Config.ATTACK_GROUP_GATHERING_CRON] = function(event)
+        QualityProcessor.calculate_quality_points()
         AttackMeterProcessor.add_form_group_cron()
     end
 }

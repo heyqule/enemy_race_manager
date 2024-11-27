@@ -52,13 +52,19 @@ local on_unit_group_created = function(event)
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_erm_group then
-            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
+            if  group.surface.planet == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
-        elseif UtilHelper.can_spawn(75) or TEST_MODE then
+        elseif TEST_MODE then
             scout_unit_name = 1
+        elseif UtilHelper.can_spawn(75) then
+            if group.surface.planet == nil then
+                scout_unit_name = 2
+            else
+                scout_unit_name = 1
+            end
         end
 
         if scout_unit_name then

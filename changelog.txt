@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: 2024-11-27
+
+  Changes:
+    - Removed the option to enable/disable attack point as it's now an essential stat.
+    - Added additional entities to have minimum 500HP.
+
+  Bugfixes:
+    - Fixed progression calculation stuck at 0% due to missing schedule job.
+    - Fixed startup crash when disabling the blast flames for Ion Cannon. This mod no longer modify its damage as it now has a mk2 variant. [mod:Orbital Ion Cannon]
+    - Fixed quality processor crash while enemy spawn on a platform.
+    - Fixed land scout spawning on space platform. It should spawn aerial scout.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 2024-11-26
 

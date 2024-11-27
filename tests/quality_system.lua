@@ -188,3 +188,36 @@ it('Home planet test', function()
     assert(tonumber(nauvis_unit_name_token[3]) == 1, 'Nauvis must be 1, yours:'..tostring(nauvis_unit_name_token[3]))
     assert(tonumber(char_unit_name_token[3]) == 1, 'Char must be 5, your:'..tostring(char_unit_name_token[3]))
 end)
+
+
+it.only('Schedule update test', function()
+    async(3700)
+    local nauvis = game.surfaces[1]
+    local char = game.planets.char.create_surface()
+    QualityProcessor.calculate_quality_points()
+
+    for i = 1, 1000, 1 do
+        local hive = nauvis.create_entity {
+            name = 'enemy_erm_zerg--hive--1',
+            position = {0, 0}
+        }
+        hive.die('player')
+    end
+
+    for i = 1, 1000, 1 do
+        local hive = char.create_entity {
+            name = 'enemy_erm_zerg--hive--1',
+            position = {0, 0}
+        }
+        hive.die('player')
+    end
+
+    after_ticks(3660, function()
+        local nauvis_point = storage.quality_on_planet['enemy']['nauvis'].points
+        local char_point = storage.quality_on_planet['enemy']['char'].points
+
+        assert(nauvis_point > 0, 'Must not be 0, yours:'..tostring(nauvis_point))
+        assert(char_point > 0, 'Must not be 0, your:'..tostring(char_point))
+        done()
+    end)
+end)

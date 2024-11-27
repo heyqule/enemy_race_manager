@@ -123,7 +123,6 @@ local refreshable_settings = {
         "enemyracemanager-build-style",
         "enemyracemanager-build-formation",
         "enemyracemanager-attack-point-spawner-kills-deduction",
-        "enemyracemanager-attack-meter-enable",
         "enemyracemanager-attack-meter-threshold",
         "enemyracemanager-attack-meter-threshold-deviation",
         "enemyracemanager-attack-meter-collector-multiplier",
@@ -237,10 +236,6 @@ end
 
 function GlobalConfig.build_formation()
     return get_global_setting_value("enemyracemanager-build-formation")
-end
-
-function GlobalConfig.attack_meter_enabled()
-    return get_global_setting_value("enemyracemanager-attack-meter-enable")
 end
 
 function GlobalConfig.attack_meter_threshold()

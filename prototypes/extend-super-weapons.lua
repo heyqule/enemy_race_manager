@@ -59,25 +59,18 @@ if mods["Kux-OrbitalIonCannon"] and data.raw["projectile"]["crosshairs"] then
     table.insert(entity["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
     table.insert(entity["action"][1]["action_delivery"]["target_effects"], super_weapon_counter_attack)
 
-    -- (deal ~ 5K damage to lvl20 buildings)
-    -- Laser damage
-    entity["action"][3]["action_delivery"]["target_effects"][1]["damage"]["amount"] = math.max(entity["action"][3]["action_delivery"]["target_effects"][1]["damage"]["amount"], 10000)
-
-    -- Explosion damage
-    entity["action"][3]["action_delivery"]["target_effects"][2]["damage"]["amount"] = math.max(entity["action"][3]["action_delivery"]["target_effects"][2]["damage"]["amount"], 6000)
-
     data:extend({ entity })
+
+    local entity_mk2 = util.table.deepcopy(data.raw["projectile"]["crosshairs-mk2"])
+    table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
+    table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_counter_attack)
+
+    data:extend({ entity_mk2 })
 
     local dummy_entity = util.table.deepcopy(data.raw["projectile"]["dummy-crosshairs"])
     table.insert(dummy_entity["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
     table.insert(dummy_entity["action"][1]["action_delivery"]["target_effects"], super_weapon_counter_attack)
 
-    -- (deal ~ 5K damage to lvl20 buildings)
-    -- Laser damage
-    dummy_entity["action"][1]["action_delivery"]["target_effects"][1]["damage"]["amount"] = math.max(dummy_entity["action"][1]["action_delivery"]["target_effects"][1]["damage"]["amount"], 10000)
-
-    -- Explosion damage
-    dummy_entity["action"][1]["action_delivery"]["target_effects"][2]["damage"]["amount"] = math.max(dummy_entity["action"][1]["action_delivery"]["target_effects"][2]["damage"]["amount"], 6000)
     data:extend({ dummy_entity })
 end
 

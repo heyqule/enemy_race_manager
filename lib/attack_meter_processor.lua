@@ -56,10 +56,6 @@ local calculateNextThreshold = function(force_name)
 end
 
 function AttackMeterProcessor.add_form_group_cron()
-    if GlobalConfig.attack_meter_enabled() == false then
-        return
-    end
-
     local force_names = ForceHelper.get_enemy_forces()
 
     for _, force_name in pairs(force_names) do

@@ -205,10 +205,15 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
 
     local planet_data = storage.quality_on_planet[force_name][surface_name]
 
+    -- Use random roll normal - epic on a non-planet surfaces.
+    if planet_data == nil then
+        return math.random(1,4)
+    end
+
     local spawn_rates, spawn_rates_size,
           lowest_tier, selected_tier, can_spawn
 
-    if planet_data and is_elite == false then
+    if is_elite == false then
         spawn_rates = planet_data.spawn_rates
         spawn_rates_size = planet_data.spawn_rates_size
         lowest_tier = planet_data.lowest_allowed_tier
