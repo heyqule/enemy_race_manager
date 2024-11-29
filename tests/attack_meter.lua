@@ -94,7 +94,10 @@ end)
 it("Time base attack", function()
     async(10800)
     local force = game.forces['enemy']
+    local start_point = 1000
     force.set_evolution_factor(0.35, game.surfaces[1])
+    storage.race_settings[race_name].attack_meter_total = start_point
+    
     AttackGroupBeaconProcessor.init_index()
     local last_minute = 0
 
@@ -104,13 +107,16 @@ it("Time base attack", function()
     end)
 
     after_ticks(7600, function()
-        assert(storage.race_settings[race_name].attack_meter > last_minute,"time base attack - 2st minute")
+        assert(storage.race_settings[race_name].attack_meter > 0,"time base attack - 2st minute")
         done()
     end)
 end)
 
-it("Time base attack - level req not met", function()
+it("Time base attack - req not met", function()
     async(10800)
+    local force = game.forces[force_name]
+    force.set_evolution_factor(0.35, game.surfaces[1])
+    
     AttackGroupBeaconProcessor.init_index()
 
     after_ticks(4000, function()

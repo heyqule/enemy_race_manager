@@ -621,6 +621,10 @@ function AttackGroupProcessor.generate_group(
 end
 
 function AttackGroupProcessor.generate_nuked_group(surface, position, radius, source_entity)
+    if source_entity == nil then
+        return
+    end
+
     local target_unit = surface.find_entities_filtered({
         type = { "unit-spawner" },
         force = ForceHelper.get_enemy_forces(),
@@ -1000,7 +1004,7 @@ function AttackGroupProcessor.clear_invalid_scout_unit_name()
 end
 
 function AttackGroupProcessor.queue_for_destroy(commandable)
-    Cron.add_1_min_queue("AttackGroupProcessor.generate_group", commandable)
+    Cron.add_1_min_queue("AttackGroupProcessor.cleanup_commandable", commandable)
 end
 
 --- Clean up unit without triggering dying effect

@@ -37,8 +37,8 @@ local update_storages = function()
         storage.skip_quality_rolling = false
     end
 
-    setting_difficulty = settings.global['enemyracemanager-difficulty'].value
-    setting_advancement = settings.global['enemyracemanager-advancement'].value
+    setting_difficulty = settings.global["enemyracemanager-difficulty"].value
+    setting_advancement = settings.global["enemyracemanager-advancement"].value
 end
 
 ---- Similar to spawn table, lerp probability
@@ -263,8 +263,8 @@ end
 function QualityProcessor.roll(entity)
     -- is_running_roll to prevent recursive roll on create entity event
     -- storage.skip_quality_rolling allows bypassing roll manually
-    -- unit from spawner doesn't need to roll
-    -- unit which is not from enemy force or not erm units doesn't need to roll.
+    -- unit from spawner doesn"t need to roll
+    -- unit which is not from enemy force or not erm units doesn"t need to roll.
     if is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
        not ForceHelper.is_enemy_force(entity.force) or
@@ -314,7 +314,7 @@ function QualityProcessor.roll(entity)
         local lowest_tier = planet_data.lowest_allowed_tier
         selected_tier = lowest_tier
 
-        --- Unit from higher tier doesn't need to roll.
+        --- Unit from higher tier doesn"t need to roll.
         if unit_tier > lowest_tier then
             return entity
         end
@@ -350,7 +350,7 @@ function QualityProcessor.roll(entity)
         if position then
             is_running_roll = true
             local new_unit = surface.create_entity {
-                name = name_token[1]..'--'..name_token[2]..'--'..selected_tier,
+                name = name_token[1].."--"..name_token[2].."--"..selected_tier,
                 force = force,
                 position = position,
                 create_build_effect_smoke = false,

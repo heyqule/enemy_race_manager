@@ -114,7 +114,9 @@ function AttackMeterProcessor.calculated_time_attack()
         local force_name = force.name
         if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_active(force_name) then
             for _, planet in pairs(game.planets) do
-                if GlobalConfig.time_base_attack_enabled() and planet.surface and force.get_evolution_factor(planet.surface) > 0.35 then
+                if GlobalConfig.time_base_attack_enabled() and
+                   RaceSettingsHelper.get_accumulated_attack_meter(force_name) > 100 and
+                   planet.surface and force.get_evolution_factor(planet.surface) > 0.35 then
                     local extra_points = RaceSettingsHelper.get_next_attack_threshold(force_name) * (GlobalConfig.time_base_attack_points() / 100)
                     RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(extra_points))
                     break

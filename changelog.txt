@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: 2024-11-27
+
+  Changes:
+    - Time based attack will not start for enemy which the player has not contacted with.
+
+  Bugfixes:
+    - Fixed a crash when super weapon doesn't provide source_entity to generate a revenge group(?).
+    - Fixed an issue on unit clean up function.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: 2024-11-27
 
