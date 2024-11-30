@@ -32,7 +32,9 @@ OnTriggerCreatedEntity.events = {
     [defines.events.on_trigger_created_entity] = function(event)
         local entity = event.entity
         local source = event.source
-        if handlers[source.type] and entity.valid then
+        if entity.valid and 
+           source and handlers[source.type] 
+        then
             handlers[source.type](entity)
         end
     end
