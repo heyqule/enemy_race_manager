@@ -1009,9 +1009,13 @@ end
 
 --- Clean up unit without triggering dying effect
 function AttackGroupProcessor.cleanup_commandable(commandable)
-    if commandable and commandable.valid and commandable.members  then
-        for _, member in pairs(commandable.members) do
-            member.destory()
+    if commandable and commandable.valid then
+        if commandable.is_unit_group and commandable.members  then
+            for _, member in pairs(commandable.members) do
+                member.destory({raise_destroy=true})
+            end
+        elseif commandable.entity and commandable.entity.valid then
+            commandable.entity.destroy({raise_destroy=true})
         end
     end
 end
