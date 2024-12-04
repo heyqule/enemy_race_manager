@@ -87,10 +87,10 @@ local rails_change_resistance = function()
     }
 end
 
-data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
-data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
-data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
-data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
+data.raw["ammo-turret"]["gun-turret"]["max_health"] = 1000
+data.raw["electric-turret"]["laser-turret"]["max_health"] = 1500
+data.raw["construction-robot"]["construction-robot"]["max_health"] = 200
+data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 200
 
 -- Enhance Vanilla Defenses
 if settings.startup["enemyracemanager-enhance-defense"].value == true then
@@ -246,5 +246,5 @@ data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resis
 data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
 
 if feature_flags.space_travel then
-    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 800
+    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 1000
 end
