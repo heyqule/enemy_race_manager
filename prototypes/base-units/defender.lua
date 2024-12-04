@@ -103,8 +103,7 @@ robot_animations.defender = {
     }
 }
 
-function makeLevelCombatRobots(level, type, health_cut_ratio)
-    health_cut_ratio = health_cut_ratio or 1
+function makeLevelCombatRobots(level, type)
     local robot = util.table.deepcopy(data.raw["combat-robot"][type])
     local original_health = robot["max_health"] * 2
 
@@ -113,7 +112,7 @@ function makeLevelCombatRobots(level, type, health_cut_ratio)
     robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-flying-enemies"
     robot["has_belt_immunity"] = true
-    robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier / health_cut_ratio, level)
+    robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier, level)
     robot["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

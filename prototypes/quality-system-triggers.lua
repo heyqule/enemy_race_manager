@@ -2,8 +2,8 @@
 --- Register created effect and dying effect trigger for Quality system
 ---
 ---***
-local String = require('__erm_libs__/stdlib/string')
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
+local SharedFunctions = require("__enemyracemanager__/prototypes/shared_functions")
 
 require("__enemyracemanager__/global")
 require("__enemyracemanager__/setting-constants")
@@ -39,12 +39,7 @@ local register_trigger = function (entity)
     end
 end
 
-local is_erm_unit = function(name)
-    if string.find(name, "--", 1, true) then
-        local nameToken = String.split(name, "--")
-        return tonumber(nameToken[3]) and data.erm_registered_race[nameToken[1]]
-    end
-end
+
 
 local is_excluded_from_quality = function(name)
     local words = {"land-scout", "aerial-scout", "demolisher"}
@@ -61,7 +56,7 @@ local types = {"unit-spawner", "turret", "unit"}
 
 for _, type in pairs(types) do
     for _, entity in pairs(data.raw[type]) do
-        if is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
+        if SharedFunctions.is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
             register_trigger(entity)
         end
     end
@@ -71,7 +66,7 @@ if feature_flags.space_travel then
     local types = {"segmented-unit", "spider-unit"}
     for _, type in pairs(types) do
         for _, entity in pairs(data.raw[type]) do
-            if is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
+            if SharedFunctions.is_erm_unit(entity.name) or not is_excluded_from_quality(entity.name) then
                 register_trigger(entity)
             end
         end

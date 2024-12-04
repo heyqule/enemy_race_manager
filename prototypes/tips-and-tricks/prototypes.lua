@@ -122,6 +122,14 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
+            name = "enemyracemanager-defense-tips",
+            category = "enemyracemanager",
+            order = "m",
+            indent = 1,
+            starting_status = "suggested",
+        },
+        {
+            type = "tips-and-tricks-item",
             name = "enemyracemanager-bosses",
             category = "enemyracemanager",
             order = "m",

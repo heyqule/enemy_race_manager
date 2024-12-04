@@ -81,3 +81,9 @@ for i = 1, max_level do
         data:extend({ makeLevelTurrets(i, "mother-toxic-worm-turret", 14) })
     end
 end
+data.raw["turret"]["small-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["medium-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["big-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["behemoth-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["leviathan-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["mother-toxic-worm-turret"].autoplace = nil

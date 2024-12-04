@@ -38,9 +38,13 @@ script.on_event(defines.events.on_player_created, function(event)
     local level = 20
     local enemy_level = 20
     scenarios_helper.spawn_tile(surface, 320)
-    scenarios_helper.build_base(surface, legendary_full_base_with_normal_ammo_2_0, 0, 0)
+    scenarios_helper.build_base(surface, normal_full_base_2_0_no_railgun, 0, 0)
     scenarios_helper.set_tech_level(force, level)
-    scenarios_helper.set_enemy_params(enemy_level, 1, 0.2)
+    scenarios_helper.set_attack_points(999999)
+    scenarios_helper.set_attack_points(999999)
+    scenarios_helper.set_attack_points(999999)
+    --scenarios_helper.set_attack_points(-999999)
+    scenarios_helper.set_enemy_params(enemy_level, 1, 1)
     scenarios_helper.set_game_speed(1)
 
     surface.daytime = 0.5
@@ -53,9 +57,9 @@ script.on_event(defines.events.on_player_created, function(event)
     --if player.character then
     --    player.character.destroy()
     --end
-    local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
-    player.set_controller { type = defines.controllers.character, character = character }
-    player.teleport({ 0, 0 })
+    --local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
+    --player.set_controller { type = defines.controllers.character, character = character }
+    --player.teleport({ 0, 0 })
 
     local surface = game.surfaces[1]
     for x = 7, 24, 1 do

@@ -85,6 +85,7 @@ local max_level = GlobalConfig.MAX_LEVELS
 for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, "toxic-biter-spawner") })
 end
+data.raw["unit-spawner"]["toxic-biter-spawner"].autoplace = nil
 
 if  settings.startup["tb-disable-terrain-check"].value == false then
     -- This set of data is used for set up default autoplace calculation.

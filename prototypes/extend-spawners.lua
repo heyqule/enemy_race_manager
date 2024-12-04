@@ -62,7 +62,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
 
     spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
     spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
-    spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_hitpoint_multiplier / health_cut_ratio, level)
+    spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
     spawner["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(spawner_base_acid_resistance, spawner_incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(spawner_base_acid_resistance, spawner_incremental_acid_resistance, level) },
@@ -128,7 +128,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
 
     worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
     worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
-    worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_worm_hitpoint_multiplier / health_cut_ratio, level)
+    worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint  / health_cut_ratio, max_worm_hitpoint_multiplier, level)
     worm["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -159,7 +159,7 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
 
     worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
     worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
-    worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint, max_worm_hitpoint_multiplier / health_cut_ratio, level)
+    worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint  / health_cut_ratio, max_worm_hitpoint_multiplier, level)
     worm["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

@@ -214,22 +214,6 @@ function GlobalConfig.get_max_projectile_range(multiplier)
     return 64 * multiplier
 end
 
-function GlobalConfig.nauvis_enemy_is_mixed()
-    if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_MIXED then
-        return true
-    end
-
-    return false
-end
-
-function GlobalConfig.nauvis_enemy_is_biter()
-    if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
-        return true
-    end
-
-    return false
-end
-
 function GlobalConfig.build_style()
     return get_global_setting_value("enemyracemanager-build-style")
 end

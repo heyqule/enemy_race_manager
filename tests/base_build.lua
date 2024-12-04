@@ -93,7 +93,8 @@ it("Build a town", function()
         force = enemy_force
     })
     local unit_group = spawn_units(surface,name)
-    BaseBuildProcessor.exec(building)
+    --Currently handled by biter arrived event
+    --BaseBuildProcessor.exec(building)
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
             type="unit-spawner",
@@ -103,10 +104,21 @@ it("Build a town", function()
             type="turret",
             force = enemy_force
         })
-        local unit_count = table_size(unit_group.members)
+        local units = surface.find_entities_filtered({
+            type="unit",
+            force = enemy_force
+        })
+        local has_build_base_unit = false
+        for _, unit in pairs(units) do
+            if unit.commandable and unit.commandable.parent_group and
+               unit.commandable.parent_group.command and 
+               unit.commandable.parent_group.command.type == defines.command.build_base then
+                has_build_base_unit = true
+            end 
+        end
         assert(count > 1, "spawners spawned")
         assert(turret_count > 1, "turrets spawned")
-        assert(unit_count > 1, "building units remained")
+        assert(has_build_base_unit == true, "building units remained")
     end)
 end)
 it("Fully Expansion", function()

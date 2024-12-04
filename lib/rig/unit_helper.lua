@@ -36,7 +36,7 @@ function ERM_UnitHelper.get_health(base_health, incremental_health, level)
     end
     local multiplier = get_health_mutiplier(incremental_health, level)
     local final_health = math.floor(base_health * multiplier)
-    return math.max(final_health, base_health)
+    return final_health
 end
 
 -- Unit Health
@@ -79,7 +79,7 @@ function ERM_UnitHelper.get_damage(base_dmg, incremental_damage, level)
     end
 
     if settings.startup["enemyracemanager-free-for-all"].value then
-        damage = damage + GlobalConfig.FFA_MULTIPLIER
+        damage = damage * GlobalConfig.FFA_MULTIPLIER
     end
 
     return damage
@@ -148,11 +148,7 @@ function ERM_UnitHelper.get_attack_range(level, ratio)
     ratio = ratio or 1
     local attack_range = GlobalConfig.get_max_attack_range()
     if level < GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_RARE then
-        attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25
-    end
-
-    if feature_flags.quality then
-        attack_range = attack_range + level
+        attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25 + ((level - 1) * 0.5)
     end
 
     return math.ceil(attack_range * ratio)

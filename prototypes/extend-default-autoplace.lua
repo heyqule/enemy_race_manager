@@ -26,7 +26,7 @@ local String = require('__erm_libs__/stdlib/string')
 
 require("global")
 
-if GlobalConfig.nauvis_enemy_is_biter() then
+if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
     local nauvis_autocontrols = data.raw.planet.nauvis.map_gen_settings.autoplace_controls
     for key, autoplace in pairs(nauvis_autocontrols) do
         if string.find(key,"enemy_base", 1, true) or string.find(key,"enemy-base", 1, true)then
@@ -40,7 +40,7 @@ if GlobalConfig.nauvis_enemy_is_biter() then
     DebugHelper.print(serpent.block(data.raw.planet.nauvis.map_gen_settings.autoplace_controls))
 
     return false
-elseif GlobalConfig.nauvis_enemy_is_mixed() == false then
+elseif settings.startup['enemyracemanager-nauvis-enemy'].value ~= NAUVIS_MIXED then
         DebugHelper.print('ENEMY: Nauvis AutoControl IS NOT MIXED')
         return false
 end
@@ -49,34 +49,56 @@ DebugHelper.print('ENEMY: Nauvis AutoControl IS MIXED')
 
 local statistic_separator = "::";
 
-local tune_autoplace = function(v, is_turret, volume, mod_name, force_name, entity_filter, distance)
-    if v.autoplace == nil then
+local generate_noise_expression = function(entity, expression)
+    local name = "erm_nauvis_mixed-"..entity.name
+
+    data:extend {
+        {
+            type = "noise-expression",
+            name = name,
+            expression = expression
+        },
+    }
+
+    return name
+end
+
+local tune_autoplace = function(entity, is_turret, volume, mod_name, force_name, entity_filter, distance)
+    if entity.autoplace == nil then
         return
     end
 
-    local name_token = String.split(v.name, "--")
-    if name_token[1] ~= mod_name then
+    local name_token = String.split(entity.name, "--")
+    if name_token[1] ~= mod_name or tonumber(name_token[3]) ~= 1 then
         return
     end
 
-    if entity_filter ~= nil and string.find(v.name, entity_filter, 1, true) == nil then
+    if entity_filter ~= nil and string.find(entity.name, entity_filter, 1, true) == nil then
         return
     end
     ---@TODO instead of placing on unit. Try adding it to planet's property_expression_names?
+
+    local nauvis = data.raw.planet.nauvis
+    local map_gen_settings = nauvis.map_gen_settings
+    
     if is_turret then
-        v.autoplace = AutoplaceUtil.enemy_worm_autoplace({
-            probability_expression = v.autoplace.probability_expression,
+        local autoplace_controls = AutoplaceUtil.enemy_worm_autoplace({
+            probability_expression = entity.autoplace.probability_expression,
             force = force_name,
             volume = volume,
-            control = v.autoplace.control
+            control = entity.autoplace.control
         })
+        local expression_name = generate_noise_expression(entity, autoplace_controls.probability_expression)
+        map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
     else
-        v.autoplace = AutoplaceUtil.enemy_spawner_autoplace({
-            probability_expression = v.autoplace.probability_expression,
+        local autoplace_controls = AutoplaceUtil.enemy_spawner_autoplace({
+            probability_expression = entity.autoplace.probability_expression,
             force = force_name,
             volume = volume,
-            control = v.autoplace.control
+            control = entity.autoplace.control
         })
+        local expression_name = generate_noise_expression(entity, autoplace_controls.probability_expression)
+        map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
     end
 end
 

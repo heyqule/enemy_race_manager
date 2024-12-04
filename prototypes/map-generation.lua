@@ -4,11 +4,141 @@
 --- DateTime: 7/1/2021 1:27 PM
 ---
 local String = require('__erm_libs__/stdlib/string')
+local MapGenFunctions = require('__erm_libs__/prototypes/map_gen')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
 require("__enemyracemanager__/global")
 require("__enemyracemanager__/setting-constants")
+
+local gap = 128
+local create_2_way_positive_noise_expression = function(entity)
+    local name = "erm_2_way_positive-"..entity.name
+    local expression = "x_axis_positive_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
+    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
+        expression = "y_axis_positive_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
+    end
+    data:extend {
+        {
+            type = "noise-expression",
+            name = name,
+            expression = expression
+        },
+    }
+
+    return name
+end
+
+local create_2_way_negative_noise_expression = function(entity)
+    local name = "erm_2_way_negative-"..entity.name
+    local expression = "x_axis_negative_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
+    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
+         expression = "y_axis_negative_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
+    end
+    data:extend {
+        {
+            type = "noise-expression",
+            name = name,
+            expression = expression
+        },
+    }
+
+    return name
+end
+
+
+local create_4_way_noise_expression = function(entity, direction)
+    local direction_str = {
+        [defines.direction.northeast] = 'northeast',
+        [defines.direction.northwest] = 'northwest',
+        [defines.direction.southwest] = 'southwest',
+        [defines.direction.southeast] = 'southeast',
+    }
+    
+    local name = "erm_4_ways-"..direction_str[direction].."-"..entity.name
+    local expression = direction_str[direction].."_4_way_split("..entity.autoplace.probability_expression..", "..gap..")"
+    data:extend {
+        {
+            type = "noise-expression",
+            name = name,
+            expression = expression
+        },
+    }
+    
+    return name
+end
+
+local entity_types = {"unit-spawner","turret"}
+local nauvis = data.raw.planet.nauvis
+local map_gen_settings = nauvis.map_gen_settings
+
+if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_2_WAY then
+
+    local twoway_positive = settings.startup['enemyracemanager-2way-group-enemy-positive'].value
+    local twoway_negative = settings.startup['enemyracemanager-2way-group-enemy-negative'].value
+
+    MapGenFunctions.remove_enemy_autoplace_controls(map_gen_settings.autoplace_controls)
+
+    if twoway_positive ~= MOD_NAME and twoway_positive ~= RACE_EMPTY then
+        map_gen_settings.autoplace_controls[twoway_positive.."-enemy-base"] = {}
+    end
+    
+    if twoway_negative ~= MOD_NAME and twoway_negative ~= RACE_EMPTY then
+        map_gen_settings.autoplace_controls[twoway_negative.."-enemy-base"] = {}
+    end
+    
+    if twoway_positive == MOD_NAME or twoway_negative == MOD_NAME then
+        map_gen_settings.autoplace_controls["enemy-base"] = {}
+    end
+
+    for _, type in pairs(entity_types) do
+        for _, entity in pairs(data.raw[type]) do
+            local name_token = ForceHelper.split_name(entity.name)
+            if entity.autoplace and tonumber(name_token[3]) == 1 then
+                if twoway_positive ~= RACE_EMPTY and name_token[1] == twoway_positive then
+                    local expression_name = create_2_way_positive_noise_expression(entity)
+                    map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
+                elseif twoway_negative ~= RACE_EMPTY and name_token[1] == twoway_negative then
+                    local expression_name = create_2_way_negative_noise_expression(entity)
+                    map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
+                end
+            end
+        end
+    end
+elseif settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_4_WAY then
+    local force_mapping = {
+        [defines.direction.northeast] = settings.startup["enemyracemanager-4way-northeast"].value,
+        [defines.direction.northwest] = settings.startup["enemyracemanager-4way-northwest"].value,
+        [defines.direction.southwest] = settings.startup["enemyracemanager-4way-southwest"].value,
+        [defines.direction.southeast] = settings.startup["enemyracemanager-4way-southeast"].value,
+    }
+
+    MapGenFunctions.remove_enemy_autoplace_controls(map_gen_settings.autoplace_controls)
+
+    for direction_key, force in pairs(force_mapping) do
+        if force == MOD_NAME then
+            map_gen_settings.autoplace_controls["enemy-base"] = {}
+        elseif force ~= RACE_EMPTY then
+            map_gen_settings.autoplace_controls[force.."-enemy-base"] = {}
+        end
+
+        if force ~= RACE_EMPTY then
+            for _, type in pairs(entity_types) do
+                for _, entity in pairs(data.raw[type]) do
+                    local name_token = ForceHelper.split_name(entity.name)
+                    if entity.autoplace and name_token[1] == force and tonumber(name_token[3]) == 1 then
+                        local expression_name = create_4_way_noise_expression(entity, direction_key)
+                        map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
+                    end
+                end
+            end
+        end
+    end
+    
+end
+nauvis.map_gen_settings = map_gen_settings
+
 
 -- Start Enemy Base Autoplace functions --
 local zero_probability_expression = function(probability)
@@ -26,19 +156,6 @@ end
 local nil_expression = function()
     DebugHelper.print("Using nil_expression")
     return nil
-end
-
-local disable_vanilla_force = function(type)
-    for name, entity in pairs(data.raw[type]) do
-        if string.find(name, MOD_NAME) then
-            entity["autoplace"] = nil_expression()
-        end
-    end
-end
-
-local disable_level_spawners = function()
-    disable_vanilla_force("unit-spawner")
-    disable_vanilla_force("turret")
 end
 
 local disable_normal_biters = function()
@@ -82,156 +199,3 @@ for _, v in pairs(data.raw["turret"]) do
         end
     end
 end
-
-
---- Handle 2 way and 4 way split.  To be refactor
-
---local SPLIT_POINT = settings.startup["enemyracemanager-2way-group-split-point"].value
----- Add 4 chunks gap between races
---local SPLIT_GAP = 64
---
---local FOUR_WAY_X_SPLIT_POINT = settings.startup["enemyracemanager-4way-x-axis"].value
---local FOUR_WAY_Y_SPLIT_POINT = settings.startup["enemyracemanager-4way-y-axis"].value
---
---
---local y_axis_positive_probability_expression = function(autoplace)
---    DebugHelper.print("Using Y+")
---    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("y")) * autoplace.probability_expression
---    return autoplace
---end
---
---local y_axis_negative_probability_expression = function(autoplace)
---    DebugHelper.print("Using Y-")
---    autoplace.probability_expression = noise.less_or_equal(noise.var("y"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
---    return autoplace
---end
---
---local x_axis_positive_probability_expression = function(autoplace)
---    DebugHelper.print("Using X+")
---    autoplace.probability_expression = noise.less_or_equal(SPLIT_POINT + SPLIT_GAP, noise.var("x")) * autoplace.probability_expression
---    return autoplace
---end
---
---local x_axis_negative_probability_expression = function(autoplace)
---    DebugHelper.print("Using X-")
---    autoplace.probability_expression = noise.less_or_equal(noise.var("x"), SPLIT_POINT - SPLIT_GAP) * autoplace.probability_expression
---    return autoplace
---end
---
---local process_x_axis_unit = function(v)
---    local nameToken = String.split(v.name, "--")
---    local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
---    local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
---
---    if onPositive and onNegative and v.autoplace then
---        DebugHelper.print("Do nothing")
---    elseif onPositive and v.autoplace then
---        v.autoplace = x_axis_positive_probability_expression(v.autoplace)
---    elseif onNegative and v.autoplace then
---        v.autoplace = x_axis_negative_probability_expression(v.autoplace)
---    else
---        v.autoplace = nil_expression()
---    end
---end
---
---local process_x_axis = function()
---    for k, v in pairs(data.raw["unit-spawner"]) do
---        -- spawners
---        DebugHelper.print("Processing:" .. v.name)
---        process_x_axis_unit(v)
---    end
---
---    for k, v in pairs(data.raw["turret"]) do
---        -- turret
---        DebugHelper.print("Processing:" .. v.name)
---        process_x_axis_unit(v)
---    end
---end
---
---local process_y_axis_unit = function(v)
---    local nameToken = String.split(v.name, "--")
---    local onPositive = nameToken[1] == GlobalConfig.positive_axis_race()
---    local onNegative = nameToken[1] == GlobalConfig.negative_axis_race()
---
---    if onPositive and onNegative and v.autoplace then
---        DebugHelper.print("Do nothing")
---    elseif onPositive and v.autoplace then
---        v.autoplace = y_axis_positive_probability_expression(v.autoplace)
---    elseif onNegative and v.autoplace then
---        v.autoplace = y_axis_negative_probability_expression(v.autoplace)
---    else
---        v.autoplace = nil_expression()
---    end
---end
---
---local process_y_axis = function()
---    for _, v in pairs(data.raw["unit-spawner"]) do
---        -- spawners
---        DebugHelper.print("Processing:" .. v.name)
---        process_y_axis_unit(v)
---    end
---
---    for _, v in pairs(data.raw["turret"]) do
---        -- turret
---        DebugHelper.print("Processing:" .. v.name)
---        process_y_axis_unit(v)
---    end
---end
---
---local process_4_ways_unit = function(v)
---    local nameToken = String.split(v.name, "--")
---    local topleft = nameToken[1] == settings.startup["enemyracemanager-4way-top-left"].value
---    local topright = nameToken[1] == settings.startup["enemyracemanager-4way-top-right"].value
---    local bottomright = nameToken[1] == settings.startup["enemyracemanager-4way-bottom-right"].value
---    local bottomleft = nameToken[1] == settings.startup["enemyracemanager-4way-bottom-left"].value
---
---    if topleft and v.autoplace then
---        DebugHelper.print("topleft:" .. tostring(topleft))
---        v.autoplace.probability_expression = noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
---                noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
---                v.autoplace.probability_expression
---    elseif topright and v.autoplace then
---        DebugHelper.print("topright:" .. tostring(topright))
---        v.autoplace.probability_expression = noise.less_or_equal(noise.var("y"), FOUR_WAY_Y_SPLIT_POINT - SPLIT_GAP) *
---                noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
---                v.autoplace.probability_expression
---    elseif bottomright and v.autoplace then
---        DebugHelper.print("bottomright:" .. tostring(bottomright))
---        v.autoplace.probability_expression = noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
---                noise.less_or_equal(FOUR_WAY_X_SPLIT_POINT + SPLIT_GAP, noise.var("x")) *
---                v.autoplace.probability_expression
---    elseif bottomleft and v.autoplace then
---        DebugHelper.print("bottomleft:" .. tostring(bottomleft))
---        v.autoplace.probability_expression = noise.less_or_equal(FOUR_WAY_Y_SPLIT_POINT + SPLIT_GAP, noise.var("y")) *
---                noise.less_or_equal(noise.var("x"), FOUR_WAY_X_SPLIT_POINT - SPLIT_GAP) *
---                v.autoplace.probability_expression
---    else
---        v.autoplace = nil_expression()
---    end
---end
---
---local process_4_ways = function()
---    for _, v in pairs(data.raw["unit-spawner"]) do
---        -- spawners
---        DebugHelper.print("Processing:" .. v.name)
---        process_4_ways_unit(v)
---    end
---
---    for _, v in pairs(data.raw["turret"]) do
---        -- turret
---        DebugHelper.print("Processing:" .. v.name)
---        process_4_ways_unit(v)
---    end
---end
---
---
----- 2 Ways Race handler
---if GlobalConfig.mapgen_is_2_races_split() and settings.startup["enemyracemanager-2way-group-enemy-orientation"].value == X_AXIS then
---    process_x_axis()
---elseif GlobalConfig.mapgen_is_2_races_split() and settings.startup["enemyracemanager-2way-group-enemy-orientation"].value == Y_AXIS then
---    process_y_axis()
---end
---
---if GlobalConfig.mapgen_is_4_races_split() then
---    process_4_ways()
---end

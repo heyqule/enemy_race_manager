@@ -151,7 +151,7 @@ function QualityProcessor.calculate_quality_points()
                         data.tier = 3
                     end
 
-                    -- update custom group unit tier, using the highest tiers from any planet.
+                    -- update custom group unit tier, let it use the highest tiers from any planet.
                     RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
 
                     quality_data[planet.name] = calculate_chance_cache(data, quality_points)
@@ -358,17 +358,11 @@ function QualityProcessor.roll(entity)
             }
 
             if new_unit then
-                if new_unit and new_unit.commandable and storage.group_tracker[new_unit.force.name] then
-                    local group = storage.group_tracker[new_unit.force.name].group
-                    if group and group.valid and
-                       group.surface.index == new_unit.surface.index and
-                       util.distance(group.position, new_unit.position) < SCAN_RADIUS
-                    then
-                        group.add_member(new_unit)
-                    end
+                if entity.commandable and entity.commandable.parent_group then
+                    entity.commandable.parent_group.add_member(new_unit)
                 end
-
                 entity.destroy()
+                
                 return new_unit
             end
         end

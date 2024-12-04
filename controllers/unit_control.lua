@@ -35,12 +35,42 @@ local DEBUG_GROUP_STATES = {
     [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
 }
 
+local DEBUG_MOVING_STATES = {
+    [defines.moving_state.stale] = "defines.moving_state.stale",
+    [defines.moving_state.moving] = "defines.moving_state.moving",
+    [defines.moving_state.adaptive] = "defines.moving_state.adaptive",
+    [defines.moving_state.stuck] = "defines.moving_state.stuck",
+}
+
+local DEBUG_COMMAND = {
+    [defines.command.attack] = "defines.command.attack",
+    [defines.command.go_to_location] = "defines.command.go_to_location",
+    [defines.command.compound] = "defines.command.compound",
+    [defines.command.group] = "defines.command.group",
+    [defines.command.attack_area] = "defines.command.attack_area",
+    [defines.command.wander] = "defines.command.wander",
+    [defines.command.flee] = "defines.command.flee",
+    [defines.command.stop] = "defines.command.stop",
+    [defines.command.build_base] = "defines.command.build_base",
+}
+
+local base_build_group = {}
+
 local CHUNK_SIZE = 32
 
 local on_biter_base_build = function(event)
     local entity = event.entity
     if entity and entity.valid then
+        BaseBuildProcessor.exec(entity)
         AttackGroupBeaconProcessor.create_spawn_beacon(entity)
+    end
+end
+
+--- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
+--- Some group building base doesn't trigger on_biter_base_built nanithefuk?
+local on_build_base_arrived = function(event)
+    if event.group then
+        BaseBuildProcessor.exec(event.group.members[1])
     end
 end
 
@@ -89,6 +119,12 @@ local checking_state = {
 }
 
 local on_unit_group_finished_gathering = function(event)
+    --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
+    if storage.on_unit_group_finished_gathering_build_base then
+        storage.on_unit_group_finished_gathering_build_base = false    
+        return
+    end
+    
     local group = event.group
     if not group.valid then
         return
@@ -151,6 +187,37 @@ local on_unit_group_finished_gathering = function(event)
     if scout_unit_name then
         storage.scout_unit_name[group.unique_id] = nil
     end
+
+    --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
+    --- er... build group always failed.  No idea the reason, probably relate to the AI bug.
+    if event.group.command and event.group.command.type == defines.command.build_base and not storage.on_unit_group_finished_gathering_build_base then
+        local group = event.group
+        local surface = group.surface
+        local force = group.force
+        local command = group.command
+        storage.skip_quality_rolling = true
+        storage.on_unit_group_finished_gathering_build_base = true
+        base_build_group[group.unique_id] = {group = group, command = command}
+        --- Why does it need a tier 1 unit to make the group able to path??
+        local has_level_1 = false
+        for _, unit in pairs(group.members) do
+            local name_token = ForceHelper.get_name_token(unit.name)
+            if name_token[3] and tonumber(name_token[3]) == 1 then
+                has_level_1 = true
+                break
+            end 
+        end
+
+        if not has_level_1 then
+            local key, member = next(group.members)
+            if member then
+                local name_token = ForceHelper.get_name_token(member.name)
+                local lvl1entity = surface.create_entity({name=name_token[1].."--"..name_token[2]..'--1',position=group.position, force=force})
+                group.add_member(lvl1entity)
+                member.destroy()
+            end                
+        end
+    end
 end
 
 --- handle scouts under ai complete
@@ -191,13 +258,35 @@ local handle_scouts = function(scout_unit_data)
     end
 end
 
+--- @TODO SPIDER AI ISSUE BYPASS, break build building group
+local handle_build_group = function(unit_number, event_result)
+    if base_build_group == nil then
+        return
+    end
+    
+    local base_group_data = base_build_group[unit_number]
+    if base_group_data then
+        local group = base_group_data.group
+        if group.valid and (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck) then
+            local surface = group.surface
+            local new_group = surface.create_unit_group {position=group.position, force=group.force}
+            for _, unit in pairs(group.members) do
+                new_group.add_member(unit)
+            end
+            new_group.set_command(base_group_data.command)
+            new_group.start_moving()
+            base_build_group[unit_number] = nil
+        end
+    end
+end
+
 local nearby_retry = 3
 --- handle ERM groups under ai complete
 local handle_erm_groups = function(unit_number, event_result, was_distracted)
     if AttackGroupProcessor.is_erm_unit_group(unit_number) then
         local erm_unit_group = storage.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
-
+        
         AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
 
         if group.valid == false then
@@ -205,6 +294,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             return
         end
 
+        --- @TODO SPIDER AI ISSUE BYPASS, groups breaks.
         --- Reapply chain command if group moving has stale and command is wiped by spider AI.
         ---
         --- Rseding91 — 2024/10/28 at 4:02 PM
@@ -218,7 +308,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
         if event_result ==  defines.behavior_result.fail and
                 was_distracted == false and
                 group.command == nil and
-            (erm_unit_group.commands) and erm_unit_group.commands.type ==  defines.command.compound and
+            (erm_unit_group.commands) and erm_unit_group.commands.type == defines.command.compound and
            (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
         then
             local commands = erm_unit_group.commands
@@ -309,6 +399,7 @@ local on_ai_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
 
+    handle_build_group(unit_number, event_result)
     -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
     handle_erm_groups(unit_number, event_result, event.was_distracted)
 
@@ -359,6 +450,7 @@ UnitControl.events = {
         AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
     end,
     [defines.events.on_biter_base_built] = on_biter_base_build,
+    [defines.events.on_build_base_arrived] = on_build_base_arrived,
     [defines.events.on_unit_group_created] = on_unit_group_created,
     [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,
     [defines.events.on_ai_command_completed] = on_ai_completed,

@@ -1,8 +1,5 @@
 local control_name = "enemy-base"
 
-
-
-
 --[[
 local function peak_to_noise_expression(variable, optimal, range)
   local distance_from_optimal = noise.ridge(variable - optimal, 0, math.huge)
@@ -31,5 +28,72 @@ data:extend({
     name = "erm_plateau_peak_to_noise_expression",
     parameters = {"variable", "optimal", "range"},
     expression = "min(erm_peak_to_noise_expression(variable, optimal, range) * 20, 1)",
+  },
+
+  --- 2 way splits
+  {
+    type = "noise-function",
+    name = "x_axis_positive_2_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(x >= main_gap, custom_enemy_probability_expression, 0)"
+  },
+  {
+    type = "noise-function",
+    name = "x_axis_negative_2_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(x <= neg_main_gap, custom_enemy_probability_expression, 0)",
+    local_expressions = {
+      neg_main_gap = "main_gap * -1"
+    }
+  },
+  {
+    type = "noise-function",
+    name = "y_axis_positive_2_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y >= main_gap, custom_enemy_probability_expression, 0)"
+  },
+  {
+    type = "noise-function",
+    name = "y_axis_negative_2_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y <= neg_main_gap, custom_enemy_probability_expression, 0)",
+    local_expressions = {
+      neg_main_gap = "main_gap * -1"
+    }
+  },
+  
+  --- 4 way splits
+  {
+    type = "noise-function",
+    name = "northeast_4_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y <= neg_main_gap, if(x <= neg_main_gap, custom_enemy_probability_expression, 0) , 0)",
+    local_expressions = {
+      neg_main_gap = "main_gap * -1"
+    }
+  },
+  {
+    type = "noise-function",
+    name = "northwest_4_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y <= neg_main_gap, if(x >= main_gap, custom_enemy_probability_expression, 0), 0)",
+    local_expressions = {
+      neg_main_gap = "main_gap * -1"
+    }
+  },
+  {
+    type = "noise-function",
+    name = "southwest_4_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y >= main_gap, if(x >= main_gap, custom_enemy_probability_expression, 0), 0)",
+  },
+  {
+    type = "noise-function",
+    name = "southeast_4_way_split",
+    parameters = {"custom_enemy_probability_expression", "main_gap"},
+    expression = "if(y >= main_gap, if(x <= neg_main_gap, custom_enemy_probability_expression, 0), 0)",
+    local_expressions = {
+      neg_main_gap = "main_gap * -1"
+    }
   },
 })

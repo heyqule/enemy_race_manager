@@ -1,9 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.6
+Date: 2024-12-05
+
+  Features:
+    - Added back 2 ways and 4 ways split for Nauvis.
+    - Mixed races on Nauvis now support [space-age] game.
+    - Free for all now works in [space-age] game with above settings.
+    - Added "Defense Tips" to tips and tricks
+    
+  Changes:
+    - Tuned 3rd party biter spawners & turret autoplace.
+    - Removed non player entity types from health balancer. (e.g tree, simple-entity(rocks), asteriods and etc)
+    - Reduced normal tier of behemoth biter & spitter HP by 60% to match late game units from other forces. Effective HP for great (2nd)tier should be similar to the base game behemoth unit HP.
+    - When build base group arrives its destination, it immediately builds its town.  This is "temporary" workaround on a 2.0 group command issue which affected multiple areas.
+    - Max unit range setting represent normal tier units.  Each higher tier adds 0.5 range.  Legendary tier max range = max range + 2     
+    
+    
+---------------------------------------------------------------------------------------------------
 Version: 2.0.5
 Date: 2024-12-02
 
   Bugfixes:
-    - Fixed a crash during unit clean up when custom unit pathing failed.
+    - Fixed a crash during unit clean up when custom unit pathing failed.    
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.4

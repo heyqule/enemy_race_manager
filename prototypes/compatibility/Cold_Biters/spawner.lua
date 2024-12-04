@@ -84,6 +84,8 @@ local max_level = GlobalConfig.MAX_LEVELS
 for i = 1, max_level do
     data:extend({ makeLevelSpawners(i, "cb-cold-spawner") })
 end
+data.raw["unit-spawner"]["cb-cold-spawner"].autoplace = nil
+
 
 if  settings.startup["cb-disable-temperature-check"].value == false then
     -- This set of data is used for set up default autoplace calculation.
@@ -97,9 +99,4 @@ if  settings.startup["cb-disable-temperature-check"].value == false then
         temperature = 1, --1,2,3 (1 cold, 2. normal, 3 hot)
         entity_filter = "cold",
     })
-end
-
-
-if GlobalConfig.nauvis_enemy_is_biter() then
-    data.raw.planet.nauvis.map_gen_settings.autoplace_controls['enemy-base'] = {}
 end

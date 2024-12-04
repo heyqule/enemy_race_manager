@@ -1,4 +1,6 @@
 NAUVIS_MIXED = "Mixed Races"
+NAUVIS_2_WAY = "2 Way Split"
+NAUVIS_4_WAY = "4 Way Split"
 
 QUALITY_CASUAL = "Casual"
 QUALITY_NORMAL = "Normal"
