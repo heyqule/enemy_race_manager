@@ -7,7 +7,7 @@ Date: 2024-12-05
     - Mixed races on Nauvis now supports [space-age] games.
     - Free for all now works in [space-age] game with above settings.
     - Added "Defense Tips" to tips and tricks
-    
+
   Changes:
     - Tuned 3rd party biter spawners & turret autoplace.
     - Removed non player entity types from health balancer. (e.g tree, simple-entity(rocks), asteriods and etc)
@@ -16,7 +16,7 @@ Date: 2024-12-05
     - Changed max unit range setting to represent normal tier units.  Each higher tier adds 0.5 range.  Legendary tier max range = max range + 2.
     - Buffed rocket turret HP from 800 -> 1000.
     - Reduced construction bot resistances to match other player combat entities. (75% -> 50%)
-  
+
   Bugfixes:
     - Fixed land scout spawning for flying group.
     - Fixed a crash on Army window fetching an invalid icon.
