@@ -19,7 +19,7 @@ Date: 2024-12-05
 
   Bugfixes:
     - Fixed land scout spawning for flying group.
-    - Fixed a crash on Army window fetching an invalid icon.
+    - Fixed a crash on Army window when it's fetching an invalid icon.
                
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
