@@ -33,7 +33,7 @@ function UnitControlGUI.update(player)
 
         for name, unit_data in pairs(army_data["unit_types"]) do
             if unit_data["unit_count"] > 0 then
-                local sprite = item_table.add { type = "sprite", sprite = "recipe/" .. name }
+                local sprite = item_table.add { type = "sprite", sprite = "entity/" .. name }
                 sprite.style.width = 32
                 sprite.style.height = 32
                 sprite.style.stretch_image_to_widget_size = true
