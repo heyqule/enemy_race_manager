@@ -78,11 +78,19 @@ local on_unit_group_created = function(event)
     local group = event.group
     local force = group.force
     local force_name = force.name
-    local is_erm_group = storage.group_tracker and storage.group_tracker[force_name]
+    local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
+    local erm_group = storage.erm_unit_groups[group.unique_id]
+    
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
-        if is_erm_group then
+        if is_group_tracker_group then
             if  group.surface.planet == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
+                scout_unit_name = 2
+            else
+                scout_unit_name = 1
+            end
+        elseif erm_group then
+            if  group.surface.planet == nil or erm_group.is_aerial then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
