@@ -216,7 +216,9 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                     destination = { x = position.x, y = position.y },
                     radius = AttackGroupProcessor.ATTACK_RADIUS
                 }
-                DebugHelper.drawline(1, "default attack path", {r=1,g=1,b=0,a=0.5}, group.position , position)
+                if DEBUG_MODE then
+                    DebugHelper.drawline(1, "default attack path", {r=1,g=1,b=0,a=0.5}, group.position , position)
+                end
             else
                 if DEBUG_MODE then
                     for index, command in pairs(commands) do
