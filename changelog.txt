@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+Date: 2024-12-06
+
+  Changes:
+    - Changed collision layer name from "flying_units" to "flying". 
+    - Added " Combat Mechanic Overhaul" to Mod Compatibility document.  It causes laser not able to shoot enemy spawner / turrets    
+
+  Bugfixes:
+    - Fixed a crash on pentapod tries rolling quality, which they are not supposed to.
+    - Fixed an error on generate_group function in remote_api 
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.7
 Date: 2024-12-05
 

@@ -103,7 +103,7 @@ data:extend({
 data:extend({
     {
         type = "collision-layer",
-        name = "flying_units",
+        name = "flying",
     }
 })
 

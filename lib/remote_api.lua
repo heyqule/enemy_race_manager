@@ -99,7 +99,7 @@ end
 --- Usage: remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?, options?)
 function RemoteAPI.generate_attack_group(force_name, units_number, options)
     local force = game.forces[force_name]
-    units_number = tonumber(units_number)
+    units_number = tonumber(units_number) or GlobalConfig.max_group_size()
     options = options or {}
     options.group_type =  AttackGroupProcessor.GROUP_TYPE_MIXED
 

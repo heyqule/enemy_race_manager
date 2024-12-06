@@ -52,7 +52,7 @@ end
 function BaseBuildProcessor.process_on_cmd(entity)
     local name_token = ForceHelper.get_name_token(entity.name)
     local force_name = entity.force.name
-    if GlobalConfig.race_is_active(force_name) and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
+    if GlobalConfig.race_is_active(force_name) and name_token and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(unit_group, true)
@@ -123,28 +123,30 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
 
     for _, unit in pairs(members) do
         local unit_name_token = ForceHelper.get_name_token(unit.name)
-        local name = nil
-        if cc < tonumber(formation[1]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name, unit_name_token[3])
-            cc = cc + 1
-        elseif support < tonumber(formation[2]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name, unit_name_token[3])
-            support = support + 1
-        elseif turret < tonumber(formation[3]) then
-            name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name, unit_name_token[3])
-            turret = turret + 1
-        else
-            return
-        end
+        if unit_name_token then
+            local name = nil
+            if cc < tonumber(formation[1]) then
+                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name, unit_name_token[3])
+                cc = cc + 1
+            elseif support < tonumber(formation[2]) then
+                name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name, unit_name_token[3])
+                support = support + 1
+            elseif turret < tonumber(formation[3]) then
+                name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name, unit_name_token[3])
+                turret = turret + 1
+            else
+                return
+            end
 
-        Cron.add_1_sec_queue(
-                "BaseBuildProcessor.build",
-                unit.surface,
-                name,
-                force_name,
-                unit.position
-        )
-        unit.destroy()
+            Cron.add_1_sec_queue(
+                    "BaseBuildProcessor.build",
+                    unit.surface,
+                    name,
+                    force_name,
+                    unit.position
+            )
+            unit.destroy()
+        end
     end
 end
 

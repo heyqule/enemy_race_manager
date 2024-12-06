@@ -210,7 +210,7 @@ local on_unit_group_finished_gathering = function(event)
         local has_level_1 = false
         for _, unit in pairs(group.members) do
             local name_token = ForceHelper.get_name_token(unit.name)
-            if name_token[3] and tonumber(name_token[3]) == 1 then
+            if name_token and name_token[3] and tonumber(name_token[3]) == 1 then
                 has_level_1 = true
                 break
             end 
@@ -220,9 +220,11 @@ local on_unit_group_finished_gathering = function(event)
             local key, member = next(group.members)
             if member then
                 local name_token = ForceHelper.get_name_token(member.name)
-                local lvl1entity = surface.create_entity({name=name_token[1].."--"..name_token[2]..'--1',position=group.position, force=force})
-                group.add_member(lvl1entity)
-                member.destroy()
+                if name_token then
+                    local lvl1entity = surface.create_entity({name=name_token[1].."--"..name_token[2]..'--1',position=group.position, force=force})
+                    group.add_member(lvl1entity)
+                    member.destroy()
+                end
             end                
         end
     end

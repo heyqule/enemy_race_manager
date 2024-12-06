@@ -43,10 +43,10 @@ local get_name_token = function(name)
     end
 
     if storage.force_entity_name_cache[name] == nil then
-        if not string.find(name, "--", 1, true) then
-            storage.force_entity_name_cache[name] = { MOD_NAME, name, "1" }
-        else
+        if string.find(name, "--", 1, true) then
             storage.force_entity_name_cache[name] = String.split(name, "--")
+        else
+            return nil
         end
     end
 

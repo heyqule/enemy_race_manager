@@ -22,6 +22,9 @@ Overhaul mod compabitibility will be done when they become available.
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
+#### Combat Mechanic Overhaul
+- Laser and electric turret are not able to shoot spawner/turret.  But gun/rocket can.
+
 #### Milestone
 
 - Milestone for killing level 5/10/15/20 enemy command centers.

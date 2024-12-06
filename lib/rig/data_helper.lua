@@ -8,11 +8,11 @@
 local DataHelper = {}
 
 DataHelper.getFlyingCollisionMask = function()
-    return {layers={flying_units = true}, not_colliding_with_itself = true}
+    return {layers={flying = true}, not_colliding_with_itself = true}
 end
 
 DataHelper.getFlyingLayerName = function()
-    return "flying_units"
+    return "flying"
 end
 
 return DataHelper

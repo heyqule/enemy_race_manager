@@ -79,7 +79,7 @@ function ForceHelper.get_name_token(name)
         if string.find(name, "--", 1, true) then
             storage.force_entity_name_cache[name] = ForceHelper.split_name(name)
         else
-            storage.force_entity_name_cache[name] = { ForceHelper.default_mod_name, name, "1" }
+            return nil
         end
     end
 

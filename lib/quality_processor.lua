@@ -274,8 +274,12 @@ function QualityProcessor.roll(entity)
         is_running_roll = false
         return entity
     end
-
+    
     local name_token = ForceHelper.get_name_token(entity.name)
+    if name_token == nil then
+        return entity
+    end
+    
     local unit_tier = tonumber(name_token[3])
 
     -- Prevent roll if unit_tier not found
