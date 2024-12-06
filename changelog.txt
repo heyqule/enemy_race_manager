@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.7
+Date: 2024-12-05
+
+  Changes:
+    - Changed default attack points for launching rockets from 50 to 20, as per 2.0.0 design.
+    
+  Bugfixes:
+    - Fixed a quality processor event is using incorrect name for on_nth_tick
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.6
 Date: 2024-12-05
 

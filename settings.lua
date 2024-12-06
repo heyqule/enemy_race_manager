@@ -360,7 +360,7 @@ data:extend {
         name = "enemyracemanager-rocket-attack-point",
         description = "enemyracemanager-rocket-attack-point",
         setting_type = "runtime-global",
-        default_value = 50,
+        default_value = 20,
         minimum_value = 10,
         maximum_value = 1000,
         order = "enemyracemanager-311"

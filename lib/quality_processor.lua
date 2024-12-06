@@ -388,7 +388,7 @@ QualityProcessor.events =
     [defines.events.on_runtime_mod_setting_changed] = update_storages()
 }
 
-QualityProcessor.on_tick = {
+QualityProcessor.on_nth_tick = {
     [301] = QualityProcessor.calculate_quality_points
 }
 
