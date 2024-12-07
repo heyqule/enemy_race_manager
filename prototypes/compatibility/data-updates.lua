@@ -28,4 +28,8 @@ if mods["Toxic_biters"] then
     require "Toxic_Biters/worm"
 end
 
+if mods['combat-mechanics-overhaul'] then
+    require "CMO/electric_turret"
+end
+
 require "shared/resistance"

@@ -15,15 +15,15 @@ Overhaul mod compabitibility will be done when they become available.
 
 - It may or may not work. Expect incompatibility.
 
+#### Resource Spawner Overhaul
+- You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
+
 #### AAI programmable vehicle
 
 - It has a feature that prevent player/enemy build too close to each other.
 - This affects proxy builder units which they build too close to your defenses, and you can't replace destroyed
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
-
-#### Combat Mechanic Overhaul
-- Laser and electric turret are not able to shoot spawner/turret.  But gun/rocket can.
 
 #### Milestone
 

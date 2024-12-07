@@ -28,8 +28,6 @@ require "prototypes/extend-army-events"
 
 require "prototypes/extend-freeforall"
 
-require("prototypes/compatibility/data-updates")
-
 require("prototypes/extend-scout-units")
 
 require("prototypes/extend-creep-removal")
@@ -43,6 +41,8 @@ require("prototypes/extend-resistances")
 require("prototypes/extend-default-autoplace")
 
 require("prototypes/map-generation.lua")
+
+require("prototypes/compatibility/data-updates")
 
 if TEST_MODE then
     require("prototypes/test-prototypes")

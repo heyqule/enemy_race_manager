@@ -28,10 +28,10 @@ data:extend(
         {
             {
                 type = "trigger-target-type",
-                name = "air-unit"
+                name = "flying"
             },
             ---  Invisible unit can only target by laser and tesla turret.
-            ---  Players can't target them but they can be deal with AOE damage.
+            ---  Player and other unit can still target them.
             ---  Currently used by Protoss: invisible dark templar.
             {
                 type = "trigger-target-type",
