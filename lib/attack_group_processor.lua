@@ -1028,7 +1028,9 @@ function AttackGroupProcessor.cleanup_commandable(commandable)
     if commandable and commandable.valid then
         if commandable.is_unit_group and commandable.members  then
             for _, member in pairs(commandable.members) do
-                member.destory({raise_destroy=true})
+                if member.valid then
+                    member.destroy({raise_destroy=true})
+                end
             end
         elseif commandable.entity and commandable.entity.valid then
             commandable.entity.destroy({raise_destroy=true})

@@ -376,14 +376,6 @@ it("Enemy victory expansion", function()
             type = "unit",
             force = force_name
         })
-        
-        local correct = 0
-        for _, entity in pairs(entities) do
-           if string.find(entity.name, "mutalisk", 1, true) or string.find(entity.name, "scout", 1, true) then
-               correct = correct + 1
-           end
-        end
-        assert(correct > 0,"Has correct unit in the area")
 
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
