@@ -64,11 +64,6 @@ Click.erm_clean_idle_biter = function(event)
     GuiContainer.main_window.kill_idle_units(event)
 end
 
-Click.erm_reset_default_bitter = function(event)
-    GuiContainer.main_window.reset_default(event)
-end
-
-
 Click.erm_detail_close_button = function(event)
     local element = event.element
     local owner = game.players[element.player_index]
@@ -78,14 +73,14 @@ Click.erm_detail_close_button = function(event)
     end
 end
 
-Click.detail_setting_confirm = function(event)
+Click.erm_detail_reset_active_attack_points = function(event)
     local element = event.element
     local owner = game.players[element.player_index]
     if owner then
-        local nameToken = String.split(element.name, "/")
-        GuiContainer.detail_window.confirm(owner, nameToken, element)
-        GuiContainer.main_window.show(owner)
-        GuiContainer.main_window.update_all()
+        local nameToken = util.split(element.name, "/")
+        GuiContainer.detail_window.reset_active_attack_points(owner, nameToken[1])
+        GuiContainer.detail_window.toggle_close(owner)
+        GuiContainer.detail_window.show(owner, storage.race_settings[nameToken[1]])
     end
 end
 
@@ -234,6 +229,21 @@ Click.erm_rallypoint_unset = function(event)
     end
 end
 
+Click.nuke_planet_cancel = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.nuke_planet_dialog.hide(player)
+    end
+end
+
+Click.nuke_planet_confirm = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.nuke_planet_dialog.confirm(player)
+    end
+end
+
+
 Click.events = {
     --- setup: ['click_elememt_name_pattern'] = function_name(event)
     --- UI setup: Add filter pattern tag: tags={filter_pattern=".*/detail_action"}
@@ -247,6 +257,7 @@ Click.events = {
 
     --- Enemy Detail window clicks ---
     ["erm_detail_close_button"] = Click.erm_detail_close_button,
+    [".*/reset_attack_points"] =  Click.erm_detail_reset_active_attack_points,
 
     --- Boss Detail window clicks ---
     [".*/boss_details"] = Click.boss_detail,
@@ -275,7 +286,11 @@ Click.events = {
     --- Army RallyPoint ---
     ["erm_rally_point_set"] = Click.erm_rallypoint_set,
     ["erm_rallypoint_map"] = Click.erm_rallypoint_map,
-    ["erm_rally_point_unset"] = Click.erm_rallypoint_unset
+    ["erm_rally_point_unset"] = Click.erm_rallypoint_unset,
+
+    --- Nuke Planet confirmation ---
+    [".*/nuke_planet_cancel"] = Click.nuke_planet_cancel,
+    [".*/nuke_planet_confirm"] = Click.nuke_planet_confirm,
 }
 --- handle all ERM on_click function calls
 Click.on_click_event = function(event)

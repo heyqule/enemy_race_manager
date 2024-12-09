@@ -87,24 +87,35 @@ local rails_change_resistance = function()
     }
 end
 
-data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
-data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200
-data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
-data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
-
--- Buff Robots, immune fire, bump all other resist to 75
--- Construction bots are no longer repairable to preserve construction bot queue. They repair themselves in roboport
-for name, entity in pairs(data.raw["construction-robot"]) do
-    table.insert(data.raw["construction-robot"][name]["flags"], "not-repairable")
+--- Wrap them in a check b/c some mods delete the base game prototypes. ¯\_(ツ)_/¯
+if data.raw["ammo-turret"]["gun-turret"] then
+    data.raw["ammo-turret"]["gun-turret"]["max_health"] = 800
+end
+if data.raw["electric-turret"]["laser-turret"] then
+    data.raw["electric-turret"]["laser-turret"]["max_health"] = 1200    
+end
+if data.raw["construction-robot"]["construction-robot"] then
+    data.raw["construction-robot"]["construction-robot"]["max_health"] = 250
+    data.raw["construction-robot"]["construction-robot"]["resistances"] = armor_change_resistance(50, 0)
+    data.raw["construction-robot"]["construction-robot"]["resistances"][4]["percent"] = 100
+    -- Buff Robots, immune fire, bump all other resist to 75
+    -- Construction bots are no longer repairable to preserve construction bot queue. They repair themselves in roboport
+    for name, entity in pairs(data.raw["construction-robot"]) do
+        table.insert(data.raw["construction-robot"][name]["flags"], "not-repairable")
+    end
+end
+if data.raw["construction-robot"]["logistic-robot"] then
+    data.raw["logistic-robot"]["logistic-robot"]["max_health"] = 250
+    data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resistance(50, 0)
+    data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
 end
 
-data.raw["construction-robot"]["construction-robot"]["resistances"] = armor_change_resistance(50, 0)
-data.raw["construction-robot"]["construction-robot"]["resistances"][4]["percent"] = 100
-data.raw["logistic-robot"]["logistic-robot"]["resistances"] = armor_change_resistance(50, 0)
-data.raw["logistic-robot"]["logistic-robot"]["resistances"][4]["percent"] = 100
+
 
 if feature_flags.space_travel then
-    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 1000
+    if data.raw["ammo-turret"]["rocket-turret"] then
+        data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 1000
+    end
 end
 
 -- Enhance Vanilla Defenses

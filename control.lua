@@ -44,6 +44,8 @@ handler.add_lib(require("__enemyracemanager__/controllers/attack_group_managemen
 
 handler.add_lib(require("__enemyracemanager__/controllers/attack_group_beacon"))
 
+--- On Rocket Launch Events
+handler.add_lib(require("__enemyracemanager__/controllers/on_player_died"))
 
 --- On Rocket Launch Events
 handler.add_lib(require("__enemyracemanager__/controllers/on_rocket_launch"))

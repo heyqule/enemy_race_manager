@@ -107,11 +107,5 @@ function QualityPointWindow.toggle_close(owner)
     end
 end
 
-function QualityPointWindow.update_data_box(element, owner)
-    if owner and element then
-
-    end
-end
-
 
 return QualityPointWindow

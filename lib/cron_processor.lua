@@ -56,7 +56,7 @@ function CronProcessor.init_globals()
 
     -- Conditional Crons
     storage.quick_cron = storage.quick_cron or Queue()  -- Spawn
-    storage.quick_cron_is_running = false
+    storage.quick_cron_is_running = storage.quick_cron_is_running or false
 
     storage.boss_cron = storage.boss_cron or Queue()
 
@@ -154,7 +154,7 @@ end
 function CronProcessor.process_quick_queue()
     process_one_job(storage.quick_cron)
 
-     if storage.quick_cron_is_running == true and Queue.is_empty(storage.quick_cron) then
+     if Queue.is_empty(storage.quick_cron) then
          storage.quick_cron_is_running = false
          script.on_nth_tick(GlobalConfig.QUICK_CRON, nil)
      end

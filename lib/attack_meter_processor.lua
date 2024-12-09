@@ -109,7 +109,7 @@ function AttackMeterProcessor.calculate_points(entity)
 end
 
 -- Calculate every minutes
-function AttackMeterProcessor.calculated_time_attack()
+function AttackMeterProcessor.calculate_time_attack()
     for _, force in pairs(game.forces) do
         local force_name = force.name
         if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_active(force_name) then

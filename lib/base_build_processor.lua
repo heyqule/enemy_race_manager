@@ -122,17 +122,16 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     end
 
     for _, unit in pairs(members) do
-        local unit_name_token = ForceHelper.get_name_token(unit.name)
-        if unit_name_token then
+        if unit.valid then
             local name = nil
             if cc < tonumber(formation[1]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name, unit_name_token[3])
+                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
                 cc = cc + 1
             elseif support < tonumber(formation[2]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name, unit_name_token[3])
+                name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name)
                 support = support + 1
             elseif turret < tonumber(formation[3]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name, unit_name_token[3])
+                name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name)
                 turret = turret + 1
             else
                 return

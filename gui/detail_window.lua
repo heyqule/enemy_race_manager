@@ -9,13 +9,13 @@ require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
-local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 --- Detail Windows
 local DetailWindow = {
     root_name = "erm_races_manager_detail",
-    window_width = 680,
+    window_width = 720,
 }
 
 
@@ -107,11 +107,6 @@ function DetailWindow.show(player, race_setting)
     local right_flow = main_flow.add { type = "flow", direction = "vertical" }
     right_flow.style.width = DetailWindow.window_width / 2
 
-    if admin then
-        local center_gap = right_flow.add { type = "empty-widget" }
-        center_gap.style.height = 16
-    end
-
     local boss_flow = right_flow.add { type = "flow", name = "quality_points_flow", direction = "vertical" }
     boss_flow.add { type = "label", name = "quality_points_details_description", caption = { "gui.quality_points_details_description" } }
     boss_flow.add { type = "button", name = race_setting.race .. "/quality_points_details", tags={filter_pattern=".*/quality_points_details"}, caption = { "gui.quality_points_details" } }
@@ -119,6 +114,12 @@ function DetailWindow.show(player, race_setting)
     local boss_flow = right_flow.add { type = "flow", name = "boss_flow", direction = "vertical" }
     boss_flow.add { type = "label", name = "boss_flow_description", caption = { "gui.boss_flow_description" } }
     boss_flow.add { type = "button", name = race_setting.race .. "/boss_details", tags={filter_pattern=".*/boss_details"}, caption = { "gui.boss_details" } }
+
+    if admin then
+        local reset_attack_points_flow = right_flow.add { type = "flow", name = "reset_attack_points_flow", direction = "vertical" }
+        reset_attack_points_flow.add { type = "label", name = "reset_attack_points_description", caption = { "gui.reset_attack_points_description" } }
+        reset_attack_points_flow.add { type = "button", name = race_setting.race .. "/reset_attack_points", tags={filter_pattern=".*/reset_attack_points"}, caption = { "gui.reset_attack_points" },  style = "red_button" }
+    end
 end
 
 function DetailWindow.hide(player)
@@ -128,6 +129,13 @@ end
 function DetailWindow.toggle_close(owner)
     if owner then
         DetailWindow.hide(owner)
+    end
+end
+
+function DetailWindow.reset_active_attack_points(owner, race_name)
+    if owner then
+        RaceSettingsHelper.set_attack_meter(race_name, 0)
+        owner.force.print({"gui.reset_active_attack_points_force", owner.name, race_name})
     end
 end
 

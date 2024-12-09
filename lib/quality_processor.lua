@@ -28,9 +28,6 @@ local top_tier = 5
 local SCAN_RADIUS = 64
 local can_spawn_as_decimal = true
 
--- a flag to check whether re-roll is running to prevent firing another re-oll on same unit.
-local is_running_roll
-
 local update_storages = function()
     if storage.quality_on_planet == nil then
         storage.quality_on_planet = storage.quality_on_planet or {}
@@ -265,13 +262,13 @@ function QualityProcessor.roll(entity)
     -- storage.skip_quality_rolling allows bypassing roll manually
     -- unit from spawner doesn"t need to roll
     -- unit which is not from enemy force or not erm units doesn"t need to roll.
-    if is_running_roll or storage.skip_quality_rolling or
+    if storage.is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
        not ForceHelper.is_enemy_force(entity.force) or
        not ForceHelper.is_erm_unit(entity)
     then
         storage.skip_quality_rolling = false
-        is_running_roll = false
+        storage.is_running_roll = false
         return entity
     end
     
@@ -310,7 +307,7 @@ function QualityProcessor.roll(entity)
         local planet_data = storage.quality_on_planet[force.name][surface.name]
 
         if not planet_data then
-            is_running_roll = false
+            storage.is_running_roll = false
             return entity
         end
         local spawn_rates = planet_data.spawn_rates
@@ -352,7 +349,7 @@ function QualityProcessor.roll(entity)
                16, 2)
 
         if position then
-            is_running_roll = true
+            storage.is_running_roll = true
             local new_unit = surface.create_entity {
                 name = name_token[1].."--"..name_token[2].."--"..selected_tier,
                 force = force,

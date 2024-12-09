@@ -53,7 +53,7 @@ end
 
 --- Regular attack group Test
     it("Regular Group by AP", function()
-        async(14400)
+        async(5400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
@@ -61,7 +61,7 @@ end
 
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
-        after_ticks(14400, function()
+        after_ticks(5400, function()
             assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
 
             local key = next(storage.erm_unit_groups)
@@ -74,7 +74,7 @@ end
     end)
     --- Elite group Test
     it("Elite Group by AAP", function()
-        async(14400)
+        async(5400)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -10, -10 } })
@@ -87,7 +87,7 @@ end
         QualityProcessor.calculate_quality_points()
 
 
-        after_ticks(14400, function()
+        after_ticks(5400, function()
             assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
 
             local key = next(storage.erm_unit_groups)
@@ -110,7 +110,7 @@ end
     end)
 
     it("Superweapon revenge", function()
-        async(7300)
+        async(3600)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
@@ -183,7 +183,7 @@ end
     end)
 
     it("Dropships", function()
-        async(7300)
+        async(7200)
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -216,7 +216,7 @@ end
     end)
 
     it("Featured Group", function()
-        async(7300)
+        async(3600)
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -229,7 +229,7 @@ end
                 featured_group_id = 1}
         )
 
-        after_ticks(7200, function()
+        after_ticks(3600, function()
             local entities = surface.find_entities_filtered({
                 area = {{-100,-100},{100,100}},
                 type = "unit",
@@ -251,7 +251,7 @@ end
     end)
 
     it("Featured Flyer Group", function()
-        async(7300)
+        async(5400)
 
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
@@ -264,7 +264,7 @@ end
                  featured_group_id = 2}
         )
 
-        after_ticks(7200, function()
+        after_ticks(5400, function()
             local entities = surface.find_entities_filtered({
                 area = {{-100,-100},{100,100}},
                 type = "unit",
@@ -360,7 +360,7 @@ end
     end)
 
 it("Enemy victory expansion", function()
-    async(18000)
+    async(7200)
     local surface = game.surfaces[1]
     local entity = spawn_cc(surface)
     AttackGroupBeaconProcessor.init_index()
@@ -370,7 +370,7 @@ it("Enemy victory expansion", function()
             {group_type = AttackGroupProcessor.GROUP_TYPE_FLYING}
     )
 
-    after_ticks(18000, function()
+    after_ticks(7200, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = "unit",

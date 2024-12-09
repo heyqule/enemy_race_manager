@@ -125,10 +125,6 @@ cron_switch = {
     ["InterplanetaryAttacks.scan"] = function(args)
         InterplanetaryAttacks.scan(unpack(args))
     end,
-    ----LevelProcessor
-    --["LevelProcessor.calculate_multiple_levels"] = function(args)
-    --    LevelProcessor.calculate_multiple_levels()
-    --end,
 }
 
 --- Garbage Collection and Statistic aggregations, all calls are run by quick cron
@@ -151,30 +147,12 @@ end
 local CronController = {}
 
 CronController.on_nth_tick = {
-    [Config.ONE_MINUTE_CRON] = function(event)
-        Cron.process_1_min_queue()
-    end,
-
-    [Config.FIFTEEN_SECONDS_CRON] = function(event)
-        Cron.process_15_sec_queue()
-    end,
-
-    [Config.TEN_SECONDS_CRON] = function(event)
-        Cron.process_10_sec_queue()
-    end,
-
-    [Config.TWO_SECONDS_CRON] = function(event)
-        Cron.process_2_sec_queue()
-    end,
-
-    [Config.ONE_SECOND_CRON] = function(event)
-        Cron.process_1_sec_queue()
-    end,
-
-    [Config.TIME_BASED_ATTACK_POINT_CRON] = function(event)
-        AttackMeterProcessor.calculated_time_attack()
-    end,
-
+    [Config.ONE_MINUTE_CRON] = Cron.process_1_min_queue,
+    [Config.FIFTEEN_SECONDS_CRON] = Cron.process_15_sec_queue,
+    [Config.TEN_SECONDS_CRON] = Cron.process_10_sec_queue,
+    [Config.TWO_SECONDS_CRON] = Cron.process_2_sec_queue,
+    [Config.ONE_SECOND_CRON] = Cron.process_1_sec_queue,
+    [Config.TIME_BASED_ATTACK_POINT_CRON] = AttackMeterProcessor.calculate_time_attack,
     [Config.GC_AND_STATS] = garbage_and_stats
 }
 

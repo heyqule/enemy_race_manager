@@ -228,7 +228,7 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                             DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5},  commands.commands[index-1].destination ,  command.destination)
                         end
                     end
-                end                
+                end
             end
 
             if group_tracker.always_angry then
@@ -263,12 +263,16 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                     created = game.tick
                 }
             else
-                storage.erm_unit_groups[group.unique_id].commands = commands        
+                storage.erm_unit_groups[group.unique_id].commands = commands
             end
             surface.pollute(position, pollution_deduction)
-        else
+        elseif group.surface.pollutant_type then
             group.set_autonomous()
             surface.pollute({0, 0}, pollution_deduction)
+        else
+            --- Re-add 20% of AttackGroupProcessor.MIXED_UNIT_POINTS
+            RaceSettingsHelper.add_to_attack_meter(group.force.name, #group.members * 5)
+            AttackGroupProcessor.queue_for_destroy(group)
         end
 
         set_group_tracker(force_name, nil)
@@ -750,6 +754,13 @@ function AttackGroupProcessor.process_attack_position(options)
         end
     end
 
+    local erm_group_data = storage.erm_unit_groups[group.unique_id]
+    --- @TODO SPIDER AI ISSUE BYPASS, only assign now attack command if the group is not in same location.
+    local is_near_same_location = false
+    if erm_group_data and erm_group_data.has_completed_command_at then
+        is_near_same_location = Position.manhattan_distance(erm_group_data.has_completed_command_at, group.position) < AttackGroupProcessor.ATTACK_RADIUS
+    end
+
     if target_entity then
         local command = {
             type = defines.command.attack,
@@ -757,32 +768,35 @@ function AttackGroupProcessor.process_attack_position(options)
             distraction = distraction
         }
         group.set_command(command)
-    elseif attack_position then
+    elseif attack_position and not is_near_same_location then
         local command = {
             type = defines.command.attack_area,
             destination = { x = attack_position.x, y = attack_position.y },
-            radius = AttackGroupProcessor.ATTACK_RADIUS,
+            radius = AttackGroupProcessor.ATTACK_RADIUS / 2,
             distraction = distraction
-        }
+        }    
         group.set_command(command)
-    else
-        --- Victory Expansion
-        local erm_group_data = storage.erm_unit_groups[group.unique_id]
-        if erm_group_data and erm_group_data.has_completed_command then
+    elseif erm_group_data then
+        --- Victory Wander and Victory Expansion
+        if erm_group_data.ran_wandering_command then
             script.raise_event(
-                Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
-                {
-                    group = group,
-                    limit = 1
-                }
+                    Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
+                    {
+                        group = group,
+                        limit = 1
+                    }
             )
-        end
 
-        if group.is_unit_group then
-            group.set_autonomous()
+            AttackGroupProcessor.queue_for_destroy(group)
         else
-           AttackGroupProcessor.queue_for_destroy(group)
-        end
+            erm_group_data.ran_wandering_command = true
+            erm_group_data.has_completed_command_at = nil
+            local command = {
+                type = defines.command.wander,
+                ticks_to_wait = 3600
+            }
+            group.set_command(command)
+        end            
     end
 end
 

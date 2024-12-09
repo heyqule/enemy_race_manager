@@ -133,6 +133,15 @@ function SurfaceProcessor.get_enemy_on(surface_name)
     return MOD_NAME
 end
 
+function SurfaceProcessor.get_all_enemies_on(surface_name)
+    local surface_race_data = storage.enemy_surfaces[surface_name]
+    if surface_race_data and surface_race_data.size > 0 then
+        return surface_race_data.races_by_key
+    end
+
+    return nil
+end
+
 function SurfaceProcessor.get_gps_message(x, y, surface_name)
     return "[gps=" .. x .. "," .. y .. "," .. surface_name .. "]"
 end

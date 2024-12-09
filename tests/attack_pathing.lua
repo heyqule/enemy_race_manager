@@ -563,7 +563,7 @@ it("Can't avoid land Beacon, all enemies killed by turrets", function()
 end)
 
 it("Aerial Attack", function()
-    async(7200)
+    async(4000)
     local surface = game.surfaces[1]
     local enemy = game.forces["enemy"]
     local player = game.forces["player"]
@@ -581,7 +581,7 @@ it("Aerial Attack", function()
         AttackGroupProcessor.generate_group(game.forces["enemy"], 50, {group_type=AttackGroupProcessor.GROUP_TYPE_FLYING})
     end)
     
-    after_ticks(7200, function()
+    after_ticks(3600, function()
         local enemies = surface.find_entities_filtered {
             force = "enemy",
             type = "unit",

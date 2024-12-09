@@ -304,6 +304,8 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             return
         end
 
+        local moving_state_stale = (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
+
         --- @TODO SPIDER AI ISSUE BYPASS, groups breaks.
         --- Reapply chain command if group moving has stale and command is wiped by spider AI.
         ---
@@ -319,7 +321,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
                 was_distracted == false and
                 group.command == nil and
             (erm_unit_group.commands) and erm_unit_group.commands.type == defines.command.compound and
-           (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
+            moving_state_stale
         then
             local commands = erm_unit_group.commands
             local new_commands
@@ -358,13 +360,8 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             end
         end
         --- End Bug workaround
-
-        if event_result == defines.behavior_result.success and was_distracted == false then
-            erm_unit_group.has_completed_command = true
-        end
-
         if event_result == defines.behavior_result.fail or
-                erm_unit_group.nearby_retry >= nearby_retry
+            erm_unit_group.nearby_retry >= nearby_retry
         then
             if erm_unit_group.always_angry and erm_unit_group.always_angry == true then
                 AttackGroupProcessor.process_attack_position({
@@ -402,6 +399,10 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             end
             erm_unit_group.nearby_retry = erm_unit_group.nearby_retry + 1
         end
+
+        if event_result == defines.behavior_result.success and was_distracted == false then
+            erm_unit_group.has_completed_command_at = group.position
+        end
     end
 end
 
@@ -411,6 +412,7 @@ local on_ai_completed = function(event)
 
     handle_build_group(unit_number, event_result)
     -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
+    -- Can utilize register_on_object_destroyed
     handle_erm_groups(unit_number, event_result, event.was_distracted)
 
     local scout_unit_data = storage.scout_by_unit_number[unit_number]
@@ -434,7 +436,7 @@ UnitControl.events = {
     --- This event queue up to 5 batch of units.
     [Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD]] = function(event)
         local i = 0
-        local limit = event.limit or 5
+        local limit = event.limit or 1
         if limit > 5 then
             limit = 5
         end

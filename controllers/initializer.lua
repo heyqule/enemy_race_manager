@@ -7,6 +7,8 @@
 
 require("__enemyracemanager__/global")
 
+local Queue = require("__erm_libs__/stdlib/queue")
+
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -150,7 +152,7 @@ local conditional_events = function()
         ArmyDeploymentProcessor.start_event(true)
     end
 
-    if storage.quick_cron_is_running then
+    if storage.quick_cron_is_running or not Queue.is_empty(storage.quick_cron) then
         script.on_nth_tick(GlobalConfig.QUICK_CRON, Cron.process_quick_queue)
     end
 
@@ -186,8 +188,9 @@ local init_globals = function()
         storage.is_using_quality = true
     end
 
+    storage.death_loop_detection = storage.death_loop_detection or {}
+
     SurfaceProcessor.init_globals()
-    --MapProcessor.init_globals()
     ForceHelper.init_globals()
     Cron.init_globals()
     AttackGroupProcessor.init_globals()
