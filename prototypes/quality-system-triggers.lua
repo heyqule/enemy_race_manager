@@ -33,12 +33,13 @@ local register_trigger = function (entity)
             type = "direct",
             action_delivery = {
                 type = "instant",
-                source_effects = roll_dice
+                source_effects = { 
+                    roll_dice
+                }
             }
         }
     end
 end
-
 
 
 local is_excluded_from_quality = function(name)

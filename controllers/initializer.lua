@@ -94,8 +94,8 @@ local addRaceSettings = function()
         { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
         { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
     }
-    race_settings.structure_killed_count_by_planet = {}
-    race_settings.unit_killed_count_by_planet = {}
+    race_settings.structure_killed_count_by_planet = race_settings.structure_killed_count_by_planet or {}
+    race_settings.unit_killed_count_by_planet = race_settings.unit_killed_count_by_planet or {}
 
 
     RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
