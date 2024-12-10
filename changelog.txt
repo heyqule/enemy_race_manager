@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.11
+Date: 2024-12-10
+
+  Bugfixes:
+    - Fixed startup crash when including ion cannon mk2 on a not space-age game.  It changed to space-age only entity.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.10
 Date: 2024-12-10
   

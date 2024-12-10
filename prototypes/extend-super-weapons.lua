@@ -61,11 +61,12 @@ if mods["Kux-OrbitalIonCannon"] and data.raw["projectile"]["crosshairs"] then
 
     data:extend({ entity })
 
-    local entity_mk2 = util.table.deepcopy(data.raw["projectile"]["crosshairs-mk2"])
-    table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
-    table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_counter_attack)
-
-    data:extend({ entity_mk2 })
+    if feature_flags.space_travel then
+        local entity_mk2 = util.table.deepcopy(data.raw["projectile"]["crosshairs-mk2"])
+        table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
+        table.insert(entity_mk2["action"][1]["action_delivery"]["target_effects"], super_weapon_counter_attack)
+        data:extend({ entity_mk2 })
+    end
 
     local dummy_entity = util.table.deepcopy(data.raw["projectile"]["dummy-crosshairs"])
     table.insert(dummy_entity["action"][1]["action_delivery"]["target_effects"], super_weapon_attack_points)
