@@ -188,7 +188,7 @@ Click.army_deploy_open_map = function(event)
         local deployers = storage.army_built_deployers[player.force.index]
         local unit_number = tonumber(nameToken[3])
         if deployers and deployers[unit_number] and deployers[unit_number].entity.valid then
-            player.zoom_to_world(deployers[unit_number].entity.position)
+            player.centered_on = deployers[unit_number].entity
         end
     end
 end

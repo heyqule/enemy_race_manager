@@ -14,12 +14,13 @@ Date: 2024-12-10
     - Base buildings now roll on quality tier, instead of using unit's tier.  This avoids single tier dominating an area.
     - Victorious group retire themselves after building their victory base, instead of using set_autonomous() to preserve performance.
     - When a custom attack group could not request an attack path, its members destroy themselves and re-add 20% of attack points.
-    - Updated defense section of tips and tricks
+    - Updated defense section of tips and tricks.
         
   Bugfixes:
     - Fixed startup crash when other mods removed base game rocket-turret entity.
     - Attempt to fix quick cron failed to restart which caused multiplayer error.
     - Fixed a path looping issue caused by 2.0 group command issue, where attack_area fails immediately after set_command.
+    - Fixed center on view for deployers.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.9
