@@ -74,6 +74,8 @@ function SurfaceProcessor.rebuild_race()
         return
     end
 
+    ForceHelper.reset_surface_lists()
+
     for surface_index, race in pairs(storage.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
                 (race ~= MOD_NAME and script.active_mods[race] == nil) or

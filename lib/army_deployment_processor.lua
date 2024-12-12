@@ -53,7 +53,7 @@ local spawn_unit = function(deployer_data)
     local surface = entity.surface
     local registered_units = storage.army_registered_units
     if entity and entity.valid and
-            surface and surface.valid then
+        surface and surface.valid then
         local force = entity.force
         if entity.energy > entity.electric_buffer_size * 0.9 then
             local inventory = entity.get_inventory(defines.inventory.assembling_machine_output)

@@ -29,21 +29,13 @@ These race mods are made as educational demos. You'll have to download them sepa
 New Enemy Races:
 * [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
 * [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss)
-
-##### The followings are not yet ready for Factorio 2.0
-WIP for 2.0:
 * [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 
 Player Controllable Units: (WIP for 2.0)
 
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
 
-The following races are made by [5hinzou](https://mods.factorio.com/user/5hinzou). All hail to him as he did the remaster graphics!
-They have different spawn table and unit properties. They can play together with my version
-
-* [Zerg - Jormungand Brood](https://mods.factorio.com/mod/erm_zerg_exp)
-* [Protoss - Velari Tribe](https://mods.factorio.com/mod/erm_toss_exp)
-* [Terran - United Earth Directorate](https://mods.factorio.com/mod/erm_terran_exp)
+Special Thanks to [5hinzou](https://mods.factorio.com/user/5hinzou) as he did the remaster graphics!
 
 **Tips on defense:**
 

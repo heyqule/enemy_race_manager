@@ -393,4 +393,16 @@ function GlobalConfig.add_attack_group_attackable_entity(name)
     end
 end
 
+--- Unit group must be valid when this runs. If it doesn't, it likely other mods mess it up.
+function GlobalConfig.check_unit_group_for_mod_incompatibility(group)
+    if not group.valid and
+        storage.compatibility_warnings == false
+    then
+        storage.compatibility_warnings = true
+        game.print('[ERM] Detected mod incompatibility, unit group destroyed before completing ERM logics. Please report to Discord with your save.')
+        return true
+    end
+    return false
+end
+
 return GlobalConfig

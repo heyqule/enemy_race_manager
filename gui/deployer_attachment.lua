@@ -52,6 +52,7 @@ function DeployerAttachement.show(player, unit_number)
     local switch = container.add {
         type = "switch",
         name = "army_deployer/auto_deploy/" .. data.entity.unit_number,
+        tags = {filter_pattern="army_deployer/auto_deploy/.*"},
         allow_none_state = false,
         left_label_caption = "OFF",
         right_label_caption = "ON"

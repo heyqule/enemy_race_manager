@@ -68,7 +68,7 @@ AttackGroupHeatProcessor.remove_force = function(attacker_index)
 end
 
 AttackGroupHeatProcessor.calculate_heat = function(force_name, surface_index, attacker_index, heat_points)
-    if force_name == nil then
+    if force_name == nil or not ForceHelper.can_have_enemy_on(game.surfaces[surface_index]) then
         return
     end
     init_data(force_name, surface_index)
@@ -160,6 +160,10 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
                     break;
                 end
             end
+        end
+
+        if not ForceHelper.can_have_enemy_on(return_surface) then
+            return_surface = nil
         end
 
         if not return_surface or storage.override_interplanetary_attack_enabled then

@@ -144,6 +144,10 @@ local pick_an_unit = function(force_name)
 end
 
 local add_an_unit_to_group = function(surface, group, force, force_name, unit_name, is_elite)
+    if Config.check_unit_group_for_mod_incompatibility(group) then
+        return
+    end
+
     local unit_full_name
     if is_elite then
         unit_full_name = RaceSettingsHelper.get_race_entity_name(force_name, unit_name, QualityProcessor.roll_quality(force_name, surface.name, true))

@@ -70,7 +70,7 @@ script.on_event(defines.events.on_player_created, function(event)
     for _, item in pairs(prototypes) do
         x = -100 + i * gap
         local nameToken = ForceHelper.get_name_token(item.name)
-        if nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], "%d") ~= 1 then
+        if nameToken and (nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], "%d") ~= 1) then
             local force_name = "enemy"
             if nameToken[1] == "erm_terran" then
                 force_name = "player"

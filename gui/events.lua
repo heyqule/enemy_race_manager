@@ -384,6 +384,8 @@ local gui_open_switch = {
                 (registered_deployer[entity.name])
         then
             GuiContainer.deployer_attachment.show(owner, entity.unit_number)
+        else
+            GuiContainer.deployer_attachment.hide(owner)
         end
     end,
 }
@@ -477,7 +479,8 @@ local deployer_switch = function(event)
 end
 
 local switch_state_change_handlers = {
-    ["army_deployer/build_only/.*"] = deployer_switch
+    ["army_deployer/build_only/.*"] = deployer_switch,
+    ["army_deployer/auto_deploy/.*"] = deployer_switch
 }
 
 local on_gui_switch_state_changed = function(event)
@@ -517,7 +520,6 @@ GuiEvent.events = {
     [defines.events.on_gui_selection_state_changed] = SelectionStateChanged.on_selection_state_changed,
     [defines.events.on_gui_opened] = on_gui_opened,
     [defines.events.on_gui_closed] = on_gui_closed,
-    [defines.events.on_gui_value_changed] = on_value_changed,
     [defines.events.on_gui_selected_tab_changed] = on_gui_selected_tab_changed,
     [defines.events.on_gui_confirmed] = on_gui_confirmed,
     [defines.events.on_gui_switch_state_changed] = on_gui_switch_state_changed,

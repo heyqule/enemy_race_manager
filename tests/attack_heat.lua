@@ -312,7 +312,7 @@ it("Ask friend, Zerg can't attack, ask enemy to raid Surface 1", function()
     end
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
 
-game.planets.vulcanus.create_surface()
+    game.planets.vulcanus.create_surface()
     local surface = game.surfaces[2]
     for i=1, 10, 1 do
         local ling = surface.create_entity({
@@ -354,7 +354,7 @@ game.planets.vulcanus.create_surface()
         local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy_erm_zerg", target_force, true)
         storage.override_ask_friend = false
         assert( picked_surface == nil, "Couldnt pick surface, asking for friend")
-        --- Check friend"attack points.
+        --- Check friend attack points.
         assert(RaceSettingsHelper.get_attack_meter("enemy") > RaceSettingsHelper.get_attack_meter("enemy_erm_zerg"), "enemy needs attack point")
         assert(RaceSettingsHelper.get_attack_meter("enemy_erm_zerg") < RaceSettingsHelper.get_attack_meter("enemy"), "enemy_erm_zerg needs give out points")
 

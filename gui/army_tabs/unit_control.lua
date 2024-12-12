@@ -44,6 +44,7 @@ function UnitControlGUI.update(player)
                 local textfield = item_table.add {
                     type = "textfield", numeric = true,
                     name = "army_deployer/planner/" .. name,
+                    tags = {filter_pattern="army_deployer/planner/.*"},
                     text = auto_deploy_units,
                     tooltip = { "gui-army.control_unit_deploy_box_tooltip" }
                 }

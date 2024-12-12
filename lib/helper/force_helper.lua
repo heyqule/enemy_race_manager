@@ -135,22 +135,26 @@ end
 
 -- Whether a surface can assign enemy
 function ForceHelper.can_have_enemy_on(surface)
-    if surface.valid then
+    if surface and surface.valid then
         local surface_name = surface.name
-        if storage.surface_inclusion_list[surface_name] == nil and
-            (storage.surface_exclusion_list[surface_name] == true or
-                not surface.planet
-            )
+        if storage.surface_inclusion_list[surface_name] then
+            return true
+        elseif storage.surface_exclusion_list[surface_name] == true then
+            return false
+        elseif
+            storage.surface_exclusion_list[surface_name] == true or
+            not surface.planet or
+            surface.planet.prototype.hidden == true
         then
             storage.surface_exclusion_list[surface_name] = true
             storage.enemy_surfaces[surface_name] = nil
             storage.surface_inclusion_list[surface_name] = nil
             return false
+        else
+            storage.surface_inclusion_list[surface_name] = true
+            storage.surface_exclusion_list[surface_name] = nil
+            return true
         end
-
-        storage.surface_inclusion_list[surface_name] = true
-        storage.surface_exclusion_list[surface_name] = nil
-        return true
     end
 
     return false

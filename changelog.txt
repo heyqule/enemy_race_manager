@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.13
+Date: 2024-12-13
+
+  Changes:
+    - Scouts have their own localised name, instead of it with parent entity.
+    - Marked intelligent-enemy as conflict.  It interferes ERM core logics. 
+    - Updated Kux-OrbitalIonCannon optional dependency version to 3.8.0+.
+    - Updated Mod-Compatilbility doc regarding to distant-fire, intelligent-enemy and enable-all-feature-flags.
+
+  Bugfixes:
+    - Fixed army deployer attachment did not close when opening other assemblers.
+    - Fixed army deployer auto-deploy toggle not working.
+    - Fixed army planner's number input not working.
+    - Fixed a crash by adding more rules to exclude surfaces from ERM managed planets/surfaces.
+    - Fixed an issue when "Free for all" mode modifies entity.energy_per_shield.
+    - Fixed an planet stats UI issue.
+    - Fixed a crash when other mods mess up custom attack group logics and added warning message to notify player once per game session.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.12
 Date: 2024-12-10
 

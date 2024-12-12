@@ -132,7 +132,7 @@ function ERM_UnitHelper.modify_biter_damage(biter, level)
 end
 
 function ERM_UnitHelper.get_pollution_attack(value, level)
-    return value + level * 0.1 * value
+    return value + (level - 1) * 0.1 * value
 end
 
 function ERM_UnitHelper.get_vision_distance(attack_range)

@@ -2,7 +2,7 @@
 
 For 1.1, see https://github.com/heyqule/enemy_race_manager/blob/1.22.6/Mod-Compatibility.md
 
-Overhaul mod compabitibility will be done when they become available.
+Overhaul mod compatibility will be done when they become available.
 
 #### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 
@@ -15,6 +15,22 @@ Overhaul mod compabitibility will be done when they become available.
 
 - It may or may not work. Expect incompatibility.
 
+#### Milestone
+
+- Milestone for killing higher tier enemy command centers.
+- Milestone for killing bosses
+
+#### Super Weapon Attack Points / Counter Attack supported mods
+- Ion Cannon [space-age]
+
+## MODS with issues, but not considered conflicted
+#### Distant Misfires
+- It messed up bullet collision layers.  Their bullets can't hit air units.
+
+#### Enable All Feature Flags
+- Misuse of feature flags.  It enables space_travel flag when space-age mod is disabled and cause startup crashes.
+- Don't disable space-age mod when using this mod.
+
 #### Resource Spawner Overhaul
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 
@@ -25,10 +41,8 @@ Overhaul mod compabitibility will be done when they become available.
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
-#### Milestone
+## CONFLICTED MODS
+Conflict mods may be lifted once it deemed to be compatible.
 
-- Milestone for killing level 5/10/15/20 enemy command centers.
-- Milestone for killing bosses
-
-#### Super Weapon Attack Points / Counter Attack supported mods
-- Ion Cannon [space-age]
+#### Intelligent Enemy
+- Incompatible.  It interferes ERM core logics and causes massive lag spikes. e.g. breaks my custom attack group.

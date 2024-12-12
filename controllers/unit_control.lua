@@ -192,6 +192,10 @@ local on_unit_group_finished_gathering = function(event)
         end
     end
 
+    if Config.check_unit_group_for_mod_incompatibility(group) then
+        return
+    end
+    
     if scout_unit_name then
         storage.scout_unit_name[group.unique_id] = nil
     end

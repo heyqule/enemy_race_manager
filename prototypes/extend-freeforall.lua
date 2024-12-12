@@ -38,9 +38,8 @@ if settings.startup["enemyracemanager-free-for-all"].value then
                     entity.max_shield_value = entity.max_shield_value * GlobalConfig.FFA_MULTIPLIER
 
                     if entity.energy_per_shield then
-                        local energy_per_shield = tonumber(string.sub(entity.energy_per_shield, 1, string.len(entity.energy_per_shield) - 2))
-                        local energy_unit = string.sub(entity.energy_per_shield, string.len(entity.energy_per_shield) - 1)
-                        entity.energy_per_shield = (energy_per_shield / GlobalConfig.FFA_MULTIPLIER) .. energy_unit
+                        local number, unit = string.match(entity.energy_per_shield,"^(%d+%.?%d*)(%a+)$")
+                        entity.energy_per_shield = (number / GlobalConfig.FFA_MULTIPLIER) .. unit
                     end
                 end
 
