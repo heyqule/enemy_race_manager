@@ -17,7 +17,7 @@ Date: 2024-12-13
     - Fixed an planet stats UI issue.
     - Fixed an command center control UI issue.
     - Fixed a crash when other mods mess up custom attack group logics and added warning message to notify player once per game session.
-    
+
   Scripting:
     - Added remote_call('enemyracemanager','is_erm_group') for other mods to check and avoid interfering with ERM logics. ERM will mark conflict to any mod that interferes its core logics based on severity.
 
@@ -38,21 +38,21 @@ Date: 2024-12-10
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.10
 Date: 2024-12-10
-  
+
   Features:
     - [Player death loop detection]  
     - When player repeatedly dies near the spawn area on a planet, central command offers an uWuClear rapid delivery.
     - It kills all enemies and some player entities within 384 tiles from your force's spawn point.
     - It also reduces all active attack points for the enemy forces on that planet to 0.
     - This action requires defines.input_action.deconstruct permission for multiplayer.
-    
+
   Changes:
     - Added "reset active attack points" button to enemy detail window (admin-only). 
     - Base buildings now roll on quality tier, instead of using unit's tier.  This avoids single tier dominating an area.
     - Victorious group retire themselves after building their victory base, instead of using set_autonomous() to preserve performance.
     - When a custom attack group could not request an attack path, its members destroy themselves and re-add 20% of attack points.
     - Updated defense section of tips and tricks.
-        
+
   Bugfixes:
     - Fixed startup crash when other mods removed base game rocket-turret entity.
     - Attempt to fix quick cron failed to restart which caused multiplayer error.
@@ -85,7 +85,7 @@ Date: 2024-12-05
 
   Changes:
     - Changed default attack points for launching rockets from 50 to 20, as per 2.0.0 design.
-    
+
   Bugfixes:
     - Fixed a quality processor event is using incorrect name for on_nth_tick
 
@@ -111,7 +111,7 @@ Date: 2024-12-05
   Bugfixes:
     - Fixed land scout spawning for flying group.
     - Fixed a crash on Army window when it's fetching an invalid icon.
-               
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
 Date: 2024-12-02
