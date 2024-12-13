@@ -270,7 +270,7 @@ function RemoteAPI.add_boss_attack_group(group)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "add_boss_attack_group")
+--- Usage: remote.call("enemyracemanager", "add_erm_attack_group", group, target_force)
 --- Assign unit group to ERM attack group, which manage by ERM group logics
 function RemoteAPI.add_erm_attack_group(group, target_force)
     if group.valid and next(group.members) then
@@ -282,6 +282,23 @@ function RemoteAPI.add_erm_attack_group(group, target_force)
             created = game.tick
         }
     end
+end
+
+--- Usage: remote.call("enemyracemanager", "is_erm_group")
+--- Check whether the group is managed by ERM.
+function RemoteAPI.is_erm_group(group)
+    if group.valid then
+        if storage.erm_unit_groups[group.unique_id] then
+            return true
+        end
+
+        if storage.group_tracker[group.force.name] and
+           storage.group_tracker[group.force.name]["unique_id"] == group.unique_id then
+            return true
+        end 
+    end
+    
+    return false
 end
 
 --- Overriding certain control variables

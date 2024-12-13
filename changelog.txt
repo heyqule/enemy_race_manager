@@ -3,7 +3,7 @@ Version: 2.0.13
 Date: 2024-12-13
 
   Changes:
-    - Scouts have their own localised name, instead of it with parent entity.
+    - Scouts have their own localised name, instead of using parent entity's.
     - Marked intelligent-enemy as conflict.  It interferes ERM core logics. 
     - Updated Kux-OrbitalIonCannon optional dependency version to 3.8.0+.
     - Updated Mod-Compatibility doc regarding to distant-fire, intelligent-enemy and enable-all-feature-flags.
@@ -17,6 +17,9 @@ Date: 2024-12-13
     - Fixed an planet stats UI issue.
     - Fixed an command center control UI issue.
     - Fixed a crash when other mods mess up custom attack group logics and added warning message to notify player once per game session.
+    
+  Scripting:
+    - Added remote_call('enemyracemanager','is_erm_group') for other mods to avoid interfering with ERM logics.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.12

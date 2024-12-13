@@ -270,6 +270,7 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
             position = position, force = force_name
         }
         new_group = true
+        remote.call("enemyracemanager", "add_erm_attack_group", group)
     end
 
     if level == nil then
@@ -291,8 +292,6 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
             radius = ATTACK_CHUNK_SIZE,
             distraction = defines.distraction.by_anything
         })
-
-        remote.call("enemyracemanager", "add_erm_attack_group", group)
     end
 end
 
