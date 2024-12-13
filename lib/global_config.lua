@@ -399,7 +399,7 @@ function GlobalConfig.check_unit_group_for_mod_incompatibility(group)
         storage.compatibility_warnings == false
     then
         storage.compatibility_warnings = true
-        game.print('[ERM] Detected mod incompatibility, unit group destroyed before completing ERM logics. Please report to Discord with your save.')
+        game.print({"gui.compatibility_warning"})
         return true
     end
     return false
