@@ -15,6 +15,7 @@ Date: 2024-12-13
     - Fixed a crash by adding more rules to exclude surfaces from ERM managed planets/surfaces.
     - Fixed an issue when "Free for all" mode modifies entity.energy_per_shield.
     - Fixed an planet stats UI issue.
+    - Fixed an command center control UI issue.
     - Fixed a crash when other mods mess up custom attack group logics and added warning message to notify player once per game session.
 
 ---------------------------------------------------------------------------------------------------
