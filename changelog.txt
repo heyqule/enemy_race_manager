@@ -6,7 +6,7 @@ Date: 2024-12-13
     - Scouts have their own localised name, instead of it with parent entity.
     - Marked intelligent-enemy as conflict.  It interferes ERM core logics. 
     - Updated Kux-OrbitalIonCannon optional dependency version to 3.8.0+.
-    - Updated Mod-Compatilbility doc regarding to distant-fire, intelligent-enemy and enable-all-feature-flags.
+    - Updated Mod-Compatibility doc regarding to distant-fire, intelligent-enemy and enable-all-feature-flags.
 
   Bugfixes:
     - Fixed army deployer attachment did not close when opening other assemblers.
