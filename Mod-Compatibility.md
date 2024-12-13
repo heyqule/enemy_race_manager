@@ -42,9 +42,10 @@ Overhaul mod compatibility will be done when they become available.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
 ## CONFLICTED MODS
-These mods usually break ERM's critical functions. Conflict mods may be lifted once it deemed to be compatible.
+These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 
 Conflict mods may use remote.call("enemyracemanager", "is_erm_group") to check whether they are dealing with ERM unit group and avoid applying custom logic to prevent conflicts. 
 
 #### Intelligent Enemy
-- Incompatible.  It interferes ERM core functions and causes massive lag spikes.
+- Incompatible.  It interferes ERM core functions and causes massive lag spikes.  
+  - prevents custom attack group to be formed.
