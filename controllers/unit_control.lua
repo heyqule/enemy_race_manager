@@ -320,7 +320,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
         --- Issue tracking:
         --- https://forums.factorio.com/viewtopic.php?f=182&t=118082&p=626929#p626929
         ---
-        --- and there goes some performance to copy group lol.
+        --- and there goes some performance to copy group lol.  Maybe do copy it in a queue down the road.
         if event_result ==  defines.behavior_result.fail and
                 was_distracted == false and
                 group.command == nil and

@@ -19,7 +19,7 @@ Date: 2024-12-13
     - Fixed a crash when other mods mess up custom attack group logics and added warning message to notify player once per game session.
     
   Scripting:
-    - Added remote_call('enemyracemanager','is_erm_group') for other mods to avoid interfering with ERM logics.
+    - Added remote_call('enemyracemanager','is_erm_group') for other mods to check and avoid interfering with ERM logics. ERM will mark conflict to any mod that interferes its core logics based on severity.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.12
