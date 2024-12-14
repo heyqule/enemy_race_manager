@@ -46,6 +46,6 @@ These mods usually break many ERM's critical functions or/and cause indirect per
 
 Conflict mods may use remote.call("enemyracemanager", "is_erm_group", LuaCommandable) to check whether they are dealing with ERM unit group and avoid applying custom logic to prevent conflicts. 
 
-#### Intelligent Enemy
-- Incompatible.  It interferes ERM core functions and causes massive lag spikes.  
-  - prevents custom attack group to be formed.
+#### Intelligent Enemy (as of 1.0.7)
+- Incompatible.  It interferes ERM core functions.  
+  - causes custom attack group behaviour anomalies.
