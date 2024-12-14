@@ -32,7 +32,7 @@ end
 
 local stop_event = function()
     if storage.army_deployer_event_running == true and can_stop_event() then
-        script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
+        script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, nil)
         storage.army_deployer_event_running = false
     end
 end
