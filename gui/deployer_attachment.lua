@@ -88,7 +88,10 @@ function DeployerAttachement.go_to(player)
         if player.render_mode == defines.render_mode.chart_zoomed_in then
             player.close_map()
         elseif deployer_data.rally_point then
-            player.zoom_to_world(deployer_data.rally_point)
+            player.set_controller {
+                type = defines.controllers.remote,
+                position = deployer_data.rally_point
+            }
         end
     end
 end
