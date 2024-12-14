@@ -41,14 +41,14 @@ Overhaul mod compatibility will be done when they become available.
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
-#### Planet Maraxsis
-- It messed up the scout beacons' collision layer.  It make the beacon able to block player buildings.
-- Bug report: https://github.com/notnotmelon/maraxsis/issues/146
-
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 
-Conflict mods may use remote.call("enemyracemanager", "is_erm_group", LuaCommandable) to check whether they are dealing with ERM unit group and avoid applying custom logic to prevent conflicts. 
+There are 2 ways for mods to avoid conflict with ERM.
+1. Check whether the unit group is script driven.  If so, they should not apply their logic to the group.  Those is_script_driven groups are likely controlled by other mods.
+   - Enemy AI mods should track their own groups and avoid apply change to other enemy mod's AI group. 
+   - https://lua-api.factorio.com/latest/classes/LuaCommandable.html#is_script_driven
+2. They may use remote.call("enemyracemanager", "is_erm_group", LuaCommandable) to check whether they are dealing with ERM unit group and avoid applying custom logic to prevent conflicts. 
 
 #### Intelligent Enemy (as of 1.0.7)
 - Incompatible.  It interferes ERM core functions.  

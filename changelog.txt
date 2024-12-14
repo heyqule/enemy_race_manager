@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.18
+Date: 2024-12-14
+
+  Changes:
+    - Removed Planet Maraxsis from Mod Compatibility doc.
+    - Added optional Maraxsis version (1.23.36+) dependency as it resolved the beacon collision issue. (https://github.com/notnotmelon/maraxsis/issues/146)    
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.17
 Date: 2024-12-14
 
@@ -24,7 +32,7 @@ Date: 2024-12-14
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.14
 Date: 2024-12-14
-  
+
   Bugfixes:
     - Attempt to fix deployer and teleport cron failed to restart which may cause multiplayer error.
 
