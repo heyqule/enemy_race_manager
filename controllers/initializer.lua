@@ -144,12 +144,12 @@ local prepare_world = function()
 end
 
 local conditional_events = function()
-    if storage.army_teleporter_event_running or table_size(storage.teleport_cron) > 0 then
+    if storage.army_teleporter_event_running or ArmyTeleportationProcessor.can_start_event() then
         ArmyTeleportationProcessor.start_event(true)
     end
 
-    if storage.army_deployer_event_running or table_size(storage.army_active_deployers) > 0 then
-        ArmyDeploymentProcessor.start_event(true)
+    if storage.army_deployer_event_running or ArmyDeploymentProcessor.can_start_event() then
+        ArmyDeploymentProcessor.start_event()
     end
 
     if storage.quick_cron_is_running or not Queue.is_empty(storage.quick_cron) then

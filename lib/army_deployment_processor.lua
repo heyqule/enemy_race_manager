@@ -17,6 +17,7 @@ local retry_threshold = settings.startup["enemyracemanager-unit-deployer-timeout
 local start_with_auto_deploy = settings.startup["enemyracemanager-unit-deployer-auto-start"].value
 
 local process_deployer_queue = function(event)
+    storage.army_deployer_event_running = true
     ArmyDeploymentProcessor.deploy()
 end
 
@@ -151,9 +152,6 @@ end
 
 function ArmyDeploymentProcessor.start_event(reload)
     if storage.army_deployer_event_running == false or reload then
-        if not reload then
-            storage.army_deployer_event_running = true
-        end
         script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
     end
 end
@@ -315,6 +313,10 @@ function ArmyDeploymentProcessor.deploy()
     if current_tick % stop_event_check > stop_event_check_modular then
         stop_event()
     end
+end
+
+function ArmyDeploymentProcessor.can_start_event()
+    return can_stop_event() == false
 end
 
 return ArmyDeploymentProcessor

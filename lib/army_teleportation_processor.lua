@@ -26,6 +26,7 @@ local unset_indicator = function(teleport)
 end
 
 local process_teleport_queue = function()
+    storage.army_teleporter_event_running = true
     Cron.process_teleport_queue()
 end
 
@@ -33,7 +34,6 @@ function ArmyTeleportationProcessor.start_event(reload)
     if storage.army_teleporter_event_running == false or reload then
         if not reload then
             ArmyTeleportationProcessor.scan_units()
-            storage.army_teleporter_event_running = true
         end
         script.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
@@ -305,6 +305,10 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
             end
         end
     end
+end
+
+function ArmyTeleportationProcessor.can_start_event()
+    return can_stop_event() == false
 end
 
 return ArmyTeleportationProcessor
