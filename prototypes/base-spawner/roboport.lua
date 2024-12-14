@@ -73,7 +73,8 @@ local selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } }
 
 function make_roboport(level)
     level = level or 1
-
+    local spawner = util.table.deepcopy(data.raw["unit-spawner"]['biter-spawner'])
+    
     data:extend({
         {
             type = "unit-spawner",
@@ -97,6 +98,7 @@ function make_roboport(level)
             corpse = "roboport-remnants",
             dying_explosion = "roboport-explosion",
             collision_box = collision_box,
+            collision_mask = spawner['collision_mask'],
             map_generator_bounding_box = map_generator_bounding_box,
             selection_box = selection_box,
             max_health = ERM_UnitHelper.get_building_health(hitpoint, max_hitpoint_multiplier, level),

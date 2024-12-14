@@ -315,10 +315,11 @@ function RemoteAPI.milestones_preset_addons()
             required_mods = { "enemyracemanager" },
             milestones = {
                 { type = "group", name = "Kills" },
-                { type = "kill", name = "enemy/biter-spawner/5", quantity = 1 },
-                { type = "kill", name = "enemy/biter-spawner/10", quantity = 1 },
-                { type = "kill", name = "enemy/biter-spawner/15", quantity = 1 },
-                { type = "kill", name = "enemy/biter-spawner/20", quantity = 1, next = "x10" },
+                { type = "kill", name = "enemy--biter-spawner--1", quantity = 1 },
+                { type = "kill", name = "enemy--biter-spawner--2", quantity = 1 },
+                { type = "kill", name = "enemy--biter-spawner--3", quantity = 1 },
+                { type = "kill", name = "enemy--biter-spawner--4", quantity = 1 },
+                { type = "kill", name = "enemy--biter-spawner--5", quantity = 1, next = "x10" },
             }
         }
     }

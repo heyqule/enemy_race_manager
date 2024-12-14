@@ -163,13 +163,14 @@ Click.army_deploy_filter_type = function(event)
     if player and player.valid then
         local nameToken = String.split(element.name, "/")
         local army_window = GuiContainer.army_control_window
-        local filter = storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3].."/"..nameToken[4]]
+        print(serpent.block(nameToken))
+        local filter = storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]]
         if filter then
             filter = false
         else
             filter = true
         end
-        storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3].."/"..nameToken[4]] = filter
+        storage.army_windows_tab_player_data[player.index].deployer_type_filters[nameToken[3]] = filter
         army_window.update_deployers()
     end
 end

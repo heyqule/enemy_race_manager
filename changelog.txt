@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.15
+Date: 2024-12-15
+
+  Bugfixes:
+    - Fixed collision mask on robotport that caused Enemy entities with auto place controls 'xxx' on surface 'xxx' have different collision masks. 
+    - Fixed an unintended change which lead to CRC issue
+    - Fixed deployer filter UI crash due to entity name change.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.14
 Date: 2024-12-14
   

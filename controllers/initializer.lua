@@ -146,12 +146,10 @@ end
 local conditional_events = function()
     if storage.army_teleporter_event_running or table_size(storage.teleport_cron) > 0 then
         ArmyTeleportationProcessor.start_event(true)
-        storage.army_teleporter_event_running = true
     end
 
     if storage.army_deployer_event_running or table_size(storage.army_active_deployers) > 0 then
         ArmyDeploymentProcessor.start_event(true)
-        storage.army_deployer_event_running = true
     end
 
     if storage.quick_cron_is_running or not Queue.is_empty(storage.quick_cron) then
