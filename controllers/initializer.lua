@@ -144,7 +144,7 @@ local prepare_world = function()
 end
 
 local conditional_events = function()
-    if storage.army_teleporter_event_running or not Queue.is_empty(storage.teleport_cron) then
+    if storage.army_teleporter_event_running or table_size(storage.teleport_cron) > 0 then
         ArmyTeleportationProcessor.start_event(true)
         storage.army_teleporter_event_running = true
     end
