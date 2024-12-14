@@ -12,46 +12,46 @@ Please refer to the addRaceSettings() in controllers/initializer.lua for setting
 
 ##### Proper way to update race_setting in enemy mods
 
-1. ```local race_settings = remote.call('enemyracemanager', 'get_race', 'erm_zerg')```
+1. ```local race_settings = remote.call('enemyracemanager', 'get_race', 'enemy_erm_zerg')```
 2. make change to the race settings
 3. ```remote.call('enemyracemanager', 'update_race_setting', race_settings)```
 
 #### Get race setting
 
-```remote.call('enemyracemanager', 'get_race', 'erm_zerg')```
+```remote.call('enemyracemanager', 'get_race', 'enemy_erm_zerg')```
 
 Returns the ERM settings of a race. This includes level, xp
 
 #### Get race tier
 
-```remote.call('enemyracemanager', 'get_race_tier', 'erm_zerg')```
+```remote.call('enemyracemanager', 'get_race_tier', 'enemy_erm_zerg')```
 
 #### Add point to attack meter of a race
 
-```remote.call('enemyracemanager', 'add_points_to_attack_meter', 'erm_zerg', 5000)```
+```remote.call('enemyracemanager', 'add_points_to_attack_meter', 'enemy_erm_zerg', 5000)```
 
-if the 3rd parameter is nil, a race will be randomly picked.
+if the 3rd parameter is nil, a force will be randomly picked.
 
 ## Generate Attack Groups
 
 The following APIs generate regular attack groups.
 
-* 3rd param is race name.
+* 3rd param is force name.
 * 4th param is optional group size.
 
 #### Generate a mixed attack group
 
-```remote.call('enemyracemanager', 'generate_attack_group', 'erm_zerg', 100)```
+```remote.call('enemyracemanager', 'generate_attack_group', 'enemy_erm_zerg', 100)```
 
 #### Generate a flying attack group
 
-```remote.call('enemyracemanager', 'generate_flying_group', 'erm_zerg', 50)```
+```remote.call('enemyracemanager', 'generate_flying_group', 'enemy_erm_zerg', 50)```
 
 Default size: Max Group Size / 2
 
 #### Generate a dropship attack group
 
-``` remote.call('enemyracemanager', 'generate_dropship_group', 'erm_zerg', 20) ```
+``` remote.call('enemyracemanager', 'generate_dropship_group', 'enemy_erm_zerg', 20) ```
 
 Default size: Max Group Size / 5
 
@@ -59,26 +59,26 @@ Default size: Max Group Size / 5
 
 The following APIs generate featured attack and elite groups.
 
-* 3rd param is race name.
+* 3rd param is force name.
 * 4th param is optional group size.
 * 5th param is optional feature group ID. It randomly picks a group if value is nil.
     * Please refer to feature group table sections.
 
 #### Generate a featured attack group
 
-```remote.call('enemyracemanager', 'generate_featured_group', 'erm_zerg', 100, 1)```
+```remote.call('enemyracemanager', 'generate_featured_group', 'enemy_erm_zerg', 100, 1)```
 
 #### Generate a featured flying attack group
 
-```remote.call('enemyracemanager', 'generate_featured_flying_group', 'erm_zerg', 50, 1)```
+```remote.call('enemyracemanager', 'generate_featured_flying_group', 'enemy_erm_zerg', 50, 1)```
 
 #### Generate an elite attack group
 
-```remote.call('enemyracemanager', 'generate_elite_featured_group', 'erm_zerg', 100, 1)```
+```remote.call('enemyracemanager', 'generate_elite_featured_group', 'enemy_erm_zerg', 100, 1)```
 
 #### Generate an elite flying attack group
 
-```remote.call('enemyracemanager', 'generate_elite_featured_flying_group', 'erm_zerg', 50, 1)```
+```remote.call('enemyracemanager', 'generate_elite_featured_flying_group', 'enemy_erm_zerg', 50, 1)```
 
 ### Feature groups tables
 
