@@ -41,6 +41,9 @@ Overhaul mod compatibility will be done when they become available.
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
+#### Planet Maraxsis
+- It messed up the scout beacons' collision layer.  It make the beacon able to block buildings. 
+
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 
