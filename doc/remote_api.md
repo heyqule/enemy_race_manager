@@ -95,21 +95,6 @@ race_settings.featured_flying_groups = { ... }
 * [Redarmy](https://github.com/heyqule/erm_redarmy/blob/main/control.lua#L90)
 * [Marspeople](https://github.com/heyqule/erm_marspeople/blob/main/control.lua#L91)
 
-## Assign unit group as an ERM attack group, which will managed by ERM group logics
-```
-remote.call('enemyracemanager', 'add_erm_attack_group', unit_group:LuaCommandable, target_force:LuaForce)
-```
-
-## Get ERM's custom event handler
-```
-remote.call('enemyracemanager', 'get_event_name', event_name)
-```
-
-
-## Check whether a LuaCommandable is an ERM group
-```remote.call('enemyracemanager', 'generate_elite_featured_flying_group', unit_group:LuaCommandable)```
-
-
 ## Override attack strategy, Call this right after you call any of the generate group remote calls.
 Example:
 ```
@@ -120,6 +105,20 @@ Acceptable values:
 - 1 / divert to left side of the target
 - 2 / divert to right side of the target
 - 3 / brutal force based on scout beacons
+
+## Assign unit group as an ERM attack group, which will managed by ERM group logics
+```
+remote.call('enemyracemanager', 'add_erm_attack_group', unit_group:LuaCommandable, target_force:LuaForce)
+```
+
+
+## Get ERM's custom event handler
+```
+remote.call('enemyracemanager', 'get_event_name', event_name)
+```
+
+## Check whether a LuaCommandable is an ERM group
+```remote.call('enemyracemanager', 'is_erm_group', unit_group:LuaCommandable)```
 
 ## Check whether a force is a valid ERM enemy force
 ```
