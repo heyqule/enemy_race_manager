@@ -189,7 +189,7 @@ function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name,
 end
 
 function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
-    return storage.army_populations[force.name]["auto_deploy"][name]
+    return storage.army_populations[force.name]["auto_deploy"][name] or 1
 end
 
 function ArmyPopulationProcessor.is_under_max_pop(force)

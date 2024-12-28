@@ -291,7 +291,7 @@ end
 
 function Army_MainWindow.update_army_planner(player, element)
     if player and player.valid and element and element.valid then
-        local unit_count = math.abs(tonumber(element.text))
+        local unit_count = tonumber(element.text) or 1
         local force = player.force
         local name = string.gsub(element.name, "army_deployer/planner/", "")
         if ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name, unit_count) then
