@@ -260,8 +260,8 @@ end
 function QualityProcessor.roll(entity)
     -- is_running_roll to prevent recursive roll on create entity event
     -- storage.skip_quality_rolling allows bypassing roll manually
-    -- unit from spawner doesn"t need to roll
-    -- unit which is not from enemy force or not erm units doesn"t need to roll.
+    -- unit from spawner doesn't need to roll
+    -- unit which is not from enemy force or not erm units doesn't need to roll.
     if storage.is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
        not ForceHelper.is_enemy_force(entity.force) or
@@ -315,8 +315,8 @@ function QualityProcessor.roll(entity)
         local lowest_tier = planet_data.lowest_allowed_tier
         selected_tier = lowest_tier
 
-        --- Unit from higher tier doesn"t need to roll.
-        if unit_tier > lowest_tier then
+        --- Unit from higher tier and it has spawn rates doesn't need to roll.
+        if unit_tier > lowest_tier and spawn_rates[unit_tier] > 0 then
             return entity
         end
 

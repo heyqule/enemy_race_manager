@@ -93,3 +93,8 @@ it("Protoss: Time Unit Tree/Stone blockage test", function()
         done()
     end)
 end)
+
+
+it("Drop unit should based on parent entity", function()
+    
+end) 

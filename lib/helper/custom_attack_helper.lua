@@ -119,6 +119,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
     local source_entity = event.source_entity
+    local source_entity_force_name = event.source_entity.force.name or force_name
     local race_settings = get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
     local name_tokens = get_name_token(source_entity.name)
@@ -136,7 +137,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             storage.skip_quality_rolling = true
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = force_name })
+            local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
             if entity and entity.type == "unit" then
                 entity.commandable.set_command({
                     type = defines.command.attack_area,

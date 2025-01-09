@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.20
+Date: 2024-01-17
+
+  Changes:
+    - Fixed locale for enemy force's land and aerial scout.
+    - Added Distant Misfire 0.12.5 as optional dependency, as it fixed the flying mask issue.
+    - Removed Distant Misfire from mod compatibility log
+    - Unit quality processor can downgrade unit's tier to a tier with non-zero spawn rate. This should prevent other mods from picking legendary unit in early game. [WIP]
+    
+  Bugfixes:
+    - Dropped units now based on the dropship's force. [WIP]
+    - Unit can't teleport to other planet when unit supply is near full [Issues:53] [WIP]
+    - Fixed a crash when there are queued jobs for a disabled enemy race.
+    - Fixed a crash when user launch to spawn and a bot removes rocket silo [WIP]
+    
+---------------------------------------------------------------------------------------------------
 Version: 2.0.19
 Date: 2024-12-27
 
@@ -185,13 +201,7 @@ Date: 2024-11-29
   Bugfixes:
     - Fixed a crash when super weapon doesn't provide source_entity to generate a revenge group(?).
     - Fixed an issue on unit clean up function.
-
----------------------------------------------------------------------------------------------------
-Version: 2.0.3
-Date: 2024-11-27
-
-  Bugfixes:
-    - Fix a crash when generating super weapon revenge group without source_entity
+    - Fixed a crash when generating super weapon revenge group without source_entity
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2

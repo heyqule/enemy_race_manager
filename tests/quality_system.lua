@@ -221,3 +221,7 @@ it('Schedule update test', function()
         done()
     end)
 end)
+
+it('When create_entity spawns higher than allow tier, set it to current max tier', function()
+    
+end) 

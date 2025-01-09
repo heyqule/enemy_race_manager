@@ -146,3 +146,14 @@ it("Fully Expansion", function()
         assert.falsy(unit_group.valid, "builder group disbanded")
     end)
 end)
+
+it("Test building an invalid prototype", function()
+    local surface = game.surfaces[1]
+    local name = "enemy_erm_zerg--invalid-spawner--1"
+    BaseBuildProcessor.build(surface, name, enemy_force, {0, 0})
+    local entity_count = surface.count_entities_filtered({
+        type="unit-spawner",
+        force = enemy_force
+    })
+    assert.falsy(entity_count, "invalid should not be built")
+end) 
