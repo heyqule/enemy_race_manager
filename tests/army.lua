@@ -368,6 +368,7 @@ it("Army Teleport, different surface", function()
             })
         end
     end)
+    
     after_ticks(7100, function()
         local marines = surface2.find_entities_filtered({
             name=unit_name,
@@ -375,6 +376,86 @@ it("Army Teleport, different surface", function()
         })
 
         assert(table_size(marines) == 5, "Units not teleported without power")
+
+        game.delete_surface(surface2)
+        done()
+    end)
+end)
+
+it("Army Teleport, different surface, when population is full", function()
+    async(7200)
+    AttackGroupBeaconProcessor.init_index()
+    local surface = game.surfaces[1]
+    local surface2 = game.planets.vulcanus.create_surface()
+
+    local force = game.forces["player"]
+    local building = "erm_terran--command-center"
+    local unit_name = "erm_terran--marine--mk1"
+    local battlecruiser_unit_name = "erm_terran--battlecruiser--yamato"
+
+    local powerinterface1 = surface.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation1 = surface.create_entity({
+        force=force,
+        name="substation",
+        position={0,3},
+        raise_built = true
+    })
+    local command_center1 = surface.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+
+    local powerinterface2 = surface2.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation2 = surface2.create_entity({
+        force=force,
+        name="substation",
+        position={0,3},
+        raise_built = true
+    })
+    local command_center2 = surface2.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+
+    for i=1,100,1 do
+        surface.create_entity({
+            force=force,
+            name=unit_name,
+            position={100,100}
+        })
+    end
+
+    for i=1,10,1 do
+        surface.create_entity({
+            force=force,
+            name=battlecruiser_unit_name,
+            position={0,0}
+        })
+    end
+
+    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
+    
+    after_ticks(7100, function()
+        local battlecruiser = surface2.find_entities_filtered({
+            name=battlecruiser_unit_name,
+            area={{-48,-48}, {48,48}}
+        })
+
+        assert(table_size(battlecruiser) == 10, "Units not teleported")
 
         game.delete_surface(surface2)
         done()

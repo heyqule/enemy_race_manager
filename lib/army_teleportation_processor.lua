@@ -295,12 +295,14 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
                 unit.teleport(position)
                 ArmyFunctions.assign_wander_command(unit)
             else
+                ArmyPopulationProcessor.remove_unit_count(unit)
                 local spawned_entity = unit.clone({position=position,surface=exit_entity.surface})
                 if spawned_entity and spawned_entity.valid then
-                    ArmyPopulationProcessor.remove_unit_count(spawned_entity)
                     --- @todo render Recall effect on entrance position
                     unit.destroy()
                     ArmyFunctions.assign_wander_command(spawned_entity)
+                else
+                    ArmyPopulationProcessor.add_unit_count(unit)
                 end
             end
         end

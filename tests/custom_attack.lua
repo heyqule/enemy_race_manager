@@ -96,5 +96,23 @@ end)
 
 
 it("Drop unit should based on parent entity", function()
-    
+    local surface = game.surfaces[1]
+    local enemy_force = game.forces["enemy_erm_zerg"]
+    local player_force = game.forces["player"]
+    local laser_entity = surface.create_entity({ name = "laser-turret", force = player_force, position = { 0, 0 } })
+    local overlord = surface.create_entity({ name = "enemy_erm_zerg--overlord--4", force = enemy_force, position = { 10, 10 } })
+
+    after_ticks(600, function()
+        local units = surface.find_entities_filtered({
+            type="unit"
+        })
+        local i = 0
+        for _, unit in pairs(units) do
+            if (unit.force.name == enemy_force.name) then
+                i = i + 1
+            end
+        end
+        assert(i > 1, "Should have more than 1 friendly enemy unit")
+        
+    end)
 end) 

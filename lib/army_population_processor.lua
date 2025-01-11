@@ -89,7 +89,7 @@ function ArmyPopulationProcessor.index()
         end
     end
     profiler.stop()
-    game.print({ "", "Rebuild Player Army Index: ", profiler })
+    log({ "", "Rebuild Player Army Index: ", profiler })
 end
 
 function ArmyPopulationProcessor.calculate_max_units(force)

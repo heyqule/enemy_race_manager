@@ -53,12 +53,14 @@ local get_command_centers = function(player, windows_tab_data)
     if force_list then
         for surface_id, surface_items in pairs(force_list) do
             for _, item in pairs(surface_items) do
-                if left_surface == nil or (left_surface and surface_id == left_surface.index) then
-                    table.insert(left_name_list, item.entity.backer_name)
-                end
+                if item.entity and item.entity.valid then
+                    if left_surface == nil or (left_surface and surface_id == left_surface.index) then
+                        table.insert(left_name_list, item.entity.backer_name)
+                    end
 
-                if right_surface == nil or (right_surface and surface_id == right_surface.index) then
-                    table.insert(right_name_list, item.entity.backer_name)
+                    if right_surface == nil or (right_surface and surface_id == right_surface.index) then
+                        table.insert(right_name_list, item.entity.backer_name)
+                    end                    
                 end
             end
             local _, item = next(surface_items)

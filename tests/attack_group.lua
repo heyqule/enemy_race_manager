@@ -33,6 +33,7 @@ local function spawn_cc(surface)
     local position = {x=0,y=320}
     surface.request_to_generate_chunks({ position.x/32, position.y/32}, 2)
     surface.force_generate_chunk_requests()
+    storage.skip_quality_rolling = true
     return surface.create_entity({name=command_center,force=force_name,position=position})
 end
 
@@ -81,7 +82,7 @@ end
         AttackGroupBeaconProcessor.init_index()
 
         storage.erm_unit_groups = {}
-        storage.race_settings[race_name].attack_meter = 3000
+        storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
         storage.race_settings[race_name].attack_meter_total = 2000000
         QualityProcessor.calculate_quality_points()

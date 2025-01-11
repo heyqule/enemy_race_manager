@@ -31,6 +31,9 @@ ArmyPopulationController.events = {
             ArmyPopulation.remove_unit_count(entity)
             ArmyControlUI.update_army_stats()
         end
+    end,
+    [defines.events.on_surface_deleted] = function(event)
+        ArmyPopulation.index()
     end
 }
 return ArmyPopulationController

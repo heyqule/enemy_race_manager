@@ -315,11 +315,13 @@ function QualityProcessor.roll(entity)
         local lowest_tier = planet_data.lowest_allowed_tier
         selected_tier = lowest_tier
 
-        --- Unit from higher tier and it has spawn rates doesn't need to roll.
-        if unit_tier > lowest_tier and spawn_rates[unit_tier] > 0 then
-            return entity
-        end
+        local converted_unit_tier = (spawn_rates_size - unit_tier + 1)
 
+        --- If Unit tier has spawn rates, then doesn't need to re-roll.
+        local need_swap = spawn_rates[converted_unit_tier] == 0
+        if not need_swap then
+            return entity
+        end            
 
         for index, spawn_rate in pairs(spawn_rates) do
             if spawn_rate > 0 then
@@ -338,8 +340,8 @@ function QualityProcessor.roll(entity)
 
         -- Tier conversion
         selected_tier = (spawn_rates_size - selected_tier + 1)
-        --- no need to swap if unit is already at the same or higher than selected tier.
-        if tonumber(unit_tier) >= selected_tier then
+        --- no need to swap if unit is already at the same or higher than selected tier and doesn't have spaw flag.
+        if unit_tier >= selected_tier and not need_swap then
             return entity
         end
     end

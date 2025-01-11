@@ -155,5 +155,5 @@ it("Test building an invalid prototype", function()
         type="unit-spawner",
         force = enemy_force
     })
-    assert.falsy(entity_count, "invalid should not be built")
+    assert(entity_count == 0, "invalid should not be built")
 end) 
