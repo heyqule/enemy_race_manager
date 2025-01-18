@@ -38,6 +38,11 @@ Overhaul mod compatibility will be done when they become available.
   buildings.
 - Try set "Deadzone construction denial range" to 5 tiles or something low. It defaults to 50 tiles.
 
+#### Colony Builder
+
+- May cause crash when ERM Terran presents, details: https://mods.factorio.com/mod/ColonyBuilder/discussion/6758feb5bba896c80b4cdd61 
+- Unit control may not work well as Terran and Builder uses their own set of unit control logics.
+
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 

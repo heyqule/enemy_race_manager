@@ -39,8 +39,8 @@ cron_switch = {
     ["AttackGroupProcessor.clear_invalid_erm_unit_groups"] = function(args)
         AttackGroupProcessor.clear_invalid_erm_unit_groups()
     end,
-    ["AttackGroupProcessor.clear_invalid_scout_unit_name"] = function(args)
-        AttackGroupProcessor.clear_invalid_scout_unit_name()
+    ["AttackGroupProcessor.clear_registered_group"] = function(args)
+        AttackGroupProcessor.clear_registered_group()
     end,
     ["AttackGroupProcessor.cleanup_commandable"] = function(args)
         AttackGroupProcessor.cleanup_commandable(unpack(args))
@@ -130,7 +130,7 @@ cron_switch = {
 --- Garbage Collection and Statistic aggregations, all calls are run by quick cron
 local garbage_and_stats = function(event)
     Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_erm_unit_groups")
-    Cron.add_quick_queue("AttackGroupProcessor.clear_invalid_scout_unit_name")
+    Cron.add_quick_queue("AttackGroupProcessor.clear_registered_group")
 
     Cron.add_quick_queue("AttackGroupPathingProcessor.remove_old_nodes")
 

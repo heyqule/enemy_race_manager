@@ -55,3 +55,41 @@ QUALITY_DICE_ROLL = "em-dcrll"
 QUALITY_TALLY_POINT = "em-tllpt"
 
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }
+
+
+--- For Debug use
+DEBUG_BEHAVIOUR_RESULTS = {
+    [defines.behavior_result.in_progress] = "defines.behavior_result.in_progress",
+    [defines.behavior_result.fail] = "defines.behavior_result.fail",
+    [defines.behavior_result.success] = "defines.behavior_result.success",
+    [defines.behavior_result.deleted] = "defines.behavior_result.deleted"
+}
+
+DEBUG_GROUP_STATES = {
+    [defines.group_state.gathering] = "defines.group_state.gathering",
+    [defines.group_state.moving] = "defines.group_state.moving",
+    [defines.group_state.attacking_distraction] = "defines.group_state.attacking_distraction",
+    [defines.group_state.attacking_target] = "defines.group_state.attacking_target",
+    [defines.group_state.finished] = "defines.group_state.finished",
+    [defines.group_state.pathfinding] = "defines.group_state.pathfinding",
+    [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
+}
+
+DEBUG_MOVING_STATES = {
+    [defines.moving_state.stale] = "defines.moving_state.stale",
+    [defines.moving_state.moving] = "defines.moving_state.moving",
+    [defines.moving_state.adaptive] = "defines.moving_state.adaptive",
+    [defines.moving_state.stuck] = "defines.moving_state.stuck",
+}
+
+DEBUG_COMMAND = {
+    [defines.command.attack] = "defines.command.attack",
+    [defines.command.go_to_location] = "defines.command.go_to_location",
+    [defines.command.compound] = "defines.command.compound",
+    [defines.command.group] = "defines.command.group",
+    [defines.command.attack_area] = "defines.command.attack_area",
+    [defines.command.wander] = "defines.command.wander",
+    [defines.command.flee] = "defines.command.flee",
+    [defines.command.stop] = "defines.command.stop",
+    [defines.command.build_base] = "defines.command.build_base",
+}

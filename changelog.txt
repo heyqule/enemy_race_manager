@@ -1,18 +1,28 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.20
-Date: 2024-01-17
+Date: 2024-01-18
 
   Changes:
     - Fixed locale for enemy force's land and aerial scout.
-    - Added Distant Misfire 0.12.5 as optional dependency, as it fixed the flying mask issue.
+    - Unit quality processor can downgrade unit's quality tier. This should prevent other mods from picking legendary unit in early game.
+    - Elite attack group will not use featured groups when the enemy force is not on tier 3.  This prevents late game units to spawn early.
+    - The chance of rolling higher tier units for elite attack group changed from additional 30% to 33%.
+    - Changed planet progression from 20% to 25% for the enemy to reach unit tier 3.
+    - When enemy evolution is off in map_gen settings, quality processor will rely 100% on attack points.
+    - Added Distant Misfire 0.12.5+ as optional dependency, as it fixed the flying mask issue.
     - Removed Distant Misfire from mod compatibility log
-    - Unit quality processor can downgrade unit's tier to a tier with non-zero spawn rate. This should prevent other mods from picking legendary unit in early game.
+    - Added Colony Builder to compatibility log
+
+  Optimizations:    
+    - Utilized register_on_object_destroyed for unit group data management.
+    - Auto destroy units when an unit groups stuck for a while.
     
   Bugfixes:
-    - Dropped units now based on the dropship's force.
+    - "Enemy" force's custom spawn units are now based on the parent unit's force.
     - Unit can't teleport to other planet when unit supply is near full [Issue: 53]
     - Fixed a crash when there are queued jobs for a disabled enemy race.
     - Fixed a crash when user launches a rocket, then a bot removes rocket silo immediately.
+    - Fixed manual build group lost its command when under artillery siege in Factorio 2.0.31.
     
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.19

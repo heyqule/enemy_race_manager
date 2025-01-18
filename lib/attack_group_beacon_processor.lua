@@ -10,6 +10,7 @@ local RaceSettingsHelper = require("helper/race_settings_helper")
 local Configs = require("global_config")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local Position = require("__erm_libs__/stdlib/position")
 
@@ -775,10 +776,10 @@ AttackGroupBeaconProcessor.init_index = function()
     storage.attack_beacon_index_all = nil
 
     profiler.stop()
-    print("[ERM] Total Processed Surfaces: " .. tostring(total_surfaces))
-    print("[ERM] Total New Spawnable Beacons: " .. tostring(spawn_beacons))
-    print("[ERM] Total New Attackable Beacons: " .. tostring(attack_entity_beacons))
-    print("[ERM] Total New Resource Beacons: " .. tostring(resource_beacons))
+    DebugHelper.print("[ERM] Total Processed Surfaces: " .. tostring(total_surfaces))
+    DebugHelper.print("[ERM] Total New Spawnable Beacons: " .. tostring(spawn_beacons))
+    DebugHelper.print("[ERM] Total New Attackable Beacons: " .. tostring(attack_entity_beacons))
+    DebugHelper.print("[ERM] Total New Resource Beacons: " .. tostring(resource_beacons))
     game.print({ "", "[ERM] Attack Group Beacons Re-indexed: ", profiler })
 end
 

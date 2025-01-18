@@ -63,7 +63,7 @@ end
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
         after_ticks(5400, function()
-            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
+            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table: "..table_size(storage.erm_unit_groups))
 
             local key = next(storage.erm_unit_groups)
             assert.not_nil(storage.erm_unit_groups[key], "Check Unit Group Data")
@@ -89,13 +89,16 @@ end
 
 
         after_ticks(5400, function()
-            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
+            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table: "..table_size(storage.erm_unit_groups))
 
             local key = next(storage.erm_unit_groups)
             assert.not_nil(storage.erm_unit_groups[key], "Check Group Record")
 
             local group = storage.erm_unit_groups[key].group
             assert.truthy(storage.erm_unit_groups[key].group.valid, "Check Unit Group valid")
+            
+            local registered_group = storage.registered_groups[key]
+            assert.truthy(registered_group, "Check registered groups data")
 
             local has_epic_member = false
             for _, member in pairs(group.members) do
@@ -144,7 +147,7 @@ end
         end)
 
         after_ticks(3600, function()
-            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table")
+            assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table: "..table_size(storage.erm_unit_groups))
 
             local key = next(storage.erm_unit_groups)
             assert.not_nil(storage.erm_unit_groups[key], "Check Group Record")
@@ -294,8 +297,8 @@ end
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -20, -20 } })
         AttackGroupBeaconProcessor.init_index()
         AttackGroupProcessor.generate_group(
-                game.forces[force_name],
-                200
+            game.forces[force_name],
+            200
         )
         after_ticks(600, function()
             local group = storage.group_tracker.enemy_erm_zerg.group

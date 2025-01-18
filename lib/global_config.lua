@@ -311,7 +311,7 @@ function GlobalConfig.spawner_kills_deduct_evolution_points()
 end
 
 function GlobalConfig.initialize_races_data()
-    storage.installed_races = { MOD_NAME }
+    storage.installed_races = { [MOD_NAME] = true }
     storage.active_races = { [MOD_NAME] = true }
 
 

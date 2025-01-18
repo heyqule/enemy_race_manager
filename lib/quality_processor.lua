@@ -120,6 +120,7 @@ end
 --- Planet evolution takes 30%, accumulated attack point takes 70%
 function QualityProcessor.calculate_quality_points()
     update_storages()
+    local evolution_enabled = game.map_settings.enemy_evolution.enabled
     for _, force in pairs(game.forces) do
         if ForceHelper.is_enemy_force(force) then
             local quality_data = storage.quality_on_planet[force.name] or {}
@@ -128,8 +129,14 @@ function QualityProcessor.calculate_quality_points()
                 if planet.surface then
                     local data = quality_data[planet.name] or {}
 
-                    local quality_points = ( math.min((force.get_evolution_factor(planet.surface.name)), 1) ) * evolution_target +
-                            math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
+                    local quality_points
+                    if evolution_enabled then
+                        quality_points = ( math.min((force.get_evolution_factor(planet.surface.name)), 1) ) * evolution_target +
+                                math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
+                    else
+                        local final_target = evolution_target + attack_point_target
+                        quality_points = math.min((accumulated_attack_meter / attack_point_divider) * final_target, final_target)
+                    end
 
                     quality_points = quality_points * setting_advancement
 
@@ -142,7 +149,7 @@ function QualityProcessor.calculate_quality_points()
 
                     if quality_points <= 1000 then
                         data.tier = 1
-                    elseif quality_points > 1000 and quality_points <= 2000 then
+                    elseif quality_points > 1000 and quality_points <= 2500 then
                         data.tier = 2
                     else
                         data.tier = 3
@@ -218,7 +225,7 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
         spawn_rates = planet_data.spawn_rates
         for key, rates in pairs(spawn_rates) do
             if spawn_rates[key] > 0 then
-                spawn_rates[key] = math.min((rates + 0.3), 1)
+                spawn_rates[key] = math.min((rates + 0.33), 1)
             end
         end
         spawn_rates_size = planet_data.spawn_rates_size

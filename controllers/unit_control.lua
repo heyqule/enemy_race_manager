@@ -18,45 +18,10 @@ local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_a
 
 local Config = require("__enemyracemanager__/lib/global_config")
 
-local DEBUG_BEHAVIOUR_RESULTS = {
-    [defines.behavior_result.in_progress] = "defines.behavior_result.in_progress",
-    [defines.behavior_result.fail] = "defines.behavior_result.fail",
-    [defines.behavior_result.success] = "defines.behavior_result.success",
-    [defines.behavior_result.deleted] = "defines.behavior_result.deleted"
-}
-
-local DEBUG_GROUP_STATES = {
-    [defines.group_state.gathering] = "defines.group_state.gathering",
-    [defines.group_state.moving] = "defines.group_state.moving",
-    [defines.group_state.attacking_distraction] = "defines.group_state.attacking_distraction",
-    [defines.group_state.attacking_target] = "defines.group_state.attacking_target",
-    [defines.group_state.finished] = "defines.group_state.finished",
-    [defines.group_state.pathfinding] = "defines.group_state.pathfinding",
-    [defines.group_state.wander_in_group] = "defines.group_state.wander_in_group"
-}
-
-local DEBUG_MOVING_STATES = {
-    [defines.moving_state.stale] = "defines.moving_state.stale",
-    [defines.moving_state.moving] = "defines.moving_state.moving",
-    [defines.moving_state.adaptive] = "defines.moving_state.adaptive",
-    [defines.moving_state.stuck] = "defines.moving_state.stuck",
-}
-
-local DEBUG_COMMAND = {
-    [defines.command.attack] = "defines.command.attack",
-    [defines.command.go_to_location] = "defines.command.go_to_location",
-    [defines.command.compound] = "defines.command.compound",
-    [defines.command.group] = "defines.command.group",
-    [defines.command.attack_area] = "defines.command.attack_area",
-    [defines.command.wander] = "defines.command.wander",
-    [defines.command.flee] = "defines.command.flee",
-    [defines.command.stop] = "defines.command.stop",
-    [defines.command.build_base] = "defines.command.build_base",
-}
-
 local base_build_group = {}
 
 local CHUNK_SIZE = 32
+local BUILD_BASE_RETRY = 3
 
 local on_biter_base_build = function(event)
     local entity = event.entity
@@ -109,9 +74,20 @@ local on_unit_group_created = function(event)
             storage.scout_unit_name[group.unique_id] = {
                 entity = group,
                 scout_type = scout_unit_name,
-                tick = game.tick
             }
         end
+        
+        --defines.events.on_object_destroyed
+        local registration_number, useful_id, object_type
+        registration_number, useful_id, object_type = script.register_on_object_destroyed(group)
+        storage.registered_groups[useful_id] = {
+            registration_number = registration_number,
+            useful_id = useful_id,
+            object_type = object_type,
+            group = group,
+            last_position = group.position,
+            last_tick = game.tick
+        }
     end
 end
 
@@ -149,8 +125,7 @@ local on_unit_group_finished_gathering = function(event)
         not is_erm_group and
         group.is_script_driven and
         group.command == nil and
-        checking_state[group.state] and
-        #group.members > 10
+        checking_state[group.state]
     then
         local target = AttackGroupHeatProcessor.pick_target(group_force.name)
         AttackGroupProcessor.process_attack_position({
@@ -209,7 +184,7 @@ local on_unit_group_finished_gathering = function(event)
         local command = group.command
         storage.skip_quality_rolling = true
         storage.on_unit_group_finished_gathering_build_base = true
-        base_build_group[group.unique_id] = {group = group, command = command}
+        base_build_group[group.unique_id] = {group = group, command = command, retry = 0}
         --- Why does it need a tier 1 unit to make the group able to path??
         local has_level_1 = false
         for _, unit in pairs(group.members) do
@@ -219,7 +194,7 @@ local on_unit_group_finished_gathering = function(event)
                 break
             end 
         end
-
+    
         if not has_level_1 then
             local key, member = next(group.members)
             if member then
@@ -273,23 +248,40 @@ local handle_scouts = function(scout_unit_data)
 end
 
 --- @TODO SPIDER AI ISSUE BYPASS, break build building group
-local handle_build_group = function(unit_number, event_result)
+local recreate_build_group = function(base_group_data, unit_number)
+    local group = base_group_data.group
+    local members = group.members
+
+    if table_size(members) and base_group_data.retry < BUILD_BASE_RETRY then
+        local surface = group.surface
+        storage.on_unit_group_finished_gathering_build_base = true
+        local new_group = surface.create_unit_group {position=group.position, force=group.force}
+
+        for _, unit in pairs(group.members) do
+            new_group.add_member(unit)
+        end
+        new_group.set_command(base_group_data.command)
+        new_group.start_moving()
+        group.destroy()
+        base_build_group[unit_number] = nil
+        base_build_group[new_group.unique_id] = {group = new_group, command = new_group.command, retry = base_group_data.retry + 1} 
+    end
+end
+
+local handle_build_group = function(group_number, event_result)
     if base_build_group == nil then
         return
     end
-    
-    local base_group_data = base_build_group[unit_number]
+
+    local base_group_data = base_build_group[group_number]
     if base_group_data then
         local group = base_group_data.group
-        if group.valid and (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck) then
-            local surface = group.surface
-            local new_group = surface.create_unit_group {position=group.position, force=group.force}
-            for _, unit in pairs(group.members) do
-                new_group.add_member(unit)
-            end
-            new_group.set_command(base_group_data.command)
-            new_group.start_moving()
-            base_build_group[unit_number] = nil
+        if group.valid and (group.moving_state == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck) then
+            recreate_build_group(base_group_data, group_number)
+        end
+
+        if group.valid and event_result == defines.behavior_result.fail then
+            recreate_build_group(base_group_data, group_number)
         end
     end
 end
@@ -303,12 +295,13 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
         
         AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
 
-        if group.valid == false then
-            storage.erm_unit_groups[unit_number] = nil
+        if not group.valid then
+            AttackGroupProcessor.storage_clean_up(unit_number)
             return
         end
 
-        local moving_state_stale = (group.moving_state  == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck)
+        local moving_state_stale = (group.moving_state  == defines.moving_state.stale or 
+                group.moving_state == defines.moving_state.stuck)
 
         --- @TODO SPIDER AI ISSUE BYPASS, groups breaks.
         --- Reapply chain command if group moving has stale and command is wiped by spider AI.
@@ -360,7 +353,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
                 storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
                 storage.erm_unit_groups[new_group.unique_id].commands = new_commands
                 storage.erm_unit_groups[new_group.unique_id].group = new_group
-                storage.erm_unit_groups[group.unique_id] = nil
+                AttackGroupProcessor.storage_clean_up(group.unique_id)
             end
         end
         --- End Bug workaround
@@ -410,7 +403,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
     end
 end
 
-local on_ai_completed = function(event)
+local on_ai_command_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
 
@@ -421,6 +414,20 @@ local on_ai_completed = function(event)
 
     local scout_unit_data = storage.scout_by_unit_number[unit_number]
     handle_scouts(scout_unit_data)
+    
+    
+    --if storage.registered_groups[unit_number] then
+    --    print('on_ai_completed')
+    --    print(unit_number)
+    --    print(DEBUG_BEHAVIOUR_RESULTS[event_result])
+    --    local group = storage.registered_groups[unit_number].group
+    --    if group.valid then
+    --        print(DEBUG_GROUP_STATES[group.state])
+    --        print(DEBUG_MOVING_STATES[group.moving_state])
+    --        print(tostring(group.is_script_driven))
+    --        print(serpent.block(group.command)) 
+    --    end
+    --end
 end
 
 --- @TODO 2.0 handle this with per planet statistic?
@@ -431,6 +438,16 @@ end
 local function handle_unit_spawner(event)
     local dead_spawner = event.entity
     AttackGroupHeatProcessor.calculate_heat(dead_spawner.force.name, dead_spawner.surface.index, event.force.index)
+end
+
+local function handle_unit_group_destroyed(event)
+    local group_number = event.useful_id
+    if event.type == defines.target_type.commandable and 
+       storage.registered_groups[group_number] and
+       storage.registered_groups[group_number].registration_number == event.registration_number
+    then
+        AttackGroupProcessor.storage_clean_up(group_number)
+    end
 end
 
 
@@ -469,7 +486,8 @@ UnitControl.events = {
     [defines.events.on_build_base_arrived] = on_build_base_arrived,
     [defines.events.on_unit_group_created] = on_unit_group_created,
     [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,
-    [defines.events.on_ai_command_completed] = on_ai_completed,
+    [defines.events.on_ai_command_completed] = on_ai_command_completed,
+    [defines.events.on_object_destroyed] = handle_unit_group_destroyed
 }
 
 return UnitControl
