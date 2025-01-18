@@ -13,7 +13,7 @@ Date: 2024-01-18
     - Removed Distant Misfire from mod compatibility log
     - Added Colony Builder to compatibility log
 
-  Optimizations:    
+  Optimizations:
     - Utilized register_on_object_destroyed for unit group data management.
     - Auto destroy units when an unit groups stuck for a while.
     
