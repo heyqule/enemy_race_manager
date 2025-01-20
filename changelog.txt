@@ -6,7 +6,7 @@ Date: 2024-01-20
     - Fixed army deployer cron job might not properly reload for an existing save after 2.0.17 changes.
     - Fixed explosive biter were not showing up.
     - Fixed disable mother worm crash on data phase.
-    
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.20
 Date: 2024-01-18
