@@ -24,6 +24,7 @@ end
 local can_stop_event = function()
     local stop = 0
     for _, force_data in pairs(storage.army_active_deployers) do
+        force_data.total = table_size(force_data.deployers)
         if force_data.total == 0 then
             stop = stop + 1
         end
@@ -240,7 +241,7 @@ end
 function ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
     if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]["deployers"][unit_number] then
         storage.army_active_deployers[force_index]["deployers"][unit_number] = nil
-        storage.army_active_deployers[force_index].total = table_size(storage.army_active_deployers[force_index]["deployers"])
+        storage.army_active_deployers[force_index].total = storage.army_active_deployers[force_index].total - 1
         if storage.army_active_deployers[force_index].total == 0 then
             stop_event()
         end
