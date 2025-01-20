@@ -25,14 +25,14 @@ Date: 2024-01-18
   Optimizations:
     - Utilized register_on_object_destroyed for unit group data management.
     - Auto destroy units when an unit groups stuck for a while.
-    
+
   Bugfixes:
     - "Enemy" force's custom spawn units are now based on the parent unit's force.
     - Unit can't teleport to other planet when unit supply is near full [Issue: 53]
     - Fixed a crash when there are queued jobs for a disabled enemy race.
     - Fixed a crash when user launches a rocket, then a bot removes rocket silo immediately.
     - Fixed manual build group lost its command when under artillery siege in Factorio 2.0.31.
-    
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.19
 Date: 2024-12-27
