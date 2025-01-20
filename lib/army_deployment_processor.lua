@@ -152,6 +152,10 @@ end
 
 function ArmyDeploymentProcessor.start_event(reload)
     if storage.army_deployer_event_running == false or reload then
+        if reload then
+            script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, nil)
+        end
+
         script.on_nth_tick(GlobalConfig.AUTO_DEPLOY_CRON, process_deployer_queue)
     end
 end
@@ -236,7 +240,10 @@ end
 function ArmyDeploymentProcessor.remove_from_active(force_index, unit_number)
     if storage.army_active_deployers[force_index] and storage.army_active_deployers[force_index]["deployers"][unit_number] then
         storage.army_active_deployers[force_index]["deployers"][unit_number] = nil
-        storage.army_active_deployers[force_index].total = storage.army_active_deployers[force_index].total - 1
+        storage.army_active_deployers[force_index].total = table_size(storage.army_active_deployers[force_index]["deployers"])
+        if storage.army_active_deployers[force_index].total == 0 then
+            stop_event()
+        end
     end
 end
 

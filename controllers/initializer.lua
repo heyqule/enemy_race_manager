@@ -139,7 +139,7 @@ local prepare_world = function()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
     script.raise_event(
-            GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
+        GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
     )
 end
 
@@ -149,7 +149,7 @@ local conditional_events = function()
     end
 
     if storage.army_deployer_event_running or ArmyDeploymentProcessor.can_start_event() then
-        ArmyDeploymentProcessor.start_event()
+        ArmyDeploymentProcessor.start_event(true)
     end
 
     if storage.quick_cron_is_running or not Queue.is_empty(storage.quick_cron) then

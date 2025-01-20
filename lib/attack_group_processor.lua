@@ -1058,7 +1058,6 @@ function AttackGroupProcessor.clear_registered_group()
         local current_tick =  game.tick
         if group_entity and group_entity.valid then
             if current_tick > last_tick + DAY_TICK then
-                print(group_number..' Position >>'..tostring(Position.distance(group_entity.position, group_data.last_position) < 10))
                 if Position.distance(group_entity.position, group_data.last_position) < 10 then
                     --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks once it gets nuke by artillery.
                     --- Nuke stuck units to preserve performance

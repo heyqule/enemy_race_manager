@@ -58,7 +58,7 @@ function makeLevelTurrets(level, type, distance)
     turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace( {
         probability_expression = "enemy_autoplace_base("..distance..", 90001)",
         force = FORCE_NAME,
-        control = "hot_enemy_base"
+        control = "enemy-base"
     })
     turret["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-explosive_biter_map_color"].value)
 
@@ -87,4 +87,7 @@ data.raw["turret"]["medium-explosive-worm-turret"].autoplace = nil
 data.raw["turret"]["big-explosive-worm-turret"].autoplace = nil
 data.raw["turret"]["behemoth-explosive-worm-turret"].autoplace = nil
 data.raw["turret"]["leviathan-explosive-worm-turret"].autoplace = nil
-data.raw["turret"]["mother-explosive-worm-turret"].autoplace = nil
+
+if data.raw["turret"]["mother-explosive-worm-turret"] then
+    data.raw["turret"]["mother-explosive-worm-turret"].autoplace = nil
+end 

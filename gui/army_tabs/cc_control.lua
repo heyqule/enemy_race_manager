@@ -152,7 +152,7 @@ function CommandCenterControlGUI.update(player)
         name = "army_cc/minimap_row",
     }
 
-    local selected_from_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.from)
+    local selected_from_entity = ArmyTeleportationProcessor.get_entity_by_name(player_data.selected_cc.from)
     if selected_from_entity and selected_from_entity.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,
@@ -173,7 +173,7 @@ function CommandCenterControlGUI.update(player)
         from_map.style.height = 150
     end
 
-    local selected_to_entity = ArmyTeleportationProcessor.getEntityByName(player_data.selected_cc.to)
+    local selected_to_entity = ArmyTeleportationProcessor.get_entity_by_name(player_data.selected_cc.to)
     if selected_to_entity and selected_to_entity.valid then
         SharedGuiFunctions.add_mini_map(
                 center_pane_row_map,

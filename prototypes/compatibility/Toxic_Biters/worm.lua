@@ -86,4 +86,7 @@ data.raw["turret"]["medium-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["big-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["behemoth-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["leviathan-toxic-worm-turret"].autoplace = nil
-data.raw["turret"]["mother-toxic-worm-turret"].autoplace = nil
+
+if data.raw["turret"]["mother-toxic-worm-turret"] then
+    data.raw["turret"]["mother-toxic-worm-turret"].autoplace = nil
+end

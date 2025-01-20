@@ -35,6 +35,9 @@ function ArmyTeleportationProcessor.start_event(reload)
         if not reload then
             ArmyTeleportationProcessor.scan_units()
         end
+        if reload then
+            script.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, nil)
+        end
         script.on_nth_tick(GlobalConfig.TELEPORT_QUEUE_CRON, process_teleport_queue)
     end
 end
@@ -118,7 +121,7 @@ function ArmyTeleportationProcessor.get_object_by_name(backer_name)
     end
 end
 
-function ArmyTeleportationProcessor.getEntityByName(backer_name)
+function ArmyTeleportationProcessor.get_entity_by_name(backer_name)
     local teleport_object = ArmyTeleportationProcessor.get_object_by_name(backer_name)
     if teleport_object then
         return teleport_object.entity
