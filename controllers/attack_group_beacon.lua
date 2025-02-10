@@ -44,7 +44,7 @@ AttackGroupBeacon.on_nth_tick = {
         for _, force_name in pairs(force_names) do
             local source_force = game.forces[force_name]
 
-            if Config.race_is_active(force_name) then
+            if Config.race_is_erm_managed(force_name) then
                 local target_force = AttackGroupHeatProcessor.pick_target(force_name)
                 local surface = AttackGroupHeatProcessor.pick_surface(force_name, target_force)
                 if target_force and surface then

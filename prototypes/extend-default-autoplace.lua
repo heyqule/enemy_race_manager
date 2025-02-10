@@ -21,6 +21,7 @@
 require("util")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local AutoplaceUtil = require("__enemyracemanager__/prototypes/enemy-autoplace")
+local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local String = require('__erm_libs__/stdlib/string')
 
@@ -29,7 +30,7 @@ require("global")
 if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
     local nauvis_autocontrols = data.raw.planet.nauvis.map_gen_settings.autoplace_controls
     for key, autoplace in pairs(nauvis_autocontrols) do
-        if string.find(key,"enemy_base", 1, true) or string.find(key,"enemy-base", 1, true)then
+        if MapgenFunctions.autoplace_is_enemy_base(key) then
             nauvis_autocontrols[key] = nil
         end
     end
@@ -172,7 +173,7 @@ local rebalanceTables = function(...)
         table.insert(newTables, newTable)
     end
 
-    return unpack(newTables)
+    return table.unpack(newTables)
 end
 
 local rearrange_specs = function()

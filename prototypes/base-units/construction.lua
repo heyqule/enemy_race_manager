@@ -54,8 +54,6 @@ local distraction_cooldown = 300
 local collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 
-local unit_scale = 1
-
 local robot_animations = {}
 
 robot_animations["construction-robot"] = {

@@ -5,12 +5,14 @@
 ---
 --- require("__enemyracemanager__/lib/helper/force_helper")
 ---
-
 require('util')
 local String = require('__erm_libs__/stdlib/string')
 
 local ForceHelper = {
-    default_mod_name = "enemy"
+    default_force_names = {
+        enemy = true,
+        enemy_pentapod = true
+    }
 }
 
 local NEUTRAL_FORCES = {
@@ -104,7 +106,7 @@ function ForceHelper.refresh_all_enemy_forces()
     storage.player_forces = {}
     storage.enemy_force_check = {}
     for _, force in pairs(game.forces) do
-        if force.name == "enemy" or
+        if ForceHelper.default_force_names[force.name] or
             (string.find(force.name, "enemy", 1, true) and
             script.active_mods[string.gsub(force.name,"enemy_","")] ~= nil) and
             storage.race_settings[force.name]

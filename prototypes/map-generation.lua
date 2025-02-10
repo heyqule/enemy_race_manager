@@ -141,31 +141,39 @@ nauvis.map_gen_settings = map_gen_settings
 
 
 -- Start Enemy Base Autoplace functions --
-local zero_probability_expression = function(probability)
+local zero_probability_expression = function(autoplace)
     DebugHelper.print("Using zero_probability_expression")
-    return
+    
+    local data = 
     {
         control = "enemy-base",
         order = "b[enemy]-misc",
         force = "enemy",
         probability_expression = "0",
-        richness_expression = "1"
+        richness_expression = "0",
     }
-end
 
-local nil_expression = function()
-    DebugHelper.print("Using nil_expression")
-    return nil
+    if autoplace then
+        data = {
+            control = autoplace.control,
+            order = autoplace.order,
+            force = autoplace.force,
+            probability_expression = "0",
+            richness_expression = "0",
+        }
+    end
+
+    return data
 end
 
 local disable_normal_biters = function()
     DebugHelper.print("Disabling Vanilla Spawners...")
-    data.raw["unit-spawner"]["biter-spawner"]["autoplace"] = zero_probability_expression(0)
-    data.raw["unit-spawner"]["spitter-spawner"]["autoplace"] = zero_probability_expression(0)
-    data.raw["turret"]["behemoth-worm-turret"]["autoplace"] = zero_probability_expression(0)
-    data.raw["turret"]["big-worm-turret"]["autoplace"] = zero_probability_expression(0)
-    data.raw["turret"]["medium-worm-turret"]["autoplace"] = zero_probability_expression(0)
-    data.raw["turret"]["small-worm-turret"]["autoplace"] = zero_probability_expression(0)
+    data.raw["unit-spawner"]["biter-spawner"]["autoplace"] = zero_probability_expression(data.raw["unit-spawner"]["biter-spawner"]["autoplace"])
+    data.raw["unit-spawner"]["spitter-spawner"]["autoplace"] = zero_probability_expression(data.raw["unit-spawner"]["spitter-spawner"]["autoplace"])
+    data.raw["turret"]["behemoth-worm-turret"]["autoplace"] = zero_probability_expression(data.raw["turret"]["behemoth-worm-turret"]["autoplace"])
+    data.raw["turret"]["big-worm-turret"]["autoplace"] = zero_probability_expression(data.raw["turret"]["big-worm-turret"]["autoplace"])
+    data.raw["turret"]["medium-worm-turret"]["autoplace"] = zero_probability_expression(data.raw["turret"]["medium-worm-turret"]["autoplace"])
+    data.raw["turret"]["small-worm-turret"]["autoplace"] = zero_probability_expression(data.raw["turret"]["small-worm-turret"]["autoplace"])
 end
 
 -- END Enemy Base Autoplace functions --
@@ -183,8 +191,9 @@ for _, v in pairs(data.raw["unit-spawner"]) do
         local nameToken = String.split(v.name, "--")
         local level = tonumber(nameToken[3])
         if level and level > 1 then
-            DebugHelper.print("Disabling:" .. v.name)
-            data.raw["unit-spawner"][v.name]["autoplace"] = nil_expression()
+            DebugHelper.print("Zero-ing:" .. v.name)
+            --- Nil autoplace makes the unit not able to perform build base command. Use 0 probability instead.
+            data.raw["unit-spawner"][v.name]["autoplace"] = zero_probability_expression(data.raw["unit-spawner"][v.name]["autoplace"])
         end
     end
 end
@@ -194,8 +203,8 @@ for _, v in pairs(data.raw["turret"]) do
         local nameToken = String.split(v.name, "--")
         local level = tonumber(nameToken  [3])
         if level and level > 1 then
-            DebugHelper.print("Disabling:" .. v.name)
-            data.raw["turret"][v.name]["autoplace"] = nil_expression()
+            DebugHelper.print("Zero-ing:" .. v.name)
+            data.raw["turret"][v.name]["autoplace"] = zero_probability_expression(data.raw["turret"][v.name]["autoplace"])
         end
     end
 end

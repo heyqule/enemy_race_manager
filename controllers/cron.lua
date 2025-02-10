@@ -31,10 +31,10 @@ cron_switch = {
         AttackGroupProcessor.add_to_group_cron(args)
     end,
     ["AttackGroupProcessor.generate_group"] = function(args)
-        AttackGroupProcessor.generate_group(unpack(args))
+        AttackGroupProcessor.generate_group(table.unpack(args))
     end,
     ["AttackGroupProcessor.spawn_scout"] = function(args)
-        AttackGroupProcessor.spawn_scout(unpack(args))
+        AttackGroupProcessor.spawn_scout(table.unpack(args))
     end,
     ["AttackGroupProcessor.clear_invalid_erm_unit_groups"] = function(args)
         AttackGroupProcessor.clear_invalid_erm_unit_groups()
@@ -43,46 +43,46 @@ cron_switch = {
         AttackGroupProcessor.clear_registered_group()
     end,
     ["AttackGroupProcessor.cleanup_commandable"] = function(args)
-        AttackGroupProcessor.cleanup_commandable(unpack(args))
+        AttackGroupProcessor.cleanup_commandable(table.unpack(args))
     end,
     -- AttackMeterProcessor
     ["AttackMeterProcessor.form_group"] = function(args)
-        AttackMeterProcessor.form_group(unpack(args))
+        AttackMeterProcessor.form_group(table.unpack(args))
     end,
     -- AttackGroupPathingProcessor
     ["AttackGroupPathingProcessor.construct_side_attack_commands"] = function(args)
-        AttackGroupPathingProcessor.construct_side_attack_commands(unpack(args))
+        AttackGroupPathingProcessor.construct_side_attack_commands(table.unpack(args))
     end,
     ["AttackGroupPathingProcessor.construct_brutal_force_commands"] = function(args)
-        AttackGroupPathingProcessor.construct_brutal_force_commands(unpack(args))
+        AttackGroupPathingProcessor.construct_brutal_force_commands(table.unpack(args))
     end,
     ["AttackGroupPathingProcessor.remove_old_nodes"] = function(args)
         AttackGroupPathingProcessor.remove_old_nodes()
     end,
     --AttackGroupHeatProcessor
     ["AttackGroupHeatProcessor.aggregate_heat"] = function(args)
-        AttackGroupHeatProcessor.aggregate_heat(unpack(args))
+        AttackGroupHeatProcessor.aggregate_heat(table.unpack(args))
     end,
     ["AttackGroupHeatProcessor.cooldown_heat"] = function(args)
-        AttackGroupHeatProcessor.cooldown_heat(unpack(args))
+        AttackGroupHeatProcessor.cooldown_heat(table.unpack(args))
     end,
     --AttackGroupBeaconProcessor
     ["AttackGroupBeaconProcessor.start_scout_scan"] = function(args)
         AttackGroupBeaconProcessor.start_scout_scan()
     end,
     ["AttackGroupBeaconProcessor.scout_scan"] = function(args)
-        AttackGroupBeaconProcessor.scout_scan(unpack(args))
+        AttackGroupBeaconProcessor.scout_scan(table.unpack(args))
     end,
     --ArmyTeleportationProcessor
     ["ArmyTeleportationProcessor.teleport"] = function(args)
-        ArmyTeleportationProcessor.teleport(unpack(args))
+        ArmyTeleportationProcessor.teleport(table.unpack(args))
     end,
     ["ArmyTeleportationProcessor.scan_units"] = function(args)
         ArmyTeleportationProcessor.scan_units()
     end,
     --BaseBuildProcessor
     ["BaseBuildProcessor.build"] = function(args)
-        BaseBuildProcessor.build(unpack(args))
+        BaseBuildProcessor.build(table.unpack(args))
     end,
     -- BossProcessor
     ["BossProcessor.check_pathing"] = function(args)
@@ -98,15 +98,15 @@ cron_switch = {
         BossProcessor.support_structures_spawn()
     end,
     ["BossProcessor.remove_boss_groups"] = function(args)
-        BossProcessor.remove_boss_groups(unpack(args))
+        BossProcessor.remove_boss_groups(table.unpack(args))
     end,
     --BossAttackProcessor
     ["BossAttackProcessor.process_attack"] = function(args)
-        BossAttackProcessor.process_attack(unpack(args))
+        BossAttackProcessor.process_attack(table.unpack(args))
     end,
     --BossGroupProcessor
     ["BossGroupProcessor.generate_units"] = function(args)
-        BossGroupProcessor.generate_units(unpack(args))
+        BossGroupProcessor.generate_units(table.unpack(args))
     end,
     ["BossGroupProcessor.process_attack_groups"] = function(args)
         BossGroupProcessor.process_attack_groups()
@@ -123,7 +123,7 @@ cron_switch = {
         InterplanetaryAttacks.queue_scan()
     end,
     ["InterplanetaryAttacks.scan"] = function(args)
-        InterplanetaryAttacks.scan(unpack(args))
+        InterplanetaryAttacks.scan(table.unpack(args))
     end,
 }
 

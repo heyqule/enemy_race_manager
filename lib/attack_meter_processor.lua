@@ -60,7 +60,7 @@ function AttackMeterProcessor.add_form_group_cron()
 
     for _, force_name in pairs(force_names) do
         local force = game.forces[force_name]
-        if GlobalConfig.race_is_active(force_name) then
+        if GlobalConfig.race_is_erm_managed(force_name) then
             Cron.add_10_sec_queue("AttackMeterProcessor.form_group", force_name, force)
         end
     end
@@ -74,7 +74,22 @@ function AttackMeterProcessor.calculate_points(entity)
     local force_name = force.name
     local surface_name = surface.name
     local attack_meter_points = unit_point_map[entity_type]
-    if not GlobalConfig.race_is_active(force_name) or not attack_meter_points then
+
+    if not ForceHelper.is_enemy_force(force)  then
+        return 
+    end
+    
+    --- Add kill counts
+    if unit_map[entity_type] then
+        RaceSettingsHelper.add_killed_units_count(force_name, surface_name, 1)
+    end
+
+    if structure_map[entity_type] then
+        RaceSettingsHelper.add_killed_structure_count(force_name, surface_name, 1)
+    end
+    
+    --- Skip attack point if the force is not ERM managed
+    if not GlobalConfig.race_is_erm_managed(force_name) or not attack_meter_points then
         return
     end
 
@@ -83,14 +98,6 @@ function AttackMeterProcessor.calculate_points(entity)
         if custom_points > 0 then
             attack_meter_points = custom_points
         end
-    end
-
-    if unit_map[entity_type] then
-        RaceSettingsHelper.add_killed_units_count(force_name, surface_name, 1)
-    end
-
-    if structure_map[entity_type] then
-        RaceSettingsHelper.add_killed_structure_count(force_name, surface_name, 1)
     end
 
     attack_meter_points = attack_meter_points * GlobalConfig.attack_meter_collector_multiplier()
@@ -112,7 +119,7 @@ end
 function AttackMeterProcessor.calculate_time_attack()
     for _, force in pairs(game.forces) do
         local force_name = force.name
-        if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_active(force_name) then
+        if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_erm_managed(force_name) then
             for _, planet in pairs(game.planets) do
                 if GlobalConfig.time_base_attack_enabled() and
                    RaceSettingsHelper.get_accumulated_attack_meter(force_name) > 100 and
@@ -127,7 +134,7 @@ function AttackMeterProcessor.calculate_time_attack()
 end
 
 function AttackMeterProcessor.form_group(force_name, force)
-    if not GlobalConfig.race_is_active(force_name) then
+    if not GlobalConfig.race_is_erm_managed(force_name) then
         return
     end
 
@@ -161,8 +168,8 @@ function AttackMeterProcessor.adjust_last_accumulated_attack_meter(force_name)
 end
 
 function AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
-    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(friend_force_name))
-    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(friend_force_name), true)
+    RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1, true)
     calculateNextThreshold(force_name)
 end
 

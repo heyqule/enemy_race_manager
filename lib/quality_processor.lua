@@ -5,6 +5,7 @@
 ---
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local QualityProcessor = {}
 
 --- The following is the spawn rate of each tier under different difficulty
@@ -100,7 +101,8 @@ local calculate_chance_cache = function(planet_data, time)
     end
     local spawn_rates_size = table_size(planet_data.spawn_rates)
     planet_data.spawn_rates_size = spawn_rates_size
-
+    planet_data.lowest_allowed_tier = spawn_rates_size
+    
     for index, _ in pairs(planet_data.spawn_rates) do
         local next_rate = planet_data.spawn_rates[index + 1]
         if next_rate and next_rate ~= 0 then
@@ -115,7 +117,9 @@ local calculate_chance_cache = function(planet_data, time)
     return planet_data
 end
 
-
+local is_erm_managed = function(force)
+    return ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_erm_managed(force.name)
+end
 ---
 --- Planet evolution takes 30%, accumulated attack point takes 70%
 function QualityProcessor.calculate_quality_points()
@@ -207,6 +211,14 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
         QualityProcessor.calculate_quality_points()
     end
 
+    --- Home planet spawns, always use the top tier
+    local surface = game.surfaces[surface_name]
+    local race_settings = storage.race_settings[force_name]
+    if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
+    then
+        return top_tier
+    end
+
     local planet_data = storage.quality_on_planet[force_name][surface_name]
 
     -- Use random roll normal - epic on a non-planet surfaces.
@@ -271,14 +283,14 @@ function QualityProcessor.roll(entity)
     -- unit which is not from enemy force or not erm units doesn't need to roll.
     if storage.is_running_roll or storage.skip_quality_rolling or
        (entity.commandable and entity.commandable.spawner) or
-       not ForceHelper.is_enemy_force(entity.force) or
+       not is_erm_managed(entity.force) or
        not ForceHelper.is_erm_unit(entity)
     then
         storage.skip_quality_rolling = false
         storage.is_running_roll = false
         return entity
     end
-    
+
     local name_token = ForceHelper.get_name_token(entity.name)
     if name_token == nil then
         return entity
@@ -390,6 +402,10 @@ function QualityProcessor.reset_all_progress()
         force.reset_evolution()
     end
     QualityProcessor.calculate_quality_points()
+end
+
+function QualityProcessor.skip_roll_quality()
+    storage.skip_quality_rolling = true
 end
 
 --- Register events

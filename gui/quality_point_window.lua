@@ -90,8 +90,17 @@ function QualityPointWindow.show(player, force_name)
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[3]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[2]) .. "%" }
         item_table.add { type = "label", caption = string.format("%.2f",calculated_rates[1]) .. "%" }
-        item_table.add { type = "label", caption = (unit_kills[surface_name] or 0) }
-        item_table.add { type = "label", caption = (structure_kills[surface_name] or 0) }
+        if unit_kills[surface_name] then
+            item_table.add { type = "label", caption = unit_kills[surface_name] }
+        else
+            item_table.add { type = "label", caption = 0 }
+        end     
+        
+        if structure_kills[surface_name] then
+            item_table.add { type = "label", caption = structure_kills[surface_name] }
+        else
+            item_table.add { type = "label", caption = 0 }
+        end       
     end
     main_flow.add { type = "label", name = "quality_points_home_planet_description", caption = { "gui.quality_points_home_planet_description" } }
 

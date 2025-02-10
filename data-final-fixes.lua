@@ -6,7 +6,10 @@
 require("__enemyracemanager__/global")
 require('prototypes/finalize-unit-prototypes')
 require('prototypes/health-balance')
+
 local String = require('__erm_libs__/stdlib/string')
+local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
+
 if DEBUG_MODE then
     data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15
     data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 15
@@ -16,6 +19,15 @@ if DEBUG_MODE then
     local erm_prototype_count = 0
     local damage_types_count = 0
     local damage_types = {}
+    
+    local planets_count = 0
+    local planets_with_pollutant = 0
+    local planets_with_enemy_autoplace = 0
+    local planets = { }
+
+    local space_loc_count = 0
+    local space_locs = { }
+    
     for type_name, entity_type in pairs(data.raw) do
         for entity_name, entity in pairs(entity_type) do
             prototype_count = prototype_count + 1
@@ -33,6 +45,32 @@ if DEBUG_MODE then
                 damage_types_count = damage_types_count + 1
                 table.insert(damage_types, entity.name)
             end
+
+            if type_name == "planet" then
+                planets_count = planets_count + 1
+                if entity.pollutant_type then
+                    planets_with_pollutant = planets_with_pollutant + 1
+                end
+                
+                local enemy_autoplaces = nil
+                if MapgenFunctions.has_enemy_autoplace(entity) then
+                    planets_with_enemy_autoplace = planets_with_enemy_autoplace + 1
+                    enemy_autoplaces = MapgenFunctions.get_enemy_autoplaces(entity)
+                end
+                table.insert(planets, {
+                    name = entity.name,
+                    pollutant_type = entity.pollutant_type,
+                    enemy_autoplaces = enemy_autoplaces,
+                    territory_units = MapgenFunctions.territory_units(entity)
+                })
+            end
+
+            if type_name == "space-location" then
+                space_loc_count = space_loc_count + 1
+                table.insert(space_locs, {
+                    name = entity.name
+                })
+            end
         end
     end
     log("Total Prototypes:" .. prototype_count)
@@ -42,4 +80,11 @@ if DEBUG_MODE then
     log("Total Damage Types:"..damage_types_count)
     log(serpent.block(damage_types))
 
+    log("Total Planets:"..planets_count)
+    log("Total Planets with pollutant_type:"..planets_count)
+    log(serpent.block(planets))
+
+    log("Total Space Location:"..space_loc_count)
+    log(serpent.block(space_locs))
+        
 end

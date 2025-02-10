@@ -24,6 +24,7 @@ local function spawn_units(surface,name)
     unit_group.set_command {
         type = defines.command.build_base,
         destination={3,3},
+        ignore_planner=true
     }
     return unit_group
 end
@@ -93,8 +94,8 @@ it("Build a town", function()
         force = enemy_force
     })
     local unit_group = spawn_units(surface,name)
-    --Currently handled by biter arrived event
-    --BaseBuildProcessor.exec(building)
+    
+    BaseBuildProcessor.exec(building)
     after_ticks(900, function()
         local count = surface.count_entities_filtered({
             type="unit-spawner",

@@ -523,7 +523,7 @@ GuiEvent.events = {
     [defines.events.on_gui_selected_tab_changed] = on_gui_selected_tab_changed,
     [defines.events.on_gui_confirmed] = on_gui_confirmed,
     [defines.events.on_gui_switch_state_changed] = on_gui_switch_state_changed,
-    [defines.events.on_lua_shortcut] = on_lua_shortcut
+    [defines.events.on_lua_shortcut] = on_lua_shortcut,
 }
 
 return GuiEvent

@@ -9,10 +9,13 @@ local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local SpawnLocationScanner = {}
 
-local distance = 10 --chunks
+local distance = 8 --chunks
 local chunk_size = 32
-local radius = distance * chunk_size
+local player_radius = distance / 1.6 * 32
+local other_enemy_radius = 3 * chunk_size
 local angle_division = 15
+
+local search_limit = 12
 
 local reference_unit_name = "enemy--behemoth-biter--1"
 
@@ -195,23 +198,32 @@ function SpawnLocationScanner.scan(surface, max_planet_radius)
 end
 
 function SpawnLocationScanner.is_valid_position(surface, tile_position)
-    local entities = surface.find_entities_filtered {
+    local player_entity = surface.count_entities_filtered {
         force = ForceHelper.get_player_forces(),
-        radius = radius,
+        radius = player_radius,
         position = tile_position,
-        limit = 1
+        limit = search_limit
     }
 
-    if next(entities) then
+    local enemy_entities = surface.count_entities_filtered {
+        force = ForceHelper.get_enemy_forces(),
+        type='unit-spawner',
+        radius = other_enemy_radius,
+        position = tile_position,
+        limit = search_limit
+    }
+
+    if player_entity == search_limit or enemy_entities == search_limit then
         return false
     end
 
-    local position = surface.find_non_colliding_position(reference_unit_name, tile_position, radius, 8)
+    local position = surface.find_non_colliding_position(reference_unit_name, tile_position, other_enemy_radius, 8)
 
     if position then
         return true
     end
 
+    print("Scanner Failed, no collide: "..surface.name)
     return false
 end
 
@@ -245,8 +257,8 @@ function SpawnLocationScanner.get_spawn_location(surface)
             storage.spawn_locations[surface_index][direction] = nil
         end
         i = i + 1
+        direction = pick_next_direction(direction)
     until stop == true or i == 7
-    direction = pick_next_direction(direction)
     spawn_tracker.last_attack_direction = direction
     return position
 end

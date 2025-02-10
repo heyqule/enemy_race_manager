@@ -12,6 +12,7 @@ local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_setting
 before_each(function()
     TestShared.prepare_the_factory()
     storage.is_multi_planets_game = true
+    storage.skip_interplanetary_attack = true
 end)
 
 after_each(function()
@@ -20,6 +21,7 @@ after_each(function()
     TestShared.reset_forces()
     AttackGroupHeatProcessor.reset_globals()
     storage.is_multi_planets_game = false
+    storage.skip_interplanetary_attack = false
 end)
 
 local biter_spawner = "enemy--biter-spawner--1"
@@ -348,17 +350,12 @@ it("Ask friend, Zerg can't attack, ask enemy to raid Surface 1", function()
     end
     RaceSettingsHelper.add_to_attack_meter("enemy_erm_zerg", 1000)
     after_ticks(300, function()
-        storage.override_ask_friend = true
         local target_force = AttackGroupHeatProcessor.pick_target("enemy_erm_zerg")
-        storage.override_ask_friend = true
         local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy_erm_zerg", target_force, true)
-        storage.override_ask_friend = false
         assert( picked_surface == nil, "Couldnt pick surface, asking for friend")
         --- Check friend attack points.
         assert(RaceSettingsHelper.get_attack_meter("enemy") > RaceSettingsHelper.get_attack_meter("enemy_erm_zerg"), "enemy needs attack point")
         assert(RaceSettingsHelper.get_attack_meter("enemy_erm_zerg") < RaceSettingsHelper.get_attack_meter("enemy"), "enemy_erm_zerg needs give out points")
-
-        storage.override_ask_friend = false
         done()
     end)
 end)

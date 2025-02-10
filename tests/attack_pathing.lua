@@ -11,6 +11,8 @@ local TestShared = require("shared")
 
 before_each(function()
     TestShared.prepare_the_factory()
+    storage.override_attack_strategy = nil
+    storage.skip_interplanetary_attack = true
 end)
 
 after_each(function()
@@ -18,6 +20,7 @@ after_each(function()
     TestShared.reset_lab_tile()
     AttackGroupPathingProcessor.reset_globals()
     storage.override_attack_strategy = nil
+    storage.skip_interplanetary_attack = false
 end)
 
 local DEFAULT_DIMENSION  = 192

@@ -32,15 +32,37 @@ local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deploymen
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
+local createRace = function()
+    local force = game.forces[GLEBA_FORCE_NAME]
+    if not force then
+        force = game.create_force(GLEBA_FORCE_NAME)
+    end
+
+    force.ai_controllable = true;
+    force.disable_research()
+    force.friendly_fire = true;
+
+    if settings.startup["enemyracemanager-free-for-all"].value then
+        ForceHelper.set_friends(game, GLEBA_FORCE_NAME, false)
+    else
+        ForceHelper.set_friends(game, GLEBA_FORCE_NAME, true)
+    end
+
+    ForceHelper.set_neutral_force(game, GLEBA_FORCE_NAME)
+    
+end
+
 local addRaceSettings = function()
-    local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
+    local race_settings = remote.call("enemyracemanager", "get_race", FORCE_NAME)
     if race_settings == nil then
         race_settings = {}
     end
 
-    race_settings.race = race_settings.race or MOD_NAME
+    race_settings.race = race_settings.race or FORCE_NAME
     race_settings.tier = race_settings.tier or 1
     race_settings.label = { "gui.label-biters" }
+    race_settings.is_primitive = race_settings.is_primitive or false
+    race_settings.autoplace_name = race_settings.autoplace_name or AUTOCONTROL_NAME
     race_settings.attack_meter = race_settings.attack_meter or 0
     race_settings.attack_meter_total = race_settings.attack_meter_total or 0
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
@@ -94,6 +116,9 @@ local addRaceSettings = function()
         { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
         { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
     }
+
+    race_settings.interplanetary_attack_active = race_settings.interplanetary_attack_active or false
+    
     race_settings.structure_killed_count_by_planet = race_settings.structure_killed_count_by_planet or {}
     race_settings.unit_killed_count_by_planet = race_settings.unit_killed_count_by_planet or {}
 
@@ -104,7 +129,34 @@ local addRaceSettings = function()
 
     script.raise_event(
             GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
-            {affected_race = MOD_NAME }
+            {affected_race = FORCE_NAME }
+    )
+
+
+    local gleba_race_settings = remote.call("enemyracemanager", "get_race", GLEBA_FORCE_NAME)
+    if gleba_race_settings == nil then
+        gleba_race_settings = {}
+    end
+
+    gleba_race_settings.race = gleba_race_settings.race or GLEBA_FORCE_NAME
+    gleba_race_settings.tier = gleba_race_settings.tier or 1
+    gleba_race_settings.is_primitive = true
+    gleba_race_settings.autoplace_name = gleba_race_settings.autoplace_name or GLEBA_FORCE_AUTOCONTROL_NAME
+    gleba_race_settings.label = { "gui.label-pentapod" }
+    gleba_race_settings.attack_meter = gleba_race_settings.attack_meter or 0
+    gleba_race_settings.attack_meter_total = gleba_race_settings.attack_meter_total or 0
+    gleba_race_settings.next_attack_threshold = gleba_race_settings.next_attack_threshold or 0
+    gleba_race_settings.interplanetary_attack_active = gleba_race_settings.interplanetary_attack_active or false
+    gleba_race_settings.structure_killed_count_by_planet = gleba_race_settings.structure_killed_count_by_planet or {}
+    gleba_race_settings.unit_killed_count_by_planet = gleba_race_settings.unit_killed_count_by_planet or {}
+
+    remote.call("enemyracemanager", "register_race", gleba_race_settings)
+
+    RaceSettingsHelper.process_unit_spawn_rate_cache(gleba_race_settings)
+
+    script.raise_event(
+            GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
+            {affected_race = GLEBA_FORCE_NAME }
     )
 end
 
@@ -172,8 +224,7 @@ local init_globals = function()
 
     -- Use for decorative removal when building dies
     storage.decorative_cache = storage.decorative_cache or {}
-
-    storage.installed_races = {}
+    
     storage.active_races = {}
     storage.active_races_names = {}
     storage.active_races_num = 1
@@ -207,7 +258,6 @@ local init_globals = function()
     InterplanetaryAttacks.init_globals()
     QualityProcessor.on_init()
 
-
     script.raise_event(
         GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
     )
@@ -217,6 +267,7 @@ end
 local on_init = function(event)
     init_globals()
     GlobalConfig.refresh_config()
+    createRace()
     addRaceSettings()
     prepare_world()
     conditional_events()
@@ -230,6 +281,7 @@ end
 local on_configuration_changed = function(event)
     init_globals()
     GlobalConfig.refresh_config()
+    createRace()
     addRaceSettings()
     prepare_world()
 end

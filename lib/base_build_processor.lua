@@ -52,7 +52,7 @@ end
 function BaseBuildProcessor.process_on_cmd(entity)
     local name_token = ForceHelper.get_name_token(entity.name)
     local force_name = entity.force.name
-    if GlobalConfig.race_is_active(force_name) and name_token and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
+    if GlobalConfig.race_is_erm_managed(force_name) and name_token and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
         local unit_group = BaseBuildProcessor.determine_build_group(entity)
         if unit_group then
             BaseBuildProcessor.build_formation(unit_group, true)
@@ -101,7 +101,7 @@ end
 function BaseBuildProcessor.build_formation(unit_group, has_cc)
     local force_name = unit_group.force.name
 
-    if not GlobalConfig.race_is_active(force_name) then
+    if not GlobalConfig.race_is_erm_managed(force_name) then
         return nil
     end
 
@@ -164,7 +164,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     end
     
     if not surface.can_place_entity({ name = name, force = force_name, position = position }) then
-        position = surface.find_non_colliding_position(name, position, radius, 11.33, true)
+        position = surface.find_non_colliding_position(name, position, radius, 8.33, true)
     end
 
     if position then
@@ -172,10 +172,10 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
 
         if built_entity then
             script.raise_event(
-                    GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
-                    {
-                        entity = built_entity
-                    }
+                GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
+                {
+                    entity = built_entity
+                }
             )
         end
     end

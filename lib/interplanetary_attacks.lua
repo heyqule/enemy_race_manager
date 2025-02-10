@@ -13,17 +13,77 @@ local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_proc
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
-local InterplanetaryAttacks = {}
+local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-local NAUVIS = 1
+local InterplanetaryAttacks = {}
 
 local base_spawn_rate = 50
 
 local group_variance = 20
 local home_group_size = 20
 
-local can_perform_attack = function()
-    return storage.is_multi_planets_game
+local default_ignore_list = {
+    --- Offical planets --
+    aquilo = true,
+
+    --- 3rd party planets with their defined uniqueness
+    --- Maraxsis
+    maraxsis = true,
+    ["maraxsis-trench"] = true,
+}
+
+local player_entities = {"rocket-silo", "mining-drill", "cargo-landing-pad"}
+
+local defense_entities = {"artillery-turret", "artillery-wagon"}
+
+local is_not_ignore_planet = function(planet)
+    local prototype = planet.prototype
+    if default_ignore_list[planet.name] or
+       prototype.hidden
+    then
+        return false
+    end
+
+    if prototype.map_gen_settings.autoplace_controls then
+        for name, _ in pairs(prototype.map_gen_settings.autoplace_controls) do
+            if MapgenFunctions.autoplace_is_enemy_base(name) then
+                return true
+            end
+        end
+    end
+
+    if prototype.map_gen_settings.territory_settings then
+        return true
+    end
+
+    return false
+end
+
+local check_home_planet_attacked = function(force_name)
+    if RaceSettingsHelper.can_perform_interplanetary_raid(force_name) then
+        return true
+    end
+    
+    local home_planet = RaceSettingsHelper.get_home_planet(force_name)
+    if home_planet and game.surfaces[home_planet] and
+        storage.race_settings[force_name].structure_killed_count_by_planet[home_planet] and
+        storage.race_settings[force_name].structure_killed_count_by_planet[home_planet] > 0
+    then
+        RaceSettingsHelper.set_interplanetary_raid_for(force_name, true)
+    end
+    return RaceSettingsHelper.can_perform_interplanetary_raid(force_name)
+end
+
+local can_perform_attack = function(force_name)
+    local can_perform = storage.is_multi_planets_game and 
+           Config.interplanetary_raid_enable()
+    
+    if force_name then
+        can_perform = check_home_planet_attacked(force_name)
+    end
+    
+    return can_perform
 end
 
 function InterplanetaryAttacks.init_globals()
@@ -35,11 +95,23 @@ function InterplanetaryAttacks.init_globals()
     --- }
     storage.interplanetary_intel = storage.interplanetary_intel or {}
     storage.interplanetary_tracker = storage.interplanetary_tracker or {}
+    storage.interplanetary_planets = storage.interplanetary_planets or {} 
 
     if not storage.interplanetary_intel[1] then
         storage.interplanetary_intel[1] = InterplanetaryAttacks.get_default_intel()
         storage.interplanetary_intel[1].has_player_entities = true
     end
+
+    for interface_name, functions in pairs(remote.interfaces) do
+        if functions["interplanetary_attack_ignore_planets"] then
+            local data = remote.call(interface_name, "interplanetary_attack_ignore_planets")
+            for _, planet in pairs(data) do
+                default_ignore_list[planet] = true
+            end
+        end
+    end
+    
+    DebugHelper.print('Interplanetary attack ignores: '..serpent.block(default_ignore_list))
 end
 
 function InterplanetaryAttacks.get_default_intel()
@@ -53,7 +125,7 @@ function InterplanetaryAttacks.get_default_intel()
 end
 
 function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
-    if not can_perform_attack() then
+    if not can_perform_attack(force_name) then
         return false
     end
 
@@ -75,8 +147,8 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     end
 
     if RaceSettingsHelper.can_spawn(base_spawn_rate - intel.calculated_defense) == false and
-        not storage.override_interplanetary_attack_roll_bypass then
-        AttackMeterProcessor.adjust_attack_meter(force_name)
+        not storage.override_interplanetary_attack_roll_bypass 
+    then
         return false
     end
 
@@ -93,8 +165,10 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     local max_unit_number = Config.max_group_size()
     local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
 
-    --- If it"a build group, 20 units use for building on spot, the rest will attack.
-     local build_home = RaceSettingsHelper.can_spawn(25) or storage.override_interplanetary_attack_build_base
+    --- If it's a build group, 20 units use for building on spot, the rest will attack.
+     local build_home = RaceSettingsHelper.can_spawn(
+            Config.interplanetary_raid_base_build_chance()
+    ) or storage.override_interplanetary_attack_build_base
     if build_home then
         group_unit_number = group_unit_number - home_group_size
     end
@@ -149,6 +223,9 @@ function InterplanetaryAttacks.scan(surface)
         return
     end
 
+    --- interplanetary attacks debug
+    print("scanning: "..surface.name)
+    
     if surface and ForceHelper.can_have_enemy_on(surface) then
         --- Event to manipulate storage.interplanetary_intel
         local intel =  storage.interplanetary_intel[surface.index]
@@ -166,7 +243,6 @@ function InterplanetaryAttacks.scan(surface)
             SpawnLocationScanner.scan(surface, max_planet_radius)
         end
     end
-
 end
 
 function InterplanetaryAttacks.set_intel(surface_index, data)
@@ -188,8 +264,36 @@ end
 
 function InterplanetaryAttacks.reset_globals()
     storage.interplanetary_intel = {}
-    storage.interplanetary_tracker =  {}
+    storage.interplanetary_tracker = {}
     InterplanetaryAttacks.init_globals()
 end
+
+function InterplanetaryAttacks.determine_planet_details(surface_index)
+    local surface = game.surfaces[surface_index]
+    local planet = surface.planet
+    if planet and is_not_ignore_planet(planet) then
+        local intel = InterplanetaryAttacks.get_intel(surface_index) or InterplanetaryAttacks.get_default_intel()
+        local player_entity_count = surface.count_entities_filtered({
+            type=player_entities,
+            force=ForceHelper.get_player_forces(),
+            limit = 1
+        })
+        if player_entity_count then
+            intel.has_player_entities = true
+        end
+
+        local defense_count = surface.count_entities_filtered({
+            type=defense_entities,
+            force=ForceHelper.get_player_forces(),
+            limit = 1
+        })
+        if defense_count then
+            intel.defense = defense_count
+        end
+        intel.updated = game.tick
+        InterplanetaryAttacks.set_intel(surface_index, intel)
+    end
+end
+
 
 return InterplanetaryAttacks

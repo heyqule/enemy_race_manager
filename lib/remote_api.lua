@@ -325,6 +325,17 @@ function RemoteAPI.milestones_preset_addons()
     }
 end
 
+--- Register native forces
+function RemoteAPI.register_new_enemy_race()
+    local data = { FORCE_NAME }
+
+    if script.feature_flags.space_travel then
+        table.insert(data, GLEBA_FORCE_NAME) 
+    end
+
+    return data
+end
+
 --- remote.call("enemyracemanager", "get_event_name", GlobalConfig.EVENT_TIER_WENT_UP)
 --- script.on_event(event_name, function(event)
 function RemoteAPI.get_event_name(event_name)
@@ -358,6 +369,7 @@ RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
 RemoteAPI.get_quality_point = QualityProcessor.get_quality_point
 RemoteAPI.roll_quality = QualityProcessor.roll_quality
+RemoteAPI.skip_roll_quality = QualityProcessor.skip_roll_quality
 
 --- AttackGroupProcessor
 RemoteAPI.process_attack_position = AttackGroupProcessor.process_attack_position

@@ -275,7 +275,7 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
             surface.pollute({0, 0}, pollution_deduction)
         else
             --- Re-add 20% of AttackGroupProcessor.MIXED_UNIT_POINTS
-            RaceSettingsHelper.add_to_attack_meter(group.force.name, #group.members * 5)
+            RaceSettingsHelper.add_to_attack_meter(group.force.name, #group.members * 5, true)
             AttackGroupProcessor.queue_for_destroy(group)
         end
 
@@ -428,7 +428,7 @@ function AttackGroupProcessor.init_globals()
 end
 
 function AttackGroupProcessor.add_to_group_cron(arg)
-    add_to_group(unpack(arg))
+    add_to_group(table.unpack(arg))
 end
 
 ---
@@ -579,19 +579,17 @@ function AttackGroupProcessor.generate_group(
             else
                 --- Drop current group if retry fails
                 set_group_tracker(force_name, nil)
-
-                --- @TODO interplanetary attack disabled for 2.0
-                --- Try roll a interplantary attack, 33% chance
-                --if Config.interplanetary_attack_enable() and
-                --   RaceSettingsHelper.can_spawn(33)
-                --then
-                --    script.raise_event(
-                --            Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],
-                --            {
-                --                force_name = force_name,
-                --                target_force = target_force
-                --            })
-                --end
+                
+                --- Try roll a interplantary attack, 50% chance
+                if RaceSettingsHelper.can_spawn(50)
+                then
+                   script.raise_event(
+                           Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],
+                           {
+                               force_name = force_name,
+                               target_force = target_force
+                           })
+                end
             end
             return false
         end
@@ -796,7 +794,7 @@ function AttackGroupProcessor.process_attack_position(options)
     end
 
     local erm_group_data = storage.erm_unit_groups[group.unique_id]
-    --- @TODO SPIDER AI ISSUE BYPASS, only assign attack command if the group is not in same location.
+    --- only assign attack command if the group is not in same location.
     local is_near_same_location = false
     if erm_group_data and erm_group_data.has_completed_command_at then
         is_near_same_location = Position.manhattan_distance(erm_group_data.has_completed_command_at, group.position) < AttackGroupProcessor.ATTACK_RADIUS
@@ -996,8 +994,8 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
                   bypass_attack_meter=true
                 }
             )
-        elseif Config.race_is_active(force_name) then
-            RaceSettingsHelper.add_to_attack_meter(force_name, refund_points)
+        elseif Config.race_is_erm_managed(force_name) then
+            RaceSettingsHelper.add_to_attack_meter(force_name, refund_points, true)
         end
     end
 end
@@ -1059,8 +1057,6 @@ function AttackGroupProcessor.clear_registered_group()
         if group_entity and group_entity.valid then
             if current_tick > last_tick + DAY_TICK then
                 if Position.distance(group_entity.position, group_data.last_position) < 10 then
-                    --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks once it gets nuke by artillery.
-                    --- Nuke stuck units to preserve performance
                     AttackGroupProcessor.destroy_members(group_entity)
                     group_entity.destroy()
                 else

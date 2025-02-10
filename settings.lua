@@ -492,7 +492,7 @@ data:extend {
         description = "enemyracemanager-time-based-points",
         setting_type = "runtime-global",
         default_value = 2,
-        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50, 75 },
+        allowed_values = { 1, 2, 3, 5, 8, 10, 15, 20, 33, 50},
         order = "enemyracemanager-451"
     },
 
@@ -507,13 +507,22 @@ data:extend {
     },
     {
         type = "int-setting",
+        name = "enemyracemanager-interplanetary-raids-spawn-chance",
+        description = "enemyracemanager-interplanetary-raids-spawn-chance",
+        setting_type = "runtime-global",
+        default_value = 20,
+        allowed_values = {5, 10, 20, 25, 33, 50},
+        order = "enemyracemanager-910",
+    },
+    {
+        type = "int-setting",
         name = "enemyracemanager-interplanetary-raids-build-base-chance",
         description = "enemyracemanager-interplanetary-raid-build-base-chance",
         setting_type = "runtime-global",
         default_value = 25,
-        allowed_values = {0, 10, 20, 25, 33, 50, 66, 75},
+        allowed_values = {5, 10, 20, 25, 33, 50},
         order = "enemyracemanager-911"
-    },
+    }
 }
 
 

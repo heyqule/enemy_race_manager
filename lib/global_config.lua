@@ -143,6 +143,9 @@ local refreshable_settings = {
         "enemyracemanager-precision-strike-warning",
         "enemyracemanager-time-based-enable",
         "enemyracemanager-time-based-points",
+        "enemyracemanager-interplanetary-raids",
+        "enemyracemanager-interplanetary-raids-spawn-chance",
+        "enemyracemanager-interplanetary-raids-build-base-chance"
     }
 }
 
@@ -165,9 +168,14 @@ local check_register_erm_race = function(mod_name)
     if remote.interfaces[mod_name] and
        remote.interfaces[mod_name]["register_new_enemy_race"]
     then
-        return remote.call(mod_name, "register_new_enemy_race")
+        local data = remote.call(mod_name, "register_new_enemy_race")
+        if type(data) == 'string' then
+            return {data}
+        elseif type(data) == 'table' then
+            return data
+        end
     end
-    return nil
+    return {}
 end
 
 function GlobalConfig.is_cache_expired(last_tick, length)
@@ -310,22 +318,25 @@ function GlobalConfig.spawner_kills_deduct_evolution_points()
     return get_global_setting_value("enemyracemanager-attack-point-spawner-kills-deduction")
 end
 
+function GlobalConfig.interplanetary_raid_enable()
+    return get_global_setting_value("enemyracemanager-interplanetary-raids")
+end
+
+function GlobalConfig.interplanetary_raid_spawn_chance()
+    return get_global_setting_value("enemyracemanager-interplanetary-raids-spawn-chance")
+end
+
+function GlobalConfig.interplanetary_raid_base_build_chance()
+    return get_global_setting_value("enemyracemanager-interplanetary-raids-build-base-chance")
+end
+
 function GlobalConfig.initialize_races_data()
-    storage.installed_races = { [MOD_NAME] = true }
-    storage.active_races = { [MOD_NAME] = true }
-
+    storage.active_races = {}
 
     for name, _ in pairs(script.active_mods) do
-        local register_id = check_register_erm_race(name)
-        if register_id then
-            storage.active_races[register_id] = true
-        end
-    end
-
-    for name, _ in pairs(script.active_mods) do
-        local register_id = check_register_erm_race(name)
-        if register_id then
-            storage.installed_races[register_id] = true
+        local register_ids = check_register_erm_race(name)
+        for _, name in pairs(register_ids) do
+            storage.active_races[name] = true            
         end
     end
 
@@ -344,12 +355,8 @@ function GlobalConfig.get_enemy_races_total()
     return storage.active_races_num
 end
 
-function GlobalConfig.race_is_active(force_name)
-    return storage.active_races[force_name] == true
-end
-
-function GlobalConfig.get_installed_races()
-    return storage.installed_races
+function GlobalConfig.race_is_erm_managed(force_name)
+    return storage.active_races[force_name] == true and storage.race_settings[force_name].is_primitive == false
 end
 
 function GlobalConfig.format_daytime(start_tick, end_tick)

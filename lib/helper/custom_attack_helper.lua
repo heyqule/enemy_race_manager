@@ -10,6 +10,7 @@ local String = require('__erm_libs__/stdlib/string')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local Orientation = require('__erm_libs__/stdlib/orientation')
 
 local Table = require("__erm_libs__/stdlib/table")
 
@@ -483,6 +484,63 @@ function CustomAttackHelper.process_time_to_live_unit_died(event)
     if event.source_entity then
         CustomAttackHelper.time_to_live_unit_died(event.source_entity)
     end
+end
+
+local opposition_position_calculation = {
+    [defines.direction.north] = function(target_position, distance, offset)
+        return { target_position.x + offset, target_position.y + distance}
+    end,
+    [defines.direction.south] = function(target_position, distance, offset)
+        return { target_position.x + offset, target_position.y - distance}
+    end,
+    [defines.direction.east] = function(target_position, distance, offset)
+        return { target_position.x - distance, target_position.y + offset }
+    end,
+    [defines.direction.west] = function(target_position, distance, offset)
+        return { target_position.x + distance, target_position.y + offset }
+    end
+}
+
+local rounding_orientation = function(orientation)
+    if orientation > 0.625 and orientation <= 0.875 then
+        orientation = 0.75
+    elseif orientation > 0.375 and orientation <= 0.625 then
+        orientation = 0.5
+    elseif orientation > 0.125 and orientation <= 0.375 then
+        orientation = 0.25
+    else
+        orientation = 0
+    end
+    return orientation
+end
+
+function CustomAttackHelper.process_guerrilla(event)
+    if not event.source_entity or not event.source_entity.valid then
+        return
+    end
+
+    local unit = event.source_entity
+    local commandable = unit.commandable
+    
+    if not storage.guerrilla_distances[unit.name] then
+        local prototype = unit.prototype
+        local distance = math.ceil((prototype.vision_distance / 1.25) - prototype.attack_parameters.range)
+        storage.guerrilla_distances[unit.name] = distance
+    end
+    
+    local orientation = rounding_orientation(unit.orientation)
+    
+    local position = opposition_position_calculation[Orientation.to_direction(orientation)](
+        unit.position,
+        storage.guerrilla_distances[unit.name],
+        math.random(-8,8)
+    )
+
+    commandable.set_command( {
+        type = defines.command.go_to_location,
+        distraction = defines.distraction.none,
+        destination = position,
+    })
 end
 
 return CustomAttackHelper

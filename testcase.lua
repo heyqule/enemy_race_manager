@@ -21,7 +21,7 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         table.insert(tests,"tests/attack_heat")
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
-        --table.insert(tests,"tests/interplanetary_attacks")
+        table.insert(tests,"tests/interplanetary_attacks")
     else
         error("Required erm_zerg and erm_protoss to test attack functions")
     end

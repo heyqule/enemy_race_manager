@@ -55,7 +55,7 @@ local INDEXABLE_ATTACKABLE_ENTITY_TYPES = {
     "artillery-turret",
 }
 if script.feature_flags.space_travel then
-    table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
+    table.insert(INDEXABLE_ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
 end
 
 local CONTROL_DATA = "cdata"
@@ -690,8 +690,13 @@ AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk = function(surface, ar
 end
 
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
+    if not storage[ATTACK_ENTITIES_BEACON][surface.index] or not storage[CONTROL_DATA][surface.index] then
+        return nil
+    end 
+    
     local selected_key = storage[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
     local attack_beacons = storage[ATTACK_ENTITIES_BEACON][surface.index][target_force.name]
+    
     if not selected_key or attack_beacons == nil or attack_beacons[selected_key] == nil then
         return nil
     end

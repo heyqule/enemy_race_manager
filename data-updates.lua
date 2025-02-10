@@ -10,9 +10,13 @@ end
 
 require("prototypes/extend-ground-fire-patches.lua")
 
+require("prototypes/extend-gleba.lua")
+
 require("prototypes/extend-defense.lua")
 
 require("prototypes/extend-weapons.lua")
+
+require("prototypes/extend-attackable-entities.lua")
 
 require("prototypes/extend-super-weapons.lua")
 

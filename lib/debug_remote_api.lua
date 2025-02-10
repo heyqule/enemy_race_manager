@@ -44,9 +44,9 @@ function Debug_RemoteAPI.print_option_settings()
     log(helpers.table_to_json(storage.settings))
 end
 
---- Usage: remote.call("enemyracemanager_debug", "print_installed_races")
-function Debug_RemoteAPI.print_installed_races()
-    log(helpers.table_to_json(GlobalConfig.get_installed_races()))
+--- Usage: remote.call("enemyracemanager_debug", "print_active_races")
+function Debug_RemoteAPI.print_active_races()
+    log(helpers.table_to_json(GlobalConfig.get_active_races()))
 end
 
 --- Usage: remote.call("enemyracemanager_debug", "print_enemy_races")
@@ -95,7 +95,7 @@ end
 --- Usage: remote.call("enemyracemanager_debug", "add_points_to_attack_meter", 500000)
 function Debug_RemoteAPI.add_points_to_attack_meter(value)
     for name, settings in pairs(storage.race_settings) do
-        if settings.attack_meter then
+        if settings.attack_meter and not settings.is_primitive then
             RaceSettingsHelper.add_to_attack_meter(name, value)
         end            
     end
@@ -196,9 +196,9 @@ function Debug_RemoteAPI.forces_relation()
         local forceA = forces[key]
         print("------ " .. forceA.name .. " ------")
         for _, forceB in pairs(forces) do
-            print(forceB.name .." is friend: : " .. tostring(forceA.is_friend(forceB))..
-                    ", in friend-list: "..tostring(forceA.get_friend(forceB))..
-                    ", cease_fire:"..tostring(forceA.get_cease_fire(forceB))
+            print(forceB.name .." is_friend: : " .. tostring(forceA.is_friend(forceB))..
+                    ", get_friend: "..tostring(forceA.get_friend(forceB))..
+                    ", get_cease_fire:"..tostring(forceA.get_cease_fire(forceB))
             )
         end
         print("------ END " .. forceA.name .. "------")

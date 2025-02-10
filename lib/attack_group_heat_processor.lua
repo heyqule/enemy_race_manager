@@ -34,12 +34,14 @@ AttackGroupHeatProcessor.init_globals = function()
     storage.attack_heat = storage.attack_heat or {}
     storage.attack_heat_by_forces = storage.attack_heat_by_forces or {}
     storage.attack_heat_by_surfaces = storage.attack_heat_by_surfaces or {}
+    storage.attack_heat_last_surface = storage.attack_heat_last_surface or 1
 end
 
 AttackGroupHeatProcessor.reset_globals = function()
     storage.attack_heat = {}
-    storage.attack_heat_by_forces = storage.attack_heat_by_forces or {}
-    storage.attack_heat_by_surfaces = storage.attack_heat_by_surfaces or {}
+    storage.attack_heat_by_forces = {}
+    storage.attack_heat_by_surfaces = {}
+    storage.attack_heat_last_surface = 1
 end
 
 --- Handle removing surface data
@@ -150,13 +152,28 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
         surface_data and
         storage.total_enemy_surfaces > 1
     then
-        local _, surface = next(surface_data)
+        
+        -- Roll interplanetary attack
+        if not storage.skip_interplanetary_attack and 
+            (storage.override_interplanetary_attack_enabled or
+            RaceSettingsHelper.can_spawn(Config.interplanetary_raid_spawn_chance()))
+        then
+            script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
+                force_name = force_name,
+                target_force = target_force
+            })
+            return nil
+        end
+        
+        
+        local _, surface = next(surface_data, storage.attack_heat_last_surface)
         if surface and surface.has_attack_beacon then
             return_surface = game.surfaces[surface.surface_index]
         else
-            for _, surface in pairs(surface_data) do
+            for index, surface in pairs(surface_data) do
                 if surface.has_attack_beacon then
                     return_surface = game.surfaces[surface.surface_index]
+                    storage.attack_heat_last_surface = index
                     break;
                 end
             end
@@ -166,43 +183,21 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             return_surface = nil
         end
 
-        if not return_surface or storage.override_interplanetary_attack_enabled then
-            local ask_friend_roll = nil
-            --- @TODO to be refactor for interplanetary attacks.
-            local interplanetary_attack_enable = true
-
-            if interplanetary_attack_enable then
-                ask_friend_roll = storage.override_ask_friend
-                if ask_friend_roll == nil then
-                    ask_friend_roll = RaceSettingsHelper.can_spawn(50)
-                end
-            end
-
+        if not return_surface and ask_friend then
             -- Transfer all attack points to a friend that can attack.
-            if ask_friend and ask_friend_roll then
-                for friend_force_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
-                    for surface_index, surface in pairs(race_surface_data) do
-                        if surface and surface.has_attack_beacon and
-                                storage.attack_heat[friend_force_name][surface_index] ~= nil
-                        then
+            for friend_force_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
+                for surface_index, surface in pairs(race_surface_data) do
+                    if surface and surface.has_attack_beacon and
+                            storage.attack_heat[friend_force_name][surface_index] ~= nil
+                    then
 
-                            --- AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
-                            RaceSettingsHelper.add_to_attack_meter(friend_force_name, RaceSettingsHelper.get_next_attack_threshold(force_name))
-                            RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1)
-                            return nil
-                        end
+                        --- AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
+                        RaceSettingsHelper.add_to_attack_meter(friend_force_name, RaceSettingsHelper.get_next_attack_threshold(force_name), true)
+                        RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1, true)
+                        return nil
                     end
                 end
             end
-
-            -- @TODO temporary disable interplanetary attack
-            --if interplanetary_attack_enable or storage.override_interplanetary_attack_enabled then
-            --    script.raise_event(Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC],{
-            --        force_name = force_name,
-            --        target_force = target_force
-            --    })
-            --    return nil
-            --end
         end
     end
 

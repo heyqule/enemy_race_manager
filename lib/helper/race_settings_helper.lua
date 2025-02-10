@@ -1,8 +1,12 @@
+
 local Table = require("__erm_libs__/stdlib/table")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local RaceSettingsHelper = {
-    default_mod_name = "enemy"
+    default_force_names = {
+        enemy = true,
+        enemy_pentapod = true
+    }
 }
 
 local FEATURE_RACE_NAME = 1
@@ -19,7 +23,9 @@ function RaceSettingsHelper.clean_up_race()
     end
 
     for _, item in pairs(storage.race_settings) do
-        if item.race ~= RaceSettingsHelper.default_mod_name and script.active_mods[string.gsub(item.race,"enemy_","")] == nil then
+        if not RaceSettingsHelper.default_force_names[item.race] and 
+           script.active_mods[string.gsub(item.race,"enemy_","")] == nil 
+        then
             storage.race_settings = Table.remove_keys(storage.race_settings, { item.race })
             if game.forces["enemy_" .. item.race] then
                 game.merge_forces("enemy_" .. item.race, "enemy")
@@ -133,9 +139,10 @@ function RaceSettingsHelper.get_attack_meter(target_race)
     return storage.race_settings[target_race].attack_meter
 end
 
-function RaceSettingsHelper.add_to_attack_meter(target_race, value)
+function RaceSettingsHelper.add_to_attack_meter(target_race, value, skip_accumulate)
+    local skip_accumulate = skip_accumulate or false
     storage.race_settings[target_race].attack_meter = math.max( math.min(storage.race_settings[target_race].attack_meter + value, 999999),  0)
-    if (value > 0) then
+    if (value > 0) and not skip_accumulate then
         RaceSettingsHelper.set_accumulated_attack_meter(target_race, storage.race_settings[target_race].attack_meter_total + math.min(value, 999999))
     end
 end
@@ -355,5 +362,20 @@ function RaceSettingsHelper.boss_tier(target_race)
     return storage.race_settings[target_race]["boss_tier"] or 1
 end
 
+function RaceSettingsHelper.can_perform_interplanetary_raid(target_race)
+    return storage.race_settings[target_race]["interplanetary_attack_active"] or false
+end
+
+function RaceSettingsHelper.set_interplanetary_raid_for(target_race, value)
+    storage.race_settings[target_race]["interplanetary_attack_active"] = value
+end
+
+function RaceSettingsHelper.get_home_planet(target_race)
+    return storage.race_settings[target_race]["home_planet"]
+end
+
+function RaceSettingsHelper.is_primitive(target_race)
+    return storage.race_settings[target_race]["is_primitive"] or true
+end
 
 return RaceSettingsHelper

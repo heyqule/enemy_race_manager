@@ -61,7 +61,7 @@ it("Calculate attack points", function()
 
     --- When attack group generated
     after_ticks(16000, function()
-        assert(storage.race_settings[race_name].attack_meter < 5490,"Round2: Attack Meter Number should be lower after group generated")
+        assert(storage.race_settings[race_name].attack_meter < 5490,"Round2: Attack Meter Number should be lower after group generated: "..storage.race_settings[race_name].attack_meter)
         assert(5490 >= storage.race_settings[race_name].attack_meter_total,"Round2: Accumulated Attack Meter Number")
         done()
     end)

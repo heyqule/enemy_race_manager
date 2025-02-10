@@ -7,11 +7,12 @@
 local Queue = require("__erm_libs__/stdlib/queue")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
---local LevelManager = require("__enemyracemanager__/lib/level_processor")
+
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 local TestShared = {}
 
@@ -30,6 +31,7 @@ function TestShared.prepare_the_factory()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
     QualityProcessor.calculate_quality_points()
+    InterplanetaryAttacks.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
     TestShared.reset_forces()
@@ -52,6 +54,7 @@ function TestShared.reset_the_factory()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
+    InterplanetaryAttacks.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
 end
@@ -105,8 +108,8 @@ function TestShared.reset_forces()
     end
 end
 
-function TestShared.reset_lab_tile(radius)
-    local surface = game.surfaces[1]
+function TestShared.reset_lab_tile(radius, surface)
+    local surface = game.surfaces[1] or game.surfaces[surface]
     local tile_types = { "lab-dark-2","lab-dark-1" }
     local tiles = {}
     local radius = radius or 320

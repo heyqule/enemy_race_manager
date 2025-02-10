@@ -46,8 +46,6 @@ local base_cold_resistance = 20
 local incremental_cold_resistance = 15
 
 -- Animation Settings
-local unit_scale = 2
-
 local pollution_absorption_absolute = 50
 local spawning_cooldown = { 600, 300 }
 local spawning_radius = 10
@@ -137,7 +135,7 @@ function make_roboport(level)
                             height = 120,
                             direction_count = 1,
                             scale = 0.4,
-                            shift = util.by_pixel(0, -15),
+                            shift = util.by_pixel(0, -25),
                         },
                         {
                             filename = "__base__/graphics/entity/roboport/roboport-shadow.png",

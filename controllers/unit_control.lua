@@ -31,12 +31,11 @@ local on_biter_base_build = function(event)
     end
 end
 
---- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
---- Some group building base doesn't trigger on_biter_base_built nanithefuk?
 local on_build_base_arrived = function(event)
-    if event.group then
-        BaseBuildProcessor.exec(event.group.members[1])
-    end
+    --if event.group then
+    --    BaseBuildProcessor.exec(event.group.members[1])
+    --    AttackGroupBeaconProcessor.create_spawn_beacon(event.group.members[1])
+    --end
 end
 
 local on_unit_group_created = function(event)
@@ -103,12 +102,6 @@ local checking_state = {
 }
 
 local on_unit_group_finished_gathering = function(event)
-    --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
-    if storage.on_unit_group_finished_gathering_build_base then
-        storage.on_unit_group_finished_gathering_build_base = false    
-        return
-    end
-    
     local group = event.group
     if not group.valid then
         return
@@ -174,39 +167,6 @@ local on_unit_group_finished_gathering = function(event)
     if scout_unit_name then
         storage.scout_unit_name[group.unique_id] = nil
     end
-
-    --- @TODO SPIDER AI ISSUE BYPASS, build base groups breaks.
-    --- er... build group always failed.  No idea the reason, probably relate to the AI bug.
-    if event.group.command and event.group.command.type == defines.command.build_base and not storage.on_unit_group_finished_gathering_build_base then
-        local group = event.group
-        local surface = group.surface
-        local force = group.force
-        local command = group.command
-        storage.skip_quality_rolling = true
-        storage.on_unit_group_finished_gathering_build_base = true
-        base_build_group[group.unique_id] = {group = group, command = command, retry = 0}
-        --- Why does it need a tier 1 unit to make the group able to path??
-        local has_level_1 = false
-        for _, unit in pairs(group.members) do
-            local name_token = ForceHelper.get_name_token(unit.name)
-            if name_token and name_token[3] and tonumber(name_token[3]) == 1 then
-                has_level_1 = true
-                break
-            end 
-        end
-    
-        if not has_level_1 then
-            local key, member = next(group.members)
-            if member then
-                local name_token = ForceHelper.get_name_token(member.name)
-                if name_token then
-                    local lvl1entity = surface.create_entity({name=name_token[1].."--"..name_token[2]..'--1',position=group.position, force=force})
-                    group.add_member(lvl1entity)
-                    member.destroy()
-                end
-            end                
-        end
-    end
 end
 
 --- handle scouts under ai complete
@@ -247,45 +207,6 @@ local handle_scouts = function(scout_unit_data)
     end
 end
 
---- @TODO SPIDER AI ISSUE BYPASS, break build building group
-local recreate_build_group = function(base_group_data, unit_number)
-    local group = base_group_data.group
-    local members = group.members
-
-    if table_size(members) and base_group_data.retry < BUILD_BASE_RETRY then
-        local surface = group.surface
-        storage.on_unit_group_finished_gathering_build_base = true
-        local new_group = surface.create_unit_group {position=group.position, force=group.force}
-
-        for _, unit in pairs(group.members) do
-            new_group.add_member(unit)
-        end
-        new_group.set_command(base_group_data.command)
-        new_group.start_moving()
-        group.destroy()
-        base_build_group[unit_number] = nil
-        base_build_group[new_group.unique_id] = {group = new_group, command = new_group.command, retry = base_group_data.retry + 1} 
-    end
-end
-
-local handle_build_group = function(group_number, event_result)
-    if base_build_group == nil then
-        return
-    end
-
-    local base_group_data = base_build_group[group_number]
-    if base_group_data then
-        local group = base_group_data.group
-        if group.valid and (group.moving_state == defines.moving_state.stale or group.moving_state == defines.moving_state.stuck) then
-            recreate_build_group(base_group_data, group_number)
-        end
-
-        if group.valid and event_result == defines.behavior_result.fail then
-            recreate_build_group(base_group_data, group_number)
-        end
-    end
-end
-
 local nearby_retry = 3
 --- handle ERM groups under ai complete
 local handle_erm_groups = function(unit_number, event_result, was_distracted)
@@ -300,63 +221,6 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
             return
         end
 
-        local moving_state_stale = (group.moving_state  == defines.moving_state.stale or 
-                group.moving_state == defines.moving_state.stuck)
-
-        --- @TODO SPIDER AI ISSUE BYPASS, groups breaks.
-        --- Reapply chain command if group moving has stale and command is wiped by spider AI.
-        ---
-        --- Rseding91 — 2024/10/28 at 4:02 PM
-        --- The group members are not within the collection area of the unit group. so it makes new commands to pack them closer together.
-        --- Those commands finish, which then marks the group command as done
-        ---
-        --- Issue tracking:
-        --- https://forums.factorio.com/viewtopic.php?f=182&t=118082&p=626929#p626929
-        ---
-        --- and there goes some performance to copy group lol.  Maybe do copy it in a queue down the road.
-        if event_result ==  defines.behavior_result.fail and
-                was_distracted == false and
-                group.command == nil and
-            (erm_unit_group.commands) and erm_unit_group.commands.type == defines.command.compound and
-            moving_state_stale
-        then
-            local commands = erm_unit_group.commands
-            local new_commands
-            -- try go to last stop if the group stuck
-            if group.moving_state == defines.moving_state.stuck then
-                new_commands = commands.commands[table_size(commands)]
-            else
-                local remove_upto
-                for index, command in pairs(commands.commands) do
-                    if command.destination and util.distance(group.position, command.destination) < CHUNK_SIZE * 2 then
-                        remove_upto = index
-                        break
-                    end
-                end
-
-                if remove_upto then
-                    for index = remove_upto, 1, -1 do
-                        table.remove(commands.commands,index)                    
-                    end                        
-                end
-
-                new_commands = commands
-            end
-
-            if table_size(new_commands.commands) >= 1 then
-                local new_group = group.surface.create_unit_group({ position = group.position, force = group.force })
-                for _, member in pairs(group.members) do
-                    new_group.add_member(member)
-                end
-
-                new_group.set_command(new_commands)
-                storage.erm_unit_groups[new_group.unique_id] = util.table.deepcopy(erm_unit_group)
-                storage.erm_unit_groups[new_group.unique_id].commands = new_commands
-                storage.erm_unit_groups[new_group.unique_id].group = new_group
-                AttackGroupProcessor.storage_clean_up(group.unique_id)
-            end
-        end
-        --- End Bug workaround
         if event_result == defines.behavior_result.fail or
             erm_unit_group.nearby_retry >= nearby_retry
         then
@@ -406,8 +270,7 @@ end
 local on_ai_command_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
-
-    handle_build_group(unit_number, event_result)
+    
     -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
     -- Can utilize register_on_object_destroyed
     handle_erm_groups(unit_number, event_result, event.was_distracted)

@@ -13,7 +13,7 @@ require("util")
 
 require("__enemyracemanager__/global")
 
-local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 1.2
+local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
 
 -- Handles acid and poison resistance

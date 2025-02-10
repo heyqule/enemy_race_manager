@@ -32,7 +32,7 @@ local process_all_jobs = function(cron_list)
 
     repeat
         local job = cron_list()
-        CronProcessor.add_quick_queue(job[1], unpack(job[2]))
+        CronProcessor.add_quick_queue(job[1], table.unpack(job[2]))
     until Queue.is_empty(cron_list)
 end
 
@@ -43,7 +43,7 @@ local process_all_jobs_as_1s_cron = function(cron_list)
 
     repeat
         local job = cron_list()
-        CronProcessor.add_1_sec_queue(job[1], unpack(job[2]))
+        CronProcessor.add_1_sec_queue(job[1], table.unpack(job[2]))
     until Queue.is_empty(cron_list)
 end
 

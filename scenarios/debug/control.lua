@@ -38,7 +38,7 @@ script.on_event(defines.events.on_player_created, function(event)
     local level = 20
     local enemy_level = 20
     scenarios_helper.spawn_tile(surface, 320)
-    scenarios_helper.build_base(surface, normal_full_base_2_0_no_railgun, 0, 0)
+    scenarios_helper.build_base(surface, normal_base_1_1, 0, 0)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_attack_points(999999)
     scenarios_helper.set_attack_points(999999)
@@ -54,9 +54,9 @@ script.on_event(defines.events.on_player_created, function(event)
     player.cheat_mode = true
 
     -- Comment out the following to start with godmode
-    --if player.character then
-    --    player.character.destroy()
-    --end
+    if player.character then
+        player.character.destroy()
+    end
     local character = player.surface.create_entity { name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force }
     player.set_controller { type = defines.controllers.character, character = character }
     player.teleport({ 0, 0 })
@@ -71,4 +71,33 @@ script.on_event(defines.events.on_player_created, function(event)
             })
         end
     end
+
+    if game.planets['char'] then
+        local char = game.planets['char'].create_surface()
+        local hive = char.create_entity({name='enemy_erm_zerg--hive--5',position={x=10,y=10}, force='enemy_erm_zerg'})
+        hive.die('player')        
+    end
+    
+    if game.planets['aiur'] then
+        local aiur = game.planets['aiur'].create_surface()
+        local nexus = aiur.create_entity({name='enemy_erm_toss--nexus--5',position={x=10,y=10}, force='enemy_erm_toss'})
+        nexus.die('player')        
+    end
+
+    if game.planets['earth'] then
+        local earth = game.planets['earth'].create_surface()
+        local lab = earth.create_entity({name='enemy_erm_redarmy--lab--5',position={x=10,y=10}, force='enemy_erm_redarmy'})
+        lab.die('player') 
+    end
+
+    --for _, planet in pairs(game.planets) do
+    --    if not planet.surface then
+    --        planet.create_surface()
+    --        local new_surface = planet.surface
+    --        new_surface.request_to_generate_chunks({ 0, 0 }, 15)
+    --        new_surface.force_generate_chunk_requests()
+    --        scenarios_helper.spawn_tile(new_surface, 192)
+    --        scenarios_helper.build_base(new_surface, normal_base_1_1, 0, 0)
+    --    end
+    --end
 end)

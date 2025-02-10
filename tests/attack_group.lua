@@ -14,11 +14,13 @@ local QualityProcessor = require('lib/quality_processor')
 
 before_each(function()
     TestShared.prepare_the_factory()
+    storage.skip_interplanetary_attack = true
     storage.erm_unit_groups = {}
 end)
 
 after_each(function()
     TestShared.reset_the_factory()
+    storage.skip_interplanetary_attack = false
     storage.erm_unit_groups = {}
 end)
 
