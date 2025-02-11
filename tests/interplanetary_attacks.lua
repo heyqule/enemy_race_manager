@@ -5,6 +5,8 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 
+local race_name = "enemy_erm_zerg"
+local enemy_force_name = "enemy_erm_zerg"
 
 before_each(function()
     TestShared.prepare_the_factory()
@@ -26,14 +28,11 @@ after_each(function()
     storage.is_multi_planets_game = false
     storage.override_interplanetary_attack_enabled = false
     storage.override_interplanetary_attack_roll_bypass = false
+    storage.race_settings[race_name].interplanetary_attack_active = false
 end)
 
-
-local race_name = "enemy_erm_zerg"
-local enemy_force_name = "enemy_erm_zerg"
-
 it("Interplanetary Attack: Success Attack!", function()
-    async(3600)
+    async(5400)
     local surface = game.surfaces[1]
     local player = game.forces["player"]
     
@@ -45,7 +44,7 @@ it("Interplanetary Attack: Success Attack!", function()
     hive.die('player')     
     
     AttackGroupBeaconProcessor.init_index()
-    for i=1,24,1 do
+    for i=1,32,1 do
         InterplanetaryAttacks.scan(surface)
     end
     storage.race_settings[race_name].attack_meter = 3000
@@ -55,7 +54,7 @@ it("Interplanetary Attack: Success Attack!", function()
         InterplanetaryAttacks.exec(race_name, player)
     end)
     
-    after_ticks(3600, function()
+    after_ticks(5400, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = "unit",
@@ -68,8 +67,8 @@ it("Interplanetary Attack: Success Attack!", function()
     end)
 end)
 
-it.only("Interplanetary Attack: Home planet not discovered", function()
-    async(3600)
+it("Interplanetary Attack: Home planet not discovered", function()
+    async(5400)
     local surface = game.surfaces[1]
     local surface2 = game.planets.vulcanus.create_surface()
 
@@ -77,7 +76,7 @@ it.only("Interplanetary Attack: Home planet not discovered", function()
     surface.request_to_generate_chunks({ 0, 0 }, 25)
     surface.force_generate_chunk_requests()
     AttackGroupBeaconProcessor.init_index()
-    for i=1,24,1 do
+    for i=1,32,1 do
         InterplanetaryAttacks.scan(surface)
     end
     storage.race_settings[race_name].attack_meter = 3000
@@ -92,7 +91,7 @@ it.only("Interplanetary Attack: Home planet not discovered", function()
         InterplanetaryAttacks.exec(race_name, player)
     end)
 
-    after_ticks(3600, function()
+    after_ticks(5400, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = "unit",
@@ -106,7 +105,7 @@ end)
 
 
 it("Interplanetary Attack: pick new planet on second run", function()
-    async(7200)
+    async(5400)
     local surface = game.surfaces[1]
     local surface2 = game.planets.vulcanus.create_surface()
     local surface3 = game.planets.char.create_surface() 
@@ -124,7 +123,7 @@ it("Interplanetary Attack: pick new planet on second run", function()
     surface2.force_generate_chunk_requests()
 
     AttackGroupBeaconProcessor.init_index()
-    for i=1,24,1 do
+    for i=1,32,1 do
         InterplanetaryAttacks.scan(surface)
         InterplanetaryAttacks.scan(surface2)
     end
@@ -145,7 +144,7 @@ it("Interplanetary Attack: pick new planet on second run", function()
     end)
 
     game.players[1].teleport({0,0},'vulcanus')
-    after_ticks(7200, function()
+    after_ticks(5400, function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = "unit",
