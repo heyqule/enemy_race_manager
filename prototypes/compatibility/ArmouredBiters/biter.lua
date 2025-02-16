@@ -72,6 +72,4 @@ for i = 1, max_level do
     data:extend({ makeLevelEnemy(i, "big-armoured-biter", 3) })
     -- 1, 2000 - 10, 7000 - 20, 12000 (org: 6000)
     data:extend({ makeLevelEnemy(i, "behemoth-armoured-biter", 5) })
-    -- 1, 4500 - 10, 15750 - 20, 27000 (org: 18000)
-    data:extend({ makeLevelEnemy(i, "leviathan-armoured-biter", 5) })
 end

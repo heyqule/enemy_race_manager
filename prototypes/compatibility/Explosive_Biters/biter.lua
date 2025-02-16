@@ -86,15 +86,6 @@ for i = 1, max_level do
     data:extend({ makeLevelEnemy(i, "behemoth-explosive-biter") })
     -- 1, 1500 - 10, 5250 - 20, 9000 (org: 1500)
     data:extend({ makeLevelEnemy(i, "behemoth-explosive-spitter") })
-    -- 1, 20000 - 10, 70000 - 20, 120000 (org: 80000)
-    data:extend({ makeLevelEnemy(i, "explosive-leviathan-biter", 5) })
-    -- 1, 12500 - 10, 43750 - 20, 75000 (org: 50000)
-    data:extend({ makeLevelEnemy(i, "leviathan-explosive-spitter", 5) })
-
-    if not settings.startup["eb-disable-mother"].value then
-        -- 1, 33333 - 10, 116666 - 20, 200000 (org: 100000)
-        data:extend({ makeLevelEnemy(i, "mother-explosive-spitter", 3) })
-    end
 end
 
 data.raw["fire"]["explosive-biter-flame"].damage_per_tick.amount = data.raw["fire"]["explosive-biter-flame"].damage_per_tick.amount * 0.5

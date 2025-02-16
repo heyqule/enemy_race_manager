@@ -379,9 +379,8 @@ local gui_open_switch = {
         local entity = event.entity
         local registered_deployer = storage.army_registered_deployers
 
-        if event.gui_type == defines.gui_type.entity and
-                entity and entity.valid and
-                (registered_deployer[entity.name])
+        if entity and entity.valid and
+            (registered_deployer[entity.name])
         then
             GuiContainer.deployer_attachment.show(owner, entity.unit_number)
         else

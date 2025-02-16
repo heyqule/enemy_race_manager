@@ -43,6 +43,11 @@ Overhaul mod compatibility will be done when they become available.
 - May cause crash when ERM Terran presents, details: https://mods.factorio.com/mod/ColonyBuilder/discussion/6758feb5bba896c80b4cdd61 
 - Unit control may not work well as Terran and Builder uses their own set of unit control logics.
 
+#### Rampant AI (limited, may have interferences)
+- It works with default settings. However, its AI code only work for "enemy" force. It does not affect custom enemy forces.
+- It may interfere with ERM custom attack groups.
+- Rampant enemies override ERM enemies! DO NOT enable them.
+
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 

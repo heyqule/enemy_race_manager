@@ -9,7 +9,7 @@ Date: 2024-02-??
     - Updated tip and trick for interplanetary attack.    
     - Added is_primitive flag to indicate an enemy force that does not run ERM logics.
     - Gleba pentapods is now under its own force.  But the ERM features don't apply to them.
-    - Added support to create multiple forces under same mod.
+    - Added advanced_target_priorities as dependency. This mod streamline target priority on turrets.
 
   Changes:
     - Changed Factorio dependency to 2.0.34.
@@ -17,6 +17,8 @@ Date: 2024-02-??
     - Changed target-able entities' is_military attribute to true. Those buildings will attract enemies when they are in the enemy's vision range. This is done to accommodate attack area command.
     - Added a list of "target-able entities" to Tip and trick - "Custom attack group".
     - Fixed corrupted roboport graphic.
+    - ERM no longer add quality tier for leviathan and mother units/worms for Explosive, Cold, Toxic and Armoured biters.
+    - Add "Rampant AI" back to compatibility note as a variant has ported to 2.0.  It may interfere with ERM logics.
     
   Bugfixes:
     - Fixed custom attack group is not using legendary tier on home planet.

@@ -41,7 +41,7 @@ function DeployerAttachement.show(player, unit_number)
     else
         container.add { type = "label", caption = "N/A"}
     end
-    container.add { type = "button", name = "erm_rally_point_set", caption = { "gui-rallypoint.set" }, style = "green_button_no_confirm", tooltip=nil}
+    container.add { type = "button", name = "erm_rally_point_set", caption = { "gui-rallypoint.set" }, style = "erm_green_button_no_confirm", tooltip=nil}
     container.add { type = "button", name = "erm_rally_point_unset", caption = { "gui-rallypoint.unset" }, style = "red_button"}
 
     local active_deployers = {}

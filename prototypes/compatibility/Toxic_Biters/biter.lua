@@ -89,13 +89,4 @@ for i = 1, max_level do
     data:extend({ makeLevelEnemy(i, "behemoth-toxic-biter") })
     -- 1, 1500 - 10, 5250 - 20, 9000 (org: 1500)
     data:extend({ makeLevelEnemy(i, "behemoth-toxic-spitter") })
-    -- 1, 20000 - 10, 70000 - 20, 120000 (org: 80000)
-    data:extend({ makeLevelEnemy(i, "leviathan-toxic-biter", 5) })
-    -- 1, 12500 - 10, 43750 - 20, 75000 (org: 50000)
-    data:extend({ makeLevelEnemy(i, "leviathan-toxic-spitter", 5) })
-
-    if not settings.startup["tb-disable-mother"].value then
-        -- 1, 33333 - 10, 116666 - 20, 200000 (org: 100000)
-        data:extend({ makeLevelEnemy(i, "mother-toxic-spitter", 3) })
-    end
 end

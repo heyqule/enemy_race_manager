@@ -59,10 +59,10 @@ function makeLevelSpawners(level, type)
         res[6] = { MOD_NAME .. "--big-explosive-spitter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.4 } } }
         res[7] = { MOD_NAME .. "--behemoth-explosive-biter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.3 } } }
         res[8] = { MOD_NAME .. "--behemoth-explosive-spitter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.3 } } }
-        res[9] = { MOD_NAME .. "--explosive-leviathan-biter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.03 } } }
-        res[10] = { MOD_NAME .. "--leviathan-explosive-spitter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.03 } } }
+        res[9] = { "explosive-leviathan-biter", { { 0.9, 0.0 }, { 1.0, 0.03 } } }
+        res[10] = { "leviathan-explosive-spitter", { { 0.9, 0.0 }, { 1.0, 0.03 } } }
         if not settings.startup["eb-disable-mother"].value then
-            res[11] = { MOD_NAME .. "--mother-explosive-spitter--" .. level, { { 0.925, 0.0 }, { 1.0, 0.02 } } }
+            res[11] = { "mother-explosive-spitter", { { 0.925, 0.0 }, { 1.0, 0.02 } } }
         end
         return res
     end)()

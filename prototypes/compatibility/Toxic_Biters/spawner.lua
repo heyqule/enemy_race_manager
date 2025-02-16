@@ -62,10 +62,10 @@ function makeLevelSpawners(level, type)
         res[6] = { MOD_NAME .. "--big-toxic-spitter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.4 } } }
         res[7] = { MOD_NAME .. "--behemoth-toxic-biter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.3 } } }
         res[8] = { MOD_NAME .. "--behemoth-toxic-spitter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.3 } } }
-        res[9] = { MOD_NAME .. "--leviathan-toxic-biter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.03 } } }
-        res[10] = { MOD_NAME .. "--leviathan-toxic-spitter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.03 } } }
+        res[9] = { "leviathan-toxic-biter", { { 0.9, 0.0 }, { 1.0, 0.03 } } }
+        res[10] = { "leviathan-toxic-spitter", { { 0.9, 0.0 }, { 1.0, 0.03 } } }
         if not settings.startup["tb-disable-mother"].value then
-            res[11] = { MOD_NAME .. "--mother-toxic-spitter--" .. level, { { 0.925, 0.0 }, { 1.0, 0.02 } } }
+            res[11] = { "mother-toxic-spitter", { { 0.925, 0.0 }, { 1.0, 0.02 } } }
         end
         return res
     end)()

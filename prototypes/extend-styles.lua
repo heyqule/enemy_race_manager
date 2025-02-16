@@ -4,27 +4,7 @@
 --- DateTime: 11/25/2022 11:37 PM
 ---
 
-data.raw["gui-style"]["default"]["erm_deep_frame_in_highlight_frame"] = {
-    type = "frame_style",
-    parent = "frame",
-    padding = 0,
-    graphical_set = {
-        base = {
-            position = { 85, 0 }, corner_size = 8,
-            center = { position = { 21, 4 }, size = { 2, 2 } },
-            draw_type = "inner"
-        },
-        shadow = default_inner_glow(default_glow_color, 1)
-    },
-    vertical_flow_style = {
-        type = "vertical_flow_style",
-        vertical_spacing = 0
-    }
-}
-
-
-
-data.raw["gui-style"]["default"]["green_button_no_confirm"] =
+data.raw["gui-style"]["default"]["erm_green_button_no_confirm"] =
 {
     type = "button_style",
     parent = "button",

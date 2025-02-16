@@ -18,10 +18,12 @@ end
 
 local gleba = 'gleba'
 local enemy_force = game.forces[FORCE_NAME]
-force.set_evolution_factor(enemy_force.get_evolution_factor(gleba), gleba)
-force.set_evolution_factor_by_pollution(enemy_force.get_evolution_factor_by_pollution(gleba), gleba)
-force.set_evolution_factor_by_time(enemy_force.get_evolution_factor_by_time(gleba), gleba)
-force.set_evolution_factor_by_killing_spawners(enemy_force.get_evolution_factor_by_killing_spawners(gleba), gleba)
+if game.surfaces[gleba] then
+    force.set_evolution_factor(enemy_force.get_evolution_factor(gleba), gleba)
+    force.set_evolution_factor_by_pollution(enemy_force.get_evolution_factor_by_pollution(gleba), gleba)
+    force.set_evolution_factor_by_time(enemy_force.get_evolution_factor_by_time(gleba), gleba)
+    force.set_evolution_factor_by_killing_spawners(enemy_force.get_evolution_factor_by_killing_spawners(gleba), gleba)
+end
 
 --- Change enemy force on gleba
 for _, surface in pairs(game.surfaces) do

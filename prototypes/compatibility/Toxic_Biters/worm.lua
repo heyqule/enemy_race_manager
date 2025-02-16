@@ -75,18 +75,19 @@ for i = 1, max_level do
     data:extend({ makeLevelTurrets(i, "medium-toxic-worm-turret", 2) })
     data:extend({ makeLevelTurrets(i, "big-toxic-worm-turret", 5) })
     data:extend({ makeLevelTurrets(i, "behemoth-toxic-worm-turret", 8) })
-    data:extend({ makeLevelTurrets(i, "leviathan-toxic-worm-turret", 14) })
-
-    if not settings.startup["tb-disable-mother"].value then
-        data:extend({ makeLevelTurrets(i, "mother-toxic-worm-turret", 14) })
-    end
 end
 data.raw["turret"]["small-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["medium-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["big-toxic-worm-turret"].autoplace = nil
 data.raw["turret"]["behemoth-toxic-worm-turret"].autoplace = nil
-data.raw["turret"]["leviathan-toxic-worm-turret"].autoplace = nil
+data.raw["turret"]["leviathan-toxic-worm-turret"].autoplace = enemy_autoplace.enemy_worm_autoplace( {
+    probability_expression = "enemy_autoplace_base(16, 90000)",
+    force = FORCE_NAME
+}) 
 
 if data.raw["turret"]["mother-toxic-worm-turret"] then
-    data.raw["turret"]["mother-toxic-worm-turret"].autoplace = nil
+    data.raw["turret"]["mother-toxic-worm-turret"].autoplace = enemy_autoplace.enemy_worm_autoplace( {
+        probability_expression = "enemy_autoplace_base(24, 90000)",
+        force = FORCE_NAME
+    })
 end

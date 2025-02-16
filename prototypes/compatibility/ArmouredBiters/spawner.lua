@@ -67,7 +67,7 @@ function makeLevelSpawners(level, type)
         { MOD_NAME .. "--behemoth-armoured-biter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.35 * bb_r } } }
     }
     if l_r > 0 then
-        table.insert(result_units, { MOD_NAME .. "--leviathan-armoured-biter--" .. level, { { 0.825, 0.0 }, { 1.0, 0.05 * l_r } } })
+        table.insert(result_units, { "leviathan-armoured-biter", { { 0.825, 0.0 }, { 1.0, 0.05 * l_r } } })
     end
 
     spawner["result_units"] = result_units
@@ -97,7 +97,7 @@ for i = 1, max_level do
             unitSet[#unitSet + 1] = { MOD_NAME .. "--behemoth-armoured-biter--" .. i, { { 0.75, 0.0 }, { 1.0, 0.35 * bb_r } } }
 
             if l_r > 0 then
-                unitSet[#unitSet + 1] = { MOD_NAME .. "--leviathan-armoured-biter--" .. i, { { 0.8, 0.0 }, { 1.0, 0.05 * l_r } } }
+                unitSet[#unitSet + 1] = { "leviathan-armoured-biter", { { 0.8, 0.0 }, { 1.0, 0.05 * l_r } } }
             end
         end
     end

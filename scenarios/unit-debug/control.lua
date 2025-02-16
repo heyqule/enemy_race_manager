@@ -49,7 +49,7 @@ script.on_event(defines.events.on_tick, function(event)
         --local invis_darktemplar = surface.create_entity({name="enemy_erm_toss--invis_darktemplar--5", force="enemy_erm_toss", position={-10,-10}})
         remote.call('enemyracemanager','skip_roll_quality')
         --local lings = surface.create_entity({name="enemy_erm_redarmy--plane-bomber--5", force="enemy_erm_redarmy", position={-10,-10}})
-        local lings = surface.create_entity({name="enemy_erm_zerg--mutalisk--5", force="enemy_erm_zerg", position={-10,-10}})
+        local lings = surface.create_entity({name="enemy_erm_redarmy--human-flamethrower--5", force="enemy_erm_redarmy", position={-10,-10}})
     end
 end)
 

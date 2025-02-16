@@ -325,6 +325,101 @@ function RemoteAPI.milestones_preset_addons()
     }
 end
 
+function RemoteAPI.advanced_target_priorities_register_section_data()
+    local data = {
+        {
+            delimiter = '--',
+            name = "biters",
+            prefix = 'enemy',
+            suffix = nil,
+            --- 4 type of options 'size', 'unit_type', 'tier','variant'
+            options = {
+                {'small','medium','big','behemoth'},
+                {'biter','spitter'},
+                {1,2,3,4,5}
+            },
+            --- controls order of text concatenation
+            option_titles = {
+                'size', 'unit_type', 'tier'
+            },
+            option_delimiters = {
+                '-'
+            }
+        },
+        {
+            delimiter = '--',
+            name = "corrupt-robots",
+            prefix = 'enemy',
+            suffix = nil,
+            options = {
+                {'defender','distractor','destroyer','logistic-robot','construction-robot'},
+                {1,2,3,4,5}
+            },
+            option_titles = {
+                'unit_type', 'tier'
+            },
+            option_delimiters = {}
+        },
+    }
+    
+
+    if script.active_mods["Toxic_biters"] or script.active_mods["Cold_biters"] or 
+       script.active_mods["Cold_biters"] or script.active_mods["Explosive_biters"] then
+        data['leviathan_units'] = {
+            delimiter = '-',
+            name = "leviathan_units",
+            prefix = nil,
+            suffix = nil,
+            options = {
+                {'leviathan','mother'},
+                {}
+            },
+            option_titles = {
+                'size','unit_type' 
+            },
+            option_delimiters = {}
+        }
+        data["biter_variants"] = {
+            delimiter = '--',
+            name = "biter_variants",
+            prefix = 'enemy',
+            suffix = nil,
+            options = {
+                {'small','medium','big','behemoth'},
+                {},
+                {'biter','spitter'},
+                {1,2,3,4,5}
+            },
+            option_titles = {
+                'size', 'variant', 'unit_type', 'tier'
+            },
+            option_delimiters = {
+                '-','-',
+            }
+        }
+    end
+    if script.active_mods["Toxic_biters"] then
+        table.insert(data['biter_variants']['options'][2], 'toxic')
+        table.insert(data['leviathan_units']['options'][2], 'toxic-biter')
+        table.insert(data['leviathan_units']['options'][2], 'toxic-spitter')        
+    end
+    if script.active_mods["Cold_biters"] then
+        table.insert(data['biter_variants']['options'][2], 'cold')
+        table.insert(data['leviathan_units']['options'][2], 'cold-biter')
+        table.insert(data['leviathan_units']['options'][2], 'cold-spitter')
+    end
+    if script.active_mods["Explosive_biters"] then
+        table.insert(data['biter_variants']['options'][2], 'explosive')
+        table.insert(data['leviathan_units']['options'][2], 'explosive-biter')
+        table.insert(data['leviathan_units']['options'][2], 'explosive-spitter')
+    end
+    if script.active_mods["ArmouredBiters"] then
+        table.insert(data['biter_variants']['options'][2], 'armoured')
+        table.insert(data['leviathan_units']['options'][2], 'armoured-biter')
+    end
+    return data
+end
+
 --- Register native forces
 function RemoteAPI.register_new_enemy_race()
     local data = { FORCE_NAME }
