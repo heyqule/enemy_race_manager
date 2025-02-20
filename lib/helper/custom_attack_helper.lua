@@ -91,13 +91,13 @@ end
 local get_drop_position = function(final_unit_name, surface, position, force_name, level)
     local drop_position = position
     if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
-        drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 16, 3, true)
+        drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 8, 2, true)
 
         if drop_position == nil then
             local low_tier_flyer_name = get_low_tier_flying_unit(force_name)
             if low_tier_flyer_name then
                 final_unit_name = force_name .. "--" .. low_tier_flyer_name .."--" .. tostring(level)
-                drop_position = surface.find_non_colliding_position(final_unit_name, position, 16, 3, true)
+                drop_position = surface.find_non_colliding_position(final_unit_name, position, 8, 2, true)
             end
         end
     end
@@ -131,7 +131,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     local final_unit_name = force_name .. "--" .. unit_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+        position = surface.find_non_colliding_position(final_unit_name, position, 8, 2, true)
     end
 
     if position then
@@ -170,7 +170,7 @@ local drop_player_unit = function(event, force_name, unit_name, count, position)
     local final_unit_name = force_name .. "--" .. unit_name
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, position, 10, 3, true)
+        position = surface.find_non_colliding_position(final_unit_name, position, 8, 2, true)
     end
 
     if position then
@@ -541,6 +541,46 @@ function CustomAttackHelper.process_guerrilla(event)
         distraction = defines.distraction.none,
         destination = position,
     })
+end
+
+local get_build_bounding_box = function(orientation)
+    local bounding_box = {x=12, y=4}
+    if (orientation > 0.625 and orientation <= 0.875) or
+       (orientation > 0.125 and orientation <= 0.375) 
+    then
+        bounding_box = {x=4, y=12}
+    end
+    return bounding_box
+end
+
+local build = function(event, force_name, building_name, position)
+    position = position or event.source_position or event.source_entity.position
+    local source_entity = event.source_entity
+    local source_entity_force_name = event.source_entity.force.name or force_name
+    local race_settings = get_race_settings(force_name)
+    local surface = game.surfaces[event.surface_index]
+    local name_tokens = get_name_token(source_entity.name)
+    local level = name_tokens[3]
+
+    position.x = position.x + 2
+
+    local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
+
+    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+        local building_box = get_build_bounding_box(source_entity.orientation)
+        position = surface.find_non_colliding_position_in_box(final_unit_name, 
+                {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}}, 
+            2, true)
+    end
+
+    if position then
+        storage.skip_quality_rolling = true
+        local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
+    end
+end
+
+function CustomAttackHelper.build(event, force_name, unit_name)
+    build(event, force_name, unit_name)
 end
 
 return CustomAttackHelper

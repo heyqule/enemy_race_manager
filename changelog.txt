@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.22
-Date: 2024-02-??
+Date: 2024-02-21
 
   Features:
     - Re-added interplanetary attacks. Default: ON  (BETA feature)
     - Interplanetary attacks start when you kill a structure on an enemy's home planet.  Forces without home planet can't do interplanetary attack, e.g biters and pentapods.
     - Custom attack groups by default have 20% chance to roll an interplanetary attack. 25% to build a base when they land.
     - Updated tip and trick for interplanetary attack.    
-    - Added is_primitive flag to indicate an enemy force that does not run ERM logics.
-    - Gleba pentapods is now under its own force.  But the ERM features don't apply to them.
+    - Added is_primitive flag in race_settings to indicate an enemy force that does not run ERM logics.
+    - Gleba pentapods are now under its own force.  But the ERM features don't apply to them.
     - Added advanced_target_priorities as dependency. This mod streamline target priority on turrets.
 
   Changes:
@@ -16,15 +16,16 @@ Date: 2024-02-??
     - Added guerrilla tactic.  Some aerial enemies may retreat certain distance after each attack.
     - Changed target-able entities' is_military attribute to true. Those buildings will attract enemies when they are in the enemy's vision range. This is done to accommodate attack area command.
     - Added a list of "target-able entities" to Tip and trick - "Custom attack group".
+    - Changed proxy builder's building placement function to use bounding box, instead of radius. It *should* reduce the chance of building on the player's entity ghost.
     - Fixed corrupted roboport graphic.
     - ERM no longer add quality tier for leviathan and mother units/worms for Explosive, Cold, Toxic and Armoured biters.
     - Add "Rampant AI" back to compatibility note as a variant has ported to 2.0.  It may interfere with ERM logics.
-    
+
   Bugfixes:
     - Fixed custom attack group is not using legendary tier on home planet.
     - Removed a workaround for unit command issue which fixed in Factorio 2.0.34. Ref: https://forums.factorio.com/viewtopic.php?t=118082
     - Removed a workaround for an issue that higher level base building group can't path to destination. Enemies no longer build its base upon arrival.
-  
+
   Scripting:
     - Added remote_call('enemyracemanager','skip_roll_quality') for others to skip unit quality rolling when spawning ERM units.
     - Added remote_call('enemyracemanager','interplanetary_attack_ignore_planets', planet_name) for others to register a planet to the interplanetary attack ignore list.  If the planet doesn't have enemy, it's automatically in ignore list.   

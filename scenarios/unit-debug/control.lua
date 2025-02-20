@@ -46,10 +46,10 @@ end)
 script.on_event(defines.events.on_tick, function(event)
     if event.tick % 900 == 0 then
         local surface = game.surfaces[1]
-        --local invis_darktemplar = surface.create_entity({name="enemy_erm_toss--invis_darktemplar--5", force="enemy_erm_toss", position={-10,-10}})
         remote.call('enemyracemanager','skip_roll_quality')
+        local invis_darktemplar = surface.create_entity({name="enemy_erm_toss--invis_darktemplar--5", force="enemy_erm_toss", position={-10,-10}})
         --local lings = surface.create_entity({name="enemy_erm_redarmy--plane-bomber--5", force="enemy_erm_redarmy", position={-10,-10}})
-        local lings = surface.create_entity({name="enemy_erm_redarmy--human-flamethrower--5", force="enemy_erm_redarmy", position={-10,-10}})
+        --local lings = surface.create_entity({name="enemy_erm_redarmy--human-flamethrower--5", force="enemy_erm_redarmy", position={-10,-10}})
     end
 end)
 
