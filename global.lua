@@ -16,9 +16,9 @@ GLEBA_FORCE_AUTOCONTROL_NAME = "gleba_enemy_base"
 
 --- [ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 --- Enable this flag to enable debug features
-DEBUG_MODE = true
+DEBUG_MODE = false
 --- Enable this flag when running tests.  It forces some chance based logics to run.
-TEST_MODE = true
+TEST_MODE = false
 --- For debugging beacons
 BEACON_SELECTABLE = false
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
