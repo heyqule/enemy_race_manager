@@ -364,7 +364,7 @@ function RemoteAPI.advanced_target_priorities_register_section_data()
     
 
     if script.active_mods["Toxic_biters"] or script.active_mods["Cold_biters"] or 
-       script.active_mods["Cold_biters"] or script.active_mods["Explosive_biters"] then
+       script.active_mods["ArmouredBiters"] or script.active_mods["Explosive_biters"] then
         data['leviathan_units'] = {
             delimiter = '-',
             name = "leviathan_units",
