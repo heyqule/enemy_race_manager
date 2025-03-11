@@ -24,10 +24,6 @@ Overhaul mod compatibility will be done when they become available.
 - Ion Cannon [space-age]
 
 ## MODS with issues, but not considered conflicted
-#### Enable All Feature Flags
-- Misuse of feature flags.  It enables space_travel flag when space-age mod is disabled and cause startup crashes.
-- Don't disable space-age mod when using this mod.
-
 #### Resource Spawner Overhaul
 - You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
 

@@ -39,9 +39,10 @@ script.on_event(defines.events.on_player_created, function(event)
         { filter = "type", type = "turret", mode = "or" },
         { filter = "type", type = "unit", mode = "or" }
     })
+    scenarios_helper.spawn_tile(surface,300)
     local i = 0
-    local x = -200
-    local y = -200
+    local x = -250
+    local y = -250
     local gap = 20
     --for _, item in pairs(prototypes) do
     --    x = -100 + i * gap
@@ -68,71 +69,85 @@ script.on_event(defines.events.on_player_created, function(event)
     }
 
     for _, item in pairs(prototypes) do
-        x = -100 + i * gap
+        x = -250 + i * gap
         local nameToken = ForceHelper.get_name_token(item.name)
-        if nameToken and (nameToken[3] == nil or acceptLevels[nameToken[3]] or string.find(nameToken[3], "%d") ~= 1) then
+        local entities = surface.find_entities({{x-10,y-10},{x+10,y+10}})
+        for _, en in pairs(entities) do
+            en.destroy()
+        end
+        if nameToken and 
+            (   
+                acceptLevels[nameToken[3]] or 
+                nameToken[1] == "erm_terran" or 
+                nameToken[2] == 'controllable' 
+            ) 
+        then
             local force_name = "enemy"
-            if nameToken[1] == "erm_terran" then
+            if nameToken[1] == "erm_terran" or nameToken[2] == 'controllable' then
                 force_name = "player"
             end
+
+            remote.call('enemyracemanager','skip_roll_quality')
             local entity = surface.create_entity({
                 name = item.name,
                 force = force_name,
                 position = { x, y }
             })
-            entity.active = false
+            if entity then
+                entity.active = false
 
-            local y_offset = 0
+                local y_offset = 0
 
-            rendering.draw_text({
-                text=entity.prototype.localised_name,
-                color = { r = 1, g = 1, b = 1, a = 1 },
-                target={ x+2, y + y_offset},
-                surface=entity.surface,
-                scale=2
-            })
-            y_offset = y_offset + 2
-
-            rendering.draw_text({
-                text="Health: "..entity.prototype.get_max_health(),
-                color = { r = 1, g = 0, b = 0, a = 1 },
-                target={ x+2, y + y_offset},
-                surface=entity.surface,
-                scale=2
-            })
-            y_offset = y_offset + 2
-
-
-            if entity.prototype.speed then
                 rendering.draw_text({
-                    text="Speed: ".. string.format('%.2f',entity.prototype.speed * 60 * 3600 / 1000)..'km/h',
+                    text=entity.prototype.localised_name,
                     color = { r = 1, g = 1, b = 1, a = 1 },
-                    target={ x+2, y+y_offset },
+                    target={ x+2, y + y_offset},
                     surface=entity.surface,
                     scale=2
                 })
                 y_offset = y_offset + 2
+
+                rendering.draw_text({
+                    text="Health: "..entity.prototype.get_max_health(),
+                    color = { r = 1, g = 0, b = 0, a = 1 },
+                    target={ x+2, y + y_offset},
+                    surface=entity.surface,
+                    scale=2
+                })
+                y_offset = y_offset + 2
+
+
+                if entity.prototype.speed then
+                    rendering.draw_text({
+                        text="Speed: ".. string.format('%.2f',entity.prototype.speed * 60 * 3600 / 1000)..'km/h',
+                        color = { r = 1, g = 1, b = 1, a = 1 },
+                        target={ x+2, y+y_offset },
+                        surface=entity.surface,
+                        scale=2
+                    })
+                    y_offset = y_offset + 2
+                end
+
+                if entity.prototype.attack_parameters then
+                    rendering.draw_text({
+                        text="Attack Cooldown: ".. (entity.prototype.attack_parameters.cooldown / 60) .. "s",
+                        color = { r = 1, g = 1, b = 1, a = 1 },
+                        target={ x+2, y+y_offset },
+                        surface=entity.surface,
+                        scale=2
+                    })
+                    y_offset = y_offset + 2
+                    rendering.draw_text({
+                        text="Attack Warmup: ".. (entity.prototype.attack_parameters.warmup / 60) .."s",
+                        color = { r = 1, g = 1, b = 1, a = 1 },
+                        target={ x+2, y+y_offset },
+                        surface=entity.surface,
+                        scale=2
+                    })
+                    y_offset = y_offset + 2
+                end
             end
-
-            if entity.prototype.attack_parameters then
-                rendering.draw_text({
-                    text="Attack Cooldown: ".. (entity.prototype.attack_parameters.cooldown / 60) .. "s",
-                    color = { r = 1, g = 1, b = 1, a = 1 },
-                    target={ x+2, y+y_offset },
-                    surface=entity.surface,
-                    scale=2
-                })
-                y_offset = y_offset + 2
-                rendering.draw_text({
-                    text="Attack Warmup: ".. (entity.prototype.attack_parameters.warmup / 60) .."s",
-                    color = { r = 1, g = 1, b = 1, a = 1 },
-                    target={ x+2, y+y_offset },
-                    surface=entity.surface,
-                    scale=2
-                })
-                y_offset = y_offset + 2
-            end
-
+            
             i = i + 1
             if i % 21 == 0 then
                 x = -100

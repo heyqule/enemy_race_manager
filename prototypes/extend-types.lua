@@ -84,13 +84,6 @@ data:extend(
                 order = "z-erm_rally_point"
             }
         })
--- Recipe Category
-data:extend({
-    { type = "recipe-category", name = "erm_controllable_infantry" },
-    { type = "recipe-category", name = "erm_controllable_factory" },
-    { type = "recipe-category", name = "erm_controllable_starport" },
-    { type = "recipe-category", name = "erm_controllable_buildings" },
-})
 
 --- Ammo Category
 data:extend({

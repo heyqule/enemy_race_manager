@@ -96,7 +96,7 @@ local addRaceSettings = function()
     race_settings.droppable_units = {
         { {  "medium-spitter", "medium-biter", "defender" }, { 1, 2, 1 } },
         { { "big-spitter", "big-biter", "defender", "distractor" }, { 2, 3, 1, 1 } },
-        { { "behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 1 } },
+        { { "big-spitter", "big-biter","behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 2, 1, 1 } },
     }
     race_settings.construction_buildings = {
         { { "biter-spawner", "spitter-spawner" }, { 1, 1 } },
@@ -231,7 +231,7 @@ local init_globals = function()
     storage.is_multi_planets_game = false
 
     --- SE or Space Age
-    if script.active_mods["space-exploration"] or script.feature_flags.space_travel then
+    if script.active_mods["space-age"] or script.feature_flags.space_travel then
         storage.is_multi_planets_game = true
     end
 

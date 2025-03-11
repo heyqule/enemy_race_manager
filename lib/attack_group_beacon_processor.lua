@@ -45,7 +45,7 @@ local ATTACKABLE_ENTITY_TYPES = {
     "artillery-turret",
     "lab",
 }
-if script.feature_flags.space_travel then
+if script.active_mods["space-age"] then
     table.insert(ATTACKABLE_ENTITY_TYPES, "agricultural-tower")
     table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
 end

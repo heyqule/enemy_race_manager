@@ -57,7 +57,8 @@ local spawn_unit = function(deployer_data)
     if entity and entity.valid and
         surface and surface.valid then
         local force = entity.force
-        if entity.energy > entity.electric_buffer_size * 0.9 then
+        local has_enough_energy = entity.electric_buffer_size == nil or entity.energy > entity.electric_buffer_size * 0.9
+        if has_enough_energy then
             local inventory = entity.get_inventory(defines.inventory.assembling_machine_output)
             local contents = inventory.get_contents()
             for key, data in pairs(contents) do

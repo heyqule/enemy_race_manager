@@ -112,10 +112,8 @@ end
 
 
 
-if feature_flags.space_travel then
-    if data.raw["ammo-turret"]["rocket-turret"] then
-        data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 1000
-    end
+if feature_flags.space_travel and data.raw["ammo-turret"]["rocket-turret"] then
+    data.raw["ammo-turret"]["rocket-turret"]["max_health"] = 1000
 end
 
 -- Enhance Vanilla Defenses
@@ -127,7 +125,7 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(35, 20)
     data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(45, 20)
 
-    if feature_flags.space_travel then
+    if feature_flags.space_travel and data.raw["armor"]["mech-armor"] then
         data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(60, 20)
     end
 

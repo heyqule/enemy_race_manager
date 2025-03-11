@@ -24,6 +24,25 @@ Date: 2024-03-13
     
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.23
+Date: 2024-03-??
+  
+  Features:
+    - Added ERM economy to replace the captive spawner workflow on Zerg, Protoss and Redarmy.
+    - Exceptional or higher tier unit spawner may drop loots to create new recipes.  See tip and tricks for details.
+  
+  Changes:
+    - Army deploying now supports unit deployer that doesn't use electricity.
+    - Changed spawn rate for CASUAL difficulty @ max progression from 30% exceptional, 70% great to 40% exceptional, 60% great.
+    - Changed some of the feature_flags.space_travel check to check for mods[space-age]  instead.
+    - Added big-splitter and big-biter to tier 3 droppable units.    
+     
+  Bugfixes:
+    - Fixed a startup crash when mech-armor is not found.
+    - Fixed skip_roll_quality on customer_attack_helper is not properly assigned.
+    - Fixed a start up crash when modded asteroid doesn't have resistance table.
+
+---------------------------------------------------------------------------------------------------
+Version: 2.0.23
 Date: 2024-03-11
 
   Bugfixes:

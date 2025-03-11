@@ -424,7 +424,7 @@ end
 function RemoteAPI.register_new_enemy_race()
     local data = { FORCE_NAME }
 
-    if script.feature_flags.space_travel then
+    if script.active_mods["space-age"] then
         table.insert(data, GLEBA_FORCE_NAME) 
     end
 

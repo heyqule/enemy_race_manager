@@ -109,7 +109,7 @@ https://github.com/users/heyqule/projects/1
 - DE: PatrickBlack, Spiti6910, Batrick
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
-- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D
+- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D, Alaar
 - HU: CsokiHUN
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race

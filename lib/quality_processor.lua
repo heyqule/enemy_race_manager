@@ -11,7 +11,7 @@ local QualityProcessor = {}
 --- The following is the spawn rate of each tier under different difficulty
 --- legendary, epic, exceptional, great, normal
 local max_difficulties = {
-    [QUALITY_CASUAL] = {0, 0, 0.3, 0.7, 0},
+    [QUALITY_CASUAL] = {0, 0, 0.4, 0.6, 0},
     [QUALITY_NORMAL] = {0, 0.1, 0.60, 0.3, 0},
     [QUALITY_ADVANCED] = {0.05, 0.25, 0.7, 0, 0},
     [QUALITY_HARDCORE] = {0.2, 0.3, 0.5, 0, 0},

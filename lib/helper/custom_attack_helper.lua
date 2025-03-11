@@ -26,7 +26,7 @@ local rock_names = {
     "big-sand-rock",
     "huge-rock",
 }
-if script.feature_flags.space_travel then
+if script.active_mods["space-age"] then
     rock_names = Table.array_combine(rock_names, {
         "big-volcanic-rock",
         "huge-volcanic-rock",
@@ -106,7 +106,7 @@ end
 
 local add_member = function(final_unit_name, surface, drop_position, force_name, group)
     if drop_position then
-        storage.skip_quality_rolling = true
+        remote.call('enemyracemanager','skip_roll_quality')
         local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
         if entity and entity.type == "unit" then
             if group.valid and group.is_unit_group then
@@ -119,12 +119,16 @@ end
 local drop_unit = function(event, force_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
     count = count or 1
-    local source_entity = event.source_entity
-    local source_entity_force_name = event.source_entity.force.name or force_name
-    local race_settings = get_race_settings(force_name)
+    local source_entity_force_name = force_name
+    get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
-    local name_tokens = get_name_token(source_entity.name)
-    local level = name_tokens[3]
+    local level = 1
+    local source_entity = event.source_entity
+    if source_entity then
+        source_entity_force_name = source_entity.force.name
+        local name_tokens = get_name_token(source_entity.name)
+        level = name_tokens[3]
+    end
 
     position.x = position.x + 2
 
@@ -137,7 +141,7 @@ local drop_unit = function(event, force_name, unit_name, count, position)
     if position then
         local idx = 0;
         while idx < count do
-            storage.skip_quality_rolling = true
+            remote.call('enemyracemanager','skip_roll_quality')
             local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
             if entity and entity.type == "unit" then
                 entity.commandable.set_command({
@@ -220,8 +224,8 @@ end
 ---
 --- Process single type of unit drops
 ---
-function CustomAttackHelper.drop_player_unit(event, force_name, unit_name, count)
-    drop_player_unit(event, force_name, unit_name, count)
+function CustomAttackHelper.drop_player_unit(event, force_name, unit_name, count, position)
+    drop_player_unit(event, force_name, unit_name, count, position)
 end
 
 ---
@@ -574,7 +578,7 @@ local build = function(event, force_name, building_name, position)
     end
 
     if position then
-        storage.skip_quality_rolling = true
+        remote.call('enemyracemanager','skip_roll_quality')
         local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
     end
 end

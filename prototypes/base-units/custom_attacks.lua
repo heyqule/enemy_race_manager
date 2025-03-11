@@ -16,9 +16,9 @@ function CustomAttacks.process_logistic(event)
     if CustomAttackHelper.can_spawn(75) then
         CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"))
     end
-    if race_settings.tier == 3 and CustomAttackHelper.can_spawn(40) then
+    if race_settings.tier == 3 and CustomAttackHelper.can_spawn(33) then
         CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 2)
-        if CustomAttackHelper.can_spawn(25) then
+        if CustomAttackHelper.can_spawn(20) then
             CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 1)
         end
     end
