@@ -27,8 +27,16 @@ local String = require('__erm_libs__/stdlib/string')
 
 require("global")
 
+local planet_nauvis = data.raw.planet.nauvis
+local nauvis_map_gen = planet_nauvis.map_gen_settings
+---@TODO to support custom start up planet
+if not nauvis_map_gen then
+    return
+end
+
+
 if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
-    local nauvis_autocontrols = data.raw.planet.nauvis.map_gen_settings.autoplace_controls
+    local nauvis_autocontrols = nauvis_map_gen.autoplace_controls
     for key, autoplace in pairs(nauvis_autocontrols) do
         if MapgenFunctions.autoplace_is_enemy_base(key) then
             nauvis_autocontrols[key] = nil
@@ -38,7 +46,7 @@ if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
     nauvis_autocontrols['enemy-base'] = {}
 
     DebugHelper.print('ENEMY: Nauvis AutoControl:')
-    DebugHelper.print(serpent.block(data.raw.planet.nauvis.map_gen_settings.autoplace_controls))
+    DebugHelper.print(serpent.block(nauvis_autocontrols))
 
     return false
 elseif settings.startup['enemyracemanager-nauvis-enemy'].value ~= NAUVIS_MIXED then
@@ -78,9 +86,6 @@ local tune_autoplace = function(entity, is_turret, volume, mod_name, force_name,
         return
     end
     ---@TODO instead of placing on unit. Try adding it to planet's property_expression_names?
-
-    local nauvis = data.raw.planet.nauvis
-    local map_gen_settings = nauvis.map_gen_settings
     
     if is_turret then
         local autoplace_controls = AutoplaceUtil.enemy_worm_autoplace({
@@ -90,7 +95,7 @@ local tune_autoplace = function(entity, is_turret, volume, mod_name, force_name,
             control = entity.autoplace.control
         })
         local expression_name = generate_noise_expression(entity, autoplace_controls.probability_expression)
-        map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
+        nauvis_map_gen.property_expression_names["entity:"..entity.name..":probability"] = expression_name
     else
         local autoplace_controls = AutoplaceUtil.enemy_spawner_autoplace({
             probability_expression = entity.autoplace.probability_expression,
@@ -99,7 +104,7 @@ local tune_autoplace = function(entity, is_turret, volume, mod_name, force_name,
             control = entity.autoplace.control
         })
         local expression_name = generate_noise_expression(entity, autoplace_controls.probability_expression)
-        map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
+        nauvis_map_gen.property_expression_names["entity:"..entity.name..":probability"] = expression_name
     end
 end
 

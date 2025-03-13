@@ -72,6 +72,10 @@ end
 local entity_types = {"unit-spawner","turret"}
 local nauvis = data.raw.planet.nauvis
 local map_gen_settings = nauvis.map_gen_settings
+---@TODO to support custom start up planet
+if map_gen_settings == nil then
+    return
+end
 
 if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_2_WAY then
 

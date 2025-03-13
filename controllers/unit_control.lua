@@ -44,6 +44,11 @@ local on_unit_group_created = function(event)
     local force_name = force.name
     local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
     local erm_group = storage.erm_unit_groups[group.unique_id]
+    local race_settings = storage.race_settings[force_name]
+    print('on_unit_group_created')
+    --if race_settings.is_primitive then
+    --    return
+    --end
     
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
@@ -61,7 +66,7 @@ local on_unit_group_created = function(event)
             end
         elseif TEST_MODE then
             scout_unit_name = 1
-        elseif UtilHelper.can_spawn(75) then
+        elseif not race_settings.is_primitive and UtilHelper.can_spawn(75) then
             if group.surface.planet == nil then
                 scout_unit_name = 2
             else
@@ -102,17 +107,23 @@ local checking_state = {
 }
 
 local on_unit_group_finished_gathering = function(event)
+    print('on_unit_group_finished_gathering')
     local group = event.group
     if not group.valid then
         return
     end
-
+    
     local is_erm_group = AttackGroupProcessor.is_erm_unit_group(group.unique_id)
     if is_erm_group and storage.erm_unit_groups[group.unique_id].scout_id then
         return
     end
 
     local group_force = group.force
+    local force_name = group_force.name
+    local race_settings = storage.race_settings[force_name]
+    --if race_settings.is_primitive then
+    --    return
+    --end
 
     if ForceHelper.is_enemy_force(group_force) and
         not is_erm_group and

@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.24
+Date: 2024-03-13
+
+  Changes:
+    - Updated Mod-Compatibility document regarding to mods that modify planet nauvis prototype (Solar System++).
+    - Removed Colony Builder from Mod-Compatibility document. It's no longer crashed in Factorio 2.0.40 build and seems work with ERM unit control.
+
+  Bugfixes:
+    - Fixed a crash when a primitive force tried to generate a scout, which it does not have scout.
+    - Fixed a startup crash when other mods wiped nauvis map_gen_settings.
+    
+---------------------------------------------------------------------------------------------------
 Version: 2.0.23
 Date: 2024-03-11
 
