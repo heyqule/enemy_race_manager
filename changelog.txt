@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.25
+Date: 2024-03-13
+  
+  Changes:
+    - updated bob damage types for ERM enemy resistances table changes.
+    - Lock spawner_evolution_factor_health_modifier at 10 (default value).  Overrides other mods as it affects ERM spawner HP balance. 
+    - Add notes to Mod Compatibility regarding to Bob_enemies.
+
+  Bugfixes:
+    - Fixed a startup crash from quality register when Bobenemies 2.0 enables.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.24
 Date: 2024-03-13
 

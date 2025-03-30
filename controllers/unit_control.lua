@@ -45,7 +45,6 @@ local on_unit_group_created = function(event)
     local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
     local erm_group = storage.erm_unit_groups[group.unique_id]
     local race_settings = storage.race_settings[force_name]
-    print('on_unit_group_created')
     --if race_settings.is_primitive then
     --    return
     --end
@@ -107,7 +106,6 @@ local checking_state = {
 }
 
 local on_unit_group_finished_gathering = function(event)
-    print('on_unit_group_finished_gathering')
     local group = event.group
     if not group.valid then
         return

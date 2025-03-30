@@ -10,8 +10,8 @@ local damage_types = {
     -- K2
     { "radioactive", 5, 65 },
     -- Bob Warfare
-    { "bob-pierce", 10, 80 },
-    { "plasma", 5, 85 }
+    { "bob-pierce", 10, 65 },
+    { "bob-plasma", 5, 70 }
 }
 
 local spawner_damage_types = {
@@ -19,7 +19,7 @@ local spawner_damage_types = {
     { "radioactive", 5, 35 },
     -- Bob Warfare
     { "bob-pierce", 10, 30 },
-    { "plasma", 5, 30 }
+    { "bob-plasma", 5, 30 }
 }
 
 

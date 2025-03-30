@@ -25,17 +25,26 @@ local register_trigger = function (entity)
             tally_point
         }
     end
-
+    
     if (type(entity.created_effect) == "table") then
-        table.insert(entity["created_effect"]["action_delivery"]["source_effects"], roll_dice)
-    else
-        entity.created_effect = {
+        table.insert(entity.created_effect, {
             type = "direct",
             action_delivery = {
                 type = "instant",
-                source_effects = { 
-                    roll_dice
+                source_effects = roll_dice
+            }
+        })
+    else
+        entity.created_effect = {
+            {
+                type = "direct",
+                action_delivery = {
+                    type = "instant",
+                    source_effects = {
+                        roll_dice
+                    }
                 }
+
             }
         }
     end

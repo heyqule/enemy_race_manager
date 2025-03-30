@@ -47,6 +47,13 @@ Overhaul mod compatibility will be done when they become available.
 - It removed map_gen_settings and causes startup crash.  This will be fixed in a future release.
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
 
+#### Bob Enemies
+- Bob enemies can't spawn under ERM as it replace normal biter spawner & worm during runtime.
+- I'll add a compatibility solution in next feature release. 
+- It alters HP of big and behemoth biters.  Big and behemoth a lot stronger. (will be fix in next feature release)
+- It changed spawner_evolution_factor_health_modifier to 20. ERM reverts it back to 10 (default) as it affects balance of ERM spawners.
+- Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
+
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
 

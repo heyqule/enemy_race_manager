@@ -88,3 +88,7 @@ if DEBUG_MODE then
     log(serpent.block(space_locs))
         
 end
+
+--- Revert this value to default as it affects ERM spawner balance.
+--- Bob Enemies changes it to 20 lol.
+data.raw["utility-constants"].default.spawner_evolution_factor_health_modifier = 10
