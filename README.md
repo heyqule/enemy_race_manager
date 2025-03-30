@@ -35,7 +35,7 @@ Player Controllable Units: (WIP for 2.0)
 
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
 
-Special Thanks to [5hinzou](https://mods.factorio.com/user/5hinzou) as he did the remaster graphics!
+Special Thanks to [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) as he did the remaster graphics!
 
 **Tips on defense:**
 

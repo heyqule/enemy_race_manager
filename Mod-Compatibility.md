@@ -39,9 +39,9 @@ Overhaul mod compatibility will be done when they become available.
 - It may interfere with ERM custom attack groups.
 - Rampant enemies override ERM enemies! DO NOT enable them.
 
-#### Solar System ++ (Any mod that disables planet nauvis)
-- It removed map_gen_settings and causes startup crash.  This will be fixed in a future release.
+#### Any mod that changes the properties of space-age planets (e.g Solar System ++)
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
+- Change space-age planet may lead to missing features or crashes.  Use at your own risk.
 
 #### Bob Enemies
 - Bob enemies can't spawn under ERM as it replace normal biter spawner & worm during runtime.

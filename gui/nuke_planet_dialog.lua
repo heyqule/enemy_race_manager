@@ -89,8 +89,10 @@ function NukePlanetDialog.confirm(player)
                 end
             end
             local enemy_names = SurfaceProcessor.get_all_enemies_on(surface.name)
-            for _, name in pairs(enemy_names) do
-                RaceSettingsHelper.set_attack_meter(name, 0)
+            if enemy_names then
+                for _, name in pairs(enemy_names) do
+                    RaceSettingsHelper.set_attack_meter(name, 0)
+                end
             end
             storage.death_loop_detection[player.index] = nil
             player.force.print({"gui.nuke_delivery", player.name, surface.name})

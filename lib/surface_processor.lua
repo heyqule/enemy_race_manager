@@ -14,7 +14,10 @@ function SurfaceProcessor.init_globals()
     storage.total_enemy_surfaces = storage.total_enemy_surfaces or 0
 end
 
-local surfix = "enemy-base"
+local surfixes = {
+    "enemy-base",
+    "enemy_base"
+}
 local basegame_autoplaces = {
     gleba_enemy_base = true
 }
@@ -33,19 +36,22 @@ function SurfaceProcessor.assign_race(surface)
         if prototype.map_gen_settings and prototype.map_gen_settings.autoplace_controls then
             local autocontrols = prototype.map_gen_settings.autoplace_controls
             for key, _ in pairs(autocontrols) do
-                if string.find(key, surfix, 1, true) or basegame_autoplaces[key] then
-                    local index = string.find(key, surfix, 1, true)
-                    local enemy_race
+                for skey, surfix in pairs(surfixes) do
+                    if string.find(key, surfix, 1, true) or basegame_autoplaces[key] then
+                        local index = string.find(key, surfix, 1, true)
+                        local precheck_enemy_race = string.sub(key, 0, (string.len(surfix) + 2) * -1)
+                        local enemy_race
 
-                    if key == surfix or basegame_autoplaces[key] then
-                        enemy_race = MOD_NAME
-                    elseif index then
-                        enemy_race = string.sub(key, 0, (string.len(surfix) + 2) * -1)
-                    end
+                        if index and ForceHelper.is_enemy_force(precheck_enemy_race) then
+                            enemy_race = precheck_enemy_race
+                        else
+                            enemy_race = MOD_NAME
+                        end
 
-                    if enemy_race then
-                        races_by_name[enemy_race] = true
-                        table.insert(races_by_key, enemy_race)
+                        if enemy_race then
+                            races_by_name[enemy_race] = true
+                            table.insert(races_by_key, enemy_race)
+                        end
                     end
                 end
             end

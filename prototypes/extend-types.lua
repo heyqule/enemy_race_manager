@@ -82,9 +82,12 @@ data:extend(
                 name = "erm_rally_point",
                 group = "combat",
                 order = "z-erm_rally_point"
-            }
+            },
+            { 
+                type = "recipe-category", 
+                name = "erm_controllable_buildings" 
+            },
         })
-
 --- Ammo Category
 data:extend({
     {
