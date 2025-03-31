@@ -55,11 +55,10 @@ local spawner_incremental_cold_resistance = 15
 
 
 -- Add new spawners
-function makeLevelSpawners(level, type, health_cut_ratio)
+function makeLevelSpawners(level, type, health_cut_ratio, distance, seed)
     health_cut_ratio = health_cut_ratio or 1
     local spawner = util.table.deepcopy(data.raw["unit-spawner"][type])
     local original_hitpoint = spawner["max_health"]
-
     spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
     spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
@@ -112,7 +111,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
 
     -- @TODO Noise expression
     spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
-        probability_expression = "enemy_autoplace_base(0, 6)",
+        probability_expression = "enemy_autoplace_base("..distance..", "..seed..")",
         force = FORCE_NAME,
     })
     spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
@@ -120,7 +119,7 @@ function makeLevelSpawners(level, type, health_cut_ratio)
     return spawner
 end
 
-function makeLevelWorm(level, type, health_cut_ratio, distance)
+function makeLevelWorm(level, type, health_cut_ratio, distance, seed)
     health_cut_ratio = health_cut_ratio or 1
     local worm = util.table.deepcopy(data.raw["turret"][type])
     local original_hitpoint = worm["max_health"]
@@ -143,7 +142,8 @@ function makeLevelWorm(level, type, health_cut_ratio, distance)
     ERM_UnitHelper.modify_biter_damage(worm, level)
     -- @TODO Noise expression
     worm["autoplace"] = enemy_autoplace.enemy_worm_autoplace({
-        probability_expression = "enemy_autoplace_base("..distance..", 3)", force = FORCE_NAME
+        probability_expression = "enemy_autoplace_base("..distance..", "..seed..")", 
+        force = FORCE_NAME
     })
     worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
@@ -186,13 +186,13 @@ local max_level = GlobalConfig.MAX_LEVELS
 
 for i = 1, max_level do
     -- 350 - 5017
-    data:extend({ makeLevelSpawners(i, "biter-spawner", 0.75) })
-    data:extend({ makeLevelSpawners(i, "spitter-spawner", 0.75) })
+    data:extend({ makeLevelSpawners(i, "biter-spawner", 0.75, 0, 6) })
+    data:extend({ makeLevelSpawners(i, "spitter-spawner", 0.75, 0, 7) })
 
-    data:extend({ makeLevelWorm(i, "small-worm-turret", 2, 0) })
-    data:extend({ makeLevelWorm(i, "medium-worm-turret", 1, 2) })
-    data:extend({ makeLevelWorm(i, "big-worm-turret", 3, 5) })
-    data:extend({ makeLevelWorm(i, "behemoth-worm-turret", 4, 8) })
+    data:extend({ makeLevelWorm(i, "small-worm-turret", 2, 0, 2) })
+    data:extend({ makeLevelWorm(i, "medium-worm-turret", 1, 2, 3) })
+    data:extend({ makeLevelWorm(i, "big-worm-turret", 3, 5, 4) })
+    data:extend({ makeLevelWorm(i, "behemoth-worm-turret", 4, 8, 5) })
 
     data:extend({ makeShortRangeLevelWorm(i, "big-worm-turret", 5) })
 end

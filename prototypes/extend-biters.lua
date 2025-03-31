@@ -36,6 +36,11 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = util.table.deepcopy(data.raw["unit"][type])
     local original_health = biter["max_health"]
 
+    --- attempt to prevent HP inflation by other mod. e.g bobenemies. =.=
+    if original_health > 10000 then
+        original_health = original_health / 10
+    end
+    
     biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
     biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
     biter["max_health"] = ERM_UnitHelper.get_health(original_health / health_cut_ratio, max_hitpoint_multiplier, level)
@@ -63,7 +68,7 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     ERM_UnitHelper.modify_biter_damage(biter, level)
     biter["movement_speed"] = ERM_UnitHelper.get_movement_speed(biter["movement_speed"], biter["movement_speed"] * 0.2, level)
     biter["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
-
+    
     return biter
 end
 

@@ -11,17 +11,21 @@ Date: 2024-04-??
     - Changed some of the feature_flags.space_travel check to check for mods['space-age'] instead.
     - Added big-splitter and big-biter to tier 3 droppable units.    
     - Improved surface manager compatibility with 3rd party enemy autoplaces.
+    - [Bobenemies] They spawns along with ERM biters. 
+    - [Bobenemies] Supports kill statistics and accumulating attack points. Not support other ERM logics.
+    - [RSO] forced compatibibles setting to be enabled 
 
   Bugfixes:
     - Fixed a startup crash when mech-armor is removed by other mods.
     - Fixed skip_roll_quality on customer_attack_helper is not properly assigned.
     - Fixed a startup crash when modded asteroid doesn't have resistance table.
     - Fixed an issue which pick surface function did not properly handle attack_heat_last_surface under certain circumstances.
+    - Fixed an issue where splitter spawner couldn't spawn
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.25
 Date: 2024-03-30
-  
+
   Changes:
     - updated bob damage types for ERM enemy resistances table changes.
     - Lock spawner_evolution_factor_health_modifier at 10 (default value).  Overrides other mods as it affects ERM spawner HP balance. 
