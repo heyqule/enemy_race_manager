@@ -4,7 +4,7 @@ Date: 2024-04-??
 
   Features:
     - Added ERM economy to replace the captive biter spawner workflow on Zerg, Protoss and Redarmy.
-    - Exceptional or higher tier unit spawners may drop loots to create new recipes.  See tip and tricks for details.
+    - Great or higher tier unit spawners may drop loots to create new recipes.  See tip and tricks for details.
 
   Changes:
     - Army deploying now supports unit deployer that doesn't use electricity.
@@ -13,7 +13,8 @@ Date: 2024-04-??
     - Improved surface manager compatibility with 3rd party enemy autoplaces.
     - [Bobenemies] They spawns along with ERM biters. 
     - [Bobenemies] Supports kill statistics and accumulating attack points. Not support other ERM logics.
-    - [RSO] forced compatibibles setting to be enabled 
+    - [RSO] forced compatibility settings to be the correct values.
+    - Updated Mod-Compatibility doc for Bobenemies and RSO
 
   Bugfixes:
     - Fixed a startup crash when mech-armor is removed by other mods.

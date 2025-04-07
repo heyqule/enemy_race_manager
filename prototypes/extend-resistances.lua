@@ -4,7 +4,7 @@
 --- DateTime: 11/13/2024 8:39 PM
 ---
 
-if feature_flags.space_travel and data.raw.asteroid then
+if mods['space-age'] and data.raw.asteroid then
     --- Add acid and poison resistances to asteroids.
     for _, asteroid in pairs(data.raw.asteroid) do
         if asteroid.resistances then

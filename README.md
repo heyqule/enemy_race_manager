@@ -8,6 +8,12 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 - ERM - 2.0 Features Reel: Coming Soon
 
+### What's new in 2.0.26
+#### ERM economy [space-age] only
+- Zerg, Protoss, Redarmy drop loots on "Great" or higher tier.
+- New recipes to turn those loots into biter egg or other items.
+- New resources on planet Aiur and Char
+
 ### 2.0 Changes
 - Support Factorio 2.0 and Space Age
 - New evolution system, Quality Spawns, replaced the old leveling system.

@@ -11,6 +11,13 @@ Overhaul mod compatibility will be done when they become available.
 - The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
 - ERM branded enemies have higher priority in autoplace control.  These spawners may not show up if there is conflict in the planet autoplace.
 
+#### Bob Enemies
+- Bob enemies can't spawn under ERM as it replace normal biter spawner & worm during runtime.
+- ERM add bob enemies as part of ERM biter autoplace.  Expect rainbows and do not expect unit balance.
+- ERM track bob enemies kills and attack points.  But Bobs enemies do not use ERM logics.
+- It changed spawner_evolution_factor_health_modifier to 20. ERM reverts it back to 10 (game default) as it affects balance of all ERM spawners.
+- Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
+
 #### Other not mentioned enemy mods
 
 - It may or may not work. Expect incompatibility.
@@ -25,10 +32,9 @@ Overhaul mod compatibility will be done when they become available.
 
 ## MODS with issues, but not considered conflicted
 #### Resource Spawner Overhaul
-- You have to enable "Use vanilla biter generation" in Startup tab and disable "Use RSO biter generation" in Map tab
+- ERM forcefully enabled "Use vanilla biter generation" and disabled "Use RSO biter generation" setting and hide them.
 
 #### AAI programmable vehicle
-
 - It has a feature that prevent player/enemy build too close to each other.
 - This affects proxy builder units which they build too close to your defenses, and you can't replace destroyed
   buildings.
@@ -37,18 +43,11 @@ Overhaul mod compatibility will be done when they become available.
 #### Rampant AI (limited, may have interferences)
 - It works with default settings. However, its AI code only work for "enemy" force. It does not affect custom enemy forces.
 - It may interfere with ERM custom attack groups.
-- Rampant enemies override ERM enemies! DO NOT enable them.
+- New enemies placement does not work.
 
 #### Any mod that changes the properties of space-age planets (e.g Solar System ++)
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
 - Change space-age planet may lead to missing features or crashes.  Use at your own risk.
-
-#### Bob Enemies
-- Bob enemies can't spawn under ERM as it replace normal biter spawner & worm during runtime.
-- I'll add a compatibility solution in next feature release. 
-- It alters HP of big and behemoth biters.  Big and behemoth a lot stronger. (will be fix in next feature release)
-- It changed spawner_evolution_factor_health_modifier to 20. ERM reverts it back to 10 (default) as it affects balance of ERM spawners.
-- Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
 
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
