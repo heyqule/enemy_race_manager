@@ -8,6 +8,12 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 - ERM - 2.0 Features Reel: Coming Soon
 
+### What's new in 2.0.26
+#### ERM economy [space-age] only
+- Zerg, Protoss, Redarmy drop loots on "Great" or higher tier.
+- New recipes to turn those loots into biter egg or other items.
+- New resources on planet Aiur and Char
+
 ### 2.0 Changes
 - Support Factorio 2.0 and Space Age
 - New evolution system, Quality Spawns, replaced the old leveling system.
@@ -35,7 +41,7 @@ Player Controllable Units: (WIP for 2.0)
 
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
 
-Special Thanks to [5hinzou](https://mods.factorio.com/user/5hinzou) as he did the remaster graphics!
+Special Thanks to [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) as he did the remaster graphics!
 
 **Tips on defense:**
 
@@ -109,7 +115,7 @@ https://github.com/users/heyqule/projects/1
 - DE: PatrickBlack, Spiti6910, Batrick
 - ES: Jose Eduardo
 - FR: Wiwok, Daiky Raraga
-- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D
+- RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D, Alaar
 - HU: CsokiHUN
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race

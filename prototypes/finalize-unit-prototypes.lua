@@ -56,7 +56,7 @@ for _, v in pairs(data.raw["unit"]) do
     end
 end
 
-if feature_flags.space_travel then
+if mods['space-age'] then
     for _, v in pairs(data.raw["spider-unit"]) do
         if string.find(v.name, "--", 1, true) then
             --table.insert(v.flags, "get-by-unit-number")

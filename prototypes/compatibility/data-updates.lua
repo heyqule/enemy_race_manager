@@ -32,4 +32,8 @@ if mods['combat-mechanics-overhaul'] then
     require "CMO/electric_turret"
 end
 
+if mods['bobenemies'] then
+    require "bobenemies/unit_tweak"
+end
+
 require "shared/resistance"

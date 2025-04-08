@@ -223,7 +223,6 @@ function SpawnLocationScanner.is_valid_position(surface, tile_position)
         return true
     end
 
-    print("Scanner Failed, no collide: "..surface.name)
     return false
 end
 

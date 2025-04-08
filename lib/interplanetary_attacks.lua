@@ -222,9 +222,6 @@ function InterplanetaryAttacks.scan(surface)
     if not can_perform_attack() then
         return
     end
-
-    --- interplanetary attacks debug
-    print("scanning: "..surface.name)
     
     if surface and ForceHelper.can_have_enemy_on(surface) then
         --- Event to manipulate storage.interplanetary_intel

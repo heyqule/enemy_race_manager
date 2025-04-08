@@ -5,7 +5,7 @@
 ---
 
 --- Add PSI Emitter Satellite, spawn boss and return 2000 space science pack for base game
-if feature_flags.space_travel then
+if mods['space-age'] then
     data:extend({ {
                       type = "item",
                       name = "psi-tracking-satellite",

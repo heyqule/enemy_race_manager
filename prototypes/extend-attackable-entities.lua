@@ -11,7 +11,7 @@ local ATTACKABLE_ENTITY_TYPES = {
     ["artillery-turret"] = true,
     ["lab"] = true,
 }
-if feature_flags.space_travel then
+if mods['space-age'] then
     ATTACKABLE_ENTITY_TYPES["agricultural-tower"] = true
     ATTACKABLE_ENTITY_TYPES["cargo-landing-pad"] = true
 end

@@ -102,7 +102,6 @@ function ArmyPopulationProcessor.can_place_unit(unit)
     local unit_force = unit.force
     init_force_data(unit_force)
     return storage.army_populations[unit_force.name]["max_pop"] >= (storage.army_populations[unit_force.name]["pop_count"] + storage.army_registered_units[unit.name])
-
 end
 
 function ArmyPopulationProcessor.add_unit_count(unit)
