@@ -58,7 +58,7 @@ function makeLevelTurrets(level, type, distance)
     turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace( {
         probability_expression = "enemy_autoplace_base("..distance..", 90001)",
         force = FORCE_NAME,
-        control = "enemy-base"
+        control = AUTOCONTROL_NAME
     })
     turret["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-explosive_biter_map_color"].value)
 

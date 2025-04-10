@@ -13,7 +13,7 @@
     "enemyracemanager_assets >= 2.0.0",
     "erm_libs >= 2.0.3",
     "advanced_target_priorities >= 1.0.0",
-    "~zerm_postprocess >= 2.0.1",
+    "~zerm_postprocess >= 2.0.0",
     "?ArmouredBiters",
     "?Explosive_biters",
     "?Cold_biters",

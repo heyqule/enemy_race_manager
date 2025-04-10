@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.26
-Date: 2024-04-??
+Date: 2024-04-11
 
   Features:
     - Added ERM economy to replace the captive biter spawner workflow on Zerg, Protoss and Redarmy.
@@ -10,7 +10,7 @@ Date: 2024-04-??
     - Army deploying now supports unit deployer that doesn't use electricity.
     - Changed some of the feature_flags.space_travel check to check for mods['space-age'] instead.
     - Added big-splitter and big-biter to tier 3 droppable units.    
-    - Improved surface manager compatibility with 3rd party enemy autoplaces.
+    - Improved surface manager compatibility with 3rd party enemy autoplaces. 
     - [Bobenemies] They spawns along with ERM biters. 
     - [Bobenemies] Supports kill statistics and accumulating attack points. Not support other ERM logics.
     - [RSO] forced compatibility settings to be the correct values.
@@ -19,9 +19,10 @@ Date: 2024-04-??
   Bugfixes:
     - Fixed a startup crash when mech-armor is removed by other mods.
     - Fixed skip_roll_quality on customer_attack_helper is not properly assigned.
-    - Fixed a startup crash when modded asteroid doesn't have resistance table.
+    - Fixed a startup crash when modded asteroids don't have resistance table.
     - Fixed an issue which pick surface function did not properly handle attack_heat_last_surface under certain circumstances.
     - Fixed an issue where splitter spawner couldn't spawn
+    - Fixed some enemy placements issues for explosive, cold, toxic biter.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.25

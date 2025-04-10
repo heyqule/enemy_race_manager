@@ -10,18 +10,11 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 ### What's new in 2.0.26
 #### ERM economy [space-age] only
-- Zerg, Protoss, Redarmy drop loots on "Great" or higher tier.
-- New recipes to turn those loots into biter egg or other items.
-- New resources on planet Aiur and Char
-
-### 2.0 Changes
-- Support Factorio 2.0 and Space Age
-- New evolution system, Quality Spawns, replaced the old leveling system.
-- Space Age specific environmental attacks.
-- New planets as enemy's home planet.
-- Unit stats re-balance.
-- Re-work various subsystems with 2.0 features.  
-- Boss mode and interplanetary attack subsystems are temporary offline.
+- [space-age] Zerg, Protoss, Redarmy drop loots on "Great" or higher tier.
+- [space-age] New recipes to turn those loots into biter egg or other items.  This replaces the existing captive spawner workflow for those races.
+- [space-age] New resources, mineral and geysers, on planet Aiur and Char.
+- [space-age] Zerg and Protoss controllable units.
+- Improvements and Bugfixes
 
 Note 1: 2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.
 
@@ -91,6 +84,11 @@ Some enemy force have their home planet.  They are home to their Legendary force
   - Unit population control
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
+
+### ERM Economy
+Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new recipes and new army units.  They can also convert to biter eggs.  
+
+WHen you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.    
 
 ### Remote API Support
 

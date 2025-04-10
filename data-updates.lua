@@ -8,6 +8,8 @@ if DEBUG_MODE then
     debugHelper.print(serpent.block(data.erm_spawn_specs))
 end
 
+require("prototypes/compatibility/data-updates")
+
 require("prototypes/extend-ground-fire-patches.lua")
 
 require("prototypes/extend-gleba.lua")
@@ -45,8 +47,6 @@ require("prototypes/extend-resistances")
 require("prototypes/extend-default-autoplace")
 
 require("prototypes/map-generation.lua")
-
-require("prototypes/compatibility/data-updates")
 
 if TEST_MODE then
     require("prototypes/test-prototypes")
