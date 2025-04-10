@@ -88,7 +88,7 @@ ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/M
 ### ERM Economy
 Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new recipes and new army units.  They can also convert to biter eggs.  
 
-WHen you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.    
+When you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.    
 
 ### Remote API Support
 
