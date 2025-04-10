@@ -74,6 +74,7 @@ function makeLevelSpawners(level, type)
     spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
         probability_expression = "enemy_autoplace_base(0, 90003)",
         force = FORCE_NAME,
+        control = AUTOCONTROL_NAME
     })
     spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-armoured_biter_map_color"].value)
 
