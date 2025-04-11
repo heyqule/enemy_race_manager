@@ -34,14 +34,14 @@ AttackGroupHeatProcessor.init_globals = function()
     storage.attack_heat = storage.attack_heat or {}
     storage.attack_heat_by_forces = storage.attack_heat_by_forces or {}
     storage.attack_heat_by_surfaces = storage.attack_heat_by_surfaces or {}
-    storage.attack_heat_last_surface = storage.attack_heat_last_surface or 1
+    storage.attack_heat_last_surface = storage.attack_heat_last_surface or {}
 end
 
 AttackGroupHeatProcessor.reset_globals = function()
     storage.attack_heat = {}
     storage.attack_heat_by_forces = {}
     storage.attack_heat_by_surfaces = {}
-    storage.attack_heat_last_surface = 1
+    storage.attack_heat_last_surface = {}
 end
 
 --- Handle removing surface data
@@ -164,17 +164,20 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             })
             return nil
         end
-        
-        
-        local sdata_key, surface = next(surface_data, storage.attack_heat_last_surface)
+
+        if not storage.attack_heat_last_surface[force_name] then
+            storage.attack_heat_last_surface[force_name] = 1
+        end
+
+        local sdata_key, surface = next(surface_data, storage.attack_heat_last_surface[force_name])
         if surface and surface.has_attack_beacon then
             return_surface = game.surfaces[surface.surface_index]
-            storage.attack_heat_last_surface = sdata_key
+            storage.attack_heat_last_surface[force_name] = sdata_key
         else
             for index, surface in pairs(surface_data) do
                 if surface.has_attack_beacon then
                     return_surface = game.surfaces[surface.surface_index]
-                    storage.attack_heat_last_surface = index
+                    storage.attack_heat_last_surface[force_name] = index
                     break;
                 end
             end

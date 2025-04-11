@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.27
+Date: 2024-04-11
+
+  Changes:
+    - Updated Mod-Compatibility doc for new RSO issues as they breaks unit spawners spawn and new resources spawn. 
+
+  Bugfixes:
+    - Fixed letter casing for Bob enemy compatibility change.
+    - Fixed a crash when attack heat processor picks a surface under certain condition.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.26
 Date: 2024-04-11
 

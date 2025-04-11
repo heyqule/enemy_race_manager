@@ -33,7 +33,7 @@ if mods['combat-mechanics-overhaul'] then
 end
 
 if mods['bobenemies'] then
-    require "bobenemies/unit_tweak"
+    require "Bobenemies/unit_tweak"
 end
 
 require "shared/resistance"

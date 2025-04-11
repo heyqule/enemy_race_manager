@@ -12,6 +12,7 @@ local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -223,6 +224,20 @@ function Debug_RemoteAPI.create_air_scout(force_name, position)
         position = position,
         force = force_name
     })
+end
+
+--- Usage: remote.call("enemyracemanager_debug", "spawn_scout", "enemy", "player", "nauvis")
+function Debug_RemoteAPI.spawn_scout(source_force_name, target_force_name, surface_name)
+    local source_force = game.forces[source_force_name]
+    local target_force = game.forces[target_force_name]
+    local surface = game.surfaces[surface_name]
+    AttackGroupProcessor.spawn_scout(source_force_name, source_force, surface, target_force)
+end
+
+--- Usage: remote.call("enemyracemanager_debug", "pick_surface", "enemy", "player")
+function Debug_RemoteAPI.pick_surface(source_force_name, target_force_name)
+    local target_force = game.forces[target_force_name]
+    AttackGroupHeatProcessor.pick_surface(source_force_name, target_force)
 end
 
 --- remote.call("enemyracemanager_debug", "validate_erm_groups")
