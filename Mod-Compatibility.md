@@ -23,7 +23,6 @@ Overhaul mod compatibility will be done when they become available.
 - It may or may not work. Expect incompatibility.
 
 #### Milestone
-
 - Milestone for killing higher tier enemy command centers.
 - Milestone for killing bosses
 
@@ -33,11 +32,7 @@ Overhaul mod compatibility will be done when they become available.
 ## MODS with issues, but not considered conflicted
 #### Resource Spawner Overhaul
 - ERM forcefully enabled "Use vanilla biter generation" and disabled "Use RSO biter generation" setting and hide them.
-- As of RSO: 7.0.14, it causes the following issues
-- These options can't spawn enemies on nauvis, Nauvis enemy = "Mixed race", "2 way split", "4 ways split" and "enemy"
-- Mineral and geyser can't spawn Planet Aiur and Planet Char
-- These issues are on RSO to fix.
-- Details: https://mods.factorio.com/mod/rso-mod/discussion/67f85a4f43421d09d37d2fb9
+- Requires 7.0.15+ for various compatibility fixes.
 
 #### AAI programmable vehicle
 - It has a feature that prevent player/enemy build too close to each other.

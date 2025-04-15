@@ -171,7 +171,24 @@ data:extend {
         description = "enemyracemanager-disable-friendly-fire",
         setting_type = "startup",
         default_value = true,
-        order = "enemyracemanager-300"
+        order = "enemyracemanager-301"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-rail-entities-indestructible",
+        description = "enemyracemanager-rail-entities-indestructible",
+        setting_type = "startup",
+        default_value = true,
+        allowed_values = false,
+        order = "enemyracemanager-302",
+    },
+    {
+        type = "string-setting",
+        name = "enemyracemanager-rail-entities-indestructible-planets",
+        description = "enemyracemanager-rail-entities-indestructible-planets",
+        setting_type = "startup",
+        default_value = "fulgora",
+        order = "enemyracemanager-302"
     },
     --- Startup: Free for All
     {

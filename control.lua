@@ -55,6 +55,7 @@ handler.add_lib(require("__enemyracemanager__/controllers/on_script_trigger_effe
 
 handler.add_lib(require("__enemyracemanager__/controllers/on_trigger_created_entity"))
 
+handler.add_lib(require("__enemyracemanager__/controllers/indestructible_entities"))
 
 handler.add_lib(require("__enemyracemanager__/controllers/debug_events"))
 

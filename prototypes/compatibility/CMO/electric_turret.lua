@@ -5,5 +5,9 @@
 ---
 
 for _, turret in pairs(data.raw["electric-turret"]) do
-    table.insert(turret["attack_target_mask"], 'ground-static')
+    if type(turret["attack_target_mask"]) == "table" then
+        table.insert(turret["attack_target_mask"], 'ground-static')
+    else
+        turret["attack_target_mask"] = { "common", "ground-unit", "flying", 'ground-static'}
+    end
 end

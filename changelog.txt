@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.28
+Date: 2024-04-15
+
+  Features:
+    - Added support to make rail, rail-signals indestructible. [Default: ON]
+    - Added setting to specify applicable planet. [Default: fulgora]
+    - Existing rails indestructible migration after setting changed.
+    - Added Remote API support to register ignore planets (YourRemoteAPI.erm_register_ignore_planet_for_indestructible() which return table of planet names)
+    - Added Remote API support to register applicable planets (YourRemoteAPI.erm_register_applicable_planet_for_indestructible_entity() which return table of planet names)
+
+  Changes:
+    - Changed based dependency to 2.0.44 as it's required for the following factoriopedia change.
+    - Alt + left click now open factoriopedia when they are not hover on player's command center. 
+    - Moved optional dependencies for load order to hidden optional dependencies.
+    - Added RSO >= 7.0.15 dependencies as it fixes various compatibility issues.
+
+  Bugfixes:
+    - Fixed a crash after a surface removed in attack heat processor.
+    - Fixed a startup crash with CMO enabled after 2.0.26.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.27
 Date: 2024-04-11
 

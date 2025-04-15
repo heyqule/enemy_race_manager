@@ -90,6 +90,8 @@ Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new rec
 
 When you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.    
 
+Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly different manufacture workflow.
+
 ### Remote API Support
 
 * [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)

@@ -50,6 +50,7 @@ AttackGroupHeatProcessor.remove_surface = function(surface_index)
         if storage.attack_heat[active_race] and storage.attack_heat[active_race][surface_index] then
             storage.attack_heat[active_race][surface_index] = nil
             AttackGroupHeatProcessor.aggregate_heat(active_race)
+            storage.attack_heat_last_surface[active_race] = 1
         end
     end
 end
