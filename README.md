@@ -117,6 +117,7 @@ https://github.com/users/heyqule/projects/1
 - FR: Wiwok, Daiky Raraga
 - RU: SeptiSe7en, Misha Mitchell, oZeDo, X-0D, Alaar
 - HU: CsokiHUN
+- CH-zn: Tanvec
 
 You can help translate this mod directly online by going to the following link and finding "ERM" or "Enemy Race
 Manager":

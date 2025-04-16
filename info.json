@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.0.28",
+  "version": "2.0.29",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -12,8 +12,8 @@
     "?quality >= 2.0.0",
     "enemyracemanager_assets >= 2.0.0",
     "erm_libs >= 2.0.4",
-    "advanced_target_priorities >= 1.0.0",
     "~zerm_postprocess >= 2.0.0",
+    "advanced_target_priorities >= 1.0.0",
     "?ArmouredBiters >= 1.2.1",
     "?Explosive_biters >= 2.3.1",
     "?Cold_biters >= 2.0.9",
@@ -22,7 +22,7 @@
     "(?)maraxsis >= 1.23.36",
     "(?)distant-misfires >= 0.12.5",
     "(?)bobenemies >= 2.0.0",
-    "(?)rso_mod >= 7.0.15",
+    "(?)rso-mod >= 7.0.15",
     "!intelligent-enemy"
   ]
 }
