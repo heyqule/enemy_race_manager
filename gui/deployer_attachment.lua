@@ -85,9 +85,7 @@ function DeployerAttachement.go_to(player)
     local ui = player.gui.relative[DeployerAttachement.root_name]
     if ui then
         local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
-        if player.render_mode == defines.render_mode.chart_zoomed_in then
-            player.close_map()
-        elseif deployer_data.rally_point then
+        if deployer_data.rally_point then
             player.set_controller {
                 type = defines.controllers.remote,
                 position = deployer_data.rally_point
