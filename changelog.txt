@@ -10,7 +10,7 @@ Version: 2.0.31
 Date: 2024-04-18
 
   Bugfixes:
-    - Fixed orphan spawn beacon data did not been properly clean. 
+    - Fixed orphan spawn beacon data has not been properly clean. 
     - Warning: this fix may cause mayhem on island map if you have accumulated too many attack points. :)
 
 ---------------------------------------------------------------------------------------------------
