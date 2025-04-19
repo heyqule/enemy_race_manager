@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.32
+Date: 2024-04-18
+
+  Bugfixes:
+    - Turn off debug mode.
+
+---------------------------------------------------------------------------------------------------
+Version: 2.0.31
+Date: 2024-04-18
+
+  Bugfixes:
+    - Fixed orphan spawn beacon data did not been properly clean. 
+    - Warning: this fix may cause mayhem on island map if you have accumulated too many attack points. :)
+
+---------------------------------------------------------------------------------------------------
+Version: 2.0.30
+Date: 2024-04-18
+
+  Changes:
+    - Added advanced_spaceship_repair mod as optional dependency.  
+    - It repairs damaged entities in batch for space platform. It's ideal to have when you are going to Aiur and Char.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.29
 Date: 2024-04-18
 

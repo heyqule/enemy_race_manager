@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.0.29",
+  "version": "2.0.32",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -14,6 +14,7 @@
     "erm_libs >= 2.0.5",
     "~zerm_postprocess >= 2.0.0",
     "advanced_target_priorities >= 1.0.0",
+    "?advanced_spaceship_repair >= 1.0.0",
     "?ArmouredBiters >= 1.2.1",
     "?Explosive_biters >= 2.3.1",
     "?Cold_biters >= 2.0.9",

@@ -1049,7 +1049,7 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
 
                 break
             elseif value.beacon.health == REMOVE_ATTACK_ENTITY_BEACON_COUNTS and
-                    value.is_spawn == false
+                   not value.is_spawn
             then
                 value.beacon.destructible = true
                 value.beacon.destroy()
