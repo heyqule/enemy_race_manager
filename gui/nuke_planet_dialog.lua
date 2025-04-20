@@ -79,7 +79,7 @@ function NukePlanetDialog.confirm(player)
                 speed = 3,
             }
             local entities = surface.find_entities_filtered{
-                type={"unit","turret","unit-spawner"},
+                type={"unit", "turret", "unit-spawner", "segmented-unit", "spider-unit"},
                 area=nuke_area,
                 force=ForceHelper.get_enemy_forces(),
             }

@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.??
+Date: 2024-??-??
+
+  Features:
+    - Redesigned Boss mode.
+    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, not repairable or minable. Boss ends when it's destroyed.                
+
+  Changes:
+    - added segmented-unit and spider-unit types to kill when calling uWuClear rapid delivery.    
+    - removed old boss items, psi-tracking-satellite.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.36
 Date: 2024-05-27
 
@@ -14,7 +26,7 @@ Date: 2024-05-11
 
   Bugfixes:
     - Fixed file naming on "Combat Mechanic Overhaul""
-
+    
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.34
 Date: 2024-05-10
