@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.??
+Date: 2024-??-??
+
+  Features:
+    - Redesigned Boss mode.
+    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, not repairable or minable. Boss ends when it's destroyed.                
+
+  Changes:
+    - added segmented-unit and spider-unit types to kill when calling uWuClear rapid delivery.    
+    - removed old boss items, psi-tracking-satellite.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.38
 Date: 2024-08-09
 
