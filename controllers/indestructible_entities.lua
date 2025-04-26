@@ -8,10 +8,6 @@ local String = require('__erm_libs__/stdlib/string')
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local enabled = false
-local applicable_planets = {
-    fulgora = true
-}
-local ignore_planets = {}
 
 local include_types_mapping = {}
 
@@ -35,38 +31,46 @@ local include_types = {
 local function make_entity_indestructible(event)
     if enabled then
         local entity = event.entity
+        local ignore_planets = storage.indestructible_entity_ignore_planets
+        local applicable_planets = storage.indestructible_entity_acceptable_planets
+
         if entity and entity.valid and
-           not ignore_planets[entity.surface.name] and
-           applicable_planets[entity.surface.name] and
-           (include_types_mapping[entity.type])
+                not ignore_planets[entity.surface.name] and
+                applicable_planets[entity.surface.name] and
+                (include_types_mapping[entity.type])
         then
             entity.destructible = false
         end
     end
-end 
+end
 
 local function on_configuration_changed(event)
     enabled = settings.startup['enemyracemanager-rail-entities-indestructible'].value
+    storage.indestructible_entity_ignore_planets = storage.indestructible_entity_ignore_planets or {}
+    storage.indestructible_entity_acceptable_planets = storage.indestructible_entity_acceptable_planets or {}
+
     for interface_name, functions in pairs(remote.interfaces) do
         if functions["register_ignore_planet_for_indestructible_entity"]  then
             for _, name in pairs(remote.call(interface_name, "register_ignore_planet_for_indestructible_entity")) do
-                ignore_planets[String.trim(name)] = true 
+                storage.indestructible_entity_ignore_planets[String.trim(name)] = true
             end
         end
 
         if functions["register_applicable_planet_for_indestructible_entity"] then
             for _, name in pairs(remote.call(interface_name, "register_applicable_planet_for_indestructible_entity")) do
-                applicable_planets[String.trim(name)] = true
+                storage.indestructible_entity_acceptable_planets[String.trim(name)] = true
             end
         end
     end
+    local ignore_planets = storage.indestructible_entity_ignore_planets
+    local applicable_planets = storage.indestructible_entity_acceptable_planets
 
     local planet_string = settings.startup['enemyracemanager-rail-entities-indestructible-planets'].value
     local planets_tokens = String.split(planet_string, ',')
     for _, planet_name in pairs(planets_tokens) do
         planet_name = String.trim(planet_name)
         if not ignore_planets[planet_name] then
-            applicable_planets[planet_name] = true 
+            applicable_planets[planet_name] = true
         end
     end
 
@@ -76,21 +80,23 @@ local function on_configuration_changed(event)
 
     --- indestructible entity migration ---
     for _, surface in pairs(game.surfaces) do
-        for chunk in surface.get_chunks() do
-            local entities = surface.find_entities_filtered {
-                type = include_types,
-                area = chunk.area
-            }
-            for _, entity in pairs(entities) do
-                if enabled then
-                    entity.destructible = false
-                else
-                    entity.destructible = true
+        if applicable_planets[surface.name] then
+            for chunk in surface.get_chunks() do
+                local entities = surface.find_entities_filtered {
+                    type = include_types,
+                    area = chunk.area
+                }
+                for _, entity in pairs(entities) do
+                    if enabled then
+                        entity.destructible = false
+                    else
+                        entity.destructible = true
+                    end
                 end
             end
-        end 
+        end
     end
-    
+
     DebugHelper.print('--- Indestructable entity - ignore planet ---')
     DebugHelper.print(serpent.block(ignore_planets))
     DebugHelper.print('--- Indestructable entity - applicable planet ---')
