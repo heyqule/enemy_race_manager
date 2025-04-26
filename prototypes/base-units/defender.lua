@@ -121,6 +121,7 @@ function makeLevelCombatRobots(level, type)
         { type = "electric", percent = ERM_UnitHelper.get_resistance(base_electric_resistance, incremental_electric_resistance, level) },
         { type = "cold", percent = ERM_UnitHelper.get_resistance(base_cold_resistance, incremental_cold_resistance, level) }
     }
+    robot["next_upgrade"] = nil    
     robot["healing_per_tick"] = 0
     robot["run_animation"] = {
         layers = {
