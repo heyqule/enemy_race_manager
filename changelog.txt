@@ -4,7 +4,7 @@ Date: 2024-04-25
 
   Bugfixes:
     - Fixed compatibility issue on construction bot with bob's logistics.
-    - Fixed indestructible rails applied to non-applicable planet/surfaces.
+    - Fixed indestructible rails applied to non-applicable planet/surfaces during migration.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.32
