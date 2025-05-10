@@ -45,6 +45,10 @@ Overhaul mod compatibility will be done when they become available.
 - It may interfere with ERM custom attack groups.
 - New enemies placement does not work.
 
+#### Combat Mechanic Overhaul
+- Have been causing unexpected issues.  Expect anomalies when you use it.
+- I have fixed some of them. Such as turrets can't hit air unit or other ground structures.
+
 #### Any mod that changes the properties of space-age planets (e.g Solar System ++)
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
 - Change space-age planet may lead to missing features or crashes.  Use at your own risk.

@@ -16,7 +16,7 @@ data:extend({
         type = "custom-input",
         name = "erm-alt-left-click",
         localised_name = "ERM mouse alt left click",
-        key_sequence = "ALT + mouse-button-1",
+        key_sequence = "CONTROL + ALT + mouse-button-1",
         consuming = "none",
         include_selected_prototype = true
     },

@@ -51,10 +51,6 @@ CustomInput.events = {
     ["erm-alt-left-click"] = function(event)
         if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
             valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
-        elseif event.selected_prototype and event.selected_prototype.base_type == 'entity' then
-            --- not sure why original open_factoriopedia_gui don't work. ANYWAY!
-            --- @TODO To be redeploy on next stable version
-            -- game.players[event.player_index].open_factoriopedia_gui(prototypes.entity[event.selected_prototype.name])
         end
     end,
     ["erm-open-army-window"] = function(event)

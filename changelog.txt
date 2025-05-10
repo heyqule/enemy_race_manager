@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.34
+Date: 2024-05-10
+
+  Changes:
+    - Added "Combat Mechanic Overhaul" to MOD compatiblity doc.
+    - Added Combat Mechanic Overhaul to hidden dependency.
+    - Change ERM's 'ALT + left-click' to "Control + ALT + left-click" to avoid factoripedia collision.
+
+  Bugfixes:
+    - Fixed gun turret can't target air with CMO, as it removed certain target layers.  ERM added them back.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.33
 Date: 2024-04-25
 

@@ -40,6 +40,7 @@ Special Thanks to [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) as he did 
 
 - A LOT OF construction robots and repair kits. Automate repair network ASAP. Mix all turrets. Uranium bullets and flamethrowers are OP.
 - Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the damage turret with new one and build wall after it destroyed.
+- [Advanced Spaceship Repair](https://mods.factorio.com/mod/advanced_spaceship_repair) helps to repair entities in a batch on spaceship.  It's an optional dependency and it requires space-age.
 
 Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/2.0-New-Race-Design.md) and join my discord for additional help.
 
