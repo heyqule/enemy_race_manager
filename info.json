@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.0.33",
+  "version": "2.0.34",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -24,6 +24,7 @@
     "(?)distant-misfires >= 0.12.5",
     "(?)bobenemies >= 2.0.0",
     "(?)rso-mod >= 7.0.15",
+    "(?)combat-mechanics-overhaul >= 0.7.2",
     "!intelligent-enemy"
   ]
 }

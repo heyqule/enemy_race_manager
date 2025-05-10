@@ -11,3 +11,13 @@ for _, turret in pairs(data.raw["electric-turret"]) do
         turret["attack_target_mask"] = { "common", "ground-unit", "flying", 'ground-static'}
     end
 end
+
+--- Fix ammo turret can't target flying
+for _, turret in pairs(data.raw["ammo-turret"]) do
+    if type(turret["attack_target_mask"]) == "table" then
+        table.insert(turret["attack_target_mask"], 'flying')
+        table.insert(turret["attack_target_mask"], 'ground-static')
+    else
+        turret["attack_target_mask"] = { "common", "ground-unit", "flying", 'ground-static'}
+    end
+end
