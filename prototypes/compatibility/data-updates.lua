@@ -29,7 +29,7 @@ if mods["Toxic_biters"] then
 end
 
 if mods['combat-mechanics-overhaul'] then
-    require "CMO/electric_turret"
+    require "CMO/turret"
 end
 
 if mods['bobenemies'] then
