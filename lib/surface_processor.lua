@@ -6,8 +6,11 @@
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local SurfaceProcessor = {}
+
+SurfaceProcessor.get_gps_message = UtilHelper.get_gps_message
 
 function SurfaceProcessor.init_globals()
     storage.enemy_surfaces = storage.enemy_surfaces or {}
@@ -148,10 +151,6 @@ function SurfaceProcessor.get_all_enemies_on(surface_name)
     end
 
     return nil
-end
-
-function SurfaceProcessor.get_gps_message(x, y, surface_name)
-    return "[gps=" .. x .. "," .. y .. "," .. surface_name .. "]"
 end
 
 function SurfaceProcessor.get_attackable_surfaces()

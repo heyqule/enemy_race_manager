@@ -35,3 +35,6 @@ require "prototypes.extend-mapping-beacons"
 require "prototypes.extend-rallypoint"
 require "prototypes.tips-and-tricks.prototypes"
 require "prototypes.shortcuts"
+
+--- The following require quality mod ---
+require "prototypes.extend-quality"

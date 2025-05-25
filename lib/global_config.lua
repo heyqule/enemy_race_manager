@@ -12,13 +12,12 @@ local GlobalConfig = {}
 GlobalConfig.MAX_TIER = 3
 --- Tick base EVENTS
 GlobalConfig.RACE_SETTING_UPDATE_INTERVAL = 5 * minute
-GlobalConfig.ATTACK_GROUP_GATHERING_CRON = 1 * minute + 1
-GlobalConfig.ATTACK_POINT_CALCULATION = minute + 3
-GlobalConfig.BOSS_QUEUE_CRON = 11
+GlobalConfig.ATTACK_GROUP_GATHERING_CRON = minute + 2 * second + 1
+GlobalConfig.BOSS_QUEUE_CRON = 7 
 GlobalConfig.TELEPORT_QUEUE_CRON = 33
 GlobalConfig.AUTO_DEPLOY_CRON = 3 * second + 1
 GlobalConfig.SPAWN_SCOUTS_INTERVAL = 25301
-GlobalConfig.TIME_BASED_ATTACK_POINT_CRON = 1 * minute + 3
+GlobalConfig.TIME_BASED_ATTACK_POINT_CRON = minute + 5
 
 -- +1 to spread the job across all ticks
 -- execute all job on designated tick
@@ -67,36 +66,43 @@ GlobalConfig.QUALITY_MAPPING = {
     {"quality_mapping.exceptional"},
     {"quality_mapping.epic"},
     {"quality_mapping.legendary"},
+    --- Boss tier units ---
+    {"quality_mapping.divine"},
 }
+
 
 GlobalConfig.BOSS_MAX_TIERS = 5
--- 5 Tiers of boss and their properties
-GlobalConfig.BOSS_DESPAWN_TIMER = { 60, 75, 90, 105, 120 }
+GlobalConfig.BOSS_QUALITY_TIER = 7
+GlobalConfig.BOSS_UNIT_TIER = 6
+GlobalConfig.BOSS_AI = { destroy_when_commands_fail = true, allow_try_return_to_spawner = false }
+GlobalConfig.BOSS_QUALITY_MAPPING = {'normal', 'great','exceptional','epic','legendary','mythic','divine'}
 
-local boss_difficulty = {
-    [BOSS_NORMAL] = { 25, 30, 36, 42, 50 },
-    [BOSS_HARD] = { 36, 42, 51, 62, 75 },
-    [BOSS_GODLIKE] = { 51, 62, 74, 86, 99 }
+
+--- with the new scaling 10x scaling.
+GlobalConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 7500000}
+GlobalConfig.BOSS_BUILDING_UNIT = {50, 60, 70, 85, 100}
+GlobalConfig.BOSS_SPAWN_TIMER = { 
+    {180,180},
+    {165,165},
+    {150,150},
+    {135,135},
+    {120,120}
 }
-GlobalConfig.BOSS_LEVELS = boss_difficulty[settings.startup["enemyracemanager-boss-difficulty"].value]
-
-local boss_spawn_size = {
-    [BOSS_SPAWN_SQUAD] = 5,
-    [BOSS_SPAWN_PATROL] = 10,
-    [BOSS_SPAWN_PLATOON] = 20,
-}
-GlobalConfig.boss_spawn_size = boss_spawn_size[settings.startup["enemyracemanager-attacks-unit-spawn-size"].value]
-GlobalConfig.BOSS_BUILDING_HITPOINT = { 10000000, 20000000, 32000000, 50000000, 75000000 }
-
 --if DEBUG_MODE then
 --    GlobalConfig.BOSS_BUILDING_HITPOINT = {1000000, 2000000, 3200000, 5000000, 7500000}
 --end
 
+local batch_spawn_size = {
+    [BOSS_SPAWN_SQUAD] = 6,
+    [BOSS_SPAWN_PATROL] = 12,
+    [BOSS_SPAWN_PLATOON] = 24,
+}
+GlobalConfig.batch_spawn_size = batch_spawn_size[settings.startup["enemyracemanager-attacks-unit-spawn-size"].value]
 GlobalConfig.BOSS_MAX_SUPPORT_STRUCTURES = { 15, 24, 30, 40, 50 }
 GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = { 5, 6, 7, 8, 10 }
 -- 1 phase change and 5 types of attacks based on damage taken
-GlobalConfig.BOSS_DEFENSE_ATTACKS = { 12000000, 999999, 500000, 250000, 69420, 20000 }
-GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = { 3, 3, 4, 4, 4 }
+GlobalConfig.BOSS_DEFENSE_ATTACKS = { 15000000, 999999, 500000, 250000, 69420, 20000 }
+GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = { 3, 3, 4, 4, 5 }
 
 -- 320 radius toward the target area.
 GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
@@ -336,7 +342,10 @@ function GlobalConfig.initialize_races_data()
     for name, _ in pairs(script.active_mods) do
         local register_ids = check_register_erm_race(name)
         for _, name in pairs(register_ids) do
-            storage.active_races[name] = true            
+            storage.active_races[name] = true
+            if string.find(name, "enemy_", nil, true) then
+                storage.remote_race_name_cache[name] = string.gsub(name,"enemy_","") 
+            end
         end
     end
 

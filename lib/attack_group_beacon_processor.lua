@@ -30,9 +30,9 @@ local BEACON_HEALTH_LIMIT = 200
 local AERIAL_BEACON = "erm_aerial_beacon"
 local LAND_BEACON = "erm_land_beacon"
 local SPAWN_BEACON = "erm_spawn_beacon"
-local ATTACK_ENTITIES_BEACON = "erm_attackable_entity_beacon"
-local ATTACK_ENTITIES_SPAWN_BEACON = "erm_ae_spawn_beacon"
 local RESOURCE_BEACON = "erm_resource_beacon"
+local ATTACK_ENTITIES_BEACON = "erm_attackable_entity_beacon"
+
 local BEACON_TYPE = "simple-entity-with-owner"
 local RESOURCE_BEACON_ACCEPTANCE_LIMIT = 50
 local LAND_SCOUT = "--land_scout--"
@@ -394,8 +394,8 @@ local function create_attack_entity_beacon_from_spawn(surface)
             beacon_data.cache = { }
             storage[ATTACK_ENTITIES_BEACON][surface.index][force.name][beacon.unit_number] = beacon_data
 
-            init_beacon_struct(ATTACK_ENTITIES_SPAWN_BEACON, surface.index, force.name)
-            storage[ATTACK_ENTITIES_SPAWN_BEACON][surface.index][force.name] = beacon_data
+            init_beacon_struct(SPAWN_BEACON, surface.index, force.name)
+            storage[SPAWN_BEACON][surface.index][force.name] = beacon_data
         end
     end
 
@@ -740,7 +740,7 @@ AttackGroupBeaconProcessor.init_globals = function()
     for _, beacon in pairs(ALL_BEACONS) do
         storage[beacon] = storage[beacon] or {}
     end
-    storage[ATTACK_ENTITIES_SPAWN_BEACON] = storage[ATTACK_ENTITIES_SPAWN_BEACON] or {}
+    storage[SPAWN_BEACON] = storage[SPAWN_BEACON] or {}
     storage.attack_group_attackable_entity_names = storage.attack_group_attackable_entity_names or {}
     storage[CONTROL_DATA] = storage[CONTROL_DATA] or {}
 end
@@ -1137,7 +1137,7 @@ AttackGroupBeaconProcessor.remove_beacons_on_surface = function(surface_index)
     for _, beacon in pairs(ALL_BEACONS) do
         storage[beacon][surface_index] = nil
     end
-    storage[ATTACK_ENTITIES_SPAWN_BEACON][surface_index] = nil
+    storage[SPAWN_BEACON][surface_index] = nil
     storage[CONTROL_DATA][surface_index] = nil
 end
 
@@ -1171,7 +1171,7 @@ AttackGroupBeaconProcessor.has_attack_entity_beacon = function(surface)
 end
 
 AttackGroupBeaconProcessor.get_attackable_spawn_beacon = function(surface, force)
-    local surface = storage[ATTACK_ENTITIES_SPAWN_BEACON][surface.index]
+    local surface = storage[SPAWN_BEACON][surface.index]
     if surface then
         local beacon = surface[force.name]
         if beacon then

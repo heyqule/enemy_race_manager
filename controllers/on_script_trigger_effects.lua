@@ -12,9 +12,11 @@ local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_proc
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local BossPsiRadar = require("__enemyracemanager__/lib/boss_psi_radar")
 
 local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
+
 local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
@@ -198,7 +200,13 @@ local script_functions = {
 
     [QUALITY_TALLY_POINT] = function(event)
         AttackMeterProcessor.calculate_points(event.source_entity)
-    end
+    end,
+    
+    [REGISTER_BOSS_RADAR] = function(event)
+        -- boss radar print
+        print('Registering boss radar')
+        BossPsiRadar.register(event.source_entity)
+    end 
 }
 
 local creep_removal_enabled = settings.startup['enemyracemanager-auto-creep-removal'].value

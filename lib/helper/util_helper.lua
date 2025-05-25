@@ -24,4 +24,8 @@ function UtilHelper.to_chunk_position(pos)
     return { x = floor(pos.x / 32), y = floor(pos.y / 32) }
 end
 
+function UtilHelper.get_gps_message(x, y, surface_name)
+    return "[gps=" .. x .. "," .. y .. "," .. surface_name .. "]"
+end
+
 return UtilHelper

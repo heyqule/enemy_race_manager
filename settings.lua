@@ -184,15 +184,6 @@ data:extend {
     --- Startup: Boss
     {
         type = "string-setting",
-        name = "enemyracemanager-boss-difficulty",
-        description = "enemyracemanager-boss-difficulty",
-        setting_type = "startup",
-        default_value = BOSS_NORMAL,
-        allowed_values = { BOSS_NORMAL, BOSS_HARD, BOSS_GODLIKE },
-        order = "enemyracemanager-700",
-    },
-    {
-        type = "string-setting",
         name = "enemyracemanager-attacks-unit-spawn-size",
         description = "enemyracemanager-attacks-unit-spawn-size",
         setting_type = "startup",

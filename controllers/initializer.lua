@@ -228,6 +228,7 @@ local init_globals = function()
     storage.active_races = {}
     storage.active_races_names = {}
     storage.active_races_num = 1
+    storage.remote_race_name_cache = {}
     storage.is_multi_planets_game = false
 
     --- SE or Space Age

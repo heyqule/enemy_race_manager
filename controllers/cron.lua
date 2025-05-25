@@ -18,6 +18,7 @@ local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_proc
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
+local BossPsiRadar = require("__enemyracemanager__/lib/boss_psi_radar")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
 local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
@@ -85,17 +86,14 @@ cron_switch = {
         BaseBuildProcessor.build(table.unpack(args))
     end,
     -- BossProcessor
+    ["BossPsiRadar.scan"] = function(args)
+        BossPsiRadar.scan()
+    end,
     ["BossProcessor.check_pathing"] = function(args)
         BossProcessor.check_pathing()
     end,
     ["BossProcessor.heartbeat"] = function(args)
         BossProcessor.heartbeat()
-    end,
-    ["BossProcessor.units_spawn"] = function(args)
-        BossProcessor.units_spawn()
-    end,
-    ["BossProcessor.support_structures_spawn"] = function(args)
-        BossProcessor.support_structures_spawn()
     end,
     ["BossProcessor.remove_boss_groups"] = function(args)
         BossProcessor.remove_boss_groups(table.unpack(args))

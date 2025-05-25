@@ -1,14 +1,20 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.??
+Version: 2.0.36
 Date: 2024-??-??
 
   Features:
     - Redesigned Boss mode.
-    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, not repairable or minable. Boss ends when it's destroyed.                
+    - This mode requires quality mod to be enabled.  It's used for higher tier boss units & attacks. 
+    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, not repairable and not minable. You are defeated and boss mode ends when it's destroyed.
+    - Psi Radar takes approximate 10 minutes to scan the boss.  Prepare your defense in the mean time.
+    -                  
 
   Changes:
-    - added segmented-unit and spider-unit types to kill when calling uWuClear rapid delivery.    
+    - When calling uWuClear rapid delivery, it now kills segmented-unit and spider-unit types as well, regardless of their health.    
     - removed old boss items, psi-tracking-satellite.
+     
+  Bugfixes:
+    - Fixed unit quality doesn't roll on home planet for certain attacks.    
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.38
