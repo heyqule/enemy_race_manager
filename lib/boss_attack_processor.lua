@@ -17,12 +17,14 @@ local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local BossAttackProcessor = {}
 
 BossAttackProcessor.TYPE_PROJECTILE = 1
-BossAttackProcessor.TYPE_BEAM = 2
+BossAttackProcessor.TYPE_FALLING_PROJECTILE = 2
+BossAttackProcessor.TYPE_BEAM = 3
+BossAttackProcessor.TYPE_DIRECT = 4
 
 local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
 local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
 local scanMinLength = 128
-local type_name = { "projectile", "beam" }
+local type_name = { "projectile", "beam", "direct" }
 
 local get_scan_area = {
     [defines.direction.north] = function(x, y)
@@ -119,7 +121,7 @@ local select_attack = function(mod_name, attacks, tier)
     for i, value in pairs(attacks["projectile_name"]) do
         if can_spawn(attacks["projectile_chance"][i]) then
             data = {
-                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["projectile_type"][i]] .. "-t" .. tier,
+                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["projectile_type"][i]],
                 count = attacks["projectile_count"][i],
                 spread = attacks["projectile_spread"][i],
                 type = attacks["projectile_type"][i],
@@ -144,7 +146,7 @@ end
 
 local fetch_attack_data = function(force_name)
     if not storage.boss.attack_cache then
-        storage.boss.attack_cache = remote.call(force_name .. "_boss_attacks", "get_attack_data")
+        storage.boss.attack_cache = remote.call(storage.remote_race_name_cache[force_name] .. "_boss_attacks", "get_attack_data")
     end
 end
 
@@ -209,6 +211,29 @@ local process_attack = function(data, unique_position)
                 target = position,
                 speed = data["speed"] or 0.3,
                 max_range = data["range"] or 96,
+                create_build_effect_smoke = false,
+                raise_built = false,
+                force = entity_force
+            })
+        elseif data["type"] == BossAttackProcessor.TYPE_FALLING_PROJECTILE then
+                surface.create_entity({
+                    name = entity_name,
+                    position = start_position,
+                    target = position,
+                    speed = data["speed"] or 0.3,
+                    max_range = data["range"] or 96,
+                    create_build_effect_smoke = false,
+                    raise_built = false,
+                    force = entity_force
+                })            
+        elseif data["type"] == BossAttackProcessor.TYPE_DIRECT then
+            --- target_position
+            --- source_position
+            --- duration
+            --- source_offset
+            surface.create_entity({
+                name = entity_name,
+                position = position,
                 create_build_effect_smoke = false,
                 raise_built = false,
                 force = entity_force

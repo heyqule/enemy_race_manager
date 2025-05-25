@@ -10,6 +10,7 @@ local String = require('__erm_libs__/stdlib/string')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local Orientation = require('__erm_libs__/stdlib/orientation')
 
 local Table = require("__erm_libs__/stdlib/table")
@@ -128,6 +129,8 @@ local drop_unit = function(event, force_name, unit_name, count, position)
         source_entity_force_name = source_entity.force.name
         local name_tokens = get_name_token(source_entity.name)
         level = name_tokens[3]
+    elseif surface.name == storage.custom_attack_race_settings[force_name].home_planet then
+        level = GlobalConfig.MAX_LEVELS
     end
 
     position.x = position.x + 2
@@ -564,7 +567,11 @@ local build = function(event, force_name, building_name, position)
     local race_settings = get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
     local name_tokens = get_name_token(source_entity.name)
-    local level = name_tokens[3]
+    local level = tonumber(name_tokens[3])
+
+    if level > GlobalConfig.MAX_LEVELS then
+        level = GlobalConfig.MAX_LEVELS
+    end
 
     position.x = position.x + 2
 

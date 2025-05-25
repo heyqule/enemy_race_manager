@@ -298,8 +298,8 @@ function QualityProcessor.roll(entity)
     
     local unit_tier = tonumber(name_token[3])
 
-    -- Prevent roll if unit_tier not found
-    if unit_tier == nil then
+    -- Prevent roll if unit_tier not found or unit_tier > max_levels (assuming boss units)
+    if unit_tier == nil or unit_tier >= GlobalConfig.MAX_LEVELS then
         return entity
     end
 

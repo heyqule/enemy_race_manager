@@ -5,7 +5,6 @@
 ---
 require("util")
 
-
 local Position = require("__erm_libs__/stdlib/position")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -33,14 +32,11 @@ local scanRadius = 16
 local chunkSize = 32
 local spawnRadius = 64
 local cleanChunkSize = 8
-local maxRetry = 3
 
 local INCLUDE_SPAWNS = true -- Only for debug
 
 local enemy_entities = { "unit-spawner", "turret", "unit" }
 local enemy_buildings = { "unit-spawner", "turret" }
-local turrets = { "ammo-turret", "electric-turret", "fluid-turret" }
-local indexable_turrets = { "ammo-turret", "fluid-turret" }
 local beacon_name = "erm-boss-beacon"
 
 local boss_setting_default = function()
@@ -50,22 +46,21 @@ local boss_setting_default = function()
         entity_position = nil,
         target_position = { x = 0, y = 0 },
         target_direction = defines.direction.north,
-        silo_position = { x = 0, y = 0 },
+        radar = nil,
         surface = nil,
         surface_name = "",
-        force_name = "",
         force = nil,
         force_name = "",
         boss_tier = 1,
         flying_only = false,
         spawned_tick = 0,
-        despawn_at_tick = 0,
         pathing_entity = nil,
         pathing_entity_checks = 0,
         attack_last_hp = { 0, 0, 0, 0, 0, 0 },
         victory = false,
         high_level_enemy_list = nil, -- Track all high level enemies, they die when the base destroys.
-        loading = false
+        loading = false,
+        spawn_beacons = {}
     }
 end
 
@@ -77,42 +72,10 @@ local boss_spawnable_index_default = function()
     }
 end
 
-local index_boss_spawnable_chunk = function(gunturret, area, usefirst)
-    local surface = gunturret.surface
-    local spawners = surface.find_entities_filtered { type = enemy_buildings, force = storage.boss.force, area = area, limit = 20 }
 
-    local target_spawner
-    local last = #spawners
-    if gunturret.direction == defines.direction.east or
-            gunturret.direction == defines.direction.north
-    then
-        target_spawner = spawners[1]
-    else
-        target_spawner = spawners[last]
-    end
-
-    if target_spawner then
-        -- Skip if it"too close to any of the turrets
-        local turret = surface.find_entities_filtered { position = target_spawner.position, radius = 192, type = turrets, limit = 1 }
-        if turret[1] then
-            return
-        end
-        local distance = util.distance(target_spawner.position, gunturret.position)
-        table.insert(storage.boss_spawnable_index.chunks, {
-            spawn_position = target_spawner.position,
-            turret_position = gunturret.position,
-            distance = distance
-        })
-        if storage.boss_spawnable_index.closest_distance > distance then
-            storage.boss_spawnable_index.closest_distance = distance
-        end
-        storage.boss_spawnable_index.size = storage.boss_spawnable_index.size + 1
-    end
-end
 
 local start_unit_spawn = function()
     Cron.add_15_sec_queue("BossProcessor.units_spawn")
-    Cron.add_1_min_queue("BossProcessor.support_structures_spawn")
     Cron.add_15_sec_queue("BossGroupProcessor.process_attack_groups")
     if INCLUDE_SPAWNS then
         BossGroupProcessor.spawn_initial_group()
@@ -184,7 +147,7 @@ local can_build_spawn_building = function()
 end
 
 local spawn_building = function()
-    if not can_build_spawn_building() then
+    if true or not can_build_spawn_building() then
         return
     end
 
@@ -273,40 +236,16 @@ local attack_functions = {
     basic_attack
 }
 
-local draw_time = function(boss, current_tick)
-    local datetime_str = GlobalConfig.format_daytime_string(current_tick, boss.despawn_at_tick)
-
-    rendering.draw_text({
-        text = { "description.boss-despawn-in", datetime_str },
-        surface = boss.surface_name,
-        target = boss.entity,
-        target_offset = { -3.5, -8 },
-        color = { r = 1, g = 0, b = 0 },
-        time_to_live = GlobalConfig.TWO_SECONDS_CRON,
-        scale = 2,
-        only_in_alt_mode = true
-    })
-end
-
-local initialize_result_log = function(force_name, difficulty, squad_size)
+local initialize_result_log = function(force_name)
     local default_best_record = {
         tier = 1,
         time = -1,
     }
     if storage.boss_logs[force_name] == nil then
         storage.boss_logs[force_name] = {
-            difficulty = difficulty,
-            squad_size = squad_size,
             best_record = default_best_record,
             entries = {}
         }
-    end
-
-    if not storage.boss_logs[force_name].difficulty == difficulty or
-            not storage.boss_logs[force_name].difficulty == squad_size then
-        storage.boss_logs[force_name]["difficulty"] = difficulty
-        storage.boss_logs[force_name]["squad_size"] = squad_size
-        storage.boss_logs[force_name].best_record = default_best_record
     end
 end
 
@@ -328,10 +267,8 @@ end
 
 local write_result_log = function(victory)
     local boss = storage.boss
-    local difficulty = settings.startup["enemyracemanager-boss-difficulty"].value
-    local squad_size = settings.startup["enemyracemanager-attacks-unit-spawn-size"].value
-
-    initialize_result_log(boss.force_name, difficulty, squad_size)
+    
+    initialize_result_log(boss.force_name)
 
     local record = {
         race = boss.force_name,
@@ -339,8 +276,6 @@ local write_result_log = function(victory)
         victory = victory,
         surface = boss.surface_name,
         location = boss.entity_position,
-        difficulty = difficulty,
-        squad_size = squad_size,
         spawn_tick = boss.spawned_tick,
         last_tick = game.tick
     }
@@ -359,15 +294,17 @@ function BossProcessor.init_globals()
 end
 
 --- Start the boss spawn flow
-function BossProcessor.exec(rocket_silo, spawn_position)
-    DebugHelper.print("BossProcessor: Check rocket_silo valid...")
-    if rocket_silo and rocket_silo.valid and storage.boss.loading == false and
+function BossProcessor.exec(radar, spawn_position)
+    DebugHelper.print("BossProcessor: Check radar valid...")
+    if radar and radar.valid and storage.boss.loading == false and
             (storage.boss.entity == nil or storage.boss.entity.valid == false) then
         storage.boss.loading = true
-        local surface = rocket_silo.surface
-        local force_name = SurfaceProcessor.get_enemy_on(rocket_silo.surface.name)
-
+        local surface = radar.surface
+        local name_tokens = ForceHelper.get_name_token(radar.name)
+        local force_name = name_tokens[1]
+        
         if force_name == nil then
+            DebugHelper.print("Force name not found")
             return nil
         end
 
@@ -382,12 +319,8 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         storage.boss.force_name = force.name
         storage.boss.surface = surface
         storage.boss.surface_name = surface.name
-        storage.boss.silo_position = rocket_silo.position
         storage.boss.spawned_tick = game.tick
         storage.boss.boss_tier = RaceSettingsHelper.boss_tier(storage.boss.force_name)
-        storage.boss.despawn_at_tick = game.tick + (minute * GlobalConfig.BOSS_DESPAWN_TIMER[storage.boss.boss_tier])
-        BossProcessor.index_turrets(surface)
-        DebugHelper.print("BossProcessor: Indexed positions: " .. storage.boss_spawnable_index.size)
 
         if storage.boss_spawnable_index.size == 0 and spawn_position == nil then
             surface.print("Unable to find a boss spawner.  Please try again.")
@@ -396,10 +329,9 @@ function BossProcessor.exec(rocket_silo, spawn_position)
         end
 
         if not Position.is_position(spawn_position) then
-            local target_chunk_data = storage.boss_spawnable_index.chunks[math.random(1, storage.boss_spawnable_index.size)]
-            spawn_position = target_chunk_data.spawn_position
-            storage.boss.target_position = target_chunk_data.turret_position
-            storage.boss.target_direction = get_target_direction(spawn_position, target_chunk_data.turret_position)
+            spawn_position = radar.position
+            storage.boss.target_position = spawn_position
+            storage.boss.target_direction = get_target_direction(spawn_position, radar.position)
         end
 
         local entities = surface.find_entities_filtered {
@@ -409,19 +341,39 @@ function BossProcessor.exec(rocket_silo, spawn_position)
                 bottom_right = { spawn_position.x + cleanChunkSize, spawn_position.y + cleanChunkSize }
             }
         }
-        DebugHelper.print("BossProcessor: To destroy entities: " .. #entities)
+        DebugHelper.print("BossProcessor: destroy entities: " .. #entities)
         for i = 1, #entities do
             entities[i].destroy()
         end
 
+        force.set_evolution_factor(1, surface)
+        local boss_name = BossProcessor.get_boss_name(force_name)
         DebugHelper.print("BossProcessor: Creating Boss Base...")
-        DebugHelper.print(BossProcessor.get_boss_name(force_name))
+        DebugHelper.print(boss_name)
+        local boss_spawn_location = surface.find_non_colliding_position(boss_name, spawn_position, chunkSize, 1, true)
+        storage.skip_quality_rolling = true
         local boss_entity = surface.create_entity {
-            name = BossProcessor.get_boss_name(force_name),
-            position = spawn_position,
+            name = boss_name,
+            position = boss_spawn_location,
             force = force,
             spawn_decorations = true
         }
+        
+        print(serpent.block(spawn_position))
+        print(serpent.block(boss_spawn_location))
+        print(serpent.block(boss_entity))
+
+        local entities = surface.find_entities_filtered {
+            name = boss_name,
+            limit = 1
+        }
+        print(serpent.block(entities))
+        
+        if not boss_entity then
+            storage.boss = boss_setting_default()
+            storage.boss.radar = radar
+            return
+        end
 
         for _, value in pairs(ForceHelper.get_player_forces()) do
             DebugHelper.print("BossProcessor: Add Beacon for " .. value)
@@ -457,15 +409,19 @@ function BossProcessor.exec(rocket_silo, spawn_position)
 
         DebugHelper.print("BossProcessor: Create Pathing Unit...")
         local pathing_entity_name = BossProcessor.get_pathing_entity_name(force_name)
-        local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, chunkSize, 2, true)
+        DebugHelper.print(pathing_entity_name)
+        local pathing_spawn_location = surface.find_non_colliding_position(pathing_entity_name, spawn_position, chunkSize, 1, true)
+        DebugHelper.print(pathing_spawn_location)
+        storage.skip_quality_rolling = true
         local pathing_entity = surface.create_entity {
             name = pathing_entity_name,
             position = pathing_spawn_location,
             force = force
         }
+        DebugHelper.print(pathing_entity)
         local command = {
             type = defines.command.attack,
-            target = rocket_silo,
+            target = radar,
             distraction = defines.distraction.by_damage
         }
         pathing_entity.commandable.set_command(command)
@@ -487,10 +443,10 @@ function BossProcessor.check_pathing()
         local pathing_entity = boss.pathing_entity
         DebugHelper.print("BossProcessor: Comparing path unit position")
         if pathing_entity and pathing_entity.valid then
-            if pathing_entity.spawner then
+            if pathing_entity.commandable.spawner then
                 DebugHelper.print("BossProcessor: flying only [attached spawner]")
                 storage.boss.flying_only = true
-                start_unit_spawn()
+                --start_unit_spawn()
                 storage.boss.loading = false
                 return
             end
@@ -501,13 +457,13 @@ function BossProcessor.check_pathing()
                 DebugHelper.print(#boss_base)
                 DebugHelper.print(boss_base[1].name)
                 storage.boss.flying_only = true
-                start_unit_spawn()
+                --start_unit_spawn()
                 storage.boss.loading = false
                 return
             end
         end
         DebugHelper.print("BossProcessor: Not a flying only boss ")
-        start_unit_spawn()
+        --start_unit_spawn()
         storage.boss.loading = false
         return
     end
@@ -522,7 +478,7 @@ function BossProcessor.get_boss_name(force_name)
         return RaceSettingsHelper.get_race_entity_name(
                 force_name,
                 storage.race_settings[force_name].boss_building,
-                GlobalConfig.BOSS_LEVELS[storage.boss.boss_tier]
+                math.min(5, storage.boss.boss_tier)
         )
     end
 
@@ -533,7 +489,7 @@ function BossProcessor.get_pathing_entity_name(force_name)
     return RaceSettingsHelper.get_race_entity_name(
             force_name,
             storage.race_settings[force_name].pathing_unit,
-            1
+            5
     )
 end
 
@@ -580,9 +536,9 @@ function BossProcessor.heartbeat()
         return
     end
 
-    if current_tick > boss.despawn_at_tick then
+    if not boss.radar and not boss.radar.valid then
         -- start despawn process
-        DebugHelper.print("BossProcessor: start despawn process")
+        DebugHelper.print("BossProcessor: Defeated, start despawn process")
         write_result_log(false)
         BossDespawnProcessor.exec()
         BossProcessor.unset()
@@ -622,36 +578,10 @@ function BossProcessor.heartbeat()
     if boss_direct_attack then
         BossAttackProcessor.unset_attackable_entities_cache()
     end
-
-    draw_time(boss, current_tick)
+    
     Cron.add_2_sec_queue("BossProcessor.heartbeat")
 end
 
-function BossProcessor.index_turrets(surface)
-    local gunturrets = surface.find_entities_filtered({ type = indexable_turrets })
-    local totalturrets = #gunturrets;
-    local turret_gap = math.max(4, math.floor(totalturrets / 64))
-    local turret_gap_pick = math.max(2, math.random(2, math.floor(turret_gap / 2)))
-    DebugHelper.print("BossProcessor: Total: " .. totalturrets)
-    DebugHelper.print("BossProcessor: Gap: " .. turret_gap .. "/" .. turret_gap_pick)
-    storage.boss_spawnable_index.closest_distance = 9999
-    for i = 1, totalturrets do
-        if i % turret_gap == turret_gap_pick then
-            local gunturret = gunturrets[i]
-            index_boss_spawnable_chunk(gunturret, get_scan_area[gunturret.direction](gunturret.position.x, gunturret.position.y))
-            i = i + turret_gap - 2
-        end
-    end
-
-    local newChunkList = {}
-    for _, chunk in pairs(storage.boss_spawnable_index.chunks) do
-        if chunk.distance <= storage.boss_spawnable_index.closest_distance * 2 then
-            table.insert(newChunkList, chunk)
-        end
-    end
-    storage.boss_spawnable_index.chunks = newChunkList
-    storage.boss_spawnable_index.size = table_size(newChunkList)
-end
 
 --- Queue to spawn boss units
 --- @see enemyracemanager/control.lua
@@ -667,19 +597,6 @@ function BossProcessor.units_spawn()
     end
 end
 
---- Queue to build boss Spawner
---- @see enemyracemanager/control.lua
-function BossProcessor.support_structures_spawn()
-    if not RaceSettingsHelper.is_in_boss_mode() then
-        DebugHelper.print("BossProcessor: support_structures_spawn stops...")
-        return
-    end
-
-    if INCLUDE_SPAWNS then
-        spawn_building()
-        Cron.add_1_min_queue("BossProcessor.support_structures_spawn")
-    end
-end
 
 function BossProcessor.unset()
     if RaceSettingsHelper.is_in_boss_mode() then

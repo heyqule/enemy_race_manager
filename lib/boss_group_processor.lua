@@ -20,6 +20,7 @@ local BossGroupProcessor = {}
 -- spawn_cycles x enemyracemanager-boss-spawn-size = max boss group size, default 120 (10 * 24 / 2)
 local default_spawn_cycles = 24
 local chunkSize = 32
+local unit_tier = GlobalConfig.BOSS_UNIT_TIER
 
 local FEATURE_GROUP_TYPE_MIXED = 1
 local FEATURE_GROUP_TYPE_FLYING = 2
@@ -44,13 +45,13 @@ local create_group = function(max_cycles, unit_per_cycle, default_max_group)
         storage.boss_group_spawn.group = group
         storage.boss_group_spawn.unique_id = group.unique_id
         DebugHelper.print("BossGroupProcessor: Create Group..." .. tostring(group.unique_id))
-        unit_per_cycle = unit_per_cycle or GlobalConfig.boss_spawn_size
+        unit_per_cycle = unit_per_cycle or GlobalConfig.batch_spawn_size
         storage.boss_group_spawn.max_cycles = max_cycles or default_spawn_cycles
         storage.boss_group_spawn.unit_per_cycle = unit_per_cycle
 
         local max_units
         if default_max_group then
-            max_units = (storage.boss_group_spawn.max_cycles * GlobalConfig.boss_spawn_size)
+            max_units = (storage.boss_group_spawn.max_cycles * GlobalConfig.batch_spawn_size)
         else
             max_units = storage.boss_group_spawn.max_cycles * unit_per_cycle
         end
@@ -113,11 +114,13 @@ function BossGroupProcessor.generate_units(useCycle, queueCycle)
         local unit_full_name = RaceSettingsHelper.get_race_entity_name(
                 boss_data.force_name,
                 unit_name,
-                GlobalConfig.BOSS_LEVELS[storage.race_settings[boss_data.force_name].boss_tier]
+                unit_tier
         )
 
         local position = surface.find_non_colliding_position(unit_full_name, group.position,
                 chunkSize, 1)
+        
+        storage.skip_quality_rolling = true
         local entity = surface.create_entity({
             name = unit_full_name,
             position = position,
@@ -158,7 +161,7 @@ end
 function BossGroupProcessor.spawn_initial_group()
     DebugHelper.print("BossProcessor.spawn_initial_group")
     pick_featured_group()
-    create_group(default_spawn_cycles / 3, GlobalConfig.boss_spawn_size * 3, true)
+    create_group(default_spawn_cycles / 3, GlobalConfig.batch_spawn_size * 3, true)
     Cron.add_2_sec_queue("BossGroupProcessor.generate_units", true, true)
 end
 
@@ -172,7 +175,7 @@ end
 function BossGroupProcessor.spawn_defense_group()
     DebugHelper.print("BossProcessor.spawn_defense_group")
     pick_featured_group()
-    create_group(nil, GlobalConfig.boss_spawn_size)
+    create_group(nil, GlobalConfig.batch_spawn_size)
     BossGroupProcessor.generate_units(false, false)
 end
 
@@ -191,7 +194,7 @@ function BossGroupProcessor.get_default_data()
 end
 
 function BossGroupProcessor.get_group_size()
-    return GlobalConfig.boss_spawn_size * default_spawn_cycles
+    return GlobalConfig.batch_spawn_size * default_spawn_cycles
 end
 
 -- Clean up attack group automatically

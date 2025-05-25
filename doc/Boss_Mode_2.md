@@ -25,38 +25,29 @@
 
 - Spawn rate 2 seconds. Boss variant units has its own multipliers (1x - 5x). 
 - Can host [50,60,70,85,100] Boss variant units
-- Boss Variant, Same Base HP
+- Boss Variant　T1 to T5, Same Base HP  [10m, 20m, 32m, 50m, 75m]
+- 
+
 ### Boss Difficulty
 - [1x, 1.5x, 2x] host
 - [1x, 1.5x, 2x] damage
 
 #### When the base received damage
 
-- It may spawn 5(configurable) defense units[Done]
-- New units join existing attack group.[Done]
-- It may spawn regular spawner / defenses [Done]
-- Perform normal defense attack [DONE]
-- It may perform nearby advanced attacks (80% of the time when your military units are near) [DONE]
-- It may perform artillery advanced attacks (20% of the time when your military units are near, 100% when your entity
-  are in its range) [TO DO]
-- When it takes huge amount of damage, it may perform more devastating attacks. [DONE]
+- 
 
-#### When the base is alive
 
-- Spawn regular spawners / defenses every nauvis day. within radius of 64. [Done]
-- perform long range siege attack on player structures every attack cycle (3 minutes).[TO DO]
-- Targets: miners, rocket-silos, artillery and turrets [Done]
 
 #### When the base is despawned
 
-- Boss base despawns after some time. It will launch x amount of super attack your base before it despawn. [WIP]
+- Launch [3, 5, 7, 10, 15] groups of boss variant unit to attack your base, one group per minutes.
 
 #### When the base is killed
 
 - Beating a boss group will spawn 1-2 unkillable infinite chest with intermediate products for (90 minutes). [Done]
 - Each chest can drop up to 5 types of items, it changes every 5 minutes. 
 
-###Boss Tiers [WIP]
+### Boss Tiers [WIP]
 Boss Structure
 - T1
     - 10000000 HP

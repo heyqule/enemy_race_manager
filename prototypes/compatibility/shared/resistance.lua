@@ -7,8 +7,10 @@ local ForceHelper = require("lib.helper.force_helper")
 local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
-    -- K2
     { "radioactive", 5, 65 },
+    -- K2 --
+    { "kr-explosive", 10, 65 },
+    { "kr-radioactive", 5, 65 },
     -- Bob Warfare
     { "bob-pierce", 10, 65 },
     { "bob-plasma", 5, 70 }
@@ -19,7 +21,10 @@ local spawner_damage_types = {
     { "radioactive", 5, 35 },
     -- Bob Warfare
     { "bob-pierce", 10, 30 },
-    { "bob-plasma", 5, 30 }
+    { "bob-plasma", 5, 35 },
+    -- K2 --
+    { "kr-explosive", 10, 30 },
+    { "kr-radioactive", 5, 35 },
 }
 
 
@@ -51,8 +56,12 @@ local set_spawner_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
         local name = ForceHelper.split_name(unit.name)
         for _, damage_type in pairs(spawner_damage_types) do
-            if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
-                table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            if data.raw["damage-type"][damage_type[1]] and unit.resistances then
+                if string.find(name[2],'boss-',nil, true) then
+                    table.insert(unit.resistances, { type = damage_type[1], percent = 75})
+                elseif name[3] then
+                    table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+                end 
             end
         end
     end

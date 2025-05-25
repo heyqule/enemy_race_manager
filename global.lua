@@ -16,11 +16,13 @@ GLEBA_FORCE_AUTOCONTROL_NAME = "gleba_enemy_base"
 
 --- [ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 --- Enable this flag to enable debug features
-DEBUG_MODE = false
+DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
-TEST_MODE = false
+TEST_MODE = true
+--- Boss test take way longer than other test, enable only when it's needed
+ENABLE_BOSS_TESTS = true
 --- For debugging beacons
-BEACON_SELECTABLE = false
+BEACON_SELECTABLE = true
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
@@ -44,8 +46,6 @@ ARMY_RALLYPOINT_DEPLOY = "emrpt-d"
 ROCKET_SILO_PLACED = "emrs-p"
 ROCKET_SILO_REMOVED  = "emrs-r"
 
-TRIGGER_BOSS_DIES = "embss-die"
-
 LAND_SCOUT_BEACON = "em-landsb"
 AERIAL_SCOUT_BEACON = "em-airsb"
 
@@ -54,6 +54,9 @@ ALL_PLANETS = "All Planets"
 ENVIRONMENTAL_ATTACK = "emev-atk"
 
 CREEP_REMOVAL = "em-crprm"
+
+REGISTER_BOSS_RADAR = "embss-rdr"
+TRIGGER_BOSS_DIES = "embss-die"
 
 --- Roll dice when unit/spawner/turrets spawns
 QUALITY_DICE_ROLL = "em-dcrll"

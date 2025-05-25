@@ -185,8 +185,8 @@ end
 
 --- Usage: remote.call("enemyracemanager_debug", "loss_boss")
 function Debug_RemoteAPI.loss_boss()
-    if storage.boss then
-        storage.boss.despawn_at_tick = 1
+    if storage.boss and storage.boss.radar and storage.boss.radar.valid then
+        storage.boss.radar.die('enemy')
     end
 end
 

@@ -11,11 +11,11 @@ BossAttacksData.default_speed = 1
 --Example:
 --BossAttacks.basic_attacks =
 --{
---    projectile_name = {"blood-cloud","acid-cloud","blood-fire"},
+--    projectile_name = {"blood-cloud","acid-cloud", "earthquake"},
 --    projectile_type = {
 --        BossAttackProcessor.TYPE_PROJECTILE,
 --        BossAttackProcessor.TYPE_PROJECTILE,
---        BossAttackProcessor.TYPE_PROJECTILE
+--        BossAttackProcessor.TYPE_DIRECT
 --    },
 --    projectile_chance = {25, 25, 100},
 --    projectile_count = {1, 1, 1},
@@ -36,7 +36,11 @@ BossAttacksData.default_speed = 1
 --}
 BossAttacksData.basic_attacks = {}
 BossAttacksData.advanced_attacks = {}
+
 BossAttacksData.super_attacks = {}
+--- Idle attack happens when you are being peaceful to the boss.
+--- General idea is that it hit radar every 5 mins if idle.  Otherwise, spawn attack groups or/and hit near by structures every minute.
+BossAttacksData.idle_attacks = {}
 -- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
 -- Use CustomAttackHelper.drop_batch_units() instead
 BossAttacksData.despawn_attacks = {}
@@ -47,6 +51,7 @@ function BossAttacksData.get_attack_data()
         basic_attacks = BossAttacksData.basic_attacks,
         advanced_attacks = BossAttacksData.advanced_attacks,
         super_attacks = BossAttacksData.super_attacks,
+        idle_attacks = BossAttacksData.idle_attacks,
         despawn_attacks = BossAttacksData.despawn_attacks,
         phases = BossAttacksData.phases,
     }

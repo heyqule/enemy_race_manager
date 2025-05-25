@@ -4,8 +4,12 @@
 --- DateTime: 7/12/2022 6:15 PM
 ---
 
---- Add PSI Emitter Satellite, spawn boss and return 2000 space science pack for base game
-if mods['space-age'] then
+if mods['space-age'] and mods['quality'] then
+    local source_effects = {
+        type = "script",
+        effect_id = REGISTER_BOSS_RADAR
+    }
+    
     data:extend({
     {
         type = "radar",
@@ -22,8 +26,8 @@ if mods['space-age'] then
         corpse = "small-remnants",
         collision_box = { { -0.35, -0.35 }, { 0.35, 0.35 } },
         selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } },
-        max_distance_of_nearby_sector_revealed = 1,
-        max_distance_of_sector_revealed = 1,
+        max_distance_of_nearby_sector_revealed = 2,
+        max_distance_of_sector_revealed = 2,
         energy_per_sector = "999999kJ",
         energy_per_nearby_scan = "1kJ",
         energy_source = {
@@ -33,4 +37,30 @@ if mods['space-age'] then
         selectable_in_game = false,
         },
     })
+
+    for name, entity in pairs(data.raw['radar']) do
+        if string.find(entity.name,'--psi-radar', nil, true) then
+            -- boss radar print
+            print('Registering PSI radar effect..')
+            if (type(entity.created_effect) == "table") then
+                table.insert(entity.created_effect, {
+                    type = "direct",
+                    action_delivery = {
+                        type = "instant",
+                        source_effects = source_effects
+                    }
+                })
+            else
+                entity.created_effect = {
+                    {
+                        type = "direct",
+                        action_delivery = {
+                            type = "instant",
+                            source_effects = source_effects
+                        }
+                    }
+                }
+            end
+        end
+    end
 end

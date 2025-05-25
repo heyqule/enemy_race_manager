@@ -22,14 +22,15 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
         table.insert(tests,"tests/interplanetary_attacks")
+        table.insert(tests,"tests/psi_radar")
     else
-        error("Required erm_zerg and erm_protoss to test attack functions")
+        error("Required erm_zerg and erm_protoss to test attack / boss functions")
     end
 
     if script.active_mods["erm_terran"] then
         table.insert(tests,"tests/army")
     else
-        --error("Required erm_terran to test army functions")
+        error("Required erm_terran to test army functions")
     end
 
      require("__factorio-test__/init")(tests)
