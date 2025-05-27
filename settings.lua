@@ -11,14 +11,6 @@ data:extend {
         allowed_values = { NAUVIS_MIXED, NAUVIS_2_WAY, NAUVIS_4_WAY, 'enemy' },
         order = "enemyracemanager-100"
     },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-factoriopedia-level",
-        default_value = 1,
-        setting_type = "startup",
-        allowed_values = { 1, 2, 3, 4, 5 },
-        order = "enemyracemanager-101"
-    },
     --- Biter related
     {
         type = "int-setting",
@@ -28,25 +20,6 @@ data:extend {
         default_value = ATTACK_RANGE_14,
         allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20, ATTACK_RANGE_26, ATTACK_RANGE_32, ATTACK_RANGE_40 },
         order = "enemyracemanager-104"
-    },
-    {
-        type = "int-setting",
-        name = "enemyracemanager-enemy-corpse-time",
-        description = "enemyracemanager-enemy-corpse-time",
-        setting_type = "startup",
-        default_value = 15,
-        minimum_value = 1,
-        maximum_value = 60,
-        order = "enemyracemanager-105"
-    },
-    --- Range 1000 to 1019 reserve for map color changes
-    {
-        type = "color-setting",
-        name = "enemy-map-color",
-        description = "enemy-map-color",
-        setting_type = "startup",
-        default_value = VANILLA_MAP_COLOR,
-        order = "enemyracemanager-1001"
     },
 
     {
@@ -541,12 +514,38 @@ data:extend {
         order = "enemyracemanager-911"
     },
     {
+        type = "int-setting",
+        name = "enemyracemanager-enemy-corpse-time",
+        description = "enemyracemanager-enemy-corpse-time",
+        setting_type = "startup",
+        default_value = 15,
+        minimum_value = 1,
+        maximum_value = 60,
+        order = "enemyracemanager-980"
+    },
+    {
         type = "bool-setting",
         name = "enemyracemanager-auto-creep-removal",
         description = "enemyracemanager-auto-creep-removal",
         setting_type = "startup",
         default_value = true,
-        order = "enemyracemanager-1000"
+        order = "enemyracemanager-981"
+    },
+    {
+        type = "int-setting",
+        name = "enemyracemanager-factoriopedia-level",
+        default_value = 1,
+        setting_type = "startup",
+        allowed_values = { 1, 2, 3, 4, 5 },
+        order = "enemyracemanager-982"
+    },
+    {
+        type = "color-setting",
+        name = "enemy-map-color",
+        description = "enemy-map-color",
+        setting_type = "startup",
+        default_value = VANILLA_MAP_COLOR,
+        order = "enemyracemanager-991"
     },
 }
 
