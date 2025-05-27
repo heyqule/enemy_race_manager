@@ -539,7 +539,15 @@ data:extend {
         default_value = 25,
         allowed_values = {5, 10, 20, 25, 33, 50},
         order = "enemyracemanager-911"
-    }
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-auto-creep-removal",
+        description = "enemyracemanager-auto-creep-removal",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-1000"
+    },
 }
 
 

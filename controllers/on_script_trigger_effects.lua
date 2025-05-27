@@ -192,10 +192,6 @@ local script_functions = {
         })
     end,
 
-    [CREEP_REMOVAL] = function(event)
-        remove_creep(event.source_entity)
-    end,
-
     [QUALITY_DICE_ROLL] = function(event)
         return QualityProcessor.roll(event.source_entity)
     end,
@@ -204,6 +200,14 @@ local script_functions = {
         AttackMeterProcessor.calculate_points(event.source_entity)
     end
 }
+
+local creep_removal_enabled = settings.startup['enemyracemanager-auto-creep-removal'].value
+if creep_removal_enabled then
+    script_functions[CREEP_REMOVAL] = function(event)
+        remove_creep(event.source_entity)
+    end
+end
+
 
 local TriggerEffects = {}
 

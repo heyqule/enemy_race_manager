@@ -6,10 +6,6 @@
 local version = require("__erm_libs__/stdlib/version")
 require("global")
 
-if mods["Krastorio2"] then
-    require "K2/settings"
-end
-
 if mods["ArmouredBiters"] then
     require "ArmouredBiters/settings"
 end
