@@ -309,6 +309,20 @@ local function is_valid_beacon(beacon)
     return beacon and beacon.valid
 end
 
+local function has_nearby_spawners(beacon_entity)
+    if beacon_entity.surface.count_entities_filtered({
+        type = 'unit-spawner',
+        position = beacon_entity.position,
+        radius = SPAWNER_BEACON_RADIUS,
+        force = beacon_entity.force,
+        limit = 1,
+    }) > 0 then
+        return true
+    end
+
+    return false
+end
+
 
 local function init_beacon_struct(beacon, surface_name, force_name)
     if type(storage[beacon][surface_name]) == "nil" then
@@ -1177,20 +1191,22 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     end
 
     local i = 0
-    local new_key, node
+    local new_key, node, control_key
     local control_data = storage[CONTROL_DATA][surface.index][force.name]
     local beacon_data = beacon_surface[force.name]
     repeat
-        local control_key = control_data[SCOUT_SPAWN_KEY] or nil
+        control_key = control_data[SCOUT_SPAWN_KEY] or nil
         new_key, node = get_beacon_node(beacon_data, control_key)
         i = i + 1
         if control_key and
-            node ~= nil and
-            (node.beacon == nil or node.beacon.valid == false)
+           node ~= nil
         then
-            -- Wipe data node if beacon is no longer exists
-            beacon_data[control_key] = nil
-            node = nil
+            if node.beacon == nil or node.beacon.valid == false or not has_nearby_spawners(node.beacon) then
+                -- Wipe data node if beacon is no longer exists
+                -- or beacon doesn't have spawner nearby
+                beacon_data[control_key] = nil
+                node = nil 
+            end
         else
             control_data[SCOUT_SPAWN_KEY] = new_key
         end

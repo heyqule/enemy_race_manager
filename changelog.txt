@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.37
+Date: 2024-06-16
+
+  Bugfixes:
+    - Fixed planet detail GUI crash after an surface removed. 
+    - Fixed scout spawned on spawn beacon which does not have an spawner.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.36
 Date: 2024-05-27
 

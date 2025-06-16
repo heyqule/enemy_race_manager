@@ -35,6 +35,7 @@ MapManagement.events = {
         AttackGroupHeatProcessor.remove_surface(event.surface_index)
         InterplanetaryAttacks.remove_surface(event.surface_index)
         SpawnLocationScanner.remove_surface(event.surface_index)
+        QualityProcessor.remove_surface(game.surfaces[event.surface_index].name)
     end,
     [defines.events.on_pre_surface_cleared] = function(event)
         AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)

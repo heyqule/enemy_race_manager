@@ -404,6 +404,16 @@ function QualityProcessor.reset_all_progress()
     QualityProcessor.calculate_quality_points()
 end
 
+function QualityProcessor.remove_surface(surface_name)
+    for fname, surfaces in pairs(storage.quality_on_planet) do
+        for sname, surface in pairs(surfaces) do
+            if sname == surface_name then
+                storage.quality_on_planet[fname][sname] = nil
+            end
+        end
+    end
+end
+
 function QualityProcessor.skip_roll_quality()
     storage.skip_quality_rolling = true
 end
