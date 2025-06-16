@@ -8,32 +8,36 @@ local BossAttacksData = {}
 BossAttacksData.default_range = 64
 BossAttacksData.default_speed = 1
 
---Example:
---BossAttacks.basic_attacks =
---{
---    projectile_name = {"blood-cloud","acid-cloud", "earthquake"},
---    projectile_type = {
---        BossAttackProcessor.TYPE_PROJECTILE,
---        BossAttackProcessor.TYPE_PROJECTILE,
---        BossAttackProcessor.TYPE_DIRECT
---    },
---    projectile_chance = {25, 25, 100},
---    projectile_count = {1, 1, 1},
---    projectile_spread = {1, 1, 2},
---    projectile_speed = {BossAttacksData.default_speed, BossAttacksData.default_speed, BossAttacksData.default_speed},
---    projectile_range = {BossAttacksData.default_range, BossAttacksData.default_range, BossAttacksData.default_range},
---    projectile_use_multiplier = {false, false, true},
---    projectile_count_multiplier = {
---        {},
---        {},
---        {1, 1, 1, 2, 3}
---    },
---    projectile_spread_multiplier = {
---        {},
---        {},
---        {1, 1, 1, 1, 1}
---    },
---}
+---Example:
+---BossAttacks.basic_attacks =
+---{
+---    attack_name = {"blood-cloud","acid-cloud", "earthquake"},
+---    attack_type = {
+---        BossAttackProcessor.TYPE_PROJECTILE,
+---        BossAttackProcessor.TYPE_PROJECTILE,
+---        BossAttackProcessor.TYPE_DIRECT
+---    }, 
+---    attack_chance = {   ***[attack_index][tier]***  
+---        {25, 25, 25, 25, 25, 25, 25},
+---        {25, 25, 25, 25, 25, 25, 25},
+---        {100,100,100,100,100,100,100},
+---    },
+---    attack_count = {1, 1, 1},
+---    attack_spread = {1, 1, 2},
+---    attack_speed = {BossAttacksData.default_speed, BossAttacksData.default_speed, BossAttacksData.default_speed},
+---    attack_range = {BossAttacksData.default_range, BossAttacksData.default_range, BossAttacksData.default_range},
+---    attack_use_multiplier = {false, false, true},
+---    attack_count_multiplier = {
+---        {},
+---        {},
+---        {1, 1, 1, 2, 3, 3, 3}
+---    },
+---    attack_spread_multiplier = {
+---        {},
+---        {},
+---        {1, 1, 1, 1, 1, 1, 1}
+---    },
+---}
 BossAttacksData.basic_attacks = {}
 BossAttacksData.advanced_attacks = {}
 
@@ -41,8 +45,8 @@ BossAttacksData.super_attacks = {}
 --- Idle attack happens when you are being peaceful to the boss.
 --- General idea is that it hit radar every 5 mins if idle.  Otherwise, spawn attack groups or/and hit near by structures every minute.
 BossAttacksData.idle_attacks = {}
--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
--- Use CustomAttackHelper.drop_batch_units() instead
+--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
+--- Use CustomAttackHelper.drop_batch_units() instead
 BossAttacksData.despawn_attacks = {}
 BossAttacksData.phases = {}
 

@@ -20,6 +20,8 @@ BossAttackProcessor.TYPE_PROJECTILE = 1
 BossAttackProcessor.TYPE_FALLING_PROJECTILE = 2
 BossAttackProcessor.TYPE_BEAM = 3
 BossAttackProcessor.TYPE_DIRECT = 4
+BossAttackProcessor.TYPE_STRUCT_SPAWN = 5
+BossAttackProcessor.TYPE_UNIT_SPAWN = 6
 
 local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
 local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
@@ -118,22 +120,21 @@ end
 local select_attack = function(mod_name, attacks, tier)
     local data
     local boss = storage.boss
-    for i, value in pairs(attacks["projectile_name"]) do
-        if can_spawn(attacks["projectile_chance"][i]) then
+    for i, value in pairs(attacks["attack_name"]) do
+        if can_spawn(attacks["attack_chance"][i][tier]) then
             data = {
-                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["projectile_type"][i]],
-                count = attacks["projectile_count"][i],
-                spread = attacks["projectile_spread"][i],
-                type = attacks["projectile_type"][i],
+                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["attack_type"][i]],
+                count = attacks["attack_count"][i],
+                spread = attacks["attack_spread"][i],
+                type = attacks["attack_type"][i],
             }
 
-            if attacks["projectile_use_multiplier"][i] then
-                data["count"] = math.floor(data["count"] * attacks["projectile_count_multiplier"][i][tier])
-                data["spread"] = math.floor(data["spread"] * attacks["projectile_spread_multiplier"][i][tier])
+            if attacks["attack_use_multiplier"][i] then
+                data["count"] = math.floor(data["count"] * attacks["attack_count_multiplier"][i][tier])
+                data["spread"] = math.floor(data["spread"] * attacks["attack_spread_multiplier"][i][tier])
             end
 
-            data = set_optional_data(data, attacks, i, "projectile_speed")
-            data = set_optional_data(data, attacks, i, "projectile_range")
+            data = set_optional_data(data, attacks, i, "attack_speed")
 
             break
         end
