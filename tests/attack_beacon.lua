@@ -374,7 +374,8 @@ describe("Pick Spawn beacon", function()
         storage["erm_spawn_beacon"][surface.index] = {}
         storage["erm_spawn_beacon"][surface.index][enemy.name] = {}
         for i = 1, 10, 1 do
-            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
+            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}, force='enemy'})
+            local spawner_entity = surface.create_entity({name = "biter-spawner", position={i*5,i*5}, force='enemy'})
             storage["erm_spawn_beacon"][surface.index][enemy.name][i] = { beacon = entity }
         end
 
@@ -390,6 +391,26 @@ describe("Pick Spawn beacon", function()
 
         local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
         assert.not_nil(node, "It picks another beacon")
+    end)
+
+    it("If spawn beacon doesn't have near by spawner, it should kill itself", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local enemy = game.forces["enemy"]
+
+        local control_key = 1
+        storage["cdata"][surface.index][enemy.name]["ssk"] = control_key
+
+        storage["erm_spawn_beacon"][surface.index] = {}
+        storage["erm_spawn_beacon"][surface.index][enemy.name] = {}
+
+        local entity = surface.create_entity({name = "erm_spawn_beacon", position={20,20}, force='enemy'})
+        storage["erm_spawn_beacon"][surface.index][enemy.name][1] = { beacon = entity }
+
+        assert.not_nil( storage["erm_spawn_beacon"][surface.index][enemy.name][1], "1st node is not nil")
+
+        local node = AttackGroupBeaconProcessor.get_spawn_beacon(surface, enemy)
+        assert.is_nil(node, "Node need to be nil")
     end)
 end)
 
