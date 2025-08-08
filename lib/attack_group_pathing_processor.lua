@@ -191,7 +191,7 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
     local request_path_data = storage.request_path[path_id]
 
-    if request_path_data == nil then
+    if request_path_data == nil or not path_node or not path_node.valid then
         return
     end
 
