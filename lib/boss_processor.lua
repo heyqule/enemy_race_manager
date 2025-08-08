@@ -35,9 +35,19 @@ local cleanChunkSize = 8
 
 local INCLUDE_SPAWNS = true -- Only for debug
 
+--- The ratio of HP deduct from Boss when an assisted spawner dies 
+local ASSISTED_SPAWNER_DEATH_RATIO = 0.33
+
 local enemy_entities = { "unit-spawner", "turret", "unit" }
 local enemy_buildings = { "unit-spawner", "turret" }
 local beacon_name = "erm-boss-beacon"
+
+local qualities = {}
+for name, item in pairs(prototypes.quality) do
+    if string.find(name, 'erm-boss-', nil, true) then
+        table.insert(qualities, item.name)
+    end
+end
 
 local boss_setting_default = function()
     return {
@@ -60,7 +70,9 @@ local boss_setting_default = function()
         victory = false,
         high_level_enemy_list = nil, -- Track all high level enemies, they die when the base destroys.
         loading = false,
-        spawn_beacons = {}
+        spawn_beacons = {},
+        assisted_spawners = {},
+        total_assisted_spawners = 0
     }
 end
 
@@ -147,29 +159,31 @@ local can_build_spawn_building = function()
 end
 
 local spawn_building = function()
-    if true or not can_build_spawn_building() then
-        return
-    end
+    return nil
+    
+    --if true or not can_build_spawn_building() then
+    --    return
+    --end
 
-    local boss = storage.boss
-    local boss_tier = boss.boss_tier
-    for i = 1, GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
-        local building_name
-        if RaceSettingsHelper.can_spawn(7) then
-            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "cc")
-        elseif RaceSettingsHelper.can_spawn(45) then
-            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "support")
-        else
-            building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "turret")
-        end
-
-        BaseBuildProcessor.build(
-                boss.surface,
-                building_name,
-                boss.force_name,
-                boss.entity_position
-        )
-    end
+    --local boss = storage.boss
+    --local boss_tier = boss.boss_tier
+    --for i = 1, GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
+    --    local building_name
+    --    if RaceSettingsHelper.can_spawn(7) then
+    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "cc")
+    --    elseif RaceSettingsHelper.can_spawn(45) then
+    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "support")
+    --    else
+    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "turret")
+    --    end
+    --
+    --    BaseBuildProcessor.build(
+    --            boss.surface,
+    --            building_name,
+    --            boss.force_name,
+    --            boss.entity_position
+    --    )
+    --end
 end
 
 local destroy_beacons = function()
@@ -302,7 +316,7 @@ function BossProcessor.exec(radar, spawn_position)
         local surface = radar.surface
         local name_tokens = ForceHelper.get_name_token(radar.name)
         local force_name = name_tokens[1]
-        
+
         if force_name == nil then
             DebugHelper.print("Force name not found")
             return nil
@@ -320,7 +334,13 @@ function BossProcessor.exec(radar, spawn_position)
         storage.boss.surface = surface
         storage.boss.surface_name = surface.name
         storage.boss.spawned_tick = game.tick
-        storage.boss.boss_tier = RaceSettingsHelper.boss_tier(storage.boss.force_name)
+        local boss_tier = RaceSettingsHelper.boss_tier(storage.boss.force_name)
+        storage.boss.boss_tier = boss_tier
+        local boss_quality = nil
+        if boss_tier > 1 then
+            boss_quality = qualities[boss_tier - 1]
+            storage.boss.quality = boss_quality
+        end
 
         if storage.boss_spawnable_index.size == 0 and spawn_position == nil then
             surface.print("Unable to find a boss spawner.  Please try again.")
@@ -356,7 +376,8 @@ function BossProcessor.exec(radar, spawn_position)
             name = boss_name,
             position = boss_spawn_location,
             force = force,
-            spawn_decorations = true
+            spawn_decorations = true,
+            quality = boss_quality
         }
         
         print(serpent.block(spawn_position))
@@ -597,6 +618,9 @@ function BossProcessor.units_spawn()
     end
 end
 
+function BossProcessor.get_boss_quality()
+    return storage.boss.quality
+end
 
 function BossProcessor.unset()
     if RaceSettingsHelper.is_in_boss_mode() then
@@ -627,6 +651,30 @@ function BossProcessor.remove_boss_groups(spawn_data)
             end
         end
     end
+end
+
+function BossProcessor.assisted_spawner_spawns(event)
+    local spawner_entity = event.source_entity
+    if spawner_entity then
+        storage.boss.assisted_spawners[spawner_entity.unit_number] = {
+            entity = spawner_entity,
+            last_health = spawner_entity.get_health_ratio()
+        }
+        storage.boss.total_assisted_spawners = storage.boss.total_assisted_spawners + 1 
+    end 
+end
+
+--- Deduct boss health when assist spawner dies.
+function BossProcessor.assisted_spawner_dies(event)
+    local spawner_entity = event.source_entity
+    local boss_entity = storage.boss.entity
+    if not boss_entity or not spawner_entity  then
+        return
+    end
+    
+    boss_entity.health = boss_entity.health - (spawner_entity.max_health * ASSISTED_SPAWNER_DEATH_RATIO)
+    storage.boss.assisted_spawners[spawner_entity.unit_number] = nil
+    storage.boss.total_assisted_spawners = math.max(storage.boss.total_assisted_spawners - 1, 0)
 end
 
 return BossProcessor

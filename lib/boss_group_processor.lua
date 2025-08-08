@@ -20,7 +20,7 @@ local BossGroupProcessor = {}
 -- spawn_cycles x enemyracemanager-boss-spawn-size = max boss group size, default 120 (10 * 24 / 2)
 local default_spawn_cycles = 24
 local chunkSize = 32
-local unit_tier = GlobalConfig.BOSS_UNIT_TIER
+local unit_tier = GlobalConfig.BOSS_MAX_TIERS
 
 local FEATURE_GROUP_TYPE_MIXED = 1
 local FEATURE_GROUP_TYPE_FLYING = 2

@@ -586,12 +586,55 @@ local build = function(event, force_name, building_name, position)
 
     if position then
         remote.call('enemyracemanager','skip_roll_quality')
-        local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
+        local entity = surface.create_entity({ 
+            name = final_unit_name, 
+            position = position, 
+            force = source_entity_force_name,
+            preserve_ghosts_and_corpses = true
+        })
     end
 end
 
-function CustomAttackHelper.build(event, force_name, unit_name)
-    build(event, force_name, unit_name)
+function CustomAttackHelper.build(event, force_name, unit_name, position)
+    build(event, force_name, unit_name, position)
+end
+
+local boss_build = function(event, force_name, building_name, position)
+    position = position or event.source_position or event.source_entity.position
+    local source_entity = event.source_entity
+    local source_entity_force_name = event.source_entity.force.name or force_name
+    local race_settings = get_race_settings(force_name)
+    local surface = game.surfaces[event.surface_index]
+    local name_tokens = get_name_token(source_entity.name)
+    local level = tonumber(name_tokens[3])
+
+    if level > GlobalConfig.BOSS_MAX_TIERS then
+        level = GlobalConfig.BOSS_MAX_TIERS
+    end
+
+    position.x = position.x + 2
+
+    local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
+
+    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+        position = surface.find_non_colliding_position(final_unit_name, position, 32, 2, true)
+    end
+
+    if position then
+        remote.call('enemyracemanager','skip_roll_quality')
+        local entity = surface.create_entity({
+            name = final_unit_name,
+            position = position,
+            force = source_entity_force_name,
+            preserve_ghosts_and_corpses = true,
+            quality = source_entity.quality
+        })
+    end
+end
+
+
+function CustomAttackHelper.boss_build(event, force_name, unit_name, position)
+    boss_build(event, force_name, unit_name, position)
 end
 
 return CustomAttackHelper

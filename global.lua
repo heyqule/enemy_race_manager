@@ -56,7 +56,10 @@ ENVIRONMENTAL_ATTACK = "emev-atk"
 CREEP_REMOVAL = "em-crprm"
 
 REGISTER_BOSS_RADAR = "embss-rdr"
+TRIGGER_BOSS_SPAWNED = "embss-spn"
 TRIGGER_BOSS_DIES = "embss-die"
+TRIGGER_BOSS_ASSIST_SPAWNED = "embas_spn"
+TRIGGER_BOSS_ASSIST_DIES = "embas-die"
 
 --- Roll dice when unit/spawner/turrets spawns
 QUALITY_DICE_ROLL = "em-dcrll"

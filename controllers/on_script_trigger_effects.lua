@@ -13,6 +13,7 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local BossPsiRadar = require("__enemyracemanager__/lib/boss_psi_radar")
+local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 
 local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
@@ -111,6 +112,12 @@ local script_functions = {
     --- Boss related
     [TRIGGER_BOSS_DIES] = function(args)
         storage.boss.victory = true
+    end,
+    [TRIGGER_BOSS_ASSIST_SPAWNED] = function(args)
+        BossProcessor.assisted_spawner_spawns(args)
+    end,
+    [TRIGGER_BOSS_ASSIST_DIES] = function(args)
+        BossProcessor.assisted_spawner_dies(args)
     end,
 
     --- Attack group beacons

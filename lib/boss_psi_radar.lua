@@ -36,7 +36,6 @@ function BossPsiRadar.register(radar)
             return
         end
         -- boss radar print
-        print('Valid radar...')
         boss_data.radar = radar
         boss_data.radar_position = radar.position
         iteration = 1
@@ -47,8 +46,6 @@ function BossPsiRadar.register(radar)
 end
 
 function BossPsiRadar.scan()
-    -- boss radar print
-    print('PSI Radar scanning')
     local radar = storage.boss.radar
     local radar_position = storage.boss.radar.position
     if not radar and not radar.valid then

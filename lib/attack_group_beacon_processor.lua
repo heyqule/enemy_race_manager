@@ -123,7 +123,7 @@ local function get_cache_block()
         cached_spawner_matrix = {},
         --- last resort spawner matrix, if this fails, attack beacon removes itself.
         last_resort_spawner = nil,
-        --- Tier only changes when all directions can"t match a spawner.
+        --- Tier only changes when all directions can't match a spawner.
         tier = 1,
         direction = 0,
         initial_direction = 0,
