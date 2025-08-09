@@ -191,8 +191,12 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
     local request_path_data = storage.request_path[path_id]
 
-    if request_path_data == nil or not path_node or not path_node.valid then
+    if request_path_data == nil then
         return
+    end
+
+    if not path_node or not path_node.valid then
+        path_node = request_path_data.goal
     end
 
     local direction = Position.complex_direction_to(path_node.position, enemy_position)
