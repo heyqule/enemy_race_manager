@@ -125,7 +125,6 @@ it("Army Deployment", function()
 
     local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
     assert.not_nil(deployer,"Deploy Registered")
-    game.speed = 1
     if deployer and deployer.entity.valid then
         ArmyDeployment.add_to_active(deployer.entity)
         assert.not_nil(deployer.entity,"Deploy Entity Valid")
@@ -149,7 +148,6 @@ it("Army Deployment", function()
         assert( table_size(marines) == marine_size, "Marine can not spawned while power is out")
         done()
     end)
-    game.speed = 1000
 end)
 
 it("Army Deployment with rally point", function()

@@ -86,6 +86,7 @@ for tier = 1, 5, 1 do
                 assert(nyduspit[1].quality.name == BossProcessor.get_boss_quality(), "Boss nyduspit quality match")
                 assert(units[1].quality.name == BossProcessor.get_boss_quality(), "Boss unit quality match")
             end
+            storage.race_settings[enemy_name].boss_tier = 1
             done()
         end)
     end) 
@@ -98,7 +99,7 @@ it("Test Boss Spawn Data", function()
     surface.request_to_generate_chunks({ 0, 0 }, 8)
     surface.force_generate_chunk_requests()
     game.players[1].teleport({10,0},'char')
-    place_zerg_radar(surface, {x=10,y=10})
+    local radar = place_zerg_radar(surface, {x=10,y=10})
     BossProcessor.exec(radar, {x=100,y=100})
     after_ticks(900, function()
         assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")

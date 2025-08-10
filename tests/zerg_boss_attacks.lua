@@ -127,7 +127,7 @@ it("If max assist spawner has not reached, Boss should respawn a new boss assist
     end)
 end)
 
-it.only("If existing spawner is under 50% cap, boss spawn 2 assist spawners after a minute of last assist spawner kill.", function()
+it("If existing spawner is under 50% cap, boss spawn 2 assist spawners after a minute of last assist spawner kill.", function()
     async(4500)
     local surface = game.planets.char.create_surface()
     surface.request_to_generate_chunks({ 0, 0 }, 8)
