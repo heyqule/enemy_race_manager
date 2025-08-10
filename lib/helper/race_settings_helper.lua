@@ -362,6 +362,10 @@ function RaceSettingsHelper.boss_tier(target_race)
     return storage.race_settings[target_race]["boss_tier"] or 1
 end
 
+function RaceSettingsHelper.get_boss_settings(target_race)
+    return  storage.race_settings[target_race]["boss_settings"]
+end
+
 function RaceSettingsHelper.can_perform_interplanetary_raid(target_race)
     return storage.race_settings[target_race]["interplanetary_attack_active"] or false
 end

@@ -16,6 +16,7 @@ local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_proces
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
 local BossDespawnProcessor = require("__enemyracemanager__/lib/boss_despawn_processor")
+local CustomAttacks = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
@@ -37,6 +38,8 @@ local INCLUDE_SPAWNS = true -- Only for debug
 
 --- The ratio of HP deduct from Boss when an assisted spawner dies 
 local ASSISTED_SPAWNER_DEATH_RATIO = 0.33
+--- Wait between assist spawner spawn
+local ASSISTED_SPAWNER_INTERVAL = 3600
 
 local enemy_entities = { "unit-spawner", "turret", "unit" }
 local enemy_buildings = { "unit-spawner", "turret" }
@@ -72,7 +75,8 @@ local boss_setting_default = function()
         loading = false,
         spawn_beacons = {},
         assisted_spawners = {},
-        total_assisted_spawners = 0
+        total_assisted_spawners = 0,
+        assisted_spawner_check_time = game.tick
     }
 end
 
@@ -330,11 +334,11 @@ function BossProcessor.exec(radar, spawn_position)
         local force = game.forces[force_name]
         DebugHelper.print("BossProcessor: Data setup...")
         storage.boss.force = force
-        storage.boss.force_name = force.name
+        storage.boss.force_name = force_name
         storage.boss.surface = surface
         storage.boss.surface_name = surface.name
         storage.boss.spawned_tick = game.tick
-        local boss_tier = RaceSettingsHelper.boss_tier(storage.boss.force_name)
+        local boss_tier = RaceSettingsHelper.boss_tier(force_name)
         storage.boss.boss_tier = boss_tier
         local boss_quality = nil
         if boss_tier > 1 then
@@ -419,6 +423,14 @@ function BossProcessor.exec(radar, spawn_position)
         storage.boss.entity_name = boss_entity.name
         storage.boss.entity_position = boss_entity.position
 
+        local boss_settings = RaceSettingsHelper.get_boss_settings(force_name)
+        storage.boss.max_buildable_unit_spawner = boss_settings.max_buildable_unit_spawner[boss_tier]
+        storage.boss.max_attack_per_heartbeat = boss_settings.max_attack_per_heartbeat[boss_tier]
+        storage.boss.base_unit_spawn_count = boss_settings.base_unit_spawn_count[boss_tier]
+        storage.boss.defense_attacks = boss_settings.defense_attacks
+        storage.boss.defeated_unit_count = boss_settings.defeated_unit_count
+        storage.boss.phase_change = boss_settings.phase_change
+        
         game.print({
             "description.boss-base-spawn-at",
             SurfaceProcessor.get_gps_message(
@@ -541,6 +553,37 @@ local display_victory_dialog = function(boss)
     end
 end
 
+local spawn_assist_spawner = function(boss_data)
+    if game.tick >= boss_data.assisted_spawner_check_time + ASSISTED_SPAWNER_INTERVAL and boss_data.total_assisted_spawners < boss_data.max_buildable_unit_spawner then
+        local race_settings = storage.race_settings[boss_data.force_name]
+        local offsets = {
+            {x = 16, y = 16},
+            {x = 16, y = -16},
+            {x = -16, y = 16},
+            {x = -16, y = -16}
+        }
+        local offset_size = 4
+
+        local assisted_spawner_name = race_settings.boss_assisted_spawner
+        local event_obj = {
+            surface_index = boss_data.surface.index,
+            source_entity = boss_data.entity
+        }
+        if boss_data.total_assisted_spawners / boss_data.max_buildable_unit_spawner <= 0.5 then
+            -- spawn an assist
+            local offset = offsets[math.random(1, offset_size)]
+            CustomAttacks.boss_build(event_obj, boss_data.force_name, assisted_spawner_name,
+                    {x = boss_data.entity_position.x + offset.x, y = boss_data.entity_position.y + offset.y})
+        end
+        
+        local offset = offsets[math.random(1, offset_size)]
+        CustomAttacks.boss_build(event_obj, boss_data.force_name, assisted_spawner_name,
+                {x = boss_data.entity_position.x + offset.x, y = boss_data.entity_position.y + offset.y})
+
+        boss_data.assisted_spawner_check_time = game.tick
+    end
+end
+
 function BossProcessor.heartbeat()
     local boss = storage.boss
     local current_tick = game.tick
@@ -575,30 +618,33 @@ function BossProcessor.heartbeat()
         return
     end
 
-    local boss_direct_attack = false
-    local performed_attacks = 0
-    for index, last_hp in pairs(boss.attack_last_hp) do
-        local direct_attack = false
-        local spawn_attack = false
-        if last_hp - boss.entity.health > GlobalConfig.BOSS_DEFENSE_ATTACKS[index] then
-            storage.boss.attack_last_hp[index] = boss.entity.health
-            DebugHelper.print("BossProcessor: Attack Index " .. index .. " @ " .. boss.entity.health)
-            direct_attack, spawn_attack = attack_functions[index]()
-            performed_attacks = performed_attacks + 1
-
-            if direct_attack then
-                boss_direct_attack = true
-            end
-
-            if max_attacks == performed_attacks then
-                break
-            end
-        end
-    end
-
-    if boss_direct_attack then
-        BossAttackProcessor.unset_attackable_entities_cache()
-    end
+    spawn_assist_spawner(boss)
+    --
+    --local boss_direct_attack = false
+    --local performed_attacks = 0
+    --for index, last_hp in pairs(boss.attack_last_hp) do
+    --    local direct_attack = false
+    --    local spawn_attack = false
+    --    if last_hp - boss.entity.health > GlobalConfig.BOSS_DEFENSE_ATTACKS[index] then
+    --        storage.boss.attack_last_hp[index] = boss.entity.health
+    --        DebugHelper.print("BossProcessor: Attack Index " .. index .. " @ " .. boss.entity.health)
+    --        direct_attack, spawn_attack = attack_functions[index]()
+    --        performed_attacks = performed_attacks + 1
+    --
+    --        if direct_attack then
+    --            boss_direct_attack = true
+    --        end
+    --
+    --        if max_attacks == performed_attacks then
+    --            break
+    --        end
+    --    end
+    --end
+    --
+    --if boss_direct_attack then
+    --    BossAttackProcessor.unset_attackable_entities_cache()
+    --end
+    --
     
     Cron.add_2_sec_queue("BossProcessor.heartbeat")
 end
@@ -675,6 +721,7 @@ function BossProcessor.assisted_spawner_dies(event)
     boss_entity.health = boss_entity.health - (spawner_entity.max_health * ASSISTED_SPAWNER_DEATH_RATIO)
     storage.boss.assisted_spawners[spawner_entity.unit_number] = nil
     storage.boss.total_assisted_spawners = math.max(storage.boss.total_assisted_spawners - 1, 0)
+    storage.boss.assisted_spawner_check_time = game.tick
 end
 
 return BossProcessor

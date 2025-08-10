@@ -48,7 +48,7 @@ after_each(function()
 end)
 
 
-it.only("PSI radar spawns radar (southeast)", function()
+it("PSI radar spawns radar (southeast)", function()
     async(72000)
     local surface = game.planets.char.create_surface()
     
@@ -64,7 +64,7 @@ it.only("PSI radar spawns radar (southeast)", function()
     end)
 end)
 
-it.only("PSI radar spawns radar (northeast)", function()
+it("PSI radar spawns radar (northeast)", function()
     async(72000)
     local surface = game.planets.char.create_surface()
 
@@ -80,7 +80,7 @@ it.only("PSI radar spawns radar (northeast)", function()
     end)
 end)
 
-it.only("PSI radar spawns radar (southwest)", function()
+it("PSI radar spawns radar (southwest)", function()
     async(72000)
     local surface = game.planets.char.create_surface()
 
@@ -96,7 +96,7 @@ it.only("PSI radar spawns radar (southwest)", function()
     end)
 end)
 
-it.only("PSI radar spawns radar (northwest)", function()
+it("PSI radar spawns radar (northwest)", function()
     async(72000)
     local surface = game.planets.char.create_surface()
 
