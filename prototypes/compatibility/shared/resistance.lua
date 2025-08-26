@@ -27,6 +27,24 @@ local spawner_damage_types = {
     { "kr-radioactive", 5, 35 },
 }
 
+local erm_inclusive_resistances = {
+    physical = true,
+    impact = true,
+    poison = true,
+    explosion = true,
+    fire = true,
+    laser = true,
+    acid = true,
+    electric = true,
+    cold = true,
+    healing = true,
+    radioactive = true,
+    ["kr-explosive"] = true,
+    ["kr-radioactive"] = true,
+    ["bob-pierce"] = true,
+    ["bob-plasma"] = true,
+}
+
 
 -- max resist 75
 local controlable_subgroups = {
@@ -44,9 +62,18 @@ local enemies_subgroups = {
 local set_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
         local name = ForceHelper.split_name(unit.name)
-        for _, damage_type in pairs(damage_types) do
+        for index, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
                 table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            end
+        end
+     
+        for index, unit_resistance in pairs(data.raw['damage-type']) do
+            if not erm_inclusive_resistances[unit_resistance.name] then
+                table.insert(unit.resistances, { 
+                    type = unit_resistance.name, 
+                    percent = UnitHelper.get_resistance(10, 65, tonumber(name[3])) 
+                })
             end
         end
     end
@@ -57,11 +84,27 @@ local set_spawner_resistance = function(unit)
         local name = ForceHelper.split_name(unit.name)
         for _, damage_type in pairs(spawner_damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances then
-                if string.find(name[2],'boss-',nil, true) then
+                if string.find(name[2],'boss_',nil, true) then
                     table.insert(unit.resistances, { type = damage_type[1], percent = 75})
                 elseif name[3] then
                     table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
                 end 
+            end
+        end
+        
+        for index, unit_resistance in pairs(data.raw['damage-type']) do
+            if not erm_inclusive_resistances[unit_resistance.name] then
+                if string.find(name[2],'boss_',nil, true) then
+                    table.insert(unit.resistances, {
+                        type = unit_resistance.name,
+                        percent = 75
+                    })
+                elseif name[3] then
+                    table.insert(unit.resistances, {
+                        type = unit_resistance.name,
+                        percent = UnitHelper.get_resistance(10, 40, tonumber(name[3]))
+                    })
+                end
             end
         end
     end
@@ -90,4 +133,3 @@ for _, unit in pairs(data.raw.unit) do
         end
     end
 end
-

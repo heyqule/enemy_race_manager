@@ -3,9 +3,10 @@
 --- Created by heyqule.
 --- DateTime: 7/16/2022 2:58 PM
 ---
-
-
-
+local Table = require("__erm_libs__/stdlib/Table")
+local Position = require("__erm_libs__/stdlib/position")
+local Direction = require("__erm_libs__/stdlib/direction")
+local Territory = require("__erm_libs__/stdlib/territory")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -22,28 +23,16 @@ BossAttackProcessor.TYPE_BEAM = 3
 BossAttackProcessor.TYPE_DIRECT = 4
 BossAttackProcessor.TYPE_STRUCT_SPAWN = 5
 BossAttackProcessor.TYPE_UNIT_SPAWN = 6
+BossAttackProcessor.TYPE_SEGMENTED_UNIT_SPAWN = 7
 
-local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
-local scanRadius = GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS
-local scanMinLength = 128
-local type_name = { "projectile", "beam", "direct" }
+local scanRange = 3200
+local scanExtraPadding = 160
+local scanBeaconLimit = 100
+local bossRadius = 96
+local chunksize = 32
+local type_name = { "projectile", 'falling_projectile', "beam", "direct" }
 
-local get_scan_area = {
-    [defines.direction.north] = function(x, y)
-        return { left_top = { x - scanRadius, y - scanLength }, right_bottom = { x + scanRadius, y - scanMinLength } }
-    end,
-    [defines.direction.east] = function(x, y)
-        return { left_top = { x + scanMinLength, y - scanRadius }, right_bottom = { x + scanLength, y + scanRadius } }
-    end,
-    [defines.direction.south] = function(x, y)
-        return { left_top = { x - scanRadius, y + scanMinLength }, right_bottom = { x + scanRadius, y + scanLength } }
-    end,
-    [defines.direction.west] = function(x, y)
-        return { left_top = { x - scanLength, y - scanRadius }, right_bottom = { x - scanMinLength, y + scanRadius } }
-    end,
-}
-
-local pick_near_by_player_entity_position = function(artillery_mode)
+local acquire_attack_target = function(artillery_mode)
     artillery_mode = artillery_mode or false
 
     local return_position
@@ -51,13 +40,16 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     local surface = boss.surface
     local attackable_entities_cache = boss.attackable_entities_cache
     local attackable_entities_cache_size = boss.attackable_entities_cache_size
+    
+    ---- 10+% targets hit radar
+    ---- 10+% targets other attackable targets
 
     if attackable_entities_cache == nil and not artillery_mode then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ForceHelper.get_player_forces(),
-            radius = 64,
+            radius = bossRadius,
             position = boss.entity_position,
-            limit = 50,
+            limit = scanBeaconLimit,
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
@@ -68,14 +60,13 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ForceHelper.get_player_forces(),
-            area = get_scan_area[boss.target_direction](storage.boss.entity_position.x, storage.boss.entity_position.y),
-            limit = GlobalConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT,
+            area = boss.scan_area,
+            limit = scanBeaconLimit,
             is_military_target = true
         }
         attackable_entities_cache_size = #attackable_entities_cache
         storage.boss.attackable_entities_cache = attackable_entities_cache
         storage.boss.attackable_entities_cache_size = attackable_entities_cache_size
-        artillery_mode = true
     end
 
     if storage.boss.attackable_entities_cache_size > 0 then
@@ -90,8 +81,11 @@ local pick_near_by_player_entity_position = function(artillery_mode)
     end
 
     if return_position == nil then
-        return_position = boss.silo_position or {0, 0}
-        artillery_mode = true
+        return_position = boss.radar_position or {0, 0}
+    end
+
+    if Position.distance(boss.entity_position, return_position) > bossRadius then
+        artillery_mode = true 
     end
 
     return return_position, artillery_mode
@@ -99,10 +93,10 @@ local pick_near_by_player_entity_position = function(artillery_mode)
 end
 
 local queue_attack = function(data)
-    for i = 1, data["spread"] do
-        local position, artillery_mode = pick_near_by_player_entity_position()
-        data["artillery_mode"] = artillery_mode
-        data["position"] = position
+    for i = 1, data.spread do
+        local position, artillery_mode = acquire_attack_target(data.artillery_mode)
+        data.artillery_mode = artillery_mode
+        data.position = position
         Cron.add_boss_queue("BossAttackProcessor.process_attack", table.deepcopy(data))
     end
 end
@@ -120,38 +114,56 @@ end
 local select_attack = function(mod_name, attacks, tier)
     local data
     local boss = storage.boss
-    for i, value in pairs(attacks["attack_name"]) do
-        if can_spawn(attacks["attack_chance"][i][tier]) then
+    for i, value in pairs(attacks.attack_name) do
+        if can_spawn(attacks.attack_chance[i][tier]) then
+            local entity_name
+            if type_name[attacks.attack_type[i]] then
+                entity_name = mod_name .. "--" .. value .. "--" .. type_name[attacks.attack_type[i]]
+            else
+                --- other attack types may require additional name processing when under process_attack().
+                entity_name = mod_name .. "--" .. value
+            end
             data = {
-                entity_name = mod_name .. "--" .. value .. "-" .. type_name[attacks["attack_type"][i]],
-                count = attacks["attack_count"][i],
-                spread = attacks["attack_spread"][i],
-                type = attacks["attack_type"][i],
+                entity_name = entity_name,
+                count = attacks.attack_count[i],
+                spread = attacks.attack_spread[i],
+                type = attacks.attack_type[i],
             }
 
-            if attacks["attack_use_multiplier"][i] then
-                data["count"] = math.floor(data["count"] * attacks["attack_count_multiplier"][i][tier])
-                data["spread"] = math.floor(data["spread"] * attacks["attack_spread_multiplier"][i][tier])
+            if attacks.attack_use_multiplier[i] then
+                data.count = math.floor(data.count * attacks.attack_count_multiplier[i][tier])
+                data.spread = math.floor(data.spread * attacks.attack_spread_multiplier[i][tier])
             end
-
+            
+            data = set_optional_data(data, attacks, i, "unique_position")
+            data = set_optional_data(data, attacks, i, "attack_beam_duration")
             data = set_optional_data(data, attacks, i, "attack_speed")
 
             break
         end
     end
-    data["entity_position"] = boss.entity_position
-    data["surface"] = boss.surface
-    data["entity_force"] = boss.force
+    data.entity_position = boss.entity_position
+    data.surface = boss.surface
+    data.entity_force = boss.force
+    if boss.boss_tier > 1 then
+        data.quality = 'erm-boss-'..GlobalConfig.BOSS_QUALITY_MAPPING[boss.boss_tier]
+    end
+    
     return data
 end
 
 local fetch_attack_data = function(force_name)
-    if not storage.boss.attack_cache then
-        storage.boss.attack_cache = remote.call(storage.remote_race_name_cache[force_name] .. "_boss_attacks", "get_attack_data")
+    local boss_data = storage.boss
+    if not boss_data.attack_cache or boss_data.attack_cache_force_refresh then
+        boss_data.attack_cache_force_refresh = false
+        boss_data.attack_cache = remote.call(storage.remote_race_name_cache[force_name] .. "_boss_attacks", "get_attack_data")
     end
 end
 
 local prepare_attack = function(type)
+    if not storage.boss or not storage.boss.entity then
+        return
+    end
     local force_name = storage.boss.force_name
     local tier = storage.boss.boss_tier
     fetch_attack_data(force_name)
@@ -163,113 +175,359 @@ local get_despawn_attack = function()
     local force_name = storage.boss.force_name
     local tier = storage.boss.boss_tier
     fetch_attack_data(force_name)
-    local data = select_attack(force_name, storage.boss.attack_cache["despawn_attacks"], tier)
+    local data = select_attack(force_name, storage.boss.attack_cache.despawn_attacks, tier)
     return data
 end
 
-local process_attack = function(data, unique_position)
-    unique_position = unique_position or false
-    data["artillery_mode"] = data["artillery_mode"] or false
 
-    local surface = data["surface"]
-    local entity_force = data["entity_force"]
-    if not (surface and surface.valid and entity_force and entity_force.valid) or data["position"] == nil then
+local attack_projectile = function(data, boss_data)
+    local start_position = data.entity_position
+    local surface = data.surface
+    local entity_name = data.entity_name
+    local position = data.position
+    start_position = Position.get_offset_position(start_position, position, 8)
+    start_position = surface.find_non_colliding_position(entity_name, start_position, 12, 1, true)
+    surface.create_entity({
+        name = entity_name,
+        position = start_position,
+        target = position,
+        speed = data.speed or 0.3,
+        max_range = data.range or 96,
+        create_build_effect_smoke = false,
+        raise_built = false,
+        force = data.entity_force,
+        quality = data.quality
+    })
+end
+
+local attack_falling_projectile = function(data, boss_data)
+    local surface = data.surface
+    local entity_name = data.entity_name
+    local position = data.position
+    local start_drop_position = {
+        x = position.x + chunksize * Direction.multipliers[Direction.opposite(boss_data.target_direction)][1],
+        y = position.y - chunksize
+    }
+    start_drop_position = surface.find_non_colliding_position(entity_name, start_drop_position, 12, 1, true)
+    surface.create_entity({
+        name = entity_name,
+        position = start_drop_position,
+        target = position,
+        speed = 0.3,
+        max_range = 32,
+        create_build_effect_smoke = false,
+        raise_built = false,
+        force = data.entity_force,
+        quality = data.quality
+    })
+end
+
+local attack_direct = function(data, boss_data)
+    data.surface.create_entity({
+        name = data.entity_name,
+        position = data.position,
+        create_build_effect_smoke = false,
+        raise_built = false,
+        force = data.entity_force,
+        quality = data.quality
+    })
+end
+
+local attack_beam = function(data, boss_data)
+    local start_position = data.entity_position
+    local surface = data.surface
+    surface.create_entity({
+        name = data.entity_name,
+        position = start_position,
+        source_position = start_position,
+        target_position = data.position,
+        duration = data.attack_beam_duration or 180,
+        max_length = 1600,
+        create_build_effect_smoke = false,
+        raise_built = false,
+        force = data.entity_force,
+        quality = data.quality
+    })
+end
+
+
+local attack_struct_spawn = function(data, boss_data)
+    local surface = data.surface
+    local new_entity_name = data.entity_name .. '--' .. boss_data.boss_tier
+    local position = surface.find_non_colliding_position(new_entity_name, data.entity_position, 32, 6, true)
+    storage.skip_quality_rolling = true
+    surface.create_entity({
+        name = new_entity_name,
+        position = position,
+        create_build_effect_smoke = false,
+        raise_built = false,
+        force = data.entity_force,
+        quality = data.quality
+    })
+end
+
+--- Spawn divine tier only.
+local attack_unit_spawn = function(data, boss_data)
+    local surface = data.surface
+    local entity_name = data.entity_name
+    local position = data.position
+    local start_position = data.entity_position
+    local entity_force = data.entity_force
+    local new_entity_name = entity_name .. '--6'
+    local spawn_units = {}
+    position = surface.find_non_colliding_position(new_entity_name, start_position, 32, 6, true)
+    for i = 0, GlobalConfig.batch_spawn_size do
+        storage.skip_quality_rolling = true
+        local units = surface.create_entity({
+            name = new_entity_name,
+            position = position,
+            create_build_effect_smoke = false,
+            raise_built = false,
+            force = entity_force,
+            quality = data.quality
+        })
+        table.insert(spawn_units, units)
+    end
+    
+    if spawn_units and #spawn_units > 0 then
+        local group_position = Position.get_offset_position(start_position, data.position, 8)
+        local unit_group = surface.create_unit_group({position=group_position, force=entity_force})
+        for _, unit in pairs(spawn_units) do
+            unit_group.add_member(unit)
+        end
+        unit_group.set_command(
+            {
+                type = defines.command.attack_area,
+                destination = boss_data.radar_position,
+                radius = chunksize,
+                distraction = defines.distraction.by_anything
+            }
+        )
+    end
+end
+
+local attack_segment_unit_spawn  = function(data, boss_data)
+    -- process the follow if not boss_data.controlled_segment_unit
+    -- first a segmented unit within the boss_data.scan_area
+    -- if segmented unit found, assign to seg_unit and do the following code
+    local surface = data.surface
+    local entity_name = data.entity_name
+    local entity_force = data.entity_force
+    local send_alert = false
+    -- First, try to find an existing segmented unit in the scan area
+    if boss_data.controlled_segment_unit then
+        return
+    end
+
+    local segmented_units = surface.find_entities_filtered{
+        area = boss_data.scan_area,
+        type = "segmented-unit",
+        force = entity_force,
+        limit = 1
+    }
+
+    local _, seg_unit = next(segmented_units)
+    if seg_unit and seg_unit.valid and seg_unit.segmented_unit then
+        seg_unit = seg_unit
+        boss_data.controlled_segment_unit = {
+            entity = seg_unit,
+            unit_number = seg_unit.unit_number
+        }
+        send_alert = true
+        local territory = seg_unit.segmented_unit.territory
+        local new_territory_chunks = Territory.compute_territory_path(seg_unit.position, boss_data.radar_position)
+        if territory then
+            surface.set_territory_for_chunks(
+                    new_territory_chunks,
+                    territory
+            )
+        end
+    else
+        -- if segmented unit not found, iterate the chunks in boss_data.scan_area,
+        -- and find the first chunk with LuaTerritory
+        -- Get its segmented_unit and do the following
+        local territories = surface.get_territories()
+        for _, territory in pairs(territories) do
+            if territory and territory.valid then
+                -- Check if territory is in scan area
+                local chunk_positions = territory.get_chunk_positions()
+                local in_scan_area = false
+                for _, chunk_pos in pairs(chunk_positions) do
+                    local chunk_center = {
+                        x = chunk_pos.x * 32 + 16,
+                        y = chunk_pos.y * 32 + 16
+                    }
+                    if chunk_center.x >= boss_data.scan_area.left_top.x and
+                            chunk_center.x <= boss_data.scan_area.right_bottom.x and
+                            chunk_center.y >= boss_data.scan_area.left_top.y and
+                            chunk_center.y <= boss_data.scan_area.right_bottom.y then
+                        in_scan_area = true
+                        break
+                    end
+                end
+
+                if in_scan_area then
+                    -- Find a segmented unit in this territory
+                    local units = territory.surface.find_entities_filtered{
+                        type = "segmented-unit",
+                        force = entity_force
+                    }
+
+                    for _, unit in pairs(units) do
+                        if unit and unit.valid then
+                            seg_unit = unit
+                            boss_data.controlled_segment_unit = {
+                                entity = seg_unit,
+                                unit_number = seg_unit.unit_number
+                            }
+                            break
+                        end
+                    end
+
+                    if seg_unit then
+                        local territory = seg_unit.territory
+                        local new_territory_chunks = Territory.compute_territory_path(seg_unit.position, boss_data.radar_position)
+                        if territory then
+                            surface.set_territory_for_chunks(
+                                    new_territory_chunks,
+                                    territory
+                            )
+                        end
+                        send_alert = true
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+
+    -- if neither territory or segmented_unit found in boss_data.scan_area, do the following
+    if not seg_unit then
+        --- Spawn at 20% away from boss.
+        local spawn_position = Position.lerp(boss_data.entity_position, boss_data.radar_position, 20)
+        spawn_position = Position.random(spawn_position, -96, 96)
+        storage.skip_quality_rolling = true
+        local unit = surface.create_entity({
+            name = entity_name,
+            position = spawn_position,
+            create_build_effect_smoke = false,
+            raise_built = false,
+            force = entity_force,
+            quality = data['quality']
+        })
+
+        if unit then
+            -- Create a position halfway between boss and radar
+            local mid_position = {
+                x = (boss_data.entity_position.x + boss_data.radar_position.x) / 2,
+                y = (boss_data.entity_position.y + boss_data.radar_position.y) / 2
+            }
+
+            -- Create territory path from spawn position to mid position
+            local new_territory_chunks = Territory.compute_territory_path(spawn_position, mid_position, 3)
+
+            --- Create L Path from mid position
+            local new_L_territory_chunks = Territory.compute_L_shape(spawn_position, 10)
+
+            -- Create territory on surface
+            local territory = surface.create_territory{
+                chunks = Table.array_combine(new_territory_chunks, new_L_territory_chunks)
+            }
+
+            -- Assign unit to territory
+            unit.territory = territory
+            boss_data.controlled_segment_unit = {
+                entity = unit,
+                unit_number = seg_unit.unit_number
+            }
+            send_alert = true
+        end
+    end
+
+    if send_alert then
+        surface.print('Boss Radar: Detected territory anomalies.')
+        boss_data.segmented_unit_check_time = game.tick
+    end
+end
+
+local attack_functions = {
+    [BossAttackProcessor.TYPE_PROJECTILE] = attack_projectile,
+    [BossAttackProcessor.TYPE_FALLING_PROJECTILE] = attack_falling_projectile,
+    [BossAttackProcessor.TYPE_DIRECT] = attack_direct,
+    [BossAttackProcessor.TYPE_BEAM] = attack_beam,
+    [BossAttackProcessor.TYPE_STRUCT_SPAWN] = attack_struct_spawn,
+    [BossAttackProcessor.TYPE_UNIT_SPAWN] = attack_unit_spawn,
+    [BossAttackProcessor.TYPE_SEGMENTED_UNIT_SPAWN] = attack_segment_unit_spawn
+}
+
+
+
+
+local process_attack = function(data)
+    data.unique_position = data.unique_position or false
+    data.artillery_mode = data.artillery_mode or false
+
+    local boss_data = storage.boss
+    local surface = data.surface
+    local entity_force = data.entity_force
+    if not (surface and surface.valid and entity_force and entity_force.valid) or data.position == nil then
         DebugHelper.print("not valid surface / force / position")
         return
     end
-    local start_position = {
-        data["entity_position"]["x"]  + math.random(-8, 8),
-        data["entity_position"]["y"] + math.random(-8, 8)
-    }
-    local entity_name = data["entity_name"]
-
-    if data["artillery_mode"] then
-        data["speed"] = 1
-        data["range"] = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
+    
+    if data.artillery_mode then
+        data.speed = 1
+        data.range = scanRange
     end
+    
+    for i = 1, data.count do
+        if attack_functions[data.type] then
+            -- First shot always accurate, subsequent shot varies
+            if i > 1 then
+                local position = data.position
+                if data.unique_position then
+                    DebugHelper.print("Retargeting as unique position")
+                    position = acquire_attack_target(data.artillery_mode)
+                end
 
-    for i = 1, data["count"] do
-        -- First shot always accurate, subsequent shot varies
-        local position = data["position"]
-        if i > 1 then
-            if unique_position then
-                position = pick_near_by_player_entity_position(data["artillery_mode"])
+                if data.artillery_mode then
+                    position = Position.random(position, -16, 16)
+                else
+                    position = Position.random(position, -8, 8)
+                end
+                data.position = position
             end
-
-            if data["artillery_mode"] then
-                position["x"] = position["x"] + math.random(-16, 16)
-                position["y"] = position["y"] + math.random(-16, 16)
-            else
-                position["x"] = position["x"] + math.random(-8, 8)
-                position["y"] = position["y"] + math.random(-8, 8)
-            end
-        end
-
-        if data["type"] == BossAttackProcessor.TYPE_PROJECTILE then
-            surface.create_entity({
-                name = entity_name,
-                position = start_position,
-                target = position,
-                speed = data["speed"] or 0.3,
-                max_range = data["range"] or 96,
-                create_build_effect_smoke = false,
-                raise_built = false,
-                force = entity_force
-            })
-        elseif data["type"] == BossAttackProcessor.TYPE_FALLING_PROJECTILE then
-                surface.create_entity({
-                    name = entity_name,
-                    position = start_position,
-                    target = position,
-                    speed = data["speed"] or 0.3,
-                    max_range = data["range"] or 96,
-                    create_build_effect_smoke = false,
-                    raise_built = false,
-                    force = entity_force
-                })            
-        elseif data["type"] == BossAttackProcessor.TYPE_DIRECT then
-            --- target_position
-            --- source_position
-            --- duration
-            --- source_offset
-            surface.create_entity({
-                name = entity_name,
-                position = position,
-                create_build_effect_smoke = false,
-                raise_built = false,
-                force = entity_force
-            })
-        elseif data["type"] == BossAttackProcessor.TYPE_BEAM then
-            --- target_position
-            --- source_position
-            --- duration
-            --- source_offset
-            surface.create_entity({
-                name = entity_name,
-                position = position,
-                create_build_effect_smoke = false,
-                raise_built = false,
-                force = entity_force
-            })
+            
+            attack_functions[data.type](data, boss_data)
         end
     end
 end
 
 function BossAttackProcessor.unset_attackable_entities_cache()
-    storage.boss.attackable_entities_cache = nil
-    storage.boss.attackable_entities_cache_size = 0
+    local boss_data = storage.boss
+    boss_data.attackable_entities_cache = nil
+    boss_data.attackable_entities_cache_size = 0
 end
 
 function BossAttackProcessor.exec_basic()
     prepare_attack("basic_attacks")
 end
 
-function BossAttackProcessor.exec_advanced()
-    prepare_attack("advanced_attacks")
+function BossAttackProcessor.exec_heavy()
+    prepare_attack("heavy_attacks")
 end
 
-function BossAttackProcessor.exec_super()
-    prepare_attack("super_attacks")
+function BossAttackProcessor.exec_assist()
+    prepare_attack("assist_attacks")
+end
+
+function BossAttackProcessor.exec_special()
+    prepare_attack("special_attacks")
+end
+
+function BossAttackProcessor.exec_ultimate()
+    prepare_attack("ultimate_attacks")
 end
 
 function BossAttackProcessor.exec_phase()
@@ -280,16 +538,17 @@ function BossAttackProcessor.process_despawn_attack()
     DebugHelper.print("Despawn Attack...")
     BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_despawn_attack()
-    for i = 1, data["spread"] do
-        local position, artillery_mode = pick_near_by_player_entity_position(true)
-        data["artillery_mode"] = artillery_mode
-        data["position"] = position
+    for i = 1, data.spread do
+        local position, artillery_mode = acquire_attack_target(true)
+        data.artillery_mode = artillery_mode
+        data.position = position
         Cron.add_quick_queue("BossAttackProcessor.process_attack", table.deepcopy(data), true)
     end
 end
 
 function BossAttackProcessor.process_attack(data, force)
-    if (force ~= true and (data == nil or not storage.boss or not storage.boss.entity or not storage.boss.entity.valid or not data["position"])) then
+    local boss_data = storage.boss
+    if (force ~= true and (data == nil or not boss_data or not boss_data.entity or not boss_data.entity.valid or not data.position)) then
         return
     end
 

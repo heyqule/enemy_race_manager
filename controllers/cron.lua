@@ -20,7 +20,6 @@ local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local BossPsiRadar = require("__enemyracemanager__/lib/boss_psi_radar")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
-local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
 local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
@@ -101,13 +100,6 @@ cron_switch = {
     --BossAttackProcessor
     ["BossAttackProcessor.process_attack"] = function(args)
         BossAttackProcessor.process_attack(table.unpack(args))
-    end,
-    --BossGroupProcessor
-    ["BossGroupProcessor.generate_units"] = function(args)
-        BossGroupProcessor.generate_units(table.unpack(args))
-    end,
-    ["BossGroupProcessor.process_attack_groups"] = function(args)
-        BossGroupProcessor.process_attack_groups()
     end,
     -- BossRewardProcessor
     ["BossRewardProcessor.clean_up"] = function(args)

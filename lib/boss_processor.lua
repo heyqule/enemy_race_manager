@@ -6,12 +6,13 @@
 require("util")
 
 local Position = require("__erm_libs__/stdlib/position")
+local Territory = require("__erm_libs__/stdlib/territory")
+
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
-local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
 local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
@@ -24,22 +25,18 @@ local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local BossProcessor = {}
 
--- beam scan up to 100 chunks
-local scanLength = GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE
--- 7 chunks
-local scanMinLength = 224
-local scanRadius = 16
 
 local chunkSize = 32
 local spawnRadius = 64
 local cleanChunkSize = 8
 
-local INCLUDE_SPAWNS = true -- Only for debug
-
 --- The ratio of HP deduct from Boss when an assisted spawner dies 
 local ASSISTED_SPAWNER_DEATH_RATIO = 0.33
 --- Wait between assist spawner spawn
 local ASSISTED_SPAWNER_INTERVAL = 3600
+local SEGMENTED_UNIT_CHECK_INTERVAL = 600
+
+local SCAN_EXTRA_PADDING = 320
 
 local enemy_entities = { "unit-spawner", "turret", "unit" }
 local enemy_buildings = { "unit-spawner", "turret" }
@@ -70,13 +67,16 @@ local boss_setting_default = function()
         pathing_entity = nil,
         pathing_entity_checks = 0,
         attack_last_hp = { 0, 0, 0, 0, 0, 0 },
+        attack_cache_force_refresh = false,
         victory = false,
         high_level_enemy_list = nil, -- Track all high level enemies, they die when the base destroys.
         loading = false,
         spawn_beacons = {},
         assisted_spawners = {},
         total_assisted_spawners = 0,
-        assisted_spawner_check_time = game.tick
+        assisted_spawner_check_time = game.tick,
+        segmented_unit_check_time = game.tick,
+        controlled_segment_unit = nil
     }
 end
 
@@ -86,16 +86,6 @@ local boss_spawnable_index_default = function()
         size = 0,
         retry = 0
     }
-end
-
-
-
-local start_unit_spawn = function()
-    Cron.add_15_sec_queue("BossProcessor.units_spawn")
-    Cron.add_15_sec_queue("BossGroupProcessor.process_attack_groups")
-    if INCLUDE_SPAWNS then
-        BossGroupProcessor.spawn_initial_group()
-    end
 end
 
 local process_boss_queue = function(event)
@@ -111,20 +101,15 @@ local remove_boss_event = function()
     Cron.empty_boss_queue()
 end
 
-local get_scan_area = {
-    [defines.direction.north] = function(x, y)
-        return { left_top = { x - scanRadius, y - scanLength }, right_bottom = { x + scanRadius, y - scanMinLength } }
-    end,
-    [defines.direction.east] = function(x, y)
-        return { left_top = { x + scanMinLength, y - scanRadius }, right_bottom = { x + scanLength, y + scanRadius } }
-    end,
-    [defines.direction.south] = function(x, y)
-        return { left_top = { x - scanRadius, y + scanMinLength }, right_bottom = { x + scanRadius, y + scanLength } }
-    end,
-    [defines.direction.west] = function(x, y)
-        return { left_top = { x - scanLength, y - scanRadius }, right_bottom = { x - scanMinLength, y + scanRadius } }
-    end,
-}
+
+local get_scan_area = function(boss_position, radar_position)
+    local x1 = math.min(boss_position.x, radar_position.x) - SCAN_EXTRA_PADDING
+    local y1 = math.min(boss_position.y, radar_position.y) - SCAN_EXTRA_PADDING
+    local x2 = math.max(boss_position.x, radar_position.x) + SCAN_EXTRA_PADDING
+    local y2 = math.max(boss_position.y, radar_position.y) + SCAN_EXTRA_PADDING
+
+    return { left_top = { x = x1, y = y1 }, right_bottom = { x = x2, y = y2 } }
+end
 
 local get_target_direction = function(spawn_position, target_position)
     local diffThreshold = chunkSize * 3
@@ -162,34 +147,6 @@ local can_build_spawn_building = function()
     return true
 end
 
-local spawn_building = function()
-    return nil
-    
-    --if true or not can_build_spawn_building() then
-    --    return
-    --end
-
-    --local boss = storage.boss
-    --local boss_tier = boss.boss_tier
-    --for i = 1, GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES[boss_tier] do
-    --    local building_name
-    --    if RaceSettingsHelper.can_spawn(7) then
-    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "cc")
-    --    elseif RaceSettingsHelper.can_spawn(45) then
-    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "support")
-    --    else
-    --        building_name = BaseBuildProcessor.getBuildingName(boss.force_name, "turret")
-    --    end
-    --
-    --    BaseBuildProcessor.build(
-    --            boss.surface,
-    --            building_name,
-    --            boss.force_name,
-    --            boss.entity_position
-    --    )
-    --end
-end
-
 local destroy_beacons = function()
     local beacons = storage.boss.surface.find_entities_filtered { name = beacon_name, type = "radar" }
     for i = 1, #beacons do
@@ -199,30 +156,8 @@ end
 
 local unset_boss_data = function()
     storage.boss = boss_setting_default()
-    for _, spawn_data in pairs(storage.boss_attack_groups) do
-        Cron.add_quick_queue("BossProcessor.remove_boss_groups", spawn_data)
-    end
-
-    Cron.add_quick_queue("BossProcessor.remove_boss_groups", storage.boss_group_spawn)
-
-    storage.boss_attack_groups = {}
-    storage.boss_group_spawn = BossGroupProcessor.get_default_data()
     storage.boss_spawnable_index = boss_spawnable_index_default()
     remove_boss_event()
-end
-
-local spawn_unit_attack = function()
-    if INCLUDE_SPAWNS then
-        BossGroupProcessor.spawn_defense_group()
-    end
-    return false, true
-end
-
-local spawn_base_attack = function()
-    if INCLUDE_SPAWNS then
-        spawn_building()
-    end
-    return false, true
 end
 
 local basic_attack = function()
@@ -230,13 +165,23 @@ local basic_attack = function()
     return true, false
 end
 
-local advanced_attack = function()
-    BossAttackProcessor.exec_advanced()
+local heavy_attack = function()
+    BossAttackProcessor.exec_heavy()
     return true, false
 end
 
-local super_attack = function()
-    BossAttackProcessor.exec_super()
+local assist_attacks = function()
+    BossAttackProcessor.exec_assist()
+    return true, false
+end
+
+local special_attacks = function()
+    BossAttackProcessor.exec_special()
+    return true, false
+end
+
+local ultimate_attack = function()
+    BossAttackProcessor.exec_ultimate()
     return true, false
 end
 
@@ -247,10 +192,10 @@ end
 --- Phase change + 5 attacks
 local attack_functions = {
     phase_change,
-    super_attack,
-    spawn_unit_attack,
-    spawn_base_attack,
-    advanced_attack,
+    ultimate_attack,
+    special_attacks,
+    assist_attacks,
+    heavy_attack,
     basic_attack
 }
 
@@ -302,18 +247,23 @@ local write_result_log = function(victory)
     update_best_time(record)
 end
 
+
+
 function BossProcessor.init_globals()
     storage.boss = storage.boss or boss_setting_default()
-    storage.boss_attack_groups = storage.boss_attack_groups or {}
-    storage.boss_group_spawn = storage.boss_group_spawn or BossGroupProcessor.get_default_data()
     storage.boss_spawnable_index = storage.boss_spawnable_index or boss_spawnable_index_default()
     storage.boss_rewards = storage.boss_rewards or {}
     storage.boss_logs = storage.boss_logs or {}
+    storage.boss.attack_cache_force_refresh = true
 end
 
 --- Start the boss spawn flow
 function BossProcessor.exec(radar, spawn_position)
-    DebugHelper.print("BossProcessor: Check radar valid...")
+    if not Position.is_position(spawn_position) then
+        DebugHelper.print("Missing spawn position...")
+        return
+    end        
+    DebugHelper.print("BossProcessor: Check radar valid...")            
     if radar and radar.valid and storage.boss.loading == false and
             (storage.boss.entity == nil or storage.boss.entity.valid == false) then
         storage.boss.loading = true
@@ -352,11 +302,14 @@ function BossProcessor.exec(radar, spawn_position)
             return
         end
 
-        if not Position.is_position(spawn_position) then
-            spawn_position = radar.position
-            storage.boss.target_position = spawn_position
-            storage.boss.target_direction = get_target_direction(spawn_position, radar.position)
-        end
+        local boss_settings = RaceSettingsHelper.get_boss_settings(force_name)
+        storage.boss.max_buildable_unit_spawner = boss_settings.max_buildable_unit_spawner[boss_tier]
+        storage.boss.max_attack_per_heartbeat = boss_settings.max_attacks_per_heartbeat[boss_tier]
+        storage.boss.defense_attacks = boss_settings.defense_attacks
+        storage.boss.defeated_unit_count = boss_settings.defeated_unit_count
+
+        storage.boss.target_position = spawn_position
+        storage.boss.target_direction = Position.complex_direction_to(spawn_position, radar.position, true)
 
         local entities = surface.find_entities_filtered {
             type = enemy_entities,
@@ -383,16 +336,11 @@ function BossProcessor.exec(radar, spawn_position)
             spawn_decorations = true,
             quality = boss_quality
         }
-        
-        print(serpent.block(spawn_position))
-        print(serpent.block(boss_spawn_location))
-        print(serpent.block(boss_entity))
 
         local entities = surface.find_entities_filtered {
             name = boss_name,
             limit = 1
         }
-        print(serpent.block(entities))
         
         if not boss_entity then
             storage.boss = boss_setting_default()
@@ -418,18 +366,45 @@ function BossProcessor.exec(radar, spawn_position)
             boss_entity.health,
             boss_entity.health,
             boss_entity.health,
-            boss_entity.health
+            boss_entity.health,
         }
         storage.boss.entity_name = boss_entity.name
         storage.boss.entity_position = boss_entity.position
 
-        local boss_settings = RaceSettingsHelper.get_boss_settings(force_name)
-        storage.boss.max_buildable_unit_spawner = boss_settings.max_buildable_unit_spawner[boss_tier]
-        storage.boss.max_attack_per_heartbeat = boss_settings.max_attack_per_heartbeat[boss_tier]
-        storage.boss.base_unit_spawn_count = boss_settings.base_unit_spawn_count[boss_tier]
-        storage.boss.defense_attacks = boss_settings.defense_attacks
-        storage.boss.defeated_unit_count = boss_settings.defeated_unit_count
-        storage.boss.phase_change = boss_settings.phase_change
+        storage.boss.scan_area = get_scan_area(boss_entity.position, radar.position)
+
+        if DEBUG_MODE then
+            exit.indicator = rendering.draw_rectangle({
+                color = { b = 0.3, a = 0.05 },
+                left_top = storage.boss.scan_area.top_left,
+                right_bottom = storage.boss.scan_area.bottom_right,
+                surface = storage.boss.surface.index,
+                forces = 'player',
+                filled = false,
+                draw_on_ground = true,
+                width = 8,
+                only_in_alt_mode = true,
+            })
+        end
+
+        --- replace tile
+        local tile = surface.get_tile(boss_entity.position)
+        local tiles = {}
+        for x = (boss_entity.position.x - 16), boss_entity.position.x + 16, 1 do
+            for y = (boss_entity.position.y - 16), boss_entity.position.y + 16, 1 do
+                table.insert(tiles, { name = tile, position = { x, y } })
+            end
+        end
+        surface.set_tiles(tiles, true, true, true, true)
+
+        --- Kill cliff
+        for k, entity in pairs(surface.find_entities_filtered{type = "cliff", area = {
+            top_left = { boss_entity.position.x - 16, boss_entity.position.y - 16 },
+            bottom_right = { boss_entity.position.x + 16, boss_entity.position.y + 16 }
+        }}) do
+            entity.destroy()
+        end
+        
         
         game.print({
             "description.boss-base-spawn-at",
@@ -553,6 +528,7 @@ local display_victory_dialog = function(boss)
     end
 end
 
+--- Spawn assist spawner when there is room for them
 local spawn_assist_spawner = function(boss_data)
     if game.tick >= boss_data.assisted_spawner_check_time + ASSISTED_SPAWNER_INTERVAL and boss_data.total_assisted_spawners < boss_data.max_buildable_unit_spawner then
         local race_settings = storage.race_settings[boss_data.force_name]
@@ -579,15 +555,50 @@ local spawn_assist_spawner = function(boss_data)
         local offset = offsets[math.random(1, offset_size)]
         CustomAttacks.boss_build(event_obj, boss_data.force_name, assisted_spawner_name,
                 {x = boss_data.entity_position.x + offset.x, y = boss_data.entity_position.y + offset.y})
-
         boss_data.assisted_spawner_check_time = game.tick
+    end
+end
+
+--- When a segmented unit is too close to the boss, the boss changes that segmented unit's territory to include radar.
+--- Check once every 15 seconds. (ง •̀_•́)ง
+local redirect_segment_unit = function(boss_data)
+    if game.tick >= boss_data.segmented_unit_check_time + SEGMENTED_UNIT_CHECK_INTERVAL and
+            (not boss_data.controlled_segment_unit or
+            not boss_data.controlled_segment_unit.entity.valid) 
+    then
+        local surface = boss_data.surface
+        local seg_units = surface.find_entities_filtered {
+            type = "segmented-unit",
+            force = boss_data.force_name,
+            position = boss_data.entity_position,
+            radius = spawnRadius * 2
+        }
+        local seg_unit = seg_units[1]
+        if seg_unit and seg_unit.segmented_unit then
+            boss_data.controlled_segment_unit = {
+                entity = seg_unit,
+                unit_number = seg_unit.unit_number
+            }
+            local territory = seg_unit.segmented_unit.territory
+            local new_territory_chunks = Territory.compute_territory_path(seg_unit.position, boss_data.radar_position)
+            if territory then
+                surface.set_territory_for_chunks(
+                        new_territory_chunks,
+                        territory
+                )
+            else
+               seg_unit.territory = surface.create_territory({chunks=new_territory_chunks})
+            end
+            surface.print('Boss Radar: Detected territory anomalies.')
+        end
+        boss_data.segmented_unit_check_time = game.tick
     end
 end
 
 function BossProcessor.heartbeat()
     local boss = storage.boss
     local current_tick = game.tick
-    local max_attacks = GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT[boss.boss_tier]
+    local max_attacks = boss.max_attacks_per_heartbeat
     if boss.victory then
         -- start reward process
         storage.race_settings[boss.force_name].boss_kill_count = storage.race_settings[boss.force_name].boss_kill_count + 1
@@ -619,50 +630,38 @@ function BossProcessor.heartbeat()
     end
 
     spawn_assist_spawner(boss)
-    --
-    --local boss_direct_attack = false
-    --local performed_attacks = 0
-    --for index, last_hp in pairs(boss.attack_last_hp) do
-    --    local direct_attack = false
-    --    local spawn_attack = false
-    --    if last_hp - boss.entity.health > GlobalConfig.BOSS_DEFENSE_ATTACKS[index] then
-    --        storage.boss.attack_last_hp[index] = boss.entity.health
-    --        DebugHelper.print("BossProcessor: Attack Index " .. index .. " @ " .. boss.entity.health)
-    --        direct_attack, spawn_attack = attack_functions[index]()
-    --        performed_attacks = performed_attacks + 1
-    --
-    --        if direct_attack then
-    --            boss_direct_attack = true
-    --        end
-    --
-    --        if max_attacks == performed_attacks then
-    --            break
-    --        end
-    --    end
-    --end
-    --
-    --if boss_direct_attack then
-    --    BossAttackProcessor.unset_attackable_entities_cache()
-    --end
-    --
+    
+    redirect_segment_unit(boss)
+
+    local boss_direct_attack = false
+    local performed_attacks = 1
+    for index, last_hp in pairs(boss.attack_last_hp) do
+        local direct_attack = false
+        local spawn_attack = false
+        if last_hp - boss.entity.health > boss.defense_attacks[index] then
+            storage.boss.attack_last_hp[index] = boss.entity.health
+            DebugHelper.print("BossProcessor: Attack Index " .. index .. " @ " .. boss.entity.health)
+            direct_attack, spawn_attack = attack_functions[index]()
+            performed_attacks = performed_attacks + 1
+
+            if direct_attack then
+                boss_direct_attack = true
+            end
+
+            if max_attacks == performed_attacks then
+                break
+            end
+        end
+    end
+
+    if boss_direct_attack then
+        BossAttackProcessor.unset_attackable_entities_cache()
+    end
+
     
     Cron.add_2_sec_queue("BossProcessor.heartbeat")
 end
 
-
---- Queue to spawn boss units
---- @see enemyracemanager/control.lua
-function BossProcessor.units_spawn()
-    if not RaceSettingsHelper.is_in_boss_mode() then
-        DebugHelper.print("BossProcessor: units_spawn stops...")
-        return
-    end
-
-    if INCLUDE_SPAWNS then
-        BossGroupProcessor.spawn_regular_group()
-        Cron.add_15_sec_queue("BossProcessor.units_spawn")
-    end
-end
 
 function BossProcessor.get_boss_quality()
     return storage.boss.quality
@@ -702,11 +701,17 @@ end
 function BossProcessor.assisted_spawner_spawns(event)
     local spawner_entity = event.source_entity
     if spawner_entity then
-        storage.boss.assisted_spawners[spawner_entity.unit_number] = {
+        local boss_data = storage.boss
+        if boss_data.total_assisted_spawners >= boss_data.max_buildable_unit_spawner then
+            spawner_entity.destroy()
+            return
+        end
+        boss_data.assisted_spawners[spawner_entity.unit_number] = {
             entity = spawner_entity,
             last_health = spawner_entity.get_health_ratio()
         }
-        storage.boss.total_assisted_spawners = storage.boss.total_assisted_spawners + 1 
+
+        boss_data.total_assisted_spawners = boss_data.total_assisted_spawners + 1 
     end 
 end
 
@@ -722,6 +727,16 @@ function BossProcessor.assisted_spawner_dies(event)
     storage.boss.assisted_spawners[spawner_entity.unit_number] = nil
     storage.boss.total_assisted_spawners = math.max(storage.boss.total_assisted_spawners - 1, 0)
     storage.boss.assisted_spawner_check_time = game.tick
+end
+
+function BossProcessor.controlled_segmented_unit_dies(event)
+    local segmented_entity = event.source_entity
+    local boss_data = storage.boss
+    if boss_data.controlled_segment_unit and
+        boss_data.controlled_segment_unit.unit_number == segmented_entity.unit_number
+    then
+        storage.boss.controlled_segment_unit = nil
+    end 
 end
 
 return BossProcessor

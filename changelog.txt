@@ -4,14 +4,18 @@ Date: 2024-??-??
 
   Features:
     - Redesigned Boss mode.
-    - This mode requires quality mod to be enabled.  It's used for higher tier boss units & attacks. 
-    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, not repairable and not minable. You are defeated and boss mode ends when it's destroyed.
-    - Psi Radar takes approximate 10 minutes to scan the boss.  Prepare your defense in the mean time.
-    -                  
+    - This mode requires quality mod to be enabled.     
+    - Added Psi Radars (boss scanner) for Zerg, Protoss and Redarmy, 1 million HP with 80 resistances, it's not repairable and not minable. You are defeated when it's destroyed.
+    - Psi Radar takes approximate 15 minutes to scan the boss.  Prepare your defense in the mean time.
+    - Boss spawns divine tier units. appox 25% tougher than legendary tier unit.
+    - It can perform various types of attacks to strike various points of interest.  
+    - It can spawn segmented-units and control segmented-units territories.               
 
   Changes:
-    - When calling uWuClear rapid delivery, it now kills segmented-unit and spider-unit types as well, regardless of their health.    
+    - When calling uWuClear rapid delivery, it now kills segmented-unit and spider-unit types as well, regardless of their health.
+    - Increased uWuClear destruction area from 384, 12 chunks -> 512, 16 chunks.    
     - removed old boss items, psi-tracking-satellite.
+    - ERM units follow ERM resistance standards (75% max) against ANY 3rd party damage types unless those damage types are supported under compatibility script.
      
   Bugfixes:
     - Fixed unit quality doesn't roll on home planet for certain attacks.    

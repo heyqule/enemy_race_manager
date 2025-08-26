@@ -18,8 +18,6 @@ local max_range = 35
 local offset = 3
 local max_side_range = max_range - offset
 local boss_roll_start_range = 25
-local iteration = 1
-local side_iteration = 1
 local BossPsiRadar = {}
 
 function BossPsiRadar.register(radar)
@@ -38,14 +36,15 @@ function BossPsiRadar.register(radar)
         -- boss radar print
         boss_data.radar = radar
         boss_data.radar_position = radar.position
-        iteration = 1
-        side_iteration = 1
-        chunksize = 32
+        storage.boss_radar_iteration = 1
+        storage.boss_radar_side_iteration = 1
         Cron.add_15_sec_queue("BossPsiRadar.scan")
     end
 end
 
 function BossPsiRadar.scan()
+    local iteration = storage.boss_radar_iteration
+    local side_iteration = storage.boss_radar_side_iteration
     local radar = storage.boss.radar
     local radar_position = storage.boss.radar.position
     if not radar and not radar.valid then
@@ -154,6 +153,8 @@ function BossPsiRadar.scan()
             side_iteration = side_iteration + 1
         end
     end
+    storage.boss_radar_iteration = iteration
+    storage.boss_radar_side_iteration = side_iteration
 
     local skip_cron = false
     if iteration >= max_range and side_iteration >= max_side_range then
@@ -197,10 +198,8 @@ function BossPsiRadar.reject(message, radar)
     else
         radar.last_user.print(message)
         radar.destroy()
-        storage.boss.radar = nil
-        storage.boss.position = nil
-        storage.boss.spawn_beacons = {}
     end
+    storage.boss = nil
 end
 
 return BossPsiRadar

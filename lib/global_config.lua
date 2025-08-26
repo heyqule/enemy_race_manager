@@ -13,7 +13,7 @@ GlobalConfig.MAX_TIER = 3
 --- Tick base EVENTS
 GlobalConfig.RACE_SETTING_UPDATE_INTERVAL = 5 * minute
 GlobalConfig.ATTACK_GROUP_GATHERING_CRON = minute + 2 * second + 1
-GlobalConfig.BOSS_QUEUE_CRON = 7 
+GlobalConfig.BOSS_QUEUE_CRON = 7 -- up to 9 action per second. 
 GlobalConfig.TELEPORT_QUEUE_CRON = 33
 GlobalConfig.AUTO_DEPLOY_CRON = 3 * second + 1
 GlobalConfig.SPAWN_SCOUTS_INTERVAL = 25301
@@ -93,22 +93,11 @@ GlobalConfig.BOSS_SPAWN_TIMER = {
 --end
 
 local batch_spawn_size = {
-    [BOSS_SPAWN_SQUAD] = 6,
-    [BOSS_SPAWN_PATROL] = 12,
-    [BOSS_SPAWN_PLATOON] = 24,
+    [BOSS_SPAWN_SQUAD] = 1,
+    [BOSS_SPAWN_PATROL] = 2,
+    [BOSS_SPAWN_PLATOON] = 3,
 }
 GlobalConfig.batch_spawn_size = batch_spawn_size[settings.startup["enemyracemanager-attacks-unit-spawn-size"].value]
-GlobalConfig.BOSS_MAX_SUPPORT_STRUCTURES = { 15, 24, 30, 40, 50 }
-GlobalConfig.BOSS_SPAWN_SUPPORT_STRUCTURES = { 5, 6, 7, 8, 10 }
--- 1 phase change and 5 types of attacks based on damage taken
-GlobalConfig.BOSS_DEFENSE_ATTACKS = { 15000000, 999999, 500000, 250000, 69420, 20000 }
-GlobalConfig.BOSS_MAX_ATTACKS_PER_HEARTBEAT = { 3, 3, 4, 4, 5 }
-
--- 320 radius toward the target area.
-GlobalConfig.BOSS_ARTILLERY_SCAN_RADIUS = 320
-GlobalConfig.BOSS_ARTILLERY_SCAN_RANGE = 3200
-GlobalConfig.BOSS_ARTILLERY_SCAN_ENTITY_LIMIT = 100
-
 
 GlobalConfig.IS_FFA = settings.startup["enemyracemanager-free-for-all"].value
 GlobalConfig.FFA_MULTIPLIER = settings.startup["enemyracemanager-free-for-all-multiplier"].value

@@ -60,6 +60,7 @@ TRIGGER_BOSS_SPAWNED = "embss-spn"
 TRIGGER_BOSS_DIES = "embss-die"
 TRIGGER_BOSS_ASSIST_SPAWNED = "embas_spn"
 TRIGGER_BOSS_ASSIST_DIES = "embas-die"
+BOSS_SEGMENT_UNIT_DIES = "embsu-die"
 
 --- Roll dice when unit/spawner/turrets spawns
 QUALITY_DICE_ROLL = "em-dcrll"

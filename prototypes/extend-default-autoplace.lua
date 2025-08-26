@@ -130,51 +130,42 @@ local get_distance = function(v, force_name)
     return 0
 end
 
---- ChatGPT function with some tweaks. XD
+--- Rebalanced tables function that evenly distributes elements among tables
 local rebalanceTables = function(...)
     local numTables = select("#", ...)
-    local newTables = {}
     local totalSize = 0
+    local mergedTable = {}
 
-    -- Calculate the total size of all tables
+    -- Calculate total size and merge all tables
     for i = 1, numTables do
         local currentTable = select(i, ...)
         totalSize = totalSize + #currentTable
-    end
-
-    -- Calculate the target size for each table
-    local targetSize = math.floor(totalSize / numTables)
-
-    -- Calculate the number of tables that should have an extra element
-    local numTablesWithExtraElement = totalSize % numTables
-
-    -- Create a merged table from all original tables
-    local mergedTable = {}
-    for i = 1, numTables do
-        local currentTable = select(i, ...)
+        
+        -- Merge the tables into one
         for j = 1, #currentTable do
             table.insert(mergedTable, currentTable[j])
         end
     end
 
-    -- Create and populate the new tables
-    local currentIndex = 1
+    -- Calculate distribution
+    local targetSize = math.floor(totalSize / numTables)
+    local numTablesWithExtraElement = totalSize % numTables
+    
+    -- Create new tables with balanced sizes
+    local newTables = {}
+    local mergedIndex = 1
+    
     for i = 1, numTables do
-        local newTable = {}
-        local remainingSize = targetSize
-
-        -- Distribute remaining elements among the first numTablesWithExtraElement tables
-        if i <= numTablesWithExtraElement then
-            remainingSize = remainingSize + 1
+        local currentTargetSize = targetSize + (i <= numTablesWithExtraElement and 1 or 0)
+        newTables[i] = {}
+        
+        -- Fill each new table with appropriate elements
+        for j = 1, currentTargetSize do
+            if mergedIndex <= #mergedTable then
+                table.insert(newTables[i], mergedTable[mergedIndex])
+                mergedIndex = mergedIndex + 1
+            end
         end
-
-        while remainingSize > 0 and currentIndex <= #mergedTable do
-            table.insert(newTable, mergedTable[currentIndex])
-            currentIndex = currentIndex + 1
-            remainingSize = remainingSize - 1
-        end
-
-        table.insert(newTables, newTable)
     end
 
     return table.unpack(newTables)
@@ -242,101 +233,70 @@ local rearrange_specs = function()
 end
 
 --- Another ChatGPT function with some tweaks lol.
-local balance_volumes_by_aux = function(data)
-    -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
-    local uniqueMoisturePairs = {}
+--- Enhanced by Qwen3-Coder
+local balance_volumes_generic = function(data, primary_field, secondary_field)
+    -- Create a table to store the unique (primary_min, primary_max) pairs as keys
+    local uniquePairs = {}
 
-    -- Find the unique (moisture_min, moisture_max) pairs
+    -- Find the unique (primary_min, primary_max) pairs
     for _, elementData in ipairs(data) do
-        local key = elementData.moisture_min .. "-" .. elementData.moisture_max
-        if not uniqueMoisturePairs[key] then
-            uniqueMoisturePairs[key] = {}
+        local key = elementData[primary_field .. "_min"] .. "-" .. elementData[primary_field .. "_max"]
+        if not uniquePairs[key] then
+            uniquePairs[key] = {}
         end
-        table.insert(uniqueMoisturePairs[key], elementData)
+        table.insert(uniquePairs[key], elementData)
     end
     local offset = 0.01
-    -- Calculate the auxInterval for each unique (moisture_min, moisture_max) pair
-    for _, elements in pairs(uniqueMoisturePairs) do
+    -- Calculate the auxInterval for each unique (primary_min, primary_max) pair
+    for _, elements in pairs(uniquePairs) do
         local count = #elements
         local auxInterval = 1 / count
 
-        -- Distribute aux_min and aux_max values evenly for each same (moisture_min, moisture_max) pair
+        -- Distribute aux_min and aux_max values evenly for each same (primary_min, primary_max) pair
         for index, elementData in ipairs(elements) do
             elementData.aux_min = math.max(auxInterval * (index - 1) - offset, 0)
             elementData.aux_max = math.min(auxInterval * index + offset, 1)
         end
     end
 
-    DebugHelper.print("Autoplace - uniqueMoisturePairs:")
-    DebugHelper.print(serpent.block(uniqueMoisturePairs))
+    DebugHelper.print("Autoplace - unique" .. primary_field .. "Pairs:")
+    DebugHelper.print(serpent.block(uniquePairs))
 
-    for uniqueIndex, element in pairs(uniqueMoisturePairs) do
+    for uniqueIndex, element in pairs(uniquePairs) do
+        local elementProcessed = false
         for key, dataItem in pairs(data) do
-            if element.moisture_min == dataItem.moisture_min and
-                    element.moisture_max == dataItem.moisture_max and
-                    element.aux_min ~= dataItem.aux_min and
-                    element.aux_max ~= dataItem.aux_max
-            then
-                data[key] = element
-                table.remove(uniqueMoisturePairs, uniqueIndex)
+            if element[primary_field .. "_min"] == dataItem[primary_field .. "_min"] and
+                    element[primary_field .. "_max"] == dataItem[primary_field .. "_max"] then
+                -- Update the aux values directly in the data table
+                dataItem.aux_min = element[1].aux_min
+                dataItem.aux_max = element[1].aux_max
+                elementProcessed = true
                 break
             end
+        end
+        
+        -- If we processed this element, remove it from uniquePairs
+        if elementProcessed then
+            uniquePairs[uniqueIndex] = nil
         end
     end
 
     return data
 end
 
---- Another ChatGPT function with some tweaks lol.
+local balance_volumes_by_aux = function(data)
+    return balance_volumes_generic(data, "moisture", "aux")
+end
+
 local balance_volumes_by_temperature = function(data)
-    -- Create a table to store the unique (moisture_min, moisture_max) pairs as keys
-    local uniqueTempPairs = {}
-
-    -- Find the unique (moisture_min, moisture_max) pairs
-    for _, elementData in ipairs(data) do
-        local key = elementData.temperature_min .. "-" .. elementData.temperature_max
-        if not uniqueTempPairs[key] then
-            uniqueTempPairs[key] = {}
-        end
-        table.insert(uniqueTempPairs[key], elementData)
-    end
-    local offset = 0.01
-    -- Calculate the auxInterval for each unique (moisture_min, moisture_max) pair
-    for _, elements in pairs(uniqueTempPairs) do
-        local count = #elements
-        local auxInterval = 1 / count
-
-        -- Distribute aux_min and aux_max values evenly for each same (moisture_min, moisture_max) pair
-        for index, elementData in ipairs(elements) do
-            elementData.aux_min = math.max(auxInterval * (index - 1) - offset, 0)
-            elementData.aux_max = math.min(auxInterval * index + offset, 1)
-        end
-    end
-
-    DebugHelper.print("Autoplace - uniqueTempPairs:")
-    DebugHelper.print(serpent.block(uniqueTempPairs))
-
-    for uniqueIndex, element in pairs(uniqueTempPairs) do
-        for key, dataItem in pairs(data) do
-            if element.temperature_min == dataItem.temperature_min and
-                    element.temperature_max == dataItem.temperature_max and
-                    element.aux_min ~= dataItem.aux_min and
-                    element.aux_max ~= dataItem.aux_max
-            then
-                data[key] = element
-                table.remove(uniqueTempPairs, uniqueIndex)
-                break
-            end
-        end
-    end
-
-    return data
+    return balance_volumes_generic(data, "temperature", "aux")
 end
 
 local match_temperature_filter = function(volume, statistics, i)
     return (volume.entity_filter and
             statistics["temperature_" .. i][1] == volume.mod_name .. statistic_separator .. volume.entity_filter) or
-            statistics["temperature_" .. i][1] == volume.mod_name
+            (not volume.entity_filter and
+            statistics["temperature_" .. i][1] == volume.mod_name)
 end
 
 local temperature_has_single_item = function(volume, statistics)

@@ -13,7 +13,6 @@ local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_grou
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 
-local BossGroupProcessor = require("__enemyracemanager__/lib/boss_group_processor")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
@@ -256,18 +255,6 @@ function RemoteAPI.spawn_interplanetary_attack(force_name, target_force, drop_lo
         error("Target Force is required")
     end
     InterplanetaryAttacks.exec(race_settings.race, force, drop_location)
-end
-
---- Usage: remote.call("enemyracemanager", "add_boss_attack_group")
---- Assign unit group to manage by boss group logics
-function RemoteAPI.add_boss_attack_group(group)
-    if group.valid and next(group.members) then
-        local group_data = BossGroupProcessor.get_default_data()
-        group_data["group"] = group
-        group_data["unique_id"] = group.unique_id
-        group_data["total_units"] = table_size(group.members)
-        table.insert(storage.boss_attack_groups, group_data)
-    end
 end
 
 --- Usage: remote.call("enemyracemanager", "add_erm_attack_group", group, target_force)

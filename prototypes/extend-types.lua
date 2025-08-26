@@ -17,11 +17,6 @@ data:extend(
                 type = "damage-type",
                 name = "radioactive"
             },
-            --- This is used for balancing FFA unit attacks vs other enemy.  Player entities have 100% resistance.
-            {
-                type = "damage-type",
-                name = "ffa_balancer"
-            }
         })
 --- Target Trigger Type
 data:extend(

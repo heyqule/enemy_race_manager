@@ -119,6 +119,9 @@ local script_functions = {
     [TRIGGER_BOSS_ASSIST_DIES] = function(args)
         BossProcessor.assisted_spawner_dies(args)
     end,
+    [BOSS_SEGMENT_UNIT_DIES] =  function(args)
+        BossProcessor.controlled_segmented_unit_dies(args)
+    end,
 
     --- Attack group beacons
     [LAND_SCOUT_BEACON] = function(event)
@@ -211,7 +214,6 @@ local script_functions = {
     
     [REGISTER_BOSS_RADAR] = function(event)
         -- boss radar print
-        print('Registering boss radar')
         BossPsiRadar.register(event.source_entity)
     end 
 }

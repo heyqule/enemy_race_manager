@@ -6,14 +6,13 @@
 require("__enemyracemanager__/setting-constants")
 require("util")
 local String = require('__erm_libs__/stdlib/string')
+local Orientation = require('__erm_libs__/stdlib/orientation')
+local Direction = require('__erm_libs__/stdlib/Direction')
+local Position = require('__erm_libs__/stdlib/Position')
+local Table = require("__erm_libs__/stdlib/table")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
-local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
-local Orientation = require('__erm_libs__/stdlib/orientation')
-
-local Table = require("__erm_libs__/stdlib/table")
 
 local ATTACK_CHUNK_SIZE = 32
 
@@ -326,7 +325,7 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         position = position, force = boss_data.force
     }
     repeat
-        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--" .. tostring(level)
+        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--6"
         local drop_position
         final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, force_name, level)
         add_member(final_unit_name, surface, drop_position, boss_data.force, group)
@@ -345,8 +344,6 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
-
-    remote.call("enemyracemanager", "add_boss_attack_group", group)
 end
 
 local break_time_to_live = function(count, max_count, units_total)
@@ -563,11 +560,21 @@ end
 local build = function(event, force_name, building_name, position)
     position = position or event.source_position or event.source_entity.position
     local source_entity = event.source_entity
-    local source_entity_force_name = event.source_entity.force.name or force_name
-    local race_settings = get_race_settings(force_name)
+    local source_entity_force_name = force_name
+    local orientation
+    local level = GlobalConfig.MAX_LEVELS
+    if source_entity then
+        source_entity_force_name = event.source_entity.force.name
+        orientation = source_entity.orientation
+        local name_tokens = get_name_token(source_entity.name)
+        level = tonumber(name_tokens[3])
+    else
+        orientation = Direction.to_orientation(
+                        Position.direction_to(event.source_position, event.target_position)
+                      )
+    end
+
     local surface = game.surfaces[event.surface_index]
-    local name_tokens = get_name_token(source_entity.name)
-    local level = tonumber(name_tokens[3])
 
     if level > GlobalConfig.MAX_LEVELS then
         level = GlobalConfig.MAX_LEVELS
@@ -578,7 +585,7 @@ local build = function(event, force_name, building_name, position)
     local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        local building_box = get_build_bounding_box(source_entity.orientation)
+        local building_box = get_build_bounding_box(orientation)
         position = surface.find_non_colliding_position_in_box(final_unit_name, 
                 {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}}, 
             2, true)

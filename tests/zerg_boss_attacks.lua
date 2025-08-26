@@ -62,7 +62,7 @@ after_each(function()
 end)
 
 
-it("When boss assisted spawner dies, boss HP get deducted", function()
+it("When boss assisted spawner dies, boss HP get deducted and spawns broodlings", function()
     async(60)
     local surface = game.planets.char.create_surface()
     surface.request_to_generate_chunks({ 0, 0 }, 8)
@@ -70,6 +70,7 @@ it("When boss assisted spawner dies, boss HP get deducted", function()
     game.players[1].teleport({10,0},'char')
     local radar = place_zerg_radar(surface, {x=10,y=10})
     BossProcessor.exec(radar, {x=100,y=100})
+    remote.call("enemyracemanager_debug", "print_global")
     local spawner_max_health = 0
     local total_spawners_checkpoint = 0
     after_ticks(30, function()
@@ -77,15 +78,17 @@ it("When boss assisted spawner dies, boss HP get deducted", function()
         local idx, spawner = next(storage.boss.assisted_spawners)
         spawner.entity.health = 1
         spawner_max_health = spawner.entity.max_health
-        spawner.entity.damage(99999,  'player', 'physical')
+        spawner.entity.damage(99999999,  'player', 'physical')
     end)
-
+    
     after_ticks(60, function()
         assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
         assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
         assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
         assert.equal(total_spawners_checkpoint - 1, storage.boss.total_assisted_spawners, "total assist spawn deducted")
         assert.equal(storage.boss.entity.health, math.floor(storage.boss.entity.max_health - spawner_max_health * 0.33), "Boss health deducted")
+        local broodling_count = surface.count_entities_filtered({name = enemy_name..'--broodling--6', force = enemy_name})
+        assert.truthy(broodling_count > 6, "Spawner spawned broodlings. Found:"..tostring(broodling_count)) 
         done()
     end)
 end)
@@ -163,3 +166,31 @@ it("If existing spawner is under 50% cap, boss spawn 2 assist spawners after a m
         done()
     end)    
 end)
+
+local defense_attacks = {1000020, 330020, 200020, 69440, 20020}
+for index, health_threshold in pairs(defense_attacks) do
+    it.only("Test boss defensive attacks @ "..health_threshold , function()
+        async(300)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({10,0},'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, {x=10,y=10})
+        BossProcessor.exec(radar, {x=100,y=100})
+        
+        local adjusted_index = index + 1
+        local last_hp = storage.boss.attack_last_hp[adjusted_index]
+        after_ticks(30, function()
+            local boss_entity = storage.boss.entity
+            boss_entity.damage(health_threshold, 'player', 'impact')
+        end)
+
+        
+        after_ticks(300, function()
+            assert.is_true(storage.boss.attack_last_hp[adjusted_index] < last_hp, 'Last attack HP updated')
+            assert.equal(storage.boss.entity.health, math.floor(storage.boss.entity.max_health - health_threshold), "Boss health deducted")
+            done()
+        end)
+    end)
+end

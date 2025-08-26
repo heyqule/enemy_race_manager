@@ -36,7 +36,6 @@ script.on_event(defines.events.on_player_created, function(event)
     local player = game.players[1]
     local force = player.force
     local level = 20
-    local enemy_level = 20
     scenarios_helper.spawn_tile(surface, 320)
     scenarios_helper.build_base(surface, normal_base_1_1, 0, 0)
     scenarios_helper.set_tech_level(force, level)
@@ -44,7 +43,7 @@ script.on_event(defines.events.on_player_created, function(event)
     --scenarios_helper.set_attack_points(999999)
     --scenarios_helper.set_attack_points(999999)
     --scenarios_helper.set_attack_points(-999999)
-    scenarios_helper.set_enemy_params(enemy_level, 1, 1)
+    scenarios_helper.set_enemy_params(1, 1)
     scenarios_helper.set_game_speed(1)
 
     surface.daytime = 0.5

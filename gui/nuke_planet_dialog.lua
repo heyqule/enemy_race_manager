@@ -66,7 +66,7 @@ function NukePlanetDialog.confirm(player)
         player.gui.screen[NukePlanetDialog.root_name].destroy()
     end
     if death_loop_data.surface_index then
-        local nuke_area = {{-384,-384},{384,384}}
+        local nuke_area = {{-512,-512},{512,512}}
         local surface = game.surfaces[death_loop_data.surface_index]
         if surface and surface.valid then
             local spawn_location = player.force.get_spawn_position(surface)
