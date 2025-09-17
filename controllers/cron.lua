@@ -23,7 +23,7 @@ local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_processor")
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
-
+local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
 -- Register Cron Functions
 cron_switch = {
     -- AttackGroupProcessor
@@ -94,9 +94,6 @@ cron_switch = {
     ["BossProcessor.heartbeat"] = function(args)
         BossProcessor.heartbeat()
     end,
-    ["BossProcessor.remove_boss_groups"] = function(args)
-        BossProcessor.remove_boss_groups(table.unpack(args))
-    end,
     --BossAttackProcessor
     ["BossAttackProcessor.process_attack"] = function(args)
         BossAttackProcessor.process_attack(table.unpack(args))
@@ -115,6 +112,9 @@ cron_switch = {
     ["InterplanetaryAttacks.scan"] = function(args)
         InterplanetaryAttacks.scan(table.unpack(args))
     end,
+    ['EmotionProcessor.run'] = function(args)
+        EmotionProcessor.run(args)
+    end
 }
 
 --- Garbage Collection and Statistic aggregations, all calls are run by quick cron
@@ -124,7 +124,7 @@ local garbage_and_stats = function(event)
 
     Cron.add_quick_queue("AttackGroupPathingProcessor.remove_old_nodes")
 
-    Cron.add_quick_queue("BossRewardProcessor.clean_up")
+    Cron.add_quick_queue('BossRewardProcessor.clean_up')
 
     for active_race, _ in pairs(storage.active_races) do
         Cron.add_quick_queue("AttackGroupHeatProcessor.aggregate_heat",active_race)

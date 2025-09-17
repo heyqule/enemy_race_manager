@@ -43,13 +43,18 @@ function BossPsiRadar.register(radar)
 end
 
 function BossPsiRadar.scan()
-    local iteration = storage.boss_radar_iteration
-    local side_iteration = storage.boss_radar_side_iteration
-    local radar = storage.boss.radar
-    local radar_position = storage.boss.radar.position
-    if not radar and not radar.valid then
+    if not storage.boss or 
+       not storage.boss.radar then
         return
     end
+    
+    local radar = storage.boss.radar
+    if not radar.valid then
+        return
+    end
+    local iteration = storage.boss_radar_iteration
+    local side_iteration = storage.boss_radar_side_iteration
+    local radar_position = storage.boss.radar.position
 
     local surface = radar.surface
 
@@ -144,6 +149,7 @@ function BossPsiRadar.scan()
                 end
             end
         end
+        storage.boss_final_scanned_position = scan_position
     end
 
     iteration = iteration + 1
@@ -158,6 +164,8 @@ function BossPsiRadar.scan()
 
     local skip_cron = false
     if iteration >= max_range and side_iteration >= max_side_range then
+        storage.boss_radar_iteration = 1
+        storage.boss_radar_side_iteration = 1
         skip_cron = true
 
         local found = false
@@ -177,9 +185,6 @@ function BossPsiRadar.scan()
         end
 
         if not found then
-            --- Show message.
-            --- destroy radar
-            --- unset boss data
             BossPsiRadar.reject('Unable to locate boss.  Radar refund back to your inventory')
         end
     end

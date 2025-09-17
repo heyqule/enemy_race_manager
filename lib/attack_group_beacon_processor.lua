@@ -13,50 +13,41 @@ local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local Position = require("__erm_libs__/stdlib/position")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 
 local AttackGroupBeaconProcessor = {}
 
 --- Beacon radius for defense, resource and attack entity beacons
-local BEACON_RADIUS = 64
+local BEACON_RADIUS = AttackGroupBeaconConstants.BEACON_RADIUS
 --- Beacon Radius for spawner beacon
-local SPAWNER_BEACON_RADIUS = 160
-local ATTACK_ENTITIES_SCAN_RADIUS = BEACON_RADIUS * 2
+local SPAWNER_BEACON_RADIUS = AttackGroupBeaconConstants.SPAWNER_BEACON_RADIUS
+local ATTACK_ENTITIES_SCAN_RADIUS = AttackGroupBeaconConstants.ATTACK_ENTITIES_SCAN_RADIUS
 
-local RESOURCE_SCAN_RADIUS = BEACON_RADIUS * 2
-local PREVENT_RESOURCE_SCAN_RADIUS = RESOURCE_SCAN_RADIUS * 2
+local RESOURCE_SCAN_RADIUS = AttackGroupBeaconConstants.RESOURCE_SCAN_RADIUS
+local PREVENT_RESOURCE_SCAN_RADIUS = AttackGroupBeaconConstants.PREVENT_RESOURCE_SCAN_RADIUS
 
-local BEACON_HEALTH_LIMIT = 200
+local BEACON_HEALTH_LIMIT = AttackGroupBeaconConstants.BEACON_HEALTH_LIMIT
 --- Beacon Names
-local AERIAL_BEACON = "erm_aerial_beacon"
-local LAND_BEACON = "erm_land_beacon"
-local SPAWN_BEACON = "erm_spawn_beacon"
-local RESOURCE_BEACON = "erm_resource_beacon"
-local ATTACK_ENTITIES_BEACON = "erm_attackable_entity_beacon"
+local AERIAL_BEACON = AttackGroupBeaconConstants.AERIAL_BEACON
+local LAND_BEACON = AttackGroupBeaconConstants.LAND_BEACON
+local SPAWN_BEACON = AttackGroupBeaconConstants.SPAWN_BEACON
+local RESOURCE_BEACON = AttackGroupBeaconConstants.RESOURCE_BEACON
+local ATTACK_ENTITIES_BEACON = AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
 
-local BEACON_TYPE = "simple-entity-with-owner"
-local RESOURCE_BEACON_ACCEPTANCE_LIMIT = 50
-local LAND_SCOUT = "--land_scout--"
-local AERIAL_SCOUT = "--aerial_scout--"
-local ALL_BEACONS = { SPAWN_BEACON, LAND_BEACON, AERIAL_BEACON, ATTACK_ENTITIES_BEACON, RESOURCE_BEACON }
-local ATTACKABLE_ENTITY_TYPES = {
-    "mining-drill",
-    "furnace",
-    "rocket-silo",
-    "artillery-turret",
-    "lab",
-}
-if script.active_mods["space-age"] then
-    table.insert(ATTACKABLE_ENTITY_TYPES, "agricultural-tower")
-    table.insert(ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
-end
+local BEACON_TYPE = AttackGroupBeaconConstants.BEACON_TYPE
+local RESOURCE_BEACON_ACCEPTANCE_LIMIT = AttackGroupBeaconConstants.RESOURCE_BEACON_ACCEPTANCE_LIMIT
+local LAND_SCOUT = AttackGroupBeaconConstants.LAND_SCOUT
+local AERIAL_SCOUT = AttackGroupBeaconConstants.AERIAL_SCOUT
+local ALL_BEACONS = AttackGroupBeaconConstants.ALL_BEACONS
+local ATTACKABLE_ENTITY_TYPES = AttackGroupBeaconConstants.ATTACKABLE_ENTITY_TYPES
+local INDEXABLE_ATTACKABLE_ENTITY_TYPES = AttackGroupBeaconConstants.INDEXABLE_ATTACKABLE_ENTITY_TYPES
 
-local INDEXABLE_ATTACKABLE_ENTITY_TYPES = {
-    "rocket-silo",
-    "artillery-turret",
-}
-if script.feature_flags.space_travel then
-    table.insert(INDEXABLE_ATTACKABLE_ENTITY_TYPES, "cargo-landing-pad")
-end
+--- Scan up to 5KM from each side. Min distance 5 chunks, 6 tiers to scan.
+local SCAN_DISTANCE = AttackGroupBeaconConstants.SCAN_DISTANCE
+local MAX_SCAN_TIERS = AttackGroupBeaconConstants.MAX_SCAN_TIERS
+local SCAN_HALF_WIDTH = AttackGroupBeaconConstants.SCAN_HALF_WIDTH
+local TOTAL_DIRECTIONS = AttackGroupBeaconConstants.TOTAL_DIRECTIONS
+
 
 local CONTROL_DATA = "cdata"
 local ATTACK_ENTITIES_CURRENT_KEY = "aeck"
@@ -486,16 +477,6 @@ local get_beacon_node = function(beacon_data, control_key)
     return new_key, node
 end
 
-AttackGroupBeaconProcessor.LAND_BEACON = LAND_BEACON
-AttackGroupBeaconProcessor.AERIAL_BEACON = AERIAL_BEACON
-AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON = ATTACK_ENTITIES_BEACON
-AttackGroupBeaconProcessor.SPAWN_BEACON = SPAWN_BEACON
-AttackGroupBeaconProcessor.RESOURCE_BEACON = RESOURCE_BEACON
-AttackGroupBeaconProcessor.ATTACKABLE_ENTITY_TYPES = ATTACKABLE_ENTITY_TYPES
-
-AttackGroupBeaconProcessor.LAND_SCOUT = LAND_SCOUT
-AttackGroupBeaconProcessor.AERIAL_SCOUT = AERIAL_SCOUT
-
 --- Set beacon tracker and control data by force
 AttackGroupBeaconProcessor.add_new_force = function(force)
     for _, surface in pairs(game.surfaces) do
@@ -563,6 +544,7 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk = function(sur
                 force = force,
                 area = area,
                 limit = 1,
+                
             })
             local entity_key, entity = next(attackable_entities)
             if entity_key then
@@ -691,6 +673,7 @@ AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk = function(surface, ar
                 force = force_name,
                 area = area,
                 limit = 1,
+                
             })
             local spawner_key = next(spawners)
             if spawner_key then
@@ -730,10 +713,6 @@ AttackGroupBeaconProcessor.get_beacon_data = function(beacon_type, surface_index
         return storage[beacon_type][surface_index][force_name]
     end
     return storage[beacon_type][surface_index]
-end
-
-AttackGroupBeaconProcessor.get_max_tiers = function()
-    return MAX_TIERS
 end
 
 AttackGroupBeaconProcessor.init_globals = function()
@@ -907,7 +886,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                     area = get_spawn_area(distances[1].position),
                     force = source_force,
                     type = "unit-spawner",
-                    limit = 3
+                    limit = 3,
+                    
                 })
             end
 
@@ -960,7 +940,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                 cache.last_resort_spawner = nil
             end
 
-            if tier > MAX_TIERS then
+            if tier > MAX_SCAN_TIERS then
                 tier = 1
                 scan_direction = 0
                 halt_cron = true
@@ -983,7 +963,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                 radius = LAST_RESORT_RADIUS,
                 force = source_force,
                 type = "unit-spawner",
-                limit = 1
+                limit = 1,
+                
             })
 
             local _, spawner = next(spawners)
@@ -1198,19 +1179,23 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
         control_key = control_data[SCOUT_SPAWN_KEY] or nil
         new_key, node = get_beacon_node(beacon_data, control_key)
         i = i + 1
-        if control_key and
-           node ~= nil
-        then
+        if (control_key or new_key) and node ~= nil then
             if node.beacon == nil or node.beacon.valid == false or not has_nearby_spawners(node.beacon) then
                 -- Wipe data node if beacon is no longer exists
                 -- or beacon doesn't have spawner nearby
-                beacon_data[control_key] = nil
+                if control_key then
+                    beacon_data[control_key] = nil
+                elseif new_key then
+                        beacon_data[new_key] = nil
+                end                    
                 node = nil 
+            else
+                control_data[SCOUT_SPAWN_KEY] = new_key                
             end
         else
             control_data[SCOUT_SPAWN_KEY] = new_key
         end
-    until node ~= nil or i < RETRY
+    until node ~= nil or i == RETRY
 
     if node ~= nil then
         return node.beacon
@@ -1333,12 +1318,10 @@ AttackGroupBeaconProcessor.get_scout_name = function(force_name, type, surface_n
     return force_name..type..QualityProcessor.roll_quality(force_name, surface_name)
 end
 
-AttackGroupBeaconProcessor.get_max_tiers = function()
-    return MAX_TIERS
+AttackGroupBeaconProcessor.get_an_attackable_entity = function(entity, radius)
+    radius = radius or BEACON_RADIUS
+    return get_an_attackable_entity(entity, radius)
 end
 
-AttackGroupBeaconProcessor.get_attackable_entity_types = function()
-    return ATTACKABLE_ENTITY_TYPES
-end
 
 return AttackGroupBeaconProcessor

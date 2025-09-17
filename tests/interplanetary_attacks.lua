@@ -58,7 +58,7 @@ it("Interplanetary Attack: Success Attack!", function()
         local entities = surface.find_entities_filtered({
             area = {{-100,-100},{100,100}},
             type = "unit",
-            force = enemy_force_name
+            force = enemy_force_name,
         })
         assert(table_size(entities) > 0,"Has units")
 
@@ -104,7 +104,7 @@ it("Interplanetary Attack: Home planet not discovered", function()
 end)
 
 
-it("Interplanetary Attack: pick new planet on second run", function()
+it("Interplanetary Attack: pick new planet on second run (may fail due to pathing)", function()
     async(5400)
     local surface = game.surfaces[1]
     local surface2 = game.planets.vulcanus.create_surface()

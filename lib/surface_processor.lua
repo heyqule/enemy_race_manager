@@ -113,6 +113,7 @@ function SurfaceProcessor.wander_unit_clean_up()
             local units = surface.find_entities_filtered({
                 type = "unit",
                 force = ForceHelper.get_enemy_forces(),
+                
             })
             for _, unit in pairs(units) do
                 checked_count = checked_count + 1

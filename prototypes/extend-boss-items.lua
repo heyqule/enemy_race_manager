@@ -40,8 +40,6 @@ if mods['space-age'] and mods['quality'] then
 
     for name, entity in pairs(data.raw['radar']) do
         if string.find(entity.name,'--psi-radar', nil, true) then
-            -- boss radar print
-            print('Registering PSI radar effect..')
             if (type(entity.created_effect) == "table") then
                 table.insert(entity.created_effect, {
                     type = "direct",

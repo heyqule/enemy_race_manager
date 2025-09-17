@@ -21,7 +21,7 @@ data:extend(
         },
         {
             type = "quality",
-            name = "erm-boss-rare",
+            name = "erm-boss-exceptional",
             level = 2,
             color = {25, 104, 178},
             order = "c",
@@ -52,7 +52,7 @@ data:extend(
         {
             type = "quality",
             name = "erm-boss-mythic",
-            level = 8,
+            level = 5,
             color = {48, 25, 52},
             order = "f",
             subgroup = "qualities",
@@ -62,7 +62,7 @@ data:extend(
         {
             type = "quality",
             name = "erm-boss-divine",
-            level = 12,
+            level = 6,
             color = {255, 0, 0},
             order = "g",
             subgroup = "qualities",

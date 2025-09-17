@@ -8,31 +8,20 @@
 ---
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
-local Cron = require("__enemyracemanager__/lib/cron_processor")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 
 local BossRewardProcessor = {}
 
 local can_spawn = RaceSettingsHelper.can_spawn
 
---- Intermediate products / weapon consumables
---- No raw materials
-local rewards_items_data = {
+local default_rewards = {
     "uranium-238",
-    "advanced-circuit",
-    "electric-engine-unit",
-    "battery",
-    "rocket",
-    "heavy-oil-barrel",
     "sulfuric-acid-barrel",
-    "engine-unit",
-    "electronic-circuit",
     "plastic-bar",
     "sulfur",
     "steel-plate",
-    "explosives",
     "solid-fuel",
     "piercing-rounds-magazine",
-    "grenade",
     "stone-wall",
     "light-oil-barrel",
     "petroleum-gas-barrel",
@@ -41,54 +30,61 @@ local rewards_items_data = {
     "stone-brick",
     "crude-oil-barrel",
     "iron-gear-wheel",
+    "iron-stick",
+    "electronic-circuit",
+    "coal",
+    "concrete",
 }
-
---- Big Mod Compaibility rewards
 
 -- Up to 8 infinity chests on each boss defeat
 local reward_settings = {
     {
-        position_offset = { x = 10, y = 10 },
+        position_offset = { x = 32, y = 32 },
         chance = { 100, 100, 100, 100, 100 },
     },
     {
-        position_offset = { x = -10, y = -10 },
+        position_offset = { x = -32, y = -32 },
         chance = { 0, 50, 100, 100, 100 },
     },
     {
-        position_offset = { x = -10, y = 10 },
+        position_offset = { x = -32, y = 32 },
         chance = { 0, 0, 50, 100, 100 },
     },
     {
-        position_offset = { x = 10, y = -10 },
+        position_offset = { x = 32, y = -32 },
         chance = { 0, 0, 0, 50, 100 },
     },
     -- Bonus lucky draw
     {
-        position_offset = { x = 32, y = 32 },
-        chance = { 33, 36, 39, 42, 45 },
+        position_offset = { x = 64, y = 64 },
+        chance = { 25, 30, 35, 40, 45 },
     },
     {
-        position_offset = { x = -32, y = -32 },
-        chance = { 20, 23, 26, 29, 33 },
+        position_offset = { x = -64, y = -64 },
+        chance = { 15, 18, 22, 27, 33 },
     },
     {
-        position_offset = { x = -32, y = 32 },
-        chance = { 10, 12, 15, 18, 20 },
+        position_offset = { x = -64, y = 64 },
+        chance = { 10, 12, 14, 17, 20 },
     },
     {
-        position_offset = { x = 32, y = -32 },
-        chance = { 6, 7, 8, 9, 10 },
+        position_offset = { x = 64, y = -64 },
+        chance = { 3, 5, 8, 11, 15 },
     }
 }
 
--- Infinite chests stay for 14 Nauvis Days.
-local expire_at = minute * 7 * 14
+-- Infinite chests stay for 1.5 hour.
+local expire_at = 90 * minute
+if TEST_MODE then
+    expire_at = 1 * minute
+end
 
-local get_infinite_chest = function()
+
+local get_infinite_chest = function(force)
     return {
         name = "infinity-chest",
-        force = "neutral"
+        force = force,
+        preserve_contents_when_created = true
     }
 end
 
@@ -103,7 +99,7 @@ end
 local spawn_chest = function(reward_setting, boss_data)
     local surface = boss_data.surface
 
-    local chest = get_infinite_chest()
+    local chest = get_infinite_chest(boss_data.radar.force)
     local name = chest.name
     local force = chest.force
     local offset = reward_setting.position_offset
@@ -124,28 +120,37 @@ local spawn_chest = function(reward_setting, boss_data)
     return nil
 end
 
-local get_item_name = function()
+local get_item_name = function(rewards_items_data)
     return rewards_items_data[math.random(1, #rewards_items_data)]
 end
 
 function BossRewardProcessor.exec()
     local boss = storage.boss
+    local reward_items_prototype = prototypes.mod_data[boss.force_name..'--boss-reward-data']
+    local reward_items_data
+    if reward_items_prototype and reward_items_prototype.data and reward_items_prototype.data.reward_data then
+        reward_items_data = reward_items_prototype.data.reward_data
+    else        
+        reward_items_data = default_rewards
+    end
+    
     for _, value in pairs(reward_settings) do
         if (can_spawn(value["chance"][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
             if chest then
-                local infinity_item_name = get_item_name()
-                chest.set_infinity_container_filter(1, {
-                    name = infinity_item_name,
-                    count = 100,
-                    mode = "exactly"
-                })
+                for i=1, 2, 1 do
+                    chest.set_infinity_container_filter(i, {
+                        name = get_item_name(reward_items_data),
+                        count = 12,
+                        mode = "exactly"
+                    })         
+                end
                 chest.destructible = false
                 chest.minable = false
                 chest.rotatable = false
                 chest.operable = false
-                DebugHelper.print("Spawning Chest with " .. infinity_item_name)
                 table.insert(storage.boss_rewards, reward_data(chest))
+                AttackGroupBeaconProcessor.create_attack_entity_beacon(chest)
             end
         end
     end
@@ -156,8 +161,6 @@ function BossRewardProcessor.clean_up()
     if rewards == nil or #rewards == 0 then
         return
     end
-
-    local removed_positions = {}
     for position, reward in pairs(rewards) do
         if game.tick > reward.expire_at and
                 reward.entity and
@@ -165,12 +168,8 @@ function BossRewardProcessor.clean_up()
         then
             DebugHelper.print("Destroy chest at " .. reward.entity_position.x .. "/" .. reward.entity_position.y)
             reward.entity.destroy();
-            table.insert(removed_positions, position)
+            storage.boss_rewards[position] = nil
         end
-    end
-
-    for _, position in pairs(removed_positions) do
-        table.remove(storage.boss_rewards, position)
     end
 end
 

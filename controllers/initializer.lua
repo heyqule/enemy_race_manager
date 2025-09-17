@@ -8,6 +8,7 @@
 require("__enemyracemanager__/global")
 
 local Queue = require("__erm_libs__/stdlib/queue")
+local String = require("__erm_libs__/stdlib/string")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
@@ -29,8 +30,36 @@ local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
+
+--- script.raise_event doesn't work during on_init?
+local emulate_event_raise = function(event_name, event_data)
+    local event_function = script.get_event_handler(event_name)
+    if event_function then
+        event_data['name'] = event_name
+        event_data['tick'] = game.tick
+        event_data['mod_name'] = "enemyracemanager"
+        event_function(event_data)
+    end
+end
+
+local populations = {
+    ["playable-tank"] = 3,
+    ["playable-car"] = 2,
+}
+
+local refresh_army_data = function()
+    -- Register Army Units
+    for _, prototype in pairs(prototypes.get_entity_filtered({{filter = "type", type = "unit"}})) do
+        local nameToken = String.split(prototype.name, "--")
+        if nameToken[1] == MOD_NAME and populations[nameToken[2]] then
+            remote.call("enemyracemanager","army_units_register", prototype.name, populations[nameToken[2]]);
+        end
+    end
+end
+    
 
 local createRace = function()
     local force = game.forces[GLEBA_FORCE_NAME]
@@ -111,6 +140,7 @@ local addRaceSettings = function()
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 20 },
         { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 },
     }
+    
     race_settings.featured_flying_groups = {
         { { "distractor", "destroyer" }, { 1, 1 }, 75 },
         { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
@@ -127,9 +157,9 @@ local addRaceSettings = function()
 
     remote.call("enemyracemanager", "register_race", race_settings)
 
-    script.raise_event(
+    emulate_event_raise(
             GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
-            {affected_race = FORCE_NAME }
+            {affected_race = FORCE_NAME}
     )
 
 
@@ -154,7 +184,7 @@ local addRaceSettings = function()
 
     RaceSettingsHelper.process_unit_spawn_rate_cache(gleba_race_settings)
 
-    script.raise_event(
+    emulate_event_raise(
             GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
             {affected_race = GLEBA_FORCE_NAME }
     )
@@ -181,17 +211,16 @@ local prepare_world = function()
     RaceSettingsHelper.clean_up_race()
     SurfaceProcessor.rebuild_race()
 
-    -- Calculate Biter Level
-    --if table_size(storage.race_settings) > 0 then
-    --    LevelProcessor.calculate_multiple_levels()
-    --end
-
+    
+    refresh_army_data()
+    
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
-    script.raise_event(
-        GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
+    emulate_event_raise(
+            GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD],
+            {  success = true }
     )
 end
 
@@ -258,9 +287,11 @@ local init_globals = function()
     SpawnLocationScanner.init_globals()
     InterplanetaryAttacks.init_globals()
     QualityProcessor.on_init()
+    EmotionProcessor.init_globals()
 
-    script.raise_event(
-        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
+    emulate_event_raise(
+        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL],
+{  success = true }
     )
 end
 
@@ -314,19 +345,6 @@ local on_runtime_mod_setting_changed = function(event)
         end
     end
 end
-
---- Initialize event names
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
-
 
 local InitController = {}
 

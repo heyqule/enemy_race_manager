@@ -3,11 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 7/6/2025 3:55 PM
 ---
-
-if not ENABLE_BOSS_TESTS then
-    return
-end
-
 local TestShared = require("shared")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 
@@ -79,8 +74,8 @@ for tier = 1, 5, 1 do
             assert(hive[1], "Boss hive presents")
             assert(nyduspit[1], "Boss nyduspit presents")
             assert(units[1], "Boss hive presents")
-            game.print(hive[1].health)
-            game.print(nyduspit[1].health)
+            game.print('Hive:'..hive[1].health)
+            game.print('nyduspit:'..nyduspit[1].health)
             if (tier > 1) then
                 assert(hive[1].quality.name == BossProcessor.get_boss_quality(), "Boss hive quality match")
                 assert(nyduspit[1].quality.name == BossProcessor.get_boss_quality(), "Boss nyduspit quality match")

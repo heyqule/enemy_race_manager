@@ -88,7 +88,7 @@ Click.boss_detail = function(event)
     local element = event.element
     local nameToken = String.split(element.name, "/")
     local owner = game.players[element.player_index]
-    GuiContainer.boss_detail_window.show(owner, nameToken[1], storage.boss_logs[nameToken[1]])
+    GuiContainer.boss_detail_window.show(owner, storage.race_settings[nameToken[1]], storage.boss_logs[nameToken[1]])
 end
 
 Click.erm_boss_detail_close_button = function(event)
@@ -117,7 +117,7 @@ Click.erm_quality_points_detail_close_button = function(event)
 end
 
 Click.victory_dialog_tier_cancel = function(event)
-    local owner = game.players[element.element.player_index]
+    local owner = game.players[event.element.player_index]
     GuiContainer.victory_dialog.hide(owner)
 end
 

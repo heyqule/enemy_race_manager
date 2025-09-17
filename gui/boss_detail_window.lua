@@ -17,9 +17,9 @@ local BossDetailsWindow = {
 local get_victory_label = function(victory)
     local title_str
     if victory == true then
-        title_str = "[img=virtual-signal.signal-green] "
+        title_str = "[img=virtual-signal.signal-check] "
     else
-        title_str = "[img=virtual-signal.signal-red] "
+        title_str = "[img=virtual-signal.signal-deny] "
     end
 
     return title_str
@@ -42,15 +42,28 @@ local add_data_entry = function(data_box, entry)
     data_box.add { type = "label", caption = { "gui.boss_detail_data_fight_duration" } }
     data_box.add { type = "label", caption = GlobalConfig.format_daytime_string(entry.spawn_tick, entry.last_tick) }
 
-    data_box.add { type = "label", caption = { "gui.boss_detail_data_difficulty" } }
-    data_box.add { type = "label", caption = entry.difficulty }
+    if entry.boss_health then
+        data_box.add { type = "label", caption = { "gui.boss_detail_data_boss_health" } }
+        data_box.add { type = "label", caption = string.format("%.2f", entry.boss_health)..'%' }
+    end
 
-    data_box.add { type = "label", caption = { "gui.boss_detail_data_squad_size" } }
-    data_box.add { type = "label", caption = entry.squad_size }
+    if entry.radar_health then
+        data_box.add { type = "label", caption = { "gui.boss_detail_data_radar_health" } }
+        data_box.add { type = "label", caption = string.format("%.2f",entry.radar_health)..'%' }        
+    end
+
+
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_unit_assist_size" } }
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_"..entry.unit_assist_size} }
+
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_max_group_size" } }
+    data_box.add { type = "label", caption =  entry.max_group_size } 
+    
 end
 
-function BossDetailsWindow.show(player, race_name, boss_log)
+function BossDetailsWindow.show(player, race_settings, boss_log)
     local gui = player.gui.screen
+    local race_name = race_settings.race
     if gui[BossDetailsWindow.root_name] then
         return
     end
@@ -67,7 +80,7 @@ function BossDetailsWindow.show(player, race_name, boss_log)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = BossDetailsWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.boss_detail_title", race_name }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.boss_detail_title", race_settings.label }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.vertically_stretchable = true
@@ -89,7 +102,7 @@ function BossDetailsWindow.show(player, race_name, boss_log)
         best_record_flow.add { type = "label", name = "erm_boss_detail_best_record", caption = { "gui.boss_detail_best_record_na" }, style = "caption_label" }
     else
         local datetime_str = GlobalConfig.format_daytime_string(0, boss_log.best_record.time)
-        best_record_flow.add { type = "label", name = "erm_boss_detail_best_record", caption = { "gui.boss_detail_best_record", datetime_str, boss_log.best_record.tier, boss_log.difficulty, boss_log.squad_size }, style = "caption_label" }
+        best_record_flow.add { type = "label", name = "erm_boss_detail_best_record", caption = { "gui.boss_detail_best_record", datetime_str, boss_log.best_record.tier}, style = "caption_label" }
     end
 
     local entries_top_flow = detail_window.add { type = "flow", name = "entries_root_flow", direction = "vertical" }

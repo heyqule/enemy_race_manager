@@ -23,37 +23,35 @@ local base_spawn_rate = 50
 local group_variance = 20
 local home_group_size = 20
 
-local default_ignore_list = {
-    --- Offical planets --
-    aquilo = true,
+local default_ignore_list
 
-    --- 3rd party planets with their defined uniqueness
-    --- Maraxsis
-    maraxsis = true,
-    ["maraxsis-trench"] = true,
-}
+local get_default_ignore_list = function()
+    if not default_ignore_list then
+        default_ignore_list = prototypes.mod_data[MOD_DATA_NEUTRAL_FORCES].data
+    end
+    return default_ignore_list
+end
 
 local player_entities = {"rocket-silo", "mining-drill", "cargo-landing-pad"}
 
 local defense_entities = {"artillery-turret", "artillery-wagon"}
 
 local is_not_ignore_planet = function(planet)
-    local prototype = planet.prototype
-    if default_ignore_list[planet.name] or
-       prototype.hidden
+    local prototypeObj = planet.prototype
+    if get_default_ignore_list()[planet.name]
     then
         return false
     end
 
-    if prototype.map_gen_settings.autoplace_controls then
-        for name, _ in pairs(prototype.map_gen_settings.autoplace_controls) do
+    if prototypeObj.map_gen_settings.autoplace_controls then
+        for name, _ in pairs(prototypeObj.map_gen_settings.autoplace_controls) do
             if MapgenFunctions.autoplace_is_enemy_base(name) then
                 return true
             end
         end
     end
 
-    if prototype.map_gen_settings.territory_settings then
+    if prototypeObj.map_gen_settings.territory_settings then
         return true
     end
 
@@ -102,6 +100,7 @@ function InterplanetaryAttacks.init_globals()
         storage.interplanetary_intel[1].has_player_entities = true
     end
 
+    get_default_ignore_list()
     for interface_name, functions in pairs(remote.interfaces) do
         if functions["interplanetary_attack_ignore_planets"] then
             local data = remote.call(interface_name, "interplanetary_attack_ignore_planets")

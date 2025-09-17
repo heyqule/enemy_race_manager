@@ -8,10 +8,11 @@ local Queue = require("__erm_libs__/stdlib/queue")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
-
+local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local EmotionalProcessor = require("__enemyracemanager__/lib/emotion_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 local TestShared = {}
@@ -26,12 +27,14 @@ function TestShared.prepare_the_factory()
         end
     end
 
+    AttackGroupPathingProcessor.reset_globals()
     QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
     QualityProcessor.calculate_quality_points()
     InterplanetaryAttacks.reset_globals()
+    EmotionalProcessor.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
     TestShared.reset_forces()
@@ -40,7 +43,7 @@ end
 function TestShared.reset_the_factory()
     local surface = game.surfaces[1]
     for key, _ in pairs(game.forces) do
-        local entities = surface.find_entities_filtered({ force = game.forces[key] })
+        local entities = surface.find_entities_filtered({ force = game.forces[key] } )
         for _, entity in pairs(entities) do
             entity.destroy({raise_destroy=true})
         end
@@ -50,10 +53,12 @@ function TestShared.reset_the_factory()
         game.delete_surface(surface)
     end
 
+    AttackGroupPathingProcessor.reset_globals()
     QualityProcessor.reset_all_progress()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
+    EmotionalProcessor.reset_globals()    
     InterplanetaryAttacks.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
@@ -68,6 +73,7 @@ function TestShared.CleanCron()
 
     -- Conditional Crons
     storage.quick_cron = Queue()  -- Spawn
+    storage.boss_cron = Queue()
     storage.teleport_cron = {}
 
     storage.erm_unit_group = {}
@@ -125,12 +131,543 @@ function TestShared.reset_lab_tile(radius, surface)
     surface.set_tiles(tiles, true, true, true, true)
 end
 
+function TestShared.create_iron_ore_batch(surface, center_position, size, amount)
+    -- size should be 5 for a 5x5 grid
+    local half_size = math.floor(size / 2)
+
+    -- Create the ore in a grid pattern
+    local resource_entity = nil
+    for x = -half_size, half_size do
+        for y = -half_size, half_size do
+            local position = {
+                x = center_position.x + x,
+                y = center_position.y + y
+            }
+
+            -- Create the iron ore entity with specified amount
+            resource_entity = surface.create_entity{
+                name = "iron-ore",
+                position = position,
+                amount = amount,
+                force = "neutral"
+            }
+        end
+    end
+
+    AttackGroupBeaconProcessor.create_resource_beacon(resource_entity)
+end
+
 function TestShared.get_command_chain()
     return {
         type = defines.command.compound,
         structure_type = defines.compound_command.return_last,
         commands = {}
     }
+end
+
+local DEFAULT_DIMENSION  = 192
+local RIVER_WIDTH  = 16
+local GATE_WIDTH  = 64
+
+local top_horizontal_river = function(surface, dimension, riverwidth, has_gate, gatewidth)
+    local water_tiles = {}
+    dimension = dimension or DEFAULT_DIMENSION
+    riverwidth = riverwidth or RIVER_WIDTH
+    gatewidth = gatewidth or GATE_WIDTH
+    has_gate = has_gate or false
+    surface = surface or game.surfaces[1]
+
+    if has_gate then
+        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+            for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+
+        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+            for x = (dimension) - (dimension - gatewidth), dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    else
+        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+            for x = dimension * -1, dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    end
+
+    if next(water_tiles) then
+        surface.set_tiles(water_tiles)
+    end
+end
+
+local function bottom_horizontal_river(surface, dimension, riverwidth, has_gate, gatewidth)
+    local water_tiles = {}
+    dimension = dimension or DEFAULT_DIMENSION
+    riverwidth = riverwidth or RIVER_WIDTH
+    gatewidth = gatewidth or GATE_WIDTH
+    has_gate = has_gate or false
+    surface = surface or game.surfaces[1]
+
+    if has_gate then
+        for y = dimension - riverwidth, dimension, 1 do
+            for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+
+        for y = dimension - riverwidth, dimension, 1 do
+            for x= (dimension) - (dimension - gatewidth), dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    else
+        for y = dimension - riverwidth, dimension, 1 do
+            for x= dimension * -1, dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    end
+
+    if next(water_tiles) then
+        surface.set_tiles(water_tiles)
+    end
+end
+
+local function left_vertical_river(surface, dimension, riverwidth, has_gate, gatewidth)
+    local water_tiles = {}
+    dimension = dimension or DEFAULT_DIMENSION
+    riverwidth = riverwidth or RIVER_WIDTH
+    gatewidth = gatewidth or GATE_WIDTH
+    has_gate = has_gate or false
+    surface = surface or game.surfaces[1]
+
+    if has_gate then
+        for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
+            for x=(dimension * -1), (dimension * -1) + riverwidth, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+
+        for y = (dimension) - (dimension - gatewidth), dimension, 1 do
+            for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    else
+        for y = (dimension * -1), dimension, 1 do
+            for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    end
+
+    if next(water_tiles) then
+        surface.set_tiles(water_tiles)
+    end
+end
+
+local function right_vertical_river(surface, dimension, riverwidth, has_gate, gatewidth)
+    local water_tiles = {}
+    dimension = dimension or DEFAULT_DIMENSION
+    riverwidth = riverwidth or RIVER_WIDTH
+    gatewidth = gatewidth or GATE_WIDTH
+    has_gate = has_gate or false
+    surface = surface or game.surfaces[1]
+
+    if has_gate then
+        for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
+            for x=dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+
+        for y = (dimension) - (dimension - gatewidth), dimension, 1 do
+            for x=dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    else
+        for y=(dimension * -1), dimension, 1 do
+            for x=dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, {name = "water", position={x,y}})
+            end
+        end
+    end
+
+    if next(water_tiles) then
+        surface.set_tiles(water_tiles)
+    end
+end
+
+local function draw_water(surface, x1,y1,x2,y2)
+    local water_tiles = {}
+    for x = x1, x2, 1 do
+        for y = y1, y2, 1 do
+            table.insert(water_tiles, {name = "water", position={x,y}})
+        end
+    end
+
+    if next(water_tiles) then
+        surface.set_tiles(water_tiles)
+    end
+end
+
+function TestShared.buildBaseNoOpen(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+end
+
+function TestShared.buildBaseWithWestDefense(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    -- (-) Top horizontal
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, true, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    -- build walls
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+        for x=(dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        end
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithWestDefenseNorthOpen(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    -- (-) Top horizontal
+    top_horizontal_river(surface, dimension, riverwidth, true, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, true, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    -- build walls
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+        for x=(dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        end
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithWestDefenseSouthOpen(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    -- (-) Top horizontal
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, true, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, true, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    -- build walls
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+        for x=(dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        end
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            inserter.direction = defines.direction.north
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithWestDefenseForBrutalForce(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    -- (-) Top horizontal
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, true, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    -- build walls
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+        for x=(dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        end
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        end
+        if y%2 == 0 and y > -200 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithNorthDefenseForBrutalForce(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    -- (-) Top horizontal
+    top_horizontal_river(surface, dimension, riverwidth, true, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    -- build walls
+    for x = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+        for y=(dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        end
+
+        if x%2 == 0 then
+            surface.create_entity({name="laser-turret",position={x, (dimension * -1)+6}, force = "player"})
+        end
+        if x%2 == 0 and x < 200 then
+            surface.create_entity({name="gun-turret",position={x, (dimension * -1)+8}, force = "player"})
+        end
+        if x%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={x,(dimension * -1)+9}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if x%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={x, (dimension * -1)+10}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if x%10 == 0 then
+            surface.create_entity({name="substation",position={x, (dimension * -1)+12}, force = "player"})
+        end
+        if x%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={x, (dimension * -1)+14}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithWestAerialDefenseForBrutalForce(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+    right_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
+        end
+        if y%2 == 0 and y < 0 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
+        end
+    end
+end
+
+function TestShared.buildBaseWithBackdoorOpen(options)
+    options = options or {}
+    local dimension = options["dimension"] or DEFAULT_DIMENSION
+    local riverwidth = options["riverwidth"] or RIVER_WIDTH
+    local gatewidth = options["gatewidth"] or GATE_WIDTH
+    local surface = options["surface"] or game.surfaces[1]
+
+    top_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
+    left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
+
+    draw_water(surface, -120, dimension * -1, -100,  dimension)
+
+    right_vertical_river(surface, dimension, riverwidth, true, gatewidth)
+
+
+    for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
+
+        if y%2 == 0 then
+            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
+        end
+        if y%2 == 0 and y < 0 then
+            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
+        end
+        if y%2 == 0 then
+            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
+            inserter.direction = defines.direction.east
+        end
+        if y%2 == 0 then
+            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
+            chest.set_infinity_container_filter(1, {
+                name = "uranium-rounds-magazine",
+                count = 100,
+                mode = "exactly"
+            })
+            chest.minable = false
+            chest.rotatable = false
+            chest.operable = false
+        end
+
+        if y%10 == 0 then
+            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
+        end
+        if y%10 == 0 then
+            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
+        end
+    end
 end
 
 return TestShared

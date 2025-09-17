@@ -10,6 +10,7 @@ local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processo
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
@@ -95,8 +96,8 @@ local on_unit_group_created = function(event)
 end
 
 local scout_type = {
-    AttackGroupBeaconProcessor.LAND_SCOUT,
-    AttackGroupBeaconProcessor.AERIAL_SCOUT
+    AttackGroupBeaconConstants.LAND_SCOUT,
+    AttackGroupBeaconConstants.AERIAL_SCOUT
 }
 
 local checking_state = {
@@ -326,12 +327,12 @@ end
 local UnitControl = {}
 
 UnitControl.events = {
-    --- This event queue up to 5 batch of units.
+    --- This event queue up to 10 units.
     [Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD]] = function(event)
         local i = 0
         local limit = event.limit or 1
-        if limit > 5 then
-            limit = 5
+        if limit > 10 then
+            limit = 10
         end
         repeat
             BaseBuildProcessor.build_formation(event.group)

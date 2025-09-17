@@ -84,7 +84,8 @@ local function on_configuration_changed(event)
             for chunk in surface.get_chunks() do
                 local entities = surface.find_entities_filtered {
                     type = include_types,
-                    area = chunk.area
+                    area = chunk.area,
+                    
                 }
                 for _, entity in pairs(entities) do
                     if enabled then

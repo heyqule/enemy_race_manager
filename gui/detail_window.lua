@@ -46,7 +46,7 @@ function DetailWindow.show(player, race_setting)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = DetailWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.detail_title", race_setting.race }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.detail_title", race_setting.label }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.vertically_stretchable = true
@@ -71,7 +71,7 @@ function DetailWindow.show(player, race_setting)
     item_table.style.horizontally_stretchable = true
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
-    item_table.add { type = "label", caption = race_setting.race }
+    item_table.add { type = "label", caption = race_setting.label }
 
     item_table.add { type = "label", caption = { "gui.tier_column" } }
     item_table.add { type = "label", caption = race_setting.tier }

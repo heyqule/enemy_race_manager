@@ -53,15 +53,6 @@ data:extend {
         allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3 },
         order = "enemyracemanager-116"
     },
-    {
-        type = "double-setting",
-        name = "enemyracemanager-pollution-to-attack-multipliers",
-        description = "enemyracemanager-pollution-to-attack-multipliers",
-        setting_type = "startup",
-        default_value = 0.2,
-        allowed_values = { 0, 0.05, 0.1, 0.2 },
-        order = "enemyracemanager-117"
-    },
     --- Startup: Map Generation
 
     {
@@ -446,8 +437,8 @@ data:extend {
         name = "enemyracemanager-precision-strike-flying-unit-chance",
         description = "enemyracemanager-precision-strike-flying-unit-chance",
         setting_type = "runtime-global",
-        default_value = 25,
-        allowed_values = { 10, 20, 25, 33, 50, 66, 75, 80, 90 },
+        default_value = 10,
+        allowed_values = { 10, 15, 20, 25, 33, 50, 66, 75, 80, 90 },
         order = "enemyracemanager-441"
     },
     {
@@ -504,6 +495,25 @@ data:extend {
         allowed_values = {5, 10, 20, 25, 33, 50},
         order = "enemyracemanager-911"
     },
+    --- EMOTIONAL DAMAGE, causes EMOTIONAL ATTACKS
+    --{
+    --    type = "bool-setting",
+    --    name = "enemyracemanager-emotional-attacks",
+    --    description = "enemyracemanager-emotional-attacks",
+    --    setting_type = "runtime-global",
+    --    default_value = false,
+    --    order = "enemyracemanager-500"
+    --},
+    --{
+    --    type = "double-setting",
+    --    name = "enemyracemanager-emotional-attacks-phase-switch-frequenzy",
+    --    description = "enemyracemanager-emotional-attacks-phase-switch-frequenzy",
+    --    setting_type = "runtime-global",
+    --    default_value = 1,
+    --    allowed_values = {0.5 ,1, 1.5, 2, 2.5, 3, 4, 5},
+    --    order = "enemyracemanager-501"
+    --},
+    
     {
         type = "int-setting",
         name = "enemyracemanager-enemy-corpse-time",

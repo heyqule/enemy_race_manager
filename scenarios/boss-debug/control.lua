@@ -78,10 +78,11 @@ script.on_event(defines.events.on_player_created, function(event)
     local force = player.force
     local level = 20
     scenarios_helper.spawn_tile(surface, 320)
-    scenarios_helper.build_base(surface, normal_full_base_2_0, 0, 0)
+    scenarios_helper.build_base(surface, legendary_full_base_with_normal_ammo_2_0, 0, 0)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_enemy_params(1, 1)
     scenarios_helper.set_game_speed(1)
+    scenarios_helper.set_boss_tier(5)
 
     surface.daytime = 0.5
     surface.daytime = 1
@@ -94,7 +95,7 @@ script.on_event(defines.events.on_player_created, function(event)
         player.character.destroy()
     end
 
-
+    scenarios_helper.replace_entity(surface, "stone-wall", "refined-concrete-wall")
     
 
     -- Comment out the following to start with godmode
@@ -195,13 +196,13 @@ end)
 --
 
 
-script.on_nth_tick(300, function()
+script.on_nth_tick(600, function()
     local surface = game.surfaces.char
     local entity = surface.find_entities_filtered({
-        name = "enemy_erm_zerg--boss_overmind--1"
+        name = "enemy_erm_zerg--boss_overmind--5",
     })
     if entity[1] then
         print("Damaging Boss...")
-        entity[1].damage(5000, "player", "impact")
+        entity[1].damage(69000, "player", "impact")
     end
 end)

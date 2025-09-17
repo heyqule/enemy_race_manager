@@ -16,6 +16,11 @@ require("prototypes/extend-gleba.lua")
 
 require("prototypes/extend-defense.lua")
 
+if settings.startup["enemyracemanager-enhance-defense"].value == true then
+    require "prototypes.army.tank"
+    require "prototypes.army.car"
+end
+
 require("prototypes/extend-weapons.lua")
 
 require("prototypes/extend-attackable-entities.lua")

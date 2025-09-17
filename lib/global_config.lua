@@ -33,8 +33,6 @@ GlobalConfig.QUICK_CRON = 11
 -- Run garbage collection and statistics on each nauvis day
 GlobalConfig.GC_AND_STATS = 25000
 
-
-
 GlobalConfig.EVENT_FLUSH_GLOBAL = "erm_flush_global"
 GlobalConfig.EVENT_ADJUST_ATTACK_METER = "erm_adjust_attack_meter"
 GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER = "erm_adjust_accumulated_attack_meter"
@@ -52,8 +50,6 @@ GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = "erm_interplanatary_attack_exec"
 GlobalConfig.RACE_SETTING_UPDATE = "erm_race_setting_update"
 GlobalConfig.PREPARE_WORLD = "erm_prepare_world"
 
---- Store script.generate_event_name() IDs
-GlobalConfig.custom_event_handlers = {}
 
 --- Quality system attributes
 GlobalConfig.MAX_LEVELS = 5
@@ -359,12 +355,12 @@ end
 
 function GlobalConfig.format_daytime(start_tick, end_tick)
     local difference = end_tick - start_tick
-    local lday = math.floor(difference / day)
-    local hour_difference = difference - (lday * day)
+    local lday = math.floor(difference / (24*hour))
+    local hour_difference = difference - (lday * (24*hour))
     local lhour = math.floor(hour_difference / hour)
-    local minute_difference = difference - (lday * day) - (lhour * hour)
+    local minute_difference = difference - (lday * (24*hour)) - (lhour * hour)
     local lminute = math.floor(minute_difference / minute)
-    local second_difference = difference - (lday * day) - (lhour * hour) - (lminute * minute)
+    local second_difference = difference - (lday * (24*hour)) - (lhour * hour) - (lminute * minute)
     local lsecond = math.floor(second_difference / second)
     return lday, lhour, lminute, lsecond
 end
@@ -372,8 +368,10 @@ end
 function GlobalConfig.format_daytime_string(start_tick, end_tick)
     local day, hour, minute, second = GlobalConfig.format_daytime(start_tick, end_tick)
     local datetime_str = ""
-    if day > 0 then
-        datetime_str = datetime_str .. string.format("%02d D ", day)
+    if day and day > 0 then
+        datetime_str = string.format("%02d D ", day)
+    else
+        datetime_str = "0 D "
     end
 
     datetime_str = datetime_str .. string.format("%02d:%02d:%02d", hour, minute, second)

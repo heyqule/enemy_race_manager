@@ -6,6 +6,7 @@
 
 
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local TestShared = require("shared")
 
 local SCAN_DISTANCE = { 700, 1500, 2200, 3000, 3800, 4800 }
@@ -173,7 +174,7 @@ describe("Surfaces and Forces", function()
         assert.equal("table", type(control_data), "Valid Surface Control Data")
         assert.equal("table", type(control_data["enemy"]), "Valid Surface Force Control Data")
 
-        local beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconProcessor.RESOURCE_BEACON, surface.index)
+        local beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconConstants.RESOURCE_BEACON, surface.index)
         assert.equal("table", type(beacon_data), "Valid Beacon Data")
 
         surface.clear()
@@ -182,7 +183,7 @@ describe("Surfaces and Forces", function()
         assert.equal("table", type(control_data), "Valid Surface Control Data")
         assert.equal("table", type(control_data["enemy"]), "Valid Surface Force Control Data")
 
-        beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconProcessor.RESOURCE_BEACON, surface.index)
+        beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconConstants.RESOURCE_BEACON, surface.index)
         assert.equal("table", type(beacon_data), "Valid Beacon Data")
 
         game.delete_surface(planet_name)
@@ -190,7 +191,7 @@ describe("Surfaces and Forces", function()
             control_data = AttackGroupBeaconProcessor.get_control_data(surface_index)
             assert.equal(nil, control_data, "Surface data is nil")
 
-            beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconProcessor.RESOURCE_BEACON, surface_index)
+            beacon_data = AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconConstants.RESOURCE_BEACON, surface_index)
             assert.equal(nil, beacon_data, "Valid Beacon Data")
         end)
     end)
@@ -269,7 +270,7 @@ describe("Pick Spawn beacon", function()
                 spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 
                 if not spawn_location then
-                    for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                    for i = 0, (AttackGroupBeaconConstants.MAX_SCAN_TIERS * #directions) - 1, 1 do
                         spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
                         if spawn_location then
                             break
@@ -308,7 +309,7 @@ describe("Pick Spawn beacon", function()
             spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
 
             if not spawn_location then
-                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                for i = 0, (AttackGroupBeaconConstants.MAX_SCAN_TIERS * #directions) - 1, 1 do
                     --- Disable fallback to test this.
                     spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true, false)
                     if spawn_location then
@@ -347,7 +348,7 @@ describe("Pick Spawn beacon", function()
             spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
 
             if not spawn_location then
-                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) + 1, 1 do
+                for i = 0, (AttackGroupBeaconConstants.MAX_SCAN_TIERS * #directions) + 1, 1 do
                     spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
@@ -512,7 +513,7 @@ describe("Modify", function()
             spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
 
             if not spawn_location then
-                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                for i = 0, (AttackGroupBeaconConstants.MAX_SCAN_TIERS * #directions) - 1, 1 do
                     spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
@@ -549,7 +550,7 @@ describe("Modify", function()
             spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
 
             if not spawn_location then
-                for i = 0, (AttackGroupBeaconProcessor.get_max_tiers() * #directions) - 1, 1 do
+                for i = 0, (AttackGroupBeaconConstants.MAX_SCAN_TIERS * #directions) - 1, 1 do
                     spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon, true)
                     if spawn_location then
                         break
@@ -608,7 +609,7 @@ describe("Pick Spawn Cache", function()
         local last_spawn_location_number = spawn_location.unit_number
         assert.equal(first_spawn_location_number, last_spawn_location_number, "First and last spawn should be equal")
 
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil( data_check.cache["enemy"].cached_beacon_matrix[0], "Verify cached_beacon_matrix")
         assert.not_nil( data_check.cache["enemy"].cached_beacon_matrix[4].skip, "Verify cached_beacon_matrix")
         assert.not_nil( data_check.cache["enemy"].cached_beacon_matrix[8], "Verify cached_beacon_matrix")
@@ -712,7 +713,7 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(first_spawn,"First Spawn Pick success")
         assert.not_nil(second_spawn,"Second Spawn Pick success")
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.equal(data_check.cache["enemy"].tier, 1, "Tier 1, Data:"..data_check.cache["enemy"].tier)
         --- Picked 8 and moved scanner to 12
         assert.equal(data_check.cache["enemy"].direction, 12, "Direction South(4), Scanner at West(6), Data: "..data_check.cache["enemy"].direction)
@@ -804,7 +805,7 @@ describe("Pick Spawn Cache", function()
         assert.not_nil(second_spawn,"Second Spawn Pick success")
         assert.equal(first_spawn.unit_number, second_spawn.unit_number, "Both picks should be equal")
 
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.equal(data_check.cache["enemy"].tier, 1, "Tier 1, Data:"..data_check.cache["enemy"].tier)
         assert.equal(data_check.cache["enemy"].direction, 12, "Direction South(4), Scanner at West(6), Data: "..data_check.cache["enemy"].direction)
 
@@ -821,7 +822,7 @@ describe("Pick Spawn Cache", function()
         assert.is_nil(no_spawn,"It died, cant pick spawn")
 
         local far_away_beacon = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawn_location = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawn_location then
@@ -855,7 +856,7 @@ describe("Pick Spawn Cache", function()
         local target_unit_number = target_beacon.beacon.unit_number
 
         local last_resort = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawner then
@@ -870,7 +871,7 @@ describe("Pick Spawn Cache", function()
         end
 
         assert.not_nil(last_resort,"Pick up last resort location")
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil(data_check.cache["enemy"].last_resort_spawner, "Has last resort spawner")
 
         AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
@@ -896,7 +897,7 @@ describe("Pick Spawn Cache", function()
         local target_unit_number = target_beacon.beacon.unit_number
 
         local last_resort = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawner then
@@ -912,7 +913,7 @@ describe("Pick Spawn Cache", function()
 
         assert.not_nil(last_resort,"Pick up last resort location")
 
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.not_nil(data_check.cache["enemy"].last_resort_spawner, "Has last resort spawner")
         assert.is_nil(data_check.cache["enemy"].bypass, "Not by passed")
         assert.not_nil(data_check.cache["enemy"].bypass_scanner, "Has by passed scanner")
@@ -927,7 +928,7 @@ describe("Pick Spawn Cache", function()
         })
 
         local last_resort2 = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawner then
@@ -967,7 +968,7 @@ describe("Pick Spawn Cache", function()
         to_die_entity.die(player)
 
         local last_resort = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawner then
@@ -981,7 +982,7 @@ describe("Pick Spawn Cache", function()
             end
         end
 
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.is_nil(data_check.cache["enemy"].last_resort_spawner, "Has last resort spawner")
         assert.not_nil(data_check.cache["enemy"].bypass, "Not by passed")
         assert.not_nil(data_check.cache["enemy"].bypass_scanner, "Has by passed scanner")
@@ -1002,7 +1003,7 @@ describe("Pick Spawn Cache", function()
 
         --- Select nothing,by passing node
         local last_resort = nil
-        for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+        for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
             for _, k in pairs(directions) do
                 local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                 if spawner then
@@ -1016,7 +1017,7 @@ describe("Pick Spawn Cache", function()
             end
         end
 
-        local data_check = storage[AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
+        local data_check = storage[AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON][surface.index][player.name][target_unit_number]
         assert.is_nil(data_check.cache["enemy"].last_resort_spawner, "Dont have last resort spawner")
         assert.not_nil(data_check.cache["enemy"].bypass, "Not by passed")
         assert.not_nil(data_check.cache["enemy"].bypass_scanner, "Has by passed scanner")
@@ -1029,7 +1030,7 @@ describe("Pick Spawn Cache", function()
             })
 
             local new_spawner = nil
-            for i=1, AttackGroupBeaconProcessor.get_max_tiers(),1 do
+            for i=1, AttackGroupBeaconConstants.MAX_SCAN_TIERS,1 do
                 for _, k in pairs(directions) do
                     local spawner = AttackGroupBeaconProcessor.pick_spawn_location(surface, enemy, target_beacon)
                     if spawner then

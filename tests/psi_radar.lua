@@ -3,10 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 4/26/2025 1:33 PM
 ---
-if not ENABLE_BOSS_TESTS then
-    return
-end
-
 local TestShared = require("shared")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 
@@ -47,31 +43,32 @@ after_each(function()
     TestShared.reset_the_factory()
 end)
 
-
+local run_ticks = 60000
 it("PSI radar spawns radar (southeast)", function()
-    async(72000)
+    async(run_ticks)
     local surface = game.planets.char.create_surface()
     
     game.players[1].teleport({10,0},'char')
     place_zerg_radar(surface, {x=10,y=10})
 
-    after_ticks(72000, function()
+    after_ticks(run_ticks, function()
         assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
         assert.not_nil(storage.boss.entity, "Boss spawned")
         local position = storage.boss.entity_position
         assert(position.x > 0 or position.y > 0, "Placement correct")
+        assert.not_nil(storage.boss_final_scanned_position, 'storage.boss_final_scanned_position filled')
         done()
     end)
 end)
 
 it("PSI radar spawns radar (northeast)", function()
-    async(72000)
+    async(run_ticks)
     local surface = game.planets.char.create_surface()
 
     game.players[1].teleport({10,0},'char')
     place_zerg_radar(surface, {x=10,y=-10})
 
-    after_ticks(72000, function()
+    after_ticks(run_ticks, function()
         assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
         assert.not_nil(storage.boss.entity, "Boss spawned")
         local position = storage.boss.entity_position
@@ -81,13 +78,13 @@ it("PSI radar spawns radar (northeast)", function()
 end)
 
 it("PSI radar spawns radar (southwest)", function()
-    async(72000)
+    async(run_ticks)
     local surface = game.planets.char.create_surface()
 
     game.players[1].teleport({10,0},'char')
     place_zerg_radar(surface, {x=-10,y=10})
 
-    after_ticks(72000, function()
+    after_ticks(run_ticks, function()
         assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
         assert.not_nil(storage.boss.entity, "Boss spawned")
         local position = storage.boss.entity_position
@@ -97,13 +94,13 @@ it("PSI radar spawns radar (southwest)", function()
 end)
 
 it("PSI radar spawns radar (northwest)", function()
-    async(72000)
+    async(run_ticks)
     local surface = game.planets.char.create_surface()
 
     game.players[1].teleport({10,0},'char')
     place_zerg_radar(surface, {x=-10,y=-10})
 
-    after_ticks(72000, function()
+    after_ticks(run_ticks, function()
         assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
         assert.not_nil(storage.boss.entity, "Boss spawned")
         local position = storage.boss.entity_position

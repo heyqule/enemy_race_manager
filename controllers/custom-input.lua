@@ -48,7 +48,7 @@ CustomInput.events = {
             valid_erm_left_click[event.selected_prototype.derived_type](event)
         end
     end,
-    ["erm-alt-left-click"] = function(event)
+    ["erm-shift-left-click"] = function(event)
         if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
             valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
         end

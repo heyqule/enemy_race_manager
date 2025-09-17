@@ -89,7 +89,7 @@ local get_low_tier_flying_unit = function(force_name)
 end
 
 local get_drop_position = function(final_unit_name, surface, position, force_name, level)
-    local drop_position = position
+    local drop_position = {x=position.x + math.random(-4,4), y= position.y + math.random(-4,4)}
     if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
         drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 8, 2, true)
 
@@ -104,10 +104,16 @@ local get_drop_position = function(final_unit_name, surface, position, force_nam
     return final_unit_name, drop_position
 end
 
-local add_member = function(final_unit_name, surface, drop_position, force_name, group)
+local add_member = function(final_unit_name, surface, drop_position, force_name, group, quality)
     if drop_position then
+        quality = quality or 'normal'
         remote.call('enemyracemanager','skip_roll_quality')
-        local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
+        local entity = surface.create_entity({ 
+            name = final_unit_name, 
+            position = drop_position, 
+            force = force_name,
+            quality = quality
+        })
         if entity and entity.type == "unit" then
             if group.valid and group.is_unit_group then
                 group.add_member(entity)
@@ -328,7 +334,7 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--6"
         local drop_position
         final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, force_name, level)
-        add_member(final_unit_name, surface, drop_position, boss_data.force, group)
+        add_member(final_unit_name, surface, drop_position, boss_data.force, group, boss_data.quality)
         i = i + 1
     until i == count
 
@@ -344,6 +350,8 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
+    group.start_moving()
+    remote.call("enemyracemanager", "add_erm_attack_group", group)
 end
 
 local break_time_to_live = function(count, max_count, units_total)

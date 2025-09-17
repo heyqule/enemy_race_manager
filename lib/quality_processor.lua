@@ -130,7 +130,7 @@ function QualityProcessor.calculate_quality_points()
             local quality_data = storage.quality_on_planet[force.name] or {}
             local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force.name)
             for _, planet in pairs(game.planets) do
-                if planet.surface then
+                if planet.surface and not planet.prototype .hidden then
                     local data = quality_data[planet.name] or {}
 
                     local quality_points

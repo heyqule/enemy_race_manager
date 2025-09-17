@@ -19,10 +19,10 @@ GLEBA_FORCE_AUTOCONTROL_NAME = "gleba_enemy_base"
 DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
 TEST_MODE = true
---- Boss test take way longer than other test, enable only when it's needed
-ENABLE_BOSS_TESTS = true
+--- ENABLE Lengthy test. Typical run 10s+ to run.
+ENABLE_LENGTHY_TESTS = false
 --- For debugging beacons
-BEACON_SELECTABLE = true
+BEACON_SELECTABLE = false
 --- Enable this flag if you want to sampling aux, moisture, elevation, and enemy probability.
 SAMPLE_TILE_MODE = false
 --- [/ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
@@ -69,6 +69,9 @@ QUALITY_TALLY_POINT = "em-tllpt"
 
 VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }
 
+MOD_DATA_SURFACE_EXCLUSIONS = 'ERM_surface_exclusions'
+MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces'
+MOD_DATA_INTERPLANETARY_ATTACKS = 'ERM_interplanetary_attack_exclusions'
 
 --- For Debug use
 DEBUG_BEHAVIOUR_RESULTS = {

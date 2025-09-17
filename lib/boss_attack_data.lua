@@ -18,18 +18,29 @@ BossAttacksData.default_speed = 1
 ---        BossAttackProcessor.TYPE_PROJECTILE,
 ---        BossAttackProcessor.TYPE_DIRECT
 ---    },
+
 ---    ### attack_chance[attack_index][tier] 
 ---    attack_chance = {     
 ---        {10, 20, 100},
 ---        {10, 25, 100}
 ---        {15, 30, 100}
 ---    },
+
 ---    ### repeat attack how many times
 ---    attack_count = {1, 1, 1},
+
 ---    ### spread how many locations.  Total attacks = count * spread 
 ---    attack_spread = {1, 1, 2},
+
 ---    ### whether search for a new location for every attack. Otherwise, search new location per spread
 ---    unique_position = {false, false, false}
+
+---    ### The attack can utilize attack beacons to aim (default: true)
+---    can_aim_attackable_targets = {false, false, false},
+
+---    ### this attack only target radar, (default: false)
+---    only_targets_radar = {true, true, true}, 
+
 ---    ### whether use additional multipliers per boss tier. 
 ---    attack_use_multiplier = {false, false, true},
 ---    attack_count_multiplier = { ***attack_count_multiplier[attack_index][tier]***
@@ -51,17 +62,9 @@ BossAttacksData.ultimate_attacks = {}
 --- Idle attack happens when you are being peaceful to the boss.
 --- General idea is that it hit radar every 5 mins if idle.  Otherwise, spawn attack groups or/and hit near by structures every minute.
 BossAttacksData.idle_attacks = {}
---- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
+--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units(). It will fail because boss is no longer exist as this point.
 --- Use CustomAttackHelper.drop_batch_units() instead
 BossAttacksData.despawn_attacks = {}
---- Phase changes
---- First phase is always peaceful, last phase is always radar targetted attacks.
-BossAttacksData.phases = {
-    --- phase_name = {"expansion","resource_raid", ""},
-    --- phase_change = {
-    ---    {20, 30 ,40}
-    --- },
-}
 
 function BossAttacksData.get_attack_data()
     return {
@@ -72,7 +75,6 @@ function BossAttacksData.get_attack_data()
         ultimate_attacks = BossAttacksData.ultimate_attacks,
         idle_attacks = BossAttacksData.idle_attacks,
         despawn_attacks = BossAttacksData.despawn_attacks,
-        phases = BossAttacksData.phases,
     }
 end
 

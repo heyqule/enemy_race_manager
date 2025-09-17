@@ -9,6 +9,7 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
@@ -125,11 +126,11 @@ local script_functions = {
 
     --- Attack group beacons
     [LAND_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.LAND_BEACON)
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.LAND_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
     [AERIAL_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.AERIAL_BEACON)
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.AERIAL_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
 

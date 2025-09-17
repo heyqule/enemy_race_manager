@@ -17,6 +17,7 @@ local QualityPointWindow = {
 
 function QualityPointWindow.show(player, force_name)
     local gui = player.gui.screen
+    local race_settings = storage.race_settings[force_name]
     if gui[QualityPointWindow.root_name] then
         return
     end
@@ -33,7 +34,7 @@ function QualityPointWindow.show(player, force_name)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = QualityPointWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", force_name }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", race_settings.label }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.vertically_stretchable = true

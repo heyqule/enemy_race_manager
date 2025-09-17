@@ -170,9 +170,9 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             storage.attack_heat_last_surface[force_name] = 1
         end
 
-        local sdata_key, surface = next(surface_data, storage.attack_heat_last_surface[force_name])
-        if surface and surface.has_attack_beacon then
-            return_surface = game.surfaces[surface.surface_index]
+        local sdata_key, surface_dat = next(surface_data, storage.attack_heat_last_surface[force_name])
+        if surface_dat and surface_dat.has_attack_beacon then
+            return_surface = game.surfaces[surface_dat.surface_index]
             storage.attack_heat_last_surface[force_name] = sdata_key
         else
             for index, surface in pairs(surface_data) do

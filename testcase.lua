@@ -22,9 +22,13 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
         table.insert(tests,"tests/interplanetary_attacks")
-        table.insert(tests,"tests/psi_radar")
+        table.insert(tests,"tests/emotional_attacks")
         table.insert(tests,"tests/boss_spawns")
         table.insert(tests,"tests/zerg_boss_attacks")
+
+        if ENABLE_LENGTHY_TESTS then
+            table.insert(tests,"tests/psi_radar")
+        end
     else
         error("Required erm_zerg and erm_protoss to test attack / boss functions")
     end
