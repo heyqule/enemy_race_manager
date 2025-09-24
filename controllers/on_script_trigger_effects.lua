@@ -9,12 +9,16 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local BossPsiRadar = require("__enemyracemanager__/lib/boss_psi_radar")
+local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 
 local CustomAttacks = require("__enemyracemanager__/prototypes/base-units/custom_attacks")
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
+
 local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
@@ -110,14 +114,23 @@ local script_functions = {
     [TRIGGER_BOSS_DIES] = function(args)
         storage.boss.victory = true
     end,
+    [TRIGGER_BOSS_ASSIST_SPAWNED] = function(args)
+        BossProcessor.assisted_spawner_spawns(args)
+    end,
+    [TRIGGER_BOSS_ASSIST_DIES] = function(args)
+        BossProcessor.assisted_spawner_dies(args)
+    end,
+    [BOSS_SEGMENT_UNIT_DIES] =  function(args)
+        BossProcessor.controlled_segmented_unit_dies(args)
+    end,
 
     --- Attack group beacons
     [LAND_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.LAND_BEACON)
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.LAND_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
     [AERIAL_SCOUT_BEACON] = function(event)
-        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconProcessor.AERIAL_BEACON)
+        AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.AERIAL_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
 
@@ -198,7 +211,12 @@ local script_functions = {
 
     [QUALITY_TALLY_POINT] = function(event)
         AttackMeterProcessor.calculate_points(event.source_entity)
-    end
+    end,
+    
+    [REGISTER_BOSS_RADAR] = function(event)
+        -- boss radar print
+        BossPsiRadar.register(event.source_entity)
+    end 
 }
 
 local creep_removal_enabled = settings.startup['enemyracemanager-auto-creep-removal'].value

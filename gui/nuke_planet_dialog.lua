@@ -5,6 +5,9 @@
 ---
 
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
+local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
+local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
@@ -59,14 +62,14 @@ function NukePlanetDialog.hide(player)
     end
 end
 
---- Spawn a nuke and nuke all enemy entities 320 tiles
+--- Spawn a nuke and nuke all enemy entities 512 tiles
 function NukePlanetDialog.confirm(player)
     local death_loop_data = storage.death_loop_detection[player.index]
     if player.gui.screen[NukePlanetDialog.root_name] then
         player.gui.screen[NukePlanetDialog.root_name].destroy()
     end
     if death_loop_data.surface_index then
-        local nuke_area = {{-384,-384},{384,384}}
+        local nuke_area = {{-512,-512},{512,512}}
         local surface = game.surfaces[death_loop_data.surface_index]
         if surface and surface.valid then
             local spawn_location = player.force.get_spawn_position(surface)
@@ -78,10 +81,18 @@ function NukePlanetDialog.confirm(player)
                 force = "neutral",
                 speed = 3,
             }
+            --- Remove boss radar
+            if RaceSettingsHelper.is_in_boss_mode() and storage.boss.surface_name == surface.name then
+                storage.boss.surrendered_method = 'gui.boss_detail_data_custom_note_uwu_delivery'
+                storage.boss.surrendered_player = player.name
+                storage.boss.radar.die(storage.boss.force)
+            end
+            
             local entities = surface.find_entities_filtered{
-                type={"unit","turret","unit-spawner"},
+                type={"unit", "turret", "unit-spawner", "segmented-unit", "spider-unit"},
                 area=nuke_area,
                 force=ForceHelper.get_enemy_forces(),
+                
             }
             for _, entity in pairs(entities) do
                 if entity.valid then
@@ -94,6 +105,12 @@ function NukePlanetDialog.confirm(player)
                     RaceSettingsHelper.set_attack_meter(name, 0)
                 end
             end
+            storage.boss.victory = false
+            --- Unset heat on surface
+            AttackGroupHeatProcessor.remove_surface(surface.index)
+            --- Reset emotion processor
+            EmotionProcessor.set_peaceful_on(surface)
+
             storage.death_loop_detection[player.index] = nil
             player.force.print({"gui.nuke_delivery", player.name, surface.name})
             return

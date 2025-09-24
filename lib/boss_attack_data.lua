@@ -8,47 +8,73 @@ local BossAttacksData = {}
 BossAttacksData.default_range = 64
 BossAttacksData.default_speed = 1
 
---Example:
---BossAttacks.basic_attacks =
---{
---    projectile_name = {"blood-cloud","acid-cloud","blood-fire"},
---    projectile_type = {
---        BossAttackProcessor.TYPE_PROJECTILE,
---        BossAttackProcessor.TYPE_PROJECTILE,
---        BossAttackProcessor.TYPE_PROJECTILE
---    },
---    projectile_chance = {25, 25, 100},
---    projectile_count = {1, 1, 1},
---    projectile_spread = {1, 1, 2},
---    projectile_speed = {BossAttacksData.default_speed, BossAttacksData.default_speed, BossAttacksData.default_speed},
---    projectile_range = {BossAttacksData.default_range, BossAttacksData.default_range, BossAttacksData.default_range},
---    projectile_use_multiplier = {false, false, true},
---    projectile_count_multiplier = {
---        {},
---        {},
---        {1, 1, 1, 2, 3}
---    },
---    projectile_spread_multiplier = {
---        {},
---        {},
---        {1, 1, 1, 1, 1}
---    },
---}
+---Example:
+---BossAttacks.basic_attacks =
+---{
+---    ### attack_name is built with '{MOD_NAME}-{attack_name}-{attack_type}' e.g 'enemy_erm_zerg-earthquake-direct'
+---    attack_name = {"blood-cloud","acid-cloud", "earthquake"},
+---    attack_type = {
+---        BossAttackProcessor.TYPE_PROJECTILE,
+---        BossAttackProcessor.TYPE_PROJECTILE,
+---        BossAttackProcessor.TYPE_DIRECT
+---    },
+
+---    ### attack_chance[attack_index][tier] 
+---    attack_chance = {     
+---        {10, 20, 100},
+---        {10, 25, 100}
+---        {15, 30, 100}
+---    },
+
+---    ### repeat attack how many times
+---    attack_count = {1, 1, 1},
+
+---    ### spread how many locations.  Total attacks = count * spread 
+---    attack_spread = {1, 1, 2},
+
+---    ### whether search for a new location for every attack. Otherwise, search new location per spread
+---    unique_position = {false, false, false}
+
+---    ### The attack can utilize attack beacons to aim (default: true)
+---    can_aim_attackable_targets = {false, false, false},
+
+---    ### this attack only target radar, (default: false)
+---    only_targets_radar = {true, true, true}, 
+
+---    ### whether use additional multipliers per boss tier. 
+---    attack_use_multiplier = {false, false, true},
+---    attack_count_multiplier = { ***attack_count_multiplier[attack_index][tier]***
+---        {},
+---        {},
+---        {1, 1, 2, 2, 3}
+---    },
+---    attack_spread_multiplier = { ***attack_spread_multiplier[attack_index][tier]***
+---        {},
+---        {},
+---        {1, 1, 1, 1, 1}
+---    },
+---}
 BossAttacksData.basic_attacks = {}
-BossAttacksData.advanced_attacks = {}
-BossAttacksData.super_attacks = {}
--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units().
--- Use CustomAttackHelper.drop_batch_units() instead
+BossAttacksData.heavy_attacks = {}
+BossAttacksData.assist_attacks = {}
+BossAttacksData.special_attacks = {}
+BossAttacksData.ultimate_attacks = {}
+--- Idle attack happens when you are being peaceful to the boss.
+--- General idea is that it hit radar every 5 mins if idle.  Otherwise, spawn attack groups or/and hit near by structures every minute.
+BossAttacksData.idle_attacks = {}
+--- Despawn attack CAN NOT use attack that calls CustomAttackHelper.drop_boss_units(). It will fail because boss is no longer exist as this point.
+--- Use CustomAttackHelper.drop_batch_units() instead
 BossAttacksData.despawn_attacks = {}
-BossAttacksData.phases = {}
 
 function BossAttacksData.get_attack_data()
     return {
         basic_attacks = BossAttacksData.basic_attacks,
-        advanced_attacks = BossAttacksData.advanced_attacks,
-        super_attacks = BossAttacksData.super_attacks,
+        heavy_attacks = BossAttacksData.heavy_attacks,
+        assist_attacks = BossAttacksData.assist_attacks,
+        special_attacks = BossAttacksData.special_attacks,
+        ultimate_attacks = BossAttacksData.ultimate_attacks,
+        idle_attacks = BossAttacksData.idle_attacks,
         despawn_attacks = BossAttacksData.despawn_attacks,
-        phases = BossAttacksData.phases,
     }
 end
 

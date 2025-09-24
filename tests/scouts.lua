@@ -7,6 +7,7 @@
 
 local TestShared = require("shared")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
 
@@ -51,8 +52,8 @@ local biter_spawner = "enemy--biter-spawner--1"
             local player_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, game.forces[player])
             local count = surface.count_entities_filtered({
                 name = {
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.AERIAL_SCOUT)
                 },
                 force = game.forces[enemy],
                 position = player_beacon.position,
@@ -63,8 +64,8 @@ local biter_spawner = "enemy--biter-spawner--1"
 
             local count = surface.count_entities_filtered({
                 name = {
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.AERIAL_SCOUT)
                 },
             })
             assert(count == 1, "It should not spawn additional scout, while one is active")
@@ -108,7 +109,7 @@ local biter_spawner = "enemy--biter-spawner--1"
 
         after_ticks(4200, function()
             local count = surface.count_entities_filtered({
-                name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
+                name=AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
             })
             assert(count > 1, "Saw "..count.." enemy buildings. Assume pass if final count is between 2 to 5")
             done()
@@ -138,7 +139,7 @@ local biter_spawner = "enemy--biter-spawner--1"
 
         after_ticks(2500, function()
             local scout_count = surface.count_entities_filtered({
-                name={AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconProcessor.LAND_SCOUT)},
+                name={AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconConstants.LAND_SCOUT)},
                 position={0,0},
                 radius=32,
             })
@@ -149,7 +150,7 @@ local biter_spawner = "enemy--biter-spawner--1"
             })
             assert(scout_count == 1 or corpse_count == 1, "Must see a scout or a corpse near final destination.")
             local count = surface.count_entities_filtered({
-                name=AttackGroupBeaconProcessor.ATTACK_ENTITIES_BEACON
+                name=AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
             })
             assert(count >= 2, "See "..count.." attack beacons. Expect at least 2.")
             done()
@@ -201,8 +202,8 @@ local biter_spawner = "enemy--biter-spawner--1"
             assert(scout.valid == true, "Scout spawned")
             local count = surface.count_entities_filtered({
                 name = {
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.LAND_SCOUT),
-                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.LAND_SCOUT),
+                    AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.AERIAL_SCOUT)
                 },
                 force = game.forces[enemy],
                 position = rocket_launcher.position,

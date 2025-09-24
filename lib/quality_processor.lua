@@ -129,41 +129,40 @@ function QualityProcessor.calculate_quality_points()
         if ForceHelper.is_enemy_force(force) then
             local quality_data = storage.quality_on_planet[force.name] or {}
             local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force.name)
-            for _, planet in pairs(game.planets) do
-                if planet.surface then
-                    local data = quality_data[planet.name] or {}
+            for surface_name, surface_data in pairs(storage.enemy_surfaces) do
+                local surface = surface_data.surface
+                local data = quality_data[surface.name] or {}
 
-                    local quality_points
-                    if evolution_enabled then
-                        quality_points = ( math.min((force.get_evolution_factor(planet.surface.name)), 1) ) * evolution_target +
-                                math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
-                    else
-                        local final_target = evolution_target + attack_point_target
-                        quality_points = math.min((accumulated_attack_meter / attack_point_divider) * final_target, final_target)
-                    end
-
-                    quality_points = quality_points * setting_advancement
-
-                    data.points = math.floor(quality_points)
-                    if quality_points >= max_out_target then
-                        data.max_out = true
-                    else
-                        data.max_out = false
-                    end
-
-                    if quality_points <= 1000 then
-                        data.tier = 1
-                    elseif quality_points > 1000 and quality_points <= 2500 then
-                        data.tier = 2
-                    else
-                        data.tier = 3
-                    end
-
-                    -- update custom group unit tier, let it use the highest tiers from any planet.
-                    RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
-
-                    quality_data[planet.name] = calculate_chance_cache(data, quality_points)
+                local quality_points
+                if evolution_enabled then
+                    quality_points = ( math.min((force.get_evolution_factor(surface.name)), 1) ) * evolution_target +
+                            math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
+                else
+                    local final_target = evolution_target + attack_point_target
+                    quality_points = math.min((accumulated_attack_meter / attack_point_divider) * final_target, final_target)
                 end
+
+                quality_points = quality_points * setting_advancement
+
+                data.points = math.floor(quality_points)
+                if quality_points >= max_out_target then
+                    data.max_out = true
+                else
+                    data.max_out = false
+                end
+
+                if quality_points <= 1000 then
+                    data.tier = 1
+                elseif quality_points > 1000 and quality_points <= 2500 then
+                    data.tier = 2
+                else
+                    data.tier = 3
+                end
+
+                -- update custom group unit tier, let it use the highest tiers from any planet.
+                RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
+
+                quality_data[surface.name] = calculate_chance_cache(data, quality_points)
             end
             storage.quality_on_planet[force.name] = quality_data
         end
@@ -214,7 +213,7 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
     --- Home planet spawns, always use the top tier
     local surface = game.surfaces[surface_name]
     local race_settings = storage.race_settings[force_name]
-    if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
+    if storage.enemy_surfaces[surface.name] and race_settings and race_settings.home_planet == surface.name
     then
         return top_tier
     end
@@ -298,8 +297,8 @@ function QualityProcessor.roll(entity)
     
     local unit_tier = tonumber(name_token[3])
 
-    -- Prevent roll if unit_tier not found
-    if unit_tier == nil then
+    -- Prevent roll if unit_tier not found or unit_tier > max_levels (assuming boss units)
+    if unit_tier == nil or unit_tier >= GlobalConfig.MAX_LEVELS then
         return entity
     end
 
@@ -311,7 +310,7 @@ function QualityProcessor.roll(entity)
     local spawn_rates_size
     local can_spawn = false
     --- Home planet spawns, always use the top tier
-    if surface.planet and race_settings and race_settings.home_planet == surface.planet.name
+    if storage.enemy_surfaces[surface.name] and race_settings and race_settings.home_planet == surface.name
     then
         selected_tier = top_tier
         can_spawn = true

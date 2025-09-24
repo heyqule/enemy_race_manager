@@ -1,3 +1,4 @@
+require "global"
 require "prototypes.noise-functions"
 require "prototypes.extend-types"
 require "prototypes.extend-biters"
@@ -31,7 +32,55 @@ table.insert(data.erm_spawn_specs, {
 data.erm_land_scout[MOD_NAME] = "small-biter"
 data.erm_aerial_scout[MOD_NAME] = "defender"
 
+
+if not data.raw['mod-data'] or not data.raw['mod-data'][MOD_DATA_SURFACE_EXCLUSIONS] then
+    data.extend({
+        {
+            type = 'mod-data',
+            name = MOD_DATA_SURFACE_EXCLUSIONS,
+            data_type = 'erm_data',
+            data = {}
+        }
+    })
+end
+data.raw['mod-data'][MOD_DATA_SURFACE_EXCLUSIONS].data['lignumis'] = true
+
+if not data.raw['mod-data'] or not data.raw['mod-data'][MOD_DATA_NEUTRAL_FORCES] then
+    data.extend({
+        {
+            type = 'mod-data',
+            name = MOD_DATA_NEUTRAL_FORCES,
+            data_type = 'erm_data',
+            data = {}
+        }
+    })
+end
+data.raw['mod-data'][MOD_DATA_NEUTRAL_FORCES].data['maze-terraforming-targets'] = true
+
+
+if not data.raw['mod-data'] or not data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS] then
+    data.extend({
+        {
+            type = 'mod-data',
+            name = MOD_DATA_INTERPLANETARY_ATTACKS,
+            data_type = 'erm_data',
+            data = {}
+        }
+    })
+end
+--- Offical planets --
+data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data["aquilo"] = true
+--- 3rd party planets with their defined uniqueness, not suitable for invasion.
+data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data["maraxsis"] = true
+data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data["maraxsis-trench"] = true
+data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data['lignumis'] = true
+
+
+
 require "prototypes.extend-mapping-beacons"
 require "prototypes.extend-rallypoint"
 require "prototypes.tips-and-tricks.prototypes"
 require "prototypes.shortcuts"
+
+--- The following require quality mod ---
+require "prototypes.extend-quality"

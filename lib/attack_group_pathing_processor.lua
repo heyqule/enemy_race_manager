@@ -6,6 +6,7 @@
 local Position = require("__erm_libs__/stdlib/position")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 local DebugHelper =  require("__enemyracemanager__/lib/debug_helper")
@@ -16,7 +17,7 @@ local AttackGroupPathingProcessor = {}
 
 local BEACON_RADIUS = 64
 local CHUNK_SIZE = 32
-local TRANSLATE_RANGE = CHUNK_SIZE * 10
+local TRANSLATE_RANGE = CHUNK_SIZE * 15
 local GC_TICK = 25000 * 4
 
 --- lowest defense beacon score
@@ -85,9 +86,9 @@ function AttackGroupPathingProcessor.request_path(surface, source_force, start, 
 
     local scout_name
     if is_aerial then
-        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.AERIAL_SCOUT)
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconConstants.AERIAL_SCOUT)
     else
-        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.LAND_SCOUT)
+        scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconConstants.LAND_SCOUT)
     end
 
     local data_table = prototypes.get_entity_filtered({{
@@ -144,7 +145,7 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
         local surface = request_path_data.surface
         for key, path_node in pairs(path_nodes) do
 
-            local search_beacons = {AttackGroupBeaconProcessor.LAND_BEACON, AttackGroupBeaconProcessor.AERIAL_BEACON}
+            local search_beacons = {AttackGroupBeaconConstants.LAND_BEACON, AttackGroupBeaconConstants.AERIAL_BEACON}
             local beacons = surface.find_entities_filtered {
                 name = search_beacons,
                 force = source_force,
@@ -170,10 +171,10 @@ function AttackGroupPathingProcessor.on_script_path_request_finished(path_id, pa
                     Cron.add_quick_queue("AttackGroupPathingProcessor.construct_side_attack_commands",
                             path_id, path_node, enemy.position, search_beacons, true)
                 else
-                    if beacon.name == AttackGroupBeaconProcessor.LAND_BEACON then
-                        storage[AttackGroupBeaconProcessor.LAND_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                    if beacon.name == AttackGroupBeaconConstants.LAND_BEACON then
+                        storage[AttackGroupBeaconConstants.LAND_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
                     else
-                        storage[AttackGroupBeaconProcessor.AERIAL_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
+                        storage[AttackGroupBeaconConstants.AERIAL_BEACON][beacon.surface.index][beacon.force.name][beacon.unit_number] = nil
                     end
                     beacon.destroy()
                 end
@@ -242,6 +243,11 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
         storage.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
     end
+    
+    if DEBUG_MODE then
+        DebugHelper.drawline(request_path_data.surface.index, "BF: enemy to new pos", {r=0,g=0,b=1,a=0.5}, buffer_zone, enemy_position)
+        DebugHelper.drawline(request_path_data.surface.index, "BF: path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, buffer_zone)
+    end
 end
 
 --- Side attacks to avoid defense
@@ -274,8 +280,8 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
     )
 
     if DEBUG_MODE then
-        DebugHelper.drawline(request_path_data.surface.index, "enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
-        DebugHelper.drawline(request_path_data.surface.index, "path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
+        DebugHelper.drawline(request_path_data.surface.index, "SA: enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
+        DebugHelper.drawline(request_path_data.surface.index, "SA: path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
     end
 
     local area = request_path_data.surface.count_entities_filtered {
@@ -303,7 +309,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
         })
 
         if DEBUG_MODE then
-            DebugHelper.drawline(request_path_data.surface.index, "new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
+            DebugHelper.drawline(request_path_data.surface.index, "SA: new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
         end            
 
         storage.request_path[path_id].commands[side_key] = commands_chain
@@ -331,7 +337,7 @@ function AttackGroupPathingProcessor.get_command(group_number, strategy)
     end
 
     local request_id = storage.request_path_link[group_number]
-
+    
     if request_id then
         local request_path_data = storage.request_path[request_id]
         if request_path_data and
@@ -339,7 +345,6 @@ function AttackGroupPathingProcessor.get_command(group_number, strategy)
         then
             local rc_command = request_path_data.commands[strategy]
             AttackGroupPathingProcessor.remove_node(group_number)
-
             return rc_command
         end
     end

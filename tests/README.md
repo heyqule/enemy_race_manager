@@ -10,4 +10,6 @@ TEST_MODE = true
 
 2.0 Test suite are designed to run with Space Age contents.
 
-Any test which uses SA contents will fail in base game.
+Any test which uses SA contents will fail or crash in base game.
+
+##### ENABLE_BOSS_TESTS flag enable tests for boss modes.

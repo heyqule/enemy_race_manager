@@ -6,6 +6,7 @@
 require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 --- Quality Point Windows
 local QualityPointWindow = {
@@ -17,6 +18,7 @@ local QualityPointWindow = {
 
 function QualityPointWindow.show(player, force_name)
     local gui = player.gui.screen
+    local race_settings = storage.race_settings[force_name]
     if gui[QualityPointWindow.root_name] then
         return
     end
@@ -33,7 +35,7 @@ function QualityPointWindow.show(player, force_name)
     local title_flow = detail_window.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = QualityPointWindow.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", force_name }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.quality_points_window", race_settings.label }, style = "caption_label" }
 
     local pusher = title_flow.add { type = "empty-widget", style = "draggable_space_header" }
     pusher.style.vertically_stretchable = true
@@ -70,7 +72,7 @@ function QualityPointWindow.show(player, force_name)
     local unit_kills = storage.race_settings[force_name].unit_killed_count_by_planet
     for surface_name, data in pairs(dataset) do
         local calculated_rates = {0, 0, 0, 0, 0}
-        local surface_str = "[space-location="..surface_name.."] "..surface_name
+        local surface_str = SurfaceProcessor.get_planet_icon(surface_name) .. surface_name
 
         if storage.race_settings[force_name].home_planet == surface_name then
             calculated_rates = {100, 0, 0, 0, 0}
@@ -107,7 +109,9 @@ function QualityPointWindow.show(player, force_name)
 end
 
 function QualityPointWindow.hide(player)
-    player.gui.screen[QualityPointWindow.root_name].destroy()
+    if player.gui.screen[QualityPointWindow.root_name] then
+        player.gui.screen[QualityPointWindow.root_name].destroy()
+    end
 end
 
 function QualityPointWindow.toggle_close(owner)

@@ -15,9 +15,28 @@ local ForceHelper = {
     }
 }
 
-local NEUTRAL_FORCES = {
-    "maze-terraforming-targets",
-}
+--- Redefine here since it can use by other mods.
+local MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces'
+local MOD_DATA_SURFACE_EXCLUSIONS = 'ERM_surface_exclusions'
+
+local NEUTRAL_FORCES
+
+local get_neutral_forces = function()
+    if not NEUTRAL_FORCES then
+        NEUTRAL_FORCES = prototypes.mod_data[MOD_DATA_NEUTRAL_FORCES].data
+    end
+    return NEUTRAL_FORCES
+end
+    
+local refresh_exclusion_surface = function()
+    if storage.surface_exclusion_list == nil then
+        storage.surface_exclusion_list = prototypes.mod_data[MOD_DATA_SURFACE_EXCLUSIONS].data
+    else
+        for name, item in pairs(prototypes.mod_data[MOD_DATA_SURFACE_EXCLUSIONS].data) do
+            storage.surface_exclusion_list[name] = true
+        end
+    end
+end
 
 function ForceHelper.init_globals()
     storage.force_entity_name_cache = storage.force_entity_name_cache or {}
@@ -35,7 +54,8 @@ function ForceHelper.is_erm_unit(entity)
 end
 
 function ForceHelper.is_enemy_force(force)
-    return storage.enemy_force_check[force.name]
+    if type(force) ~= 'string' then force = force.name end
+    return storage.enemy_force_check[force]
 end
 
 function ForceHelper.set_friends(game, force_name, is_friend)
@@ -52,10 +72,10 @@ function ForceHelper.set_friends(game, force_name, is_friend)
 end
 
 function ForceHelper.set_neutral_force(game, force_name)
-    for _, force in pairs(NEUTRAL_FORCES) do
-        if game.forces[force] ~= nil then
-            game.forces[force].set_cease_fire(force_name, true);
-            game.forces[force_name].set_cease_fire(force, true);
+    for neutral_force, _ in pairs(get_neutral_forces()) do
+        if game.forces[neutral_force] ~= nil then
+            game.forces[neutral_force].set_cease_fire(force_name, true);
+            game.forces[force_name].set_cease_fire(neutral_force, true);
         end
     end
 end
@@ -116,9 +136,9 @@ function ForceHelper.refresh_all_enemy_forces()
             table.insert(storage.non_player_forces, force.name)
         end
     end
-
-    for _, value in pairs(NEUTRAL_FORCES) do
-        table.insert(storage.non_player_forces, value)
+    
+    for force_name, value in pairs(get_neutral_forces()) do
+        table.insert(storage.non_player_forces, force_name)
     end
     table.insert(storage.non_player_forces, "neutral")
 
@@ -133,6 +153,8 @@ function ForceHelper.refresh_all_enemy_forces()
         end
     end
     storage.total_player_forces = #storage.player_forces
+    
+    refresh_exclusion_surface()
 end
 
 -- Whether a surface can assign enemy
@@ -145,8 +167,10 @@ function ForceHelper.can_have_enemy_on(surface)
             return false
         elseif
             storage.surface_exclusion_list[surface_name] == true or
-            not surface.planet or
-            surface.planet.prototype.hidden == true
+            (not storage.external_planets[surface_name] and 
+                (not surface.planet or 
+                   surface.planet.prototype.hidden == true)
+            )
         then
             storage.surface_exclusion_list[surface_name] = true
             storage.enemy_surfaces[surface_name] = nil
@@ -168,10 +192,16 @@ function ForceHelper.add_surface_to_exclusion_list(surface_name)
     storage.enemy_surfaces[surface_name] = nil
 end
 
+function ForceHelper.reset_surface_from_lists(surface_name)
+    storage.surface_exclusion_list[surface_name] = nil
+    storage.surface_inclusion_list[surface_name] = nil
+    storage.enemy_surfaces[surface_name] = nil
+end
 
 function ForceHelper.reset_surface_lists()
     storage.surface_exclusion_list = {}
     storage.surface_inclusion_list = {}
+    refresh_exclusion_surface()
 end
 
 return ForceHelper

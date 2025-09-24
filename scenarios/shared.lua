@@ -102,7 +102,7 @@ function ScenarioHelper.set_tech_level(force, level)
     end
 end
 
-function ScenarioHelper.set_enemy_params(level, tier, factor)
+function ScenarioHelper.set_enemy_params(tier, factor)
     remote.call("enemyracemanager_debug", "set_evolution_factor", factor)
     remote.call("enemyracemanager_debug", "set_tier", tier)
     remote.call("enemyracemanager_debug", "attack_group_beacon_index")
@@ -125,5 +125,47 @@ end
 function ScenarioHelper.set_game_speed(speed)
     game.speed = speed
 end
+
+function ScenarioHelper.replace_entity(surface, entity_name, new_entity_name, quality)
+    for _, entity in pairs(surface.find_entities_filtered { name = entity_name }) do
+        local force = entity.force
+        local position = entity.position
+        local quality = entity.quality
+        entity.destroy()
+        surface.create_entity { 
+            name = new_entity_name, 
+            position = position, 
+            force = force,
+            quality = quality
+        }
+    end
+
+    local infinity_chests = surface.find_entities_filtered({
+        name = "infinity-chest"
+    })
+
+    -- Loop through each infinity chest
+    for _, chest in pairs(infinity_chests) do
+        if chest.valid then
+            -- Get the current filter
+            local current_filter = chest.get_infinity_container_filter(1)
+
+            -- Check if the chest has a filter and if it matches the old item
+            if current_filter and current_filter.name == entity_name then
+                -- Set the new filter with the new item but preserve the count
+                chest.set_infinity_container_filter(1, {
+                    name = new_entity_name,
+                    count = current_filter.count,
+                    quality = quality or current_filter.quality
+                })
+            end
+        end
+    end
+
+
+end
+
+
+
 
 return ScenarioHelper

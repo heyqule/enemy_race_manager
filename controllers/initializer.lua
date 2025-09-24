@@ -8,6 +8,7 @@
 require("__enemyracemanager__/global")
 
 local Queue = require("__erm_libs__/stdlib/queue")
+local String = require("__erm_libs__/stdlib/string")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 
@@ -29,10 +30,42 @@ local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
+--- script.raise_event doesn't work during on_init?
+local emulate_event_raise = function(event_name, event_data)
+    local event_function = script.get_event_handler(event_name)
+    if event_function then
+        event_data['name'] = event_name
+        event_data['tick'] = game.tick
+        event_data['mod_name'] = "enemyracemanager"
+        event_function(event_data)
+    end
+end
+
+local populations = {
+    ["playable-tank"] = 3,
+    ["playable-car"] = 2,
+}
+
+local refresh_army_data = function()
+    -- Register Army Units
+    for _, prototype in pairs(prototypes.get_entity_filtered({{filter = "type", type = "unit"}})) do
+        local nameToken = String.split(prototype.name, "--")
+        if nameToken[1] == MOD_NAME and populations[nameToken[2]] then
+            remote.call("enemyracemanager","army_units_register", prototype.name, populations[nameToken[2]]);
+        end
+    end
+end
+    
+
 local createRace = function()
+    if not prototypes.entity['gleba-spawner'] then
+        return
+    end
+    
     local force = game.forces[GLEBA_FORCE_NAME]
     if not force then
         force = game.create_force(GLEBA_FORCE_NAME)
@@ -111,6 +144,7 @@ local addRaceSettings = function()
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 20 },
         { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 },
     }
+    
     race_settings.featured_flying_groups = {
         { { "distractor", "destroyer" }, { 1, 1 }, 75 },
         { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
@@ -127,37 +161,38 @@ local addRaceSettings = function()
 
     remote.call("enemyracemanager", "register_race", race_settings)
 
-    script.raise_event(
-            GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
-            {affected_race = FORCE_NAME }
+    emulate_event_raise(
+            GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE],
+            {affected_race = FORCE_NAME}
     )
 
+    if prototypes.entity['gleba-spawner'] then
+        local gleba_race_settings = remote.call("enemyracemanager", "get_race", GLEBA_FORCE_NAME)
+        if gleba_race_settings == nil then
+            gleba_race_settings = {}
+        end
 
-    local gleba_race_settings = remote.call("enemyracemanager", "get_race", GLEBA_FORCE_NAME)
-    if gleba_race_settings == nil then
-        gleba_race_settings = {}
+        gleba_race_settings.race = gleba_race_settings.race or GLEBA_FORCE_NAME
+        gleba_race_settings.tier = gleba_race_settings.tier or 1
+        gleba_race_settings.is_primitive = true
+        gleba_race_settings.autoplace_name = gleba_race_settings.autoplace_name or GLEBA_FORCE_AUTOCONTROL_NAME
+        gleba_race_settings.label = { "gui.label-pentapod" }
+        gleba_race_settings.attack_meter = gleba_race_settings.attack_meter or 0
+        gleba_race_settings.attack_meter_total = gleba_race_settings.attack_meter_total or 0
+        gleba_race_settings.next_attack_threshold = gleba_race_settings.next_attack_threshold or 0
+        gleba_race_settings.interplanetary_attack_active = gleba_race_settings.interplanetary_attack_active or false
+        gleba_race_settings.structure_killed_count_by_planet = gleba_race_settings.structure_killed_count_by_planet or {}
+        gleba_race_settings.unit_killed_count_by_planet = gleba_race_settings.unit_killed_count_by_planet or {}
+
+        remote.call("enemyracemanager", "register_race", gleba_race_settings)
+
+        RaceSettingsHelper.process_unit_spawn_rate_cache(gleba_race_settings)
+
+        emulate_event_raise(
+                GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE],
+                {affected_race = GLEBA_FORCE_NAME }
+        )        
     end
-
-    gleba_race_settings.race = gleba_race_settings.race or GLEBA_FORCE_NAME
-    gleba_race_settings.tier = gleba_race_settings.tier or 1
-    gleba_race_settings.is_primitive = true
-    gleba_race_settings.autoplace_name = gleba_race_settings.autoplace_name or GLEBA_FORCE_AUTOCONTROL_NAME
-    gleba_race_settings.label = { "gui.label-pentapod" }
-    gleba_race_settings.attack_meter = gleba_race_settings.attack_meter or 0
-    gleba_race_settings.attack_meter_total = gleba_race_settings.attack_meter_total or 0
-    gleba_race_settings.next_attack_threshold = gleba_race_settings.next_attack_threshold or 0
-    gleba_race_settings.interplanetary_attack_active = gleba_race_settings.interplanetary_attack_active or false
-    gleba_race_settings.structure_killed_count_by_planet = gleba_race_settings.structure_killed_count_by_planet or {}
-    gleba_race_settings.unit_killed_count_by_planet = gleba_race_settings.unit_killed_count_by_planet or {}
-
-    remote.call("enemyracemanager", "register_race", gleba_race_settings)
-
-    RaceSettingsHelper.process_unit_spawn_rate_cache(gleba_race_settings)
-
-    script.raise_event(
-            GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE],
-            {affected_race = GLEBA_FORCE_NAME }
-    )
 end
 
 local prepare_world = function()
@@ -169,9 +204,11 @@ local prepare_world = function()
     game.map_settings.unit_group.max_member_speedup_when_behind = 2
     game.map_settings.unit_group.max_member_slowdown_when_ahead = 1
     game.map_settings.unit_group.max_group_slowdown_factor = 1
+    game.map_settings.unit_group.member_disown_distance = 64
+    game.map_settings.unit_group.max_wait_time_for_late_members = 5 * minute
     -- One to two nauvis day of gathering time.
-    game.map_settings.unit_group.min_group_gathering_time = 7 * 3600
-    game.map_settings.unit_group.max_group_gathering_time = 14 * 3600
+    game.map_settings.unit_group.min_group_gathering_time = 7 * minute
+    game.map_settings.unit_group.max_group_gathering_time = 14 * minute
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
@@ -180,18 +217,16 @@ local prepare_world = function()
     -- Race Cleanup
     RaceSettingsHelper.clean_up_race()
     SurfaceProcessor.rebuild_race()
-
-    -- Calculate Biter Level
-    --if table_size(storage.race_settings) > 0 then
-    --    LevelProcessor.calculate_multiple_levels()
-    --end
-
+    
+    refresh_army_data()
+    
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
-    script.raise_event(
-        GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD], {}
+    emulate_event_raise(
+            GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_PREPARE_WORLD],
+            {  success = true }
     )
 end
 
@@ -228,9 +263,11 @@ local init_globals = function()
     storage.active_races = {}
     storage.active_races_names = {}
     storage.active_races_num = 1
+    storage.remote_race_name_cache = {}
     storage.is_multi_planets_game = false
 
-    --- SE or Space Age
+    --- Space Age OR
+    --- by calling remote.call("enemyracemanager", "enable_multi_planet_game") for base game. (see erm_se mod for example)
     if script.active_mods["space-age"] or script.feature_flags.space_travel then
         storage.is_multi_planets_game = true
     end
@@ -257,9 +294,11 @@ local init_globals = function()
     SpawnLocationScanner.init_globals()
     InterplanetaryAttacks.init_globals()
     QualityProcessor.on_init()
+    EmotionProcessor.init_globals()
 
-    script.raise_event(
-        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL], {}
+    emulate_event_raise(
+        GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL],
+{  success = true }
     )
 end
 
@@ -313,19 +352,6 @@ local on_runtime_mod_setting_changed = function(event)
         end
     end
 end
-
---- Initialize event names
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name()
-GlobalConfig.custom_event_handlers[GlobalConfig.PREPARE_WORLD] = script.generate_event_name()
-
 
 local InitController = {}
 

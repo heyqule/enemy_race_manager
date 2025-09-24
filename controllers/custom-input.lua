@@ -6,18 +6,25 @@
 
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 local MainWindow = require("__enemyracemanager__/gui/main_window")
+local BossRadar = require("__enemyracemanager__/gui/boss_radar")
 
 local valid_erm_left_click = {
     ["radar"] = function(event)
 
         local player = game.players[event.player_index]
 
-        if player and player.valid and storage.army_registered_command_centers[event.selected_prototype.name] then
-            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
-            if entity then
-                local element = player.gui.screen[ArmyControlUI.root_name]["main-tab"][ArmyControlUI.tab_names[3]]["main-pane"]["left-listing"]["army_cc/cc_select_from"]
-                ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+        if player and player.valid then
+            if storage.army_registered_command_centers[event.selected_prototype.name] then
+                local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
+                ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
+                if entity then
+                    local element = player.gui.screen[ArmyControlUI.root_name]["main-tab"][ArmyControlUI.tab_names[3]]["main-pane"]["left-listing"]["army_cc/cc_select_from"]
+                    ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+                end 
+            end
+            
+            if storage.registered_boss_radars[event.selected_prototype.name] then
+                BossRadar.show(player)
             end
         end
     end,
@@ -28,12 +35,14 @@ local valid_erm_alt_left_click = {
     ["radar"] = function(event)
         local player = game.players[event.player_index]
 
-        if player and player.valid and storage.army_registered_command_centers[event.selected_prototype.name] then
-            local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-            ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
-            if entity then
-                local element = player.gui.screen[ArmyControlUI.root_name]["main-tab"][ArmyControlUI.tab_names[3]]["main-pane"]["right-listing"]["army_cc/cc_select_to"]
-                ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+        if player and player.valid then
+            if storage.army_registered_command_centers[event.selected_prototype.name] then
+                local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
+                ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
+                if entity then
+                    local element = player.gui.screen[ArmyControlUI.root_name]["main-tab"][ArmyControlUI.tab_names[3]]["main-pane"]["right-listing"]["army_cc/cc_select_to"]
+                    ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
+                end
             end
         end
     end
@@ -48,7 +57,7 @@ CustomInput.events = {
             valid_erm_left_click[event.selected_prototype.derived_type](event)
         end
     end,
-    ["erm-alt-left-click"] = function(event)
+    ["erm-shift-left-click"] = function(event)
         if event.selected_prototype and valid_erm_alt_left_click[event.selected_prototype.derived_type] then
             valid_erm_alt_left_click[event.selected_prototype.derived_type](event)
         end
@@ -62,7 +71,13 @@ CustomInput.events = {
         if game.players[event.player_index] then
             MainWindow.toggle_main_window(game.players[event.player_index])
         end
+    end,
+    ["erm-open-boss-window"] = function(event)
+        if game.players[event.player_index] then
+            BossRadar.toggle_main_window(game.players[event.player_index])
+        end
     end
+    
 }
 
 return CustomInput

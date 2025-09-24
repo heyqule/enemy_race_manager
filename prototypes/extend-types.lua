@@ -17,11 +17,6 @@ data:extend(
                 type = "damage-type",
                 name = "radioactive"
             },
-            --- This is used for balancing FFA unit attacks vs other enemy.  Player entities have 100% resistance.
-            {
-                type = "damage-type",
-                name = "ffa_balancer"
-            }
         })
 --- Target Trigger Type
 data:extend(
@@ -86,6 +81,12 @@ data:extend(
             { 
                 type = "recipe-category", 
                 name = "erm_controllable_buildings" 
+            },
+            {
+                type = "item-subgroup",
+                name = "boss_radar",
+                group = "combat",
+                order = "h"
             },
         })
 --- Ammo Category

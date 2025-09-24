@@ -35,6 +35,16 @@ function Debug_RemoteAPI.print_surface_races()
     log(helpers.table_to_json(value_table))
 end
 
+
+--- remote.call("enemyracemanager_debug", "print_surface_map_gen_settings")
+function Debug_RemoteAPI.print_surface_map_gen_settings()
+    local map_data = {}
+    for index, surface in pairs(game.surfaces) do
+        map_data[surface.name] = surface.map_gen_settings
+    end
+    helpers.write_file("enemyracemanager/erm-surface-map-gen.json", helpers.table_to_json(map_data))
+end
+
 --- Usage: remote.call("enemyracemanager_debug", "print_forces")
 function Debug_RemoteAPI.print_forces()
     log(helpers.table_to_json(game.forces))
@@ -185,8 +195,8 @@ end
 
 --- Usage: remote.call("enemyracemanager_debug", "loss_boss")
 function Debug_RemoteAPI.loss_boss()
-    if storage.boss then
-        storage.boss.despawn_at_tick = 1
+    if storage.boss and storage.boss.radar and storage.boss.radar.valid then
+        storage.boss.radar.die('enemy')
     end
 end
 

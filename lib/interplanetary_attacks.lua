@@ -22,38 +22,38 @@ local base_spawn_rate = 50
 
 local group_variance = 20
 local home_group_size = 20
+local attack_meter_threshold = 1000000
+local default_max_radius = 900000
 
-local default_ignore_list = {
-    --- Offical planets --
-    aquilo = true,
+local default_ignore_list
 
-    --- 3rd party planets with their defined uniqueness
-    --- Maraxsis
-    maraxsis = true,
-    ["maraxsis-trench"] = true,
-}
+local get_default_ignore_list = function()
+    if not default_ignore_list then
+        default_ignore_list = prototypes.mod_data[MOD_DATA_INTERPLANETARY_ATTACKS].data
+    end
+    return default_ignore_list
+end
 
 local player_entities = {"rocket-silo", "mining-drill", "cargo-landing-pad"}
 
 local defense_entities = {"artillery-turret", "artillery-wagon"}
 
 local is_not_ignore_planet = function(planet)
-    local prototype = planet.prototype
-    if default_ignore_list[planet.name] or
-       prototype.hidden
+    local prototypeObj = planet.prototype
+    if get_default_ignore_list()[planet.name]
     then
         return false
     end
 
-    if prototype.map_gen_settings.autoplace_controls then
-        for name, _ in pairs(prototype.map_gen_settings.autoplace_controls) do
+    if prototypeObj.map_gen_settings.autoplace_controls then
+        for name, _ in pairs(prototypeObj.map_gen_settings.autoplace_controls) do
             if MapgenFunctions.autoplace_is_enemy_base(name) then
                 return true
             end
         end
     end
 
-    if prototype.map_gen_settings.territory_settings then
+    if prototypeObj.map_gen_settings.territory_settings then
         return true
     end
 
@@ -72,6 +72,12 @@ local check_home_planet_attacked = function(force_name)
     then
         RaceSettingsHelper.set_interplanetary_raid_for(force_name, true)
     end
+
+    --- for base-game surfaces without space-age
+    if home_planet and not game.planets[home_planet] and RaceSettingsHelper.get_accumulated_attack_meter(force_name) > attack_meter_threshold then
+        RaceSettingsHelper.set_interplanetary_raid_for(force_name, true)
+    end
+    
     return RaceSettingsHelper.can_perform_interplanetary_raid(force_name)
 end
 
@@ -102,6 +108,7 @@ function InterplanetaryAttacks.init_globals()
         storage.interplanetary_intel[1].has_player_entities = true
     end
 
+    get_default_ignore_list()
     for interface_name, functions in pairs(remote.interfaces) do
         if functions["interplanetary_attack_ignore_planets"] then
             local data = remote.call(interface_name, "interplanetary_attack_ignore_planets")
@@ -116,7 +123,7 @@ end
 
 function InterplanetaryAttacks.get_default_intel()
     return {
-        radius = 900000,
+        radius = default_max_radius,
         type = "planet",
         updated = game.tick,
         defense = 0,
@@ -233,7 +240,7 @@ function InterplanetaryAttacks.scan(surface)
 
         --- Scan planet for dropzone only if it"occupied
         if intel and intel.has_player_entities then
-            local max_planet_radius = 3200
+            local max_planet_radius = default_max_radius
             if intel.radius then
                 max_planet_radius = intel.radius
             end
@@ -268,7 +275,9 @@ end
 function InterplanetaryAttacks.determine_planet_details(surface_index)
     local surface = game.surfaces[surface_index]
     local planet = surface.planet
-    if planet and is_not_ignore_planet(planet) then
+    if (planet and is_not_ignore_planet(planet)) or
+        not planet and SurfaceProcessor.is_surface_attackable(surface.name)
+    then
         local intel = InterplanetaryAttacks.get_intel(surface_index) or InterplanetaryAttacks.get_default_intel()
         local player_entity_count = surface.count_entities_filtered({
             type=player_entities,
@@ -282,7 +291,7 @@ function InterplanetaryAttacks.determine_planet_details(surface_index)
         local defense_count = surface.count_entities_filtered({
             type=defense_entities,
             force=ForceHelper.get_player_forces(),
-            limit = 1
+            limit = 12
         })
         if defense_count then
             intel.defense = defense_count
@@ -291,6 +300,7 @@ function InterplanetaryAttacks.determine_planet_details(surface_index)
         InterplanetaryAttacks.set_intel(surface_index, intel)
     end
 end
+
 
 
 return InterplanetaryAttacks

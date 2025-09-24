@@ -7,8 +7,10 @@ local ForceHelper = require("lib.helper.force_helper")
 local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
-    -- K2
     { "radioactive", 5, 65 },
+    -- K2 --
+    { "kr-explosive", 10, 65 },
+    { "kr-radioactive", 5, 65 },
     -- Bob Warfare
     { "bob-pierce", 10, 65 },
     { "bob-plasma", 5, 70 }
@@ -19,7 +21,28 @@ local spawner_damage_types = {
     { "radioactive", 5, 35 },
     -- Bob Warfare
     { "bob-pierce", 10, 30 },
-    { "bob-plasma", 5, 30 }
+    { "bob-plasma", 5, 35 },
+    -- K2 --
+    { "kr-explosive", 10, 30 },
+    { "kr-radioactive", 5, 35 },
+}
+
+local erm_inclusive_resistances = {
+    physical = true,
+    impact = true,
+    poison = true,
+    explosion = true,
+    fire = true,
+    laser = true,
+    acid = true,
+    electric = true,
+    cold = true,
+    healing = true,
+    radioactive = true,
+    ["kr-explosive"] = true,
+    ["kr-radioactive"] = true,
+    ["bob-pierce"] = true,
+    ["bob-plasma"] = true,
 }
 
 
@@ -39,9 +62,18 @@ local enemies_subgroups = {
 local set_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
         local name = ForceHelper.split_name(unit.name)
-        for _, damage_type in pairs(damage_types) do
+        for index, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
                 table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            end
+        end
+     
+        for index, unit_resistance in pairs(data.raw['damage-type']) do
+            if not erm_inclusive_resistances[unit_resistance.name] then
+                table.insert(unit.resistances, { 
+                    type = unit_resistance.name, 
+                    percent = UnitHelper.get_resistance(10, 65, tonumber(name[3])) 
+                })
             end
         end
     end
@@ -51,8 +83,28 @@ local set_spawner_resistance = function(unit)
     if enemies_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
         local name = ForceHelper.split_name(unit.name)
         for _, damage_type in pairs(spawner_damage_types) do
-            if data.raw["damage-type"][damage_type[1]] and unit.resistances and name[3] then
-                table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+            if data.raw["damage-type"][damage_type[1]] and unit.resistances then
+                if string.find(name[2],'boss_',nil, true) then
+                    table.insert(unit.resistances, { type = damage_type[1], percent = 75})
+                elseif name[3] then
+                    table.insert(unit.resistances, { type = damage_type[1], percent = UnitHelper.get_resistance(damage_type[2], damage_type[3], tonumber(name[3])) })
+                end 
+            end
+        end
+        
+        for index, unit_resistance in pairs(data.raw['damage-type']) do
+            if not erm_inclusive_resistances[unit_resistance.name] then
+                if string.find(name[2],'boss_',nil, true) then
+                    table.insert(unit.resistances, {
+                        type = unit_resistance.name,
+                        percent = 75
+                    })
+                elseif name[3] then
+                    table.insert(unit.resistances, {
+                        type = unit_resistance.name,
+                        percent = UnitHelper.get_resistance(10, 40, tonumber(name[3]))
+                    })
+                end
             end
         end
     end
@@ -80,5 +132,13 @@ for _, unit in pairs(data.raw.unit) do
             end
         end
     end
-end
 
+    -- Prevent 100% resistance from 3rd party unit.   Some units fight each other while dealing no damage, causing performance issue.  Damage immune is crap design anyway.  
+    if unit.resistances then
+        for index, resistance in pairs(unit.resistances) do
+            if resistance.percent == 100 then
+                unit.resistances[index].percent = 95
+            end
+        end 
+    end
+end

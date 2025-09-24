@@ -97,7 +97,7 @@ it('Test when applicable entities spawn, it should roll', function()
     assert(tonumber(unit_name[3]) > 1, 'Turret is able to swap to higher tier')
 end)
 
-it('Test when unit spawn at higher tier, it should re-roll to max non-zero tier', function()
+it('Test when unit spawn at higher tier, quality roll keeps its tier', function()
     local nauvis = game.surfaces[1]
 
     game.forces[enemy].set_evolution_factor(1)
@@ -105,7 +105,7 @@ it('Test when unit spawn at higher tier, it should re-roll to max non-zero tier'
     QualityProcessor.calculate_quality_points()
 
     local entity = nauvis.create_entity {
-        name = 'enemy--big-biter--5',
+        name = 'enemy_erm_zerg--zergling--6',
         position = {32, 32}
     }
     local units = nauvis.find_entities_filtered {
@@ -115,7 +115,7 @@ it('Test when unit spawn at higher tier, it should re-roll to max non-zero tier'
     }
     local unit = units[1]
     local unit_name = ForceHelper.get_name_token(unit.name)
-    assert(tonumber(unit_name[3]) < 5, 'Biter should swap to lower tier. Found: '..tonumber(unit_name[3]))
+    assert(tonumber(unit_name[3]) == 6, 'Enemy keeps higher tier. Found: '..tonumber(unit_name[3]))
 
 end)
 

@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.0.38",
+  "version": "2.0.39",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -10,7 +10,7 @@
     "base >= 2.0.43",
     "?space-age >= 2.0.0",
     "?quality >= 2.0.0",
-    "enemyracemanager_assets >= 2.0.0",
+    "enemyracemanager_assets >= 2.0.1",
     "erm_libs >= 2.0.5",
     "~zerm_postprocess >= 2.0.0",
     "advanced_target_priorities >= 1.0.0",

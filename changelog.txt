@@ -1,13 +1,76 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.39
+Date: 2025-09-24
+
+  Features:
+    - [space-age] [[ Re-designed Boss (Experimental) ]]
+    - This mode requires quality and space-age mod to be enabled.
+    - Added Psi Radars (boss scanner). it's not repairable and not minable. You are defeated when it's destroyed.         
+    - Added "Divine" units. They are appox 25% tougher than "Legendary" unit.  They only spawn by the boss and its assisted spawner. 
+    - Added many new offensive systems for the boss.
+    - Added boss reward.  It spawns 1 or more infinite-chest with various items for 60 minutes once you win the duel.   
+    - Added 5 tiers for the boss.  Each tier have different attack frequencies and different chances of rolling an attack.  They also spawns higher quality of divine units and projectiles.
+    - Added UI to have camera view on boss and radar. (Default: Ctrl+Alt+B or click on PSI radar) 
+    - This release only has Zerg boss, Overmind.  Other bosses (protoss and redarmy) are still work in progress.
+    - *** See additional details in tips and tricks ***    
+    - [[ EMOTIONAL DAMAGE system (Experimental) ]]
+    - It is only used by the boss at the moment.  When the boss have taken x amount of damage, it rolls a new strategy.  
+    - The system selects the units from existing spawn areas. Final group size varies based on the density in a given area.
+    - There are 4 offensive strategies so far. Rapid Expansion, Siege, Double Tap, Rush.  The default is set to Peaceful.    
+    - *** See additional details in tips and tricks ***
+    - [[ Cars and Tanks Army ]]    
+    - Added remote car that uses firearm-magazine.  Cost 2 army supply.
+    - Added remote tank that uses regular cannon shell.  Cost 3 army supply.
+    - They are designed for early - mid game. They are inferior than the drivable ones.
+
+  Changes:
+    - Lowered any 3rd party units that has 100% resistance to 95% (eg Cold, Toxic, Explosive biters).  Units fight each other with no damage and causing performance issues.
+    - When calling uWuClear rapid delivery, it now kills all enemy unit and structures and reset some of the offensive metrics.    
+    - Increased uWuClear destruction area from 384, 12 chunks -> 512, 16 chunks.   
+    - All ERM units follow ERM resistance standards (75% max at top tiers) against ANY 3rd party damage types unless the new damage types are supported under compatibility script.
+    - Adjusted Armour, Explosive, Cold, Toxic biter's custom featured attack groups.
+    - Lowered the default chance of precision strike flying group from 25% to 10%.     
+    - Added destination location to precision strike message.
+    - Excluded hidden planet/surface from enemy data UI.
+    - Fixed UIs to use label name instead of name.
+    - Removed pollution multiplier startup settings.  Every unit tier increases by 10%.  Legendary unit increases by 40%.
+    - Added 10-33% resistances to all player's base game turrets, depending on turret type.
+    - Changed the chance of enemy's victory based expansion from 100% to 10% with 3 mins cooldown.  The group may build up to 10 buildings, depending on units left in the group.
+    - Changed Builder Processor to build support structure first, then command center to balance boss mode.    
+    - Changed "CTRL + ALT + left-click" functions (Army Command Center alt view) to "Shift - left-click" to avoid base game chat ping collision.   
+    - Updated various tips and tricks, moved "Unit Control" tab from ERM-Terran.
+    - Updated compatibility note for Alien Biomes.
+    - Changed adding "pentapod" force only when space-age is enabled.
+    - Updated surface processor to support 3rd party planetary surface without space-age (Space Exploration).
+
+  Bugfixes:
+    - Fixed unit quality didn't roll on home planet for certain attacks.    
+    - Fixed attackable entities for mining drone mod compatibility.
+    - Fixed 3rd party supported biters did not register race setting data during on_init.
+    - Fixed attack_group_beacon_processor did not process "get beacon" retry properly.
+    - Fixed capture-robot-rocket's target filter to include all variants of biter-spawner and spitter-spawner.
+
+  Scripting:
+    - Added data.raw['mod-data']["ERM_surface_exclusions"] to excluded surfaces from ERM's custom attack processing.
+    - Added "lignumis" to ERM_surface_exclusions. 
+    - Added data.raw['mod-data']["ERM_neutral_forces"] to specify 3rd party neutral forces.    
+    - Added data.raw['mod-data']["ERM_interplanetary_attack_exclusions"] to exclude surfaces from interplanetary attacks.
+    - Automatically added any hidden planet to above planet exclusion data sets in data-final-fixes.lua.
+    - Added RemoteAPI.random_pick_a_force() to return an active enemy force name.
+    - Added RemoteAPI.register_external_planet() to register an ERM tracking surface.
+    - Added 'erm_pre_surface_created' event to set up custom ERM planet data from other mods.
+
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.38
-Date: 2024-08-09
+Date: 2025-08-09
 
   Bugfixes:
     - Fixed a crash when construct_brutal_force_commands' beacon became invalid.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.37
-Date: 2024-06-16
+Date: 2025-06-16
 
   Bugfixes:
     - Fixed planet detail GUI crash after a surface removed. 
@@ -15,7 +78,7 @@ Date: 2024-06-16
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.36
-Date: 2024-05-27
+Date: 2025-05-27
 
   Changes:
     - Added "Auto creep removal" as startup option.  You can disable it to preserve creep.
@@ -25,14 +88,14 @@ Date: 2024-05-27
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.35
-Date: 2024-05-11
+Date: 2025-05-11
 
   Bugfixes:
     - Fixed file naming on "Combat Mechanic Overhaul""
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.34
-Date: 2024-05-10
+Date: 2025-05-10
 
   Changes:
     - Added "Combat Mechanic Overhaul" to MOD compatiblity doc.
@@ -45,7 +108,7 @@ Date: 2024-05-10
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.33
-Date: 2024-04-25
+Date: 2025-04-25
 
   Bugfixes:
     - Fixed compatibility issue on construction bot with bob's logistics.
@@ -53,14 +116,14 @@ Date: 2024-04-25
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.32
-Date: 2024-04-18
+Date: 2025-04-18
 
   Bugfixes:
     - Turn off debug mode.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.31
-Date: 2024-04-18
+Date: 2025-04-18
 
   Bugfixes:
     - Fixed orphan spawn beacon data has not been properly clean. 
@@ -68,7 +131,7 @@ Date: 2024-04-18
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.30
-Date: 2024-04-18
+Date: 2025-04-18
 
   Changes:
     - Added advanced_spaceship_repair mod as optional dependency.  
@@ -76,7 +139,7 @@ Date: 2024-04-18
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.29
-Date: 2024-04-18
+Date: 2025-04-18
 
   Changes:
     - Updated erm_lib to 2.0.5 for copying planet music. 
@@ -89,7 +152,7 @@ Date: 2024-04-18
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.28
-Date: 2024-04-15
+Date: 2025-04-15
 
   Features:
     - Added support to make rail, rail-signals indestructible. [Default: ON]
@@ -110,7 +173,7 @@ Date: 2024-04-15
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.27
-Date: 2024-04-11
+Date: 2025-04-11
 
   Changes:
     - Updated Mod-Compatibility doc for new RSO issues as they break unit spawners spawn and new resources spawn. 
@@ -121,7 +184,7 @@ Date: 2024-04-11
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.26
-Date: 2024-04-11
+Date: 2025-04-11
 
   Features:
     - Added ERM economy to replace the captive biter spawner workflow on Zerg, Protoss and Redarmy.
@@ -147,7 +210,7 @@ Date: 2024-04-11
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.25
-Date: 2024-03-30
+Date: 2025-03-30
 
   Changes:
     - updated bob damage types for ERM enemy resistances table changes.
@@ -159,7 +222,7 @@ Date: 2024-03-30
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.24
-Date: 2024-03-13
+Date: 2025-03-13
 
   Changes:
     - Updated Mod-Compatibility document regarding to mods that modify planet nauvis prototype (Solar System++).
@@ -171,14 +234,14 @@ Date: 2024-03-13
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.23
-Date: 2024-03-11
+Date: 2025-03-11
 
   Bugfixes:
     - Fix a crash when injecting data to advance target priority for armour biter.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.22
-Date: 2024-02-21
+Date: 2025-02-21
 
   Features:
     - Re-added interplanetary attacks. Default: ON  (BETA feature)
@@ -210,7 +273,7 @@ Date: 2024-02-21
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.21
-Date: 2024-01-20
+Date: 2025-01-20
 
   Bugfixes:
     - Fixed army deployer cron job might not properly reload for an existing save after 2.0.17 changes.
@@ -219,7 +282,7 @@ Date: 2024-01-20
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.20
-Date: 2024-01-18
+Date: 2025-01-18
 
   Changes:
     - Fixed locale for enemy force's land and aerial scout.

@@ -14,9 +14,9 @@ data:extend({
     },
     {
         type = "custom-input",
-        name = "erm-alt-left-click",
+        name = "erm-shift-left-click",
         localised_name = "ERM mouse alt left click",
-        key_sequence = "CONTROL + ALT + mouse-button-1",
+        key_sequence = "Shift + mouse-button-1",
         consuming = "none",
         include_selected_prototype = true
     },
@@ -32,6 +32,13 @@ data:extend({
         name = "erm-open-stat-window",
         localised_name = "Open Stats Window",
         key_sequence = "CONTROL + ALT + S",
+        consuming = "none"
+    },
+    {
+        type = "custom-input",
+        name = "erm-open-boss-window",
+        localised_name = "Open Boss View Window",
+        key_sequence = "CONTROL + ALT + B",
         consuming = "none"
     }
 })

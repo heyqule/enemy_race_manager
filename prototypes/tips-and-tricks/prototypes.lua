@@ -114,6 +114,7 @@ data:extend(
         {
             type = "tips-and-tricks-item",
             name = "enemyracemanager-advance-army-control",
+            --tag = "[entity=]",
             category = "enemyracemanager",
             order = "l",
             indent = 1,
@@ -122,11 +123,13 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-defense-tips",
+            name = "enemyracemanager-unit-control",
+            --tag = "[entity=]",
             category = "enemyracemanager",
-            order = "m",
-            indent = 1,
+            order = "l1",
+            indent = 2,
             starting_status = "suggested",
+            --simulation = simulations.general
         },
         {
             type = "tips-and-tricks-item",
@@ -139,9 +142,33 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-other-faq",
+            name = "enemyracemanager-emotional-damage",
             category = "enemyracemanager",
             order = "n",
+            indent = 1,
+            starting_status = "suggested"
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-defense-tips",
+            category = "enemyracemanager",
+            order = "o",
+            indent = 1,
+            starting_status = "suggested",
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-enhanced-defense",
+            category = "enemyracemanager",
+            order = "p",
+            indent = 1,
+            starting_status = "suggested",
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-other-faq",
+            category = "enemyracemanager",
+            order = "p",
             indent = 1,
             starting_status = "suggested",
         },

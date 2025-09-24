@@ -84,6 +84,7 @@ function BaseBuildProcessor.determine_build_group(entity)
         position = entity.position,
         radius = 32,
         type = "unit",
+        
     }
     for _, unit in pairs(near_by_units) do
         if  unit.commandable and
@@ -124,12 +125,12 @@ function BaseBuildProcessor.build_formation(unit_group, has_cc)
     for _, unit in pairs(members) do
         if unit.valid then
             local name = nil
-            if cc < tonumber(formation[1]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
-                cc = cc + 1
-            elseif support < tonumber(formation[2]) then
+            if support < tonumber(formation[2]) then
                 name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name)
                 support = support + 1
+            elseif cc < tonumber(formation[1]) then
+                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
+                cc = cc + 1
             elseif turret < tonumber(formation[3]) then
                 name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name)
                 turret = turret + 1
@@ -164,7 +165,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     end
     
     if not surface.can_place_entity({ name = name, force = force_name, position = position }) then
-        position = surface.find_non_colliding_position(name, position, radius, 8.33, true)
+        position = surface.find_non_colliding_position(name, position, radius, 9, true)
     end
 
     if position then

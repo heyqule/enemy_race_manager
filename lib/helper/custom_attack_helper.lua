@@ -6,15 +6,16 @@
 require("__enemyracemanager__/setting-constants")
 require("util")
 local String = require('__erm_libs__/stdlib/string')
-
-local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local Orientation = require('__erm_libs__/stdlib/orientation')
-
+local Direction = require('__erm_libs__/stdlib/Direction')
+local Position = require('__erm_libs__/stdlib/Position')
 local Table = require("__erm_libs__/stdlib/table")
 
+local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+
 local ATTACK_CHUNK_SIZE = 32
+local NON_COLLISION_GAP = 4
 
 local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
@@ -89,7 +90,7 @@ local get_low_tier_flying_unit = function(force_name)
 end
 
 local get_drop_position = function(final_unit_name, surface, position, force_name, level)
-    local drop_position = position
+    local drop_position = {x=position.x + math.random(-4,4), y= position.y + math.random(-4,4)}
     if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
         drop_position = surface.find_non_colliding_position(final_unit_name, drop_position, 8, 2, true)
 
@@ -104,10 +105,16 @@ local get_drop_position = function(final_unit_name, surface, position, force_nam
     return final_unit_name, drop_position
 end
 
-local add_member = function(final_unit_name, surface, drop_position, force_name, group)
+local add_member = function(final_unit_name, surface, drop_position, force_name, group, quality)
     if drop_position then
+        quality = quality or 'normal'
         remote.call('enemyracemanager','skip_roll_quality')
-        local entity = surface.create_entity({ name = final_unit_name, position = drop_position, force = force_name })
+        local entity = surface.create_entity({ 
+            name = final_unit_name, 
+            position = drop_position, 
+            force = force_name,
+            quality = quality
+        })
         if entity and entity.type == "unit" then
             if group.valid and group.is_unit_group then
                 group.add_member(entity)
@@ -128,6 +135,8 @@ local drop_unit = function(event, force_name, unit_name, count, position)
         source_entity_force_name = source_entity.force.name
         local name_tokens = get_name_token(source_entity.name)
         level = name_tokens[3]
+    elseif surface.name == storage.custom_attack_race_settings[force_name].home_planet then
+        level = GlobalConfig.MAX_LEVELS
     end
 
     position.x = position.x + 2
@@ -323,10 +332,10 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         position = position, force = boss_data.force
     }
     repeat
-        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--" .. tostring(level)
+        local final_unit_name = force_name .. "--" .. CustomAttackHelper.get_unit(force_name, "droppable_units") .. "--6"
         local drop_position
         final_unit_name, drop_position = get_drop_position(final_unit_name, surface, position, force_name, level)
-        add_member(final_unit_name, surface, drop_position, boss_data.force, group)
+        add_member(final_unit_name, surface, drop_position, boss_data.force, group, boss_data.quality)
         i = i + 1
     until i == count
 
@@ -342,8 +351,8 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
-
-    remote.call("enemyracemanager", "add_boss_attack_group", group)
+    remote.call("enemyracemanager", "add_erm_attack_group", group)
+    group.start_moving()
 end
 
 local break_time_to_live = function(count, max_count, units_total)
@@ -376,7 +385,7 @@ local try_kill_a_tree_or_rock = function(units)
                 local idx, target_entity
                 local entities = surface.find_entities_filtered({
                     position = entity.position,
-                    radius = 32,
+                    radius = ATTACK_CHUNK_SIZE,
                     name = rock_names,
                     limit = 1,
                 })
@@ -386,7 +395,7 @@ local try_kill_a_tree_or_rock = function(units)
                 if not target_entity then
                     local entities = surface.find_entities_filtered({
                         position = entity.position,
-                        radius = 32,
+                        radius = ATTACK_CHUNK_SIZE,
                         type = {"tree"},
                         limit = 1,
                     })
@@ -560,31 +569,88 @@ end
 local build = function(event, force_name, building_name, position)
     position = position or event.source_position or event.source_entity.position
     local source_entity = event.source_entity
-    local source_entity_force_name = event.source_entity.force.name or force_name
-    local race_settings = get_race_settings(force_name)
+    local source_entity_force_name = force_name
+    local orientation
+    local level = GlobalConfig.MAX_LEVELS
+    if source_entity then
+        source_entity_force_name = event.source_entity.force.name
+        orientation = source_entity.orientation
+        local name_tokens = get_name_token(source_entity.name)
+        level = tonumber(name_tokens[3])
+    else
+        orientation = Direction.to_orientation(
+                        Position.direction_to(event.source_position, event.target_position)
+                      )
+    end
+
     local surface = game.surfaces[event.surface_index]
-    local name_tokens = get_name_token(source_entity.name)
-    local level = name_tokens[3]
+
+    if level > GlobalConfig.MAX_LEVELS then
+        level = GlobalConfig.MAX_LEVELS
+    end
 
     position.x = position.x + 2
 
     local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        local building_box = get_build_bounding_box(source_entity.orientation)
+        local building_box = get_build_bounding_box(orientation)
         position = surface.find_non_colliding_position_in_box(final_unit_name, 
-                {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}}, 
-            2, true)
+                {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}},
+                NON_COLLISION_GAP, true)
     end
 
     if position then
         remote.call('enemyracemanager','skip_roll_quality')
-        local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
+        local entity = surface.create_entity({ 
+            name = final_unit_name, 
+            position = position, 
+            force = source_entity_force_name,
+            preserve_ghosts_and_corpses = true
+        })
     end
 end
 
-function CustomAttackHelper.build(event, force_name, unit_name)
-    build(event, force_name, unit_name)
+function CustomAttackHelper.build(event, force_name, unit_name, position)
+    build(event, force_name, unit_name, position)
+end
+
+local boss_build = function(event, force_name, building_name, position)
+    position = position or event.source_position or event.source_entity.position
+    local source_entity = event.source_entity
+    local source_entity_force_name = event.source_entity.force.name or force_name
+    local race_settings = get_race_settings(force_name)
+    local surface = game.surfaces[event.surface_index]
+    local name_tokens = get_name_token(source_entity.name)
+    local level = tonumber(name_tokens[3])
+
+    if level > GlobalConfig.BOSS_MAX_TIERS then
+        level = GlobalConfig.BOSS_MAX_TIERS
+    end
+
+    position.x = position.x + 2
+
+    local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
+
+    if not surface.can_place_entity({ name = final_unit_name, position = position }) then
+        position = surface.find_non_colliding_position(final_unit_name, position, ATTACK_CHUNK_SIZE, NON_COLLISION_GAP, true)
+    end
+
+    if position then
+        remote.call('enemyracemanager','skip_roll_quality')
+        local entity = surface.create_entity({
+            name = final_unit_name,
+            position = position,
+            force = source_entity_force_name,
+            preserve_ghosts_and_corpses = true,
+            quality = source_entity.quality
+        })
+    end
+end
+
+
+function CustomAttackHelper.boss_build(event, force_name, unit_name, position)
+    boss_build(event, force_name, unit_name, position)
 end
 
 return CustomAttackHelper

@@ -37,7 +37,7 @@ function MainWindow.show(player)
 
     --- fallback to nauvis if player is not on a planet.
     local is_planet = true
-    if not game.planets[surface_name] then
+    if not storage.enemy_surfaces[surface_name] then
         surface_name = 'nauvis'
         is_planet = false
     end
@@ -74,7 +74,7 @@ function MainWindow.show(player)
     main_window.style.minimal_height = MainWindow.window_height / 1.25
 
     if is_planet then
-        scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", "[space-location="..surface_name.."] " .. surface_name }, style = "caption_label" }
+        scroll.add { type = "label", name = "surface_name", caption = { "gui.current_planet", SurfaceProcessor.get_planet_icon(surface_name) .. surface_name }, style = "caption_label" }
     else
         scroll.add { type = "label", name = "surface_name", caption = { "gui.not_on_planet" }, style = "caption_label" }
     end

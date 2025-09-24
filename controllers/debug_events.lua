@@ -97,13 +97,13 @@ end
 
 local DebugEvents = {}
 
-if SAMPLE_TILE_MODE then
-    DebugEvents.events = {
-        [defines.events.on_chunk_generated] = print_chunk_tile_details
-    }
-    DebugEvents.on_nth_tick = {
-        [61] = print_chunk_player_details
-    }
-end
+
+DebugEvents.events = {
+    [defines.events.on_chunk_generated] = print_chunk_tile_details
+}
+DebugEvents.on_nth_tick = {
+    [61] = print_chunk_player_details
+}
+
 
 return DebugEvents

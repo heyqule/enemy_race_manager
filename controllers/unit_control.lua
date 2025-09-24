@@ -10,6 +10,7 @@ local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processo
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
@@ -52,13 +53,13 @@ local on_unit_group_created = function(event)
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_group_tracker_group then
-            if  group.surface.planet == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
+            if storage.enemy_surfaces[group.surface.name] == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
         elseif erm_group then
-            if  group.surface.planet == nil or erm_group.is_aerial then
+            if storage.enemy_surfaces[group.surface.name] or erm_group.is_aerial then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -66,7 +67,7 @@ local on_unit_group_created = function(event)
         elseif TEST_MODE then
             scout_unit_name = 1
         elseif not race_settings.is_primitive and UtilHelper.can_spawn(75) then
-            if group.surface.planet == nil then
+            if storage.enemy_surfaces[group.surface.name] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -95,8 +96,8 @@ local on_unit_group_created = function(event)
 end
 
 local scout_type = {
-    AttackGroupBeaconProcessor.LAND_SCOUT,
-    AttackGroupBeaconProcessor.AERIAL_SCOUT
+    AttackGroupBeaconConstants.LAND_SCOUT,
+    AttackGroupBeaconConstants.AERIAL_SCOUT
 }
 
 local checking_state = {
@@ -288,7 +289,7 @@ local on_ai_command_completed = function(event)
     handle_scouts(scout_unit_data)
     
     
-    --if storage.registered_groups[unit_number] then
+    --if DEBUG and storage.registered_groups[unit_number] then
     --    print('on_ai_completed')
     --    print(unit_number)
     --    print(DEBUG_BEHAVIOUR_RESULTS[event_result])
@@ -326,12 +327,12 @@ end
 local UnitControl = {}
 
 UnitControl.events = {
-    --- This event queue up to 5 batch of units.
+    --- This event queue up to 10 units.
     [Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD]] = function(event)
         local i = 0
         local limit = event.limit or 1
-        if limit > 5 then
-            limit = 5
+        if limit > 10 then
+            limit = 10
         end
         repeat
             BaseBuildProcessor.build_formation(event.group)

@@ -92,3 +92,10 @@ end
 --- Revert this value to default as it affects ERM spawner balance.
 --- Bob Enemies changes it to 20 lol.
 data.raw["utility-constants"].default.spawner_evolution_factor_health_modifier = 10
+
+for _, planet in pairs(data.raw['planet']) do
+    if planet.hidden then
+        data.raw['mod-data'][MOD_DATA_SURFACE_EXCLUSIONS].data[planet.name] = true
+        data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data[planet.name] = true
+    end
+end

@@ -13,7 +13,7 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
-
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
@@ -31,6 +31,7 @@ local MIN_GROUP_SIZE = 5
 local DAY_TICK = 25000
 local IDLE_TIME_OUT = 25000 * 2
 local ERM_GROUP_TIME_TO_LIVE = 25000 * 14 --- 2 Weeks
+local VICTORY_BUILD_COOLDOWN = 3 * minute
 local RETRY = 12
 
 
@@ -251,7 +252,13 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                                 group_position.x,
                                 group_position.y,
                                 group.surface.name
-                        )
+                        ),
+                        SurfaceProcessor.get_gps_message(
+                                position.x,
+                                position.y,
+                                group.surface.name
+                        ),
+                        
                     }, { r = 1, g = 0, b = 0 })
                 end
             end
@@ -263,7 +270,7 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                     group = group,
                     always_angry = false,
                     nearby_retry = 0,
-                    attack_force = 'player',
+                    attack_force = group_tracker.attack_force or 'player',
                     created = game.tick
                 }
             else
@@ -420,6 +427,7 @@ function AttackGroupProcessor.init_globals()
     --- Toggle to run periodic scan when a scout spawns.
     storage.scout_scanner = storage.scout_scanner or false
     storage.scout_unit_name = storage.scout_unit_name or {}
+    storage.last_victory_build_tick = storage.last_victory_build_tick or 0
     AttackGroupProcessor.clear_registered_group()
     if next(storage.scout_tracker) then
         storage.scout_scanner = true
@@ -594,7 +602,7 @@ function AttackGroupProcessor.generate_group(
             return false
         end
 
-        local scout = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconProcessor.LAND_SCOUT)
+        local scout = AttackGroupBeaconProcessor.get_scout_name(force_name, AttackGroupBeaconConstants.LAND_SCOUT)
         center_location = surface.find_non_colliding_position(
                 scout, spawn_beacon.position,
                 AttackGroupProcessor.GROUP_AREA, 1)
@@ -645,7 +653,8 @@ function AttackGroupProcessor.generate_nuked_group(surface, position, radius, so
             { position.x - radius, position.y - radius },
             { position.x + radius, position.y + radius }
         },
-        limit = 1
+        limit = 1,
+        
     })
     local units = {}
 
@@ -818,13 +827,24 @@ function AttackGroupProcessor.process_attack_position(options)
     elseif erm_group_data then
         --- Victory Wander and Victory Expansion
         if erm_group_data.ran_wandering_command then
-            script.raise_event(
+            if ( RaceSettingsHelper.can_spawn(10) and 
+                 game.tick > storage.last_victory_build_tick + VICTORY_BUILD_COOLDOWN ) or 
+               TEST_MODE
+            then
+                -- build one for every 10 units in the group
+                local member_count = math.floor(#group.members / 5)
+                if member_count > 10 then
+                    member_count = 10
+                end
+                storage.last_victory_build_tick = game.tick
+                script.raise_event(
                     Config.custom_event_handlers[Config.EVENT_REQUEST_BASE_BUILD],
                     {
                         group = group,
-                        limit = 1
+                        limit = member_count
                     }
-            )
+                )
+            end
 
             AttackGroupProcessor.queue_for_destroy(group)
         else
@@ -894,9 +914,9 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
         return nil
     end
 
-    local scout_name = AttackGroupBeaconProcessor.LAND_SCOUT
+    local scout_name = AttackGroupBeaconConstants.LAND_SCOUT
     if RaceSettingsHelper.can_spawn(33) and not TEST_MODE then
-        scout_name = AttackGroupBeaconProcessor.AERIAL_SCOUT
+        scout_name = AttackGroupBeaconConstants.AERIAL_SCOUT
     end
 
     scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_name)

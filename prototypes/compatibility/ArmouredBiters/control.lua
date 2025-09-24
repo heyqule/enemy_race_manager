@@ -17,8 +17,9 @@ local modify_race_setting = function()
         table.insert(race_settings.units[2], "big-armoured-biter")
         table.insert(race_settings.units[3], "behemoth-armoured-biter")
 
-        table.insert(race_settings.featured_groups, { { "behemoth-armoured-biter", "behemoth-biter" }, { 5, 2 }, 50 })
-        table.insert(race_settings.featured_groups, { { "behemoth-biter", "behemoth-armoured-biter" }, { 5, 2 }, 50 })
+        table.insert(race_settings.featured_groups, { { "behemoth-armoured-biter", "behemoth-biter", "big-armoured-biter", "big-biter" }, { 1, 2, 2, 3 }, 50 })
+        table.insert(race_settings.featured_groups, { { "behemoth-armoured-biter", "behemoth-biter" }, { 3, 3 }, 100 })
+        table.insert(race_settings.featured_groups, { { "behemoth-armoured-biter", "behemoth-biter" }, { 4, 1 }, 120 })
 
         remote.call("enemyracemanager", "register_race", race_settings)
     end
@@ -30,7 +31,7 @@ end
 local ArmouredBiters = {}
 
 ArmouredBiters.events = {
-    [GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE]] = function(event)
+    [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE]] = function(event)
         if (event.affected_race == MOD_NAME) then
             modify_race_setting()
         end

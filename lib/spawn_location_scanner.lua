@@ -6,6 +6,7 @@
 --- Spawn location scanner, pick an area far from player entity.
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local Direction = require("__erm_libs__/stdlib/direction")
 
 local SpawnLocationScanner = {}
 
@@ -22,29 +23,10 @@ local reference_unit_name = "enemy--behemoth-biter--1"
 local floor = math.floor
 local rad = math.rad
 
-local directions =
-{
-    [defines.direction.north] = {0, -1},
-    [defines.direction.northeast] = {1, -1},
-    [defines.direction.east] = {1, 0},
-    [defines.direction.southeast] = {1, 1},
-    [defines.direction.south] = {0, 1},
-    [defines.direction.southwest] = {-1, 1},
-    [defines.direction.west] = {-1, 0},
-    [defines.direction.northwest] = {-1, -1},
-}
+local directions = Direction.multipliers
 
 --- 90 degree divisions
-local directions_degrees = {
-    [defines.direction.north] = {315, 45},
-    [defines.direction.northeast] = {0, 90},
-    [defines.direction.east] = {45, 135},
-    [defines.direction.southeast] = {90, 180},
-    [defines.direction.south] = {135, 225},
-    [defines.direction.southwest] = {180, 270},
-    [defines.direction.west] = {225, 315},
-    [defines.direction.northwest] = {270, 360},
-}
+local directions_degrees = Direction.divisions
 
 local init_surface_globals = function(surface_index)
     if storage.spawn_locations_tracker[surface_index] == nil then

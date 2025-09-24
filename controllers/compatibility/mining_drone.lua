@@ -5,14 +5,14 @@
 ---
 local Config = require("__enemyracemanager__/lib/global_config")
 
-local add_mining_drone = function(event)
-    Config.add_attack_group_attackable_entity("mining-depot")
-end
-
 local MiningDrone = {}
 
 MiningDrone.events = {
-    [Config.custom_event_handlers[Config.EVENT_FLUSH_GLOBAL]] = add_mining_drone
+    [Config.custom_event_handlers[Config.EVENT_FLUSH_GLOBAL]] = function(event)
+        print('Adding mining-depot to attackable entity list...')
+        Config.add_attack_group_attackable_entity("mining-depot")
+    end
 }
 
+return MiningDrone
 
