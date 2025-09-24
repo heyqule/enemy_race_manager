@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/16/2022 2:58 PM
 ---
-local Table = require("__erm_libs__/stdlib/Table")
+local Table = require("__erm_libs__/stdlib/table")
 local Position = require("__erm_libs__/stdlib/position")
 local Direction = require("__erm_libs__/stdlib/direction")
 local Territory = require("__erm_libs__/stdlib/territory")
