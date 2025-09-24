@@ -14,6 +14,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Emotional Damage system. (Experimental - for boss only at the moment)
 - This system utilizes new strategies to attack your base by using spawned enemy units.
 - New early game army unit.  Car and tank.
+- Space Exploration compatilbility changes.  Requires [ERM & SE compatibility addon](https://mods.factorio.com/mod/erm_se)
 - Improvements and Bugfixes
 
 Note 1: 2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.
@@ -93,6 +94,10 @@ When you are not playing with biter, you don't have to capture the "spawner" to 
 
 Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly different manufacture workflow.
 
+### Boss discovery
+
+Using PSI radar in enemy's home world will reveal their master mind.  Are you able to beat them for rewards?
+
 ### Remote API Support
 
 * [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
@@ -105,6 +110,10 @@ Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly dif
 
 Please see https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility
 details.
+
+##### Space Exploration in 2.0
+You need to download https://mods.factorio.com/mod/erm_se as well to fix compatiblity issues.  Any future SE issue will be fix in this compatibility mod 
+
 
 ### Roadmap
 https://github.com/users/heyqule/projects/1

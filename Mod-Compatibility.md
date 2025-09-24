@@ -26,8 +26,12 @@ Overhaul mod compatibility will be done when they become available.
 - Milestone for killing higher tier enemy command centers.
 - Milestone for killing bosses
 
+### Space Exploration
+- You need to download https://mods.factorio.com/mod/erm_se
+
 #### Super Weapon Attack Points / Counter Attack supported mods
 - Ion Cannon [space-age]
+
 
 ## MODS with issues, but not considered conflicted
 #### Resource Spawner Overhaul
