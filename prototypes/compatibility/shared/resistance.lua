@@ -132,4 +132,13 @@ for _, unit in pairs(data.raw.unit) do
             end
         end
     end
+
+    -- Prevent 100% resistance from 3rd party unit.   Some units fight each other while dealing no damage, causing performance issue.  Damage immune is crap design anyway.  
+    if unit.resistances then
+        for index, resistance in pairs(unit.resistances) do
+            if resistance.percent == 100 then
+                unit.resistances[index].percent = 95
+            end
+        end 
+    end
 end

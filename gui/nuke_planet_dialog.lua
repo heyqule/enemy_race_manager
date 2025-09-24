@@ -81,6 +81,13 @@ function NukePlanetDialog.confirm(player)
                 force = "neutral",
                 speed = 3,
             }
+            --- Remove boss radar
+            if RaceSettingsHelper.is_in_boss_mode() and storage.boss.surface_name == surface.name then
+                storage.boss.surrendered_method = 'gui.boss_detail_data_custom_note_uwu_delivery'
+                storage.boss.surrendered_player = player.name
+                storage.boss.radar.die(storage.boss.force)
+            end
+            
             local entities = surface.find_entities_filtered{
                 type={"unit", "turret", "unit-spawner", "segmented-unit", "spider-unit"},
                 area=nuke_area,
@@ -101,10 +108,6 @@ function NukePlanetDialog.confirm(player)
             storage.boss.victory = false
             --- Unset heat on surface
             AttackGroupHeatProcessor.remove_surface(surface.index)
-            --- Remove boss
-            if RaceSettingsHelper.is_in_boss_mode() then
-                storage.boss.entity.destroy()
-            end
             --- Reset emotion processor
             EmotionProcessor.set_peaceful_on(surface)
 

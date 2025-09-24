@@ -123,7 +123,7 @@ it("Drone build direction tests", function()
     local surface = game.surfaces[1]
     local enemy_force = game.forces["enemy_erm_zerg"]
     local player_force = game.forces["player"]
-    local gun_entity = surface.create_entity({ name = "gun-turret", force = player_force, position = { 0, 0 } })
+    local gun_entity = surface.create_entity({ name = "gun-turret", force = player_force, position = { 0, 0 } }) 
     
     surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = { 0, -20 } })
     after_ticks(600, function()

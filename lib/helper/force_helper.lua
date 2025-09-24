@@ -54,7 +54,8 @@ function ForceHelper.is_erm_unit(entity)
 end
 
 function ForceHelper.is_enemy_force(force)
-    return storage.enemy_force_check[force.name]
+    if type(force) ~= 'string' then force = force.name end
+    return storage.enemy_force_check[force]
 end
 
 function ForceHelper.set_friends(game, force_name, is_friend)
@@ -166,8 +167,10 @@ function ForceHelper.can_have_enemy_on(surface)
             return false
         elseif
             storage.surface_exclusion_list[surface_name] == true or
-            not surface.planet or
-            surface.planet.prototype.hidden == true
+            (not storage.external_planets[surface_name] and 
+                (not surface.planet or 
+                   surface.planet.prototype.hidden == true)
+            )
         then
             storage.surface_exclusion_list[surface_name] = true
             storage.enemy_surfaces[surface_name] = nil
@@ -185,6 +188,12 @@ end
 
 function ForceHelper.add_surface_to_exclusion_list(surface_name)
     storage.surface_exclusion_list[surface_name] = true
+    storage.surface_inclusion_list[surface_name] = nil
+    storage.enemy_surfaces[surface_name] = nil
+end
+
+function ForceHelper.reset_surface_from_lists(surface_name)
+    storage.surface_exclusion_list[surface_name] = nil
     storage.surface_inclusion_list[surface_name] = nil
     storage.enemy_surfaces[surface_name] = nil
 end

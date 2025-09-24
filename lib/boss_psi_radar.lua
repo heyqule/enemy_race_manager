@@ -21,16 +21,16 @@ local boss_roll_start_range = 25
 local BossPsiRadar = {}
 
 function BossPsiRadar.register(radar)
-    local boss_data =  storage.boss
+    local boss_data = storage.boss
     if radar and radar.valid then
-        if boss_data.radar then
+        if boss_data and boss_data.radar then
             local registered_radar = boss_data.radar
             local gps_msg = UtilHelper.get_gps_message(
                     registered_radar.position.x,
                     registered_radar.position.y,
                     registered_radar.surface.name
             )
-            BossPsiRadar.reject('Boss radar already existed '..gps_msg, radar)
+            BossPsiRadar.reject('Boss radar already placed '..gps_msg, radar)
             return
         end
         -- boss radar print
@@ -204,7 +204,6 @@ function BossPsiRadar.reject(message, radar)
         radar.last_user.print(message)
         radar.destroy()
     end
-    storage.boss = nil
 end
 
 return BossPsiRadar

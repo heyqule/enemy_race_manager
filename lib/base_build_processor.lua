@@ -165,7 +165,7 @@ function BaseBuildProcessor.build(surface, name, force_name, position, radius)
     end
     
     if not surface.can_place_entity({ name = name, force = force_name, position = position }) then
-        position = surface.find_non_colliding_position(name, position, radius, 8.33, true)
+        position = surface.find_non_colliding_position(name, position, radius, 9, true)
     end
 
     if position then

@@ -22,8 +22,9 @@ if script then
         [GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name(),
         [GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name(),
         [GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC] = script.generate_event_name(),
-        [GlobalConfig.RACE_SETTING_UPDATE] = script.generate_event_name(),
-        [GlobalConfig.PREPARE_WORLD] = script.generate_event_name(),
+        [GlobalConfig.EVENT_PRE_SURFACE_CREATED] = script.generate_event_name(),
+        [GlobalConfig.EVENT_RACE_SETTING_UPDATE] = script.generate_event_name(),
+        [GlobalConfig.EVENT_PREPARE_WORLD] = script.generate_event_name(),
     }
 end
 

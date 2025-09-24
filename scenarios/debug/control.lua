@@ -37,10 +37,10 @@ script.on_event(defines.events.on_player_created, function(event)
     local force = player.force
     local level = 20
     scenarios_helper.spawn_tile(surface, 320)
-    scenarios_helper.build_base(surface, normal_base_1_1, 0, 0)
+    scenarios_helper.build_base(surface, normal_full_base_2_0_no_railgun, 0, 0)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_attack_points(999999)
-    --scenarios_helper.set_attack_points(999999)
+    scenarios_helper.set_attack_points(999999)
     --scenarios_helper.set_attack_points(999999)
     --scenarios_helper.set_attack_points(-999999)
     scenarios_helper.set_enemy_params(1, 1)
@@ -51,6 +51,8 @@ script.on_event(defines.events.on_player_created, function(event)
     surface.freeze_daytime = true
 
     player.cheat_mode = true
+
+    scenarios_helper.replace_entity(surface, "stone-wall", "refined-concrete-wall")
 
     -- Comment out the following to start with godmode
     --if player.character then
@@ -71,14 +73,14 @@ script.on_event(defines.events.on_player_created, function(event)
         end
     end
 
-    for _, planet in pairs(game.planets) do
-        if not planet.surface then
-            planet.create_surface()
-            --local new_surface = planet.surface
-            --new_surface.request_to_generate_chunks({ 0, 0 }, 5)
-            --new_surface.force_generate_chunk_requests()
-            --scenarios_helper.spawn_tile(new_surface, 192)
-            --scenarios_helper.build_base(new_surface, normal_base_1_1, 0, 0)
-        end
-    end
+    --for _, planet in pairs(game.planets) do
+    --    if not planet.surface then
+    --        planet.create_surface()
+    --        --local new_surface = planet.surface
+    --        --new_surface.request_to_generate_chunks({ 0, 0 }, 5)
+    --        --new_surface.force_generate_chunk_requests()
+    --        --scenarios_helper.spawn_tile(new_surface, 192)
+    --        --scenarios_helper.build_base(new_surface, normal_base_1_1, 0, 0)
+    --    end
+    --end
 end)

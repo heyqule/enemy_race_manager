@@ -82,6 +82,12 @@ data:extend(
                 type = "recipe-category", 
                 name = "erm_controllable_buildings" 
             },
+            {
+                type = "item-subgroup",
+                name = "boss_radar",
+                group = "combat",
+                order = "h"
+            },
         })
 --- Ammo Category
 data:extend({

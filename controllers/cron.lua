@@ -98,6 +98,9 @@ cron_switch = {
     ["BossAttackProcessor.process_attack"] = function(args)
         BossAttackProcessor.process_attack(table.unpack(args))
     end,
+    ['BossAttackProcessor.index_artillery_targets'] = function(args)
+        BossAttackProcessor.index_artillery_targets(table.unpack(args))   
+    end,
     -- BossRewardProcessor
     ["BossRewardProcessor.clean_up"] = function(args)
         BossRewardProcessor.clean_up()

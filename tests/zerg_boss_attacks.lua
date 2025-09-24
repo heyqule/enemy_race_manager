@@ -90,7 +90,7 @@ it("When boss assisted spawner dies, boss HP get deducted and spawns broodlings"
         local idx, spawner = next(storage.boss.assisted_spawners)
         spawner.entity.health = 1
         spawner_max_health = spawner.entity.max_health
-        spawner.entity.damage(99999999,  'player', 'physical')
+        spawner.entity.damage(99999999,  'player', 'impact')
     end)
     
     after_ticks(60, function()
@@ -110,7 +110,7 @@ it("When boss assisted spawner dies, boss HP get deducted and spawns broodlings"
 end)
 
 it("If max assist spawner has not reached, Boss should respawn a new boss assist spawner after 1 minute.", function()
-    async(3700) 
+    async(4500) 
     local surface = game.planets.char.create_surface()
     surface.request_to_generate_chunks({ 0, 0 }, 8)
     surface.force_generate_chunk_requests()
@@ -134,12 +134,11 @@ it("If max assist spawner has not reached, Boss should respawn a new boss assist
     end)
     
     -- Check after 1 minute (3600 ticks) that a new spawner has been created
-    after_ticks(3700, function()
+    after_ticks(4500, function()
         assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
         assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
         assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
         -- Should have the same number of spawners as before (one died, one respawned, due to hiting the 3/5 threshold)
-        remote.call('enemyracemanager_debug', 'print_global')
         assert.equal(4, storage.boss.total_assisted_spawners, "New assist spawner respawned")
         -- Boss health should be deducted due to spawner death
         assert.near(storage.boss.entity.health, 

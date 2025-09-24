@@ -19,6 +19,7 @@ local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
 local CustomAttacks = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 local BossVictoryDialog = require("__enemyracemanager__/gui/victory_dialog")
+local BossRadar = require("__enemyracemanager__/gui/boss_radar")
 
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
@@ -98,46 +99,21 @@ local remove_boss_event = function()
 end
 
 
-local get_scan_area = function(boss_position, radar_position)
+local get_scan_area = function(boss_position, radar_position, using_extra_padding)
+    using_extra_padding = using_extra_padding or true
+    local extra_padding = 0
+    if using_extra_padding then
+        extra_padding = SCAN_EXTRA_PADDING
+    end
     if boss_position == nil then
         boss_position = storage.boss.entity_position
     end
-    local x1 = math.min(boss_position.x, radar_position.x) - SCAN_EXTRA_PADDING
-    local y1 = math.min(boss_position.y, radar_position.y) - SCAN_EXTRA_PADDING
-    local x2 = math.max(boss_position.x, radar_position.x) + SCAN_EXTRA_PADDING
-    local y2 = math.max(boss_position.y, radar_position.y) + SCAN_EXTRA_PADDING
-
-
-    if x1 > x2 and y1 > y2 then
-        return { left_top = { x = x1, y = y1 }, right_bottom = { x = x2, y = y2 } }
-    elseif x1 > x2 and y1 < y2 then
-        return { left_top = { x = x1, y = y2 }, right_bottom = { x = x2, y = y1 } }
-    elseif x1 < x2 and y1 < y2 then
-        return { left_top = { x = x2, y = y2 }, right_bottom = { x = x1, y = y1 } }
-    else
-        return { left_top = { x = x2, y = y1 }, right_bottom = { x = x1, y = y2 } }
-    end
-end
-
-local get_target_direction = function(spawn_position, target_position)
-    local diffThreshold = chunkSize * 3
-    local direction = defines.direction.south
-    if (spawn_position.x - target_position.x) > diffThreshold then
-        direction = defines.direction.west
-    elseif ((spawn_position.x - target_position.x) < (diffThreshold * -1)) then
-        direction = defines.direction.east
-    elseif ((spawn_position.y - target_position.y) > diffThreshold) then
-        direction = defines.direction.north
-    end
-
-    if DEBUG_MODE then
-        local directionText = { ["0"] = "North", ["2"] = "East", ["4"] = "South", ["6"] = "West" }
-        DebugHelper.print("BossProcessor: Targeting Direction: " .. directionText[tostring(direction)])
-        DebugHelper.print(serpent.block(spawn_position))
-        DebugHelper.print(serpent.block(target_position))
-    end
-
-    return direction
+    local x1 = math.min(boss_position.x, radar_position.x) - extra_padding
+    local y1 = math.min(boss_position.y, radar_position.y) - extra_padding
+    local x2 = math.max(boss_position.x, radar_position.x) + extra_padding
+    local y2 = math.max(boss_position.y, radar_position.y) + extra_padding
+    
+    return { left_top = { x = x1, y = y1 }, right_bottom = { x = x2, y = y2 } }
 end
 
 
@@ -250,8 +226,13 @@ function BossProcessor.write_result_log(victory)
 
     if victory then
         record.radar_health = boss.radar.get_health_ratio() * 100
-    else
+    elseif boss.entity and boss.entity.valid then
         record.boss_health = boss.entity.get_health_ratio() * 100
+    end
+
+    if boss.surrendered_method then
+        record.surrendered_method = boss.surrendered_method
+        record.surrendered_player = boss.surrendered_player
     end
     
     table.insert(storage.boss_logs[boss.force_name].entries, record)
@@ -264,6 +245,13 @@ function BossProcessor.init_globals()
     storage.boss_rewards = storage.boss_rewards or {}
     storage.boss_logs = storage.boss_logs or {}
     storage.boss.attack_cache_force_refresh = true
+    
+    storage.registered_boss_radars = {}
+    for _, radar in pairs(prototypes.get_entity_filtered({{filter = "type", type = "radar"}})) do
+        if radar.subgroup and radar.subgroup.name == 'boss_radar' then
+            storage.registered_boss_radars[radar.name] = true
+        end
+    end
 end
 
 function BossProcessor.reset_globals()
@@ -384,6 +372,7 @@ function BossProcessor.exec(radar, spawn_position)
         storage.boss.entity_position = boss_entity.position
 
         storage.boss.scan_area = get_scan_area(storage.boss_final_scanned_position, radar.position)
+        storage.boss.scan_area_wo_padding = get_scan_area(storage.boss_final_scanned_position, radar.position, false)
 
         if DEBUG_MODE then
             local indicator = rendering.draw_rectangle({
@@ -403,8 +392,8 @@ function BossProcessor.exec(radar, spawn_position)
         --- replace tile
         local tile = surface.get_tile(boss_entity.position)
         local tiles = {}
-        for x = (boss_entity.position.x - 32), boss_entity.position.x + 32, 1 do
-            for y = (boss_entity.position.y - 32), boss_entity.position.y + 32, 1 do
+        for x = (boss_entity.position.x - 64), boss_entity.position.x + 64, 1 do
+            for y = (boss_entity.position.y - 64), boss_entity.position.y + 64, 1 do
                 table.insert(tiles, { name = tile, position = { x, y } })
             end
         end
@@ -412,8 +401,8 @@ function BossProcessor.exec(radar, spawn_position)
 
         --- Kill cliff
         for k, entity in pairs(surface.find_entities_filtered{type = "cliff", area = {
-            top_left = { boss_entity.position.x - 16, boss_entity.position.y - 16 },
-            bottom_right = { boss_entity.position.x + 16, boss_entity.position.y + 16 }
+            top_left = { boss_entity.position.x - 32, boss_entity.position.y - 32 },
+            bottom_right = { boss_entity.position.x + 32, boss_entity.position.y + 32 }
         }}) do
             entity.destroy()
         end
@@ -583,7 +572,6 @@ local redirect_segment_unit = function(boss_data)
             force = boss_data.force_name,
             position = boss_data.entity_position,
             radius = spawnRadius * 2,
-            
         }
         local seg_unit = seg_units[1]
         if seg_unit and seg_unit.segmented_unit then
@@ -665,7 +653,7 @@ function BossProcessor.heartbeat()
         end
     end
     
-    BossAttackProcessor.unset_attackable_entities_cache()
+    BossAttackProcessor.unset_close_range_entities_cache()
     
     Cron.add_2_sec_queue("BossProcessor.heartbeat")
 end
@@ -708,6 +696,11 @@ function BossProcessor.unset()
     destroy_beacons()
 
     unset_boss_data()
+    for _, player in pairs(game.players) do
+        if player.valid then
+            BossRadar.hide(player)
+        end
+    end
     DebugHelper.print("BossProcessor: unset...")
 end
 
@@ -733,7 +726,7 @@ end
 function BossProcessor.assisted_spawner_dies(event)
     local spawner_entity = event.source_entity
     local boss_entity = storage.boss.entity
-    if not boss_entity or not boss_entity.valid or not spawner_entity or not spawner_entity.valid then
+    if not spawner_entity or not spawner_entity.valid or not boss_entity or not boss_entity.valid then
         return
     end
     

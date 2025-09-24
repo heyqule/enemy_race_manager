@@ -33,5 +33,12 @@ data:extend({
         localised_name = "Open Stats Window",
         key_sequence = "CONTROL + ALT + S",
         consuming = "none"
+    },
+    {
+        type = "custom-input",
+        name = "erm-open-boss-window",
+        localised_name = "Open Boss View Window",
+        key_sequence = "CONTROL + ALT + B",
+        consuming = "none"
     }
 })

@@ -23,13 +23,14 @@ MapManagement.events = {
         AttackGroupBeaconProcessor.create_resource_beacon_from_trunk(event.surface, event.area)
     end,
     [defines.events.on_surface_created] = function(event)
-        SurfaceProcessor.assign_race(game.surfaces[event.surface_index])
+        script.raise_event(GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_PRE_SURFACE_CREATED], event)
+        SurfaceProcessor.register_enemies(game.surfaces[event.surface_index])
         AttackGroupBeaconProcessor.init_globals_on_surface(game.surfaces[event.surface_index])
         QualityProcessor.calculate_quality_points()
         InterplanetaryAttacks.determine_planet_details(event.surface_index)
     end,
     [defines.events.on_pre_surface_deleted] = function(event)
-        SurfaceProcessor.remove_race(game.surfaces[event.surface_index])
+        SurfaceProcessor.remove_enemies(game.surfaces[event.surface_index])
         AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
         AttackGroupHeatProcessor.remove_surface(event.surface_index)
         AttackGroupHeatProcessor.remove_surface(event.surface_index)
@@ -46,11 +47,12 @@ MapManagement.events = {
     [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN]] = function(event)
         local surface = event.surface
         local intel = event.intel
-        if surface and intel and
-            tonumber(intel.updated) + cache_time < event.tick
+        if not surface or not intel
         then
-            InterplanetaryAttacks.determine_planet_details(surface.index)
+            return
         end
+
+        InterplanetaryAttacks.determine_planet_details(surface.index)
     end
 }
 

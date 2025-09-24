@@ -12,6 +12,7 @@ local ArmyControlWindow = require("__enemyracemanager__/gui/army_control_window"
 local DeployerAttachment = require("__enemyracemanager__/gui/deployer_attachment")
 local QualityPointsWindow = require("__enemyracemanager__/gui/quality_point_window")
 local NukePlanetDialog = require("__enemyracemanager__/gui/nuke_planet_dialog")
+local BossRadar = require("__enemyracemanager__/gui/boss_radar")
 
 local GUI = {
     main_window = MainWindow,
@@ -21,7 +22,8 @@ local GUI = {
     army_control_window = ArmyControlWindow,
     deployer_attachment = DeployerAttachment,
     quality_points_window = QualityPointsWindow,
-    nuke_planet_dialog = NukePlanetDialog
+    nuke_planet_dialog = NukePlanetDialog,
+    boss_radar = BossRadar
 }
 
 function GUI.init_globals()

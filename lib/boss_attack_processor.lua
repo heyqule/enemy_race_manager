@@ -10,6 +10,7 @@ local Territory = require("__erm_libs__/stdlib/territory")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local EmotionConstants = require("__enemyracemanager__/lib/emotion_constants")
 local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
@@ -28,12 +29,15 @@ BossAttackProcessor.TYPE_UNIT_SPAWN = 6
 BossAttackProcessor.TYPE_SEGMENTED_UNIT_SPAWN = 7
 BossAttackProcessor.TYPE_SELECT_NEARBY_ENEMY = 8
 
-local scanRange = 3200
+local scanRange = 2000
 local scanExtraPadding = 160
-local scanBeaconLimit = 100
+local scanAttackEntityLimit = 50
+local scanTotalAttackEntityLimit = 200
 local bossRadius = 96
 local chunksize = 32
 local type_name = { "projectile", 'falling_projectile', "beam", "direct" }
+local turret_types =  {'artillery-turret','fluid-turret','ammo-turret', 'electric-turret', 'turret'}
+local artillery_target_cache_tick = 1 * minute
 
 local acquire_attack_target = function(data)
     local artillery_mode = data.artillery_mode or false
@@ -43,12 +47,11 @@ local acquire_attack_target = function(data)
     local return_position
     local boss = storage.boss
     local surface = boss.surface
-    local attackable_entities_cache = boss.attackable_entities_cache
-    local attackable_entities_cache_size = boss.attackable_entities_cache_size
+    local attackable_entities_cache = boss.close_range_entities_cache or {}
+    local attackable_entities_cache_size = boss.close_range_entities_cache_size or 0
     
     ---- 20% targets radar
     if (only_targets_radar or RaceSettingsHelper.can_spawn(20)) then
-        DebugHelper.print('Boss Targeting Radar...')
         local offset = math.random(-8, 8)
         return_position = {x = boss.radar_position.x + offset, y = boss.radar_position.y}
         return return_position, true
@@ -56,7 +59,6 @@ local acquire_attack_target = function(data)
     
     ---- 10% targets attackable targets
     if boss.radar and boss.radar.valid and (can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10)) then
-        DebugHelper.print('Boss Targeting attackable targets...')
         local beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(
             boss.surface, 
             boss.force,
@@ -71,42 +73,54 @@ local acquire_attack_target = function(data)
         end
     end
 
-    if attackable_entities_cache == nil and not artillery_mode then
+    --- Close range combat
+    if attackable_entities_cache_size == 0 and not artillery_mode then
         attackable_entities_cache = surface.find_entities_filtered {
             force = ForceHelper.get_player_forces(),
             radius = bossRadius,
             position = boss.entity_position,
-            limit = scanBeaconLimit,
+            limit = scanAttackEntityLimit,
             is_military_target = true,
             
         }
         attackable_entities_cache_size = #attackable_entities_cache
-        storage.boss.attackable_entities_cache = attackable_entities_cache
-        storage.boss.attackable_entities_cache_size = attackable_entities_cache_size
+
+        if attackable_entities_cache_size > 0 then
+            storage.boss.close_range_entities_cache = attackable_entities_cache
+            storage.boss.close_range_entities_cache_size = attackable_entities_cache_size
+        else
+            --- bypass close entity till next heartbeat
+            storage.boss.close_range_entities_cache_size = -1
+        end
     end
 
-    if attackable_entities_cache_size == nil or attackable_entities_cache_size == 0 then
-        attackable_entities_cache = surface.find_entities_filtered {
-            force = ForceHelper.get_player_forces(),
-            area = boss.scan_area,
-            limit = scanBeaconLimit,
-            is_military_target = true,
-            
-        }
-        attackable_entities_cache_size = #attackable_entities_cache
-        storage.boss.attackable_entities_cache = attackable_entities_cache
-        storage.boss.attackable_entities_cache_size = attackable_entities_cache_size
+    if attackable_entities_cache_size == 0 and 
+       boss.long_range_entities_cache_size and 
+       game.tick < (boss.long_range_entities_cache_tick or 0) + artillery_target_cache_tick 
+    then
+        attackable_entities_cache = boss.long_range_entities_cache
+        attackable_entities_cache_size = boss.long_range_entities_cache_size
+    end
+    
+    --- artillery range combat, nuke turrets
+    if (attackable_entities_cache_size == 0) and not boss.indexing_artillery_targets
+    then
+        BossAttackProcessor.create_artillery_targets_index()
     end
 
-    if storage.boss.attackable_entities_cache_size > 0 then
+    if attackable_entities_cache_size > 0 then
         local retry = 0
         repeat
-            local entity = attackable_entities_cache[math.random(1, attackable_entities_cache_size)]
-            if entity.valid then
+            local index = math.random(1, attackable_entities_cache_size)
+            local entity = attackable_entities_cache[index]
+            if entity and entity.valid then
                 return_position = entity.position
+            else
+                table.remove(attackable_entities_cache, index)
+                attackable_entities_cache_size = attackable_entities_cache_size - 1
             end
             retry = retry + 1
-        until return_position or retry == 3
+        until return_position or retry == 5
     end
 
     if return_position == nil then
@@ -231,7 +245,7 @@ local attack_projectile = function(data)
         name = entity_name,
         position = start_position,
         target = position,
-        speed = data.speed or 0.3,
+        speed = data.speed or 0.2,
         max_range = data.range or 96,
         create_build_effect_smoke = false,
         raise_built = false,
@@ -254,7 +268,7 @@ local attack_falling_projectile = function(data)
         name = entity_name,
         position = start_drop_position,
         target = position,
-        speed = 0.3,
+        speed = 0.2,
         max_range = 32,
         create_build_effect_smoke = false,
         raise_built = false,
@@ -344,8 +358,6 @@ local attack_unit_spawn = function(data)
             radius = chunksize,
             distraction = defines.distraction.by_anything
         }
-        unit_group.set_command(command)
-        unit_group.start_moving()
         storage.erm_unit_groups[unit_group.unique_id] = {
             commands = command,
             start_position = unit_group.position,
@@ -355,6 +367,8 @@ local attack_unit_spawn = function(data)
             attack_force = boss_data.radar.force.name or 'player',
             created = game.tick
         }
+        unit_group.set_command(command)
+        unit_group.start_moving()
     end
 end
 
@@ -380,7 +394,6 @@ local attack_segment_unit_spawn  = function(data)
         type = "segmented-unit",
         force = entity_force,
         limit = 1,
-        
     }
 
     local _, seg_unit = next(segmented_units)
@@ -453,8 +466,8 @@ local attack_segment_unit_spawn  = function(data)
 
     -- if neither territory or segmented_unit found in boss_data.scan_area, do the following
     if not seg_unit then
-        --- Spawn at 20% away from boss.
-        local spawn_position = Position.lerp(boss_data.entity_position, boss_data.radar_position, 0.1)
+        --- Spawn at 15% away from boss.
+        local spawn_position = Position.lerp(boss_data.entity_position, boss_data.radar_position, 0.15)
         if RaceSettingsHelper.can_spawn(35) then
             spawn_position = Position.random({x = boss_data.radar_position.x, y = spawn_position.y}, -64, 64)
         elseif RaceSettingsHelper.can_spawn(35) then
@@ -508,17 +521,34 @@ local attack_select_nearby_enemy = function(data)
     local surface = data.surface
     local start_position = data.entity_position
     local entity_force = data.entity_force
+    local target_count = math.floor(data.select_neayby_enemy_count * GlobalConfig.max_group_size())
     local spawn_units = surface.find_entities_filtered({
         position = start_position,
         radius = bossRadius,
         type = "unit",
         force = entity_force,
-        limit = math.floor(data.select_neayby_enemy_count * GlobalConfig.max_group_size()),
-        
+        limit = target_count,
     })
+    
+    if not spawn_units or #spawn_units < (target_count / 2) then
+        local additional_spawn_units = surface.find_entities_filtered({
+            area = boss_data.scan_area_wo_padding,
+            type = "unit",
+            force = entity_force,
+            limit = target_count,
+        })    
+        
+        local start_index = #spawn_units
+        for _, unit in pairs(additional_spawn_units) do
+            if start_index < target_count then
+                table.insert(spawn_units, unit)
+                start_index = start_index + 1
+            end
+        end
+    end
 
     if spawn_units and #spawn_units > 0 then
-        local group_position = Position.get_offset_position(start_position, data.position, 8)
+        local group_position = Position.get_offset_position(start_position, data.position, chunksize)
         local unit_group = surface.create_unit_group({position=group_position, force=entity_force})
         for _, unit in pairs(spawn_units) do
             unit_group.add_member(unit)
@@ -529,8 +559,6 @@ local attack_select_nearby_enemy = function(data)
             radius = chunksize,
             distraction = defines.distraction.by_anything
         }
-        unit_group.set_command(command)
-        unit_group.start_moving()
         storage.erm_unit_groups[unit_group.unique_id] = {
             commands = command,
             start_position = unit_group.position,
@@ -540,6 +568,8 @@ local attack_select_nearby_enemy = function(data)
             attack_force = boss_data.radar.force.name or 'player',
             created = game.tick
         }
+        unit_group.set_command(command)
+        unit_group.start_moving()
     end
 end
 
@@ -592,10 +622,17 @@ local process_attack = function(data)
     end
 end
 
+function BossAttackProcessor.unset_close_range_entities_cache()
+    storage.boss.close_range_entities_cache = {}
+    storage.boss.close_range_entities_cache_size = 0
+end
+
 function BossAttackProcessor.unset_attackable_entities_cache()
-    local boss_data = storage.boss
-    boss_data.attackable_entities_cache = nil
-    boss_data.attackable_entities_cache_size = 0
+    storage.boss.close_range_entities_cache = {}
+    storage.boss.close_range_entities_cache_size = 0
+    storage.boss.long_range_entities_cache = {}
+    storage.boss.long_range_entities_cache_size = 0
+    storage.boss.long_range_entities_cache_tick = 0
 end
 
 function BossAttackProcessor.exec_basic()
@@ -649,7 +686,6 @@ function BossAttackProcessor.process_despawn_attack()
 end
 
 function BossAttackProcessor.process_idle_attack()
-    BossAttackProcessor.unset_attackable_entities_cache()
     local data = get_idle_attack()
     for i = 1, data.spread do
         local position, artillery_mode = acquire_attack_target({})
@@ -670,6 +706,66 @@ function BossAttackProcessor.process_attack(data, force_to_run)
     end
 
     process_attack(data)
+end
+
+function BossAttackProcessor.create_artillery_targets_index()
+    if not RaceSettingsHelper.is_in_boss_mode() or (storage.boss.indexing_artillery_targets and storage.boss.indexing_artillery_targets > 0) then
+        return
+    end
+
+    local boss = storage.boss
+    local left_top = boss.scan_area.left_top
+    local right_bottom = boss.scan_area.right_bottom
+    ---@expansive_call
+    local land_beacons =
+    AttackGroupBeaconProcessor.get_beacon_data(AttackGroupBeaconConstants.LAND_BEACON,
+            boss.surface.index, boss.force.name
+    )
+    if land_beacons then
+        -- Convert to array and reverse it
+        local reversed_beacons_array = {}
+        for key, beacon in pairs(land_beacons) do
+            table.insert(reversed_beacons_array,  beacon)
+        end
+        
+        local search_area = { left_top = left_top, right_bottom = right_bottom}
+        local runs = 0
+        -- Iterate in reverse order
+        for i = #reversed_beacons_array, 1, -1 do
+            local beacon = reversed_beacons_array[i]
+            if beacon.beacon and beacon.beacon.valid and
+                    Position.inside(beacon.beacon.position,search_area)
+            then
+                Cron.add_quick_queue("BossAttackProcessor.index_artillery_targets", beacon.beacon)
+                runs = runs + 1
+            end
+        end
+        storage.boss.indexing_artillery_targets = runs
+    end
+end
+
+function BossAttackProcessor.index_artillery_targets(beacon)
+    if not RaceSettingsHelper.is_in_boss_mode() or (storage.boss.long_range_entities_cache_size or 0) >= scanTotalAttackEntityLimit then
+        return
+    end
+    local entities_cache = storage.boss.long_range_entities_cache or {}
+    local boss = storage.boss
+    local surface = boss.surface
+    local entities = surface.find_entities_filtered {
+        force = ForceHelper.get_player_forces(),
+        radius = AttackGroupBeaconConstants.BEACON_RADIUS,
+        position = beacon.position,
+        limit = scanAttackEntityLimit,
+        type = turret_types
+    }
+    for i, entity in pairs(entities) do
+        if i % 5 == 0 and entity.valid then
+            table.insert(entities_cache, entity)
+        end
+    end
+    storage.boss.long_range_entities_cache = entities_cache
+    storage.boss.long_range_entities_cache_size = #storage.boss.long_range_entities_cache
+    storage.boss.indexing_artillery_targets = storage.boss.indexing_artillery_targets - 1
 end
 
 return BossAttackProcessor

@@ -15,6 +15,9 @@ SurfaceProcessor.get_gps_message = UtilHelper.get_gps_message
 function SurfaceProcessor.init_globals()
     storage.enemy_surfaces = storage.enemy_surfaces or {}
     storage.total_enemy_surfaces = storage.total_enemy_surfaces or 0
+    
+    --- Use to store 3rd party surfaces that act as "planets"
+    storage.external_planets = storage.external_planets or {}
 end
 
 local surfixes = {
@@ -24,55 +27,52 @@ local surfixes = {
 local basegame_autoplaces = {
     gleba_enemy_base = true
 }
-function SurfaceProcessor.assign_race(surface)
+function SurfaceProcessor.register_enemies(surface)
 
     if not ForceHelper.can_have_enemy_on(surface) then
         return
     end
+    
+    local map_gen_settings = surface.map_gen_settings
+    local races_by_name = {}
+    local races_by_key= {}
+    if map_gen_settings and map_gen_settings.autoplace_controls then
+        local autocontrols = map_gen_settings.autoplace_controls
+        for key, _ in pairs(autocontrols) do
+            for skey, surfix in pairs(surfixes) do
+                if string.find(key, surfix, 1, true) or basegame_autoplaces[key] then
+                    local index = string.find(key, surfix, 1, true)
+                    local precheck_enemy_race = string.sub(key, 0, (string.len(surfix) + 2) * -1)
+                    local enemy_race
 
-    local planet = surface.planet
+                    if index and ForceHelper.is_enemy_force(precheck_enemy_race) then
+                        enemy_race = precheck_enemy_race
+                    else
+                        enemy_race = MOD_NAME
+                    end
 
-    if planet then
-        local prototype = planet.prototype
-        local races_by_name = {}
-        local races_by_key= {}
-        if prototype.map_gen_settings and prototype.map_gen_settings.autoplace_controls then
-            local autocontrols = prototype.map_gen_settings.autoplace_controls
-            for key, _ in pairs(autocontrols) do
-                for skey, surfix in pairs(surfixes) do
-                    if string.find(key, surfix, 1, true) or basegame_autoplaces[key] then
-                        local index = string.find(key, surfix, 1, true)
-                        local precheck_enemy_race = string.sub(key, 0, (string.len(surfix) + 2) * -1)
-                        local enemy_race
-
-                        if index and ForceHelper.is_enemy_force(precheck_enemy_race) then
-                            enemy_race = precheck_enemy_race
-                        else
-                            enemy_race = MOD_NAME
-                        end
-
-                        if enemy_race then
-                            races_by_name[enemy_race] = true
-                            table.insert(races_by_key, enemy_race)
-                        end
+                    if enemy_race then
+                        races_by_name[enemy_race] = true
+                        table.insert(races_by_key, enemy_race)
                     end
                 end
             end
         end
+    end
 
-        if table_size(races_by_key) then
-            storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
-            storage.enemy_surfaces[surface.name] = {
-                races_by_name = races_by_name,
-                races_by_key = races_by_key,
-                size = table_size(races_by_key)
-            }
-        end
+    if table_size(races_by_key) then
+        storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
+        storage.enemy_surfaces[surface.name] = {
+            surface = surface,
+            races_by_name = races_by_name,
+            races_by_key = races_by_key,
+            size = table_size(races_by_key)
+        }
     end
 end
 
-function SurfaceProcessor.remove_race(surface)
-    if storage.enemy_surfaces[surface.name] ~= nil then
+function SurfaceProcessor.remove_enemies(surface)
+    if storage.enemy_surfaces[surface.name] then
         storage.enemy_surfaces[surface.name] = nil
         storage.total_enemy_surfaces = storage.total_enemy_surfaces - 1
     end
@@ -91,13 +91,13 @@ function SurfaceProcessor.rebuild_race()
                 storage.active_races[race] == nil or
                 not ForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
-            SurfaceProcessor.remove_race(game.surfaces[surface_index])
+            SurfaceProcessor.remove_enemies(game.surfaces[surface_index])
         end
     end
 
     for _, surface in pairs(game.surfaces) do
         if storage.enemy_surfaces[surface.name] == nil and ForceHelper.can_have_enemy_on(surface) then
-            SurfaceProcessor.assign_race(game.surfaces[surface.index])
+            SurfaceProcessor.register_enemies(game.surfaces[surface.index])
         end
     end
 
@@ -122,8 +122,9 @@ function SurfaceProcessor.wander_unit_clean_up()
                    unit.commandable.command and unit.commandable.command.type == defines.command.wander then
                     unit_count = unit_count + 1
                     local force_name = unit.force.name
-                    if force_name and storage.race_settings[force_name] and storage.race_settings[force_name].attack_meter then
-                        storage.race_settings[force_name].attack_meter = storage.race_settings[force_name].attack_meter + 1
+                    local race_settings = storage.race_settings[force_name]
+                    if force_name and race_settings and race_settings.attack_meter then
+                        storage.race_settings[force_name].attack_meter = race_settings.attack_meter + 1
                     end
                     unit.destroy()
                 end
@@ -156,6 +157,36 @@ end
 
 function SurfaceProcessor.get_attackable_surfaces()
     return storage.enemy_surfaces
+end
+
+function SurfaceProcessor.is_surface_attackable(surface_name)
+    return storage.enemy_surfaces[surface_name] ~= nil
+end
+
+
+function SurfaceProcessor.register_external_planet(data)
+    if not data.surface then
+        error('Missing Luasurface')
+    end
+
+    data.radius = data.radius or 900000
+    data.icon = data.icon or "[space-location=space-location-unknown]"
+    
+    if data.surface and data.surface.valid then
+        storage.external_planets[data.surface.name] = data
+    end
+end
+
+function SurfaceProcessor.get_planet_icon(surface_name)
+    local surface_str
+    if game.planets[surface_name] then
+        surface_str = "[space-location="..surface_name.."] "
+    elseif storage.external_planets[surface_name] then
+        surface_str = storage.external_planets[surface_name].icon.." "
+    else
+        surface_str = "[space-location=space-location-unknown] "
+    end
+    return surface_str
 end
 
 return SurfaceProcessor

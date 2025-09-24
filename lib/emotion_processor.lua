@@ -233,7 +233,6 @@ local attack_siege = function(data)
                 radius = 16,
             }
             group.set_command(command)
-            group.start_moving()
             storage.erm_unit_groups[group.unique_id] = {
                 commands = command,
                 start_position = group.position,
@@ -243,6 +242,7 @@ local attack_siege = function(data)
                 attack_force = target_force.name or 'player',
                 created = game.tick
             }
+            group.start_moving()
         else
             group.destroy()
         end
@@ -294,8 +294,6 @@ local attack_double_tap = function(data)
                 radius = 16,
             }
             group.set_command(command)
-            group.start_moving()
-
             storage.erm_unit_groups[group.unique_id] = {
                 commands = command,
                 start_position = group.position,
@@ -305,6 +303,7 @@ local attack_double_tap = function(data)
                 attack_force = target_force.name or 'player',
                 created = game.tick
             }
+            group.start_moving()
         else
             group.destroy()
         end

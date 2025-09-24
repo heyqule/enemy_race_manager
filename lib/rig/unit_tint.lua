@@ -7,6 +7,8 @@
 --- require("__enemyracemanager__/lib/rig/unit_tint")
 ---
 
+--- Moved to __enemyracemanager_assets__, this file is for backward compatibility.
+
 local ERM_UnitTint = require('__enemyracemanager_assets__/tint')
 
 return ERM_UnitTint

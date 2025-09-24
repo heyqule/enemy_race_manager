@@ -37,7 +37,7 @@ function DetailWindow.show(player, race_setting)
     local admin = player.admin
     local surface_name = player.surface.name
     --- fallback to nauvis if player is not on a planet.
-    if not game.planets[surface_name] then
+    if not storage.enemy_surfaces[surface_name] then
         surface_name = 'nauvis'
     end
 
@@ -77,10 +77,10 @@ function DetailWindow.show(player, race_setting)
     item_table.add { type = "label", caption = race_setting.tier }
 
     item_table.add { type = "label", caption = { "gui.evolution_column" } }
-    item_table.add { type = "label", caption = string.format("%.2f", game.forces[race_setting.race].get_evolution_factor(surface_name) * 100) .. "% @ [space-location="..surface_name.."]"  .. surface_name }
+    item_table.add { type = "label", caption = string.format("%.2f", game.forces[race_setting.race].get_evolution_factor(surface_name) * 100) .. "% @ "..SurfaceProcessor.get_planet_icon(surface_name).. surface_name }
 
     item_table.add { type = "label", caption = { "gui.progress_column" } }
-    item_table.add { type = "label", caption = (points / 100) .. "% @ [space-location="..surface_name.."] " .. surface_name }
+    item_table.add { type = "label", caption = (points / 100) .. "% @ ".. SurfaceProcessor.get_planet_icon(surface_name) .. surface_name }
 
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = race_setting.attack_meter .. " / " .. race_setting.next_attack_threshold }
@@ -123,7 +123,9 @@ function DetailWindow.show(player, race_setting)
 end
 
 function DetailWindow.hide(player)
-    player.gui.screen[DetailWindow.root_name].destroy()
+    if player.gui.screen[DetailWindow.root_name] then
+        player.gui.screen[DetailWindow.root_name].destroy()
+    end
 end
 
 function DetailWindow.toggle_close(owner)

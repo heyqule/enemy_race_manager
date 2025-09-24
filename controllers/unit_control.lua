@@ -53,13 +53,13 @@ local on_unit_group_created = function(event)
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_group_tracker_group then
-            if  group.surface.planet == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
+            if storage.enemy_surfaces[group.surface.name] == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
         elseif erm_group then
-            if  group.surface.planet == nil or erm_group.is_aerial then
+            if storage.enemy_surfaces[group.surface.name] or erm_group.is_aerial then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -67,7 +67,7 @@ local on_unit_group_created = function(event)
         elseif TEST_MODE then
             scout_unit_name = 1
         elseif not race_settings.is_primitive and UtilHelper.can_spawn(75) then
-            if group.surface.planet == nil then
+            if storage.enemy_surfaces[group.surface.name] then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -289,7 +289,7 @@ local on_ai_command_completed = function(event)
     handle_scouts(scout_unit_data)
     
     
-    --if storage.registered_groups[unit_number] then
+    --if DEBUG and storage.registered_groups[unit_number] then
     --    print('on_ai_completed')
     --    print(unit_number)
     --    print(DEBUG_BEHAVIOUR_RESULTS[event_result])

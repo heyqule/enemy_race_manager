@@ -91,19 +91,19 @@ script.on_event(defines.events.on_player_created, function(event)
     player.cheat_mode = true
 
     -- Comment out the following to start with godmode
-    if player.character then
-        player.character.destroy()
-    end
+    --if player.character then
+    --    player.character.destroy()
+    --end
 
     scenarios_helper.replace_entity(surface, "stone-wall", "refined-concrete-wall")
     
 
     -- Comment out the following to start with godmode
-    --if player.character then player.character.destroy() end
-    --local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
-    --player.set_controller{type = defines.controllers.character, character = character}
-    --player.teleport({0, 0})
-    local radar = place_zerg_radar(surface, {x=10,y=10})
+    if player.character then player.character.destroy() end
+    local character = player.surface.create_entity{name = "character", position = player.surface.find_non_colliding_position("character", player.force.get_spawn_position(player.surface), 10, 2), force = force}
+    player.set_controller{type = defines.controllers.character, character = character}
+    player.teleport({0, 0})
+    local radar = place_zerg_radar(surface, {x=20,y=-20})
     game.speed = 30
 end)
 
@@ -202,7 +202,6 @@ script.on_nth_tick(600, function()
         name = "enemy_erm_zerg--boss_overmind--5",
     })
     if entity[1] then
-        print("Damaging Boss...")
         entity[1].damage(69000, "player", "impact")
     end
 end)

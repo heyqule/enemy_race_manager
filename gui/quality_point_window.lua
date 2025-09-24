@@ -6,6 +6,7 @@
 require('util')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 --- Quality Point Windows
 local QualityPointWindow = {
@@ -71,7 +72,7 @@ function QualityPointWindow.show(player, force_name)
     local unit_kills = storage.race_settings[force_name].unit_killed_count_by_planet
     for surface_name, data in pairs(dataset) do
         local calculated_rates = {0, 0, 0, 0, 0}
-        local surface_str = "[space-location="..surface_name.."] "..surface_name
+        local surface_str = SurfaceProcessor.get_planet_icon(surface_name) .. surface_name
 
         if storage.race_settings[force_name].home_planet == surface_name then
             calculated_rates = {100, 0, 0, 0, 0}
@@ -108,7 +109,9 @@ function QualityPointWindow.show(player, force_name)
 end
 
 function QualityPointWindow.hide(player)
-    player.gui.screen[QualityPointWindow.root_name].destroy()
+    if player.gui.screen[QualityPointWindow.root_name] then
+        player.gui.screen[QualityPointWindow.root_name].destroy()
+    end
 end
 
 function QualityPointWindow.toggle_close(owner)

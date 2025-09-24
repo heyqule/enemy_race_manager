@@ -52,6 +52,10 @@ local add_data_entry = function(data_box, entry)
         data_box.add { type = "label", caption = string.format("%.2f",entry.radar_health)..'%' }        
     end
 
+    if entry.surrendered_method then
+        data_box.add { type = "label", caption = { "gui.boss_detail_data_custom_note" } }
+        data_box.add { type = "label", caption = { entry.surrendered_method, entry.surrendered_player } }
+    end
 
     data_box.add { type = "label", caption = { "gui.boss_detail_data_unit_assist_size" } }
     data_box.add { type = "label", caption = { "gui.boss_detail_data_"..entry.unit_assist_size} }
@@ -141,7 +145,9 @@ function BossDetailsWindow.show(player, race_settings, boss_log)
 end
 
 function BossDetailsWindow.hide(player)
-    player.gui.screen[BossDetailsWindow.root_name].destroy()
+    if player.gui.screen[BossDetailsWindow.root_name] then
+        player.gui.screen[BossDetailsWindow.root_name].destroy() 
+    end
 end
 
 function BossDetailsWindow.toggle_close(owner)

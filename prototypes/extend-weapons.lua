@@ -65,3 +65,17 @@ then
         land_mine_sticker.show_in_tooltip = true
     end
 end
+
+
+if data.raw['ammo']['capture-robot-rocket'] then
+    local matching_spawners = {'biter-spawner','spitter-spawner'}
+    local new_filters = {}
+    for _, spawner in pairs(data.raw['unit-spawner']) do
+        for _, match in pairs(matching_spawners) do
+            if string.find(spawner.name, match,  1, true) then
+                table.insert(new_filters, spawner.name)
+            end
+        end
+    end
+    data.raw['ammo']['capture-robot-rocket'].ammo_type.target_filter = new_filters
+end 

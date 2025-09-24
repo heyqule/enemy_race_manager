@@ -8,12 +8,12 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
 - ERM - 2.0 Features Reel: Coming Soon
 
-### What's new in 2.0.26
-#### ERM economy [space-age] only
-- [space-age] Zerg, Protoss, Redarmy drop loots on "Great" or higher tier.
-- [space-age] New recipes to turn those loots into biter egg or other items.  This replaces the existing captive spawner workflow for those races.
-- [space-age] New resources, mineral and geysers, on planet Aiur and Char.
-- [space-age] Zerg and Protoss controllable units.
+### What's new in 2.0.39
+- [space-age] Redesigned boss backbone. (Experimental)
+- Zerg boss, Overmind, is back. It can only be found on Planet Char. (Boss for Protoss and Red Army will be online in a future update)
+- Emotional Damage system. (Experimental - for boss only at the moment)
+- This system utilizes new strategies to attack your base by using spawned enemy units.
+- New early game army unit.  Car and tank.
 - Improvements and Bugfixes
 
 Note 1: 2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.

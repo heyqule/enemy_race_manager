@@ -20,7 +20,6 @@ local get_event_action_by_name = function(element, action_handlers, using_parent
     using_parent = using_parent or false
     local name = element.name
     local pattern = element.tags.filter_pattern
-
     if using_parent then
         name = element.parent.name
     end
@@ -243,6 +242,47 @@ Click.nuke_planet_confirm = function(event)
     end
 end
 
+Click.boss_radar_close = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.boss_radar.hide(player)
+    end
+end
+
+Click.boss_radar_goto_boss = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid and storage.boss and storage.boss.surface and storage.boss.entity_position then
+        player.set_controller {
+            type = defines.controllers.remote,
+            position = storage.boss.entity_position,
+            surface = storage.boss.surface
+        }
+    end
+end
+
+Click.boss_radar_goto_radar = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid and storage.boss and storage.boss.surface and storage.boss.radar_position then
+        player.set_controller {
+            type = defines.controllers.remote,
+            position = storage.boss.radar_position,
+            surface = storage.boss.surface
+        }
+    end
+end
+
+Click.boss_radar_goto_surrender = function(event)
+    local player = game.players[event.player_index]
+    local boss_data = storage.boss
+    if player and player.valid and boss_data and boss_data.radar then
+        storage.boss.surrendered_method = 'gui.boss_detail_data_custom_note_ui_surrender'
+        storage.boss.surrendered_player = player.name
+        game.print({"gui.boss_radar_surrender_message", player.name, storage.race_settings[boss_data.force.name].label})
+        boss_data.radar.die(boss_data.force)
+    end
+end
+
+
 
 Click.events = {
     --- setup: ['click_elememt_name_pattern'] = function_name(event)
@@ -291,6 +331,12 @@ Click.events = {
     --- Nuke Planet confirmation ---
     [".*/nuke_planet_cancel"] = Click.nuke_planet_cancel,
     [".*/nuke_planet_confirm"] = Click.nuke_planet_confirm,
+    
+    --- Boss Radar Window ---
+    ["erm_boss_radar_close_button"] = Click.boss_radar_close,
+    ["erm_boss_radar_goto_boss"] = Click.boss_radar_goto_boss,
+    ["erm_boss_radar_goto_radar"] = Click.boss_radar_goto_radar,
+    ["erm_boss_radar_surrender"] =  Click.boss_radar_goto_surrender,
 }
 --- handle all ERM on_click function calls
 Click.on_click_event = function(event)
@@ -407,6 +453,9 @@ local gui_close_switch = {
     end,
     [GuiContainer.army_control_window.root_name] = function(owner)
         GuiContainer.army_control_window.hide(owner)
+    end,
+    [GuiContainer.boss_radar.root_name] = function(owner)
+        GuiContainer.boss_radar.hide(owner)
     end
 }
 

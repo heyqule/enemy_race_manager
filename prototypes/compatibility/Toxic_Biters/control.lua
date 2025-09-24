@@ -36,7 +36,7 @@ end
 local ToxicBiters = {}
 
 ToxicBiters.events = {
-    [GlobalConfig.custom_event_handlers[GlobalConfig.RACE_SETTING_UPDATE]] = function(event)
+    [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE]] = function(event)
         if (event.affected_race == MOD_NAME) then
             modify_race_setting()
         end

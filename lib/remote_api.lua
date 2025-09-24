@@ -19,8 +19,11 @@ local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deploymen
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
+local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
+
 
 
 local RemoteAPI = {}
@@ -45,7 +48,7 @@ function RemoteAPI.get_race(race)
 end
 
 --- Return race tier
---- Usage: remote.call("enemyracemanager", "get_race_tier", "erm_zerg")
+--- /c remote.call("enemyracemanager", "get_race_tier", "erm_zerg")
 function RemoteAPI.get_race_tier(race)
     if storage and storage.race_settings and
             storage.race_settings[race] and storage.race_settings[race].tier then
@@ -55,6 +58,7 @@ function RemoteAPI.get_race_tier(race)
     return 1
 end
 
+--- /c remote.call("enemyracemanager", "get_boss_data")
 function RemoteAPI.get_boss_data()
     if storage.boss and storage.boss.entity then
         return storage.boss
@@ -62,8 +66,14 @@ function RemoteAPI.get_boss_data()
     return nil
 end
 
+--- /c remote.call("enemyracemanager", "random_pick_a_force")
+function RemoteAPI.random_pick_a_force()
+    local races = GlobalConfig.get_enemy_races()
+    return races[math.random(1, GlobalConfig.get_enemy_races_total())]
+end
+
 --- Add points to attack meter of a race
---- Usage: remote.call("enemyracemanager", "add_points_to_attack_meter", "enemy_erm_zerg", 5000)
+--- /c  remote.call("enemyracemanager", "add_points_to_attack_meter", "enemy_erm_zerg", 5000)
 function RemoteAPI.add_points_to_attack_meter(race, value)
     local races = GlobalConfig.get_enemy_races()
     race = race or races[math.random(1, GlobalConfig.get_enemy_races_total())]
@@ -80,7 +90,7 @@ function RemoteAPI.add_points_to_attack_meter(race, value)
 end
 
 --- Proper way to update race_setting in enemy mods ---
---- 1. local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
+--- 1. local race_settings = remote.call("enemyracemanager", "get_race", force_name)
 --- 2. make change to race_settings
 --- 3. remote.call("enemyracemanager", "update_race_setting", race_settings)
 function RemoteAPI.update_race_setting(race_setting)
@@ -95,7 +105,7 @@ function RemoteAPI.update_race_setting(race_setting)
 end
 
 --- Generate a mixed attack group
---- Usage: remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?, options?)
+--- /c remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?, options?)
 function RemoteAPI.generate_attack_group(force_name, units_number, options)
     local force = game.forces[force_name]
     units_number = tonumber(units_number) or GlobalConfig.max_group_size()
@@ -108,7 +118,7 @@ function RemoteAPI.generate_attack_group(force_name, units_number, options)
 end
 
 --- Generate a flying attack group
---- Usage: remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?, options?)
+--- /c  remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?, options?)
 function RemoteAPI.generate_flying_group(force_name, units_number, options)
     local force = game.forces[force_name]
     local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
@@ -122,7 +132,7 @@ function RemoteAPI.generate_flying_group(force_name, units_number, options)
 end
 
 --- Generate a dropship attack group
---- Usage: remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?, options?)
+--- /c  remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?, options?)
 function RemoteAPI.generate_dropship_group(force_name, units_number, options)
     local force = game.forces[force_name]
     local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(force_name)
@@ -147,7 +157,7 @@ local is_valid_featured_flying_squad = function(force_name, squad_id)
             squad_id <= RaceSettingsHelper.get_total_featured_squads(force_name)
 end
 
---- Usage: remote.call("enemyracemanager", "generate_featured_group", "enemy_erm_zerg", 100?, 1?)
+--- /c remote.call("enemyracemanager", "generate_featured_group", "enemy_erm_zerg", 100?, 1?)
 function RemoteAPI.generate_featured_group(force_name, size, squad_id)
     local force = game.forces[force_name]
     squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
@@ -164,7 +174,7 @@ function RemoteAPI.generate_featured_group(force_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
+--- /c remote.call("enemyracemanager", "generate_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
 function RemoteAPI.generate_featured_flying_group(force_name, size, squad_id)
     local force = game.forces[force_name]
     squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
@@ -181,7 +191,7 @@ function RemoteAPI.generate_featured_flying_group(force_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_elite_featured_group", "enemy_erm_zerg", 100?, 1?)
+--- /c  remote.call("enemyracemanager", "generate_elite_featured_group", "enemy_erm_zerg", 100?, 1?)
 function RemoteAPI.generate_elite_featured_group(force_name, size, squad_id)
     local force = game.forces[force_name]
     squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
@@ -201,7 +211,7 @@ function RemoteAPI.generate_elite_featured_group(force_name, size, squad_id)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "generate_elite_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
+--- /c remote.call("enemyracemanager", "generate_elite_featured_flying_group", "enemy_erm_zerg", 50?, 1?)
 function RemoteAPI.generate_elite_featured_flying_group(force_name, size, squad_id)
     local force = game.forces[force_name]
     squad_id = squad_id or RaceSettingsHelper.get_featured_flying_squad_id(force_name)
@@ -221,7 +231,7 @@ function RemoteAPI.generate_elite_featured_flying_group(force_name, size, squad_
     end
 end
 
---- Usage  remote.call("enemyracemanager", "spawn_environmental_attack", "nauvis", {x=100,y=200}, false?, false?, 5?, 50?)
+--- /c remote.call("enemyracemanager", "spawn_environmental_attack", "nauvis", {x=100,y=200}, false?, false?, 5?, 50?)
 function RemoteAPI.spawn_environmental_attack(surface, target_position, force_spawn, force_spawn_base, spawn_count, spawn_chance)
     local surface_obj = game.surfaces[surface]
     if not surface then
@@ -233,7 +243,7 @@ function RemoteAPI.spawn_environmental_attack(surface, target_position, force_sp
     force_spawn = force_spawn or false
     force_spawn_base = force_spawn_base or false
     spawn_count = spawn_count or 5
-    spawn_chance = spawn_chance or 5
+    spawn_chance = spawn_chance or 50
     EnvironmentalAttacks.exec({
         surface = surface_obj,
         target_position = target_position,
@@ -244,7 +254,7 @@ function RemoteAPI.spawn_environmental_attack(surface, target_position, force_sp
     })
 end
 
---- Usage  remote.call("enemyracemanager", "spawn_interplanetary_attack", "enemy_erm_zerg", "players", {x=100,y=200})
+--- /c remote.call("enemyracemanager", "spawn_interplanetary_attack", "enemy_erm_zerg", "players", {x=100,y=200})
 function RemoteAPI.spawn_interplanetary_attack(force_name, target_force, drop_location)
     local race_settings = storage.race_settings[force_name]
     if not race_settings then
@@ -257,7 +267,7 @@ function RemoteAPI.spawn_interplanetary_attack(force_name, target_force, drop_lo
     InterplanetaryAttacks.exec(race_settings.race, force, drop_location)
 end
 
---- Usage: remote.call("enemyracemanager", "add_erm_attack_group", group, target_force)
+--- /c remote.call("enemyracemanager", "add_erm_attack_group", group, target_force)
 --- Assign unit group to ERM attack group, which manage by ERM group logics
 function RemoteAPI.add_erm_attack_group(group, target_force)
     if group.valid and next(group.members) then
@@ -271,7 +281,7 @@ function RemoteAPI.add_erm_attack_group(group, target_force)
     end
 end
 
---- Usage: remote.call("enemyracemanager", "is_erm_group")
+--- /c remote.call("enemyracemanager", "is_erm_group")
 --- Check whether the group is managed by ERM.
 function RemoteAPI.is_erm_group(group)
     if group.valid then
@@ -411,14 +421,14 @@ end
 function RemoteAPI.register_new_enemy_race()
     local data = { FORCE_NAME }
 
-    if script.active_mods["space-age"] then
+    if prototypes.entity['gleba-spawner'] then
         table.insert(data, GLEBA_FORCE_NAME) 
     end
 
     return data
 end
 
---- remote.call("enemyracemanager", "get_event_name", GlobalConfig.EVENT_TIER_WENT_UP)
+--- /c remote.call("enemyracemanager", "get_event_name", GlobalConfig.EVENT_TIER_WENT_UP or 'erm_event_name' )
 --- script.on_event(event_name, function(event)
 function RemoteAPI.get_event_name(event_name)
     return GlobalConfig.custom_event_handlers[event_name]
@@ -428,6 +438,7 @@ end
 RemoteAPI.force_data_reindex = ForceHelper.refresh_all_enemy_forces
 
 RemoteAPI.is_enemy_force = ForceHelper.is_enemy_force
+RemoteAPI.get_player_forces = ForceHelper.get_player_forces
 
 --- ArmyPopulationProcessor
 RemoteAPI.army_units_register = ArmyPopulationProcessor.register_unit
@@ -456,6 +467,20 @@ RemoteAPI.skip_roll_quality = QualityProcessor.skip_roll_quality
 --- AttackGroupProcessor
 RemoteAPI.process_attack_position = AttackGroupProcessor.process_attack_position
 
+--- /c remote.call("enemyracemanager", "register_external_planet", {surface=luaSurface, icon?="icon_path", radius?=90000, type?='planet'}
+RemoteAPI.register_external_planet = SurfaceProcessor.register_external_planet
 
+RemoteAPI.get_all_enemies_on = SurfaceProcessor.get_all_enemies_on
+--- Randomly pick an enemy force
+RemoteAPI.get_enemy_on = SurfaceProcessor.get_enemy_on
+
+--- Call this in init or on_config_changed to enable multi planet game
+--- /c remote.call("enemyracemanager", "enable_multi_planet_game")
+RemoteAPI.enable_multi_planet_game = function()
+    storage.is_multi_planets_game = true
+end
+
+--- /c remote.call("enemyracemanager", "interplanetary_attacks_set_intel", surface_index, intel)
+RemoteAPI.interplanetary_attacks_set_intel = InterplanetaryAttacks.set_intel
 
 return RemoteAPI

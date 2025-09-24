@@ -13,7 +13,7 @@ GlobalConfig.MAX_TIER = 3
 --- Tick base EVENTS
 GlobalConfig.RACE_SETTING_UPDATE_INTERVAL = 5 * minute
 GlobalConfig.ATTACK_GROUP_GATHERING_CRON = minute + 2 * second + 1
-GlobalConfig.BOSS_QUEUE_CRON = 7 -- up to 9 action per second. 
+GlobalConfig.BOSS_QUEUE_CRON = 10 -- 6 actions per second. 
 GlobalConfig.TELEPORT_QUEUE_CRON = 33
 GlobalConfig.AUTO_DEPLOY_CRON = 3 * second + 1
 GlobalConfig.SPAWN_SCOUTS_INTERVAL = 25301
@@ -43,12 +43,13 @@ GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN = "erm_interplanetary_attack_scan"
 GlobalConfig.EVENT_REQUEST_PATH = "erm_request_path"
 GlobalConfig.EVENT_REQUEST_BASE_BUILD = "erm_request_base_build"
 GlobalConfig.EVENT_INTERPLANETARY_ATTACK_EXEC = "erm_interplanatary_attack_exec"
+GlobalConfig.EVENT_PRE_SURFACE_CREATED = "erm_pre_surface_created"
 
 -- How to use event erm_race_setting_updated
 -- Check race exists
 -- update settings
-GlobalConfig.RACE_SETTING_UPDATE = "erm_race_setting_update"
-GlobalConfig.PREPARE_WORLD = "erm_prepare_world"
+GlobalConfig.EVENT_RACE_SETTING_UPDATE = "erm_race_setting_update"
+GlobalConfig.EVENT_PREPARE_WORLD = "erm_prepare_world"
 
 
 --- Quality system attributes

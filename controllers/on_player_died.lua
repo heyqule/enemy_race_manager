@@ -26,7 +26,7 @@ local death_loop_detection = function(event)
     local force = game.players[event.player_index].character.force
     local character_position = game.players[event.player_index].character.position
 
-    if surface.planet and Position.manhattan_distance(character_position, force.get_spawn_position(surface)) < 64 then
+    if storage.enemy_surfaces[surface.name] and Position.manhattan_distance(character_position, force.get_spawn_position(surface)) < 64 then
         storage.death_loop_detection[event.player_index] = {
             player_index = event.player_index,
             surface_index = surface.index,

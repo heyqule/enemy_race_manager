@@ -43,7 +43,7 @@ Overhaul mod compatibility will be done when they become available.
 #### Rampant AI (limited, may have interferences)
 - It works with default settings. However, its AI code only work for "enemy" force. It does not affect custom enemy forces.
 - It may interfere with ERM custom attack groups.
-- New enemies placement does not work.
+- Its new enemies placement may not work.
 
 #### Combat Mechanic Overhaul
 - Have been causing unexpected issues.  Expect anomalies when you use it.
@@ -52,6 +52,11 @@ Overhaul mod compatibility will be done when they become available.
 #### Combat Mechanic Overhaul
 - Have been causing unexpected issues.  Expect anomalies when you use it.
 - I have fixed them on some of them. Such as turrets can't hit air unit or other ground structures.
+
+#### Alien Biomes
+- It turns any nauvis based planet into barren land (no rock or tree) as it modified the base game autoplace algo.
+- Affected planets: Earth and Auir.
+- Not recommended to use if you plan to visit the above planets.
 
 
 #### Any mod that changes the properties of space-age planets (e.g Solar System ++)

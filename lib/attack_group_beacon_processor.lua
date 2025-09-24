@@ -709,7 +709,11 @@ AttackGroupBeaconProcessor.get_control_data = function(surface_index, force_name
 end
 
 AttackGroupBeaconProcessor.get_beacon_data = function(beacon_type, surface_index, force_name)
-    if force_name then
+    if storage[beacon_type][surface_index] == nil then
+        return nil
+    end
+    
+    if force_name then 
         return storage[beacon_type][surface_index][force_name]
     end
     return storage[beacon_type][surface_index]

@@ -245,10 +245,6 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
     end
     
     if DEBUG_MODE then
-        for _, beacon in pairs(beacons) do
-            DebugHelper.print(beacon.position)
-            DebugHelper.print(beacon.health)
-        end
         DebugHelper.drawline(request_path_data.surface.index, "BF: enemy to new pos", {r=0,g=0,b=1,a=0.5}, buffer_zone, enemy_position)
         DebugHelper.drawline(request_path_data.surface.index, "BF: path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, buffer_zone)
     end

@@ -3,33 +3,29 @@ Version: 2.0.39
 Date: 2025-??-??
 
   Features:
-    - [space-age] [[ Redesigned Bosses (Experimental) ]]
+    - [space-age] [[ Re-designed Boss (Experimental) ]]
     - This mode requires quality and space-age mod to be enabled.
-    - Added Psi Radars (boss scanner), 1 million HP with 80 resistances, it's not repairable and not minable. You are defeated when it's destroyed.         
-    - Psi Radar takes approximate 15 minutes to scan the boss.  Prepare your defense in the mean time.
-    - Boss spawns "Divine" units. They are appox 25% tougher than "Legendary" unit. 
-    - It can perform various types of attacks to strike ANY point of interests.  
-    - It can spawn segmented-units and control existing segmented-units.
-    - When the boss is idle, as not taking damage, it performs artillery attacks and deploy attack groups.
-    - When it kills your radar, the duel ends and it will spawn a few punisher groups to attack various areas.
-    - When you kill the boss, you are rewarded with 1 or more infinite-chest with various items for 90 minutes.
-    - The infinite-chest is invincible, but its area are automatically marked with enemy's target beacon.
-    - The boss has 5 tiers.  Each tier have different attack frequencies and different chances of rolling an attack.  It also spawn higher quality Divine units and projectiles.
-    - This release only has Zerg boss, Overmind.  Other bosses are still work in progress.
+    - Added Psi Radars (boss scanner). it's not repairable and not minable. You are defeated when it's destroyed.         
+    - Added "Divine" units. They are appox 25% tougher than "Legendary" unit.  They only spawn by the boss and its assisted spawner. 
+    - Added many new offensive systems for the boss.
+    - Added boss reward.  It spawns 1 or more infinite-chest with various items for 60 minutes once you win the duel.   
+    - Added 5 tiers for the boss.  Each tier have different attack frequencies and different chances of rolling an attack.  They also spawns higher quality of divine units and projectiles.
+    - Added UI to have camera view on boss and radar. (Default: Ctrl+Alt+B or click on PSI radar) 
+    - This release only has Zerg boss, Overmind.  Other bosses (protoss and redarmy) are still work in progress.
     - *** See additional details in tips and tricks ***    
     - [[ EMOTIONAL DAMAGE system (Experimental) ]]
     - It is only used by the boss at the moment.  When the boss have taken x amount of damage, it rolls a new strategy.  
-    - The system selects the units from existing spawn area. Final group size varies based on the density in a given area.
-    - There are features 4 offensive strategies. Rapid Expansion, Siege, Double Tap, Rush.  The default is set to Peaceful.    
+    - The system selects the units from existing spawn areas. Final group size varies based on the density in a given area.
+    - There are 4 offensive strategies so far. Rapid Expansion, Siege, Double Tap, Rush.  The default is set to Peaceful.    
     - *** See additional details in tips and tricks ***
     - [[ Cars and Tanks Army ]]    
-    - Added remote offeense vehicles when enhanced defense is enabled.
     - Added remote car that uses firearm-magazine.  Cost 2 army supply.
     - Added remote tank that uses regular cannon shell.  Cost 3 army supply.
     - They are designed for early - mid game. They are inferior than the drivable ones.
     
   Changes:
-    - When calling uWuClear rapid delivery, it now kills all enemy unit and structures and reset some of the offensive metrics.
+    - Lowered any 3rd party units that has 100% resistance to 95% (eg Cold, Toxic, Explosive biters).  Units fight each other with no damage and causing performance issues.
+    - When calling uWuClear rapid delivery, it now kills all enemy unit and structures and reset some of the offensive metrics.    
     - Increased uWuClear destruction area from 384, 12 chunks -> 512, 16 chunks.   
     - All ERM units follow ERM resistance standards (75% max at top tiers) against ANY 3rd party damage types unless the new damage types are supported under compatibility script.
     - Adjusted Armour, Explosive, Cold, Toxic biter's custom featured attack groups.
@@ -37,18 +33,22 @@ Date: 2025-??-??
     - Added destination location to precision strike message.
     - Excluded hidden planet/surface from enemy data UI.
     - Fixed UIs to use label name instead of name.
-    - Removed pollution multiplier startup settings.  Every unit level increases by 10%.  Legendary unit increases 40%.
-    - Added 10-33% resistances to all player turrets, based on turret type.
+    - Removed pollution multiplier startup settings.  Every unit tier increases by 10%.  Legendary unit increases by 40%.
+    - Added 10-33% resistances to all player's base game turrets, depending on turret type.
     - Changed the chance of enemy's victory based expansion from 100% to 10% with 3 mins cooldown.  The group may build up to 10 buildings, depending on units left in the group.
     - Changed Builder Processor to build support structure first, then command center to balance boss mode.    
-    - Changed "CTRL + ALT + left-click" functions (Army Command Center alt view) to "Shift - left-click" to avoid base game chat ping collision.
+    - Changed "CTRL + ALT + left-click" functions (Army Command Center alt view) to "Shift - left-click" to avoid base game chat ping collision.   
     - Updated various tips and tricks, moved "Unit Control" tab from ERM-Terran.
+    - Updated compatibility note for Alien Biomes.
+    - Changed adding "pentapod" force only when space-age is enabled.
+    - Updated surface processor to support 3rd party planetary surface without space-age (Space Exploration).
 
   Bugfixes:
     - Fixed unit quality didn't roll on home planet for certain attacks.    
     - Fixed attackable entities for mining drone mod compatibility.
     - Fixed 3rd party supported biters did not register race setting data during on_init.
-    - Fixed attack_group_beacon_processor not processing beacon retry properly.
+    - Fixed attack_group_beacon_processor did not process "get beacon" retry properly.
+    - Fixed capture-robot-rocket's target filter to include all variants of biter-spawner and spitter-spawner.
 
   Scripting:
     - Added data.raw['mod-data']["ERM_surface_exclusions"] to excluded surfaces from ERM's custom attack processing.
@@ -56,6 +56,9 @@ Date: 2025-??-??
     - Added data.raw['mod-data']["ERM_neutral_forces"] to specify 3rd party neutral forces.    
     - Added data.raw['mod-data']["ERM_interplanetary_attack_exclusions"] to exclude surfaces from interplanetary attacks.
     - Automatically added any hidden planet to above planet exclusion data sets in data-final-fixes.lua.
+    - Added RemoteAPI.random_pick_a_force() to return an active enemy force name.
+    - Added RemoteAPI.register_external_planet() to register an ERM tracking surface.
+    - Added 'erm_pre_surface_created' event to set up custom ERM planet data from other mods.
 
 
 ---------------------------------------------------------------------------------------------------

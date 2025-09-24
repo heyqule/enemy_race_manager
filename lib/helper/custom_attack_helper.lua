@@ -15,6 +15,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local ATTACK_CHUNK_SIZE = 32
+local NON_COLLISION_GAP = 4
 
 local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
@@ -350,8 +351,8 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
-    group.start_moving()
     remote.call("enemyracemanager", "add_erm_attack_group", group)
+    group.start_moving()
 end
 
 local break_time_to_live = function(count, max_count, units_total)
@@ -384,7 +385,7 @@ local try_kill_a_tree_or_rock = function(units)
                 local idx, target_entity
                 local entities = surface.find_entities_filtered({
                     position = entity.position,
-                    radius = 32,
+                    radius = ATTACK_CHUNK_SIZE,
                     name = rock_names,
                     limit = 1,
                 })
@@ -394,7 +395,7 @@ local try_kill_a_tree_or_rock = function(units)
                 if not target_entity then
                     local entities = surface.find_entities_filtered({
                         position = entity.position,
-                        radius = 32,
+                        radius = ATTACK_CHUNK_SIZE,
                         type = {"tree"},
                         limit = 1,
                     })
@@ -595,8 +596,8 @@ local build = function(event, force_name, building_name, position)
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         local building_box = get_build_bounding_box(orientation)
         position = surface.find_non_colliding_position_in_box(final_unit_name, 
-                {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}}, 
-            2, true)
+                {{x=position.x-building_box.x, y=position.y-building_box.y},{x=position.x+building_box.x, y=position.y+building_box.y}},
+                NON_COLLISION_GAP, true)
     end
 
     if position then
@@ -632,7 +633,7 @@ local boss_build = function(event, force_name, building_name, position)
     local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
-        position = surface.find_non_colliding_position(final_unit_name, position, 32, 2, true)
+        position = surface.find_non_colliding_position(final_unit_name, position, ATTACK_CHUNK_SIZE, NON_COLLISION_GAP, true)
     end
 
     if position then

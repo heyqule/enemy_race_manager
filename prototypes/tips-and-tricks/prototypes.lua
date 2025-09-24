@@ -133,17 +133,9 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-defense-tips",
-            category = "enemyracemanager",
-            order = "m",
-            indent = 1,
-            starting_status = "suggested",
-        },
-        {
-            type = "tips-and-tricks-item",
             name = "enemyracemanager-bosses",
             category = "enemyracemanager",
-            order = "n",
+            order = "m",
             indent = 1,
             starting_status = "suggested",
             --simulation = simulations.bosses
@@ -152,9 +144,25 @@ data:extend(
             type = "tips-and-tricks-item",
             name = "enemyracemanager-emotional-damage",
             category = "enemyracemanager",
-            order = "o",
+            order = "n",
             indent = 1,
             starting_status = "suggested"
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-defense-tips",
+            category = "enemyracemanager",
+            order = "o",
+            indent = 1,
+            starting_status = "suggested",
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-enhanced-defense",
+            category = "enemyracemanager",
+            order = "p",
+            indent = 1,
+            starting_status = "suggested",
         },
         {
             type = "tips-and-tricks-item",

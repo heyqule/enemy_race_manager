@@ -32,8 +32,14 @@ local default_rewards = {
     "iron-gear-wheel",
     "iron-stick",
     "electronic-circuit",
+    "lubricant-barrel",
     "coal",
+    "explosives",
+    "battery",
+    --"rocket",
+    --"cannon-shell",
     "concrete",
+    "express-transport-belt",
 }
 
 -- Up to 8 infinity chests on each boss defeat
@@ -73,8 +79,8 @@ local reward_settings = {
     }
 }
 
--- Infinite chests stay for 1.5 hour.
-local expire_at = 90 * minute
+-- Infinite chests stay for 1 hour.
+local expire_at = 60 * minute
 if TEST_MODE then
     expire_at = 1 * minute
 end
