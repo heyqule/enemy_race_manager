@@ -22,7 +22,7 @@ Date: 2025-09-24
     - Added remote car that uses firearm-magazine.  Cost 2 army supply.
     - Added remote tank that uses regular cannon shell.  Cost 3 army supply.
     - They are designed for early - mid game. They are inferior than the drivable ones.
-    
+
   Changes:
     - Lowered any 3rd party units that has 100% resistance to 95% (eg Cold, Toxic, Explosive biters).  Units fight each other with no damage and causing performance issues.
     - When calling uWuClear rapid delivery, it now kills all enemy unit and structures and reset some of the offensive metrics.    
