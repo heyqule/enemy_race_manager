@@ -145,14 +145,14 @@ nauvis.map_gen_settings = map_gen_settings
 
 
 -- Start Enemy Base Autoplace functions --
-local zero_probability_expression = function(autoplace)
+local zero_probability_expression = function(autoplace, force_name)
     DebugHelper.print("Using zero_probability_expression")
-    
+    force_name = force_name or "enemy"
     local data = 
     {
         control = "enemy-base",
-        order = "b[enemy]-misc",
-        force = "enemy",
+        order = "b[enemy]-zero-probability",
+        force = force_name,
         probability_expression = "0",
         richness_expression = "0",
     }
@@ -197,7 +197,7 @@ for _, v in pairs(data.raw["unit-spawner"]) do
         if level and level > 1 then
             DebugHelper.print("Zero-ing:" .. v.name)
             --- Nil autoplace makes the unit not able to perform build base command. Use 0 probability instead.
-            data.raw["unit-spawner"][v.name]["autoplace"] = zero_probability_expression(data.raw["unit-spawner"][v.name]["autoplace"])
+            data.raw["unit-spawner"][v.name]["autoplace"] = zero_probability_expression(data.raw["unit-spawner"][v.name]["autoplace"], nameToken[1])
         end
     end
 end
@@ -208,7 +208,7 @@ for _, v in pairs(data.raw["turret"]) do
         local level = tonumber(nameToken  [3])
         if level and level > 1 then
             DebugHelper.print("Zero-ing:" .. v.name)
-            data.raw["turret"][v.name]["autoplace"] = zero_probability_expression(data.raw["turret"][v.name]["autoplace"])
+            data.raw["turret"][v.name]["autoplace"] = zero_probability_expression(data.raw["turret"][v.name]["autoplace"], nameToken[1])
         end
     end
 end

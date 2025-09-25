@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.42
+Date: 2025-09-25
+
+  Changes:
+    - Remove autoplace on boss_ spawner and turret in data final fix.
+    
+  Bugfixes:
+    - Fixed assisted_spawner_spawns crash.
+    
+---------------------------------------------------------------------------------------------------
 Version: 2.0.41
 Date: 2025-09-24
 

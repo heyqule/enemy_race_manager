@@ -99,3 +99,17 @@ for _, planet in pairs(data.raw['planet']) do
         data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data[planet.name] = true
     end
 end
+
+--- Remove autoplace on all --boss_ prefixed spawner and turrets
+local boss_needle = '--boss_'
+for _, spawner in pairs(data.raw['unit-spawner']) do
+    if string.find(spawner.name, boss_needle, 1, true) then
+        spawner.autoplace = nil
+    end
+end
+
+for _, spawner in pairs(data.raw['turret']) do
+    if string.find(spawner.name, boss_needle, 1, true) then
+        spawner.autoplace = nil
+    end
+end

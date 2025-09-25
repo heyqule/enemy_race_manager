@@ -407,3 +407,27 @@ it("Test uWu rapid delivery", function()
         done()
     end)
 end)
+
+
+it("Test Boss assist without boss", function()
+    async(60)
+    local surface = game.planets.char.create_surface()
+    surface.request_to_generate_chunks({ 0, 0 }, 8)
+    surface.force_generate_chunk_requests()
+    game.players[1].teleport({10,0},'char')
+    storage.race_settings[enemy_name].boss_tier = 1
+    
+    surface.create_entity({
+        name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
+        position = {50,50}
+    })
+
+    after_ticks(60, function()
+        local count = surface.count_entities_filtered({
+            name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
+            limit = 1
+        })
+        assert.equal(0, count, "Boss nyduspit shouldn't show up.")
+        done()
+    end)
+end) 

@@ -704,12 +704,15 @@ function BossProcessor.unset()
     DebugHelper.print("BossProcessor: unset...")
 end
 
-
+---- Boss assist spawner create event handling
 function BossProcessor.assisted_spawner_spawns(event)
     local spawner_entity = event.source_entity
     if spawner_entity then
         local boss_data = storage.boss
-        if boss_data.total_assisted_spawners >= boss_data.max_buildable_unit_spawner then
+        if
+            (not RaceSettingsHelper.is_in_boss_mode() and not storage.boss.loading) or
+            boss_data.total_assisted_spawners >= boss_data.max_buildable_unit_spawner 
+        then
             spawner_entity.destroy()
             return
         end
@@ -718,7 +721,7 @@ function BossProcessor.assisted_spawner_spawns(event)
             last_health = spawner_entity.get_health_ratio()
         }
 
-        boss_data.total_assisted_spawners = boss_data.total_assisted_spawners + 1 
+        boss_data.total_assisted_spawners = boss_data.total_assisted_spawners + 1
     end 
 end
 
