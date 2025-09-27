@@ -281,13 +281,13 @@ local function has_nearby_spawn_entity_beacon(entity, radius)
     return has_nearby_beacon({ SPAWN_BEACON }, entity, radius)
 end
 
-local function get_nearby_resource_beacon(entity, radius)
+local function get_nearby_beacon(entity, names, radius)
     local entities =  entity.surface.find_entities_filtered {
-        name = RESOURCE_BEACON,
+        name = names,
         type = BEACON_TYPE,
         position = entity.position,
         radius = radius,
-        force = NEUTRAL_FORCE,
+        force = entity.force,
         limit = 1,
     }
     local key, node = next(entities)
@@ -412,6 +412,10 @@ local function reindex_surface(surface)
         else
             need_spawn_beacon_index = true
         end
+
+        if need_spawn_beacon_index then
+            DebugHelper.print(surface.name..' requires spawn beacon index...')
+        end
     end
 
     local need_attack_entity_beacon_index = false;
@@ -427,6 +431,10 @@ local function reindex_surface(surface)
             end
         else
             need_attack_entity_beacon_index = true
+        end
+
+        if need_attack_entity_beacon_index then
+            DebugHelper.print(surface.name..' requires attack entity beacon index...')
         end
     end
 
@@ -544,7 +552,7 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk = function(sur
                 force = force,
                 area = area,
                 limit = 1,
-                
+
             })
             local entity_key, entity = next(attackable_entities)
             if entity_key then
@@ -648,18 +656,29 @@ AttackGroupBeaconProcessor.create_resource_beacon_from_trunk = function(surface,
 end
 
 AttackGroupBeaconProcessor.create_spawn_beacon = function(entity)
-    if entity and entity.valid and has_nearby_spawn_entity_beacon(entity) == false then
-        local surface_index = entity.surface.index
-        local beacon = entity.surface.create_entity({
-            name = SPAWN_BEACON,
-            position = entity.position,
-            force = entity.force
-        })
-        beacon.destructible = false;
+    if entity and entity.valid then
+        if has_nearby_spawn_entity_beacon(entity) == false then
+            local surface_index = entity.surface.index
+            local beacon = entity.surface.create_entity({
+                name = SPAWN_BEACON,
+                position = entity.position,
+                force = entity.force
+            })
+            beacon.destructible = false;
 
-        init_beacon_struct(SPAWN_BEACON, surface_index, entity.force.name)
-        storage[SPAWN_BEACON][surface_index][entity.force.name][beacon.unit_number] = init_beacon_data(beacon)
-        return true
+            init_beacon_struct(SPAWN_BEACON, surface_index, entity.force.name)
+            storage[SPAWN_BEACON][surface_index][entity.force.name][beacon.unit_number] = init_beacon_data(beacon)
+            return true
+        else
+            local beacon = get_nearby_beacon(entity, {SPAWN_BEACON}, SPAWNER_BEACON_RADIUS)
+            if beacon then
+                local surface_index = entity.surface.index
+                init_beacon_struct(SPAWN_BEACON, surface_index, entity.force.name)
+                storage[SPAWN_BEACON][surface_index][entity.force.name][beacon.unit_number] = init_beacon_data(beacon)
+                return true
+            end
+        end
+
     end
 
     return false
@@ -673,12 +692,11 @@ AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk = function(surface, ar
                 force = force_name,
                 area = area,
                 limit = 1,
-                
+
             })
             local spawner_key = next(spawners)
             if spawner_key then
-                AttackGroupBeaconProcessor.create_spawn_beacon(spawners[spawner_key])
-                return true
+                return AttackGroupBeaconProcessor.create_spawn_beacon(spawners[spawner_key])
             end
         end
     end
@@ -689,11 +707,11 @@ end
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
     if not storage[ATTACK_ENTITIES_BEACON][surface.index] or not storage[CONTROL_DATA][surface.index] then
         return nil
-    end 
-    
+    end
+
     local selected_key = storage[CONTROL_DATA][surface.index][source_force.name][ATTACK_ENTITIES_SELECTED_KEY]
     local attack_beacons = storage[ATTACK_ENTITIES_BEACON][surface.index][target_force.name]
-    
+
     if not selected_key or attack_beacons == nil or attack_beacons[selected_key] == nil then
         return nil
     end
@@ -712,8 +730,8 @@ AttackGroupBeaconProcessor.get_beacon_data = function(beacon_type, surface_index
     if storage[beacon_type][surface_index] == nil then
         return nil
     end
-    
-    if force_name then 
+
+    if force_name then
         return storage[beacon_type][surface_index][force_name]
     end
     return storage[beacon_type][surface_index]
@@ -821,7 +839,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
     local cache = target_beacon_data.cache[source_force.name];
 
     if (cache.bypass or cache.bypass_scanner) and
-        game.tick >= cache.updated + BYPASS_RETRY
+            game.tick >= cache.updated + BYPASS_RETRY
     then
         cache.bypass = nil
         cache.bypass_scanner = nil
@@ -876,8 +894,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         end
 
         if beacons and
-            beacons.skip == nil and
-            next(beacons)
+                beacons.skip == nil and
+                next(beacons)
         then
             local distances, has_invalid_beacon = get_sorted_distance(beacons, target_beacon.position)
             if has_invalid_beacon then
@@ -891,7 +909,6 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                     force = source_force,
                     type = "unit-spawner",
                     limit = 3,
-                    
                 })
             end
 
@@ -968,7 +985,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                 force = source_force,
                 type = "unit-spawner",
                 limit = 1,
-                
+
             })
 
             local _, spawner = next(spawners)
@@ -1020,7 +1037,7 @@ end
 AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_force, target_force)
     local surface_data = storage[ATTACK_ENTITIES_BEACON][surface.index]
     if surface_data == nil or
-        surface_data[target_force.name] == nil
+            surface_data[target_force.name] == nil
     then
         return nil
     end
@@ -1048,7 +1065,7 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
 
                 break
             elseif value.beacon.health == REMOVE_ATTACK_ENTITY_BEACON_COUNTS and
-                   not value.is_spawn
+                    not value.is_spawn
             then
                 value.beacon.destructible = true
                 value.beacon.destroy()
@@ -1170,7 +1187,7 @@ end
 AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     local beacon_surface = storage[SPAWN_BEACON][surface.index]
     if beacon_surface == nil or
-        beacon_surface[force.name] == nil
+            beacon_surface[force.name] == nil
     then
         return nil
     end
@@ -1190,11 +1207,11 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
                 if control_key then
                     beacon_data[control_key] = nil
                 elseif new_key then
-                        beacon_data[new_key] = nil
-                end                    
-                node = nil 
+                    beacon_data[new_key] = nil
+                end
+                node = nil
             else
-                control_data[SCOUT_SPAWN_KEY] = new_key                
+                control_data[SCOUT_SPAWN_KEY] = new_key
             end
         else
             control_data[SCOUT_SPAWN_KEY] = new_key
@@ -1256,8 +1273,8 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
         local commandable = entity.commandable
         local command = commandable.command
         if game.tick > tracker.update_tick + SCOUT_KEEP_ALIVE and
-            (command.type == defines.command.wander or
-            command.type == defines.command.stop)
+                (command.type == defines.command.wander or
+                        command.type == defines.command.stop)
         then
             entity.die("neutral")
             storage.scout_by_unit_number[tracker.unit_number] = nil
@@ -1269,22 +1286,22 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
 
 
         if entity.valid and
-            tracker.last_resource_position == nil and
-            has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
+                tracker.last_resource_position == nil and
+                has_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
         then
             --- Switch to resource path only if it"heading to final_destination
             if command and command.type == defines.command.go_to_location and
-                command.destination.x == tracker.final_destination.x and
-                command.destination.y == tracker.final_destination.y
+                    command.destination.x == tracker.final_destination.x and
+                    command.destination.y == tracker.final_destination.y
             then
-                local beacon = get_nearby_resource_beacon(entity, RESOURCE_SCAN_RADIUS)
+                local beacon = get_nearby_beacon(entity, {RESOURCE_BEACON} ,RESOURCE_SCAN_RADIUS)
                 local last_resource_distance = 0
                 if tracker.last_resource_position then
                     last_resource_distance = util.distance(beacon.position, tracker.last_resource_position)
                 end
 
                 if tracker.last_resource_position == nil or
-                    last_resource_distance >= PREVENT_RESOURCE_SCAN_RADIUS
+                        last_resource_distance >= PREVENT_RESOURCE_SCAN_RADIUS
                 then
                     commandable.set_command({
                         type = defines.command.go_to_location,
@@ -1297,7 +1314,7 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
                 end
             end
         elseif entity.valid and
-            command.type == defines.command.wander
+                command.type == defines.command.wander
         then
             local final_distance = util.distance(tracker.final_destination, entity.position)
             if final_distance > (BEACON_RADIUS / 2) then

@@ -73,14 +73,14 @@ script.on_event(defines.events.on_player_created, function(event)
         end
     end
 
-    --for _, planet in pairs(game.planets) do
-    --    if not planet.surface then
-    --        planet.create_surface()
-    --        --local new_surface = planet.surface
-    --        --new_surface.request_to_generate_chunks({ 0, 0 }, 5)
-    --        --new_surface.force_generate_chunk_requests()
-    --        --scenarios_helper.spawn_tile(new_surface, 192)
-    --        --scenarios_helper.build_base(new_surface, normal_base_1_1, 0, 0)
-    --    end
-    --end
+    for _, planet in pairs(game.planets) do
+        if not planet.surface then
+            planet.create_surface()
+            --local new_surface = planet.surface
+            --new_surface.request_to_generate_chunks({ 0, 0 }, 5)
+            --new_surface.force_generate_chunk_requests()
+            --scenarios_helper.spawn_tile(new_surface, 192)
+            --scenarios_helper.build_base(new_surface, normal_base_1_1, 0, 0)
+        end
+    end
 end)

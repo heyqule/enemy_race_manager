@@ -27,9 +27,9 @@ Note 2: Support for base game will be limited to shared features and fixing cras
 These race mods are made as educational demos. You'll have to download them separately.
 
 New Enemy Races:
-* [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
-* [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss)
-* [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
+- [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg)
+- [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss)
+- [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 
 Player Controllable Units: (WIP for 2.0)
 
