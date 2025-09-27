@@ -281,13 +281,14 @@ local function has_nearby_spawn_entity_beacon(entity, radius)
     return has_nearby_beacon({ SPAWN_BEACON }, entity, radius)
 end
 
-local function get_nearby_beacon(entity, names, radius)
+local function get_nearby_beacon(entity, names, radius, override_force)
+    local force = override_force or entity.force 
     local entities =  entity.surface.find_entities_filtered {
         name = names,
         type = BEACON_TYPE,
         position = entity.position,
         radius = radius,
-        force = entity.force,
+        force = override_force,
         limit = 1,
     }
     local key, node = next(entities)
@@ -1294,7 +1295,7 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
                     command.destination.x == tracker.final_destination.x and
                     command.destination.y == tracker.final_destination.y
             then
-                local beacon = get_nearby_beacon(entity, {RESOURCE_BEACON} ,RESOURCE_SCAN_RADIUS)
+                local beacon = get_nearby_beacon(entity, {RESOURCE_BEACON} ,RESOURCE_SCAN_RADIUS, NEUTRAL_FORCE)
                 local last_resource_distance = 0
                 if tracker.last_resource_position then
                     last_resource_distance = util.distance(beacon.position, tracker.last_resource_position)

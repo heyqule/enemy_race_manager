@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.44
+Date: 2025-09-27
+
+  Changes:
+    - Changed base_game dependency to 2.0.66.
+    - Changed erm_lib dependency to 2.0.6.
+
+  Bugfixes:
+    - Fixed an issue which the resource beacon not using proper force, introduced from 2.0.43
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.43
 Date: 2025-09-27
 
