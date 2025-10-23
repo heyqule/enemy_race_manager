@@ -1037,13 +1037,16 @@ end
 
 AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_force, target_force)
     local surface_data = storage[ATTACK_ENTITIES_BEACON][surface.index]
+    local surface_control_data = storage[CONTROL_DATA][surface.index]
     if surface_data == nil or
-            surface_data[target_force.name] == nil
+       surface_data[target_force.name] == nil or
+       surface_control_data == nil or
+       surface_control_data[source_force.name] == nil
     then
         return nil
     end
-
-    local control_data = storage[CONTROL_DATA][surface.index][source_force.name]
+    
+    local control_data = surface_control_data[source_force.name]
     local beacon_data = surface_data[target_force.name]
 
     local entity_data

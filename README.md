@@ -34,6 +34,9 @@ New Enemy Races:
 Player Controllable Units: (WIP for 2.0)
 
 [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran)
+Some zerg units
+Some protoss units.
+Car and tank units for early-mid game.
 
 Special Thanks to [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) as he did the remaster graphics!
 

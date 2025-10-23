@@ -167,26 +167,7 @@ function BossPsiRadar.scan()
         storage.boss_radar_iteration = 1
         storage.boss_radar_side_iteration = 1
         skip_cron = true
-
-        local found = false
-        for i = 1, 3, 1 do
-            for _, beacon in pairs(storage.boss.spawn_beacons) do
-                local can_spawn = UtilHelper.can_spawn(33)
-                if can_spawn then
-                    BossProcessor.exec(radar, beacon.position)
-                    found = true
-                    break
-                end
-            end
-
-            if found then
-                break
-            end
-        end
-
-        if not found then
-            BossPsiRadar.reject('Unable to locate boss.  Radar refund back to your inventory')
-        end
+        BossPsiRadar.find_spawn_location(radar)
     end
 
     if not skip_cron then
@@ -196,13 +177,36 @@ end
 
 function BossPsiRadar.reject(message, radar)
     local radar = radar or storage.boss.radar
-    if radar then
+    if radar and radar.last_user then
         radar.last_user.insert { name = radar.name, count = 1 }
         radar.last_user.print(message)
         radar.destroy()
     else
-        radar.last_user.print(message)
+        radar.surface.print(message)
         radar.destroy()
+    end
+end
+
+function BossPsiRadar.find_spawn_location(radar)
+    local found = false
+    for i = 1, 5, 1 do
+        for _, beacon in pairs(storage.boss.spawn_beacons) do
+            local can_spawn = UtilHelper.can_spawn(33)
+            if can_spawn then
+                if BossProcessor.exec(radar, beacon.position) then
+                    found = true
+                    break
+                end
+            end
+        end
+
+        if found then
+            break
+        end
+    end
+
+    if not found then
+        BossPsiRadar.reject('Unable to locate boss.  Radar refund back to user inventory')
     end
 end
 

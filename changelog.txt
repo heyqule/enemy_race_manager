@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.45
+Date: 2025-10-22
+
+  Changes:
+    - Lowered any 3rd party units that has over 85% resistance to 85% (eg Cold, Toxic, Explosive biters).
+    - When boss spawns, nearby trees are also removed to improve finding spawn location.
+    - Changed boss beam attack to match the beam prototype's length.
+
+  Bugfixes:
+    - Fixed an issue when boss radar couldn't locate a spawn location after it picks a spawn beacon.
+    - Fixed an issue when loading a SA-enabled save in a SA-disabled build would cause a crash. 
+    - Fixed an issue where legendary unit could spawn by base expansion in early game.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.44
 Date: 2025-09-27
 

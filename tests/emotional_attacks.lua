@@ -29,11 +29,11 @@ it("Emotional Attack - EMO_RAPID_EXPAND", function()
     TestShared.create_iron_ore_batch(surface, {x=100, y=-100}, 10, 1000)
     TestShared.create_iron_ore_batch(surface, {x=-100, y=100}, 10, 1000)
     TestShared.create_iron_ore_batch(surface, {x=100, y=100}, 10, 1000)
-    surface.create_entity({name=zerg_force..'--hive--5',position={x=200,y=200}, force=zerg_force})
-    surface.create_entity({name=zerg_force..'--hive--5',position={x=210,y=210}, force=zerg_force})
-    local entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=220,y=220}, force=zerg_force})
+    surface.create_entity({name=zerg_force..'--hive--1',position={x=200,y=200}, force=zerg_force})
+    surface.create_entity({name=zerg_force..'--hive--1',position={x=210,y=210}, force=zerg_force})
+    local entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=220,y=220}, force=zerg_force})
     AttackGroupBeaconProcessor.create_spawn_beacon(entity)
-    
+
     EmotionProcessor.switch({
         surface = surface,
         force = force,
@@ -49,7 +49,7 @@ it("Emotional Attack - EMO_RAPID_EXPAND", function()
         assert(last_tick < storage.emotion[zerg_force].last_run, "Try 1 Ran successfully...")
         last_tick = storage.emotion[zerg_force].last_run
     end)
-    
+
     after_ticks(3600, function()
         assert(2, #storage.emotion[zerg_force].buildable_beacons, "2 remaining expanable beacons")
         local beacons = surface.find_entities_filtered({
@@ -69,7 +69,7 @@ it("Emotional Attack - EMO_RAPID_EXPAND", function()
             if count > 0 then
                 base_beacons = base_beacons + 1
             end
-        end            
+        end
         assert(base_beacons >= 2, "Base beacon count must be >= 2")
         done()
     end)
@@ -81,15 +81,15 @@ it("Emotional Attack - EMO_SIEGE", function()
     local force = game.forces[zerg_force]
     surface.request_to_generate_chunks({ 0, 0 }, 12)
     surface.force_generate_chunk_requests()
-    
-    local entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=220,y=220}, force=zerg_force})
-    local entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=210,y=220}, force=zerg_force})
-    local entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=230,y=220}, force=zerg_force})
+
+    local entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=220,y=220}, force=zerg_force})
+    local entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=210,y=220}, force=zerg_force})
+    local entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=230,y=220}, force=zerg_force})
     AttackGroupBeaconProcessor.create_spawn_beacon(entity)
 
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
     AttackGroupBeaconProcessor.create_attack_entity_beacon(rocket_launcher)
-    
+
     EmotionProcessor.switch({
         surface = surface,
         force = force,
@@ -97,7 +97,7 @@ it("Emotional Attack - EMO_SIEGE", function()
         builder_name = storage.race_settings[zerg_force].builder,
         cooldown = 10 * minute,
     })
-    
+
     local last_tick = game.tick
 
     after_ticks(1800, function()
@@ -105,7 +105,7 @@ it("Emotional Attack - EMO_SIEGE", function()
         assert(last_tick < storage.emotion[zerg_force].last_run, "Try 1 Ran successfully...")
         last_tick = storage.emotion[zerg_force].last_run
     end)
-    
+
     after_ticks(4500, function()
         local unit_count = surface.count_entities_filtered({
             type = 'unit',
@@ -132,9 +132,9 @@ it("Emotional Attack - EMO_DOUBLE_TAP", function()
     surface.request_to_generate_chunks({ 0, 0 }, 20)
     surface.force_generate_chunk_requests()
 
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=220,y=220}, force=zerg_force})
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=210,y=220}, force=zerg_force})
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=230,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=220,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=210,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=230,y=220}, force=zerg_force})
     AttackGroupBeaconProcessor.create_spawn_beacon(close_entity)
     local builder_name = force.name..'--zergling--1'
     for i = 0, 100, 1 do
@@ -146,9 +146,9 @@ it("Emotional Attack - EMO_DOUBLE_TAP", function()
         })
     end
 
-    local far_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=350,y=350}, force=zerg_force})
-    local far_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=370,y=350}, force=zerg_force})
-    local far_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=390,y=350}, force=zerg_force})
+    local far_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=350,y=350}, force=zerg_force})
+    local far_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=370,y=350}, force=zerg_force})
+    local far_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=390,y=350}, force=zerg_force})
     AttackGroupBeaconProcessor.create_spawn_beacon(far_entity)
     for i = 0, 100, 1 do
         local new_spawn_position = surface.find_non_colliding_position(builder_name, far_entity.position, 16, 2)
@@ -158,8 +158,8 @@ it("Emotional Attack - EMO_DOUBLE_TAP", function()
             force = force
         })
     end
-    
-    
+
+
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
     AttackGroupBeaconProcessor.create_attack_entity_beacon(rocket_launcher)
 
@@ -198,9 +198,9 @@ it("Emotional Attack - EMO_RUSH", function()
     surface.request_to_generate_chunks({ 0, 0 }, 20)
     surface.force_generate_chunk_requests()
 
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=220,y=220}, force=zerg_force})
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=210,y=220}, force=zerg_force})
-    local close_entity = surface.create_entity({name=zerg_force..'--hive--5',position={x=230,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=220,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=210,y=220}, force=zerg_force})
+    local close_entity = surface.create_entity({name=zerg_force..'--hive--1',position={x=230,y=220}, force=zerg_force})
     AttackGroupBeaconProcessor.create_spawn_beacon(close_entity)
     local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
     AttackGroupBeaconProcessor.create_attack_entity_beacon(rocket_launcher)
@@ -244,5 +244,5 @@ it("Emotional Attack - EMO_RUSH", function()
         assert(unit_count > last_count, "unit_count R2... ("..unit_count..")")
         done()
     end)
-    
+
 end) 

@@ -179,6 +179,9 @@ local select_attack = function(mod_name, attacks, tier)
             end
             
             data = set_optional_data(data, attacks, i, "attack_beam_duration")
+            data = set_optional_data(data, attacks, i, "attack_beam_max_length")
+            data = set_optional_data(data, attacks, i, "attack_beam_offset")
+            
             data = set_optional_data(data, attacks, i, "attack_speed")
             data = set_optional_data(data, attacks, i, "unique_position")
             data = set_optional_data(data, attacks, i, "can_aim_attackable_targets")
@@ -291,13 +294,33 @@ end
 local attack_beam = function(data)
     local start_position = data.entity_position
     local surface = data.surface
+
+    -- Calculate distance between start_position and data.position
+    local distance = Position.distance(start_position, data.position)
+    
+    -- If distance is lower than data.attack_beam_max_length, change data.position to be at data.attack_beam_max_length
+    if data.attack_beam_max_length and distance < data.attack_beam_max_length then
+        local direction_x = data.position.x - start_position.x
+        local direction_y = data.position.y - start_position.y
+        local length = math.sqrt(direction_x^2 + direction_y^2)
+        if length > 0 then
+            local normalized_x = direction_x / length
+            local normalized_y = direction_y / length
+            data.position = {
+                x = start_position.x + normalized_x * data.attack_beam_max_length,
+                y = start_position.y + normalized_y * data.attack_beam_max_length
+            }
+        end
+    end
+
+   
     surface.create_entity({
         name = data.entity_name,
         position = start_position,
         source_position = start_position,
         target_position = data.position,
         duration = data.attack_beam_duration or 180,
-        max_length = 1600,
+        max_length = data.attack_beam_max_length or 1000,
         create_build_effect_smoke = false,
         raise_built = false,
         force = data.entity_force,

@@ -31,7 +31,7 @@ local BossProcessor = {
 
 local chunkSize = 32
 local spawnRadius = 64
-local cleanChunkSize = 8
+local cleanChunkSize = 10
 
 --- Wait between assist spawner spawn
 local ASSISTED_SPAWNER_INTERVAL = 3600
@@ -39,7 +39,7 @@ local SEGMENTED_UNIT_CHECK_INTERVAL = 600
 
 local SCAN_EXTRA_PADDING = 160
 
-local enemy_entities = { "unit-spawner", "turret", "unit" }
+local enemy_entities = { "unit-spawner", "turret", "unit", "tree" }
 local enemy_buildings = { "unit-spawner", "turret" }
 local beacon_name = "erm-boss-beacon"
 
@@ -265,7 +265,7 @@ end
 function BossProcessor.exec(radar, spawn_position)
     if not Position.is_position(spawn_position) then
         DebugHelper.print("Missing spawn position...")
-        return
+        return false
     end        
     DebugHelper.print("BossProcessor: Check radar valid...")            
     if radar and radar.valid and storage.boss.loading == false and
@@ -277,12 +277,12 @@ function BossProcessor.exec(radar, spawn_position)
 
         if force_name == nil then
             DebugHelper.print("Force name not found")
-            return nil
+            return false
         end
 
         if not RaceSettingsHelper.has_boss(force_name) then
             game.print("Unable to spawn boss on unsupported race: " .. force_name)
-            return nil
+            return false
         end
 
         local force = game.forces[force_name]
@@ -327,6 +327,11 @@ function BossProcessor.exec(radar, spawn_position)
         DebugHelper.print("BossProcessor: Creating Boss Base...")
         DebugHelper.print(boss_name)
         local boss_spawn_location = surface.find_non_colliding_position(boss_name, spawn_position, chunkSize, 1, true)
+        if boss_spawn_location == nil then
+            storage.boss = boss_setting_default()
+            storage.boss.radar = radar
+            return false
+        end
         storage.skip_quality_rolling = true
         local boss_entity = surface.create_entity {
             name = boss_name,
@@ -339,13 +344,12 @@ function BossProcessor.exec(radar, spawn_position)
         local entities = surface.find_entities_filtered {
             name = boss_name,
             limit = 1,
-            
         }
         
         if not boss_entity then
             storage.boss = boss_setting_default()
             storage.boss.radar = radar
-            return
+            return false
         end
 
         for _, value in pairs(ForceHelper.get_player_forces()) do
@@ -439,6 +443,8 @@ function BossProcessor.exec(radar, spawn_position)
         Cron.add_2_sec_queue("BossProcessor.check_pathing")
         Cron.add_2_sec_queue("BossProcessor.heartbeat")
         start_boss_event()
+        
+        return true
     end
 end
 
@@ -495,9 +501,9 @@ end
 
 function BossProcessor.get_pathing_entity_name(force_name)
     return RaceSettingsHelper.get_race_entity_name(
-            force_name,
-            storage.race_settings[force_name].pathing_unit,
-            5
+        force_name,
+        storage.race_settings[force_name].pathing_unit,
+        5
     )
 end
 

@@ -102,7 +102,7 @@ local calculate_chance_cache = function(planet_data, time)
     local spawn_rates_size = table_size(planet_data.spawn_rates)
     planet_data.spawn_rates_size = spawn_rates_size
     planet_data.lowest_allowed_tier = spawn_rates_size
-    
+
     for index, _ in pairs(planet_data.spawn_rates) do
         local next_rate = planet_data.spawn_rates[index + 1]
         if next_rate and next_rate ~= 0 then
@@ -112,7 +112,7 @@ local calculate_chance_cache = function(planet_data, time)
 
     if planet_data.spawn_rates[planet_data.lowest_allowed_tier] ~= 0 then
         planet_data.spawn_rates[planet_data.lowest_allowed_tier] = 1
-    end        
+    end
 
     return planet_data
 end
@@ -126,7 +126,7 @@ function QualityProcessor.calculate_quality_points()
     update_storages()
     local evolution_enabled = game.map_settings.enemy_evolution.enabled
     for _, force in pairs(game.forces) do
-        if ForceHelper.is_enemy_force(force) then
+        if ForceHelper.is_enemy_force(force) and storage.race_settings[force.name] then
             local quality_data = storage.quality_on_planet[force.name] or {}
             local accumulated_attack_meter = RaceSettingsHelper.get_accumulated_attack_meter(force.name)
             for surface_name, surface_data in pairs(storage.enemy_surfaces) do
@@ -226,7 +226,7 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
     end
 
     local spawn_rates, spawn_rates_size,
-          lowest_tier, selected_tier, can_spawn
+    lowest_tier, selected_tier, can_spawn
 
     if is_elite == false then
         spawn_rates = planet_data.spawn_rates
@@ -281,9 +281,9 @@ function QualityProcessor.roll(entity)
     -- unit from spawner doesn't need to roll
     -- unit which is not from enemy force or not erm units doesn't need to roll.
     if storage.is_running_roll or storage.skip_quality_rolling or
-       (entity.commandable and entity.commandable.spawner) or
-       not is_erm_managed(entity.force) or
-       not ForceHelper.is_erm_unit(entity)
+            (entity.commandable and entity.commandable.spawner) or
+            not is_erm_managed(entity.force) or
+            not ForceHelper.is_erm_unit(entity)
     then
         storage.skip_quality_rolling = false
         storage.is_running_roll = false
@@ -294,17 +294,22 @@ function QualityProcessor.roll(entity)
     if name_token == nil then
         return entity
     end
-    
+
     local unit_tier = tonumber(name_token[3])
 
     -- Prevent roll if unit_tier not found or unit_tier > max_levels (assuming boss units)
-    if unit_tier == nil or unit_tier >= GlobalConfig.MAX_LEVELS then
+    if unit_tier == nil or unit_tier > GlobalConfig.MAX_LEVELS then
         return entity
     end
 
     local force = entity.force
     local surface = entity.surface
     local race_settings = storage.race_settings[force.name]
+
+    --- Homeplanet doesn't need to roll if level matches
+    if unit_tier == GlobalConfig.MAX_LEVELS and race_settings.home_planet == surface.name then
+        return entity
+    end
 
     local selected_tier
     local spawn_rates_size
@@ -339,7 +344,7 @@ function QualityProcessor.roll(entity)
         local need_swap = spawn_rates[converted_unit_tier] == 0
         if not need_swap then
             return entity
-        end            
+        end
 
         for index, spawn_rate in pairs(spawn_rates) do
             if spawn_rate > 0 then
@@ -366,7 +371,7 @@ function QualityProcessor.roll(entity)
 
     if can_spawn then
         local position = surface.find_non_colliding_position(entity.name, entity.position,
-               16, 2)
+                16, 2)
 
         if position then
             storage.is_running_roll = true
@@ -379,11 +384,12 @@ function QualityProcessor.roll(entity)
             }
 
             if new_unit then
+                print('Replaced with '..new_unit.name)
                 if entity.commandable and entity.commandable.parent_group then
                     entity.commandable.parent_group.add_member(new_unit)
                 end
                 entity.destroy()
-                
+
                 return new_unit
             end
         end
