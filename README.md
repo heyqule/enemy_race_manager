@@ -4,6 +4,11 @@ This mod aims provide a RTS experience with Factorio logistics.  It works best w
 
 Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 
+### Special Thanks
+- [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) to provide the remaster graphics!
+- [Hawke] to improve ERM unit control features!
+- See ERM assets credit for 3rd party assets. https://mods.factorio.com/mod/enemyracemanager_assets
+
 ### What's new in 2.0.46
 - Air raid radar. A long range custom radar that scan for ERM aerial attack groups.
 - Added "engineer army", B rank army that you can build from early game.
@@ -27,7 +32,7 @@ New Enemy Races:
 - [RedArmy](https://mods.factorio.com/mod/erm_redarmy)
 
 Player Controllable Units:
-- Engineer Army - included  (B rank) 
+- Engineer Army - included  (B rank)
 - [>>>>Terran<<<<](https://mods.factorio.com/mod/erm_terran) (S rank)
 - Some zerg units from [Zerg - Garm Brood](https://mods.factorio.com/mod/erm_zerg) (A rank)
 - Some protoss units from [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss) (A rank)
@@ -41,7 +46,7 @@ Do you want to create your new race? Please refer to this doc [New-Race-DEV-READ
 
 # New Features
 ### Custom Enemy Evolution & Difficulty
-Enemy evolution is based on Force's evolution factor and kills.  When enemy evolves, they pick a higher tier of the same units. The enemy evolve independently on each planet.  The more you kill, the quicker they evolve. 
+Enemy evolution is based on Force's evolution factor and kills.  When enemy evolves, they pick a higher tier of the same units. The enemy evolve independently on each planet.  The more you kill, the quicker they evolve.
 
 There are total of 5 tier for each enemy entity, from normal, great, exceptional, epic and legendary.  Which tier can you handle?
 
@@ -61,7 +66,7 @@ There are various types of attack groups. Ground attack, Arial attack, dropships
 Build air raid radar to try arial attacks.
 
 ### Custom Base Expansion
-Enemy expansion are no longer build one structure at a time.  They build several spawners and turrets to have the best defense. 
+Enemy expansion are no longer build one structure at a time.  They build several spawners and turrets to have the best defense.
 
 ### Environmental Attacks
 Some enemy may parasitize another unit to spawn them.  Other may be practising quantum teleportation with lightnings.
@@ -75,17 +80,17 @@ When this is enabled, player entity health and enemy damage multiplied by 10x. T
 Some enemy force have their home planet.  They are home to their Legendary forces.
 
 ### Advanced Army Controls (Only for ERM - Terran, or other compatible mods)
-  - Dedicated unit assembly lines. 
-  - Set up rally point for automated unit deployment.
-  - Unit teleportation between 2 areas, including between planets/surfaces.
-  - Unit population control
+- Dedicated unit assembly lines.
+- Set up rally point for automated unit deployment.
+- Unit teleportation between 2 areas, including between planets/surfaces.
+- Unit population control
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 ### ERM Economy
-Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new recipes and new army units.  They can also convert to biter eggs.  
+Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new recipes and new army units.  They can also convert to biter eggs.
 
-When you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.    
+When you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.
 
 Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly different manufacture workflow.
 
@@ -110,12 +115,6 @@ You need to download https://mods.factorio.com/mod/erm_se as well to fix compati
 
 ### Roadmap
 https://github.com/users/heyqule/projects/1
-
-### Credits
-- Special Thanks to [_jo.nat_](https://mods.factorio.com/user/_jo.nat_) to provide the remaster graphics!
-- Special Thanks to [Hawke] to improve ERM unit control features!
-- See ERM assets credit for 3rd party assets. https://mods.factorio.com/mod/enemyracemanager_assets
-
 
 ### SPECIAL THANKS TO ALL CROWDIN TRANSLATORS
 - 
