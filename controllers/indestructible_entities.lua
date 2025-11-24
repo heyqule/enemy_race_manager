@@ -113,6 +113,7 @@ IndestructibleEntity.events = {
     [defines.events.script_raised_built] = make_entity_indestructible,
     [defines.events.on_built_entity] = make_entity_indestructible,
     [defines.events.on_robot_built_entity] = make_entity_indestructible,
+    [defines.events.on_entity_cloned] = make_entity_indestructible,
 }
 
 return IndestructibleEntity

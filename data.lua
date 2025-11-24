@@ -4,13 +4,15 @@ require "prototypes.extend-types"
 require "prototypes.extend-biters"
 require "prototypes.extend-spawners"
 
+if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
+    require "prototypes.base-spawner.roboport"
+end
+
 require "prototypes.base-units.defender"
 require "prototypes.base-units.destroyer"
 require "prototypes.base-units.distractor"
 require "prototypes.base-units.construction"
 require "prototypes.base-units.logistic"
-
-require "prototypes.base-spawner.roboport"
 
 data.erm_registered_race = data.erm_registered_race or {}
 data.erm_spawn_specs = data.erm_spawn_specs or {}
@@ -76,6 +78,31 @@ data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data["maraxsis-trench"] = 
 data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data['lignumis'] = true
 
 
+if settings.startup['enemyracemanager-enable-engineer-army'].value then
+    -- Remove wood ingredient from shotgun for automation
+    for _, entity_name in pairs({"shotgun", "combat-shotgun"}) do
+        for index, ingredient in pairs(data.raw.recipe[entity_name].ingredients) do
+            if ingredient.name == "wood" then
+                data.raw.recipe[entity_name].ingredients[index] = nil
+            end
+        end
+    end
+
+    require "prototypes.army.army_depot"
+    require "prototypes.army.corpse"
+    require "prototypes.army.miner"
+    require "prototypes.army.miner_elite"
+    require "prototypes.army.shotgun"
+    require "prototypes.army.shotgun_elite"
+    require "prototypes.army.flamethrower"
+    require "prototypes.army.car_red"
+    require "prototypes.army.car_uranium"
+    require "prototypes.army.car_rocket"
+    require "prototypes.army.tank_cannon"
+    require "prototypes.army.tank_uranium_cannon"
+    require "prototypes.army.drone_laser"
+    require "prototypes.army.drone_suicide"
+end
 
 require "prototypes.extend-mapping-beacons"
 require "prototypes.extend-rallypoint"

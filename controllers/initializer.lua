@@ -31,6 +31,7 @@ local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_populatio
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
+local AirRaidRadarOverlay = require("__enemyracemanager__/gui/air_raid_radar_overlay")
 
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
@@ -46,18 +47,30 @@ local emulate_event_raise = function(event_name, event_data)
 end
 
 local populations = {
-    ["playable-tank"] = 3,
-    ["playable-car"] = 2,
+    ["miner"] = 1,
+    ["shotgun"] = 1,
+    ["flamethrower"] = 1,
+    ["miner_elite"] = 1,
+    ["shotgun_elite"] = 1,
+    ["car_red"] = 2,
+    ["car_uranium"] = 2,
+    ["car_rocket"] = 2,
+    ["tank_cannon"] = 3,
+    ["tank_uranium_cannon"] = 3,
+    ["drone_suicide"] = 1,
+    ["drone_laser"] = 2,
 }
 
 local refresh_army_data = function()
     -- Register Army Units
     for _, prototype in pairs(prototypes.get_entity_filtered({{filter = "type", type = "unit"}})) do
         local nameToken = String.split(prototype.name, "--")
-        if nameToken[1] == MOD_NAME and populations[nameToken[2]] then
-            remote.call("enemyracemanager","army_units_register", prototype.name, populations[nameToken[2]]);
+        if nameToken[1] == "player" and populations[nameToken[3]] then
+            remote.call("enemyracemanager","army_units_register", prototype.name, populations[nameToken[3]]);
         end
     end
+
+    remote.call("enemyracemanager","army_deployer_register", 'army-depot');
 end
     
 
@@ -101,9 +114,9 @@ local addRaceSettings = function()
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
 
     race_settings.units = {
-        { "small-spitter", "small-biter", "medium-biter", "defender" },
-        { "medium-spitter", "big-biter", "big-spitter", "distractor", "logistic-robot" },
-        { "behemoth-spitter", "behemoth-biter", "destroyer", "construction-robot" },
+        { "small-spitter", "small-biter", "medium-biter" },
+        { "medium-spitter", "big-biter", "big-spitter" },
+        { "behemoth-spitter", "behemoth-biter" },
     }
     race_settings.turrets = {
         { "medium-worm-turret" },
@@ -112,29 +125,17 @@ local addRaceSettings = function()
     }
     race_settings.command_centers = {
         { "spitter-spawner", "biter-spawner" },
-        { "roboport" },
+        {},
         {}
     }
     race_settings.support_structures = {
         { "spitter-spawner", "biter-spawner" },
-        { "roboport" },
         {},
-    }
-    race_settings.flying_units = {
-        { "defender" },
-        { "distractor", "logistic-robot" },
-        { "destroyer" },
-    }
-    race_settings.dropship = "logistic-robot"
-    race_settings.droppable_units = {
-        { {  "medium-spitter", "medium-biter", "defender" }, { 1, 2, 1 } },
-        { { "big-spitter", "big-biter", "defender", "distractor" }, { 2, 3, 1, 1 } },
-        { { "big-spitter", "big-biter","behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 2, 1, 1 } },
+        {},
     }
     race_settings.construction_buildings = {
         { { "biter-spawner", "spitter-spawner" }, { 1, 1 } },
         { { "biter-spawner", "spitter-spawner", "short-range-big-worm-turret" }, { 1, 1, 1 } },
-        { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
@@ -142,14 +143,41 @@ local addRaceSettings = function()
         { { "behemoth-spitter", "behemoth-biter" }, { 5, 2 }, 30 },
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 2, 1 }, 20 },
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 20 },
-        { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 },
     }
     
-    race_settings.featured_flying_groups = {
-        { { "distractor", "destroyer" }, { 1, 1 }, 75 },
-        { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
-        { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
-    }
+    if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
+        table.insert(race_settings.units[1], "defender")
+        table.insert(race_settings.units[2], "distractor")
+        table.insert(race_settings.units[2], "logistic-robot")
+        table.insert(race_settings.units[3], "construction-robot")
+        table.insert(race_settings.units[3], "destroyer")
+        table.insert(race_settings.command_centers[2], "roboport")
+        table.insert(race_settings.support_structures[2], "roboport")
+        race_settings.flying_units = {
+            { "defender" },
+            { "distractor", "logistic-robot" },
+            { "destroyer" },
+        }
+        race_settings.dropship = "logistic-robot"
+        race_settings.droppable_units = {
+            { {  "medium-spitter", "medium-biter", "defender" }, { 1, 2, 1 } },
+            { { "big-spitter", "big-biter", "defender", "distractor" }, { 2, 3, 1, 1 } },
+            { { "big-spitter", "big-biter","behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 2, 1, 1 } },
+        }
+        table.insert(
+            race_settings.construction_buildings,
+            { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
+        )
+        race_settings.featured_flying_groups = {
+            { { "distractor", "destroyer" }, { 1, 1 }, 75 },
+            { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
+            { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
+        }
+        table.insert(
+            race_settings.featured_groups, 
+            { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 }
+        )
+    end
 
     race_settings.interplanetary_attack_active = race_settings.interplanetary_attack_active or false
     
@@ -222,6 +250,7 @@ local prepare_world = function()
     
     AttackGroupBeaconProcessor.init_index()
     SurfaceProcessor.wander_unit_clean_up()
+    AirRaidRadarOverlay.reindex()
     -- See zerm_postprocess for additional post-process after race_mods loaded
 
     emulate_event_raise(
@@ -295,11 +324,41 @@ local init_globals = function()
     InterplanetaryAttacks.init_globals()
     QualityProcessor.on_init()
     EmotionProcessor.init_globals()
+    AirRaidRadarOverlay.init_globals()
 
     emulate_event_raise(
         GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_FLUSH_GLOBAL],
 {  success = true }
     )
+end
+
+local on_player_created = function(event)
+    if event.tick == 0 and not game.is_multiplayer() and
+        settings.startup['enemyracemanager-enable-engineer-army'].value and 
+        settings.startup["enemyracemanager-new-game-bodyguards"].value
+    then
+        local player = game.players[event.player_index]
+        if player and player.force then
+            local miner = 'player--controllable--miner'
+            local shotgun = 'player--controllable--shotgun'
+            local surface = player.surface
+            local position = surface.find_non_colliding_position(miner, player.force.get_spawn_position(surface), 32, 1)
+            for i = 1, 4, 1 do
+                surface.create_entity({
+                    name = miner,
+                    force = 'player',
+                    position = position
+                })
+            end
+            for i = 1, 2, 1 do
+                surface.create_entity({
+                    name = shotgun,
+                    force = 'player',
+                    position = position
+                })
+            end
+        end
+    end
 end
 
 --- Init events
@@ -357,7 +416,8 @@ local InitController = {}
 
 InitController.events =
 {
-    [defines.events.on_runtime_mod_setting_changed] = on_runtime_mod_setting_changed
+    [defines.events.on_runtime_mod_setting_changed] = on_runtime_mod_setting_changed,
+    [defines.events.on_player_created] = on_player_created
 }
 
 InitController.on_configuration_changed = on_configuration_changed

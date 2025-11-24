@@ -24,7 +24,7 @@ local base_build_group = {}
 local CHUNK_SIZE = 32
 local BUILD_BASE_RETRY = 3
 
-local on_biter_base_build = function(event)
+local on_biter_base_built = function(event)
     local entity = event.entity
     if entity and entity.valid then
         BaseBuildProcessor.exec(entity)
@@ -46,9 +46,9 @@ local on_unit_group_created = function(event)
     local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
     local erm_group = storage.erm_unit_groups[group.unique_id]
     local race_settings = storage.race_settings[force_name]
-    --if race_settings.is_primitive then
-    --    return
-    --end
+    if group.surface.platform or not race_settings or race_settings.is_primitive then
+        return
+    end
     
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
@@ -108,7 +108,14 @@ local checking_state = {
 
 local on_unit_group_finished_gathering = function(event)
     local group = event.group
-    if not group.valid then
+    if not group.valid or group.surface.platform then
+        return
+    end
+
+    local group_force = group.force
+    local force_name = group_force.name
+    local race_settings = storage.race_settings[force_name]
+    if not race_settings or race_settings.is_primitive then
         return
     end
     
@@ -116,13 +123,6 @@ local on_unit_group_finished_gathering = function(event)
     if is_erm_group and storage.erm_unit_groups[group.unique_id].scout_id then
         return
     end
-
-    local group_force = group.force
-    local force_name = group_force.name
-    local race_settings = storage.race_settings[force_name]
-    --if race_settings.is_primitive then
-    --    return
-    --end
 
     if ForceHelper.is_enemy_force(group_force) and
         not is_erm_group and
@@ -224,7 +224,7 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
         local erm_unit_group = storage.erm_unit_groups[unit_number]
         local group = erm_unit_group.group
         
-        AttackGroupProcessor.destroy_invalid_group(erm_unit_group.group, erm_unit_group.start_position)
+        AttackGroupProcessor.destroy_invalid_group(erm_unit_group, erm_unit_group.start_position)
 
         if not group.valid then
             AttackGroupProcessor.storage_clean_up(unit_number)
@@ -355,7 +355,7 @@ UnitControl.events = {
     [Config.custom_event_handlers[Config.EVENT_REQUEST_PATH]] = function(event)
         AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
     end,
-    [defines.events.on_biter_base_built] = on_biter_base_build,
+    [defines.events.on_biter_base_built] = on_biter_base_built,
     [defines.events.on_build_base_arrived] = on_build_base_arrived,
     [defines.events.on_unit_group_created] = on_unit_group_created,
     [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,

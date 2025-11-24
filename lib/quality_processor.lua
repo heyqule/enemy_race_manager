@@ -6,6 +6,7 @@
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
+local CronProcessor = require("__enemyracemanager__/lib/cron_processor")
 local QualityProcessor = {}
 
 --- The following is the spawn rate of each tier under different difficulty
@@ -38,6 +39,11 @@ local update_storages = function()
     setting_difficulty = settings.global["enemyracemanager-difficulty"].value
     setting_advancement = settings.global["enemyracemanager-advancement"].value
 end
+
+local is_building = {
+    ['unit-spawner'] = true,
+    ['turret'] = true
+}
 
 ---- Similar to spawn table, lerp probability
 ---
@@ -384,11 +390,15 @@ function QualityProcessor.roll(entity)
             }
 
             if new_unit then
-                print('Replaced with '..new_unit.name)
                 if entity.commandable and entity.commandable.parent_group then
                     entity.commandable.parent_group.add_member(new_unit)
                 end
-                entity.destroy()
+
+                if is_building[entity.type] then
+                    CronProcessor.add_quick_queue('delayed_entity_destroy',entity)
+                else
+                    entity.destroy()
+                end
 
                 return new_unit
             end

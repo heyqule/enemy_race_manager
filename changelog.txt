@@ -1,4 +1,54 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.46
+Date: 2025-11-24
+
+  Features:
+    - [Engineer Army, Experimental]
+    - Added many new controllable army units based on the engineer and their vehicles.
+    - When army is enabled, removed wood from shotgun recipes for automation.
+    - [/Engineer Army]
+    - [Army Depot]
+    - Enabled by "Army Depot" in startup setting. (Default, ON)
+    - All engineer army units can only be built in the depot.
+    - Credit: Klonan's Kombat Drones' depot graphics.
+    - [/Army Depot]    
+    - [Air raid radar]
+    - It's military target with 2000 health, 2048 tiles range, 10s per scan.
+    - It locates ERM's custom aerial groups and show their locations as map tags when the groups are within its range.
+    - It does not scan new chunk or send circuit signal.
+    - The radar can connect to an empty constant combinator and a programmable speaker within 8 tiles to enable air raid siren.
+    - Air raid radar can connect to regular radar to board cast the signal.
+    - Custom shortcut can toggle air raid radar coverage in map mode.
+    - Precision air attack messages now require air raid radar to function.
+    - (See tip and trick for details)
+    - [/Air raid radar]
+    - New startup settings: Added an option to disable corrupted robots for biter. Biter becomes land only race.
+    - When a race doesn't have flying units and couldn't path to your base (e.g island maps), they will slowly build a sand bridge to create new path.
+    - New startup settings: [defense] new game bodyguards.  It spawns 4 "miner" and 2 "shotgun" units for player when the game starts. It only applicable to single player and requires engineer army to be enabled.    
+    - Deployer can directly assign deployed unit to a player's control group. Control group is a new feature in ERM unit control 1.1.
+    - Added Army tab in craft window. All ERM units and deployer recipes have moved to this tab.
+
+  Changes:
+    - Changed base version support to >=2.0.72, including all ERM enemy & army mods.
+    - Added ERM Unit Control 1.1 as requirement.      
+    - Changed enemyracemanager_assets requirement to 2.0.2.
+    - Decreased piercing_damage for cannon and explosive cannon projectile.
+    - Moved "Unit Control" tips and tricks to "ERM Unit control" mod.
+    - Shotgun-pellet now respects "disable friendly fire" setting.
+    - Scouts should no longer able to spawn on space platform.
+    - [All fire type entities changes]
+    - initial lifetime set to 2 seconds.
+    - max life time set to 5 seconds.
+    - Reason: player control units get stuck on all fire type entities due to low distraction cooldown. They may also disrupt pathing.
+    - [/All fire type entities changes]
+
+  Bugfixes:
+    - Fixed an autoplace issue which "enemy" only nauvis option is using some of the mixed mode logics.
+    - Fixed a crash when there are orphan spawn beacons after the enemy has been eliminated on a planet.
+    - Fixed missing data in attack group heat while doing indexing in certain occasion.  This lead to custom attack group stop working on affected surfaces.
+    - Fixed on_biter_base_built event stopped working after the entity destroyed during entity_created event that introduced from recent base game updates.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.45
 Date: 2025-10-22
 

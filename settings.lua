@@ -11,6 +11,14 @@ data:extend {
         allowed_values = { NAUVIS_MIXED, NAUVIS_2_WAY, NAUVIS_4_WAY, 'enemy' },
         order = "enemyracemanager-100"
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-enable-biter-corrupt-robots",
+        description = "enemyracemanager-enable-biter-corrupt-robots",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-101"
+    },
     --- Biter related
     {
         type = "int-setting",
@@ -152,7 +160,23 @@ data:extend {
         description = "enemyracemanager-rail-entities-indestructible-planets",
         setting_type = "startup",
         default_value = "fulgora",
-        order = "enemyracemanager-302"
+        order = "enemyracemanager-303"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-enable-engineer-army",
+        description = "enemyracemanager-enable-engineer-army",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-304"
+    },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-new-game-bodyguards",
+        description = "enemyracemanager-new-game-bodyguards",
+        setting_type = "startup",
+        default_value = false,
+        order = "enemyracemanager-304"
     },
     --- Startup: Free for All
     {

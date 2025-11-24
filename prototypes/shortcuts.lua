@@ -16,6 +16,16 @@ data:extend({
         action = "lua",
         order = "erm-detail-window-toggle",
     },
+    {
+        type = "shortcut",
+        name = "erm-air-raid-radar-overlay",
+        icon = "__enemyracemanager_assets__/graphics/air_raid_radar.png",
+        icon_size = 64,
+        small_icon = "__enemyracemanager_assets__/graphics/air_raid_radar.png",
+        small_icon_size = 64,
+        action = "lua",
+        order = "erm-air-raid-radar-overlay",
+    },
 })
 
 if mods["erm_terran"] then

@@ -282,6 +282,13 @@ Click.boss_radar_goto_surrender = function(event)
     end
 end
 
+Click.erm_controlgroup_reset = function(event)
+    local player = game.players[event.player_index]
+    if player and player.valid then
+        GuiContainer.deployer_attachment.unset_control_group(player) 
+    end
+end
+
 
 
 Click.events = {
@@ -327,6 +334,8 @@ Click.events = {
     ["erm_rally_point_set"] = Click.erm_rallypoint_set,
     ["erm_rallypoint_map"] = Click.erm_rallypoint_map,
     ["erm_rally_point_unset"] = Click.erm_rallypoint_unset,
+    
+    ["erm_unitcontrol_controlgroup_unset"] = Click.erm_controlgroup_reset,
 
     --- Nuke Planet confirmation ---
     [".*/nuke_planet_cancel"] = Click.nuke_planet_cancel,
@@ -401,11 +410,23 @@ SelectionStateChanged.deployer_surface_dropdown = function(event)
     end
 end
 
+SelectionStateChanged.controlgroup_selection = function(event)
+    local element = event.element
+    local player = game.players[element.player_index]
+    if player and player.valid then
+        local selected_index = element.selected_index
+        if selected_index > 1 then
+            GuiContainer.deployer_attachment.set_control_group(player, element.get_item(selected_index))
+        end  
+    end
+end
+
 SelectionStateChanged.events = {
     [".*/erm_boss_detail_list_box"] = SelectionStateChanged.erm_boss_detail_list_box,
     ["army_cc/cc_select_.*"] = SelectionStateChanged.cc_selection,
     ["army_cc/filter_.*_surface"] = SelectionStateChanged.cc_filter_surface,
-    ["army_deployer/filter_surface"] = SelectionStateChanged.deployer_surface_dropdown
+    ["army_deployer/filter_surface"] = SelectionStateChanged.deployer_surface_dropdown,
+    ["erm_control_group_index_selection"] = SelectionStateChanged.controlgroup_selection
 }
 
 SelectionStateChanged.on_selection_state_changed = function(event)
@@ -552,6 +573,17 @@ local shortcut_handlers = {
         local owner = game.players[event.player_index]
         if owner then
             GuiContainer.army_control_window.toggle_main_window(owner)
+        end
+    end,
+    ["erm-air-raid-radar-overlay"] = function(event)
+        local owner = game.players[event.player_index]
+        if owner then
+            local air_raid_radar_overlay = GuiContainer.air_raid_radar_overlay
+            if not air_raid_radar_overlay.is_active(owner) then
+                GuiContainer.air_raid_radar_overlay.show(owner)
+            else
+                GuiContainer.air_raid_radar_overlay.hide(owner)
+            end
         end
     end
 }

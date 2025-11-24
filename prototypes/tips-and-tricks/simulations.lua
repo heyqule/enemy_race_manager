@@ -194,7 +194,7 @@ local unit_sets = {
     {
         "enemy--biter-spawner--3",
         "enemy--spitter-spawner--3",
-        "enemy--roboport--3",
+        "enemy--biter-spawner--3",
         "enemy--behemoth-worm-turret--3",
         "enemy--behemoth-worm-turret--3",
         "enemy--big-worm-turret--3"

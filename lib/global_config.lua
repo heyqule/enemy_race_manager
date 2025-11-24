@@ -28,7 +28,7 @@ GlobalConfig.TWO_SECONDS_CRON = 2 * second + 1
 -- execute one job on designated tick
 GlobalConfig.TEN_SECONDS_CRON = 10 * second + 1
 GlobalConfig.ONE_SECOND_CRON = second + 1
-GlobalConfig.QUICK_CRON = 11
+GlobalConfig.QUICK_CRON = 9
 
 -- Run garbage collection and statistics on each nauvis day
 GlobalConfig.GC_AND_STATS = 25000
@@ -102,6 +102,8 @@ GlobalConfig.FFA_MULTIPLIER = settings.startup["enemyracemanager-free-for-all-mu
 GlobalConfig.MAX_TIME_TO_LIVE_UNIT = 800
 GlobalConfig.TIME_TO_LIVE_UNIT_BATCH = 64
 GlobalConfig.OVERFLOW_TIME_TO_LIVE_UNIT_BATCH = 320
+
+GlobalConfig.AIR_RAID_RADAR_RANGE = 2048
 
 local refreshable_settings = {
     startup = {

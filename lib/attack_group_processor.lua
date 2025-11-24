@@ -19,6 +19,7 @@ local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_gro
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local BridgeBuilder = require("__enemyracemanager__/lib/bridge_builder")
 
 
 local Cron = require("__enemyracemanager__/lib/cron_processor")
@@ -242,26 +243,8 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
 
             if group_tracker.is_precision_attack then
                 alter_distraction(commands, defines.distraction.none)
-
-                if Config.precision_strike_warning() then
-                    local group_position = group.position
-                    group.surface.print({
-                        "description.message-incoming-precision-attack",
-                        force_name,
-                        SurfaceProcessor.get_gps_message(
-                                group_position.x,
-                                group_position.y,
-                                group.surface.name
-                        ),
-                        SurfaceProcessor.get_gps_message(
-                                position.x,
-                                position.y,
-                                group.surface.name
-                        ),
-                        
-                    }, { r = 1, g = 0, b = 0 })
-                end
             end
+            
             group.set_command(commands)
             if not storage.erm_unit_groups[group.unique_id] then
                 storage.erm_unit_groups[group.unique_id] = {
@@ -284,6 +267,20 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
             --- Re-add 20% of AttackGroupProcessor.MIXED_UNIT_POINTS
             RaceSettingsHelper.add_to_attack_meter(group.force.name, #group.members * 5, true)
             AttackGroupProcessor.queue_for_destroy(group)
+        end
+
+        --- Assign to flying groups tracker for air raid radar scanner
+        if AttackGroupProcessor.FLYING_GROUPS[group_tracker.group_type] then
+            if not storage.flying_groups_tracker[surface.index] then
+                storage.flying_groups_tracker[surface.index] = {}
+            end
+            
+            storage.flying_groups_tracker[surface.index][group.unique_id] = {
+                group = group,
+                tags = {},
+                is_precision_attack = group_tracker.is_precision_attack,
+                showed_warning = false,
+            }
         end
 
         set_group_tracker(force_name, nil)
@@ -366,26 +363,26 @@ local generate_unit_queue = function(
         end
         if as_quick_queue then
             Cron.add_quick_queue(
-                "AttackGroupProcessor.add_to_group",
-                surface,
-                unit_group,
-                force,
-                force_name,
-                unit_batch
+                    "AttackGroupProcessor.add_to_group",
+                    surface,
+                    unit_group,
+                    force,
+                    force_name,
+                    unit_batch
             )
         else
             Cron.add_1_sec_queue(
-                "AttackGroupProcessor.add_to_group",
-                surface,
-                unit_group,
-                force,
-                force_name,
-                unit_batch
+                    "AttackGroupProcessor.add_to_group",
+                    surface,
+                    unit_group,
+                    force,
+                    force_name,
+                    unit_batch
             )
         end
         i = i + 1
     until i == queue_length
-
+    
     local is_aerial = AttackGroupProcessor.FLYING_GROUPS[group_type] or false
     storage.erm_unit_groups[unit_group.unique_id] = {
         group = unit_group,
@@ -419,6 +416,9 @@ function AttackGroupProcessor.init_globals()
 
     --- Track custom group spawn data, only one active group spawn per enemy race.
     storage.group_tracker = storage.group_tracker or {}
+    
+    --- Track custom flying group for air raid radar, groups by surface
+    storage.flying_groups_tracker = storage.flying_groups_tracker or {} 
 
     --- Track active scout, only one active scout per enemy race.
     storage.scout_tracker = storage.scout_tracker or {}
@@ -983,7 +983,8 @@ function AttackGroupProcessor.is_erm_unit_group(unit_number)
     return erm_unit_groups[unit_number] and erm_unit_groups[unit_number].group and erm_unit_groups[unit_number].group.valid
 end
 
-function AttackGroupProcessor.destroy_invalid_group(group, start_position)
+function AttackGroupProcessor.destroy_invalid_group(erm_unit_group, start_position)
+    local group = erm_unit_group.group
     start_position = start_position or group.position
 
     if group.valid and
@@ -996,13 +997,19 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
         local group_force = group.force
         local group_number = group.unique_id
         local force_name = group_force.name
+        local surface = group.surface
+        local attack_force = erm_unit_group.attack_force
         local refund_points = AttackGroupProcessor.destroy_members(group)
 
         --- Hardcoded chance to spawn half size aerial group
-        if (RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and group_size >= MIN_GROUP_SIZE) or TEST_MODE then
+        if RaceSettingsHelper.has_flying_unit(force_name) and 
+          (RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and 
+          group_size >= MIN_GROUP_SIZE) or 
+          TEST_MODE 
+        then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(force_name)
-            local surface =  AttackGroupHeatProcessor.pick_surface(force_name, target_force)
+            surface =  AttackGroupHeatProcessor.pick_surface(force_name, target_force)
 
             AttackGroupPathingProcessor.remove_node(group_number)
             --- This call needs to bypass attack meters calculations
@@ -1015,6 +1022,7 @@ function AttackGroupProcessor.destroy_invalid_group(group, start_position)
                 }
             )
         elseif Config.race_is_erm_managed(force_name) then
+            BridgeBuilder.exec(surface, start_position, attack_force.get_spawn_position(surface.name))
             RaceSettingsHelper.add_to_attack_meter(force_name, refund_points, true)
         end
     end

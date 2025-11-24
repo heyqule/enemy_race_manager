@@ -30,7 +30,7 @@ function DeployerAttachement.show(player, unit_number)
     }
     container.style.vertically_stretchable = false
 
-    container.add { type = "label", caption = { "gui-rallypoint.current_location" } }
+    container.add { type = "label", caption = { "gui-rallypoint.current_location" }, style = "bold_label" }
 
     local data = ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
 
@@ -48,7 +48,7 @@ function DeployerAttachement.show(player, unit_number)
     if storage.army_active_deployers[force_index] then
         active_deployers = storage.army_active_deployers[force_index]["deployers"]
     end
-    container.add { type = "label", caption = {"gui-rallypoint.auto_deploy"}}
+    container.add { type = "label", caption = {"gui-rallypoint.auto_deploy"} ,style = "bold_label"}
     local switch = container.add {
         type = "switch",
         name = "army_deployer/auto_deploy/" .. data.entity.unit_number,
@@ -60,7 +60,40 @@ function DeployerAttachement.show(player, unit_number)
     if active_deployers[unit_number] then
         switch.switch_state = "right"
     end
+    
+    --- Control Group
+    container.add { type = "label", caption = { "gui-unitcontrol.control_group" }, style = "bold_label" }
+    --- Show user if there is one.
+    local user
+    if data.control_group_user then
+        user = game.players[data.control_group_user].name
+    else
+        user = { "gui-unitcontrol.none" }
+    end
+    container.add { type = "label", caption = {"", {"gui-unitcontrol.current_assigned_player", user}} }
 
+    local control_group_index  
+    if data.control_group_index then
+        control_group_index = data.control_group_index
+    else
+        control_group_index = { "gui-unitcontrol.none" }
+    end
+    container.add { type = "label", caption = {"", {"gui-unitcontrol.current_assigned_group", control_group_index}} }
+    --- Update index based on current user
+    container.add { type = "label", caption = { "gui-unitcontrol.control_group_index" } }
+    local dropdown = container.add{
+        type = "drop-down",
+        name = "erm_control_group_index_selection",
+    }
+    dropdown.style.horizontally_stretchable = true
+    local index = 1
+    dropdown.add_item("---")
+    for i =  1,9,1 do
+        dropdown.add_item(i)
+    end
+    dropdown.selected_index = 1
+    
+    container.add { type = "button", name = "erm_unitcontrol_controlgroup_unset", caption = { "gui-unitcontrol.unset" }, style = "red_button"}
 end
 
 function DeployerAttachement.hide(player)
@@ -90,6 +123,28 @@ function DeployerAttachement.go_to(player)
                 type = defines.controllers.remote,
                 position = deployer_data.rally_point
             }
+        end
+    end
+end
+
+function DeployerAttachement.set_control_group(player, selected_item)
+    local ui = player.gui.relative[DeployerAttachement.root_name]
+    if ui then
+        local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
+        if deployer_data then
+            ArmyDeploymentProcessor.set_control_group(player, ui.tags.unit_number, selected_item)
+            DeployerAttachement.show(player, ui.tags.unit_number)
+        end
+    end
+end
+
+function DeployerAttachement.unset_control_group(player)
+    local ui = player.gui.relative[DeployerAttachement.root_name]
+    if ui then
+        local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
+        if deployer_data.control_group_user then
+            ArmyDeploymentProcessor.unset_control_group(player, ui.tags.unit_number)
+            DeployerAttachement.show(player, ui.tags.unit_number)
         end
     end
 end

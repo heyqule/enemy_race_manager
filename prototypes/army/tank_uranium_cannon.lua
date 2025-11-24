@@ -17,30 +17,25 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
 local ERMPlayerUnitHelper = require("__enemyracemanager__/lib/rig/player_unit_helper")
-local ERM_WeaponRig = require('__enemyracemanager__/lib/rig/weapon')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
 
+local ArmyEconomyHelper = require('__erm_libs__/prototypes/army_economy_helper')
 
-local name = 'tank'
-
-local hitpoint = 1000
 local distraction_cooldown = 30
 
 local collision_box = { { -0.5, -0.66 }, { 0.5, 0.66 } }
 local selection_box = { { -0.9, -1.3 }, { 0.9, 1.3 } }
 
-local attack_range = ERMPlayerUnitHelper.get_attack_range(1, 6)
+local attack_range = ERMPlayerUnitHelper.get_attack_range(1, 10)
 local vision_distance = ERMPlayerUnitHelper.get_vision_distance(attack_range)
 
 local tank = util.table.deepcopy(data.raw['car']['tank'])
 --Level 1 animation, level 2 and 3 are armored animations
 -- types: running, running_with_gun, mining_with_tool
 local tank_animation = tank['animation']
-ERM_UnitTint.mask_tint(tank_animation['layers'][2], ERM_UnitTint.tint_army_green())
+ERM_UnitTint.apply_runtime_tint(tank_animation['layers'][2])
 
 local gun_animation = tank['turret_animation']
-ERM_UnitTint.mask_tint(gun_animation['layers'][2], ERM_UnitTint.tint_army_green())
+ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][2])
 ERM_AnimationRig.adjust_repeat_count_all(gun_animation['layers'], 2)
 ERM_AnimationRig.adjust_max_advance_all(gun_animation['layers'], 1)
 
@@ -64,10 +59,35 @@ if data.raw['corpse']['erm-player-tank-remnants'] == nil then
     })
 end
 
+local prefix  = "player"
+local name = "tank_uranium_cannon"
+local icons = {
+    {
+        icon = "__base__/graphics/icons/tank.png",
+        icon_size = 64,
+    },
+    {
+        icon = "__base__/graphics/icons/explosive-uranium-cannon-shell.png",
+        icon_size = 64,
+        scale = 0.25,
+        shift = {-9,9}
+    },
+}
+local resistances = {
+    acid = {75},
+    poison = {75},
+    physical = {75},
+    fire = {75},
+    explosion = {75},
+    laser = {75},
+    electric = {75},
+    cold = {75}
+}
+
 data:extend({
     {
         type = "projectile",
-        name = "enemy--playable-tank--1--cannon-projectile",
+        name = prefix.."--"..name.."--projectile",
         flags = {"not-on-map"},
         hidden = true,
         collision_box = {{-0.3, -1.1}, {0.3, 1.1}},
@@ -83,7 +103,7 @@ data:extend({
                 {
                     {
                         type = "damage",
-                        damage = {amount = 75, type = "physical"}
+                        damage = {amount = 250, type = "physical"}
                     },
                     {
                         type = "create-entity",
@@ -109,7 +129,7 @@ data:extend({
                         action =
                         {
                             type = "area",
-                            radius = 2,
+                            radius = 4,
                             force = "not-same",
                             action_delivery =
                             {
@@ -118,7 +138,7 @@ data:extend({
                                 {
                                     {
                                         type = "damage",
-                                        damage = {amount = 25, type = "explosion"}
+                                        damage = {amount = 175, type = "explosion"}
                                     },
                                     {
                                         type = "create-entity",
@@ -151,26 +171,15 @@ data:extend({
     },
     {
         type = "unit",
-        name = 'enemy--playable-tank--1',
-        localised_name = { 'entity-name.enemy--playable-tank--1'},
-        icons = {
-            {
-                icon = "__base__/graphics/icons/tank.png",
-                icon_size = 64,
-            },
-            {
-                icon = "__base__/graphics/icons/signal/signal_red.png",
-                icon_size = 64,
-                scale = 0.2,
-                shift = { -9, -9 }
-            },
-        },
-        flags = { "placeable-enemy", "placeable-player", "placeable-off-grid" },
+        name = prefix.."--controllable--"..name,
+        localised_name = { 'entity-name.'..prefix.."--controllable--"..name},
+        icons = icons,
+        flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "not-flammable" },
         has_belt_immunity = true,
-        max_health = hitpoint,
-        order = 'enemy--unit-playable-tank--1',
+        max_health = 250 * ERMPlayerUnitHelper.get_health_multiplier(),
+        order = prefix.."--controllable--"..name,
         shooting_cursor_size = 2,
-        resistances = tank.resistances,
+        resistances = ERMPlayerUnitHelper.get_resistances(resistances),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         can_open_gates = true,
@@ -179,10 +188,11 @@ data:extend({
         collision_box = collision_box,
         selection_box = selection_box,
         vision_distance = vision_distance,
-        movement_speed = 0.2,
+        movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        radar_range = 2,
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,
-        ai_settings = biter_ai_settings,
+        --ai_settings = biter_ai_settings,
         spawning_time_modifier = 1.5,
         attack_parameters = {
             type = "projectile",
@@ -193,7 +203,7 @@ data:extend({
             cooldown = 180,
             projectile_creation_distance = 1.6,
             projectile_center = { -0.15625, -0.07812 },
-            damage_modifier = 1,
+            damage_modifier = ERMPlayerUnitHelper.get_damage_multiplier(),
             sound = sounds.tank_gunshot,
             ammo_type = {
                 category = "cannon-shell",
@@ -202,7 +212,7 @@ data:extend({
                     type = "direct",
                     action_delivery = {
                         type = "projectile",
-                        projectile = "enemy--playable-tank--1--cannon-projectile",
+                        projectile = prefix.."--"..name.."--projectile",
                         starting_speed = 1,
                         max_range =  attack_range * 1.5,
                     }
@@ -215,36 +225,42 @@ data:extend({
         corpse = "erm-player-tank-remnants",
         dying_explosion = "erm-fire-explosion-ground_normal-1"
     },
-    {
-        type = "item",
-        name = "enemy--playable-tank--1",
-        icon = "__base__/graphics/icons/tank.png",
-        subgroup = "erm_controllable_units",
-        order = "b[unit-control]-b[tank]",
-        inventory_move_sound = item_sounds.vehicle_inventory_move,
-        pick_sound = item_sounds.vehicle_inventory_pickup,
-        drop_sound = item_sounds.vehicle_inventory_move,
-        place_result = "enemy--playable-tank--1",
-        stack_size = 20
-    },
-    {
-        type = "recipe",
-        name = "enemy--playable-tank--1",
-        enabled = false,
-        energy_required = 15,
-        ingredients =
-        {
-            {type = "item", name = "tank", amount = 1},
-            {type = "item", name = "cannon-shell", amount = 20},
-            {type = "item", name = "solid-fuel", amount = 10},
-        },
-        results = {{type="item", name= "enemy--playable-tank--1", amount=1}}
-    },
 })
 
-table.insert(data.raw['technology']['tank']['effects'],         {
+ArmyEconomyHelper.create_item({
+    prefix = prefix,
+    name = name,
+    icons = icons,
+    subgroup = prefix.."--erm_controllable",
+    stack_size = 20,
+    weight = 50,
+})
+
+ArmyEconomyHelper.create_recipe({
+    prefix = prefix,
+    name = name,
+    energy_required = 50,
+    ingredients =
+    {
+        {type = "item", name = "tank", amount = 1},
+        {type = "item", name = "low-density-structure", amount = 10},
+        {type = "item", name = "explosive-uranium-cannon-shell", amount = 30},
+        {type = "item", name = "rocket-fuel", amount = 20},
+    },
+    category = prefix.."--erm_controllable",
+    amount = 1
+})
+
+ArmyEconomyHelper.create_deploy_recipe({
+    prefix = prefix,
+    name = name,
+    icons =  util.table.deepcopy(icons),
+    category = prefix.."--erm_controllable",
+})
+
+table.insert(data.raw['technology']['uranium-ammo']['effects'],         {
     type = "unlock-recipe",
-    recipe = "enemy--playable-tank--1"
+    recipe = prefix.."--controllable--"..name
 })
 
 

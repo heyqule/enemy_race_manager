@@ -75,7 +75,13 @@ local spawn_unit = function(deployer_data)
                     else
                         ArmyFunctions.assign_wander_command(spawned_entity)
                     end
+                    
                     if spawned_entity then
+                        if deployer_data.control_group_user then
+                            local player_index = deployer_data.control_group_user
+                            local control_group_index = deployer_data.control_group_index
+                            remote.call("erm_unit_control", "assign_control_group", player_index, control_group_index, spawned_entity)
+                        end
                         inventory.remove({ name = unit_name, count = 1 })
                         add_statistic(entity, unit_name, count)
                         return true
@@ -183,7 +189,11 @@ function ArmyDeploymentProcessor.add_entity(entity)
         -- holds draw_line luaRenderObj, remove when unset
         rally_draw_link = nil,
         -- holds draw_sprite luaRenderObj, remove when unset
-        rally_draw_flag = nil
+        rally_draw_flag = nil,
+        -- holds Control Group user, set when an user set the control group dropdown
+        control_group_user = nil,
+        -- holds Control Group index, set when an user set the control group dropdown
+        control_group_index = nil,
     }
 
     if start_with_auto_deploy then
@@ -326,6 +336,22 @@ end
 
 function ArmyDeploymentProcessor.can_start_event()
     return can_stop_event() == false
+end
+
+function ArmyDeploymentProcessor.set_control_group(player, unit_number, control_group_index)
+    local force = player.force
+    if storage.army_built_deployers[force.index][unit_number] then
+        storage.army_built_deployers[force.index][unit_number].control_group_user = player.index
+        storage.army_built_deployers[force.index][unit_number].control_group_index = control_group_index
+    end
+end
+
+function ArmyDeploymentProcessor.unset_control_group(player, unit_number)
+    local force = player.force
+    if storage.army_built_deployers[force.index][unit_number] then
+        storage.army_built_deployers[force.index][unit_number].control_group_user = nil
+        storage.army_built_deployers[force.index][unit_number].control_group_index = nil
+    end
 end
 
 return ArmyDeploymentProcessor

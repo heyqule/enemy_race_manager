@@ -87,6 +87,9 @@ local script_functions = {
             CustomAttacks.process_logistic(args)
         end
     end,
+    [SELF_DESTRUCT_ATTACK] = function(args)
+        CustomAttacks.process_self_destruct(args)
+    end,
 
     --- Player super weapon attacks
     [PLAYER_SUPER_WEAPON_ATTACK] = function(event)

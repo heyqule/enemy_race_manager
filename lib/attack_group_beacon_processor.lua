@@ -514,8 +514,8 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon = function(source_entity)
     local attackable_entity = get_an_attackable_entity(source_entity, ATTACK_ENTITIES_SCAN_RADIUS)
 
     if attackable_entity and
-            attackable_entity.valid and
-            has_nearby_attack_entity_beacon(attackable_entity) == false
+        attackable_entity.valid and
+        has_nearby_attack_entity_beacon(attackable_entity) == false
     then
         --- 128 tile scan radius
         local attackable_entities = count_attackable_entities(attackable_entity, ATTACK_ENTITIES_SCAN_RADIUS)
@@ -895,8 +895,8 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
         end
 
         if beacons and
-                beacons.skip == nil and
-                next(beacons)
+            beacons.skip == nil and
+            next(beacons)
         then
             local distances, has_invalid_beacon = get_sorted_distance(beacons, target_beacon.position)
             if has_invalid_beacon then
@@ -934,9 +934,12 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
                 until next(spawners) == nil or (rc_entity and rc_entity.valid)
             else
                 -- Destroy spawn beacon if spawner is not found within it.
-                storage[SPAWN_BEACON][surface.index][source_force.name][distances[1].entity.unit_number] = nil
-                distances[1].entity.destructible = true
-                distances[1].entity.destroy()
+                local entity = distances[1].entity
+                if storage[SPAWN_BEACON][surface.index][source_force.name] then
+                    storage[SPAWN_BEACON][surface.index][source_force.name][entity.unit_number] = nil
+                end
+                entity.destructible = true
+                entity.destroy()
             end
         end
 

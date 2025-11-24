@@ -7,7 +7,7 @@ data:extend({
     {
         type = "custom-input",
         name = "erm-left-click",
-        localised_name = "ERM mouse left click",
+        localised_name = {"controls","erm-left-click"},
         key_sequence = "mouse-button-1",
         consuming = "none",
         include_selected_prototype = true
@@ -15,29 +15,29 @@ data:extend({
     {
         type = "custom-input",
         name = "erm-shift-left-click",
-        localised_name = "ERM mouse alt left click",
-        key_sequence = "Shift + mouse-button-1",
+        localised_name = {"controls","erm-shift-left-click"},
+        key_sequence = "SHIFT + mouse-button-1",
         consuming = "none",
         include_selected_prototype = true
     },
     {
         type = "custom-input",
         name = "erm-open-army-window",
-        localised_name = "Open Army Window",
+        localised_name = {"controls","erm-open-army-window"},
         key_sequence = "CONTROL + ALT + A",
         consuming = "none"
     },
     {
         type = "custom-input",
         name = "erm-open-stat-window",
-        localised_name = "Open Stats Window",
+        localised_name = {"controls","erm-open-stat-window"},
         key_sequence = "CONTROL + ALT + S",
         consuming = "none"
     },
     {
         type = "custom-input",
         name = "erm-open-boss-window",
-        localised_name = "Open Boss View Window",
+        localised_name = {"controls","erm-open-boss-window"},
         key_sequence = "CONTROL + ALT + B",
         consuming = "none"
     }

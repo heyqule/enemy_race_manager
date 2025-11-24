@@ -9,14 +9,26 @@ require("global")
 
 for _, fire in pairs(data.raw["fire"]) do
     if DEBUG_MODE then
-        log(fire.name.." init:"..tostring(fire.initial_lifetime).." max:"..tostring(fire.maximum_lifetime))
+        print("[ERM Fire changes] "..fire.name.." init:"..tostring(fire.initial_lifetime).." max:"..tostring(fire.maximum_lifetime))
+        print('<before>')
+        print('fire.initial_lifetime:'..tostring(fire.initial_lifetime))
+        print('fire.maximum_damage_multiplier:'..tostring(fire.maximum_damage_multiplier))
+        print('fire.maximum_lifetime:'..tostring(fire.maximum_lifetime))
+        print('fire.damage_per_tick:'..serpent.block(fire.damage_per_tick))
     end
 
-    if fire.initial_lifetime and fire.initial_lifetime > 300 then
-        fire.initial_lifetime = 300
+    if fire.initial_lifetime and fire.initial_lifetime > 150 then
+        fire.initial_lifetime = 150
     end
 
-    if fire.maximum_lifetime and fire.maximum_lifetime > 900 then
-        fire.maximum_lifetime = 900
+    if fire.maximum_lifetime and fire.maximum_lifetime > 300 then
+        fire.maximum_lifetime = 300
+    end
+
+    if DEBUG_MODE then
+        print('<after>')
+        print('fire.initial_lifetime:'..tostring(fire.initial_lifetime))
+        print('fire.maximum_damage_multiplier:'..tostring(fire.maximum_damage_multiplier))
+        print('fire.maximum_lifetime:'..tostring(fire.maximum_lifetime))
     end
 end

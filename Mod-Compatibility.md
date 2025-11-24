@@ -16,11 +16,13 @@ Overhaul mod compatibility will be done when they become available.
 - ERM add bob enemies as part of ERM biter autoplace.  Expect rainbows and do not expect unit balance.
 - ERM track bob enemies kills and attack points.  But Bobs enemies do not use ERM logics.
 - It changed spawner_evolution_factor_health_modifier to 20. ERM reverts it back to 10 (game default) as it affects balance of all ERM spawners.
-- Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
+
 
 #### Other not mentioned enemy mods
 
-- It may or may not work. Expect incompatibility.
+- It may or may not work. Expect incompatibility or broken unit balances.
+- Common Issue 1: Other enemy may eliminated ERM units and stop ERM from executing its function. (Mod: Zombie )
+- Common Issue 2: Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
 
 #### Milestone
 - Milestone for killing higher tier enemy command centers.

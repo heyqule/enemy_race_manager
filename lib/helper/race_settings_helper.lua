@@ -80,7 +80,7 @@ function RaceSettingsHelper.pick_an_unit_from_tier(target_race_name, tier)
 end
 
 function RaceSettingsHelper.has_flying_unit(target_race_name)
-    if storage.race_settings[target_race_name]["flying_units"] == nil then
+    if not storage.race_settings[target_race_name]["flying_units"] then
         return false
     end
 
@@ -94,7 +94,7 @@ function RaceSettingsHelper.pick_a_flying_unit_from_tier(target_race_name, tier)
 end
 
 function RaceSettingsHelper.has_dropship_unit(target_race_name)
-    if storage.race_settings[target_race_name]["dropship"] == nil then
+    if not storage.race_settings[target_race_name]["dropship"] then
         return false
     end
 

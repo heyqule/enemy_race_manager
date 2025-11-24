@@ -77,6 +77,10 @@ require("prototypes/compatibility/controls")
 
 handler.add_lib(require("__enemyracemanager__/controllers/initializer"))
 
+require("__enemyracemanager__/controllers/air-raid-radar")
+
+handler.add_lib(require("__enemyracemanager__/gui/air_raid_radar_overlay"))
+
 local RemoteApi = require("__enemyracemanager__/lib/remote_api")
 remote.add_interface("enemyracemanager", RemoteApi)
 

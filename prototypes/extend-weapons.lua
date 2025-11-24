@@ -20,6 +20,8 @@ if settings.startup["enemyracemanager-disable-friendly-fire"].value == true then
     WeaponHelper.remove_friendly_fire(data.raw["projectile"]["explosive-cannon-projectile"])
     WeaponHelper.remove_friendly_fire(data.raw["projectile"]["explosive-uranium-cannon-projectile"])
     WeaponHelper.remove_friendly_fire(data.raw["projectile"]["grenade"])
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["shotgun-pellet"])
+    WeaponHelper.remove_friendly_fire(data.raw["projectile"]["piercing-shotgun-pellet"])
 end
 
 -- Allow rocket explosion to hit air

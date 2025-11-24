@@ -34,4 +34,23 @@ function PlayerUnitHelper.get_vision_distance(attack_range)
     return attack_range + 8
 end
 
+function PlayerUnitHelper.get_resistances(resistances)
+    local formatted_resistances = {}
+    for name, values in pairs(resistances) do
+        local resistance = {}
+        resistance.type = name
+        if not values[1] then
+            error(name..' is missing a percentage value')    
+        end
+        resistance.percent = values[1]
+        if values[2] then
+            resistance.decrease = values[2]
+        end
+        
+        table.insert(formatted_resistances, resistance)
+    end
+    
+    return formatted_resistances
+end
+
 return PlayerUnitHelper

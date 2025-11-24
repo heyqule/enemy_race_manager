@@ -37,6 +37,13 @@ data:extend(
 data:extend(
         {
             {
+                type = "item-group",
+                name = "army",
+                order = "f",
+                icon = "__enemyracemanager_assets__/graphics/army_logo.png",
+                icon_size = 128,
+            },
+            {
                 type = "item-subgroup",
                 name = "erm-flying-enemies",
                 group = "enemies",
@@ -57,25 +64,25 @@ data:extend(
             {
                 type = "item-subgroup",
                 name = "erm_controllable_units",
-                group = "combat",
+                group = "army",
                 order = "z-erm_controllable_units"
             },
             {
                 type = "item-subgroup",
                 name = "erm_controllable_buildings",
-                group = "combat",
+                group = "army",
                 order = "z-erm_controllable_buildings"
             },
             {
                 type = "item-subgroup",
                 name = "erm_ai_beacons",
-                group = "combat",
+                group = "army",
                 order = "z-erm_ai_beacons"
             },
             {
                 type = "item-subgroup",
                 name = "erm_rally_point",
-                group = "combat",
+                group = "army",
                 order = "z-erm_rally_point"
             },
             { 
@@ -85,7 +92,7 @@ data:extend(
             {
                 type = "item-subgroup",
                 name = "boss_radar",
-                group = "combat",
+                group = "army",
                 order = "h"
             },
         })

@@ -121,7 +121,7 @@ function Army_MainWindow.update(player, tab_id)
 end
 
 function Army_MainWindow.update_army_stats()
-    for k, player in pairs(game.players) do
+    for k, player in pairs(game.connected_players) do
         local main_tab = SharedTabFunctions.get_main_tab(player)
         if player and main_tab and main_tab.selected_tab_index == 1 then
             Army_MainWindow.update(player, 1)
@@ -130,7 +130,7 @@ function Army_MainWindow.update_army_stats()
 end
 
 function Army_MainWindow.update_deployers()
-    for k, player in pairs(game.players) do
+    for k, player in pairs(game.connected_players) do
         local main_tab = SharedTabFunctions.get_main_tab(player)
         if player and main_tab and main_tab.selected_tab_index == 2 then
             Army_MainWindow.update(player, 2)
@@ -139,7 +139,7 @@ function Army_MainWindow.update_deployers()
 end
 
 function Army_MainWindow.update_command_centers()
-    for k, player in pairs(game.players) do
+    for k, player in pairs(game.connected_players) do
         local main_tab = SharedTabFunctions.get_main_tab(player)
         if player and main_tab and main_tab.selected_tab_index == 3 then
             Army_MainWindow.update(player, 3)

@@ -17,15 +17,10 @@ local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
 local ERMPlayerUnitHelper = require("__enemyracemanager__/lib/rig/player_unit_helper")
-local ERM_WeaponRig = require('__enemyracemanager__/lib/rig/weapon')
-local GlobalConfig = require('__enemyracemanager__/lib/global_config')
-local ERM_DebugHelper = require('__enemyracemanager__/lib/debug_helper')
+
+local ArmyEconomyHelper = require('__erm_libs__/prototypes/army_economy_helper')
 
 
-
-local name = 'car'
-
-local hitpoint = 500
 local distraction_cooldown = 30
 
 local collision_box = { { -0.5, -0.66 }, { 0.5, 0.66 } }
@@ -38,10 +33,10 @@ local car = util.table.deepcopy(data.raw['car']['car'])
 --Level 1 animation, level 2 and 3 are armored animations
 -- types: running, running_with_gun, mining_with_tool
 local car_animation = car['animation']
-ERM_UnitTint.mask_tint(car_animation['layers'][2], ERM_UnitTint.tint_army_green())
+ERM_UnitTint.apply_runtime_tint(car_animation['layers'][2])
 
 local gun_animation = car['turret_animation']
-ERM_UnitTint.mask_tint(gun_animation['layers'][2], ERM_UnitTint.tint_army_green())
+ERM_UnitTint.apply_runtime_tint(car_animation['layers'][2])
 ERM_AnimationRig.adjust_repeat_count_all(gun_animation['layers'], 2)
 ERM_AnimationRig.adjust_max_advance_all(gun_animation['layers'], 0.2)
 
@@ -65,46 +60,62 @@ if data.raw['corpse']['erm-player-car-remnants'] == nil then
     })
 end
 
+local prefix  = "player"
+local name = "car_red"
+local icons = {
+    {
+        icon = "__base__/graphics/icons/car.png",
+        icon_size = 64,
+    },
+    {
+        icon = "__base__/graphics/icons/piercing-rounds-magazine.png",
+        icon_size = 64,
+        scale = 0.25,
+        shift = {-9,9}
+    },
+}
+
+local resistances = {
+    acid = {25},
+    poison = {25},
+    physical = {25},
+    fire = {25},
+    explosion = {25},
+    laser = {25},
+    electric = {25},
+    cold = {25}
+}
+
 data:extend({
     {
         type = "unit",
-        name = 'enemy--playable-car--1',
-        localised_name = { 'entity-name.enemy--playable-car--1'},
-        icons = {
-            {
-                icon = "__base__/graphics/icons/car.png",
-                icon_size = 64,
-            },
-            {
-                icon = "__base__/graphics/icons/signal/signal_yellow.png",
-                icon_size = 64,
-                scale = 0.2,
-                shift = { -9, -9 }
-            },
-        },
-        flags = { "placeable-enemy", "placeable-player", "placeable-off-grid" },
+        name = prefix.."--controllable--"..name,
+        localised_name = { 'entity-name.'..prefix.."--controllable--"..name},
+        icons = icons,
+        flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "not-flammable" },
         has_belt_immunity = true,
-        max_health = hitpoint,
-        order = 'enemy--unit-playable-car--1',
+        max_health = 35 * ERMPlayerUnitHelper.get_health_multiplier(),
+        order = prefix.."--controllable--"..name,
         shooting_cursor_size = 2,
-        resistances = car.resistances,
+        resistances = ERMPlayerUnitHelper.get_resistances(resistances),
         subgroup = "erm_controllable_units",
-        shooting_cursor_size = 2,
         can_open_gates = true,
         map_color = ERM_UnitTint.tint_army_color(),
         healing_per_tick = 0,
         collision_box = collision_box,
         selection_box = selection_box,
         vision_distance = vision_distance,
-        movement_speed = 0.225,
+        radar_range = 1,
+        movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,
-        ai_settings = biter_ai_settings,
+        --ai_settings = biter_ai_settings,
         spawning_time_modifier = 1.5,
         attack_parameters = {
             type = "projectile",
             ammo_category = "bullet",
-            cooldown = 10,
+            cooldown = 15,
+            damage_modifier = ERMPlayerUnitHelper.get_damage_multiplier(),
             movement_slow_down_factor = 0.7,
             shell_particle =
             {
@@ -151,7 +162,7 @@ data:extend({
                                     },
                                     {
                                         type = "damage",
-                                        damage = {amount = 5, type = "physical"}
+                                        damage = {amount = 8, type = "physical"}
                                     },
                                     {
                                         type = "activate-impact",
@@ -169,36 +180,41 @@ data:extend({
         corpse = 'erm-player-car-remnants',
         dying_explosion = "erm-fire-explosion-ground_normal-1"
     },
-    {
-        type = "item",
-        name = "enemy--playable-car--1",
-        icon = "__base__/graphics/icons/car.png",
-        subgroup = "erm_controllable_units",
-        order = "b[unit-control]-b[tank]",
-        inventory_move_sound = item_sounds.vehicle_inventory_move,
-        pick_sound = item_sounds.vehicle_inventory_pickup,
-        drop_sound = item_sounds.vehicle_inventory_move,
-        place_result = "enemy--playable-car--1",
-        stack_size = 20
-    },
-    {
-        type = "recipe",
-        name = "enemy--playable-car--1",
-        enabled = false,
-        energy_required = 15,
-        ingredients =
-        {
-            {type = "item", name = "car", amount = 1},
-            {type = "item", name = "firearm-magazine", amount = 20},
-            {type = "item", name = "coal", amount = 10},
-        },
-        results = {{type="item", name="enemy--playable-car--1", amount=1}}
-    },
 })
 
-table.insert(data.raw['technology']['tank']['effects'],         {
+ArmyEconomyHelper.create_item({
+    prefix = prefix,
+    name = name,
+    icons = icons,
+    subgroup = prefix.."--erm_controllable",
+    stack_size = 10,
+    weight = 100,
+})
+
+ArmyEconomyHelper.create_recipe({
+    prefix = prefix,
+    name = name,
+    energy_required = 30,
+    ingredients =
+    {
+        {type = "item", name = "car", amount = 1},
+        {type = "item", name = "piercing-rounds-magazine", amount = 24},
+        {type = "item", name = "coal", amount = 20},
+    },
+    category = prefix.."--erm_controllable",
+    amount = 1
+})
+
+ArmyEconomyHelper.create_deploy_recipe({
+    prefix = prefix,
+    name = name,
+    icons = util.table.deepcopy(icons),
+    category = prefix.."--erm_controllable",
+})
+
+table.insert(data.raw['technology']['automobilism']['effects'],         {
     type = "unlock-recipe",
-    recipe = "enemy--playable-tank--1"
+    recipe = prefix.."--controllable--"..name
 })
 
 

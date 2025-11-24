@@ -24,6 +24,7 @@ local BossAttackProcessor = require("__enemyracemanager__/lib/boss_attack_proces
 local BossRewardProcessor = require("__enemyracemanager__/lib/boss_reward_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
+local BridgeBuilder = require("__enemyracemanager__/lib/bridge_builder")
 -- Register Cron Functions
 cron_switch = {
     -- AttackGroupProcessor
@@ -105,6 +106,10 @@ cron_switch = {
     ["BossRewardProcessor.clean_up"] = function(args)
         BossRewardProcessor.clean_up()
     end,
+    -- BridgeBuilder
+    ["BridgeBuilder.run_cron"] = function(args)
+        BridgeBuilder.run_cron(table.unpack(args))
+    end,
     --ForceHelper
     ["ForceHelper.refresh_all_enemy_forces"] = function(args)
         ForceHelper.refresh_all_enemy_forces()
@@ -117,6 +122,11 @@ cron_switch = {
     end,
     ['EmotionProcessor.run'] = function(args)
         EmotionProcessor.run(args)
+    end,
+    ['delayed_entity_destroy'] = function(args)
+        if args[1] and args[1].valid then
+            args[1].destroy()
+        end
     end
 }
 

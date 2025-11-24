@@ -1,0 +1,6 @@
+{
+    "entity":[
+        ["enemy--playable-car--1","player--controllable--car-red"],
+        ["enemy--playable-tank--1", "player--controllable--tank-cannon"]
+    ]
+}

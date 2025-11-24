@@ -125,7 +125,7 @@ for _, unit in pairs(data.raw["unit-spawner"]) do
 end
 
 for _, unit in pairs(data.raw.unit) do
-    if controlable_subgroups[unit.subgroup] and UnitHelper.is_erm_unit(unit) then
+    if controlable_subgroups[unit.subgroup] then
         for _, damage_type in pairs(damage_types) do
             if data.raw["damage-type"][damage_type[1]] and unit.resistances then
                 table.insert(unit.resistances, { type = damage_type[1], percent = 75 })

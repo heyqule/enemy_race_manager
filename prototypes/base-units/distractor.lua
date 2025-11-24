@@ -123,7 +123,8 @@ function makeLevelCombatRobots(level, type)
     robot["healing_per_tick"] = 0
     robot["run_animation"] = {
         layers = {
-            robot_animations[type].in_motion,
+            robot_animations[type].in_motion.layers[1],
+            robot_animations[type].in_motion.layers[2],
             robot_animations[type].shadow_in_motion,
         }
     }

@@ -47,8 +47,9 @@ if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
 
     DebugHelper.print('ENEMY: Nauvis AutoControl:')
     DebugHelper.print(serpent.block(nauvis_autocontrols))
-    
-elseif settings.startup['enemyracemanager-nauvis-enemy'].value ~= NAUVIS_MIXED then
+end
+
+if settings.startup['enemyracemanager-nauvis-enemy'].value ~= NAUVIS_MIXED then
         DebugHelper.print('ENEMY: Nauvis AutoControl IS NOT MIXED')
         return false
 end

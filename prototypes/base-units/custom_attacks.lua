@@ -6,11 +6,7 @@
 
 local CustomAttackHelper = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 
-local CustomAttacks = {}
-
-CustomAttacks.valid = CustomAttackHelper.valid
-
-function CustomAttacks.process_logistic(event)
+function CustomAttackHelper.process_logistic(event)
     local race_settings = CustomAttackHelper.get_race_settings(MOD_NAME)
     CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 2)
     if CustomAttackHelper.can_spawn(75) then
@@ -24,9 +20,9 @@ function CustomAttacks.process_logistic(event)
     end
 end
 
-function CustomAttacks.process_constructor(event)
+function CustomAttackHelper.process_constructor(event)
     CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "construction_buildings"))
     event.source_entity.destroy()
 end
 
-return CustomAttacks
+return CustomAttackHelper

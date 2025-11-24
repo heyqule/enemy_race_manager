@@ -124,7 +124,7 @@ function MainWindow.update(player)
 end
 
 function MainWindow.update_all()
-    for k, player in pairs(game.players) do
+    for k, player in pairs(game.connected_players) do
         if player then
             MainWindow.update(player)
         end

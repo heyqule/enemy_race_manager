@@ -29,6 +29,7 @@ SAMPLE_TILE_MODE = false
 
 CONSTRUCTION_ATTACK = "embtr-con"
 LOGISTIC_ATTACK = "embtr-log"
+SELF_DESTRUCT_ATTACK = "embtr-sda"
 -- Super weapon: Nuke, ion cannon, iridium-piledriver.
 PLAYER_SUPER_WEAPON_ATTACK = "emptk-sw"
 -- Planet Purifier: SE"plague rocket, mirv
