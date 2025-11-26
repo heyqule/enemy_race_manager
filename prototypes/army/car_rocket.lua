@@ -143,7 +143,44 @@ data:extend({
         distance_per_frame = 1,
         run_animation = new_animation,
         corpse = 'erm-player-car-remnants',
-        dying_explosion = "erm-fire-explosion-ground_normal-1"
+        dying_explosion = "erm-fire-explosion-ground_normal-1",
+        light =
+        {
+            {
+                type = "oriented",
+                minimum_darkness = 0.3,
+                picture =
+                {
+                    filename = "__core__/graphics/light-cone.png",
+                    priority = "extra-high",
+                    flags = { "light" },
+                    scale = 2,
+                    width = 200,
+                    height = 200
+                },
+                shift = {-0.6, -14},
+                size = 1.5,
+                intensity = 0.4,
+                color = {0.92, 0.77, 0.3}
+            },
+            {
+                type = "oriented",
+                minimum_darkness = 0.3,
+                picture =
+                {
+                    filename = "__core__/graphics/light-cone.png",
+                    priority = "extra-high",
+                    flags = { "light" },
+                    scale = 2,
+                    width = 200,
+                    height = 200
+                },
+                shift = {0.6, -14},
+                size = 1.5,
+                intensity = 0.4,
+                color = {0.92, 0.77, 0.3}
+            }
+        },
     },
 })
 

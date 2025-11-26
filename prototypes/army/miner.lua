@@ -118,8 +118,7 @@ ArmyEconomyHelper.create_recipe({
     ingredients =
     {
         {type = "item", name = "light-armor", amount = 1},
-        {type = "item", name = "iron-stick", amount = 2},
-        {type = "item", name = "iron-plate", amount = 2},
+        {type = "item", name = "iron-plate", amount = 10},
     },
     category = prefix.."--erm_controllable",
     amount = 1

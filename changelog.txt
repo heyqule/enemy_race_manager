@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.47
+Date: 2025-11-26
+
+  Changes:
+    - Added headlight to engineer army cars.
+    - Fixed army-depot locale.
+    - Removed iron-stick from army-depot and miner recipe.
+    - Changed army-depot research time from 60 -> 45.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.46
 Date: 2025-11-24
 

@@ -229,11 +229,12 @@ local army_depot =
   crafting_speed = 1,
   energy_source =
   {
-    type = "void",
+    type = "electric",
     usage_priority = "secondary-input",
+    emissions_per_minute = { pollution = 2 }
   },
+  energy_usage = "100kW",
   scale_entity_info_icon = true,
-  energy_usage = "69W",
   gui_title_key = "army-depot",
   entity_info_icon_shift = {0, -1},
   map_color = ERM_UnitTint.tint_army_color(),
@@ -283,8 +284,7 @@ local depot_recipe =
   ingredients =
   {
     {type = "item", name = "iron-plate", amount = 100},
-    {type = "item", name = "iron-stick", amount = 40},
-    {type = "item", name = "iron-gear-wheel", amount = 25},
+    {type = "item", name = "iron-gear-wheel", amount = 50},
     {type = "item", name = "electronic-circuit", amount = 50},
   },
   enabled = false
@@ -294,7 +294,7 @@ local base_tech =
 {
   type = "technology",
   name = "army-depot",
-  localised_name = {"army-depot"},
+  localised_name = {"technology-name.army-depot"},
   icon = "__enemyracemanager_assets__/graphics/depot/infantry-depot-item-icon.png",
   icon_size = 64,
   effects =
@@ -311,7 +311,7 @@ local base_tech =
     {
       {"automation-science-pack", 1},
     },
-    time = 60
+    time = 45
   },
   order = "i-a"
 }
