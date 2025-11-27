@@ -30,7 +30,7 @@ local gun_animation = human_animation['animations'][2]['idle_with_gun']
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][2])
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][4])
 
-local attack_range = 8
+local attack_range = ERMPlayerUnitHelper.get_attack_range(0.5, 2)
 
 local base_movement_speed = 0.1
 local incremental_movement_speed = 0.175
@@ -84,7 +84,7 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air" },
         has_belt_immunity = false,
-        max_health = 180 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 120 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),

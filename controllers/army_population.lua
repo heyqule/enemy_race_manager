@@ -6,15 +6,17 @@
 
 local ArmyPopulation = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
+local String = require("__erm_libs__/stdlib/string")
 
-local isFollowResearch = function(research)
-    return string.find(research.name, "follower-robot-count-", 1, true)
+local isFollowerResearch = function(research_name)
+    return string.find(research_name, "follower-robot-count-", 1, true)
 end
 
-local reseach_pop_update = function(event)
+local research_pop_update = function(event)
     local research = event.research
-    if isFollowResearch(research) then
-        ArmyPopulation.calculate_max_units(research.force)
+    if isFollowerResearch(research.name) then
+        local nameTokens = String.split(research.name, "-")
+        ArmyPopulation.calculate_max_units(research.force, tonumber(nameTokens[4]))
         ArmyControlUI.update_army_stats()
     end
 end
@@ -23,8 +25,8 @@ end
 local ArmyPopulationController = {}
 
 ArmyPopulationController.events = {
-    [defines.events.on_research_finished] = reseach_pop_update,
-    [defines.events.on_research_reversed] = reseach_pop_update,
+    [defines.events.on_research_finished] = research_pop_update,
+    [defines.events.on_research_reversed] = research_pop_update,
     [defines.events.script_raised_destroy] = function(event)
         local entity = event.entity
         if entity and entity.valid and ArmyPopulation.is_army_unit(entity)then

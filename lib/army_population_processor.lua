@@ -4,17 +4,35 @@
 --- DateTime: 11/7/2022 10:25 PM
 ---
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local BASE_MAX_UNIT = 150
+local BASE_MAX_UNIT = 30
+
+local robot_max_following_robot_count = {20,50,90,120}
 
 local ArmyPopulationProcessor = {}
 
-local get_max_pop = function(maximum_following_robot_count)
-    return  math.floor((BASE_MAX_UNIT + maximum_following_robot_count) * settings.global["enemyracemanager-army-limit-multiplier"].value)
+local get_max_pop = function(force, level)
+    local extra = 0
+    
+    if not level then
+        for i = 5, 1, -1 do
+            if force.technologies["follower-robot-count-"..i].researched then
+                extra = robot_max_following_robot_count[i]
+                break
+            end
+        end
+    end
+    
+    if level and level < 5 then
+        extra = robot_max_following_robot_count[level]
+    elseif level and level == 5 then
+        extra = 120
+    end
+    return  math.floor((BASE_MAX_UNIT + force.maximum_following_robot_count + extra) * settings.global["enemyracemanager-army-limit-multiplier"].value)
 end
 
 local set_default_values = function(force)
     local default_values = {
-        max_pop = get_max_pop(force.maximum_following_robot_count),
+        max_pop = get_max_pop(force),
         unit_count = 0,
         pop_count = 0,
         unit_types = {},
@@ -92,9 +110,9 @@ function ArmyPopulationProcessor.index()
     log({ "", "Rebuild Player Army Index: ", profiler })
 end
 
-function ArmyPopulationProcessor.calculate_max_units(force)
+function ArmyPopulationProcessor.calculate_max_units(force, level)
     init_force_data(force)
-    storage.army_populations[force.name]["max_pop"] = get_max_pop(force.maximum_following_robot_count)
+    storage.army_populations[force.name]["max_pop"] = get_max_pop(force, level)
     force.print("Max Army Population: " .. storage.army_populations[force.name]["max_pop"])
 end
 

@@ -71,6 +71,12 @@ local refresh_army_data = function()
     end
 
     remote.call("enemyracemanager","army_deployer_register", 'army-depot');
+
+    for _, force in pairs(game.forces) do
+        if force.research_enabled then
+            ArmyPopulationProcessor.calculate_max_units(force)
+        end 
+    end
 end
     
 
