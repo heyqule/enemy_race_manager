@@ -13,9 +13,11 @@ local Table = require("__erm_libs__/stdlib/table")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
 local ATTACK_CHUNK_SIZE = 32
 local NON_COLLISION_GAP = 4
+local MIN_DISTANCE_FROM_PLAYER_BASE = 32 -- Minimum tiles from player entities to allow unit drops
 
 local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
@@ -89,6 +91,17 @@ local get_low_tier_flying_unit = function(force_name)
     return nil
 end
 
+local is_too_close_to_player_base = function(surface, position, min_distance)
+    min_distance = min_distance or MIN_DISTANCE_FROM_PLAYER_BASE
+    local player_entities = surface.count_entities_filtered({
+        force = ForceHelper.get_player_forces(),
+        position = position,
+        radius = min_distance,
+        limit = 1
+    })
+    return player_entities > 0
+end
+
 local get_drop_position = function(final_unit_name, surface, position, force_name, level)
     local drop_position = {x=position.x + math.random(-4,4), y= position.y + math.random(-4,4)}
     if not surface.can_place_entity({ name = final_unit_name, position = drop_position }) then
@@ -102,6 +115,12 @@ local get_drop_position = function(final_unit_name, surface, position, force_nam
             end
         end
     end
+    
+    -- Check if position is too close to player base
+    if drop_position and is_too_close_to_player_base(surface, drop_position) then
+        return final_unit_name, nil
+    end
+    
     return final_unit_name, drop_position
 end
 
@@ -145,6 +164,11 @@ local drop_unit = function(event, force_name, unit_name, count, position)
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
         position = surface.find_non_colliding_position(final_unit_name, position, 8, 2, true)
+    end
+
+    -- Check if position is too close to player base - if so, skip spawning
+    if position and is_too_close_to_player_base(surface, position) then
+        return
     end
 
     if position then
