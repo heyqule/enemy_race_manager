@@ -241,6 +241,11 @@ local prepare_world = function()
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()
     end
+    
+    --- Update nauvis map_gen_settings
+    if game.surfaces[1].name == game.planets['nauvis'].name then
+        game.surfaces[1].map_gen_settings = game.planets['nauvis'].prototype.map_gen_settings
+    end
 
     -- Race Cleanup
     RaceSettingsHelper.clean_up_race()
@@ -252,7 +257,7 @@ local prepare_world = function()
     SurfaceProcessor.wander_unit_clean_up()
     AirRaidRadarOverlay.reindex()
     -- See zerm_postprocess for additional post-process after race_mods loaded
-
+    
     emulate_event_raise(
             GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_PREPARE_WORLD],
             {  success = true }

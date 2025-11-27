@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.48
+Date: 2025-11-27
+
+  Changes:
+    - "nauvis enemy" startup setting now updates nauvis surface mapgen setting when you change it mid-game.
+
+--------------------------------------------------------------------------------------------------
 Version: 2.0.47
 Date: 2025-11-26
 
