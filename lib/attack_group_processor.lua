@@ -1022,7 +1022,11 @@ function AttackGroupProcessor.destroy_invalid_group(erm_unit_group, start_positi
                 }
             )
         elseif Config.race_is_erm_managed(force_name) then
-            BridgeBuilder.exec(surface, start_position, attack_force.get_spawn_position(surface.name))
+            local target_location = {x=0, y=0}
+            if attack_force then
+                target_location = attack_force.get_spawn_position(surface.name)
+            end
+            BridgeBuilder.exec(surface, start_position, target_location)
             RaceSettingsHelper.add_to_attack_meter(force_name, refund_points, true)
         end
     end
