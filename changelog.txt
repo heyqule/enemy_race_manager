@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.52
+Date: 2025-11-27
+
+  Changes:
+    - updated tip and trick for air raid radar.
+    
+  Bugfixes:
+    - Fixed an crash when re-calculating army population during version update under certain condition.  
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.51
 Date: 2025-11-27
 
@@ -6,7 +16,7 @@ Date: 2025-11-27
     - Army Elite Shotgun: 1800 HP -> 1200 HP
     - Army Shotgun / Elite Shotgun Range: 8 -> 9
     - Army Shotgun pellets: 8 -> 6
-    - Army Population cap changes for early follow count researches:
+    - Army population cap changes for early follow count researches:
     - starting pop lowered from 150 to 31, L1: 60, L2: 100, L3: 150, L4: 200. L5+ stay the same. (25 pop per level) 
 
 ---------------------------------------------------------------------------------------------------

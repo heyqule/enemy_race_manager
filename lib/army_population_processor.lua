@@ -16,7 +16,7 @@ local get_max_pop = function(force, level)
     if not level then
         for i = 5, 1, -1 do
             if force.technologies["follower-robot-count-"..i].researched then
-                extra = robot_max_following_robot_count[i]
+                level = i
                 break
             end
         end
