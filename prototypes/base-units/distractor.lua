@@ -33,7 +33,7 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 55
 
 local laser_modifier = 2
-local incremental_laser_modifier = 6
+local incremental_laser_modifier = 3
 
 -- Handles Attack Speed
 

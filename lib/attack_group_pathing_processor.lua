@@ -267,16 +267,17 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 
     local target_direction, side_key
     if is_right_side then
-        target_direction = math.abs(direction + 20 % 16)
+        target_direction = math.abs( (direction + 20) % 16)
         side_key = AttackGroupPathingProcessor.STRATEGY_RT
     else
-        target_direction = math.abs(direction - 20 % 16)    
+        target_direction = math.abs( (direction - 20) % 16)    
         side_key = AttackGroupPathingProcessor.STRATEGY_LT 
     end
+    local chunk_range = CHUNK_SIZE*3
     local new_position = Position.translate(
             path_node.position,
             target_direction,
-            math.random(TRANSLATE_RANGE-CHUNK_SIZE, TRANSLATE_RANGE+CHUNK_SIZE)
+            math.random(TRANSLATE_RANGE-chunk_range, TRANSLATE_RANGE+chunk_range)
     )
 
     if DEBUG_MODE then

@@ -32,7 +32,7 @@ local base_cold_resistance = 10
 local incremental_cold_resistance = 55
 
 local physical_modifier = 1
-local incremental_physical_modifier = 2.5
+local incremental_physical_modifier = 3.25
 
 -- Handles Attack Speed
 

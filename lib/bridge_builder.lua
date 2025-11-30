@@ -13,6 +13,8 @@ if script.active_mods["alien-biomes"] then
     spawn_tile = "mineral-brown-sand-1"
 end
 
+local planet_tiles = prototypes.mod_data[MOD_DATA_SURFACE_BRIDGE_TILES].data
+
 --- GPT assisted function.
 local function queue_landfill_bridge(surface, posA, posB)
     local dx = posB.x - posA.x
@@ -73,11 +75,19 @@ function BridgeBuilder.run_cron(surface, positions)
     if surface.valid then
         for _, position in pairs(positions) do
             surface.set_tiles({{
-               name = spawn_tile,
+               name = BridgeBuilder.get_tile(surface),
                position = position
            }}, true)
         end        
     end
+end
+
+function BridgeBuilder.get_tile(surface)
+    if planet_tiles[surface.name] then
+        return planet_tiles[surface.name]
+    end
+    --- Default sand tile
+    return spawn_tile
 end
 
 return BridgeBuilder

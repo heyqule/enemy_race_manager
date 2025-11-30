@@ -1,12 +1,33 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.53
+Date: 2025-11-30
+
+  Changes:
+    - Increased the selection range when picking a position for left/right offset pathing strategies. 
+    - Increased air raid radar scan speed from 10s/scan to 5.57s/scan
+    - Changed air raid radar from using map tag to render.text
+    - Added "scout" tip and trick under custom attack group.
+    - Added "pathing" tip and trick for under custom attack group.
+    - Fixed locale for engineer army recipes.
+    - Corrupted distractor top damage from 80 -> 50 (100 raw DPS)
+    - Corrupted defender top damage from  28 -> 32 (128 raw DPS)  
+
+  Bugfixes:
+    - Fixed a crash when you click on a deployer from another force.
+    - Fixed command center UI opens when the player clicked on a command center from another force.    
+
+  Scripts:
+    - Added data.raw['mod-data']['ERM_bridge_tiles'].data['{surface_name}'] to define enemy's bridge tile per surface.    
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.52
 Date: 2025-11-27
 
   Changes:
     - updated tip and trick for air raid radar.
-    
+
   Bugfixes:
-    - Fixed an crash when re-calculating army population during version update under certain condition.  
+    - Fixed a crash when re-calculating army population during version update under certain condition.  
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.51

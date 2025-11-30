@@ -11,7 +11,7 @@ radar.order = 'd[radar]-b[erm-air-raid-radar]'
 radar.energy_per_sector = "10MJ"
 radar.max_distance_of_sector_revealed = 1
 radar.max_distance_of_nearby_sector_revealed = 1
-radar.energy_per_nearby_scan = "10MJ"
+radar.energy_per_nearby_scan = "5.57MJ"
 radar.energy_usage = "1MW"
 radar.minable = {mining_time = 0.1, result = "erm-air-raid-radar"}
 radar.is_military_target = true

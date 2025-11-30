@@ -23,6 +23,13 @@ local valid_entity = {
     ["erm-air-raid-radar"] = true
 }
 
+local function premultiply_with_alpha(color, a)
+    color.r = color.r * a
+    color.g = color.g * a
+    color.b = color.b * a
+    color.a = color.a * a
+end
+
 local draw_overlay = function(player, entity)
     local radar_map_data = storage.air_raid_radar_map_data
     if not radar_map_data[player.index] then

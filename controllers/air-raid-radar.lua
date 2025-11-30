@@ -4,7 +4,7 @@ local Position = require("__erm_libs__/stdlib/position")
 local Config = require("__enemyracemanager__/lib/global_config")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
-
+local draw_text = rendering.draw_text
 local max_distance = Config.AIR_RAID_RADAR_RANGE
 
 local kill_tags = function(group_data)  
@@ -123,25 +123,30 @@ AirRaidRadar.scan = function(event)
                         if group_data.is_precision_attack == true then
                             text = "✈✈✈✈"
                         end
-                        local group_tag = force.add_chart_tag(surface,  {
-                            icon = {type = "virtual", name = "signal-skull"},
-                            position = group.position,
-                            text = text,
+                        local draw_obj = draw_text({
+                            text = "[virtual-signal=signal-skull]"..text,
+                            color = {r = 1, g = 1, b = 1},
+                            force = {force},
+                            scale = 1.5,
+                            target = group.position,
+                            surface = surface,
+                            render_mode = "chart",
+                            use_rich_text = true,
+                            scale_with_zoom = true,
+                            time_to_live = 10 * second
                         })
 
-                        if group_tag then
-                            table.insert(storage.flying_groups_tracker[surface.index][group_id].tags, {entity = group_tag, tick = event.tick})
+                        table.insert(storage.flying_groups_tracker[surface.index][group_id].tags, {entity = draw_obj, tick = event.tick})
 
-                            -- Set radar signal only once per scan, not for each group
-                            if not signal_set then
-                                set_radar_signal(radar)
-                                signal_set = true
-                            end
+                        -- Set radar signal only once per scan, not for each group
+                        if not signal_set then
+                            set_radar_signal(radar)
+                            signal_set = true
                         end
 
                         if group_data.is_precision_attack == true and
-                           group_data.showed_warning == false and
-                           Config.precision_strike_warning()
+                                group_data.showed_warning == false and
+                                Config.precision_strike_warning()
                         then
                             local group_position = group.position
                             group.surface.print({
@@ -154,10 +159,10 @@ AirRaidRadar.scan = function(event)
                             }, { r = 1, g = 0, b = 0 })
                             group_data.showed_warning = true
                         end
-                    end
-                else
-                    kill_tags(group_data)
-                    storage.flying_groups_tracker[surface.index][group_id] = nil
+                    else
+                        kill_tags(group_data)
+                        storage.flying_groups_tracker[surface.index][group_id] = nil 
+                    end                        
                 end
             end
         else

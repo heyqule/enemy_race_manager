@@ -16,8 +16,8 @@ local valid_erm_left_click = {
         if player and player.valid then
             if storage.army_registered_command_centers[event.selected_prototype.name] then
                 local entity = player.surface.find_entity(event.selected_prototype.name, event.cursor_position)
-                ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
-                if entity then
+                if entity and entity.force == player.force then
+                    ArmyControlUI.open_tab(player, ArmyControlUI.tab_names[3])
                     local element = player.gui.screen[ArmyControlUI.root_name]["main-tab"][ArmyControlUI.tab_names[3]]["main-pane"]["left-listing"]["army_cc/cc_select_from"]
                     ArmyControlUI.set_selected_cc(player, element, entity.backer_name)
                 end 

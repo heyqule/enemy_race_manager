@@ -235,7 +235,6 @@ local army_depot =
   },
   energy_usage = "100kW",
   scale_entity_info_icon = true,
-  gui_title_key = "army-depot",
   entity_info_icon_shift = {0, -1},
   map_color = ERM_UnitTint.tint_army_color(),
   enemy_map_color = { r=1, b=0, g=0 },

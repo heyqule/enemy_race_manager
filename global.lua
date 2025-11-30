@@ -73,6 +73,7 @@ VANILLA_MAP_COLOR = { r = 224, g = 35, b = 33, a = 255 }
 MOD_DATA_SURFACE_EXCLUSIONS = 'ERM_surface_exclusions'
 MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces'
 MOD_DATA_INTERPLANETARY_ATTACKS = 'ERM_interplanetary_attack_exclusions'
+MOD_DATA_SURFACE_BRIDGE_TILES = "ERM_bridge_tiles"
 
 --- For Debug use
 DEBUG_BEHAVIOUR_RESULTS = {

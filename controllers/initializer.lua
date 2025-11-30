@@ -175,7 +175,7 @@ local addRaceSettings = function()
             { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
         )
         race_settings.featured_flying_groups = {
-            { { "distractor", "destroyer" }, { 1, 1 }, 75 },
+            { { "distractor", "destroyer" }, { 1, 1 }, 100 },
             { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
             { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
         }

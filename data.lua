@@ -70,6 +70,24 @@ if not data.raw['mod-data'] or not data.raw['mod-data'][MOD_DATA_INTERPLANETARY_
         }
     })
 end
+
+--- Use to define tile to use when enemy places its bridge tile
+if not data.raw['mod-data'] or not data.raw['mod-data'][MOD_DATA_SURFACE_BRIDGE_TILES] then
+    data.extend({
+        {
+            type = 'mod-data',
+            name = MOD_DATA_SURFACE_BRIDGE_TILES,
+            data_type = 'erm_data',
+            data = {}
+        }
+    })
+end
+
+data.raw['mod-data'][MOD_DATA_SURFACE_BRIDGE_TILES].data['valcanus'] = 'volcanic-ash-soil'
+data.raw['mod-data'][MOD_DATA_SURFACE_BRIDGE_TILES].data['fulgoran'] = 'fulgoran-sand'
+data.raw['mod-data'][MOD_DATA_SURFACE_BRIDGE_TILES].data['gleba'] = 'lowland-deadskin-mold'
+data.raw['mod-data'][MOD_DATA_SURFACE_BRIDGE_TILES].data['aquilo'] = 'ice-smooth'
+
 --- Offical planets --
 data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data["aquilo"] = true
 --- 3rd party planets with their defined uniqueness, not suitable for invasion.

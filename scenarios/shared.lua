@@ -6,7 +6,7 @@
 
 local ScenarioHelper = {}
 
-function ScenarioHelper.build_base(surface, blueprint_string, x_offset, y_offset)
+function ScenarioHelper.build_base(surface, blueprint_string, x_offset, y_offset, force_name)
     x_offset = x_offset or 0
     y_offset = y_offset or 0
     local bp_entity = surface.create_entity { name = "item-on-ground", position = { 10, 10 }, stack = "blueprint" }
@@ -15,7 +15,7 @@ function ScenarioHelper.build_base(surface, blueprint_string, x_offset, y_offset
     bp_entity.destroy()
     for _, entity in pairs(util.table.deepcopy(bp_entities)) do
         entity.position = { entity.position.x + x_offset, entity.position.y + y_offset }
-        entity.force = "player"
+        entity.force = force_name or "player"
         entity.raise_built = true
         surface.create_entity(entity)
     end

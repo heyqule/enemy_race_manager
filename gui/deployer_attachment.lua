@@ -17,6 +17,11 @@ function DeployerAttachement.show(player, unit_number)
     local gui = player.gui.relative
     local force_index = player.force.index
 
+    local data = ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
+    if not data then
+        return
+    end
+
     local anchor = {gui=defines.relative_gui_type.assembling_machine_gui, position=defines.relative_gui_position.right}
     local container = gui.add{
         type = "frame",
@@ -31,8 +36,6 @@ function DeployerAttachement.show(player, unit_number)
     container.style.vertically_stretchable = false
 
     container.add { type = "label", caption = { "gui-rallypoint.current_location" }, style = "bold_label" }
-
-    local data = ArmyDeploymentProcessor.get_deployer_data(force_index, unit_number)
 
     if data.rally_point and data.rally_point.x then
         container.add { type = "label", caption = data.rally_point.x .. "," .. data.rally_point.y }
@@ -118,7 +121,7 @@ function DeployerAttachement.go_to(player)
     local ui = player.gui.relative[DeployerAttachement.root_name]
     if ui then
         local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
-        if deployer_data.rally_point then
+        if deployer_data and deployer_data.rally_point then
             player.set_controller {
                 type = defines.controllers.remote,
                 position = deployer_data.rally_point
@@ -142,7 +145,7 @@ function DeployerAttachement.unset_control_group(player)
     local ui = player.gui.relative[DeployerAttachement.root_name]
     if ui then
         local deployer_data = ArmyDeploymentProcessor.get_deployer_data(player.force.index, ui.tags.unit_number)
-        if deployer_data.control_group_user then
+        if deployer_data and deployer_data.control_group_user then
             ArmyDeploymentProcessor.unset_control_group(player, ui.tags.unit_number)
             DeployerAttachement.show(player, ui.tags.unit_number)
         end
