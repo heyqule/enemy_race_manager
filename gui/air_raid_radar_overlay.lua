@@ -4,6 +4,7 @@
 --- DateTime: 11/8/2025 12:27 AM
 ---
 local Config = require("__enemyracemanager__/lib/global_config")
+local AirRaidRadar = require('lib/air_raid_radar')
 
 local get_render_object_id = rendering.get_object_by_id
 local draw_sprite = rendering.draw_sprite
@@ -89,6 +90,7 @@ local remove_radar_overlay = function(player, entity)
         end
         radar_map_data[player.index][entity.unit_number] = nil
         storage.active_air_raid_radars[entity.unit_number] = nil
+        AirRaidRadar.clear_radar_signal(entity)
     end
 end
     
@@ -127,6 +129,7 @@ AirRaidRadarOverlay.remove_radar = function(event)
                 remove_radar_overlay(player, entity)
             end
         end
+        AirRaidRadar.clear_radar_signal(entity)
     end
 end
 

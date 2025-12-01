@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.55
+Date: 2025-11-31
+
+  Changes:
+    - Removing air radar during an air raid removes the air raid signal in constant combinator.
+
+  Bugfixes:
+    - Fixed an issue where air raid alarm could not automatically turned off.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.54
 Date: 2025-11-31
 
