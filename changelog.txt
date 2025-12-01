@@ -14,7 +14,7 @@ Date: 2025-11-31
 
   Changes:
     - Prevent enemy bridge to build within 5 chunks of spawning point. 
-    
+
   Bugfixes:
     - Fixed a crash after using uWu delivery while there is an attack group in the queue.
     - Fixed an issue where flying group tracker did not properly remove the group after the group is killed.
