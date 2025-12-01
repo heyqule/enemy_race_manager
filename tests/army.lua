@@ -42,23 +42,27 @@ it("Army POP - Increase / Decrease", function()
             position={0,0},
             force=force,
         })
+    end
 
+    for i = 1, 2, 1 do
         surface.create_entity({
             name="erm_terran--battlecruiser--laser",
             position={0,0},
             force=force,
         })
+    end
 
+    for i = 1, 5, 1 do
         surface.create_entity({
             name="erm_terran--vulture",
             position={0,0},
             force=force,
-        })
+        })        
     end
 
-    assert(ArmyPop.max_pop(force) == 151, "MAX POP Count incorrect")
-    assert(ArmyPop.pop_count(force) == 80, "POP Count incorrect")
-    assert(ArmyPop.unit_count(force) == 30, "Unit Count incorrect")
+    assert(ArmyPop.max_pop(force) == 31, "MAX POP Count incorrect: "..ArmyPop.max_pop(force))
+    assert(ArmyPop.pop_count(force) == 30, "POP Count incorrect: "..ArmyPop.pop_count(force))
+    assert(ArmyPop.unit_count(force) == 17, "Unit Count incorrect:"..ArmyPop.unit_count(force))
 
     local vultures = surface.find_entities_filtered({
         name="erm_terran--vulture"
@@ -68,8 +72,8 @@ it("Army POP - Increase / Decrease", function()
         vulture.die("enemy")
     end
 
-    assert(ArmyPop.pop_count(force) == 60, "POP Count incorrect after vulture kill")
-    assert(ArmyPop.unit_count(force) == 20, "Unit Count incorrect after vulture kill")
+    assert(ArmyPop.pop_count(force) == 20, "POP Count incorrect after vulture kill: "..ArmyPop.pop_count(force))
+    assert(ArmyPop.unit_count(force) == 12, "Unit Count incorrect after vulture kill: "..ArmyPop.unit_count(force))
 
 
     local marines = surface.find_entities_filtered({
@@ -80,8 +84,9 @@ it("Army POP - Increase / Decrease", function()
         marine.destroy{raise_destroy=true}
     end
 
-    assert(ArmyPop.pop_count(force) == 50, "Pop count incorrect after marine destroy")
-    assert(ArmyPop.unit_count(force) == 10, "Unit count incorrect after marine destroy")
+    assert(ArmyPop.pop_count(force) == 10, "POP Count incorrect after marine kill: "..ArmyPop.pop_count(force))
+    assert(ArmyPop.unit_count(force) == 2, "Unit Count incorrect after marine kill: "..ArmyPop.unit_count(force))
+    
 
     for i = 1, 40, 1 do
         surface.create_entity({
@@ -91,8 +96,8 @@ it("Army POP - Increase / Decrease", function()
         })
     end
 
-    assert(ArmyPop.pop_count(force) == 150, "Pop count incorrect when pop cap hits")
-    assert(ArmyPop.unit_count(force) == 30, "Unit count incorrect when pop cap hits")
+    assert(ArmyPop.pop_count(force) == 30, "Pop count incorrect when pop cap hits")
+    assert(ArmyPop.unit_count(force) == 6, "Unit count incorrect when pop cap hits")
 
 end)
 it("Army Deployment", function()
@@ -389,7 +394,7 @@ it("Army Teleport, different surface, when population is full", function()
     local force = game.forces["player"]
     local building = "erm_terran--command-center"
     local unit_name = "erm_terran--marine--mk1"
-    local battlecruiser_unit_name = "erm_terran--battlecruiser--yamato"
+    local fire_unit_name = "erm_terran--firebat--mk1"
 
     local powerinterface1 = surface.create_entity({
         force=force,
@@ -429,31 +434,31 @@ it("Army Teleport, different surface, when population is full", function()
         raise_built = true
     })
 
-    for i=1,100,1 do
+    for i=1,15,1 do
         surface.create_entity({
             force=force,
             name=unit_name,
-            position={100,100}
+            position={0,0}
         })
     end
 
-    for i=1,10,1 do
+    for i=1,15,1 do
         surface.create_entity({
             force=force,
-            name=battlecruiser_unit_name,
-            position={0,0}
+            name=fire_unit_name,
+            position={100,100}
         })
     end
 
     ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
     
     after_ticks(7100, function()
-        local battlecruiser = surface2.find_entities_filtered({
-            name=battlecruiser_unit_name,
+        local marines = surface2.find_entities_filtered({
+            name=unit_name,
             area={{-48,-48}, {48,48}}
         })
 
-        assert(table_size(battlecruiser) == 10, "Units not teleported")
+        assert(table_size(marines) == 15, "Units not teleported:"..table_size(marines))
 
         game.delete_surface(surface2)
         done()

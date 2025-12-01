@@ -34,7 +34,10 @@ local function queue_landfill_bridge(surface, posA, posB)
 
     local placed_rows = 0
     local step = 0
-
+    local spawning_area = {
+        left_top = {x=posB.x-160, y=posB.y-160},
+        right_bottom = {x=posB.x+160,y=posB.y+160}
+    }
     while placed_rows < LONG do
         -- Move forward by integer steps
         local base_x = posA.x + nx * step
@@ -50,7 +53,15 @@ local function queue_landfill_bridge(surface, posA, posB)
             local y = base_y + py * W
 
             local tile = surface.get_tile(x, y)
-            if tile.collides_with("water_tile") then
+            if tile.collides_with("water_tile") and 
+               not Position.inside(
+                   {
+                       x=x,
+                       y=y
+                   },
+                   spawning_area
+               )
+            then
                 row_had_water = true
                 table.insert(positions, {x, y})
             end

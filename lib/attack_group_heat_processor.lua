@@ -50,7 +50,7 @@ AttackGroupHeatProcessor.remove_surface = function(surface_index)
         if storage.attack_heat[active_race] and storage.attack_heat[active_race][surface_index] then
             storage.attack_heat[active_race][surface_index] = nil
             AttackGroupHeatProcessor.aggregate_heat(active_race)
-            storage.attack_heat_last_surface[active_race] = 1
+            storage.attack_heat_last_surface[active_race] = nil
         end
     end
 end
@@ -168,11 +168,14 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             return nil
         end
 
+        local sdata_key, surface_dat
         if not storage.attack_heat_last_surface[force_name] then
-            storage.attack_heat_last_surface[force_name] = 1
+            sdata_key, surface_dat = next(surface_data)
+            storage.attack_heat_last_surface[force_name] = sdata_key
+        else
+            sdata_key, surface_dat = next(surface_data, storage.attack_heat_last_surface[force_name])
         end
-
-        local sdata_key, surface_dat = next(surface_data, storage.attack_heat_last_surface[force_name])
+        
         if surface_dat and surface_dat.has_attack_beacon then
             return_surface = game.surfaces[surface_dat.surface_index]
             storage.attack_heat_last_surface[force_name] = sdata_key

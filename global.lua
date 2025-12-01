@@ -19,7 +19,7 @@ GLEBA_FORCE_AUTOCONTROL_NAME = "gleba_enemy_base"
 DEBUG_MODE = false
 --- Enable this flag when running tests.  It forces some chance based logics to run.
 TEST_MODE = false
---- ENABLE Lengthy test. Typical run 10s+ to run.
+--- ENABLE Lengthy test. Typical need 10s+ to run.
 ENABLE_LENGTHY_TESTS = false
 --- For debugging beacons
 BEACON_SELECTABLE = false

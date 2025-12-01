@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.54
+Date: 2025-11-31
+
+  Changes:
+    - Prevent enemy bridge to build within 5 chunks of spawning point. 
+    
+  Bugfixes:
+    - Fixed a crash after using uWu delivery while there is an attack group in the queue.
+    - Fixed an issue where flying group tracker did not properly remove the group after the group is killed.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.53
 Date: 2025-11-30
 
@@ -9,8 +20,8 @@ Date: 2025-11-30
     - Added "scout" tip and trick under custom attack group.
     - Added "pathing" tip and trick for under custom attack group.
     - Fixed locale for engineer army recipes.
-    - Corrupted distractor top damage from 80 -> 50 (100 raw DPS)
-    - Corrupted defender top damage from  28 -> 32 (128 raw DPS)  
+    - Changed Corrupted distractor top damage, 80 -> 50 (100 raw DPS)
+    - Changed Corrupted defender top damage,  28 -> 32 (128 raw DPS)  
 
   Bugfixes:
     - Fixed a crash when you click on a deployer from another force.

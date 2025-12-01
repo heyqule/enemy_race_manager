@@ -17,6 +17,7 @@ AirRaidRadarOverlay.init_globals = function()
     -- }
     storage.air_raid_radar_map_data = storage.air_raid_radar_map_data or {}
     storage.air_raid_radars = storage.air_raid_radars or {}
+    storage.active_air_raid_radars = storage.active_air_raid_radars or {}
 end
 
 local valid_entity = {
@@ -87,6 +88,7 @@ local remove_radar_overlay = function(player, entity)
             end
         end
         radar_map_data[player.index][entity.unit_number] = nil
+        storage.active_air_raid_radars[entity.unit_number] = nil
     end
 end
     

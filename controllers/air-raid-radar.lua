@@ -61,7 +61,6 @@ end
 local set_radar_signal = function(radar)
     local constant_combinators = get_combinators(radar)
     if not constant_combinators then return end
-    
     for _, combinator in pairs(constant_combinators) do
         local cb = combinator.get_control_behavior()
         if cb and cb.type == defines.control_behavior.type.constant_combinator then
@@ -103,11 +102,29 @@ local clear_radar_signal = function(radar)
     end
 end
 
+local increase_radar_tracking_count = function(radar_number)
+    if storage.active_air_raid_radars[radar_number] then
+        storage.active_air_raid_radars[radar_number] = storage.active_air_raid_radars[radar_number] + 1
+    else
+        storage.active_air_raid_radars[radar_number] = 1
+    end
+end
+
+local decrease_radar_tracking_count = function(radar_number)
+    if storage.active_air_raid_radars[radar_number] then
+        storage.active_air_raid_radars[radar_number] = storage.active_air_raid_radars[radar_number] - 1
+        if storage.active_air_raid_radars[radar_number] <= 0 then
+            storage.active_air_raid_radars[radar_number] = nil
+        end
+    end
+end
+
 AirRaidRadar.scan = function(event)
     local radar = event.radar
 
     if radar and radar.valid then
         --local profiler = game.create_profiler()
+        local radar_number = radar.unit_number
         local surface = radar.surface
         local force = radar.force
         local flying_tracker = storage.flying_groups_tracker[surface.index]
@@ -159,13 +176,22 @@ AirRaidRadar.scan = function(event)
                             }, { r = 1, g = 0, b = 0 })
                             group_data.showed_warning = true
                         end
+                        
+                        increase_radar_tracking_count(radar_number)
+  
                     else
                         kill_tags(group_data)
-                        storage.flying_groups_tracker[surface.index][group_id] = nil 
-                    end                        
+                        decrease_radar_tracking_count(radar_number)
+                    end
+                else
+                    kill_tags(group_data)
+                    decrease_radar_tracking_count(radar_number)
+                    storage.flying_groups_tracker[surface.index][group_id] = nil
                 end
             end
-        else
+        end
+        
+        if not storage.active_air_raid_radars[radar_number] then
             clear_radar_signal(radar)
         end
 
