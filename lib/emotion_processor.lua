@@ -499,9 +499,6 @@ function EmotionProcessor.queue()
 end
 
 function EmotionProcessor.run(force_name)
-    if type(force_name) == "table" then
-        force_name = force_name[1]
-    end
     local data = storage.emotion[force_name]
     if data and attack_functions[data.current_emo] then
         attack_functions[data.current_emo](data)

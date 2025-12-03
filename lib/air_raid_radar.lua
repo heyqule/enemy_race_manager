@@ -72,7 +72,8 @@ AirRaidRadar.scan = function(event)
         local surface = radar.surface
         local force = radar.force
         local flying_tracker = storage.flying_groups_tracker[surface.index]
-        local signal_set = false  -- Track if we've set the signal to avoid redundant operations
+        local has_active_group = false  -- Track if we've set the signal to avoid redundant operations
+        local radar_is_active = storage.active_air_raid_radars[radar_number]
         
         if flying_tracker and next(flying_tracker) then
             for group_id, group_data in pairs(flying_tracker) do
@@ -99,12 +100,14 @@ AirRaidRadar.scan = function(event)
                         })
 
                         table.insert(storage.flying_groups_tracker[surface.index][group_id].tags, {entity = draw_obj, tick = event.tick})
+
                         -- Set radar signal only once per scan, not for each group
-                        if not signal_set then
+                        if not has_active_group and not radar_is_active then
                             AirRaidRadar.set_radar_signal(radar)
-                            signal_set = true
                             storage.active_air_raid_radars[radar_number] = true
                         end
+
+                        has_active_group = true
 
                         if group_data.is_precision_attack == true and
                                 group_data.showed_warning == false and
@@ -131,7 +134,7 @@ AirRaidRadar.scan = function(event)
             end
         end
 
-        if not signal_set and storage.active_air_raid_radars[radar_number] then
+        if not has_active_group and radar_is_active then
             AirRaidRadar.clear_radar_signal(radar)
             storage.active_air_raid_radars[radar_number] = nil
         end

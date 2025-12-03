@@ -91,7 +91,7 @@ laser_drone.attack_parameters = {
                     },
                     {
                         type = "create-entity",
-                        entity_name = "explosion"
+                        entity_name = "erm-fire-explosion-air_normal-1"
                     },
                 },
                 target_effects = {

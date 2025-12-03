@@ -696,7 +696,7 @@ function BossProcessor.unset()
         current_emo = EmotionConstants.EMO_PEACEFUL,
     }
     EmotionProcessor.switch(switch_data)
-    EmotionProcessor.run(switch_data)
+    EmotionProcessor.run(boss_data.force_name)
     
     DebugHelper.print("BossProcessor: Destroy Beacons...")
     destroy_beacons()

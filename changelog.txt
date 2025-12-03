@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.56
+Date: 2025-12-03
+
+  Changes:
+    - Fixed Engineer army "tank - cannon" having more health than intended.
+    - Changed suicide-drone explosion graphic.
+    - Added force = "not-same" when copying explosive rocket with WeaponRig.standardize_explosive_rocket_damage().      
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.55
 Date: 2025-11-31
 

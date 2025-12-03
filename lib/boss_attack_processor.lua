@@ -186,7 +186,7 @@ local select_attack = function(mod_name, attacks, tier)
             data = set_optional_data(data, attacks, i, "unique_position")
             data = set_optional_data(data, attacks, i, "can_aim_attackable_targets")
             data = set_optional_data(data, attacks, i, "only_targets_radar")
-            data = set_optional_data(data, attacks, i, "select_neayby_enemy_count")
+            data = set_optional_data(data, attacks, i, "select_nearby_enemy_count")
             
             break
         end
@@ -544,7 +544,7 @@ local attack_select_nearby_enemy = function(data)
     local surface = data.surface
     local start_position = data.entity_position
     local entity_force = data.entity_force
-    local target_count = math.floor(data.select_neayby_enemy_count * GlobalConfig.max_group_size())
+    local target_count = math.floor(data.select_nearby_enemy_count * GlobalConfig.max_group_size())
     local spawn_units = surface.find_entities_filtered({
         position = start_position,
         radius = bossRadius,

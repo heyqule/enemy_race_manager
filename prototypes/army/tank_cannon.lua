@@ -176,7 +176,7 @@ data:extend({
         icons = icons,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "not-flammable" },
         has_belt_immunity = true,
-        max_health = 600 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 75 * ERMPlayerUnitHelper.get_health_multiplier(),
         order = prefix.."--controllable--"..name,
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),

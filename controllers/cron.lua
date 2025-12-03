@@ -121,7 +121,7 @@ cron_switch = {
         InterplanetaryAttacks.scan(table.unpack(args))
     end,
     ['EmotionProcessor.run'] = function(args)
-        EmotionProcessor.run(args)
+        EmotionProcessor.run(table.unpack(args))
     end,
     ['delayed_entity_destroy'] = function(args)
         if args[1] and args[1].valid then

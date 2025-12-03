@@ -160,6 +160,7 @@ data:extend(
             order = "m1",
             indent = 2,
             starting_status = "suggested",
+            image = "__enemyracemanager_assets__/graphics/tips/air_raid_radar.jpg"
         },
         {
             type = "tips-and-tricks-item",

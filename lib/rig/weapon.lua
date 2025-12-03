@@ -102,6 +102,7 @@ function WeaponRig.standardize_explosive_rocket_damage(data, name, radius)
         type = "damage",
         damage = { amount = 3.5, type = "explosion" }
     }
+    data["action"]["action_delivery"]["target_effects"][6]['action']['force'] = "not-same"
     data["action"]["action_delivery"]["target_effects"][6]['action']['radius'] = radius or 3
     data["action"]["action_delivery"]["target_effects"][6]['action']['action_delivery']['target_effects'][1] = {
         type = "damage",
