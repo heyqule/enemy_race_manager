@@ -10,7 +10,7 @@
     "base >= 2.0.72",
     "?space-age >= 2.0.0",
     "?quality >= 2.0.0",
-    "enemyracemanager_assets >= 2.0.2",
+    "enemyracemanager_assets >= 2.0.3",
     "erm_unit_control >= 1.1.0",
     "erm_libs >= 2.0.7",
     "~zerm_postprocess >= 2.0.0",
