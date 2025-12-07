@@ -243,6 +243,14 @@ local prepare_world = function()
     -- One to two nauvis day of gathering time.
     game.map_settings.unit_group.min_group_gathering_time = 7 * minute
     game.map_settings.unit_group.max_group_gathering_time = 14 * minute
+
+    if settings.startup["enemyracemanager-free-for-all"].value then
+        local path_finder = game.map_settings.path_finder
+        local work_multiplier = settings.startup["enemyracemanager-free-for-all-path-finder-resource"].value
+        --path_finder.max_steps_worked_per_tick = 1000 * work_multiplier
+        path_finder.max_work_done_per_tick = 8000 * work_multiplier
+    end
+
     -- Fresh technology effects
     for _, force in pairs(game.forces) do
         force.reset_technology_effects()

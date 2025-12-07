@@ -55,15 +55,6 @@ Overhaul mod compatibility will be done when they become available.
 - Have been causing unexpected issues.  Expect anomalies when you use it.
 - I have fixed some of them. Such as turrets can't hit air unit or other ground structures.
 
-
-#### Alien Biomes
-- ~~It turns any nauvis based planet into barren land (no rock or tree) as it modified the base game autoplace algo.~~
-- ~~Affected planets: Earth and Auir.~~
-- ~~Not recommended to use if you plan to visit the above planets.~~
-- The above has been fixed in the latest build of protoss and factorio-world(redarmy).
-- This section will be removed in a future release.
-
-
 #### Any mod that changes the properties of space-age planets (e.g Solar System ++)
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
 - Change space-age planet may lead to missing features or crashes.  Use at your own risk.

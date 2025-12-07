@@ -302,15 +302,6 @@ local generate_unit_queue = function(
     --- Makes the group to kill on sight.
     local always_angry = options.always_angry or false
 
-
-    local queue_length = math.ceil(units_number / AttackGroupProcessor.UNIT_PER_BATCH)
-    local last_queue = queue_length - 1
-    local last_queue_unit = units_number % AttackGroupProcessor.UNIT_PER_BATCH
-    if last_queue_unit == 0 then
-        last_queue_unit = AttackGroupProcessor.UNIT_PER_BATCH
-    end
-    local i = 0
-
     local tiers = nil
     local is_precision_attack = false
     if group_type == AttackGroupProcessor.GROUP_TYPE_FLYING then
@@ -320,6 +311,7 @@ local generate_unit_queue = function(
         local spawn_as_flying_unit_precision = RaceSettingsHelper.can_spawn(Config.flying_squad_precision_chance())
 
         if flying_unit_precision_enabled and spawn_as_flying_unit_precision then
+            units_number = math.ceil(units_number / 2)
             is_precision_attack = true
         end
     elseif group_type == AttackGroupProcessor.GROUP_TYPE_DROPSHIP then
@@ -328,6 +320,15 @@ local generate_unit_queue = function(
     else
         tiers = AttackGroupProcessor.GROUP_TIERS[QualityProcessor.get_tier(force.name, surface.name)]
     end
+
+    local queue_length = math.ceil(units_number / AttackGroupProcessor.UNIT_PER_BATCH)
+    local last_queue = queue_length - 1
+    local last_queue_unit = units_number % AttackGroupProcessor.UNIT_PER_BATCH
+    if last_queue_unit == 0 then
+        last_queue_unit = AttackGroupProcessor.UNIT_PER_BATCH
+    end
+    local i = 0
+    
     local tiers_units = {}
     for index, tier in pairs(tiers) do
         tiers_units[index] = math.floor((units_number * tier) + 0.5)

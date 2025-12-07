@@ -123,10 +123,10 @@ if settings.startup["enemyracemanager-enhance-defense"].value == true then
     data.raw["armor"]["heavy-armor"]["resistances"] = armor_change_resistance(20, 10)
     data.raw["armor"]["modular-armor"]["resistances"] = armor_change_resistance(25, 15)
     data.raw["armor"]["power-armor"]["resistances"] = armor_change_resistance(35, 20)
-    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(45, 20)
+    data.raw["armor"]["power-armor-mk2"]["resistances"] = armor_change_resistance(60, 30)
 
     if mods['space-age'] and data.raw["armor"]["mech-armor"] then
-        data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(60, 20)
+        data.raw["armor"]["mech-armor"]["resistances"] = armor_change_resistance(75, 40)
     end
 
     -- Buff vehicles

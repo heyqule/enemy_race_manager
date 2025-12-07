@@ -3,6 +3,11 @@
 --- Created by heyqule.
 --- DateTime: 7/24/2021 6:52 PM
 ---
+--- This custom helper is designed to work when requires() from external mods.  Hence some of the functions use remote.call.
+--- storage objects are not SHARED between mods.    
+--- e.g
+--- each mod get its own version of storage.force_entity_name_cache in get_name_token().
+---
 require("__enemyracemanager__/setting-constants")
 require("util")
 local String = require('__erm_libs__/stdlib/string')
@@ -35,6 +40,7 @@ if script.active_mods["space-age"] then
     })
 end
 
+--- Kept a local copy of entity name token
 local get_name_token = function(name)
     if storage.force_entity_name_cache and storage.force_entity_name_cache[name] then
         return storage.force_entity_name_cache[name]
@@ -55,6 +61,8 @@ local get_name_token = function(name)
     return storage.force_entity_name_cache[name]
 end
 
+--- storage objects are kept within the mods the requires it.  
+--- Kept a local copy of race settings
 local get_race_settings = function(force_name, reload)
     if storage.custom_attack_race_settings == nil then
         storage.custom_attack_race_settings = {}
@@ -151,7 +159,11 @@ local drop_unit = function(event, force_name, unit_name, count, position)
         local idx = 0;
         while idx < count do
             remote.call('enemyracemanager','skip_roll_quality')
-            local entity = surface.create_entity({ name = final_unit_name, position = position, force = source_entity_force_name })
+            local entity = surface.create_entity({ 
+                name = final_unit_name, 
+                position = position, 
+                force = source_entity_force_name 
+            })
             if entity and entity.type == "unit" then
                 entity.commandable.set_command({
                     type = defines.command.attack_area,

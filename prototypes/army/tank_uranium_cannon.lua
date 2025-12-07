@@ -92,10 +92,10 @@ data:extend({
         hidden = true,
         collision_box = {{-0.3, -1.1}, {0.3, 1.1}},
         acceleration = 0,
+        force_condition = "not-same",
         action =
         {
             type = "direct",
-            force = "not-same",
             action_delivery =
             {
                 type = "instant",
@@ -103,7 +103,7 @@ data:extend({
                 {
                     {
                         type = "damage",
-                        damage = {amount = 250, type = "physical"}
+                        damage = {amount = 200, type = "physical"}
                     },
                     {
                         type = "create-entity",
@@ -138,7 +138,7 @@ data:extend({
                                 {
                                     {
                                         type = "damage",
-                                        damage = {amount = 175, type = "explosion"}
+                                        damage = {amount = 100, type = "explosion"}
                                     },
                                     {
                                         type = "create-entity",
@@ -232,7 +232,7 @@ ArmyEconomyHelper.create_item({
     name = name,
     icons = icons,
     subgroup = prefix.."--erm_controllable",
-    stack_size = 20,
+    stack_size = 10,
     weight = 50,
 })
 

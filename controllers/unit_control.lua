@@ -53,13 +53,17 @@ local on_unit_group_created = function(event)
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
         if is_group_tracker_group then
-            if storage.enemy_surfaces[group.surface.name] == nil or AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] then
+            if AttackGroupProcessor.FLYING_GROUPS[storage.group_tracker[force_name].group_type] or 
+               storage.enemy_surfaces[group.surface.name] == nil 
+            then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
             end
         elseif erm_group then
-            if storage.enemy_surfaces[group.surface.name] or erm_group.is_aerial then
+            if  erm_group.is_aerial or
+                storage.enemy_surfaces[group.surface.name] == nil  
+            then
                 scout_unit_name = 2
             else
                 scout_unit_name = 1
@@ -69,8 +73,6 @@ local on_unit_group_created = function(event)
         elseif not race_settings.is_primitive and UtilHelper.can_spawn(75) then
             if storage.enemy_surfaces[group.surface.name] then
                 scout_unit_name = 2
-            else
-                scout_unit_name = 1
             end
         end
 

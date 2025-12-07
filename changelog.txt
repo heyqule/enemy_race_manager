@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.57
+Date: 2025-12-07
+
+  Changes:
+    - Changed default scout spawn for regular groups to be aerial scout.
+    - Changed aerial precision strike group to use 50% of their group size.  Dropship group is not affected.
+    - Changed power-armor-mk2 resistances 45 -> 60, flat dmg reduction 20 -> 30
+    - Changed mech-armor resistances 60 -> 75, flat dmg reduction 20 -> 40
+    - Army - Elite miner: HP 2000 -> 1600, base damage 150 -> 30, fire resistance {99%, 500} 
+    - Army - Elite Shotgun: HP 1000 -> 750, fire resistance {99%, 250}
+    - Army - Flamethrower: HP 2000 -> 900, fire resistance {99%, 500}
+    - Army - Uranium Tank: Target base damage 250 -> 200, AOE base damage 175 -> 100
+    - Added "Free for all path finder resource" option to adjust path finder workload under free for al mode.  Higher value increase path finding responsiveness.
+    - Removed Alien Biomes from compatibility doc.
+
+  Bugfixes:
+    - Fixed army tanks friendly fire damage
+    - Fixed Army - Elite miner's mining animation.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.56
 Date: 2025-12-03
 

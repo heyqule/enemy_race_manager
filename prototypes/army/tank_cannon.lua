@@ -91,11 +91,11 @@ data:extend({
         flags = {"not-on-map"},
         hidden = true,
         collision_box = {{-0.3, -1.1}, {0.3, 1.1}},
+        force_condition = "not-same",
         acceleration = 0,
         action =
         {
             type = "direct",
-            force = "not-same",
             action_delivery =
             {
                 type = "instant",
@@ -232,7 +232,7 @@ ArmyEconomyHelper.create_item({
     name = name,
     icons = icons,
     subgroup = prefix.."--erm_controllable",
-    stack_size = 20,
+    stack_size = 10,
     weight = 50,
 })
 

@@ -43,7 +43,7 @@ local collision_box = { { -0.2, -0.2 }, { 0.2, 0.2 } }
 local selection_box = { { -0.4, -1.4 }, { 0.4, 0.2 } }
 local sticker_box = { { -0.2, -1 }, { 0.2, 0 } }
 
-local mining_animation = human_animation['animations'][1]['mining_with_tool']
+local mining_animation = human_animation['animations'][2]['mining_with_tool']
 ERM_UnitTint.apply_runtime_tint(mining_animation['layers'][2])
 local prefix  = "player"
 local name = "miner_elite"
@@ -60,17 +60,17 @@ local icons = {
         shift = {-9,9}
     },
     {
-        icon = "__enemyracemanager_assets__/graphics/steel-axe.png",
+        icon = "__base__/graphics/icons/signal/signal_2.png",
         icon_size = 64,
         scale = 0.25,
         shift = {-9,-9}
-    },
+    }
 }
 local resistances = {
     acid = {75},
     poison = {75},
     physical = {75},
-    fire = {95, 500},
+    fire = {99, 500},
     explosion = {75},
     laser = {75},
     electric = {75},
@@ -86,7 +86,7 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air", "not-flammable" },
         has_belt_immunity = false,
-        max_health = 220 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 160 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),
@@ -95,7 +95,7 @@ data:extend({
         selection_box = selection_box,
         sticker_box = selection_box,
         vision_distance = vision_distance,
-        movement_speed = 0.25 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
         map_color = ERM_UnitTint.tint_army_color(),
         repair_speed_modifier = 0.5,
         distraction_cooldown = distraction_cooldown,
@@ -107,7 +107,7 @@ data:extend({
             range = attack_range,
             cooldown = 75,
             cooldown_deviation = 0.1,
-            ammo_type = ERM_UnitHelper.make_unit_melee_ammo_type(150),
+            ammo_type = ERM_UnitHelper.make_unit_melee_ammo_type(30),
             damage_modifier = ERMPlayerUnitHelper.get_damage_multiplier(),
             sound = {
                 variations = {

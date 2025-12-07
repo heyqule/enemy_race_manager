@@ -196,6 +196,15 @@ data:extend {
         allowed_values = { 5, 8, 10, 12, 15 },
         order = "enemyracemanager-602",
     },
+    {
+        type = "double-setting",
+        name = "enemyracemanager-free-for-all-path-finder-resource",
+        description = "enemyracemanager-free-for-all-path-finder-resource",
+        setting_type = "startup",
+        default_value = 1,
+        allowed_values = { 1, 1.5, 2, 2.5, 3, 4, 5},
+        order = "enemyracemanager-603",
+    },
     --- Startup: Boss
     {
         type = "string-setting",

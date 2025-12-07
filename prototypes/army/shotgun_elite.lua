@@ -21,12 +21,12 @@ local HumanSound = require('__enemyracemanager_assets__/sound/human_sound')
 local human_animation = HumanAnimation.get_animation()
 --Level 1 animation, level 2 and 3 are armored animations
 -- types: running, running_with_gun, mining_with_tool
-local running_animation = human_animation['animations'][2]['running']
+local running_animation = human_animation['animations'][3]['running']
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][2])
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][4])
 ERM_AnimationRig.adjust_still_frame_all(running_animation['layers'], CHARACTER_RIG_STILL_FRAME)
 
-local gun_animation = human_animation['animations'][2]['idle_with_gun']
+local gun_animation = human_animation['animations'][3]['idle_with_gun']
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][2])
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][4])
 
@@ -68,7 +68,7 @@ local resistances = {
     acid = {75},
     poison = {75},
     physical = {75},
-    fire = {95, 500},
+    fire = {99, 350},
     explosion = {75},
     laser = {75},
     electric = {75},
@@ -84,7 +84,7 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air" },
         has_belt_immunity = false,
-        max_health = 120 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 75 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),
@@ -189,7 +189,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     category = prefix.."--erm_controllable",
 })
 
-table.insert(data.raw['technology']['military-3']['effects'],         {
+table.insert(data.raw['technology']['modular-armor']['effects'],         {
     type = "unlock-recipe",
     recipe = prefix.."--controllable--"..name
 })
