@@ -68,7 +68,7 @@ robot_animations.distractor = {
                 direction_count = 16,
                 shift = util.by_pixel(0, -2.5),
                 y = 62,
-                scale = 0.5
+                scale = 1
             },
             {
                 filename = "__base__/graphics/entity/distractor-robot/distractor-robot-mask.png",
@@ -81,7 +81,7 @@ robot_animations.distractor = {
                 shift = util.by_pixel(0, -6.25),
                 tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
                 y = 37,
-                scale = 0.5
+                scale = 0.75,
             }
         }
     },
@@ -93,8 +93,8 @@ robot_animations.distractor = {
         height = 59,
         frame_count = 1,
         direction_count = 16,
-        shift = util.by_pixel(32.5, 19.25),
-        scale = 0.5,
+        shift = util.by_pixel(41, 19.25),
+        scale = 0.75,
         draw_as_shadow = true
     }
 }

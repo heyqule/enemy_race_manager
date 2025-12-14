@@ -68,7 +68,7 @@ robot_animations.defender = {
                 direction_count = 16,
                 shift = util.by_pixel(0, 0.25),
                 y = 59,
-                scale = 0.5
+                scale = 1
             },
             {
                 filename = "__base__/graphics/entity/defender-robot/defender-robot-mask.png",
@@ -82,7 +82,7 @@ robot_animations.defender = {
                 shift = util.by_pixel(0, -4.75),
                 tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
                 y = 21,
-                scale = 0.5
+                scale = 0.75,
             }
         }
     },
@@ -95,8 +95,8 @@ robot_animations.defender = {
         frame_count = 1,
         animation_speed = 1,
         direction_count = 16,
-        shift = util.by_pixel(25.5, 19),
-        scale = 0.5,
+        shift = util.by_pixel(36, 19),
+        scale = 0.75,
         draw_as_shadow = true
     }
 }

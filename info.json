@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.0.57",
+  "version": "2.0.58",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -20,7 +20,7 @@
     "?Explosive_biters >= 2.3.1",
     "?Cold_biters >= 2.0.9",
     "?Toxic_biters >= 2.0.4",
-    "?Kux-OrbitalIonCannon >= 3.8.0",
+    "(?)Kux-OrbitalIonCannon >= 3.8.0",
     "(?)maraxsis >= 1.23.36",
     "(?)distant-misfires >= 0.12.5",
     "(?)bobenemies >= 2.0.0",

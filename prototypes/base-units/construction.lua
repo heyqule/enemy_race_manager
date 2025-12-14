@@ -59,17 +59,33 @@ local robot_animations = {}
 robot_animations["construction-robot"] = {
 
     in_motion = {
-        filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
-        priority = "high",
-        line_length = 16,
-        width = 66,
-        height = 76,
-        frame_count = 1,
-        shift = util.by_pixel(0, -4.5),
-        direction_count = 16,
-        tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
-        y = 76,
-        scale = 0.5
+        layers = {
+            {
+                filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
+                priority = "high",
+                line_length = 16,
+                width = 66,
+                height = 76,
+                frame_count = 1,
+                shift = util.by_pixel(0, -4.5),
+                direction_count = 16,
+                y = 76,
+                scale = 0.75
+            },
+            {
+                filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
+                priority = "high",
+                line_length = 16,
+                width = 66,
+                height = 76,
+                frame_count = 1,
+                shift = util.by_pixel(0, -4.5),
+                direction_count = 16,
+                tint = { r = 0.5, g = 0, b = 1, a = 0.2 },
+                y = 76,
+                scale = 0.75
+            },
+        }
     },
 
     shadow_in_motion = {
@@ -79,9 +95,9 @@ robot_animations["construction-robot"] = {
         width = 104,
         height = 49,
         frame_count = 1,
-        shift = util.by_pixel(33.5, 18.75),
+        shift = util.by_pixel(46, 18.75),
         direction_count = 16,
-        scale = 0.5,
+        scale = 0.75,
         draw_as_shadow = true
     },
 

@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.58
+Date: 2025-12-10
+
+  Changes:
+    - Changed power-armor resistances 35 -> 45
+    - Moved Kux-OrbitalIonCannon from optional dependency to hidden optional dependency.
+    - Added "Recommended weapon levels" to enemy difficulty's tier list in trick and tips.
+    - Increase corrupted robots size for better visibility.
+    - Tuned tint for corrupted construction and logistic robots. 
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.57
 Date: 2025-12-07
 

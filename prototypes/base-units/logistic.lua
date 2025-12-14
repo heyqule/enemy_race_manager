@@ -56,17 +56,33 @@ local selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } }
 local robot_animations = {}
 robot_animations["logistic-robot"] = {
     in_motion = {
-        filename = "__base__/graphics/entity/logistic-robot/logistic-robot.png",
-        priority = "high",
-        line_length = 16,
-        width = 80,
-        height = 84,
-        frame_count = 1,
-        shift = util.by_pixel(0, -3),
-        direction_count = 16,
-        tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
-        y = 252,
-        scale = 0.5
+        layers = {
+            {
+                filename = "__base__/graphics/entity/logistic-robot/logistic-robot.png",
+                priority = "high",
+                line_length = 16,
+                width = 80,
+                height = 84,
+                frame_count = 1,
+                shift = util.by_pixel(0, -3),
+                direction_count = 16,
+                y = 252,
+                scale = 0.75
+            },
+            {
+                filename = "__base__/graphics/entity/logistic-robot/logistic-robot.png",
+                priority = "high",
+                line_length = 16,
+                width = 80,
+                height = 84,
+                frame_count = 1,
+                shift = util.by_pixel(0, -3),
+                direction_count = 16,
+                tint = { r = 0.5, g = 0, b = 1, a = 0.2 },
+                y = 252,
+                scale = 0.75
+            },
+        }
     },
     shadow_in_motion = {
         filename = "__base__/graphics/entity/logistic-robot/logistic-robot-shadow.png",
@@ -75,10 +91,10 @@ robot_animations["logistic-robot"] = {
         width = 115,
         height = 57,
         frame_count = 1,
-        shift = util.by_pixel(31.75, 19.75),
+        shift = util.by_pixel(41, 19.75),
         direction_count = 16,
         y = 57 * 3,
-        scale = 0.5,
+        scale = 0.75,
         draw_as_shadow = true
     }
 }

@@ -67,7 +67,7 @@ robot_animations.destroyer = {
                 frame_count = 1,
                 direction_count = 32,
                 shift = util.by_pixel(2.5, -1.25),
-                scale = 0.5
+                scale = 0.75,
             },
             {
                 filename = "__base__/graphics/entity/destroyer-robot/destroyer-robot-mask.png",
@@ -79,7 +79,7 @@ robot_animations.destroyer = {
                 direction_count = 32,
                 shift = util.by_pixel(2.5, -7),
                 tint = { r = 0.5, g = 0, b = 1, a = 0.5 },
-                scale = 0.5
+                scale = 0.75,
             }
         }
     },
@@ -91,8 +91,8 @@ robot_animations.destroyer = {
         height = 66,
         frame_count = 1,
         direction_count = 32,
-        shift = util.by_pixel(23.5, 19),
-        scale = 0.5,
+        shift = util.by_pixel(32, 19),
+        scale = 1,
         draw_as_shadow = true
     }
 }
