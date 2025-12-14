@@ -171,6 +171,7 @@ function makeLogisticRobot(level)
     robot["selection_box"] = selection_box
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
+    robot['damaged_trigger_effect'] = nil
     return robot
 end
 

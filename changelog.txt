@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.60
+Date: 2025-12-14
+
+  Changes:
+    - Removed damaged_trigger_effect on corrupted robots.
+
+  Bugfixes:
+    - Fixed some distractors and destroyers were running away without attacking.  Changed range_mod from "center-to-bounding-box" to "center-to-center".
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.59
 Date: 2025-12-14
 

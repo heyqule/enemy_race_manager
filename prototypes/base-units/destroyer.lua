@@ -129,6 +129,7 @@ function makeLevelCombatRobots(level, type)
     robot["attack_parameters"]["cooldown"] = ERM_UnitHelper.get_attack_speed(base_attack_speed, incremental_attack_speed, level)
     robot["attack_parameters"]["damage_modifier"] = ERM_UnitHelper.get_damage(electric_modifier, incremental_electric_modifier, level)
     robot["attack_parameters"]["range"] = attack_range
+    robot["attack_parameters"]["range_mode"] = "center-to-center"
     robot["attack_parameters"]["min_attack_distance"] = attack_range - 4
     robot["attack_parameters"]["animation"] = robot["run_animation"]
     robot["attack_parameters"]["ammo_category"] = "erm-biter-damage"
@@ -144,6 +145,8 @@ function makeLevelCombatRobots(level, type)
     robot["selection_box"] = selection_box
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
+    robot['damaged_trigger_effect'] = nil
+    print(serpent.block(robot["attack_parameters"]))
     return robot
 end
 

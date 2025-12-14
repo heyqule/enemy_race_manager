@@ -292,7 +292,7 @@ local on_ai_command_completed = function(event)
     
     
     --if DEBUG and storage.registered_groups[unit_number] then
-    --    print('on_ai_completed')
+    --    print('ERM: on_ai_completed')
     --    print(unit_number)
     --    print(DEBUG_BEHAVIOUR_RESULTS[event_result])
     --    local group = storage.registered_groups[unit_number].group
