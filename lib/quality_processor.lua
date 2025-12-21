@@ -282,6 +282,9 @@ function QualityProcessor.reset_globals()
 end
 
 function QualityProcessor.roll(entity)
+    if not entity or not entity.valid then
+        return entity
+    end
     -- is_running_roll to prevent recursive roll on create entity event
     -- storage.skip_quality_rolling allows bypassing roll manually
     -- unit from spawner doesn't need to roll

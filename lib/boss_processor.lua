@@ -713,7 +713,7 @@ end
 ---- Boss assist spawner create event handling
 function BossProcessor.assisted_spawner_spawns(event)
     local spawner_entity = event.source_entity
-    if spawner_entity then
+    if spawner_entity and spawner_entity.valid then
         local boss_data = storage.boss
         if
             (not RaceSettingsHelper.is_in_boss_mode() and not storage.boss.loading) or
@@ -747,6 +747,10 @@ end
 
 function BossProcessor.controlled_segmented_unit_dies(event)
     local segmented_entity = event.source_entity
+    if not segmented_entity or not segmented_entity.valid then
+        return
+    end
+    
     local boss_data = storage.boss
     if boss_data.controlled_segment_unit and
         boss_data.controlled_segment_unit.unit_number == segmented_entity.unit_number

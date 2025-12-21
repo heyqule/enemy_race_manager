@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.61
+Date: 2025-12-21
+
+  Changes:
+    - Added guard checks to applicable on_script_trigger_effects events.
+
+  Bugfixes:
+    - Fixed a crash when source entity is nil during quality point calculation. 
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.60
 Date: 2025-12-14
 
@@ -6,7 +16,7 @@ Date: 2025-12-14
     - Removed damaged_trigger_effect on corrupted robots.
 
   Bugfixes:
-    - Fixed some distractors and destroyers were running away without attacking.  Changed range_mod from "center-to-bounding-box" to "center-to-center".
+    - Fixed some corrupted distractors and destroyers were running away without attacking.  Changed range_mode from "center-to-bounding-box" to "center-to-center".
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.59
@@ -20,7 +30,7 @@ Version: 2.0.58
 Date: 2025-12-14
 
   Changes:
-    - Changed power-armor resistances 35 -> 45
+    - Changed power-armor resistances 35% -> 45%
     - Moved Kux-OrbitalIonCannon from optional dependency to hidden optional dependency.
     - Added "Recommended weapon levels" to enemy difficulty's tier list in trick and tips.
     - Increase corrupted robots size for better visibility.
@@ -33,8 +43,8 @@ Date: 2025-12-07
   Changes:
     - Changed default scout spawn for regular groups to be aerial scout.
     - Changed aerial precision strike group to use 50% of their group size.  Dropship group is not affected.
-    - Changed power-armor-mk2 resistances 45 -> 60, flat dmg reduction 20 -> 30
-    - Changed mech-armor resistances 60 -> 75, flat dmg reduction 20 -> 40
+    - Changed power-armor-mk2 resistances 45% -> 60%, flat dmg reduction 20 -> 30
+    - Changed mech-armor resistances 60% -> 75%, flat dmg reduction 20 -> 40
     - Army - Elite miner: HP 2000 -> 1600, base damage 150 -> 30, fire resistance {99%, 500} 
     - Army - Elite Shotgun: HP 1000 -> 750, fire resistance {99%, 250}
     - Army - Flamethrower: HP 2000 -> 900, fire resistance {99%, 500}

@@ -510,6 +510,10 @@ AttackGroupBeaconProcessor.can_attack = function(surface)
 end
 
 AttackGroupBeaconProcessor.create_attack_entity_beacon = function(source_entity)
+    if not source_entity or not source_entity.valid then
+        return false
+    end
+    
     local surface = source_entity.surface
     local attackable_entity = get_an_attackable_entity(source_entity, ATTACK_ENTITIES_SCAN_RADIUS)
 
@@ -566,53 +570,56 @@ AttackGroupBeaconProcessor.create_attack_entity_beacon_from_trunk = function(sur
 end
 
 AttackGroupBeaconProcessor.create_defense_beacon = function(source_entity, beacon_name)
-    if source_entity and source_entity.valid then
-        if has_nearby_defense_beacon(source_entity) == false then
-            local military_entities = count_military_entities(source_entity)
-            if military_entities > 0 then
-                local surface = source_entity.surface
-                local beacon = surface.create_entity({
-                    name = beacon_name,
-                    position = { source_entity.position.x, source_entity.position.y },
-                    force = source_entity.force
-                })
-                beacon.destructible = false;
-                beacon.health = military_entities;
-
-                init_beacon_struct(beacon_name, surface.index, source_entity.force.name)
-                storage[beacon_name][surface.index][source_entity.force.name][beacon.unit_number] = init_beacon_data(beacon)
-                return true
-            end
-        else
-            -- Update or destroy beacon
-            local surface = source_entity.surface
-            local beacons = surface.find_entities_filtered({
-                name = {LAND_BEACON, AERIAL_BEACON},
-                type = BEACON_TYPE,
-                position = { source_entity.position.x, source_entity.position.y },
-                force = source_entity.force,
-                radius = BEACON_RADIUS,
-                limit = 1
-            })
-            if next(beacons) then
-                local beacon = beacons[1]
-                local military_entities = count_military_entities(source_entity)
-                if military_entities == 0 then
-                    if beacon.name == LAND_BEACON then
-                        storage[LAND_BEACON][surface.index][source_entity.force.name][beacon.unit_number] = nil
-                    else
-                        storage[AERIAL_BEACON][surface.index][source_entity.force.name][beacon.unit_number] = nil
-                    end
-                    beacon.destroy()
-                else
-                    beacon.health = military_entities
-                    update_beacon_data(beacon)
-                end
-            end
-        end
-
+    if not source_entity or not source_entity.valid then
         return false
     end
+    
+    if has_nearby_defense_beacon(source_entity) == false then
+        local military_entities = count_military_entities(source_entity)
+        if military_entities > 0 then
+            local surface = source_entity.surface
+            local beacon = surface.create_entity({
+                name = beacon_name,
+                position = { source_entity.position.x, source_entity.position.y },
+                force = source_entity.force
+            })
+            beacon.destructible = false;
+            beacon.health = military_entities;
+
+            init_beacon_struct(beacon_name, surface.index, source_entity.force.name)
+            storage[beacon_name][surface.index][source_entity.force.name][beacon.unit_number] = init_beacon_data(beacon)
+            return true
+        end
+    else
+        -- Update or destroy beacon
+        local surface = source_entity.surface
+        local beacons = surface.find_entities_filtered({
+            name = {LAND_BEACON, AERIAL_BEACON},
+            type = BEACON_TYPE,
+            position = { source_entity.position.x, source_entity.position.y },
+            force = source_entity.force,
+            radius = BEACON_RADIUS,
+            limit = 1
+        })
+        if next(beacons) then
+            local beacon = beacons[1]
+            local military_entities = count_military_entities(source_entity)
+            if military_entities == 0 then
+                if beacon.name == LAND_BEACON then
+                    storage[LAND_BEACON][surface.index][source_entity.force.name][beacon.unit_number] = nil
+                else
+                    storage[AERIAL_BEACON][surface.index][source_entity.force.name][beacon.unit_number] = nil
+                end
+                beacon.destroy()
+            else
+                beacon.health = military_entities
+                update_beacon_data(beacon)
+            end
+        end
+    end
+
+    return false
+
 end
 
 AttackGroupBeaconProcessor.create_resource_beacon = function(source_entity)

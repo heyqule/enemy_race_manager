@@ -225,8 +225,10 @@ function CustomAttackHelper.get_race_settings(force_name, force)
 end
 
 function CustomAttackHelper.valid(event, force_name)
-    return (event.source_entity and
+    return (event.source_entity and 
+            event.source_entity.valid and
             string.find(event.source_entity.name, force_name, 1, true) ~= nil) or
+            --- "-bs" is unit spawn attacks.
             string.find(event.effect_id, "-bs", 1, true) ~= nil
 end
 

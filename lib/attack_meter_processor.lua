@@ -67,6 +67,10 @@ function AttackMeterProcessor.add_form_group_cron()
 end
 
 function AttackMeterProcessor.calculate_points(entity)
+    if not entity or not entity.valid then
+        return
+    end
+    
     local force = entity.force
     local entity_type = entity.type
     local entity_name = entity.name
