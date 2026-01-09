@@ -1,9 +1,9 @@
 # Planet Modding for ERM
-ERM by default run on all planets with compatible "enemy" autoplaces. New enemies on a new planet which shares same "enemy" force are likely to run.
+ERM by default run on all planets with compatible "enemy" autoplaces. When new enemies that share same "enemy" force are added to a new planet, ERM logics are likely to run on that new planet.
 
 When a planet doesn't use compatible "enemy" autoplaces, it's automatically excluded from running ERM logics.
 
-However, if you need to exclude your planets from ERM, then you'll have to add the following code to your mod.
+If you need to exclude your planets from ERM, then you'll have to add the following code to your mod.
 
 ## Step 1
 Add enemyracemanager as your hidden optional dependency.
