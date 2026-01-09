@@ -14,14 +14,14 @@ Add enemyracemanager as your hidden optional dependency.
 ## Step 2
 ### You want to exclude ERM to run on your planet.
 ```lua
-# Add this to your data.lua
+-- Add this to your data.lua
 
 data.raw['mod-data']['ERM_surface_exclusions'].data['your_planet_prototype_name'] = true
 ```
 
 ### You want to exclude ERM's interplanetary attack to run on your planet.
 ```lua
-# Add this to your data.lua
+-- Add this to your data.lua
 
 data.raw['mod-data']['ERM_interplanetary_attack_exclusions'].data['your_planet_prototype_name'] = true
 ```
