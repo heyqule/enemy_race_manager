@@ -21,7 +21,7 @@ Overhaul mod compatibility will be done when they become available.
 #### Other not mentioned enemy mods
 
 - It may or may not work. Expect incompatibility or broken unit balances.
-- Common Issue 1: Other enemy may eliminated ERM units and stop ERM from executing its function. (Mod: Zombie )
+- Common Issue 1: Other enemy may eliminated ERM units and stop ERM from executing its function. (Mod: Zombie)
 - Common Issue 2: Any mod that spawner_evolution_factor_health_modifier will revert back to 10 when they are enabled with ERM.
 
 #### Milestone

@@ -90,7 +90,7 @@ When this is enabled, player entity health and enemy damage multiplied by 10x. T
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
 ### New planets and space routes with tougher enemies.
-Some enemy forces have home planet.  They are home to their Legendary forces.  Some of those planets have different resources and technologies to unlock.
+Some enemy forces have home planet.  They are home to their Legendary forces.  Some of those planets have different resources and technologies to unlock. You may encounter enemies on some space routes to certain planets.
 
 ### ERM Economy
 Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new recipes and new army units.  They can also convert to biter eggs.
@@ -103,9 +103,10 @@ Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly dif
 
 Using PSI radar in enemy's home world will reveal their master mind.  Are you able to beat them for rewards?
 
-### Remote API Support
+### Modding Support
 
 * [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+* [Planet Modding Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/planet_modding.md)
 
 ### Known Issues
 

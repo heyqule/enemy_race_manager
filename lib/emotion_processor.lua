@@ -239,7 +239,7 @@ local attack_siege = function(data)
                 group = group,
                 always_angry = false,
                 nearby_retry = 0,
-                attack_force = target_force.name or 'player',
+                attack_force = target_force or game.forces['player'],
                 created = game.tick
             }
             group.start_moving()
@@ -300,7 +300,7 @@ local attack_double_tap = function(data)
                 group = group,
                 always_angry = false,
                 nearby_retry = 0,
-                attack_force = target_force.name or 'player',
+                attack_force = target_force or game.forces['player'],
                 created = game.tick
             }
             group.start_moving()
@@ -367,7 +367,7 @@ local attack_rush = function(data)
                 group = group,
                 always_angry = false,
                 nearby_retry = 0,
-                attack_force = target_force.name or 'player',
+                attack_force = target_force or game.forces['player'],
                 created = game.tick
             }
         else

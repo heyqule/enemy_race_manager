@@ -253,7 +253,7 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                     group = group,
                     always_angry = false,
                     nearby_retry = 0,
-                    attack_force = group_tracker.attack_force or 'player',
+                    attack_force = group_tracker.attack_force or game.forces['player'],
                     created = game.tick
                 }
             else

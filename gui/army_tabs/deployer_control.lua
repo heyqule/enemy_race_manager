@@ -48,14 +48,18 @@ function DeployerControlGUI.update(player)
             elseif deployer_type_filters[entity.name] and deployer_surface_filter == nil then
                 pass = true
             end
+            
+            local surface = deployer.entity.surface
+            surfaces[surface.index] = surface.name
+        else
+            deployers[unit_number] = nil
+            local surface = game.surfaces[1]
+            surfaces[surface.index] = surface.name
         end
 
         if pass then
             filtered_deployers[unit_number] = deployer
         end
-
-        local surface = deployer.entity.surface
-        surfaces[surface.index] = surface.name
     end
 
     local filtered_surface = {ALL_PLANETS}
@@ -90,7 +94,6 @@ function DeployerControlGUI.update(player)
         if deployer_type_filters[name] then
             sprite.toggled = true
         end
-
     end
 
     local surface_dropdown = filters.add {

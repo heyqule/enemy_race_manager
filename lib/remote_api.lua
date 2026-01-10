@@ -269,13 +269,13 @@ end
 
 --- /c remote.call("enemyracemanager", "add_erm_attack_group", group, target_force)
 --- Assign unit group to ERM attack group, which manage by ERM group logics
-function RemoteAPI.add_erm_attack_group(group, target_force)
+function RemoteAPI.add_erm_attack_group(group, target_force_name)
     if group.valid and next(group.members) then
         storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,
             nearby_retry = 0,
-            attack_force = target_force,
+            attack_force = game.forces[target_force_name],
             created = game.tick
         }
     end
@@ -435,14 +435,14 @@ function RemoteAPI.get_event_name(event_name)
 end
 
 --- ForceHelper
-RemoteAPI.force_data_reindex = ForceHelper.refresh_all_enemy_forces
+RemoteAPI.force_data_reindex = ForceHelper.refresh_all_enemy_forces --- for post process
 
 RemoteAPI.is_enemy_force = ForceHelper.is_enemy_force
 RemoteAPI.get_player_forces = ForceHelper.get_player_forces
 
 --- ArmyPopulationProcessor
 RemoteAPI.army_units_register = ArmyPopulationProcessor.register_unit
-RemoteAPI.army_reindex = ArmyPopulationProcessor.index
+RemoteAPI.army_reindex = ArmyPopulationProcessor.index  --- for post process
 
 --- ArmyTeleportationProcessor
 RemoteAPI.army_command_center_register = ArmyTeleportationProcessor.register_building
@@ -453,13 +453,13 @@ RemoteAPI.army_deployer_register = ArmyDeploymentProcessor.register_building
 RemoteAPI.calculate_attack_points = AttackMeterProcessor.calculate_points
 
 --- AttackGroupBeaconProcessor
-RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals
+RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals  --- for post process
 
 --- Base build processor
 RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
 
 --- Quality Points
-RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points
+RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points  --- for post process
 RemoteAPI.get_quality_point = QualityProcessor.get_quality_point
 RemoteAPI.roll_quality = QualityProcessor.roll_quality
 RemoteAPI.skip_roll_quality = QualityProcessor.skip_roll_quality

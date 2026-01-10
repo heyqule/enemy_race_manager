@@ -713,7 +713,10 @@ AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk = function(surface, ar
 end
 
 AttackGroupBeaconProcessor.get_selected_attack_beacon = function(surface, source_force, target_force)
-    if not storage[ATTACK_ENTITIES_BEACON][surface.index] or not storage[CONTROL_DATA][surface.index] then
+    if not storage[ATTACK_ENTITIES_BEACON][surface.index] or 
+        not storage[CONTROL_DATA][surface.index] or
+        not storage[CONTROL_DATA][surface.index][source_force.name]
+    then
         return nil
     end
 

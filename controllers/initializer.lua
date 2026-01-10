@@ -62,6 +62,9 @@ local populations = {
 }
 
 local refresh_army_data = function()
+    if not settings.startup['enemyracemanager-enable-engineer-army'].value then
+        return
+    end
     -- Register Army Units
     for _, prototype in pairs(prototypes.get_entity_filtered({{filter = "type", type = "unit"}})) do
         local nameToken = String.split(prototype.name, "--")

@@ -16,7 +16,7 @@ local decrease_pop = {
 
 for _, unit in pairs(data.raw["unit"]) do
     if unit.subgroup == "erm_controllable_units" then
-        if (type(unit.dying_trigger_effect) == "table") then
+        if type(unit.dying_trigger_effect) == "table" then
             table.insert(unit.dying_trigger_effect, decrease_pop)
         else
             unit.dying_trigger_effect = {
@@ -24,7 +24,7 @@ for _, unit in pairs(data.raw["unit"]) do
             }
         end
 
-        if (type(unit.created_effect) == "table") then
+        if type(unit.created_effect) == "table" then
             table.insert(unit["created_effect"]["action_delivery"]["source_effects"], increase_pop)
         else
             unit.created_effect = {

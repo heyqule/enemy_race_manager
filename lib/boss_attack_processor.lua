@@ -387,7 +387,7 @@ local attack_unit_spawn = function(data)
             group = unit_group,
             always_angry = false,
             nearby_retry = 0,
-            attack_force = boss_data.radar.force.name or 'player',
+            attack_force = boss_data.radar.force or game.forces['player'],
             created = game.tick
         }
         unit_group.set_command(command)
@@ -588,7 +588,7 @@ local attack_select_nearby_enemy = function(data)
             group = unit_group,
             always_angry = false,
             nearby_retry = 0,
-            attack_force = boss_data.radar.force.name or 'player',
+            attack_force = boss_data.radar.force or game.forces['player'],
             created = game.tick
         }
         unit_group.set_command(command)
