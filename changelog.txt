@@ -1,6 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.63
+Date: 2026-01-14
+
+  Bugfixes:
+    - Fixed an issue in ERM map preset generation when other mods disables base game resource autoplace control.
+    - Fixed an issue in boss unit drop function.
+    - Fixed certain cache update interval for custom attack.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.62
-Date: 2026-01-04
+Date: 2026-01-11
 
   Bugfixes:    
     - Fixed an inconsistency for target force in erm group tracking data.

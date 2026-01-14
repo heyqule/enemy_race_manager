@@ -271,6 +271,7 @@ end
 --- Assign unit group to ERM attack group, which manage by ERM group logics
 function RemoteAPI.add_erm_attack_group(group, target_force_name)
     if group.valid and next(group.members) then
+        target_force_name = target_force_name or 'player' 
         storage.erm_unit_groups[group.unique_id] = {
             group = group,
             start_position = group.position,

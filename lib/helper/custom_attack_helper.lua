@@ -84,7 +84,7 @@ local get_race_settings = function(force_name, reload)
     end
 
     storage.custom_attack_race_settings[force_name] = remote.call("enemyracemanager", "get_race", force_name)
-    storage.custom_attack_race_settings[force_name].tick = game.tick + minute * GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
+    storage.custom_attack_race_settings[force_name].tick = game.tick + GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
     return storage.custom_attack_race_settings[force_name]
 end
 
@@ -365,7 +365,7 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
         radius = ATTACK_CHUNK_SIZE,
         distraction = defines.distraction.by_anything
     })
-    remote.call("enemyracemanager", "add_erm_attack_group", group)
+    remote.call("enemyracemanager", "add_erm_attack_group", group, boss_data.radar.force.name)
     group.start_moving()
 end
 

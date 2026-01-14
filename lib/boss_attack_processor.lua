@@ -51,14 +51,14 @@ local acquire_attack_target = function(data)
     local attackable_entities_cache_size = boss.close_range_entities_cache_size or 0
     
     ---- 20% targets radar
-    if (only_targets_radar or RaceSettingsHelper.can_spawn(20)) then
+    if only_targets_radar or RaceSettingsHelper.can_spawn(20) then
         local offset = math.random(-8, 8)
         return_position = {x = boss.radar_position.x + offset, y = boss.radar_position.y}
         return return_position, true
     end
     
     ---- 10% targets attackable targets
-    if boss.radar and boss.radar.valid and (can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10)) then
+    if boss.radar and boss.radar.valid and can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10) then
         local beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(
             boss.surface, 
             boss.force,

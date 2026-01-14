@@ -79,7 +79,7 @@ script.on_event(defines.events.on_player_created, function(event)
     local force = player.force
     local level = 20
     scenarios_helper.spawn_tile(surface, 320)
-    scenarios_helper.build_base(surface, normal_full_base_2_0, 0, 0)
+    scenarios_helper.build_base(surface, legendary_full_base_with_normal_ammo_2_0, 0, 0)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_enemy_params(1, 1)
     scenarios_helper.set_game_speed(1)
