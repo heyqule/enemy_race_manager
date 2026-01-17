@@ -66,6 +66,11 @@ function RemoteAPI.get_boss_data()
     return nil
 end
 
+--- /c remote.call("enemyracemanager", "add_attack_group_attackable_entity", entity_name)
+function RemoteAPI.add_attack_group_attackable_entity(entity_name)
+    return GlobalConfig.add_attack_group_attackable_entity(entity_name)
+end
+
 --- /c remote.call("enemyracemanager", "random_pick_a_force")
 function RemoteAPI.random_pick_a_force()
     local races = GlobalConfig.get_enemy_races()

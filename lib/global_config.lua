@@ -395,8 +395,11 @@ function GlobalConfig.add_attack_group_attackable_entity(name)
 
         if not name_exists then
             table.insert(storage.attack_group_attackable_entity_names, name)
+            return true
         end
     end
+    
+    return false
 end
 
 --- Unit group must be valid when this runs. If it doesn't, it likely other mods mess it up.

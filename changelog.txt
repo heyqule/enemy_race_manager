@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.64
+Date: 2026-01-17
+
+  Bugfixes:
+    - Fixed an issue on processing attackable entity when a supported modded entity removed.
+    
+  Scripts:
+    - Added remote.call("enemyracemanager", "add_attack_group_attackable_entity", entity_name) to support adding 3rd party entities from other mods.     
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.63
 Date: 2026-01-14
 

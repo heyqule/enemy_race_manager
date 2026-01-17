@@ -23,14 +23,22 @@ Please refer to the addRaceSettings() in controllers/initializer.lua for setting
 ```lua
 remote.call('enemyracemanager', 'get_race', 'enemy_erm_zerg')
 ```
-
-Returns the ERM settings of a race. This includes level, xp
+Returns the ERM settings of a race. This includes level, xp and other data.
 
 #### Get race tier
 
 ```lua
 remote.call('enemyracemanager', 'get_race_tier', 'enemy_erm_zerg')
 ```
+Return unit tier
+
+#### Add 3rd party entity to attackable entity list
+
+```lua
+remote.call("enemyracemanager", "add_attack_group_attackable_entity", entity_name)
+```
+
+return boolean
 
 #### Add point to attack meter of a race
 

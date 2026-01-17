@@ -753,7 +753,8 @@ AttackGroupBeaconProcessor.init_globals = function()
         storage[beacon] = storage[beacon] or {}
     end
     storage[SPAWN_BEACON] = storage[SPAWN_BEACON] or {}
-    storage.attack_group_attackable_entity_names = storage.attack_group_attackable_entity_names or {}
+    --- Always refresh attackable_entity_names
+    storage.attack_group_attackable_entity_names = {} 
     storage[CONTROL_DATA] = storage[CONTROL_DATA] or {}
 end
 
@@ -1108,10 +1109,11 @@ end
 AttackGroupBeaconProcessor.pick_nearby_attack_location = function(surface, init_position)
     local entities = get_attackable_entity(surface, get_next_attack_area(init_position))
 
-    local next_index = next(entities)
-    if next_index then
-        local entity = entities[next_index]
-        return entity
+    if entities then
+        local next_index = next(entities)
+        if next_index then
+            return entities[next_index]
+        end 
     end
 end
 
@@ -1132,9 +1134,9 @@ AttackGroupBeaconProcessor.pick_resource_location = function(surface, init_posit
 
     for _, entity in pairs(entities) do
         if distances[1].position.x == entity.position.x and
-                distances[1].position.y == entity.position.y  then
-            rc_position = entity.position
-            break
+            distances[1].position.y == entity.position.y  then
+                rc_position = entity.position
+                break
         end
     end
 
