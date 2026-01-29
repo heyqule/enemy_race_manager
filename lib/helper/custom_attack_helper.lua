@@ -580,7 +580,8 @@ local get_build_bounding_box = function(orientation)
     return bounding_box
 end
 
-local build = function(event, force_name, building_name, position)
+local build = function(event, force_name, building_name, position, spawn_decorations)
+    spawn_decorations = spawn_decorations or false
     position = position or event.source_position or event.source_entity.position
     local source_entity = event.source_entity
     local source_entity_force_name = force_name
@@ -620,16 +621,18 @@ local build = function(event, force_name, building_name, position)
             name = final_unit_name, 
             position = position, 
             force = source_entity_force_name,
-            preserve_ghosts_and_corpses = true
+            preserve_ghosts_and_corpses = true,
+            spawn_decorations = spawn_decorations
         })
     end
 end
 
-function CustomAttackHelper.build(event, force_name, unit_name, position)
-    build(event, force_name, unit_name, position)
+function CustomAttackHelper.build(event, force_name, unit_name, position, spawn_decorations)
+    build(event, force_name, unit_name, position, spawn_decorations)
 end
 
-local boss_build = function(event, force_name, building_name, position)
+local boss_build = function(event, force_name, building_name, position, spawn_decorations)
+    spawn_decorations = spawn_decorations or false
     position = position or event.source_position or event.source_entity.position
     local source_entity = event.source_entity
     local source_entity_force_name = event.source_entity.force.name or force_name
@@ -657,14 +660,15 @@ local boss_build = function(event, force_name, building_name, position)
             position = position,
             force = source_entity_force_name,
             preserve_ghosts_and_corpses = true,
-            quality = source_entity.quality
+            quality = source_entity.quality,
+            spawn_decorations = spawn_decorations
         })
     end
 end
 
 
-function CustomAttackHelper.boss_build(event, force_name, unit_name, position)
-    boss_build(event, force_name, unit_name, position)
+function CustomAttackHelper.boss_build(event, force_name, unit_name, position, spawn_decorations)
+    boss_build(event, force_name, unit_name, position, spawn_decorations)
 end
 
 return CustomAttackHelper

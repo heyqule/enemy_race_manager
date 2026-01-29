@@ -7,6 +7,10 @@ local String = require("__erm_libs__/stdlib/string")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
+if DEBUG_MODE then
+    return
+end
+
 data.raw["unit-spawner"]["biter-spawner"]["hidden_in_factoriopedia"] = true
 data.raw["unit-spawner"]["spitter-spawner"]["hidden_in_factoriopedia"] = true
 

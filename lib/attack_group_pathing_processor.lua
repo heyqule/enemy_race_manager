@@ -192,7 +192,7 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
 
     local request_path_data = storage.request_path[path_id]
 
-    if request_path_data == nil then
+    if request_path_data == nil or enemy_position == nil then
         return
     end
 
@@ -258,7 +258,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 
     local request_path_data = storage.request_path[path_id]
 
-    if request_path_data == nil then
+    if request_path_data == nil or enemy_position == nil then
         return
     end
 

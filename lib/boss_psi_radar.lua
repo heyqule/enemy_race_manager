@@ -58,7 +58,7 @@ function BossPsiRadar.scan()
 
     local surface = radar.surface
 
-    if not radar.status == defines.entity_status.working then
+    if radar.status ~= defines.entity_status.working then
         if storage.boss.entity == nil then
             Cron.add_15_sec_queue("BossPsiRadar.scan")
         end
@@ -185,6 +185,10 @@ function BossPsiRadar.reject(message, radar)
         radar.surface.print(message)
         radar.destroy()
     end
+
+    storage.boss.radar = nil
+    storage.boss.radar_position = nil
+    storage.boss.spawn_beacons = {}
 end
 
 function BossPsiRadar.find_spawn_location(radar)

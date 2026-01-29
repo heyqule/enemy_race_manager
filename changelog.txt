@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.65
+Date: 2026-01-29
+
+  Changes:
+    - Adjusted boss beam attack position calculation.
+    - Lowered "radioactive" resistance for enemy units from 70% to 50%
+    - Lowered "radioactive" resistance for enemy unit spawners and turret from 50% to 40%
+    - Fixed shortcut link in boss' tip and trick.
+    - Custom attack build and boss_build function support spawn decorations.
+    - Added support for boss building spawn to spawn near target position. (spawn_near_target flag)
+    - DEBUG_MODE shows all ERM entities in Factoriopedia.
+    
+  Bugfixes:
+    - Fixed a crash in construct_brutal_force_commands function when enemy position is somehow nil.    
+    - Fixed a crash when boss radar data did not clean up properly after the radar returned to player inventory.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.64
 Date: 2026-01-17
 

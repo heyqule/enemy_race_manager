@@ -12,7 +12,7 @@ data:extend(
             },
             --- ERM nukes will use this damage type and explosive
             --- This shares name with K2 radioactive resistance.
-            --- All ERMs units will have 75% max resist, starting at 5%)
+            --- All ERMs units will have 50% max resist, starting at 5%)
             {
                 type = "damage-type",
                 name = "radioactive"

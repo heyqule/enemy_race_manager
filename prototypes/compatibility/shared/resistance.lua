@@ -7,13 +7,13 @@ local ForceHelper = require("lib.helper.force_helper")
 local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
-    { "radioactive", 5, 65 },
+    { "radioactive", 5, 45 },
     -- K2 --
     { "kr-explosive", 10, 65 },
-    { "kr-radioactive", 5, 65 },
+    { "kr-radioactive", 5, 45 },
     -- Bob Warfare
-    { "bob-pierce", 10, 65 },
-    { "bob-plasma", 5, 70 }
+    { "bob-pierce", 10, 55 },
+    { "bob-plasma", 5, 60 }
 }
 
 local spawner_damage_types = {

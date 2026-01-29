@@ -49,28 +49,30 @@ local acquire_attack_target = function(data)
     local surface = boss.surface
     local attackable_entities_cache = boss.close_range_entities_cache or {}
     local attackable_entities_cache_size = boss.close_range_entities_cache_size or 0
-    
-    ---- 20% targets radar
-    if only_targets_radar or RaceSettingsHelper.can_spawn(20) then
-        local offset = math.random(-8, 8)
-        return_position = {x = boss.radar_position.x + offset, y = boss.radar_position.y}
-        return return_position, true
-    end
-    
-    ---- 10% targets attackable targets
-    if boss.radar and boss.radar.valid and can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10) then
-        local beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(
-            boss.surface, 
-            boss.force,
-            boss.radar.force
-        )
-        
-        if beacon_data then
-            local attackable_entity = AttackGroupBeaconProcessor.get_an_attackable_entity(beacon_data.beacon)
-            if attackable_entity then
-                return attackable_entity.position, true
-            end
+
+    if boss.radar and boss.radar.valid then
+        ---- 20% targets radar
+        if only_targets_radar or RaceSettingsHelper.can_spawn(20) then
+            local offset = math.random(-8, 8)
+            return_position = {x = boss.radar_position.x + offset, y = boss.radar_position.y}
+            return return_position, true
         end
+
+        ---- 10% targets attackable targets
+        if  can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10) then
+            local beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(
+                    boss.surface,
+                    boss.force,
+                    boss.radar.force
+            )
+
+            if beacon_data then
+                local attackable_entity = AttackGroupBeaconProcessor.get_an_attackable_entity(beacon_data.beacon)
+                if attackable_entity then
+                    return attackable_entity.position, true
+                end
+            end
+        end        
     end
 
     --- Close range combat
@@ -124,10 +126,10 @@ local acquire_attack_target = function(data)
     end
 
     if return_position == nil then
-        return_position = boss.radar_position or {0, 0}
+        return_position = boss.radar_position or data.position or {x = 0, y = 0}
     end
 
-    if Position.distance(boss.entity_position, return_position) > bossRadius then
+    if Position.distance(boss.entity_position or data.entity_position , return_position) > bossRadius then
         artillery_mode = true 
     end
 
@@ -180,12 +182,18 @@ local select_attack = function(mod_name, attacks, tier)
             
             data = set_optional_data(data, attacks, i, "attack_beam_duration")
             data = set_optional_data(data, attacks, i, "attack_beam_max_length")
-            data = set_optional_data(data, attacks, i, "attack_beam_offset")
+            data = set_optional_data(data, attacks, i, "attack_beam_source_offset")
             
             data = set_optional_data(data, attacks, i, "attack_speed")
+            --- Roll a new position for each attack
             data = set_optional_data(data, attacks, i, "unique_position")
-            data = set_optional_data(data, attacks, i, "can_aim_attackable_targets")
+            --- Only target near PSI emitter
             data = set_optional_data(data, attacks, i, "only_targets_radar")
+            --- Can aim any attackable target, ignore if only_targets_radar is set.
+            data = set_optional_data(data, attacks, i, "can_aim_attackable_targets")
+            --- Spawn entity near target
+            data = set_optional_data(data, attacks, i, "spawn_near_target")
+            --- Select nearby enemy count, 1 = 1 x max group size.
             data = set_optional_data(data, attacks, i, "select_nearby_enemy_count")
             
             break
@@ -294,26 +302,7 @@ end
 local attack_beam = function(data)
     local start_position = data.entity_position
     local surface = data.surface
-
-    -- Calculate distance between start_position and data.position
-    local distance = Position.distance(start_position, data.position)
     
-    -- If distance is lower than data.attack_beam_max_length, change data.position to be at data.attack_beam_max_length
-    if data.attack_beam_max_length and distance < data.attack_beam_max_length then
-        local direction_x = data.position.x - start_position.x
-        local direction_y = data.position.y - start_position.y
-        local length = math.sqrt(direction_x^2 + direction_y^2)
-        if length > 0 then
-            local normalized_x = direction_x / length
-            local normalized_y = direction_y / length
-            data.position = {
-                x = start_position.x + normalized_x * data.attack_beam_max_length,
-                y = start_position.y + normalized_y * data.attack_beam_max_length
-            }
-        end
-    end
-
-   
     surface.create_entity({
         name = data.entity_name,
         position = start_position,
@@ -324,7 +313,8 @@ local attack_beam = function(data)
         create_build_effect_smoke = false,
         raise_built = false,
         force = data.entity_force,
-        quality = data.quality
+        quality = data.quality,
+        source_offset = data.attack_beam_source_offset
     })
 end
 
@@ -333,16 +323,24 @@ local attack_struct_spawn = function(data)
     local boss_data = storage.boss
     local surface = data.surface
     local new_entity_name = data.entity_name .. '--' .. boss_data.boss_tier
-    local position = surface.find_non_colliding_position(new_entity_name, data.entity_position, 64, 12, true)
+    
+    local position = data.entity_position
+    if data.spawn_near_target then
+        position = data.position    
+    end
+
+    local spawn_position = surface.find_non_colliding_position(new_entity_name, position, 64, 2, true)
     storage.skip_quality_rolling = true
-    surface.create_entity({
-        name = new_entity_name,
-        position = position,
-        create_build_effect_smoke = false,
-        raise_built = false,
-        force = data.entity_force,
-        quality = data.quality
-    })
+    if spawn_position then
+        local entity = surface.create_entity({
+            name = new_entity_name,
+            position = spawn_position,
+            create_build_effect_smoke = false,
+            raise_built = false,
+            force = data.entity_force,
+            quality = data.quality
+        })
+    end 
 end
 
 --- Spawn divine tier only.
@@ -714,16 +712,18 @@ function BossAttackProcessor.process_idle_attack()
         local position, artillery_mode = acquire_attack_target({})
         data.artillery_mode = artillery_mode
         data.position = position
-        Cron.add_quick_queue("BossAttackProcessor.process_attack", table.deepcopy(data), true)
+        Cron.add_quick_queue("BossAttackProcessor.process_attack", table.deepcopy(data))
     end
 end 
 
 function BossAttackProcessor.process_attack(data, force_to_run)
     local boss_data = storage.boss
-    if (force_to_run ~= true and (not boss_data or 
-            not boss_data.entity or not boss_data.entity.valid or
-            not boss_data.radar or not boss_data.radar.valid or
-            not data.position or data == nil)) 
+    if (not boss_data or 
+        not boss_data.entity or not boss_data.entity.valid or
+        not boss_data.radar or not boss_data.radar.valid or
+        not boss_data.radar_position or not boss_data.entity_position or
+        not data.position or data == nil
+    ) and not force_to_run
     then
         return
     end
