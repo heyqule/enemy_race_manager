@@ -19,6 +19,14 @@ data:extend {
         default_value = true,
         order = "enemyracemanager-101"
     },
+    {
+        type = "bool-setting",
+        name = "enemyracemanager-override-biter-egg-handling",
+        description = "enemyracemanager-override-biter-egg-handling",
+        setting_type = "startup",
+        default_value = true,
+        order = "enemyracemanager-101"
+    },
     --- Biter related
     {
         type = "int-setting",

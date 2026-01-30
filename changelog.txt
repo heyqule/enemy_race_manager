@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.66
+Date: 2026-01-29
+
+  Changes:
+    - Added override-biter-egg-handling option to change the "biter-egg-handling" research trigger.   Default: ON
+    - It unlocks when you craft biter-egg, instead of capture a spawner. You can't capture zerg/toss/redarmy spawner.  However, they drop items to craft biter eggs.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.65
 Date: 2026-01-29
 
@@ -10,7 +18,7 @@ Date: 2026-01-29
     - Custom attack build and boss_build function support spawn decorations.
     - Added support for boss building spawn to spawn near target position. (spawn_near_target flag)
     - DEBUG_MODE shows all ERM entities in Factoriopedia.
-    
+
   Bugfixes:
     - Fixed a crash in construct_brutal_force_commands function when enemy position is somehow nil.    
     - Fixed a crash when boss radar data did not clean up properly after the radar returned to player inventory.
@@ -21,7 +29,7 @@ Date: 2026-01-17
 
   Bugfixes:
     - Fixed an issue on processing attackable entity when a supported modded entity removed.
-    
+
   Scripts:
     - Added remote.call("enemyracemanager", "add_attack_group_attackable_entity", entity_name) to support adding 3rd party entities from other mods.     
 
@@ -38,7 +46,7 @@ Date: 2026-01-14
 Version: 2.0.62
 Date: 2026-01-11
 
-  Bugfixes:    
+  Bugfixes:
     - Fixed an inconsistency for target force in erm group tracking data.
     - Fixed UI issues when engineer army is disabled.    
 

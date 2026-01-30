@@ -196,3 +196,13 @@ for i = 1, max_level do
 
     data:extend({ makeShortRangeLevelWorm(i, "big-worm-turret", 5) })
 end
+
+if settings.startup['enemyracemanager-override-biter-egg-handling'] then
+    data.raw.technology['biter-egg-handling'].research_trigger =
+    {
+        type = "craft-item",
+        item = "biter-egg",
+        count = 10
+    }
+    data.raw.technology['biter-egg-handling'].localised_description = { "technology-description.erm-biter-egg-handling"}
+end 
