@@ -197,7 +197,7 @@ for i = 1, max_level do
     data:extend({ makeShortRangeLevelWorm(i, "big-worm-turret", 5) })
 end
 
-if settings.startup['enemyracemanager-override-biter-egg-handling'] then
+if mods['space-age'] and data.raw.technology['biter-egg-handling'] and settings.startup['enemyracemanager-override-biter-egg-handling']  then
     data.raw.technology['biter-egg-handling'].research_trigger =
     {
         type = "craft-item",

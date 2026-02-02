@@ -25,7 +25,7 @@ data:extend {
         description = "enemyracemanager-override-biter-egg-handling",
         setting_type = "startup",
         default_value = true,
-        order = "enemyracemanager-101"
+        order = "enemyracemanager-102"
     },
     --- Biter related
     {

@@ -33,7 +33,6 @@ MapManagement.events = {
         SurfaceProcessor.remove_enemies(game.surfaces[event.surface_index])
         AttackGroupBeaconProcessor.remove_beacons_on_surface(event.surface_index)
         AttackGroupHeatProcessor.remove_surface(event.surface_index)
-        AttackGroupHeatProcessor.remove_surface(event.surface_index)
         InterplanetaryAttacks.remove_surface(event.surface_index)
         SpawnLocationScanner.remove_surface(event.surface_index)
         QualityProcessor.remove_surface(game.surfaces[event.surface_index].name)

@@ -57,7 +57,7 @@ Overhaul mod compatibility will be done when they become available.
 
 #### Any mod that changes the properties of space-age planets (e.g Solar System ++)
 - ERM uses Nauvis as default planet.  Any mod that hide nauvis may cause unintended behaviours.
-- Change space-age planet may lead to missing features or crashes.  Use at your own risk.
+- Changing space-age planets' properties may lead to missing features or crashes.  Use them with cautions.
 
 ## CONFLICTED MODS
 These mods usually break many ERM's critical functions or/and cause indirect performance issues. Conflict mods may be lifted once it deemed to be compatible.
@@ -69,4 +69,4 @@ There are 2 ways for mods to avoid conflict with ERM.
 
 #### Intelligent Enemy (as of 1.0.7)
 - Incompatible.  It interferes ERM core functions.  
-  - causes custom attack group behaviour anomalies.
+- causes custom attack group behaviour anomalies.

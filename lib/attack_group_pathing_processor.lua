@@ -197,7 +197,12 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
     end
 
     if not path_node or not path_node.valid then
-        path_node = request_path_data.goal
+        if request_path_data.goal then
+            path_node = {}
+            path_node.position = request_path_data.goal
+        else
+            return
+        end
     end
 
     local direction = Position.complex_direction_to(path_node.position, enemy_position)
@@ -225,9 +230,9 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
     end
 
     local scout_beacon = beacons[1]
-    local buffer_zone = compute_beacon_buffer_position[direction](scout_beacon.position.x,scout_beacon.position.y)
 
     if scout_beacon then
+        local buffer_zone = compute_beacon_buffer_position[direction](scout_beacon.position.x,scout_beacon.position.y)
         local commands_chain = get_command_chain()
         table.insert(commands_chain.commands, {
             type = defines.command.go_to_location,
@@ -258,7 +263,10 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
 
     local request_path_data = storage.request_path[path_id]
 
-    if request_path_data == nil or enemy_position == nil then
+    if request_path_data == nil or 
+       enemy_position == nil or 
+       path_node == nil 
+    then
         return
     end
 
