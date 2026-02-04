@@ -988,7 +988,7 @@ describe("Pick Spawn Cache", function()
         assert.not_nil(data_check.cache["enemy"].bypass, "Not by passed")
         assert.not_nil(data_check.cache["enemy"].bypass_scanner, "Has by passed scanner")
     end)
-    it("Reactivate bypassed node when it'time to retry",function()
+    it("Reactivate bypassed node when it's time to retry",function()
         AttackGroupBeaconProcessor.init_index()
         local surface = game.surfaces[1]
 

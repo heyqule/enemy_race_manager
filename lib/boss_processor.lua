@@ -261,6 +261,10 @@ function BossProcessor.reset_globals()
     storage.boss.attack_cache_force_refresh = true
 end
 
+function BossProcessor.get_init_boss_setting()
+    return boss_setting_default()
+end
+
 --- Start the boss spawn flow
 function BossProcessor.exec(radar, spawn_position)
     if not Position.is_position(spawn_position) then

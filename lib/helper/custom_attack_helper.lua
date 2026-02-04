@@ -315,6 +315,12 @@ function CustomAttackHelper.drop_batch_units(event, force_name, count)
     until i == count
 
     if group.valid and new_group then
+        local target_position = position
+        local boss_data = remote.call("enemyracemanager", "get_boss_data")
+        if boss_data and boss_data.radar_position then
+            target_position = boss_data.radar_position
+        end
+        
         group.set_command({
             type = defines.command.attack_area,
             destination = { x = position.x, y = position.y },
@@ -356,7 +362,7 @@ function CustomAttackHelper.drop_boss_units(event, force_name, count)
     local target_position = boss_data.target_position
 
     if target_position == nil then
-        target_position = boss_data.silo_position
+        target_position = boss_data.radar_position
     end
 
     group.set_command({

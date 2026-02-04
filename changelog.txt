@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.68
+Date: 2026-02-04
+
+  Bugfixes:
+    - Fixed a crash caused by boss data misalignment after a previous update.
+    - Fixed an unit group targeting issue from boss' unit spawning attacks.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.67
 Date: 2026-02-02
 

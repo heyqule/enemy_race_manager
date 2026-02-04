@@ -25,12 +25,16 @@ function BossPsiRadar.register(radar)
     if radar and radar.valid then
         if boss_data and boss_data.radar then
             local registered_radar = boss_data.radar
-            local gps_msg = UtilHelper.get_gps_message(
-                    registered_radar.position.x,
-                    registered_radar.position.y,
-                    registered_radar.surface.name
-            )
-            BossPsiRadar.reject('Boss radar already placed '..gps_msg, radar)
+            if registered_radar.valid then
+                local gps_msg = UtilHelper.get_gps_message(
+                        registered_radar.position.x,
+                        registered_radar.position.y,
+                        registered_radar.surface.name
+                )
+                BossPsiRadar.reject('Boss radar already placed '..gps_msg, radar)
+            else
+                BossPsiRadar.reject('Deteched boss placement anomaly. Please try again.  If problem persist, please notify mod author.')
+            end
             return
         end
         -- boss radar print
@@ -186,9 +190,7 @@ function BossPsiRadar.reject(message, radar)
         radar.destroy()
     end
 
-    storage.boss.radar = nil
-    storage.boss.radar_position = nil
-    storage.boss.spawn_beacons = {}
+    storage.boss = BossProcessor.get_init_boss_setting()
 end
 
 function BossPsiRadar.find_spawn_location(radar)
