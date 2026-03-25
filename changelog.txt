@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.70
+Date: 2026-??-??
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.69
 Date: 2026-03-27
 
@@ -135,7 +139,7 @@ Date: 2025-12-07
     - Army - Elite Shotgun: HP 1000 -> 750, fire resistance {99%, 250}
     - Army - Flamethrower: HP 2000 -> 900, fire resistance {99%, 500}
     - Army - Uranium Tank: Target base damage 250 -> 200, AOE base damage 175 -> 100
-    - Added "Free for all path finder resource" option to adjust path finder workload under free for al mode.  Higher value increase path finding responsiveness.
+    - Added "Free for all path finder resource" option to adjust path finder workload under free for all mode.  Higher value increase path finding responsiveness.
     - Removed Alien Biomes from compatibility doc.
 
   Bugfixes:

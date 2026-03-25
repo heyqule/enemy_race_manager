@@ -147,8 +147,10 @@ function ERM_UnitHelper.get_attack_range(level, ratio)
     ratio = ratio or 1
     local attack_range = GlobalConfig.get_max_attack_range()
     if level < GlobalConfig.MAX_LEVELS - GlobalConfig.MAX_BY_RARE then
-        attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25 + ((level - 1) * 0.5)
+        attack_range = 14 + (attack_range - 14) * (level - 1) * 0.25
     end
+
+    attack_range = attack_range + ((level - 1) * 0.5)
 
     return math.ceil(attack_range * ratio)
 end

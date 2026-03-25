@@ -221,7 +221,11 @@ function BossProcessor.write_result_log(victory)
         spawn_tick = boss.spawned_tick,
         last_tick = game.tick,
         max_group_size = GlobalConfig.max_group_size(),
-        unit_assist_size = settings.startup['enemyracemanager-attacks-unit-spawn-size'].value
+        unit_assist_size = settings.startup['enemyracemanager-attacks-unit-spawn-size'].value,
+        health_multiplier = settings.startup['enemyracemanager-max-hitpoint-multipliers'].value,
+        damage_multiplier = settings.startup['enemyracemanager-damage-multipliers'].value,
+        speed_multiplier = settings.startup['enemyracemanager-running-speed-multipliers'].value,
+        army_limit_multiplier = settings.global['enemyracemanager-army-limit-multiplier'].value,
     }
 
     if victory then

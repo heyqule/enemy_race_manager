@@ -25,14 +25,12 @@ for _, spawner in pairs(data.raw["unit-spawner"]) do
     if string.find(spawner.name, 'bob-', nil, true) then
         seed = seed + 1
         if not string.find(spawner.name, '0', nil, true) then
-            print(spawner.name..' setting build_base_evolution_requirement = 0.5 and update autoplace')
             spawner.build_base_evolution_requirement = 0.5
             spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
                 probability_expression = "enemy_autoplace_base(0, "..seed..")",
                 force = FORCE_NAME,
             })
         else
-            print(spawner.name..' setting update autoplace for 0 spawner')
             spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
                 probability_expression = "enemy_autoplace_base(0, "..seed..")",
                 force = FORCE_NAME,
@@ -59,7 +57,6 @@ for _, turret in pairs(data.raw["turret"]) do
         local nameTokens = String.split(turret.name, "-")
         local size = nameTokens[2]
         if distances[size] then
-            print(turret.name..' setting build_base_evolution_requirement = 0.5 and update autoplace')
             turret.build_base_evolution_requirement = 0.5
             turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace({
                 probability_expression = "enemy_autoplace_base("..distances[size]..", "..seed..")",
