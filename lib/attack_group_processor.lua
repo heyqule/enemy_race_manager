@@ -924,15 +924,14 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
 
     --local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
     local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, source_force, target_force, true)
-    local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, source_force)
+    local spawner_location = AttackGroupBeaconProcessor.get_valid_spawner_location(surface, source_force)
 
-    if spawn_beacon == nil or spawn_beacon.valid == false
-            or target_beacon == nil or target_beacon.beacon.valid == false then
+    if spawner_location == nil or target_beacon == nil or target_beacon.beacon.valid == false then
         return nil
     end
-
+    
     local spawn_location = surface.find_non_colliding_position(
-            scout_name, spawn_beacon.position,
+            scout_name, spawner_location,
             AttackGroupProcessor.GROUP_AREA, 1)
 
     if not spawn_location then

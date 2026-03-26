@@ -547,6 +547,16 @@ local rounding_orientation = function(orientation)
     return orientation
 end
 
+local get_guerilla_distance = function(unit)
+    if not storage.guerrilla_distances[unit.name] then
+        local prototype = unit.prototype
+        local distance = math.ceil((prototype.vision_distance / 1.25) - prototype.attack_parameters.range)
+        storage.guerrilla_distances[unit.name] = distance
+    end
+    
+    return storage.guerrilla_distances[unit.name]
+end
+
 function CustomAttackHelper.process_guerrilla(event)
     if not event.source_entity or not event.source_entity.valid then
         return
@@ -554,18 +564,14 @@ function CustomAttackHelper.process_guerrilla(event)
 
     local unit = event.source_entity
     local commandable = unit.commandable
-    
-    if not storage.guerrilla_distances[unit.name] then
-        local prototype = unit.prototype
-        local distance = math.ceil((prototype.vision_distance / 1.25) - prototype.attack_parameters.range)
-        storage.guerrilla_distances[unit.name] = distance
-    end
+
+    local teleport_distance = get_guerilla_distance(unit)
     
     local orientation = rounding_orientation(unit.orientation)
     
     local position = opposition_position_calculation[Orientation.to_direction(orientation)](
         unit.position,
-        storage.guerrilla_distances[unit.name],
+        teleport_distance,
         math.random(-8,8)
     )
 
@@ -574,6 +580,41 @@ function CustomAttackHelper.process_guerrilla(event)
         distraction = defines.distraction.none,
         destination = position,
     })
+end
+
+function CustomAttackHelper.process_guerrilla_teleport(event, explosion_init_id, explosion_dest_id)
+    if not event.source_entity or not event.source_entity.valid then
+        return
+    end
+
+    local unit = event.source_entity
+    local surface = unit.surface
+
+    local teleport_distance = get_guerilla_distance(unit)
+
+    local orientation = rounding_orientation(unit.orientation)
+
+    local position = opposition_position_calculation[Orientation.to_direction(orientation)](
+            unit.position,
+            teleport_distance,
+            math.random(-8,8)
+    )
+
+    if explosion_init_id then
+        surface.create_entity({
+            name = explosion_init_id,
+            position = unit.position
+        })
+    end
+
+    unit.teleport(position)
+
+    if explosion_dest_id then
+        surface.create_entity({
+            name = explosion_dest_id,
+            position = position
+        })
+    end
 end
 
 local get_build_bounding_box = function(orientation)

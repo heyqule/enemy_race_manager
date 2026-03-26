@@ -44,7 +44,7 @@ data:extend {
         description = "enemyracemanager-max-hitpoint-multipliers",
         setting_type = "startup",
         default_value = 20,
-        minimum_value = 10,
+        minimum_value = 5,
         maximum_value = 100,
         order = "enemyracemanager-114"
     },
@@ -271,7 +271,7 @@ data:extend {
         default_value = 1,
         minimum_value = 1,
         maximum_value = 5,
-        allowed_values = { 1, 1.25, 1.33, 1.5, 2, 2.5, 3, 4, 5 },
+        allowed_values = { 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5},
         order = "enemyracemanager-003"
     },
     {

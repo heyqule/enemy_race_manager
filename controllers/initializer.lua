@@ -170,8 +170,8 @@ local addRaceSettings = function()
         race_settings.dropship = "logistic-robot"
         race_settings.droppable_units = {
             { {  "medium-spitter", "medium-biter", "defender" }, { 1, 2, 1 } },
-            { { "big-spitter", "big-biter", "defender", "distractor" }, { 2, 3, 1, 1 } },
-            { { "big-spitter", "big-biter","behemoth-spitter", "behemoth-biter", "distractor", "destroyer" }, { 2, 3, 1, 2, 1, 1 } },
+            { { "big-spitter", "big-biter",  "medium-biter", "defender" }, { 2, 2, 4, 1 } },
+            { { "big-spitter", "big-biter", "behemoth-biter", "defender" }, { 3, 5, 1, 2 } },
         }
         table.insert(
             race_settings.construction_buildings,

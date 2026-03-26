@@ -278,7 +278,6 @@ it("Picking area with lowest defense score from East", function()
 
         assert(enemies[1] ~= nil, "There should be enemies near target beacon")
         done()
-        game.speed = 3000
     end)
 end)
 
@@ -319,7 +318,7 @@ it("Picking area with lowest defense score from North", function()
         storage.override_attack_strategy = AttackGroupPathingProcessor.STRATEGY_BF
         AttackGroupProcessor.generate_group(game.forces["enemy"], 100)
     end)
-
+    
     after_ticks(3000, function()
         local enemies = surface.find_entities_filtered {
             force = "enemy",

@@ -214,3 +214,31 @@ local biter_spawner = "enemy--biter-spawner--1"
             done()
         end)
     end)
+
+    it("Scout should not spawn inside a walled city", function()
+        async(300)
+        local surface = game.surfaces[1]
+        -- Require generated chunks
+        surface.request_to_generate_chunks({ 0, 0 }, 20)
+        surface.force_generate_chunk_requests()
+        TestShared.buildBaseNoOpen()
+
+        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
+
+        surface.create_entity({name="enemy--biter-spawner--5", position={-200,0}})
+        surface.create_entity({name="erm_spawn_beacon", position={-120,0}})
+        AttackGroupBeaconProcessor.init_index()
+        local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], surface, game.forces[player])
+        
+
+        after_ticks(300, function()
+            local enemies = surface.count_entities_filtered {
+                force = "enemy",
+                type = "unit",
+                position = rocket_launcher.position,
+                radius = 64,
+            }
+            assert.equal(enemies, 0, "Land scout should not near the rocket.")
+            done()
+        end)
+    end)

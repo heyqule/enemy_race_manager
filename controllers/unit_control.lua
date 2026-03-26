@@ -190,7 +190,8 @@ local handle_scouts = function(scout_unit_data)
         local tracker = storage.scout_tracker[scout_unit_data.force_name]
         if tracker then
             local entity = tracker.entity
-            if util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
+            if entity and entity.valid and
+                util.distance(tracker.final_destination, entity.position) < CHUNK_SIZE then
                 AttackGroupBeaconProcessor.create_attack_entity_beacon(entity)
                 local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(
                         entity.surface,
