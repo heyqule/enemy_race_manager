@@ -119,10 +119,7 @@ local get_beacon_positions = function(data)
     end
 
     if attack_position ~= nil and spawn_position == nil then
-        local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, force)
-        if spawn_beacon then
-            spawn_position = spawn_beacon.position
-        end
+        spawn_position = AttackGroupBeaconProcessor.get_valid_spawner_location(surface, force)
     end
 
     if spawn_position ~= nil and attack_position == nil then
@@ -150,9 +147,8 @@ local attack_rapid_expand = function(data)
     local position = find_buildable_location(data)
     local group_size_multiplier = data.group_size_multiplier or 0.2
     if position then
-        local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, force)
-        if spawn_beacon then
-            local spawn_location = spawn_beacon.position
+        local spawn_location = AttackGroupBeaconProcessor.get_valid_spawner_location(surface, force)
+        if spawn_location then
             local selected_units = surface.find_entities_filtered {
                 type = 'unit',
                 force = force,

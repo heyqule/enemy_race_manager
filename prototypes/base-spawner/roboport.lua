@@ -60,6 +60,36 @@ local collision_box = { { -2.2, -2.2 }, { 2.2, 2.2 } }
 local map_generator_bounding_box = { { -4, -4.5 }, { 4.25, 4.75 } }
 local selection_box = { { -2.5, -2.5 }, { 2.5, 2.5 } }
 
+data.extend({
+    {
+        type = "corpse",
+        name = "erm-roboport-remnants",
+        icon = "__base__/graphics/icons/roboport.png",
+        flags = {"placeable-neutral", "not-on-map"},
+        hidden_in_factoriopedia = true,
+        subgroup = "logistic-network-remnants",
+        order = "a-h-a",
+        selection_box = {{-2, -2}, {2, 2}},
+        tile_width = 3,
+        tile_height = 3,
+        selectable_in_game = false,
+        time_before_removed = minute * settings.startup["enemyracemanager-enemy-corpse-time"].value, -- 15 minutes
+        final_render_layer = "remnants",
+        remove_on_tile_placement = true,
+        animation = make_rotated_animation_variations_from_sheet (2,
+                {
+                    filename = "__base__/graphics/entity/roboport/remnants/roboport-remnants.png",
+                    line_length = 1,
+                    width = 364,
+                    height = 358,
+                    direction_count = 1,
+                    shift = util.by_pixel(2, 8),
+                    scale = 0.5
+                })
+    },
+})
+
+
 function make_roboport(level)
     level = level or 1
     local spawner = util.table.deepcopy(data.raw["unit-spawner"]['biter-spawner'])
@@ -84,7 +114,7 @@ function make_roboport(level)
                 },
             },
             flags = { "placeable-player", "placeable-enemy" },
-            corpse = "roboport-remnants",
+            corpse = "erm-roboport-remnants",
             dying_explosion = "roboport-explosion",
             collision_box = collision_box,
             collision_mask = spawner['collision_mask'],

@@ -1242,6 +1242,29 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     end
 end
 
+AttackGroupBeaconProcessor.get_valid_spawner_location = function(surface, force)
+    local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, force)
+
+    if spawn_beacon == nil or not spawn_beacon.valid then
+        return nil
+    end
+
+    local spawners = surface.find_entities_filtered({
+        position = spawn_beacon.position,
+        radius = SPAWNER_BEACON_RADIUS,
+        force = force,
+        type = "unit-spawner",
+        limit = 1,
+    })
+
+    local _, spawner = next(spawners)
+    if spawner then
+        return spawner.position
+    end
+    
+    return nil
+end
+
 AttackGroupBeaconProcessor.start_scout_scan = function()
     local should_repeat = false
     for force_name, entity_data in pairs(storage.scout_tracker) do

@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.69
+Date: 2026-03-28
+
+  Features:
+    - Added support for guerrilla teleport attacks. Unit teleports away from front line after an attack.
+
+  Changes:
+    - Changed Units HP multiplier setting range from 10-100 (0.5x to 5x) to 5-100 (0.25x - 5x).
+    - Removed 1.33x army multiplier option; Added 1.75x army multiplier option.  
+    - Removed behemoth-spitter and distractor from droppable unit spawn pool.
+    - Reduced chance of behemoth-biter spawn chance from droppable unit.
+    - Changed corrupted roboport corpse to use removal timer.    
+
+  Bugfixes:
+    - Fixed a scout spawning issue where they may spawn inside a gated base [Issue #63]
+    - Fixed a scout handling issue on_ai_completed.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.68
 Date: 2026-02-04
 
