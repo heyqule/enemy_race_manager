@@ -15,7 +15,7 @@ Date: 2026-03-28
   Bugfixes:
     - Fixed a scout spawning issue where they may spawn inside a gated base [Issue #63]
     - Fixed a scout handling issue on_ai_completed.
-    
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.68
 Date: 2026-02-04
