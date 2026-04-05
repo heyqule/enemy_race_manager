@@ -193,7 +193,6 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             return_surface = nil
         end
 
-        ---@TODO if home planet surface exists and landing pad exists, use that to attack instead.
         if not return_surface and 
             storage.race_settings[force_name].home_planet and
             game.surfaces[storage.race_settings[force_name].home_planet] 

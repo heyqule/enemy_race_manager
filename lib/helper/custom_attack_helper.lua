@@ -444,7 +444,7 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
     local unit_total = storage.time_to_live_units_total
     local units = storage.time_to_live_units
 
-    if unit_total == nil or unit_total == 0 then
+    if units == nil or unit_total == nil or unit_total == 0 then
         return
     end
 

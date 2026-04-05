@@ -8,6 +8,7 @@ require("__enemyracemanager__/global")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
@@ -17,7 +18,8 @@ OnRocketLaunched.events = {
     [defines.events.on_rocket_launched] = function(event)
         if GlobalConfig.rocket_attack_point_enable() then
             local rocket = event.rocket
-            if rocket and rocket.valid then
+            if rocket and rocket.valid and rocket.force and ForceHelper.is_player_force(rocket.force.name) 
+            then
                 local force_name = SurfaceProcessor.get_enemy_on(rocket.surface.name)
                 if force_name then
                     RaceSettingHelper.add_to_attack_meter(force_name, GlobalConfig.rocket_attack_points())

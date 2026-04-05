@@ -19,13 +19,14 @@ local ForceHelper = {
 local MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces'
 local MOD_DATA_SURFACE_EXCLUSIONS = 'ERM_surface_exclusions'
 
-local NEUTRAL_FORCES
-
-local get_neutral_forces = function()
-    if not NEUTRAL_FORCES then
-        NEUTRAL_FORCES = prototypes.mod_data[MOD_DATA_NEUTRAL_FORCES].data
+local set_up_neutral_forces = function()
+    table.insert(storage.neutral_forces, 'neutral')
+    for name, value in pairs( prototypes.mod_data[MOD_DATA_NEUTRAL_FORCES].data) do
+        if game.forces[name] then
+            table.insert(storage.neutral_forces, name)
+        end
     end
-    return NEUTRAL_FORCES
+    return storage.neutral_forces
 end
     
 local refresh_exclusion_surface = function()
@@ -41,10 +42,18 @@ end
 function ForceHelper.init_globals()
     storage.force_entity_name_cache = storage.force_entity_name_cache or {}
     storage.force_force_name_cache = storage.force_force_name_cache or {}
-    storage.enemy_force_cache = storage.enemy_force_cache or {}
     storage.surface_exclusion_list = storage.surface_exclusion_list or {}
     storage.surface_inclusion_list = storage.surface_inclusion_list or {}
-    storage.enemy_force_check = storage.enemy_force_check or {}
+    
+    storage.enemy_forces = storage.enemy_forces or {}
+    storage.non_player_forces = storage.non_player_forces or {}
+    storage.player_forces = storage.player_forces or {}
+    storage.neutral_forces = storage.neutral_forces or {}
+    
+    storage.enemy_forces_map = storage.enemy_forces_map or {}
+    storage.non_player_forces_map = storage.non_player_forces_map or {}
+    storage.player_forces_map = storage.player_forces_map or {}
+    storage.neutral_forces_map = storage.neutral_forces_map or {}
 end
 
 -- Checks enemy_erm_ prefix
@@ -55,8 +64,24 @@ end
 
 function ForceHelper.is_enemy_force(force)
     if type(force) ~= 'string' then force = force.name end
-    return storage.enemy_force_check[force]
+    return storage.enemy_forces_map[force]
 end
+
+function ForceHelper.is_player_force(force)
+    if type(force) ~= 'string' then force = force.name end
+    return storage.player_force_map[force]
+end
+
+function ForceHelper.is_neutral_force(force)
+    if type(force) ~= 'string' then force = force.name end
+    return storage.neutral_force_map[force]
+end
+
+function ForceHelper.is_non_player_force(force)
+    if type(force) ~= 'string' then force = force.name end
+    return storage.non_player_force_map[force]
+end
+
 
 function ForceHelper.set_friends(game, force_name, is_friend)
     for name, force in pairs(game.forces) do
@@ -72,7 +97,7 @@ function ForceHelper.set_friends(game, force_name, is_friend)
 end
 
 function ForceHelper.set_neutral_force(game, force_name)
-    for neutral_force, _ in pairs(get_neutral_forces()) do
+    for neutral_force, _ in pairs(ForceHelper.get_neutral_forces()) do
         if game.forces[neutral_force] ~= nil then
             game.forces[neutral_force].set_cease_fire(force_name, true);
             game.forces[force_name].set_cease_fire(neutral_force, true);
@@ -109,7 +134,7 @@ function ForceHelper.get_name_token(name)
 end
 
 function ForceHelper.get_non_player_forces()
-    return storage.non_player_forces or { "neutral" }
+    return storage.non_player_forces or { "neutral", "enemy" }
 end
 
 function ForceHelper.get_player_forces()
@@ -117,30 +142,33 @@ function ForceHelper.get_player_forces()
 end
 
 function ForceHelper.get_enemy_forces()
-    return storage.enemy_force_cache or { "enemy" }
+    return storage.enemy_forces or { "enemy" }
+end
+
+function ForceHelper.get_neutral_forces()
+    return storage.neutral_force or { "neutral" }
 end
 
 function ForceHelper.refresh_all_enemy_forces()
-    storage.enemy_force_cache = {}
+    storage.enemy_forces = {}
     storage.non_player_forces = {}
     storage.player_forces = {}
-    storage.enemy_force_check = {}
+    storage.neutral_forces = {}
     for _, force in pairs(game.forces) do
         if ForceHelper.default_force_names[force.name] or
             (string.find(force.name, "enemy", 1, true) and
             script.active_mods[string.gsub(force.name,"enemy_","")] ~= nil) and
             storage.race_settings[force.name]
         then
-            table.insert(storage.enemy_force_cache, force.name)
-            storage.enemy_force_check[force.name] = true
+            table.insert(storage.enemy_forces, force.name)
             table.insert(storage.non_player_forces, force.name)
         end
     end
     
-    for force_name, value in pairs(get_neutral_forces()) do
+    set_up_neutral_forces()
+    for _, force_name in pairs(storage.neutral_forces) do
         table.insert(storage.non_player_forces, force_name)
     end
-    table.insert(storage.non_player_forces, "neutral")
 
     table.insert(storage.player_forces, "player")
     for _, force in pairs(game.forces) do
@@ -153,6 +181,11 @@ function ForceHelper.refresh_all_enemy_forces()
         end
     end
     storage.total_player_forces = #storage.player_forces
+    
+    storage.enemy_forces_map = util.list_to_map(storage.enemy_forces)
+    storage.non_player_forces_map = util.list_to_map(storage.non_player_forces)
+    storage.player_forces_map = util.list_to_map(storage.player_forces)
+    storage.neutral_forces_map = util.list_to_map(storage.neutral_forces)
     
     refresh_exclusion_surface()
 end

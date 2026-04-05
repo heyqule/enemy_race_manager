@@ -2,6 +2,17 @@
 Version: 2.0.70
 Date: 2026-??-??
 
+  Features:
+    - Added town & city beacon to track enemy's custom built base via blueprint string.
+    
+  Changes:
+    - Boss log tracks HP, damage, speed and max army limit multipliers.
+    - [custom attack group] Enemy priority home planet after player have a base on there.
+    
+  Bugfixes:
+    - Fixed an issue on enemy attack range calculation on higher tier units.
+    - Fixed an issue on clear_time_to_live_units.
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.69
 Date: 2026-03-27

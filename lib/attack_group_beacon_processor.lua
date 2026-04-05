@@ -1242,6 +1242,9 @@ AttackGroupBeaconProcessor.get_spawn_beacon = function(surface, force)
     end
 end
 
+---
+--- To make sure unit spawn near a spawner
+---
 AttackGroupBeaconProcessor.get_valid_spawner_location = function(surface, force)
     local spawn_beacon = AttackGroupBeaconProcessor.get_spawn_beacon(surface, force)
 
