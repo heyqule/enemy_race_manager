@@ -19,3 +19,7 @@ if mods["rso-mod"] then
     data.raw["bool-setting"]["rso-biter-generation"].hidden = true
     data.raw["bool-setting"]["rso-biter-generation"].forced_value = false
 end
+
+if mods["factorio-test"] and data.raw["string-setting"]["factorio-test-config"] then
+    data.raw["string-setting"]["factorio-test-config"].default_value = '{"load_luassert": true}'
+end

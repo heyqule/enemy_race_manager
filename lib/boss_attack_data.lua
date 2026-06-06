@@ -35,7 +35,8 @@ BossAttacksData.default_speed = 1
 ---    ### whether search for a new location for every attack. Otherwise, search new location per spread
 ---    unique_position = {false, false, false}
 
----    ### The attack can utilize attack beacons to aim (default: true)
+---    ### The attack has higher chance to use attack beacons to aim (default: false)
+---    ### default is 20%, having this flag is 50%
 ---    can_aim_attackable_targets = {false, false, false},
 
 ---    ### this attack only target radar, (default: false)
@@ -53,6 +54,12 @@ BossAttacksData.default_speed = 1
 ---        {},
 ---        {1, 1, 1, 1, 1}
 ---    },
+---
+---    max_structure_count = {
+---        {5,5,6,8,10},
+---        --- Boss assist spawner uses a separated max count
+---        {99,99,99,99,99},
+---     },
 ---}
 BossAttacksData.basic_attacks = {}
 BossAttacksData.heavy_attacks = {}

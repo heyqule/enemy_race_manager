@@ -69,27 +69,27 @@ end
 
 function ForceHelper.is_player_force(force)
     if type(force) ~= 'string' then force = force.name end
-    return storage.player_force_map[force]
+    return storage.player_forces_map[force]
 end
 
 function ForceHelper.is_neutral_force(force)
     if type(force) ~= 'string' then force = force.name end
-    return storage.neutral_force_map[force]
+    return storage.neutral_forces_map[force]
 end
 
 function ForceHelper.is_non_player_force(force)
     if type(force) ~= 'string' then force = force.name end
-    return storage.non_player_force_map[force]
+    return storage.non_player_forces_map[force]
 end
 
 
 function ForceHelper.set_friends(game, force_name, is_friend)
     for name, force in pairs(game.forces) do
         if string.find(force.name, "enemy", 1, true) then
-            force.set_friend(force_name, is_friend);
-            force.set_friend("enemy", is_friend);
-            force.set_cease_fire(force_name, is_friend);
-            force.set_cease_fire("enemy", is_friend);
+            force.set_friend(force_name, is_friend)
+            force.set_friend("enemy", is_friend)
+            force.set_cease_fire(force_name, is_friend)
+            force.set_cease_fire("enemy", is_friend)
             game.forces[force_name].set_friend(name, is_friend)
             game.forces[force_name].set_cease_fire(name, is_friend)
         end
@@ -97,8 +97,8 @@ function ForceHelper.set_friends(game, force_name, is_friend)
 end
 
 function ForceHelper.set_neutral_force(game, force_name)
-    for neutral_force, _ in pairs(ForceHelper.get_neutral_forces()) do
-        if game.forces[neutral_force] ~= nil then
+    for _, neutral_force in pairs(ForceHelper.get_neutral_forces()) do
+        if game.forces[neutral_force] then
             game.forces[neutral_force].set_cease_fire(force_name, true);
             game.forces[force_name].set_cease_fire(neutral_force, true);
         end
@@ -146,7 +146,7 @@ function ForceHelper.get_enemy_forces()
 end
 
 function ForceHelper.get_neutral_forces()
-    return storage.neutral_force or { "neutral" }
+    return storage.neutral_forces or { "neutral" }
 end
 
 function ForceHelper.refresh_all_enemy_forces()

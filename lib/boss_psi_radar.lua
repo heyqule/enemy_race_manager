@@ -12,6 +12,7 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local chunksize = 32
 local max_range = 35
@@ -42,7 +43,19 @@ function BossPsiRadar.register(radar)
         boss_data.radar_position = radar.position
         storage.boss_radar_iteration = 1
         storage.boss_radar_side_iteration = 1
-        Cron.add_15_sec_queue("BossPsiRadar.scan")
+        local name_tokens = ForceHelper.get_name_token(radar.name)
+        local force_name = name_tokens[1]        
+        if storage.race_settings[force_name] and storage.race_settings[force_name].boss_custom_spawn then
+            local boss_object = remote.call(storage.remote_race_name_cache[force_name], 'boss_custom_spawn', radar, TEST_MODE)
+            if boss_object and boss_object.valid  then
+                BossProcessor.exec(radar, boss_object.position, boss_object)
+            else
+                DebugHelper.print(boss_object)
+                BossPsiRadar.reject('Unable to place boss entity.')
+            end
+        else
+            Cron.add_15_sec_queue("BossPsiRadar.scan")
+        end
     end
 end
 

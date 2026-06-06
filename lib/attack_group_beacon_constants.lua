@@ -27,7 +27,6 @@ local AttackGroupBeaconConstants = {
         "rocket-silo",
         "artillery-turret",
         "lab",
-        "infinity-container",
     },
     
     

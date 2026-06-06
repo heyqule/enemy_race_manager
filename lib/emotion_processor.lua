@@ -83,12 +83,12 @@ local find_buildable_location = function(data)
     
     if surface.valid and force.valid and buildable_beacons then
         repeat
-            local bIndex, beacon = next(buildable_beacons)
+            local beacon_index, beacon = next(buildable_beacons)
             if beacon and beacon.valid then
-                table.remove(buildable_beacons, bIndex)
+                buildable_beacons[beacon_index] = nil
                 return Position.calculate_position_x_tiles_further(beacon.position, 64)
-            else
-                table.remove(buildable_beacons, bIndex)
+            elseif beacon_index then
+                buildable_beacons[beacon_index] = nil
             end
         until next(buildable_beacons) == nil
     end

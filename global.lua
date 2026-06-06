@@ -16,9 +16,9 @@ GLEBA_FORCE_AUTOCONTROL_NAME = "gleba_enemy_base"
 
 --- [ MAKE SURE TO TURN THESE FLAG OFF BEFORE GO PROD ]
 --- Enable this flag to enable debug features
-DEBUG_MODE = false
+DEBUG_MODE = true
 --- Enable this flag when running tests.  It forces some chance based logics to run.
-TEST_MODE = false
+TEST_MODE = true
 --- ENABLE Lengthy test. Typical need 10s+ to run.
 ENABLE_LENGTHY_TESTS = false
 --- For debugging beacons
@@ -56,6 +56,7 @@ ENVIRONMENTAL_ATTACK = "emev-atk"
 
 CREEP_REMOVAL = "em-crprm"
 
+--- This set must be same cross all mods to trigger proper response
 REGISTER_BOSS_RADAR = "embss-rdr"
 TRIGGER_BOSS_SPAWNED = "embss-spn"
 TRIGGER_BOSS_DIES = "embss-die"
