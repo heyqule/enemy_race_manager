@@ -9,13 +9,13 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - [Hawke] to improve ERM unit control features!
 - See ERM assets credit for 3rd party assets. https://mods.factorio.com/mod/enemyracemanager_assets
 
-### What's new in 2.0.46
-- Air raid radar. A long range custom radar that scan for ERM aerial attack groups.
-- Added "engineer army", B rank army that you can build from early game.
-- Requires ERM Unit Control 1.1. Added control group support.
-- Allow disabling corrupt robot for biters.  However enemy learnt to build sand bridges if they get stuck on pathing.
-- All ERM army recipes are now in its own army tab.
-- Improvements and Bugfixes
+### What's new in 2.0.70
+- Radio Station (Command Center) for engineer army
+- Player character can teleport between command centers. You can teleport between planet, but it follows same restrictions as boarding to space platform.
+- Custom city block for enemy base building (red army)
+- [boss] attack changes and UI changes.
+- [custom attack group] Enemy priority home planet after player have a base on there.
+- Various Bugfixes
 
 ##### Notices
 - 2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.

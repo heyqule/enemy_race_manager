@@ -83,9 +83,6 @@ end)
 
 script.on_event(defines.events.on_player_created, function(event)
     local surface = game.planets[planet_name].create_surface()
-    local width = 20
-    surface.request_to_generate_chunks({1000, 1000}, width)
-    surface.force_generate_chunk_requests()
     local player = game.players[1]
     local force = player.force
     player.teleport({10,0}, planet_name)
@@ -221,10 +218,10 @@ script.on_nth_tick(600, function()
     --local entity = surface.find_entities_filtered({
     --    name = enemy_name.."--boss_warpgate--5",
     --})
-    local entity = surface.find_entities_filtered({
-        name = enemy_name.."--boss_rocket_silo--5",
-    })
-    if entity[1] then
-        entity[1].damage(29000, "player", "impact")
-    end
+    --local entity = surface.find_entities_filtered({
+    --    name = enemy_name.."--boss_rocket-silo--5",
+    --})
+    --if entity[1] then
+    --    entity[1].damage(29000, "player", "impact")
+    --end
 end)

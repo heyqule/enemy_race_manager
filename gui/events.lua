@@ -202,6 +202,8 @@ Click.army_cc_link = function(event)
             army_control_window.start_link(player)
         elseif element.name == army_control_window.stop_link_button then
             army_control_window.stop_link(player)
+        elseif element.name == army_control_window.teleport_button then
+            army_control_window.teleport(player)
         end
     end
 end

@@ -1,21 +1,24 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.70
-Date: 2026-??-??
+Date: 2026-06-22
 
   Features:
     - Added town & city beacon to track enemy's custom built base via blueprint string.
-    - Added support of calling custom boss spawn function when player place down a boss radar.
-    
+    - Added support of calling custom boss spawn function when players place down a boss radar.
+    - Added "Radio Station" to engineer army as the command center for unit teleportation. (Graphic by Hurricane046)
+    - Player character can use command center to teleport. It follows same rules as space travel when you teleport to another planet. Inventory must be empty, only armor and gun are allowed.    
+
   Changes:
     - [Boss] boss log tracks HP, damage, speed and max army limit multipliers.
-    - [Boss] New attack type: add X amount of attack point for custom attack group.
-    - [Boss] Attack with can_aim_attackable_targets flag 50% chance to trigger, instead of 20%.  Attack without the flag has 20% to trigger.
-    - [Boss] Redesigned the logic for the enemy structure spawning attacks.
+    - [Boss] New attack type: add X amount of attack point to custom attack group.
+    - [Boss] Attack with can_aim_attackable_targets flag 50% chance to trigger, instead of 20%.  Attack without this flag has 20% to trigger.
+    - [Boss] Refactored the logic for the enemy structure spawning attacks.
     - [custom attack group] Enemy priority home planet after player have a base on there.
-    - Changed unit's "radioactive" resistance from 40% -> 20%.
-    - Enhanced ForceHelper with additional functions.
+    - [Army deploy] Set "deploy #" default to 20, instead of 1.
+    - Changed unit's "radioactive" resistance from 40% -> 25%.
     - Added hidden configs to support factorio-test 3.0.
-    
+    - Added tip and trick for army UI.
+
   Bugfixes:
     - Fixed an issue on enemy attack range calculation on higher tier units.
     - Fixed an issue on clear_time_to_live_units.

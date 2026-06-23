@@ -31,7 +31,8 @@ local Army_MainWindow = {
         UnitTab.name, DeployerTab.name, CCTab.name, HelpTab.name
     },
     start_link_button = CCTab.start_link_button,
-    stop_link_button = CCTab.stop_link_button
+    stop_link_button = CCTab.stop_link_button,
+    teleport_button = CCTab.teleport_button,
 }
 
 local update_tabs = {
@@ -240,6 +241,15 @@ function Army_MainWindow.stop_link(player)
         ArmyTeleportationProcessor.unlink(force)
     else
         player_data.error_message = { "gui-army.cc_unlinked_with_error" }
+    end
+    Army_MainWindow.update_command_centers()
+end
+
+function Army_MainWindow.teleport(player)
+    local player_data = SharedTabFunctions.get_player_tab_data(player)
+    local success, message = ArmyTeleportationProcessor.teleport_player(player)
+    if not success then
+        player_data.error_message = message
     end
     Army_MainWindow.update_command_centers()
 end

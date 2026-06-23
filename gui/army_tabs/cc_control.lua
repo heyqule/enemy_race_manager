@@ -80,6 +80,7 @@ local CommandCenterControlGUI = {
     cc_from_selector = "army_cc/cc_select_from",
     cc_to_selector = "army_cc/cc_select_to",
     stop_link_button = "army_cc/stop_link",
+    teleport_button = "army_cc/teleport_link",
     start_link_button = "army_cc/start_link",
 }
 
@@ -221,11 +222,15 @@ function CommandCenterControlGUI.update(player)
     }
 
     local unlink_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.stop_link_button, tags={filter_pattern="army_cc/.*_link"}, caption = { "gui-army.cc_unlink" }, style = "red_button" }
-    unlink_button.tooltip = "Stop Communication"
-
+    unlink_button.tooltip = { "gui-army.cc_unlink_tooltip" } 
+    
     local link_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.start_link_button, tags={filter_pattern="army_cc/.*_link"}, caption = { "gui-army.cc_link" }, style = "green_button" }
-    link_button.style.left_margin = 165
-    link_button.tooltip = "Start Communication"
+    link_button.style.left_margin = 20
+    link_button.tooltip =  { "gui-army.cc_link_tooltip" }
+
+    local teleport_button = center_pane_row_links.add { type = "button", name = CommandCenterControlGUI.teleport_button, tags={filter_pattern="army_cc/.*_link"}, caption = { "gui-army.cc_teleport" }, style = "green_button" }
+    teleport_button.style.left_margin = 20
+    teleport_button.tooltip =  { "gui-army.cc_teleport_tooltip" }
 
     if player_data.error_message ~= nil then
         local error_message = center_pane.add { type = "label", name = "army_cc/linked/error_message", caption = player_data.error_message, visible = true, style = "bold_red_label" }

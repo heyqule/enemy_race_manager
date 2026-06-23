@@ -11,8 +11,8 @@ local String = require('__erm_libs__/stdlib/string')
 local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
 
 if DEBUG_MODE then
-    data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 15
-    data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 15
+    data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 16
+    data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 16
 
     local autoplace_count = 0
     local prototype_count = 0

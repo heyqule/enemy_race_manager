@@ -7,7 +7,7 @@ local ForceHelper = require("lib.helper.force_helper")
 local UnitHelper = require("lib.rig.unit_helper")
 
 local damage_types = {
-    { "radioactive", 5, 15 },
+    { "radioactive", 5, 20 },
     -- K2 --
     { "kr-explosive", 10, 65 },
     { "kr-radioactive", 5, 15 },

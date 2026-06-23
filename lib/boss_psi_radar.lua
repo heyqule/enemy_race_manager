@@ -32,9 +32,9 @@ function BossPsiRadar.register(radar)
                         registered_radar.position.y,
                         registered_radar.surface.name
                 )
-                BossPsiRadar.reject('Boss radar already placed '..gps_msg, radar)
+                BossPsiRadar.reject({ "radar-rejects.radar-placement-error",gps_msg }, radar)
             else
-                BossPsiRadar.reject('Deteched boss placement anomaly. Please try again.  If problem persist, please notify mod author.')
+                BossPsiRadar.reject({ "radar-rejects.radar-placement-error" })
             end
             return
         end
@@ -51,7 +51,7 @@ function BossPsiRadar.register(radar)
                 BossProcessor.exec(radar, boss_object.position, boss_object)
             else
                 DebugHelper.print(boss_object)
-                BossPsiRadar.reject('Unable to place boss entity.')
+                BossPsiRadar.reject(boss_object)
             end
         else
             Cron.add_15_sec_queue("BossPsiRadar.scan")
@@ -225,7 +225,7 @@ function BossPsiRadar.find_spawn_location(radar)
     end
 
     if not found then
-        BossPsiRadar.reject('Unable to locate boss.  Radar refund back to user inventory')
+        BossPsiRadar.reject({"radar-rejects.unable-locate-boss"})
     end
 end
 

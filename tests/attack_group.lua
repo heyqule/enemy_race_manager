@@ -129,28 +129,27 @@ end
         })
 
         for i = 1, 50, 1 do
+            storage.skip_quality_rolling = true
             surface.create_entity({
                 name = ultralisk,
                 force= force_name,
-                position = { entity.position.x+16, entity.position.y}
+                position = { entity.position.x+32, entity.position.y+32}
             })
         end
-
         after_ticks(300, function()
             surface.create_entity({
                 type = "projectile",
                 name = "atomic-rocket",
                 force = PLAYER,
                 target = entity,
-                position = laser_turret.position,
-                source = laser_turret,
+                position = rocket_launcher.position,
+                source = rocket_launcher,
                 speed = 0.5
             })
         end)
 
         after_ticks(3600, function()
             assert(table_size(storage.erm_unit_groups) == 1,"Check Erm unit group table: "..table_size(storage.erm_unit_groups))
-
             local key = next(storage.erm_unit_groups)
             assert.not_nil(storage.erm_unit_groups[key], "Check Group Record")
             done()

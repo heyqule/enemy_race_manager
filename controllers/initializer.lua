@@ -74,6 +74,7 @@ local refresh_army_data = function()
     end
 
     remote.call("enemyracemanager","army_deployer_register", 'army-depot');
+    remote.call("enemyracemanager","army_command_center_register", 'erm-army-radio-station');
 
     for _, force in pairs(game.forces) do
         if force.research_enabled then

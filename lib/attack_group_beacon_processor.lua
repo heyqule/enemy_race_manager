@@ -1106,6 +1106,20 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
     return nil
 end
 
+AttackGroupBeaconProcessor.pick_random_attack_beacon = function(surface, source_force)
+    local player_forces = ForceHelper.get_player_forces()
+
+    local random_index = math.random(1, storage.total_player_forces)
+    local target_force_name = player_forces[random_index]
+    local target_force = game.forces[target_force_name]
+
+    if not target_force then
+        return nil
+    end
+
+    return AttackGroupBeaconProcessor.pick_new_attack_beacon(surface, source_force, target_force)
+end
+
 AttackGroupBeaconProcessor.pick_nearby_attack_location = function(surface, init_position)
     local entities = get_attackable_entity(surface, get_next_attack_area(init_position))
 

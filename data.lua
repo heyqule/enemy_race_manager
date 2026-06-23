@@ -105,8 +105,9 @@ if settings.startup['enemyracemanager-enable-engineer-army'].value then
             end
         end
     end
-
+    
     require "prototypes.army.army_depot"
+    require "prototypes.army.radio_station"
     require "prototypes.army.corpse"
     require "prototypes.army.miner"
     require "prototypes.army.miner_elite"

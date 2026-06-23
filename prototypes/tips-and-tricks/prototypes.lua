@@ -102,15 +102,6 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-free_for_all",
-            category = "enemyracemanager",
-            order = "i",
-            indent = 1,
-            starting_status = "suggested",
-            simulation = simulations.free_for_all
-        },
-        {
-            type = "tips-and-tricks-item",
             name = "enemyracemanager-environmental-attacks",
             category = "enemyracemanager",
             order = "j",
@@ -139,9 +130,17 @@ data:extend(
         },
         {
             type = "tips-and-tricks-item",
-            name = "enemyracemanager-engineer-army",
+            name = "enemyracemanager-army-ui",
             category = "enemyracemanager",
             order = "l1",
+            indent = 2,
+            starting_status = "suggested",
+        },
+        {
+            type = "tips-and-tricks-item",
+            name = "enemyracemanager-engineer-army",
+            category = "enemyracemanager",
+            order = "l2",
             indent = 2,
             starting_status = "suggested",
         },
