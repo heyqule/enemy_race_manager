@@ -80,19 +80,21 @@ function DeployerControlGUI.update(player)
     local filters = pane.add { type = "flow", direction = "horizontal" }
 
     for name, _ in pairs(storage.army_registered_deployers) do
-        local sprite = filters.add {
-            type = "sprite-button",
-            name="army_deployer/filter_type/"..name,
-            tags={filter_pattern="army_deployer/filter_type/.*"},
-            sprite = "recipe/" .. name,
-            style = "frame_button",
-            auto_toggle = true,
-        }
-        sprite.style.width = 32
-        sprite.style.height = 32
+        if prototypes.recipe[name] then
+            local sprite = filters.add {
+                type = "sprite-button",
+                name="army_deployer/filter_type/"..name,
+                tags={filter_pattern="army_deployer/filter_type/.*"},
+                sprite = "recipe/" .. name,
+                style = "frame_button",
+                auto_toggle = true,
+            }
+            sprite.style.width = 32
+            sprite.style.height = 32
 
-        if deployer_type_filters[name] then
-            sprite.toggled = true
+            if deployer_type_filters[name] then
+                sprite.toggled = true
+            end
         end
     end
 

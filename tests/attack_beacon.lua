@@ -202,14 +202,14 @@ describe("Surfaces and Forces", function()
         local surface = game.surfaces[1]
 
         -- Force it as valid enemy race
-        storage.enemy_force_check[force_name] = true
+        storage.enemy_forces_map[force_name] = true
         AttackGroupBeaconProcessor.add_new_force(force)
 
         local control_data = AttackGroupBeaconProcessor.get_control_data(surface.index, force.name)
         assert.equal("table",type(control_data), "Test a valid ERM force")
 
         game.merge_forces("enemy_101", "player")
-        storage.enemy_force_check[force_name] = nil
+        storage.enemy_forces_map[force_name] = nil
         after_ticks(60, function()
             control_data = AttackGroupBeaconProcessor.get_control_data(surface.index, force_name)
             assert.is_nil(control_data, "Valid Force Control Data")

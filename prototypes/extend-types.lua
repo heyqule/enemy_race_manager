@@ -11,8 +11,7 @@ data:extend(
                 name = "healing",
             },
             --- ERM nukes will use this damage type and explosive
-            --- This shares name with K2 radioactive resistance.
-            --- All ERMs units will have 50% max resist, starting at 5%)
+            --- All ERMs units will have 20% max resist, starting at 5%.  Building max at 50%
             {
                 type = "damage-type",
                 name = "radioactive"

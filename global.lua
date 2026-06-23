@@ -56,6 +56,7 @@ ENVIRONMENTAL_ATTACK = "emev-atk"
 
 CREEP_REMOVAL = "em-crprm"
 
+--- This set must be same cross all mods to trigger proper response
 REGISTER_BOSS_RADAR = "embss-rdr"
 TRIGGER_BOSS_SPAWNED = "embss-spn"
 TRIGGER_BOSS_DIES = "embss-die"

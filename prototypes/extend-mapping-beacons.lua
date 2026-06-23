@@ -102,6 +102,44 @@ data:extend({
             draw_as_glow = true,
         },
         map_color = nil,
+    },
+    ---- Town Spawn beacon
+    {
+        type = "simple-entity-with-owner",
+        name = "erm_town_beacon",
+        subgroup = "erm_ai_beacons",
+        icon = "__enemyracemanager_assets__/graphics/town-hall.png",
+        icon_size = 64,
+        max_health = BEACON_HEALTH_LIMIT,
+        collision_box = nil,
+        collision_mask = {layers={}},
+        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        picture = {
+            filename = "__enemyracemanager_assets__/graphics/town-hall.png",
+            width = 64,
+            height = 64,
+            draw_as_glow = true,
+        },
+        map_color = nil,
+    },
+    ---- City Spawn beacon
+    {
+        type = "simple-entity-with-owner",
+        name = "erm_city_beacon",
+        subgroup = "erm_ai_beacons",
+        icon = "__enemyracemanager_assets__/graphics/city.png",
+        icon_size = 64,
+        max_health = BEACON_HEALTH_LIMIT,
+        collision_box = nil,
+        collision_mask = {layers={}},
+        flags = {"not-on-map","not-repairable","not-deconstructable","not-blueprintable"},
+        picture = {
+            filename = "__enemyracemanager_assets__/graphics/city.png",
+            width = 64,
+            height = 64,
+            draw_as_glow = true,
+        },
+        map_color = nil,
     }
 })
 

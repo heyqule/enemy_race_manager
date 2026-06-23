@@ -239,6 +239,7 @@ local biter_spawner = "enemy--biter-spawner--1"
                 radius = 64,
             }
             assert.equal(enemies, 0, "Land scout should not near the rocket.")
+            TestShared.reset_lab_tile(500)
             done()
         end)
     end)

@@ -18,7 +18,6 @@ end)
 
 after_each(function()
     TestShared.reset_the_factory()
-    TestShared.reset_lab_tile(500)
     storage.override_attack_strategy = nil
     storage.skip_interplanetary_attack = false
 end)

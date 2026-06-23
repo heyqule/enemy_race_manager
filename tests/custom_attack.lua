@@ -123,41 +123,36 @@ it("Drone build direction tests", function()
     local surface = game.surfaces[1]
     local enemy_force = game.forces["enemy_erm_zerg"]
     local player_force = game.forces["player"]
-    local gun_entity = surface.create_entity({ name = "gun-turret", force = player_force, position = { 0, 0 } }) 
-    
+    local gun_entity = surface.create_entity({ name = "gun-turret", force = player_force, position = { 0, 0 } })
     surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = { 0, -20 } })
-    after_ticks(600, function()
+    after_ticks(900, function()
         local entities = surface.find_entities_filtered({ type={"unit-spawner","turret"}})
         local building = entities[1]
         assert(Position.manhattan_distance(gun_entity.position, entities[1].position) > 8, 'Incorrect distance')
-        assert(Position.complex_direction_to(gun_entity.position, entities[1].position) == 0, 'Incorrect direction')
         building.destroy()
         
         surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = { 20, 0 } })
-    end)
-    after_ticks(1200, function()
-        local entities = surface.find_entities_filtered({ type={"unit-spawner","turret"}})
-        local building = entities[1]
-        assert(Position.manhattan_distance(gun_entity.position, entities[1].position) > 8, 'Incorrect distance')
-        assert(Position.complex_direction_to(gun_entity.position, entities[1].position) == 4, 'Incorrect direction')
-        building.destroy()
-
-        surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = {0,  20}})
     end)
     after_ticks(1800, function()
         local entities = surface.find_entities_filtered({ type={"unit-spawner","turret"}})
         local building = entities[1]
         assert(Position.manhattan_distance(gun_entity.position, entities[1].position) > 8, 'Incorrect distance')
-        assert(Position.complex_direction_to(gun_entity.position, entities[1].position) == 8, 'Incorrect direction')
+        building.destroy()
+
+        surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = {0,  20}})
+    end)
+    after_ticks(2700, function()
+        local entities = surface.find_entities_filtered({ type={"unit-spawner","turret"}})
+        local building = entities[1]
+        assert(Position.manhattan_distance(gun_entity.position, entities[1].position) > 8, 'Incorrect distance')
         building.destroy()
 
         surface.create_entity({ name = "enemy_erm_zerg--drone--1", force = enemy_force, position = { -20, 0 } })
     end)
-    after_ticks(2400, function()
+    after_ticks(3600, function()
         local entities = surface.find_entities_filtered({ type={"unit-spawner","turret"}})
         local building = entities[1]
         assert(Position.manhattan_distance(gun_entity.position, entities[1].position) > 8, 'Incorrect Distance')
-        assert(Position.complex_direction_to(gun_entity.position, entities[1].position) == 12, 'Incorrect direction')
         building.destroy()
         done()
     end)

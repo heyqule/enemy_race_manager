@@ -7,7 +7,7 @@ local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local BASE_MAX_UNIT = 30
 
 local robot_max_following_robot_count = {20,50,90,120}
-
+local default_deployable = 20
 local ArmyPopulationProcessor = {}
 
 local get_max_pop = function(force, level)
@@ -21,12 +21,15 @@ local get_max_pop = function(force, level)
             end
         end
     end
-    
-    if level and level < 5 then
-        extra = robot_max_following_robot_count[level]
-    elseif level and level == 5 then
-        extra = 120
+
+    if level then
+        if level < 5 then
+            extra = robot_max_following_robot_count[level]
+        elseif level == 5 then
+            extra = 120
+        end
     end
+    
     return  math.floor((BASE_MAX_UNIT + force.maximum_following_robot_count + extra) * settings.global["enemyracemanager-army-limit-multiplier"].value)
 end
 
@@ -44,7 +47,7 @@ local set_default_values = function(force)
             default_values["unit_types"][name] = { pop_count = 0, unit_count = 0 }
         end
 
-        default_values["auto_deploy"][name] = math.floor(50 / value)
+        default_values["auto_deploy"][name] = default_deployable
     end
 
     return default_values
@@ -206,7 +209,7 @@ function ArmyPopulationProcessor.set_auto_deploy_unit_count(player, force, name,
 end
 
 function ArmyPopulationProcessor.get_auto_deploy_unit_count(force, name)
-    return storage.army_populations[force.name]["auto_deploy"][name] or 1
+    return storage.army_populations[force.name]["auto_deploy"][name] or default_deployable
 end
 
 function ArmyPopulationProcessor.is_under_max_pop(force)

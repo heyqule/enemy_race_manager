@@ -14,6 +14,7 @@ local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_grou
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local EmotionConstants = require("__enemyracemanager__/lib/emotion_constants")
 local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
+local CustomAttacks = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
@@ -28,6 +29,7 @@ BossAttackProcessor.TYPE_STRUCT_SPAWN = 5
 BossAttackProcessor.TYPE_UNIT_SPAWN = 6
 BossAttackProcessor.TYPE_SEGMENTED_UNIT_SPAWN = 7
 BossAttackProcessor.TYPE_SELECT_NEARBY_ENEMY = 8
+BossAttackProcessor.TYPE_INCREASE_ATTACK_POINT = 9
 
 local scanRange = 2000
 local scanExtraPadding = 160
@@ -42,7 +44,7 @@ local artillery_target_cache_tick = 1 * minute
 local acquire_attack_target = function(data)
     local artillery_mode = data.artillery_mode or false
     local only_targets_radar = data.only_targets_radar or false
-    local can_aim_attackable_targets = data.can_aim_attackable_targets or true
+    local can_aim_attackable_targets = data.can_aim_attackable_targets or false
 
     local return_position
     local boss = storage.boss
@@ -53,13 +55,13 @@ local acquire_attack_target = function(data)
     if boss.radar and boss.radar.valid then
         ---- 20% targets radar
         if only_targets_radar or RaceSettingsHelper.can_spawn(20) then
-            local offset = math.random(-8, 8)
-            return_position = {x = boss.radar_position.x + offset, y = boss.radar_position.y}
+            local offset_x = math.random(-8, 8)
+            local offset_y = math.random(-8, 8)
+            return_position = {x = boss.radar_position.x + offset_x, y = boss.radar_position.y + offset_y}
             return return_position, true
         end
-
-        ---- 10% targets attackable targets
-        if  can_aim_attackable_targets and RaceSettingsHelper.can_spawn(10) then
+        
+        if (can_aim_attackable_targets and RaceSettingsHelper.can_spawn(50)) or RaceSettingsHelper.can_spawn(20) then
             local beacon_data = AttackGroupBeaconProcessor.pick_new_attack_beacon(
                     boss.surface,
                     boss.force,
@@ -118,7 +120,7 @@ local acquire_attack_target = function(data)
             if entity and entity.valid then
                 return_position = entity.position
             else
-                table.remove(attackable_entities_cache, index)
+                attackable_entities_cache[index] = nil
                 attackable_entities_cache_size = attackable_entities_cache_size - 1
             end
             retry = retry + 1
@@ -148,9 +150,13 @@ end
 
 local can_spawn = RaceSettingsHelper.can_spawn
 
-local set_optional_data = function(data, attacks, index, name)
+local set_optional_data = function(data, attacks, index, name, tier)
     if attacks[name] then
-        data[name] = attacks[name][index]
+        if tier then
+            data[name] = attacks[name][index][tier]
+        else
+            data[name] = attacks[name][index]
+        end
     end
 
     return data
@@ -162,7 +168,9 @@ local select_attack = function(mod_name, attacks, tier)
     for i, value in pairs(attacks.attack_name) do
         if can_spawn(attacks.attack_chance[i][tier]) then
             local entity_name
-            if type_name[attacks.attack_type[i]] then
+            if attacks.attack_type[i] == BossAttackProcessor.TYPE_STRUCT_SPAWN then
+                entity_name = value
+            elseif type_name[attacks.attack_type[i]] then
                 entity_name = mod_name .. "--" .. value .. "--" .. type_name[attacks.attack_type[i]]
             else
                 --- other attack types may require additional name processing when under process_attack().
@@ -195,7 +203,8 @@ local select_attack = function(mod_name, attacks, tier)
             data = set_optional_data(data, attacks, i, "spawn_near_target")
             --- Select nearby enemy count, 1 = 1 x max group size.
             data = set_optional_data(data, attacks, i, "select_nearby_enemy_count")
-            
+            --- Max spawnable structure count
+            data = set_optional_data(data, attacks, i, "max_structure_count", tier)
             break
         end
     end
@@ -280,7 +289,7 @@ local attack_falling_projectile = function(data)
         position = start_drop_position,
         target = position,
         speed = 0.2,
-        max_range = 32,
+        max_range = Position.distance(start_drop_position, position),
         create_build_effect_smoke = false,
         raise_built = false,
         force = data.entity_force,
@@ -318,29 +327,75 @@ local attack_beam = function(data)
     })
 end
 
+---- 20s cooldown on structures spawns attack
+local ASSISTED_SPAWN_INTERVAL = 1200
+local directional_offsets = {
+    {x = 16, y = 16},
+    {x = 16, y = -16},
+    {x = -16, y = 16},
+    {x = -16, y = -16}
+}
+local directional_offsets_size = #directional_offsets
 
+--- Spawn assist spawner when the total assist spawner isn't at max.
 local attack_struct_spawn = function(data)
     local boss_data = storage.boss
-    local surface = data.surface
-    local new_entity_name = data.entity_name .. '--' .. boss_data.boss_tier
+    if game.tick < boss_data.assisted_spawner_check_time + ASSISTED_SPAWN_INTERVAL then
+        return
+    end
     
+    local surface = data.surface
+
     local position = data.entity_position
     if data.spawn_near_target then
-        position = data.position    
+        position = data.position
+        local new_entity_name = boss_data.force_name .. '--' .. data.entity_name .. '--' .. boss_data.boss_tier
+        
+        local spawn_position = surface.find_non_colliding_position(new_entity_name, position, 64, 8, true)
+        if spawn_position then
+            storage.skip_quality_rolling = true
+            local entity = surface.create_entity({
+                name = new_entity_name,
+                position = spawn_position,
+                create_build_effect_smoke = false,
+                raise_built = false,
+                force = data.entity_force,
+                quality = data.quality
+            })
+            boss_data.assisted_spawner_check_time = game.tick
+            
+            return
+        end
     end
 
-    local spawn_position = surface.find_non_colliding_position(new_entity_name, position, 64, 2, true)
-    storage.skip_quality_rolling = true
-    if spawn_position then
-        local entity = surface.create_entity({
+    local race_settings = storage.race_settings[boss_data.force_name]
+    --- Skip boss spawn assist when there are enough on the field.
+    if data.entity_name == race_settings.boss_assisted_spawner and
+            boss_data.total_assisted_spawners >= boss_data.max_buildable_unit_spawner
+    then
+        return
+    elseif data.entity_name ~= race_settings.boss_assisted_spawner then
+        local new_entity_name = boss_data.force_name .. '--' .. data.entity_name .. '--' .. boss_data.boss_tier
+        local entity_count = surface.count_entities_filtered {
             name = new_entity_name,
-            position = spawn_position,
-            create_build_effect_smoke = false,
-            raise_built = false,
-            force = data.entity_force,
-            quality = data.quality
-        })
-    end 
+            radius = bossRadius,
+            position = position
+        }
+
+        if entity_count >= data.max_structure_count then
+            return
+        end
+    end
+
+    local event_obj = {
+        surface_index = boss_data.surface.index,
+        source_entity = boss_data.entity
+    }
+
+    local offset = directional_offsets[math.random(1, directional_offsets_size)]
+    CustomAttacks.boss_build(event_obj, boss_data.force_name, data.entity_name,
+            {x = boss_data.entity_position.x + offset.x, y = boss_data.entity_position.y + offset.y})
+    boss_data.assisted_spawner_check_time = game.tick
 end
 
 --- Spawn divine tier only.
@@ -594,6 +649,15 @@ local attack_select_nearby_enemy = function(data)
     end
 end
 
+local attack_increase_attack_points = function(data)
+    local force_name = data.entity_force.name
+    RaceSettingsHelper.add_to_attack_meter(
+            force_name, 
+            RaceSettingsHelper.get_next_attack_threshold(force_name), 
+            true
+    )
+end
+
 local attack_functions = {
     [BossAttackProcessor.TYPE_PROJECTILE] = attack_projectile,
     [BossAttackProcessor.TYPE_FALLING_PROJECTILE] = attack_falling_projectile,
@@ -602,7 +666,8 @@ local attack_functions = {
     [BossAttackProcessor.TYPE_STRUCT_SPAWN] = attack_struct_spawn,
     [BossAttackProcessor.TYPE_UNIT_SPAWN] = attack_unit_spawn,
     [BossAttackProcessor.TYPE_SEGMENTED_UNIT_SPAWN] = attack_segment_unit_spawn,
-    [BossAttackProcessor.TYPE_SELECT_NEARBY_ENEMY] = attack_select_nearby_enemy
+    [BossAttackProcessor.TYPE_SELECT_NEARBY_ENEMY] = attack_select_nearby_enemy,
+    [BossAttackProcessor.TYPE_INCREASE_ATTACK_POINT] = attack_increase_attack_points,
 }
 
 local process_attack = function(data)
@@ -674,6 +739,22 @@ end
 
 function BossAttackProcessor.exec_ultimate()
     prepare_attack("ultimate_attacks")
+end
+
+function BossAttackProcessor.exec_spawn_assist()
+    local boss_data = storage.boss
+    local race_settings = storage.race_settings[boss_data.force_name]
+    
+    local dataset = {
+        surface = boss_data.surface,
+        entity_name = race_settings.boss_assisted_spawner,
+        entity_position = boss_data.entity_position
+    }
+    if boss_data.boss_tier > 1 then
+        dataset.quality = 'erm-boss-'..GlobalConfig.BOSS_QUALITY_MAPPING[boss_data.boss_tier]
+    end
+    
+    attack_struct_spawn(dataset)
 end
 
 function BossAttackProcessor.exec_phase()

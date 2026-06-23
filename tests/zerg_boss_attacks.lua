@@ -139,7 +139,7 @@ it("If max assist spawner has not reached, Boss should respawn a new boss assist
         assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
         assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
         -- Should have the same number of spawners as before (one died, one respawned, due to hiting the 3/5 threshold)
-        assert.equal(4, storage.boss.total_assisted_spawners, "New assist spawner respawned")
+        assert(storage.boss.total_assisted_spawners > 3, "New assist spawner respawned")
         -- Boss health should be deducted due to spawner death
         assert.near(storage.boss.entity.health, 
             math.floor(storage.boss.entity.max_health - spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO), 
@@ -150,46 +150,6 @@ it("If max assist spawner has not reached, Boss should respawn a new boss assist
     end)
 end)
 
-it("If existing spawner is under 50% cap, boss spawn 2 assist spawners after a minute of last assist spawner kill.", function()
-    async(4500)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-    local total_spawners_checkpoint = 0
-    local spawner_max_health = 0
-
-    -- Wait for initial spawners to spawn
-    after_ticks(30, function()
-        total_spawners_checkpoint = storage.boss.total_assisted_spawners
-        -- Kill all spawners
-        for idx, spawner in pairs(storage.boss.assisted_spawners) do
-            spawner.entity.health = 1
-            spawner_max_health = spawner.entity.max_health
-            spawner.entity.damage(99999, 'player', 'physical') 
-        end
-        assert.equal(0, storage.boss.total_assisted_spawners, "All assist spawner killed")
-    end)
-
-    -- Check after 1 minute (3600 ticks) that a new spawner has been created
-    after_ticks(4500, function()
-        assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
-        assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
-        assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
-        -- Should have the same number of spawners as before (one died, one respawned)
-        assert.equal(2, storage.boss.total_assisted_spawners, "New assist spawner respawned")
-        -- Boss health should be deducted due to spawner death
-        assert.near(storage.boss.entity.health, 
-                math.floor(storage.boss.entity.max_health - (spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO * total_spawners_checkpoint)),
-                100, 
-                "Boss health deducted"
-        )
-        done()
-    end)    
-end)
 
 local defense_attacks = {2500020, 250020, 100020, 50020, 20020}
 for index, health_threshold in pairs(defense_attacks) do

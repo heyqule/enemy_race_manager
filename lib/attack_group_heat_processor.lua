@@ -193,6 +193,21 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
             return_surface = nil
         end
 
+        if not return_surface and 
+            storage.race_settings[force_name].home_planet and
+            game.surfaces[storage.race_settings[force_name].home_planet] 
+        then            
+            local surface = game.surfaces[storage.race_settings[force_name].home_planet]
+            if surface and surface.valid then
+                local count = surface.count_entities_filtered{
+                    type = "cargo-landing-pad"
+                }
+                if count then
+                    return_surface = storage.race_settings[force_name].home_planet
+                end
+            end
+        end
+
         if not return_surface and ask_friend then
             -- Transfer all attack points to a friend that can attack.
             for friend_force_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
@@ -200,8 +215,6 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
                     if surface and surface.has_attack_beacon and
                             storage.attack_heat[friend_force_name][surface_index] ~= nil
                     then
-
-                        --- AttackMeterProcessor.transfer_attack_points(force_name, friend_force_name)
                         RaceSettingsHelper.add_to_attack_meter(friend_force_name, RaceSettingsHelper.get_next_attack_threshold(force_name), true)
                         RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1, true)
                         return nil

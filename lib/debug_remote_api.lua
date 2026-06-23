@@ -123,7 +123,9 @@ function Debug_RemoteAPI.set_evolution_factor(value)
     for force_name, _ in pairs(storage.race_settings) do
         local force = game.forces[force_name]
         if force then
-            force.set_evolution_factor(math.min(value, 1))
+            for _, surface in pairs(game.surfaces) do
+                force.set_evolution_factor(math.min(value, 1), surface) 
+            end
         end
     end
 end

@@ -12,6 +12,7 @@ local Config = require("__enemyracemanager__/lib/global_config")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
+local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local chunksize = 32
 local max_range = 35
@@ -31,9 +32,9 @@ function BossPsiRadar.register(radar)
                         registered_radar.position.y,
                         registered_radar.surface.name
                 )
-                BossPsiRadar.reject('Boss radar already placed '..gps_msg, radar)
+                BossPsiRadar.reject({ "radar-rejects.radar-placement-error",gps_msg }, radar)
             else
-                BossPsiRadar.reject('Deteched boss placement anomaly. Please try again.  If problem persist, please notify mod author.')
+                BossPsiRadar.reject({ "radar-rejects.radar-placement-error" })
             end
             return
         end
@@ -42,7 +43,19 @@ function BossPsiRadar.register(radar)
         boss_data.radar_position = radar.position
         storage.boss_radar_iteration = 1
         storage.boss_radar_side_iteration = 1
-        Cron.add_15_sec_queue("BossPsiRadar.scan")
+        local name_tokens = ForceHelper.get_name_token(radar.name)
+        local force_name = name_tokens[1]        
+        if storage.race_settings[force_name] and storage.race_settings[force_name].boss_custom_spawn then
+            local boss_object = remote.call(storage.remote_race_name_cache[force_name], 'boss_custom_spawn', radar, TEST_MODE)
+            if boss_object and boss_object.valid  then
+                BossProcessor.exec(radar, boss_object.position, boss_object)
+            else
+                DebugHelper.print(boss_object)
+                BossPsiRadar.reject(boss_object)
+            end
+        else
+            Cron.add_15_sec_queue("BossPsiRadar.scan")
+        end
     end
 end
 
@@ -212,7 +225,7 @@ function BossPsiRadar.find_spawn_location(radar)
     end
 
     if not found then
-        BossPsiRadar.reject('Unable to locate boss.  Radar refund back to user inventory')
+        BossPsiRadar.reject({"radar-rejects.unable-locate-boss"})
     end
 end
 

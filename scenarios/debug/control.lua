@@ -43,11 +43,11 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.set_tech_level(force, level)
     scenarios_helper.set_attack_points(999999)
     scenarios_helper.set_attack_points(999999)
-    --scenarios_helper.set_attack_points(999999)
-    --scenarios_helper.set_attack_points(-999999)
+    scenarios_helper.set_attack_points(999999)
+    scenarios_helper.set_attack_points(-999999)
     scenarios_helper.set_enemy_params(1, 1)
     scenarios_helper.set_game_speed(10)
-
+    
     surface.daytime = 0.5
     surface.daytime = 1
     surface.freeze_daytime = true

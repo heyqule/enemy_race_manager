@@ -460,6 +460,7 @@ RemoteAPI.calculate_attack_points = AttackMeterProcessor.calculate_points
 
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals  --- for post process
+RemoteAPI.pick_random_attack_beacon = AttackGroupBeaconProcessor.pick_random_attack_beacon
 
 --- Base build processor
 RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation

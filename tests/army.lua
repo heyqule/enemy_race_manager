@@ -464,3 +464,210 @@ it("Army Teleport, different surface, when population is full", function()
         done()
     end)
 end)
+
+it("Army Teleport, Test player teleport on same surface", function()
+    async(300)
+    AttackGroupBeaconProcessor.init_index()
+    local player = game.players[1]
+    local surface = game.surfaces[1]
+    local force = game.forces["player"]
+    local building = "erm_terran--command-center"
+    player.teleport({-165,4})
+
+    local powerinterface1 = surface.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={-150,4},
+        raise_built = true
+    })
+    local substation1 = surface.create_entity({
+        force=force,
+        name="substation",
+        position={-150,4},
+        raise_built = true
+    })
+    local command_center1 = surface.create_entity({
+        force=force,
+        name=building,
+        position={-150,0},
+        raise_built = true
+    })
+
+    local powerinterface2 = surface.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={150,4},
+        raise_built = true
+    })
+    local substation2 = surface.create_entity({
+        force=force,
+        name="substation",
+        position={150,4},
+        raise_built = true
+    })
+    local command_center2 = surface.create_entity({
+        force=force,
+        name=building,
+        position={150,0},
+        raise_built = true
+    })
+
+    ArmyTeleport.link({entity=command_center1}, {entity=command_center2})
+    ArmyTeleport.teleport_player(player)
+
+    after_ticks(61, function()
+        local player_pos = player.position
+        assert(player_pos.x >= 100 and player_pos.x <= 200, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
+        done()
+    end)
+end)
+
+it("Army Teleport, Test player teleport to different surface", function()
+    async(300)
+    AttackGroupBeaconProcessor.init_index()
+    local surface = game.surfaces[1]
+    local surface2 = game.planets.vulcanus.create_surface()
+    surface2.request_to_generate_chunks({ 0, 0 }, 8)
+    surface2.force_generate_chunk_requests()
+    local force = game.forces["player"]
+    local player = game.players[1]
+    player.teleport({5, 5}, 'nauvis')
+    player.create_character()
+    local main_inventory = player.get_inventory(defines.inventory.character_main)
+    main_inventory.clear()
+    local trash_inventory = player.get_inventory(defines.inventory.character_trash)
+    trash_inventory.clear()
+    local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
+    ammo_inventory.clear()
+    local building = "erm_terran--command-center"
+
+    local powerinterface1 = surface.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation1 = surface.create_entity({
+        force=force,
+        name="substation",
+        position={0,4},
+        raise_built = true
+    })
+    local command_center1 = surface.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+
+    local powerinterface2 = surface2.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation2 = surface2.create_entity({
+        force=force,
+        name="substation",
+        position={0,4},
+        raise_built = true
+    })
+    local command_center2 = surface2.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+    
+    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
+    ArmyTeleport.teleport_player(player)
+    
+    after_ticks(61, function()
+        local player_pos = player.position
+        assert(player.surface.name == 'vulcanus', "Player not teleported to destination surface. Surface: " .. player.surface.name)
+        assert(player_pos.x >= -50 and player_pos.x <= 50, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
+        game.delete_surface(surface2)
+        done()
+    end)
+end)
+
+it("Army Teleport, Test player teleport to different surface, with inventory", function()
+    async(600)
+    AttackGroupBeaconProcessor.init_index()
+    local surface = game.surfaces[1]
+    local surface2 = game.planets.vulcanus.create_surface()
+    surface2.request_to_generate_chunks({ 0, 0 }, 8)
+    surface2.force_generate_chunk_requests()
+    local force = game.forces["player"]
+    local player = game.players[1]
+    player.teleport({5, 5}, 'nauvis')
+    player.create_character()
+    
+    local building = "erm_terran--command-center"
+
+    local powerinterface1 = surface.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation1 = surface.create_entity({
+        force=force,
+        name="substation",
+        position={0,4},
+        raise_built = true
+    })
+    local command_center1 = surface.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+
+    local powerinterface2 = surface2.create_entity({
+        force=force,
+        name="electric-energy-interface",
+        position={0,4},
+        raise_built = true
+    })
+    local substation2 = surface2.create_entity({
+        force=force,
+        name="substation",
+        position={0,4},
+        raise_built = true
+    })
+    local command_center2 = surface2.create_entity({
+        force=force,
+        name=building,
+        position={0,0},
+        raise_built = true
+    })
+
+    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
+
+    local main_inventory = player.get_inventory(defines.inventory.character_main)
+    main_inventory.insert({name="iron-plate",count=50})
+    local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
+    
+    ArmyTeleport.teleport_player(player)
+
+    after_ticks(121, function()
+        assert(player.surface.name == 'nauvis', "Player main inventory teleport check failed, player teleported")
+        main_inventory.clear()
+        ammo_inventory.insert({name="firearm-magazine",count=50})
+        player.teleport({5, 5}, 'nauvis')
+        ArmyTeleport.teleport_player(player)
+    end)
+
+    after_ticks(181, function()
+        assert(player.surface.name == 'nauvis', "Player ammo inventory teleport check failed, player teleported")
+        ammo_inventory.clear()
+        player.teleport({5, 5}, 'nauvis')
+        ArmyTeleport.teleport_player(player)
+    end)
+    
+    after_ticks(241, function()
+        assert(player.surface.name == 'vulcanus', "Inventory Check passed, but player not teleported to destination surface. Surface:" .. player.surface.name)        
+        done()
+    end)
+end) 

@@ -312,6 +312,48 @@ function ArmyTeleportationProcessor.teleport(unit, from_entity, exit_entity)
     end
 end
 
+function ArmyTeleportationProcessor.teleport_player(player)
+    local force = player.force
+    local entry = storage.army_entrance_teleporters[force.index]
+    local exit = storage.army_exit_teleporters[force.index]
+    local success  = false
+    local message = nil
+    
+    if entry and entry.entity and
+        exit and exit.entity and
+        util.distance(player.position, entry.entity.position) < 64
+    then
+        local surface = exit.entity.surface
+        local can_travel = false
+        --- player inventory must be empty when traveling to different planet
+        if player.surface ~= surface then
+            local main_inventory = player.get_inventory(defines.inventory.character_main)
+            local trash_inventory = player.get_inventory(defines.inventory.character_trash)
+            local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
+
+            if main_inventory and main_inventory.is_empty() and
+               trash_inventory and trash_inventory.is_empty() and
+               ammo_inventory and ammo_inventory.is_empty() then
+                can_travel = true
+            end
+        else
+            can_travel = true
+        end
+        
+        if can_travel then
+            local position = surface.find_non_colliding_position('character', exit.entity.position, 32, 1)
+            player.teleport(position, surface)
+            success = true
+        else
+            message = { "gui-army.cc_teleport_inventory_error" }
+        end
+    else
+        message = { "gui-army.cc_teleport_error" }
+    end
+    
+    return success, message
+end
+
 function ArmyTeleportationProcessor.can_start_event()
     return can_stop_event() == false
 end

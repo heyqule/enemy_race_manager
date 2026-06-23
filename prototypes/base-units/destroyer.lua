@@ -146,7 +146,6 @@ function makeLevelCombatRobots(level, type)
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
     robot['damaged_trigger_effect'] = nil
-    print(serpent.block(robot["attack_parameters"]))
     return robot
 end
 

@@ -10,8 +10,8 @@ local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 --- Boss Details Windows
 local BossDetailsWindow = {
     root_name = "erm_races_manager_boss_details",
-    window_width = 680,
-    window_height = 400,
+    window_width = 720,
+    window_height = 450,
 }
 
 local get_victory_label = function(victory)
@@ -61,8 +61,19 @@ local add_data_entry = function(data_box, entry)
     data_box.add { type = "label", caption = { "gui.boss_detail_data_"..entry.unit_assist_size} }
 
     data_box.add { type = "label", caption = { "gui.boss_detail_data_max_group_size" } }
-    data_box.add { type = "label", caption =  entry.max_group_size } 
+    data_box.add { type = "label", caption =  entry.max_group_size }
+
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_health_multiplier" } }
+    data_box.add { type = "label", caption =  entry.health_multiplier }
     
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_damage_multiplier" } }
+    data_box.add { type = "label", caption =  entry.damage_multiplier }
+
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_speed_multiplier" } }
+    data_box.add { type = "label", caption =  entry.speed_multiplier }
+
+    data_box.add { type = "label", caption = { "gui.boss_detail_data_army_limit_multiplier" } }
+    data_box.add { type = "label", caption =  entry.army_limit_multiplier }
 end
 
 function BossDetailsWindow.show(player, race_settings, boss_log)

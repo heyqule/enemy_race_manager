@@ -20,7 +20,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 
 local ATTACK_CHUNK_SIZE = 32
-local NON_COLLISION_GAP = 4
+local NON_COLLISION_GAP = 8
 
 local FEATURE_RACE_NAME = 1
 local FEATURE_RACE_SPAWN_DATA = 2
@@ -444,7 +444,7 @@ function CustomAttackHelper.clear_time_to_live_units(event, regular_batch, overf
     local unit_total = storage.time_to_live_units_total
     local units = storage.time_to_live_units
 
-    if unit_total == nil or unit_total == 0 then
+    if units == nil or unit_total == nil or unit_total == 0 then
         return
     end
 
@@ -651,8 +651,6 @@ local build = function(event, force_name, building_name, position, spawn_decorat
         level = GlobalConfig.MAX_LEVELS
     end
 
-    position.x = position.x + 2
-
     local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
@@ -692,8 +690,6 @@ local boss_build = function(event, force_name, building_name, position, spawn_de
         level = GlobalConfig.BOSS_MAX_TIERS
     end
 
-    position.x = position.x + 2
-
     local final_unit_name = force_name .. "--" .. building_name .. "--" .. level
 
     if not surface.can_place_entity({ name = final_unit_name, position = position }) then
@@ -707,6 +703,7 @@ local boss_build = function(event, force_name, building_name, position, spawn_de
             position = position,
             force = source_entity_force_name,
             preserve_ghosts_and_corpses = true,
+            raise_built = true,
             quality = source_entity.quality,
             spawn_decorations = spawn_decorations
         })

@@ -38,6 +38,8 @@ function TestShared.prepare_the_factory()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
     TestShared.reset_forces()
+    
+    
 end
 
 function TestShared.reset_the_factory()
@@ -62,6 +64,11 @@ function TestShared.reset_the_factory()
     InterplanetaryAttacks.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
+
+    if storage.reset_lab_tile then
+        TestShared.reset_lab_tile(500)
+        storage.reset_lab_tile = false
+    end
 end
 --- Clear cron and its trackers
 function TestShared.CleanCron()
@@ -315,6 +322,7 @@ local function draw_water(surface, x1,y1,x2,y2)
 end
 
 function TestShared.buildBaseNoOpen(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -327,6 +335,7 @@ function TestShared.buildBaseNoOpen(options)
 end
 
 function TestShared.buildBaseWithWestDefense(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -377,6 +386,7 @@ function TestShared.buildBaseWithWestDefense(options)
 end
 
 function TestShared.buildBaseWithWestDefenseNorthOpen(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -427,6 +437,7 @@ function TestShared.buildBaseWithWestDefenseNorthOpen(options)
 end
 
 function TestShared.buildBaseWithWestDefenseSouthOpen(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -477,6 +488,7 @@ function TestShared.buildBaseWithWestDefenseSouthOpen(options)
 end
 
 function TestShared.buildBaseWithWestDefenseForBrutalForce(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -527,6 +539,7 @@ function TestShared.buildBaseWithWestDefenseForBrutalForce(options)
 end
 
 function TestShared.buildBaseWithNorthDefenseForBrutalForce(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -577,6 +590,7 @@ function TestShared.buildBaseWithNorthDefenseForBrutalForce(options)
 end
 
 function TestShared.buildBaseWithWestAerialDefenseForBrutalForce(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH
@@ -622,6 +636,7 @@ function TestShared.buildBaseWithWestAerialDefenseForBrutalForce(options)
 end
 
 function TestShared.buildBaseWithBackdoorOpen(options)
+    storage.reset_lab_tile = true
     options = options or {}
     local dimension = options["dimension"] or DEFAULT_DIMENSION
     local riverwidth = options["riverwidth"] or RIVER_WIDTH

@@ -40,7 +40,7 @@ function UnitControlGUI.update(player)
                 item_table.add { type = "label", caption = unit_data["pop_count"] }
                 item_table.add { type = "label", caption = unit_data["unit_count"] }
 
-                local auto_deploy_units = army_data["auto_deploy"][name] or 1
+                local auto_deploy_units = ArmyPopulationProcessor.get_auto_deploy_unit_count(player.force, name)
                 local textfield = item_table.add {
                     type = "textfield", numeric = true,
                     name = "army_deployer/planner/" .. name,

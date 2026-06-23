@@ -11,7 +11,6 @@ local ArmyControlUI = require("__enemyracemanager__/gui/army_control_window")
 
 local is_valid_deployer = function(event)
     local entity = event.created_entity or event.entity
-    -- 0.01
     local army_deployers = storage.army_registered_deployers
     if entity and entity.valid and army_deployers then
         return army_deployers[entity.name]
