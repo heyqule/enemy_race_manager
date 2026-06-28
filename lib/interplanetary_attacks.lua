@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 5:42 PM
 ---
+local ERM = require('__enemyracemanager__/global')
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 local Config = require("__enemyracemanager__/lib/global_config")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -29,7 +30,7 @@ local default_ignore_list
 
 local get_default_ignore_list = function()
     if not default_ignore_list then
-        default_ignore_list = prototypes.mod_data[MOD_DATA_INTERPLANETARY_ATTACKS].data
+        default_ignore_list = prototypes.mod_data[ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data
     end
     return default_ignore_list
 end

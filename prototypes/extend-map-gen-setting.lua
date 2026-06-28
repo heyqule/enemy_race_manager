@@ -4,6 +4,7 @@
 --- DateTime: 12/25/2021 12:25 PM
 
 require("util")
+local ERM = require("__enemyracemanager__/global")
 local map_gen_settings = util.table.deepcopy(data.raw["map-gen-presets"])
 
 map_gen_settings["default"]["erm-rts-world"] = {
@@ -14,8 +15,8 @@ map_gen_settings["default"]["erm-rts-world"] = {
     },
     advanced_settings = {
         enemy_expansion = {
-            min_expansion_cooldown = 5 * 3600,
-            max_expansion_cooldown = 20 * 3600
+            min_expansion_cooldown = 10 * 3600,
+            max_expansion_cooldown = 30 * 3600
         }
     }
 }
@@ -35,8 +36,8 @@ map_gen_settings["default"]["erm-rts-death-world"] = {
             pollution_factor = 0.0000012
         },
         enemy_expansion = {
-            min_expansion_cooldown = 5 * 3600,
-            max_expansion_cooldown = 20 * 3600
+            min_expansion_cooldown = 10 * 3600,
+            max_expansion_cooldown = 30 * 3600
         },
         pollution = {
             ageing = 0.5,
@@ -60,7 +61,7 @@ for _, item in pairs(base_game_resource_list) do
     end
 end
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     map_gen_settings["default"]["erm-debug"] = {
         order = "k",
         basic_settings = {

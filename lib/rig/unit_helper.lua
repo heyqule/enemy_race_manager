@@ -202,4 +202,13 @@ function ERM_UnitHelper.make_unit_melee_ammo_type(damage_value)
     }
 end
 
+function ERM_UnitHelper.get_buildable_entities(prefix, building_names, level)
+    local building_list = {}
+    for _, building in pairs(building_names) do
+        table.insert(building_list, prefix..'--'..building..'--'..math.min(level, GlobalConfig.MAX_LEVELS))
+    end
+    return building_list
+end 
+    
+
 return ERM_UnitHelper

@@ -4,24 +4,25 @@
 --- DateTime: 12/23/2020 8:27 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local CustomAttackHelper = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 
 function CustomAttackHelper.process_logistic(event)
-    local race_settings = CustomAttackHelper.get_race_settings(MOD_NAME)
-    CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 2)
+    local race_settings = CustomAttackHelper.get_race_settings(ERM.MOD_NAME)
+    CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 2)
     if CustomAttackHelper.can_spawn(75) then
-        CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"))
+        CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"))
     end
     if race_settings.tier == 3 and CustomAttackHelper.can_spawn(33) then
-        CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 2)
+        CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 2)
         if CustomAttackHelper.can_spawn(20) then
-            CustomAttackHelper.drop_unit(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "droppable_units"), 1)
+            CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 1)
         end
     end
 end
 
 function CustomAttackHelper.process_constructor(event)
-    CustomAttackHelper.build(event, MOD_NAME, CustomAttackHelper.get_unit(MOD_NAME, "construction_buildings"))
+    CustomAttackHelper.build(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "construction_buildings"))
     event.source_entity.destroy()
 end
 

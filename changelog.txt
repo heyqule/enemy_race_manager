@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+Date: 2026-07-??
+
+  Features:
+    - Most ERM enemy units utilize "size_in_group" as its supply count for max group size.
+    - Most ERM playable units utilize "size_in_group" as its supply count.      
+    - Most ERM enemy units have its own buildable_entities list.
+    - Added steering attribute to all ERM units.
+    - When there are leftover units after base building group completes its task, they will switch to attack command.
+    - Re-designed custom attack group to work with size_in_group attribute, aka total unit supply, instead of total number of units.
+    
+  Changes:
+    - Changed default max group size from 100 to 200, back to base game default.
+    - Changed default max gathering groups from 30 to 20.
+    - Removed "Custom Base Expansion" logics. Enemy now depends on base game logic to build their base.  
+    - Changed ERM RTS preset enemy expansion timer from 5-20 mins to 10-30 mins. 
+      
+  Scripting:
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.70
 Date: 2026-06-22
 

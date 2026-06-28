@@ -1,10 +1,10 @@
-
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local modify_race_setting = function()
     if script.active_mods["Cold_biters"] then
-        local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
+        local race_settings = remote.call("enemyracemanager", "get_race", ERM.MOD_NAME)
 
         DebugHelper.print("Cold_biters is active")
 
@@ -35,7 +35,7 @@ end
 local ColdBiters = {}
 ColdBiters.events = {
     [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE]] = function(event)
-        if (event.affected_race == MOD_NAME) then
+        if (event.affected_race == ERM.MOD_NAME) then
             modify_race_setting()
         end
     end

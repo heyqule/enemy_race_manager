@@ -5,6 +5,7 @@
 ---
 --- require("__enemyracemanager__/lib/helper/force_helper")
 ---
+local ERM = require("__enemyracemanager__/global")
 require('util')
 local String = require('__erm_libs__/stdlib/string')
 
@@ -15,13 +16,10 @@ local ForceHelper = {
     }
 }
 
---- Redefine here since it can use by other mods.
-local MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces'
-local MOD_DATA_SURFACE_EXCLUSIONS = 'ERM_surface_exclusions'
 
 local set_up_neutral_forces = function()
     table.insert(storage.neutral_forces, 'neutral')
-    for name, value in pairs( prototypes.mod_data[MOD_DATA_NEUTRAL_FORCES].data) do
+    for name, value in pairs( prototypes.mod_data[ERM.MOD_DATA_NEUTRAL_FORCES].data) do
         if game.forces[name] then
             table.insert(storage.neutral_forces, name)
         end
@@ -31,9 +29,9 @@ end
     
 local refresh_exclusion_surface = function()
     if storage.surface_exclusion_list == nil then
-        storage.surface_exclusion_list = prototypes.mod_data[MOD_DATA_SURFACE_EXCLUSIONS].data
+        storage.surface_exclusion_list = prototypes.mod_data[ERM.MOD_DATA_SURFACE_EXCLUSIONS].data
     else
-        for name, item in pairs(prototypes.mod_data[MOD_DATA_SURFACE_EXCLUSIONS].data) do
+        for name, item in pairs(prototypes.mod_data[ERM.MOD_DATA_SURFACE_EXCLUSIONS].data) do
             storage.surface_exclusion_list[name] = true
         end
     end
@@ -176,7 +174,7 @@ function ForceHelper.refresh_all_enemy_forces()
             table.insert(storage.player_forces, force.name)
         end
 
-        if TEST_MODE and string.find(force.name, "test") then
+        if ERM.TEST_MODE and string.find(force.name, "test") then
             table.insert(storage.player_forces, force.name)
         end
     end
@@ -188,6 +186,46 @@ function ForceHelper.refresh_all_enemy_forces()
     storage.neutral_forces_map = util.list_to_map(storage.neutral_forces)
     
     refresh_exclusion_surface()
+end
+
+function ForceHelper.cache_prototype_names()
+    local entities = prototypes.get_entity_filtered {{filter = "type", type = {'unit-spawner', 'turret', 'unit'}}}
+    for _, entity in pairs(entities) do
+        ForceHelper.get_name_token(entity.name)
+    end
+end
+
+function ForceHelper.cache_unit_supply()
+    local units =  prototypes.get_entity_filtered {{filter = "type", type = {'unit'}}}
+    for _, unit in pairs(units) do
+        if not storage.unit_supply_cache[unit.name] and ForceHelper.is_erm_unit(unit) and unit.ai_settings then
+            local name_tokens = ForceHelper.get_name_token(unit.name)
+            if storage.race_settings[name_tokens[1]] and 
+               storage.race_settings[name_tokens[1]].timed_units and
+               storage.race_settings[name_tokens[1]].timed_units[name_tokens[2]] then
+            
+               goto cache_unit_supply_skip_unit_cache_assignment
+            end
+            storage.unit_supply_cache[unit.name] = unit.ai_settings.size_in_group or 2
+        end
+
+        ::cache_unit_supply_skip_unit_cache_assignment::
+    end
+end
+
+function ForceHelper.cache_spawner_decoration()
+    local structures = prototypes.get_entity_filtered {{filter = "type", type = {'unit-spawner', 'turret'}}}
+    for _, struct in pairs(structures) do
+        local prototype = struct
+        local prototype_decos = prototype.spawn_decoration
+        local names = {}
+        if next(prototype_decos) then
+            for i = 1, table_size(prototype_decos), 1 do
+                table.insert(names, prototype_decos[i].decorative)
+            end
+            storage.decorative_cache[struct.name] = names 
+        end
+    end
 end
 
 -- Whether a surface can assign enemy

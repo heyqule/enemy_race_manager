@@ -4,11 +4,11 @@
 --- DateTime: 8/1/2023 10:55 PM
 ---
 
-require("global")
+local ERM = require("__enemyracemanager__/global")
 
 require "prototypes/compatibility/setting-updates.lua"
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     data.raw["int-setting"]['enemyracemanager-factoriopedia-level'].default_value = 5
 end
 

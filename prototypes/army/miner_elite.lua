@@ -155,7 +155,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "modular-armor", amount = 1},
         {type = "item", name = "steel-plate", amount = 10},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -163,7 +163,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['modular-armor']['effects'],         {

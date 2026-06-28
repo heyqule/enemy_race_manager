@@ -4,8 +4,7 @@
 --- DateTime: 2/15/2022 10:00 PM
 ---
 
-
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 
 local Queue = require("__erm_libs__/stdlib/queue")
 local String = require("__erm_libs__/stdlib/string")
@@ -89,9 +88,9 @@ local createRace = function()
         return
     end
     
-    local force = game.forces[GLEBA_FORCE_NAME]
+    local force = game.forces[ERM.GLEBA_FORCE_NAME]
     if not force then
-        force = game.create_force(GLEBA_FORCE_NAME)
+        force = game.create_force(ERM.GLEBA_FORCE_NAME)
     end
 
     force.ai_controllable = true;
@@ -99,26 +98,26 @@ local createRace = function()
     force.friendly_fire = true;
 
     if settings.startup["enemyracemanager-free-for-all"].value then
-        ForceHelper.set_friends(game, GLEBA_FORCE_NAME, false)
+        ForceHelper.set_friends(game, ERM.GLEBA_FORCE_NAME, false)
     else
-        ForceHelper.set_friends(game, GLEBA_FORCE_NAME, true)
+        ForceHelper.set_friends(game, ERM.GLEBA_FORCE_NAME, true)
     end
 
-    ForceHelper.set_neutral_force(game, GLEBA_FORCE_NAME)
+    ForceHelper.set_neutral_force(game, ERM.GLEBA_FORCE_NAME)
     
 end
 
 local addRaceSettings = function()
-    local race_settings = remote.call("enemyracemanager", "get_race", FORCE_NAME)
+    local race_settings = remote.call("enemyracemanager", "get_race", ERM.FORCE_NAME)
     if race_settings == nil then
         race_settings = {}
     end
 
-    race_settings.race = race_settings.race or FORCE_NAME
+    race_settings.race = race_settings.race or ERM.FORCE_NAME
     race_settings.tier = race_settings.tier or 1
     race_settings.label = { "gui.label-biters" }
     race_settings.is_primitive = race_settings.is_primitive or false
-    race_settings.autoplace_name = race_settings.autoplace_name or AUTOCONTROL_NAME
+    race_settings.autoplace_name = race_settings.autoplace_name or ERM.AUTOCONTROL_NAME
     race_settings.attack_meter = race_settings.attack_meter or 0
     race_settings.attack_meter_total = race_settings.attack_meter_total or 0
     race_settings.next_attack_threshold = race_settings.next_attack_threshold or 0
@@ -201,19 +200,19 @@ local addRaceSettings = function()
 
     emulate_event_raise(
             GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE],
-            {affected_race = FORCE_NAME}
+            {affected_race = ERM.FORCE_NAME}
     )
 
     if prototypes.entity['gleba-spawner'] then
-        local gleba_race_settings = remote.call("enemyracemanager", "get_race", GLEBA_FORCE_NAME)
+        local gleba_race_settings = remote.call("enemyracemanager", "get_race", ERM.GLEBA_FORCE_NAME)
         if gleba_race_settings == nil then
             gleba_race_settings = {}
         end
 
-        gleba_race_settings.race = gleba_race_settings.race or GLEBA_FORCE_NAME
+        gleba_race_settings.race = gleba_race_settings.race or ERM.GLEBA_FORCE_NAME
         gleba_race_settings.tier = gleba_race_settings.tier or 1
         gleba_race_settings.is_primitive = true
-        gleba_race_settings.autoplace_name = gleba_race_settings.autoplace_name or GLEBA_FORCE_AUTOCONTROL_NAME
+        gleba_race_settings.autoplace_name = gleba_race_settings.autoplace_name or ERM.GLEBA_FORCE_AUTOCONTROL_NAME
         gleba_race_settings.label = { "gui.label-pentapod" }
         gleba_race_settings.attack_meter = gleba_race_settings.attack_meter or 0
         gleba_race_settings.attack_meter_total = gleba_race_settings.attack_meter_total or 0
@@ -228,7 +227,7 @@ local addRaceSettings = function()
 
         emulate_event_raise(
                 GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE],
-                {affected_race = GLEBA_FORCE_NAME }
+                {affected_race = ERM.GLEBA_FORCE_NAME }
         )        
     end
 end
@@ -311,6 +310,8 @@ local init_globals = function()
 
     -- Use for decorative removal when building dies
     storage.decorative_cache = storage.decorative_cache or {}
+    storage.unit_supply_cache = storage.unit_supply_cache or {}
+    
     
     storage.active_races = {}
     storage.active_races_names = {}

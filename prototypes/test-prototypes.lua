@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2024 4:56 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 require("util")
 local rocket_silo_test = util.table.deepcopy(data.raw["rocket-silo"]["rocket-silo"])
 rocket_silo_test.name = "erm-rocket-silo-test"
@@ -40,7 +41,7 @@ data:extend({
                 target_effects = {
                     {
                         type = "script",
-                        effect_id = ENVIRONMENTAL_ATTACK
+                        effect_id = ERM.ENVIRONMENTAL_ATTACK
                     }
                 },
             },

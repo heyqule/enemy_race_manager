@@ -65,9 +65,6 @@ There are various types of attack groups. Ground attack, Arial attack, dropships
 
 You should build air raid radar & siren to get early warning of aerial attacks.
 
-### Custom Base Expansion
-Enemy expansion are no longer build one structure at a time.  They build several spawners and turrets to have the best defense.
-
 ### Environmental Attacks
 Some enemy may parasitize another unit to spawn them.  Other may be practising quantum teleportation with lightnings.
 

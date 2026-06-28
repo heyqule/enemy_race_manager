@@ -8,7 +8,6 @@ local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local TestShared = require("shared")
 
-
 before_each(function()
     TestShared.prepare_the_factory()
 end)
@@ -17,57 +16,60 @@ after_each(function()
     TestShared.reset_the_factory()
 end)
 
+describe("Surface Manager", function()
 
-it("Add and remove surfaces (Space age)", function()
-    local char = game.planets['char']
-    local valcanus = game.planets['vulcanus']
-    local nauvis = game.planets['nauvis']
-    char.create_surface()
-    valcanus.create_surface()
-    after_ticks(60, function()
-        assert.not_nil(storage.enemy_surfaces[char.surface.name],"Char has enemy data")
-        assert.not_nil(storage.enemy_surfaces[valcanus.surface.name],"Valcanus has enemy data")
-        assert.not_nil(storage.enemy_surfaces[nauvis.surface.name],"Nauvis has enemy data")
+    it("Add and remove surfaces (Space age)", function()
+        local char = game.planets['char']
+        local valcanus = game.planets['vulcanus']
+        local nauvis = game.planets['nauvis']
+        char.create_surface()
+        valcanus.create_surface()
+        after_ticks(60, function()
+            assert.not_nil(storage.enemy_surfaces[char.surface.name], "Char has enemy data")
+            assert.not_nil(storage.enemy_surfaces[valcanus.surface.name], "Valcanus has enemy data")
+            assert.not_nil(storage.enemy_surfaces[nauvis.surface.name], "Nauvis has enemy data")
+        end)
     end)
-end)
 
-it("Emulate erm_pre_surface_created workflow (Non space age)", function()
-    local nauvis = game.surfaces['nauvis']
-    local map_gen = nauvis.map_gen_settings
-    local surfaceA = game.create_surface('surface-test-1', map_gen)
-    SurfaceProcessor.register_external_planet({
-        surface = surfaceA
-    })
-    ForceHelper.reset_surface_from_lists(surfaceA.name)
-    SurfaceProcessor.register_enemies(surfaceA)
-    
-    --- emulate 
-    local surfaceB = game.create_surface('surface-test-2', map_gen)
-    SurfaceProcessor.register_external_planet({
-        surface = surfaceB
-    })
-    ForceHelper.reset_surface_from_lists(surfaceB.name)
-    SurfaceProcessor.register_enemies(surfaceB)
-    remote.call("enemyracemanager_debug", "print_global")
-    
-    after_ticks(60, function()
-        assert.not_nil(storage.enemy_surfaces['surface-test-1'],"surface-test-1 has enemy data")
-        assert.not_nil(storage.enemy_surfaces['surface-test-2'],"surface-test-2 has enemy data")
-        assert.not_nil(storage.enemy_surfaces[nauvis.name],"Nauvis has enemy data")
+    it("Emulate erm_pre_surface_created workflow (Non space age)", function()
+        local nauvis = game.surfaces['nauvis']
+        local map_gen = nauvis.map_gen_settings
+        local surfaceA = game.create_surface('surface-test-1', map_gen)
+        SurfaceProcessor.register_external_planet({
+            surface = surfaceA
+        })
+        ForceHelper.reset_surface_from_lists(surfaceA.name)
+        SurfaceProcessor.register_enemies(surfaceA)
+
+        --- emulate 
+        local surfaceB = game.create_surface('surface-test-2', map_gen)
+        SurfaceProcessor.register_external_planet({
+            surface = surfaceB
+        })
+        ForceHelper.reset_surface_from_lists(surfaceB.name)
+        SurfaceProcessor.register_enemies(surfaceB)
+        remote.call("enemyracemanager_debug", "print_global")
+
+        after_ticks(60, function()
+            assert.not_nil(storage.enemy_surfaces['surface-test-1'], "surface-test-1 has enemy data")
+            assert.not_nil(storage.enemy_surfaces['surface-test-2'], "surface-test-2 has enemy data")
+            assert.not_nil(storage.enemy_surfaces[nauvis.name], "Nauvis has enemy data")
+        end)
     end)
-end)
 
-ticks_between_tests(60)
-it("Reindex Surfaces", function()
-    for _, planet in pairs(game.planets) do
-        planet.create_surface()
-    end
+    ticks_between_tests(60)
+    it("Reindex Surfaces", function()
+        for _, planet in pairs(game.planets) do
+            planet.create_surface()
+        end
 
-    local old_list = table.deepcopy(storage.enemy_surfaces)
-    storage.enemy_surfaces = {}
-    SurfaceProcessor.rebuild_race()
-    local new_list = table.deepcopy(storage.enemy_surfaces)
-    assert.not_equal(old_list, new_list, "Both list should not be equal")
-    assert.equal(table_size(new_list), storage.total_enemy_surfaces, "Total enemy surface and new list must be equal")
-    TestShared.reset_surfaces()
+        local old_list = table.deepcopy(storage.enemy_surfaces)
+        storage.enemy_surfaces = {}
+        SurfaceProcessor.rebuild_race()
+        local new_list = table.deepcopy(storage.enemy_surfaces)
+        assert.not_equal(old_list, new_list, "Both list should not be equal")
+        assert.equal(table_size(new_list), storage.total_enemy_surfaces, "Total enemy surface and new list must be equal")
+        TestShared.reset_surfaces()
+    end)
+
 end)

@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 6/22/2024 10:01 PM
 ---
-
+local ERM = require('__enemyracemanager__/global')
 local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
 local SharedTabFunctions = require("__enemyracemanager__/gui/army_tabs/shared")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
@@ -40,15 +40,15 @@ local get_command_centers = function(player, windows_tab_data)
     local force_list = storage.army_built_teleporters[player.force.index];
     local left_surface, right_surface
 
-    if left_selected_surface and left_selected_surface ~= ALL_PLANETS then
+    if left_selected_surface and left_selected_surface ~= ERM.ALL_PLANETS then
         left_surface = game.surfaces[left_selected_surface]
     end
 
-    if right_selected_surface and right_selected_surface ~= ALL_PLANETS then
+    if right_selected_surface and right_selected_surface ~= ERM.ALL_PLANETS then
         right_surface = game.surfaces[right_selected_surface]
     end
 
-    local surface_selection = {ALL_PLANETS}
+    local surface_selection = {ERM.ALL_PLANETS}
 
     if force_list then
         for surface_id, surface_items in pairs(force_list) do

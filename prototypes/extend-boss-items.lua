@@ -4,10 +4,12 @@
 --- DateTime: 7/12/2022 6:15 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
+
 if mods['space-age'] and mods['quality'] then
     local source_effects = {
         type = "script",
-        effect_id = REGISTER_BOSS_RADAR
+        effect_id = ERM.REGISTER_BOSS_RADAR
     }
     
     data:extend({

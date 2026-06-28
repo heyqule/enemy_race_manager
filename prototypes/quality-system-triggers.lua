@@ -2,19 +2,19 @@
 --- Register created effect and dying effect trigger for Quality system
 ---
 ---***
+local ERM = require("__enemyracemanager__/global")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local SharedFunctions = require("__enemyracemanager__/prototypes/shared_functions")
 
-require("__enemyracemanager__/global")
 require("__enemyracemanager__/setting-constants")
 
 local roll_dice = {
     type = "script",
-    effect_id = QUALITY_DICE_ROLL
+    effect_id = ERM.QUALITY_DICE_ROLL
 }
 local tally_point = {
     type = "script",
-    effect_id = QUALITY_TALLY_POINT
+    effect_id = ERM.QUALITY_TALLY_POINT
 }
 
 local register_trigger = function (entity)

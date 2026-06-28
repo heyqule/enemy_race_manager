@@ -132,7 +132,7 @@ function CronProcessor.add_teleport_queue(request, ...)
 end
 
 function CronProcessor.process_1_min_queue()
-    process_all_jobs(storage.one_minute_cron)
+    process_all_jobs_as_1s_cron(storage.one_minute_cron)
 end
 
 function CronProcessor.process_15_sec_queue()

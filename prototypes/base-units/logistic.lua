@@ -3,15 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 1:22 AM
 ---
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
 local ERM_DataHelper = require("__enemyracemanager__/lib/rig/data_helper")
 
 require("util")
-
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -105,8 +103,8 @@ function makeLogisticRobot(level)
     local original_health = robot["max_health"] * 3
 
     robot["type"] = "unit"
-    robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
+    robot["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    robot["name"] = ERM.MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-dropship-enemies"
     robot["has_belt_immunity"] = true
     robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier, level)
@@ -139,7 +137,7 @@ function makeLogisticRobot(level)
                     source_effects = {
                         {
                             type = "script",
-                            effect_id = LOGISTIC_ATTACK,
+                            effect_id = ERM.LOGISTIC_ATTACK,
                         }
                     }
                 }

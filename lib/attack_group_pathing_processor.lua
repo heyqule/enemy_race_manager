@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 1/5/2024 9:03 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 local Position = require("__erm_libs__/stdlib/position")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -249,7 +250,7 @@ function AttackGroupPathingProcessor.construct_brutal_force_commands(
         storage.request_path[path_id].commands[AttackGroupPathingProcessor.STRATEGY_BF] = commands_chain
     end
     
-    if DEBUG_MODE then
+    if ERM.DEBUG_MODE then
         DebugHelper.drawline(request_path_data.surface.index, "BF: enemy to new pos", {r=0,g=0,b=1,a=0.5}, buffer_zone, enemy_position)
         DebugHelper.drawline(request_path_data.surface.index, "BF: path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, buffer_zone)
     end
@@ -288,7 +289,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
             math.random(TRANSLATE_RANGE-chunk_range, TRANSLATE_RANGE+chunk_range)
     )
 
-    if DEBUG_MODE then
+    if ERM.DEBUG_MODE then
         DebugHelper.drawline(request_path_data.surface.index, "SA: enemy to new pos", {r=0,g=0,b=1,a=0.5}, new_position, enemy_position)
         DebugHelper.drawline(request_path_data.surface.index, "SA: path node to new pos", {r=1,g=0,b=0,a=0.5}, path_node.position, new_position)
     end
@@ -317,7 +318,7 @@ function AttackGroupPathingProcessor.construct_side_attack_commands(
             radius = CHUNK_SIZE;
         })
 
-        if DEBUG_MODE then
+        if ERM.DEBUG_MODE then
             DebugHelper.drawline(request_path_data.surface.index, "SA: new pos to destination", {r=1,g=0,b=1,a=0.5}, new_position, request_path_data.goal)
         end            
 

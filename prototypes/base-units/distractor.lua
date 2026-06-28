@@ -3,15 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 12:46 AM
 ---
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 local ERM_DataHelper = require("__enemyracemanager__/lib/rig/data_helper")
 
 
 require("util")
-
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -104,8 +102,8 @@ function makeLevelCombatRobots(level, type)
     local original_health = robot["max_health"] * 2
 
     robot["type"] = "unit"
-    robot["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    robot["name"] = MOD_NAME .. "--" .. robot["name"] .. "--" .. level
+    robot["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    robot["name"] = ERM.MOD_NAME .. "--" .. robot["name"] .. "--" .. level
     robot["subgroup"] = "erm-flying-enemies"
     robot["has_belt_immunity"] = true
     robot["max_health"] = ERM_UnitHelper.get_health(original_health, max_hitpoint_multiplier, level)

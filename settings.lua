@@ -1,4 +1,4 @@
-require "global"
+local ERM = require("__enemyracemanager__/global")
 require("setting-constants")
 
 data:extend {
@@ -85,18 +85,18 @@ data:extend {
         name = "enemyracemanager-2way-group-enemy-positive",
         description = "enemyracemanager-2way-group-enemy-positive",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-207",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
         name = "enemyracemanager-2way-group-enemy-negative",
         description = "enemyracemanager-2way-group-enemy-negative",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-208",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
 
     {
@@ -104,36 +104,36 @@ data:extend {
         name = "enemyracemanager-4way-northeast",
         description = "enemyracemanager-4way-northeast",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-222",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
         name = "enemyracemanager-4way-northwest",
         description = "enemyracemanager-4way-northwest",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-223",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
         name = "enemyracemanager-4way-southwest",
         description = "enemyracemanager-4way-southwest",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-224",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
         name = "enemyracemanager-4way-southeast",
         description = "enemyracemanager-4way-southeast",
         setting_type = "startup",
-        default_value = MOD_NAME,
+        default_value = ERM.MOD_NAME,
         order = "enemyracemanager-225",
-        allowed_values = { RACE_EMPTY, MOD_NAME }
+        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
     },
 
     --- Startup: Defense
@@ -247,7 +247,7 @@ data:extend {
         name = "enemyracemanager-max-gathering-groups",
         description = "enemyracemanager-max-gathering-groups",
         setting_type = "runtime-global",
-        default_value = 30,
+        default_value = 20,
         minimum_value = 10,
         maximum_value = 100,
         order = "enemyracemanager-001"
@@ -257,7 +257,7 @@ data:extend {
         name = "enemyracemanager-max-group-size",
         description = "enemyracemanager-max-group-size",
         setting_type = "runtime-global",
-        default_value = 100,
+        default_value = 200,
         minimum_value = 50,
         maximum_value = 1000,
         order = "enemyracemanager-002"
@@ -291,36 +291,6 @@ data:extend {
         default_value = 1,
         allowed_values = { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 },
         order = "enemyracemanager-005"
-    },
-    --- Custom base style
-    {
-        type = "string-setting",
-        name = "enemyracemanager-build-style",
-        description = "enemyracemanager-build-style",
-        setting_type = "runtime-global",
-        default_value = BUILDING_A_TOWN,
-        allowed_values = { BUILDING_DEFAULT, BUILDING_EXPAND_ON_CMD, BUILDING_A_TOWN, BUILDING_EXPAND_ON_ARRIVAL },
-        order = "enemyracemanager-100"
-    },
-    {
-        type = "string-setting",
-        name = "enemyracemanager-build-formation",
-        description = "enemyracemanager-build-formation",
-        setting_type = "runtime-global",
-        default_value = BUILDING_FORMATION_1_4_5,
-        allowed_values = {
-            BUILDING_FORMATION_1_1_2,
-            BUILDING_FORMATION_1_2_4,
-            BUILDING_FORMATION_1_3_8,
-            BUILDING_FORMATION_1_4_5,
-            BUILDING_FORMATION_1_4_15,
-            BUILDING_FORMATION_1_6_8,
-            BUILDING_FORMATION_1_8_11,
-            BUILDING_FORMATION_1_9_0,
-            BUILDING_FORMATION_1_9_10,
-            BUILDING_FORMATION_RANDOM
-        },
-        order = "enemyracemanager-101"
     },
     --- Attack Meters and custom attack groups ---
     {
@@ -586,7 +556,7 @@ data:extend {
         name = "enemy-map-color",
         description = "enemy-map-color",
         setting_type = "startup",
-        default_value = VANILLA_MAP_COLOR,
+        default_value = ERM.VANILLA_MAP_COLOR,
         order = "enemyracemanager-991"
     },
 }

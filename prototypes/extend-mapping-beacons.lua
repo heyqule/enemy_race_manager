@@ -5,6 +5,7 @@
 ---
 require("util")
 
+local ERM = require("__enemyracemanager__/global")
 local BEACON_HEALTH_LIMIT = 200
 
 data:extend({
@@ -144,12 +145,12 @@ data:extend({
 })
 
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     --- Make it placable in campaign for testing purposes
     for _, data in pairs(data.raw["simple-entity-with-owner"]) do
         if (data["subgroup"] == "erm_ai_beacons") then
             data["render_layer"] = "air-object"
-            if BEACON_SELECTABLE then
+            if ERM.BEACON_SELECTABLE then
                 data["selection_box"] = { { -1, -1 }, { 1, 1 } }
             end
             data.flags = {"not-repairable","not-deconstructable","not-blueprintable"}

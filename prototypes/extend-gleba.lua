@@ -5,8 +5,10 @@
 ---
 --- Change Gleba enemy to be under its own force
 ---
+local ERM = require("__enemyracemanager__/global")
+
 for _, prototype in pairs(data.raw['unit-spawner']) do
     if string.find(prototype.name, 'gleba-spawner',nil,true) then
-        prototype.autoplace.force = GLEBA_FORCE_NAME
+        prototype.autoplace.force = ERM.GLEBA_FORCE_NAME
     end
 end

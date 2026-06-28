@@ -4,8 +4,8 @@
 --- DateTime: 7/21/2021 10:45 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 require("util")
-require("global")
 local Position = require("__erm_libs__/stdlib/position")
 
 
@@ -222,11 +222,11 @@ local add_to_group = function(surface, group, force, force_name, unit_batch)
                     destination = { x = position.x, y = position.y },
                     radius = AttackGroupProcessor.ATTACK_RADIUS
                 }
-                if DEBUG_MODE then
+                if ERM.DEBUG_MODE then
                     DebugHelper.drawline(1, "default attack path", {r=1,g=1,b=0,a=0.5}, group.position , position)
                 end
             else
-                if DEBUG_MODE then
+                if ERM.DEBUG_MODE then
                     for index, command in pairs(commands) do
                         if index == 1 then
                             DebugHelper.drawline(1, "custom attack path:"..index, {r=1,g=1,b=0,a=0.5}, group.position , command.destination)
@@ -830,7 +830,7 @@ function AttackGroupProcessor.process_attack_position(options)
         if erm_group_data.ran_wandering_command then
             if ( RaceSettingsHelper.can_spawn(10) and 
                  game.tick > storage.last_victory_build_tick + VICTORY_BUILD_COOLDOWN ) or 
-               TEST_MODE
+               ERM.TEST_MODE
             then
                 -- build one for every 10 units in the group
                 local member_count = math.floor(#group.members / 5)
@@ -916,7 +916,7 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
     end
 
     local scout_name = AttackGroupBeaconConstants.LAND_SCOUT
-    if RaceSettingsHelper.can_spawn(33) and not TEST_MODE then
+    if RaceSettingsHelper.can_spawn(33) and not ERM.TEST_MODE then
         scout_name = AttackGroupBeaconConstants.AERIAL_SCOUT
     end
 
@@ -1005,7 +1005,7 @@ function AttackGroupProcessor.destroy_invalid_group(erm_unit_group, start_positi
         if RaceSettingsHelper.has_flying_unit(force_name) and 
           (RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and 
           group_size >= MIN_GROUP_SIZE) or 
-          TEST_MODE 
+          ERM.TEST_MODE 
         then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(force_name)

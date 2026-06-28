@@ -3,11 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 11/1/2024 10:31 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 local String = require("__erm_libs__/stdlib/string")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     return
 end
 

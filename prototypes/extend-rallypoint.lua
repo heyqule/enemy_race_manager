@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 6/15/2024 9:59 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
 data:extend({
@@ -42,7 +43,7 @@ data:extend({
                 type = "instant",
                 target_effects = {
                     type = "script",
-                    effect_id = ARMY_RALLYPOINT_DEPLOY
+                    effect_id = ERM.ARMY_RALLYPOINT_DEPLOY
                 }
             }
         },
@@ -51,7 +52,7 @@ data:extend({
     }
 })
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     --- Make it placable in campaign for testing purposes
     data.raw["simple-entity-with-owner"]["erm_rally_point"]["selectable_in_game"] = true
     data.raw["simple-entity-with-owner"]["erm_rally_point"]["selection_box"] = {{ -1,-1 }, {1,1}}

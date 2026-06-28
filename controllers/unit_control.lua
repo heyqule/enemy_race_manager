@@ -3,10 +3,9 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:56 PM
 ---
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
-local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
@@ -14,6 +13,7 @@ local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_grou
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 
 
@@ -27,28 +27,28 @@ local BUILD_BASE_RETRY = 3
 local on_biter_base_built = function(event)
     local entity = event.entity
     if entity and entity.valid then
-        BaseBuildProcessor.exec(entity)
         AttackGroupBeaconProcessor.create_spawn_beacon(entity)
     end
 end
 
 local on_build_base_arrived = function(event)
-    --if event.group then
-    --    BaseBuildProcessor.exec(event.group.members[1])
-    --    AttackGroupBeaconProcessor.create_spawn_beacon(event.group.members[1])
-    --end
+    local group = event.group
+    if event.group and event.group.valid and storage.registered_groups[group.unique_id] then
+        storage.registered_groups[group.unique_id].build_base_group = true
+    end
 end
 
 local on_unit_group_created = function(event)
     local group = event.group
     local force = group.force
     local force_name = force.name
-    local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
-    local erm_group = storage.erm_unit_groups[group.unique_id]
     local race_settings = storage.race_settings[force_name]
     if group.surface.platform or not race_settings or race_settings.is_primitive then
         return
     end
+
+    local is_group_tracker_group = storage.group_tracker and storage.group_tracker[force_name]
+    local erm_group = storage.erm_unit_groups[group.unique_id]
     
     if ForceHelper.is_enemy_force(force) then
         local scout_unit_name
@@ -68,7 +68,7 @@ local on_unit_group_created = function(event)
             else
                 scout_unit_name = 1
             end
-        elseif TEST_MODE then
+        elseif ERM.TEST_MODE then
             scout_unit_name = 1
         elseif not race_settings.is_primitive and UtilHelper.can_spawn(75) then
             if storage.enemy_surfaces[group.surface.name] then
@@ -82,7 +82,7 @@ local on_unit_group_created = function(event)
                 scout_type = scout_unit_name,
             }
         end
-        
+
         --defines.events.on_object_destroyed
         local registration_number, useful_id, object_type
         registration_number, useful_id, object_type = script.register_on_object_destroyed(group)
@@ -280,14 +280,32 @@ local handle_erm_groups = function(unit_number, event_result, was_distracted)
     end
 end
 
+local handle_build_groups = function(unit_number,  event_result, was_distracted)
+    local registered_group_data = storage.registered_groups[unit_number]
+    if not registered_group_data or not registered_group_data.build_base_group or not registered_group_data.group.valid then
+        return
+    end
+    
+    local unit_group = registered_group_data.group
+    if next(unit_group.members) then
+        AttackGroupProcessor.process_attack_position({
+            group = unit_group,
+            new_beacon = true
+        })
+    end
+    
+end
+
 local on_ai_command_completed = function(event)
     local unit_number = event.unit_number
     local event_result = event.result
+    local distracted = event.was_distracted
     
     -- Hmm... Unit group doesn"t call AI complete when all its units die.  its unit triggers behaviour fails tho.
     -- Can utilize register_on_object_destroyed
-    handle_erm_groups(unit_number, event_result, event.was_distracted)
-
+    handle_erm_groups(unit_number, event_result, distracted)
+    handle_build_groups(unit_number, event_result, distracted)
+    
     local scout_unit_data = storage.scout_by_unit_number[unit_number]
     handle_scouts(scout_unit_data)
     
@@ -306,7 +324,6 @@ local on_ai_command_completed = function(event)
     --end
 end
 
---- @TODO 2.0 handle this with per planet statistic?
 local function is_unit_spawner(event)
     return event.entity.type == "unit-spawner" and not ForceHelper.is_enemy_force(event.force)
 end
@@ -337,10 +354,7 @@ UnitControl.events = {
         if limit > 10 then
             limit = 10
         end
-        repeat
-            BaseBuildProcessor.build_formation(event.group)
-            i = i + 1
-        until #event.group.members == 0 or i == limit
+        BaseBuildProcessor.create_build_group(event.group, limit)
     end,
     [Config.custom_event_handlers[Config.EVENT_INTERPLANETARY_ATTACK_EXEC]] = function(event)
         InterplanetaryAttacks.exec(event.force_name, event.target_force)
@@ -358,8 +372,8 @@ UnitControl.events = {
     [Config.custom_event_handlers[Config.EVENT_REQUEST_PATH]] = function(event)
         AttackGroupPathingProcessor.request_path(event.surface, event.source_force, event.start, event.goal, event.is_aerial, event.group_number)
     end,
-    [defines.events.on_biter_base_built] = on_biter_base_built,
     [defines.events.on_build_base_arrived] = on_build_base_arrived,
+    [defines.events.on_biter_base_built] = on_biter_base_built,
     [defines.events.on_unit_group_created] = on_unit_group_created,
     [defines.events.on_unit_group_finished_gathering] = on_unit_group_finished_gathering,
     [defines.events.on_ai_command_completed] = on_ai_command_completed,

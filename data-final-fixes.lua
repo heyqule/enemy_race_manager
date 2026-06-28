@@ -3,14 +3,14 @@
 --- Created by heyqule.
 --- DateTime: 10/23/2021 12:53 PM
 ---
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 require('prototypes/finalize-unit-prototypes')
 require('prototypes/health-balance')
 
 local String = require('__erm_libs__/stdlib/string')
 local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
 
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     data.raw["radar"]["radar"]["max_distance_of_sector_revealed"] = 16
     data.raw["radar"]["radar"]["max_distance_of_nearby_sector_revealed"] = 16
 
@@ -95,8 +95,8 @@ data.raw["utility-constants"].default.spawner_evolution_factor_health_modifier =
 
 for _, planet in pairs(data.raw['planet']) do
     if planet.hidden then
-        data.raw['mod-data'][MOD_DATA_SURFACE_EXCLUSIONS].data[planet.name] = true
-        data.raw['mod-data'][MOD_DATA_INTERPLANETARY_ATTACKS].data[planet.name] = true
+        data.raw['mod-data'][ERM.MOD_DATA_SURFACE_EXCLUSIONS].data[planet.name] = true
+        data.raw['mod-data'][ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data[planet.name] = true
     end
 end
 

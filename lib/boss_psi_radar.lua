@@ -4,6 +4,7 @@
 --- DateTime: 4/22/2025 9:45 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local Direction = require("__erm_libs__/stdlib/direction")
 
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
@@ -46,7 +47,7 @@ function BossPsiRadar.register(radar)
         local name_tokens = ForceHelper.get_name_token(radar.name)
         local force_name = name_tokens[1]        
         if storage.race_settings[force_name] and storage.race_settings[force_name].boss_custom_spawn then
-            local boss_object = remote.call(storage.remote_race_name_cache[force_name], 'boss_custom_spawn', radar, TEST_MODE)
+            local boss_object = remote.call(storage.remote_race_name_cache[force_name], 'boss_custom_spawn', radar, ERM.TEST_MODE)
             if boss_object and boss_object.valid  then
                 BossProcessor.exec(radar, boss_object.position, boss_object)
             else

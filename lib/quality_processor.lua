@@ -374,15 +374,21 @@ function QualityProcessor.roll(entity)
 
         -- Tier conversion
         selected_tier = (spawn_rates_size - selected_tier + 1)
-        --- no need to swap if unit is already at the same or higher than selected tier and doesn't have spaw flag.
+        --- no need to swap if unit is already at the same or higher than selected tier and doesn't have need_swap flag.
         if unit_tier >= selected_tier and not need_swap then
             return entity
         end
     end
 
     if can_spawn then
-        local position = surface.find_non_colliding_position(entity.name, entity.position,
-                16, 2)
+
+        local group
+        if entity.commandable and entity.commandable.parent_group then
+            group = entity.commandable.parent_group
+        end
+
+        local position = entity.position
+        entity.destroy()
 
         if position then
             storage.is_running_roll = true
@@ -395,14 +401,8 @@ function QualityProcessor.roll(entity)
             }
 
             if new_unit then
-                if entity.commandable and entity.commandable.parent_group then
-                    entity.commandable.parent_group.add_member(new_unit)
-                end
-
-                if is_building[entity.type] then
-                    CronProcessor.add_quick_queue('delayed_entity_destroy',entity)
-                else
-                    entity.destroy()
+                if group then
+                    group.add_member(new_unit)
                 end
 
                 return new_unit

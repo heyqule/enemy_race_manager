@@ -4,6 +4,7 @@
 --- DateTime: 12/31/2020 1:56 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
@@ -11,7 +12,6 @@ local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 require("util")
 
 
-require("__enemyracemanager__/global")
 --local biter_ai_settings = require ("prototypes.entity.biter-ai-settings")
 local enemy_autoplace = require ("__enemyracemanager__/prototypes/enemy-autoplace")
 
@@ -59,8 +59,8 @@ function makeLevelSpawners(level, type, health_cut_ratio, distance, seed)
     health_cut_ratio = health_cut_ratio or 1
     local spawner = util.table.deepcopy(data.raw["unit-spawner"][type])
     local original_hitpoint = spawner["max_health"]
-    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
+    spawner["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    spawner["name"] = ERM.MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
     spawner["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(spawner_base_acid_resistance, spawner_incremental_acid_resistance, level) },
@@ -80,30 +80,30 @@ function makeLevelSpawners(level, type, health_cut_ratio, distance, seed)
     if string.find(type, "spitter", 1, true) then
         spawner["result_units"] = (function()
             local res = {}
-            res[1] = { MOD_NAME .. "--small-spitter--" .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }
+            res[1] = { ERM.MOD_NAME .. "--small-spitter--" .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }
             if not data.is_demo then
                 -- from evolution_factor 0.3 the weight for medium-biter is linearly rising from 0 to 0.3
                 -- this means for example that when the evolution_factor is 0.45 the probability of spawning
                 -- a small biter is 66% while probability for medium biter is 33%.
-                res[2] = { MOD_NAME .. "--medium-spitter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 }, { 0.7, 0.0 } } }
+                res[2] = { ERM.MOD_NAME .. "--medium-spitter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 }, { 0.7, 0.0 } } }
                 -- for evolution factor of 1 the spawning probabilities are: small-biter 0%, medium-biter 1/8, big-biter 4/8, behemoth biter 3/8
-                res[3] = { MOD_NAME .. "--big-spitter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.6 } } }
-                res[4] = { MOD_NAME .. "--behemoth-spitter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.4 } } }
+                res[3] = { ERM.MOD_NAME .. "--big-spitter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.6 } } }
+                res[4] = { ERM.MOD_NAME .. "--behemoth-spitter--" .. level, { { 0.9, 0.0 }, { 1.0, 0.4 } } }
             end
             return res
         end)()
     else
         spawner["result_units"] = (function()
             local res = {}
-            res[1] = { MOD_NAME .. "--small-biter--" .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }
+            res[1] = { ERM.MOD_NAME .. "--small-biter--" .. level, { { 0.0, 0.3 }, { 0.6, 0.0 } } }
             if not data.is_demo then
                 -- from evolution_factor 0.3 the weight for medium-biter is linearly rising from 0 to 0.3
                 -- this means for example that when the evolution_factor is 0.45 the probability of spawning
                 -- a small biter is 66% while probability for medium biter is 33%.
-                res[2] = { MOD_NAME .. "--medium-biter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 }, { 0.7, 0.0 } } }
+                res[2] = { ERM.MOD_NAME .. "--medium-biter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 }, { 0.7, 0.0 } } }
                 -- for evolution factor of 1 the spawning probabilities are: small-biter 0%, medium-biter 1/8, big-biter 4/8, behemoth biter 3/8
-                res[3] = { MOD_NAME .. "--big-biter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.5 } } }
-                res[4] = { MOD_NAME .. "--behemoth-biter--" .. level, { { 0.8, 0.0 }, { 1.0, 0.3 } } }
+                res[3] = { ERM.MOD_NAME .. "--big-biter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.5 } } }
+                res[4] = { ERM.MOD_NAME .. "--behemoth-biter--" .. level, { { 0.8, 0.0 }, { 1.0, 0.3 } } }
             end
             return res
         end)()
@@ -112,7 +112,7 @@ function makeLevelSpawners(level, type, health_cut_ratio, distance, seed)
     -- @TODO Noise expression
     spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
         probability_expression = "enemy_autoplace_base("..distance..", "..seed..")",
-        force = FORCE_NAME,
+        force = ERM.FORCE_NAME,
     })
     spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
@@ -125,8 +125,8 @@ function makeLevelWorm(level, type, health_cut_ratio, distance, seed)
     local original_hitpoint = worm["max_health"]
 
 
-    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
+    worm["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    worm["name"] = ERM.MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
     worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint  / health_cut_ratio, max_worm_hitpoint_multiplier, level)
     worm["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -143,7 +143,7 @@ function makeLevelWorm(level, type, health_cut_ratio, distance, seed)
     -- @TODO Noise expression
     worm["autoplace"] = enemy_autoplace.enemy_worm_autoplace({
         probability_expression = "enemy_autoplace_base("..distance..", "..seed..")", 
-        force = FORCE_NAME
+        force = ERM.FORCE_NAME
     })
     worm["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
 
@@ -157,8 +157,8 @@ function makeShortRangeLevelWorm(level, type, health_cut_ratio)
 
     worm["name"] = "short-range-" .. worm["name"]
 
-    worm["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    worm["name"] = MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
+    worm["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. worm["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    worm["name"] = ERM.MOD_NAME .. "--" .. worm["name"] .. "--" .. level;
     worm["max_health"] = ERM_UnitHelper.get_health(original_hitpoint  / health_cut_ratio, max_worm_hitpoint_multiplier, level)
     worm["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

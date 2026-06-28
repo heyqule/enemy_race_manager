@@ -4,14 +4,13 @@
 --- DateTime: 03/16/2020 1:56 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
 require("util")
 
 local enemy_autoplace = require ("prototypes.enemy-autoplace")
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -44,8 +43,8 @@ function makeLevelSpawners(level, type)
 
     local original_hitpoint = spawner["max_health"]
 
-    spawner["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    spawner["name"] = MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
+    spawner["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. spawner["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    spawner["name"] = ERM.MOD_NAME .. "--" .. spawner["name"] .. "--" .. level;
     spawner["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier, level)
     spawner["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -61,10 +60,10 @@ function makeLevelSpawners(level, type)
     spawner["spawning_cooldown"] = { 600, 300 }
 
     local result_units = {
-        { MOD_NAME .. "--small-armoured-biter--" .. level, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } },
-        { MOD_NAME .. "--medium-armoured-biter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.8, 0 } } },
-        { MOD_NAME .. "--big-armoured-biter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } },
-        { MOD_NAME .. "--behemoth-armoured-biter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.35 * bb_r } } }
+        { ERM.MOD_NAME .. "--small-armoured-biter--" .. level, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } },
+        { ERM.MOD_NAME .. "--medium-armoured-biter--" .. level, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.8, 0 } } },
+        { ERM.MOD_NAME .. "--big-armoured-biter--" .. level, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } },
+        { ERM.MOD_NAME .. "--behemoth-armoured-biter--" .. level, { { 0.85, 0.0 }, { 1.0, 0.35 * bb_r } } }
     }
     if l_r > 0 then
         table.insert(result_units, { "leviathan-armoured-biter", { { 0.825, 0.0 }, { 1.0, 0.05 * l_r } } })
@@ -73,8 +72,8 @@ function makeLevelSpawners(level, type)
     spawner["result_units"] = result_units
     spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
         probability_expression = "enemy_autoplace_base(0, 90003)",
-        force = FORCE_NAME,
-        control = AUTOCONTROL_NAME
+        force = ERM.FORCE_NAME,
+        control = ERM.AUTOCONTROL_NAME
     })
     spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-armoured_biter_map_color"].value)
 
@@ -89,13 +88,13 @@ for i = 1, max_level do
         -- Disable original spawner autoplace
         data.raw["unit-spawner"]["armoured-biter-spawner"].autoplace = nil
     else
-        local biterSpawner = data.raw["unit-spawner"][MOD_NAME .. "--biter-spawner--" .. i]
+        local biterSpawner = data.raw["unit-spawner"][ERM.MOD_NAME .. "--biter-spawner--" .. i]
         if biterSpawner then
             local unitSet = biterSpawner["result_units"]
-            unitSet[#unitSet + 1] = { MOD_NAME .. "--small-armoured-biter--" .. i, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "--medium-armoured-biter--" .. i, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.7, 0.0 } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "--big-armoured-biter--" .. i, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } }
-            unitSet[#unitSet + 1] = { MOD_NAME .. "--behemoth-armoured-biter--" .. i, { { 0.75, 0.0 }, { 1.0, 0.35 * bb_r } } }
+            unitSet[#unitSet + 1] = { ERM.MOD_NAME .. "--small-armoured-biter--" .. i, { { 0.0, 0.3 * s_r }, { 0.6, 0.0 } } }
+            unitSet[#unitSet + 1] = { ERM.MOD_NAME .. "--medium-armoured-biter--" .. i, { { 0.2, 0.0 }, { 0.6, 0.3 * m_r }, { 0.7, 0.0 } } }
+            unitSet[#unitSet + 1] = { ERM.MOD_NAME .. "--big-armoured-biter--" .. i, { { 0.5, 0.0 }, { 1.0, 0.55 * b_r } } }
+            unitSet[#unitSet + 1] = { ERM.MOD_NAME .. "--behemoth-armoured-biter--" .. i, { { 0.75, 0.0 }, { 1.0, 0.35 * bb_r } } }
 
             if l_r > 0 then
                 unitSet[#unitSet + 1] = { "leviathan-armoured-biter", { { 0.8, 0.0 }, { 1.0, 0.05 * l_r } } }
@@ -108,8 +107,8 @@ if settings.startup["ab-enable-moisture-check"].value == true then
     -- This set of data is used for set up default autoplace calculation.
     data.erm_spawn_specs = data.erm_spawn_specs or {}
     table.insert(data.erm_spawn_specs, {
-        mod_name = MOD_NAME,
-        force_name = FORCE_NAME,
+        mod_name = ERM.MOD_NAME,
+        force_name = ERM.FORCE_NAME,
         moisture = 1, -- 1 = Dry and 2 = Wet
         aux = 1, -- 1 = red desert, 2 = sand
         elevation = 2, --1,2,3 (1 low elevation, 2. medium, 3 high elavation)

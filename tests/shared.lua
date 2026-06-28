@@ -23,7 +23,7 @@ function TestShared.prepare_the_factory()
     for key, _ in pairs(game.forces) do
         local entities = surface.find_entities_filtered({ force = game.forces[key] })
         for _, entity in pairs(entities) do
-            entity.destroy({raise_destroy=true})
+            entity.destroy({ raise_destroy = true })
         end
     end
 
@@ -38,16 +38,16 @@ function TestShared.prepare_the_factory()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
     TestShared.reset_forces()
-    
-    
+
+
 end
 
 function TestShared.reset_the_factory()
     local surface = game.surfaces[1]
     for key, _ in pairs(game.forces) do
-        local entities = surface.find_entities_filtered({ force = game.forces[key] } )
+        local entities = surface.find_entities_filtered({ force = game.forces[key] })
         for _, entity in pairs(entities) do
-            entity.destroy({raise_destroy=true})
+            entity.destroy({ raise_destroy = true })
         end
     end
 
@@ -60,7 +60,7 @@ function TestShared.reset_the_factory()
     AttackGroupBeaconProcessor.reset_globals()
     AttackGroupHeatProcessor.reset_globals()
     QualityProcessor.reset_globals()
-    EmotionalProcessor.reset_globals()    
+    EmotionalProcessor.reset_globals()
     InterplanetaryAttacks.reset_globals()
     TestShared.reset_attack_meter()
     TestShared.CleanCron()
@@ -104,7 +104,7 @@ end
 
 function TestShared.reset_surfaces()
     for key, surface in pairs(game.surfaces) do
-        if not string.find(surface.name,"nauvis") then
+        if not string.find(surface.name, "nauvis") then
             game.delete_surface(surface)
         end
     end
@@ -112,7 +112,7 @@ end
 
 function TestShared.reset_forces()
     for key, force in pairs(game.forces) do
-        if string.find(force.name,"test") then
+        if string.find(force.name, "test") then
             game.merge_forces(force, game.forces[1])
         end
         for key, surface in pairs(game.surfaces) do
@@ -123,7 +123,7 @@ end
 
 function TestShared.reset_lab_tile(radius, surface)
     local surface = game.surfaces[1] or game.surfaces[surface]
-    local tile_types = { "lab-dark-2","lab-dark-1" }
+    local tile_types = { "lab-dark-2", "lab-dark-1" }
     local tiles = {}
     local radius = radius or 320
     for x = (radius * -1), radius, 1 do
@@ -152,7 +152,7 @@ function TestShared.create_iron_ore_batch(surface, center_position, size, amount
             }
 
             -- Create the iron ore entity with specified amount
-            resource_entity = surface.create_entity{
+            resource_entity = surface.create_entity {
                 name = "iron-ore",
                 position = position,
                 amount = amount,
@@ -172,9 +172,9 @@ function TestShared.get_command_chain()
     }
 end
 
-local DEFAULT_DIMENSION  = 192
-local RIVER_WIDTH  = 16
-local GATE_WIDTH  = 64
+local DEFAULT_DIMENSION = 192
+local RIVER_WIDTH = 16
+local GATE_WIDTH = 64
 
 local top_horizontal_river = function(surface, dimension, riverwidth, has_gate, gatewidth)
     local water_tiles = {}
@@ -185,21 +185,21 @@ local top_horizontal_river = function(surface, dimension, riverwidth, has_gate, 
     surface = surface or game.surfaces[1]
 
     if has_gate then
-        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+        for y = (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
 
-        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+        for y = (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = (dimension) - (dimension - gatewidth), dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     else
-        for y= (dimension * -1), (dimension - riverwidth) * -1, 1 do
+        for y = (dimension * -1), (dimension - riverwidth) * -1, 1 do
             for x = dimension * -1, dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     end
@@ -220,19 +220,19 @@ local function bottom_horizontal_river(surface, dimension, riverwidth, has_gate,
     if has_gate then
         for y = dimension - riverwidth, dimension, 1 do
             for x = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
 
         for y = dimension - riverwidth, dimension, 1 do
-            for x= (dimension) - (dimension - gatewidth), dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = (dimension) - (dimension - gatewidth), dimension, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     else
         for y = dimension - riverwidth, dimension, 1 do
-            for x= dimension * -1, dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = dimension * -1, dimension, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     end
@@ -252,20 +252,20 @@ local function left_vertical_river(surface, dimension, riverwidth, has_gate, gat
 
     if has_gate then
         for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-            for x=(dimension * -1), (dimension * -1) + riverwidth, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = (dimension * -1), (dimension * -1) + riverwidth, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
 
         for y = (dimension) - (dimension - gatewidth), dimension, 1 do
-            for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = (dimension * -1), (dimension * -1) + riverwidth, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     else
         for y = (dimension * -1), dimension, 1 do
-            for x=(dimension * -1), (dimension * -1 ) + riverwidth, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = (dimension * -1), (dimension * -1) + riverwidth, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     end
@@ -285,20 +285,20 @@ local function right_vertical_river(surface, dimension, riverwidth, has_gate, ga
 
     if has_gate then
         for y = (dimension * -1), (dimension * -1) + (dimension - gatewidth), 1 do
-            for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
 
         for y = (dimension) - (dimension - gatewidth), dimension, 1 do
-            for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+            for x = dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     else
-        for y=(dimension * -1), dimension, 1 do
-            for x=dimension - riverwidth, dimension, 1 do
-                table.insert(water_tiles, {name = "water", position={x,y}})
+        for y = (dimension * -1), dimension, 1 do
+            for x = dimension - riverwidth, dimension, 1 do
+                table.insert(water_tiles, { name = "water", position = { x, y } })
             end
         end
     end
@@ -308,11 +308,11 @@ local function right_vertical_river(surface, dimension, riverwidth, has_gate, ga
     end
 end
 
-local function draw_water(surface, x1,y1,x2,y2)
+local function draw_water(surface, x1, y1, x2, y2)
     local water_tiles = {}
     for x = x1, x2, 1 do
         for y = y1, y2, 1 do
-            table.insert(water_tiles, {name = "water", position={x,y}})
+            table.insert(water_tiles, { name = "water", position = { x, y } })
         end
     end
 
@@ -350,37 +350,37 @@ function TestShared.buildBaseWithWestDefense(options)
 
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
-        for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        for x = (dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({ name = "stone-wall", position = { x, y }, force = "player" })
         end
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 6, y }, force = "player" })
         end
-        if y%2 == 0 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 8, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 9, y }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 10, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 12, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 14, y }, force = "player" })
         end
     end
 end
@@ -401,37 +401,37 @@ function TestShared.buildBaseWithWestDefenseNorthOpen(options)
 
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
-        for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        for x = (dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({ name = "stone-wall", position = { x, y }, force = "player" })
         end
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 6, y }, force = "player" })
         end
-        if y%2 == 0 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 8, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 9, y }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 10, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 12, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 14, y }, force = "player" })
         end
     end
 end
@@ -452,37 +452,37 @@ function TestShared.buildBaseWithWestDefenseSouthOpen(options)
 
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
-        for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        for x = (dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({ name = "stone-wall", position = { x, y }, force = "player" })
         end
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 6, y }, force = "player" })
         end
-        if y%2 == 0 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 8, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 9, y }, force = "player" })
             inserter.direction = defines.direction.north
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 10, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 12, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 14, y }, force = "player" })
         end
     end
 end
@@ -503,37 +503,37 @@ function TestShared.buildBaseWithWestDefenseForBrutalForce(options)
 
     -- build walls
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
-        for x=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        for x = (dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({ name = "stone-wall", position = { x, y }, force = "player" })
         end
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+6,y}, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 6, y }, force = "player" })
         end
-        if y%2 == 0 and y > -200 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+8,y}, force = "player"})
+        if y % 2 == 0 and y > -200 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 8, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+9,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 9, y }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+10,y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 10, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+12,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 12, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+14,y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 14, y }, force = "player" })
         end
     end
 end
@@ -554,37 +554,37 @@ function TestShared.buildBaseWithNorthDefenseForBrutalForce(options)
 
     -- build walls
     for x = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
-        for y=(dimension * -1), (dimension * -1) + 3, 1 do
-            surface.create_entity({name="stone-wall",position={x,y},  force = "player"})
+        for y = (dimension * -1), (dimension * -1) + 3, 1 do
+            surface.create_entity({ name = "stone-wall", position = { x, y }, force = "player" })
         end
 
-        if x%2 == 0 then
-            surface.create_entity({name="laser-turret",position={x, (dimension * -1)+6}, force = "player"})
+        if x % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { x, (dimension * -1) + 6 }, force = "player" })
         end
-        if x%2 == 0 and x < 200 then
-            surface.create_entity({name="gun-turret",position={x, (dimension * -1)+8}, force = "player"})
+        if x % 2 == 0 and x < 200 then
+            surface.create_entity({ name = "gun-turret", position = { x, (dimension * -1) + 8 }, force = "player" })
         end
-        if x%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={x,(dimension * -1)+9}, force = "player"})
+        if x % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { x, (dimension * -1) + 9 }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if x%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={x, (dimension * -1)+10}, force = "player"})
+        if x % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { x, (dimension * -1) + 10 }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if x%10 == 0 then
-            surface.create_entity({name="substation",position={x, (dimension * -1)+12}, force = "player"})
+        if x % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { x, (dimension * -1) + 12 }, force = "player" })
         end
-        if x%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={x, (dimension * -1)+14}, force = "player"})
+        if x % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { x, (dimension * -1) + 14 }, force = "player" })
         end
     end
 end
@@ -604,33 +604,33 @@ function TestShared.buildBaseWithWestAerialDefenseForBrutalForce(options)
 
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 36, y }, force = "player" })
         end
-        if y%2 == 0 and y < 0 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
+        if y % 2 == 0 and y < 0 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 38, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 39, y }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 40, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 42, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 44, y }, force = "player" })
         end
     end
 end
@@ -647,40 +647,39 @@ function TestShared.buildBaseWithBackdoorOpen(options)
     bottom_horizontal_river(surface, dimension, riverwidth, false, gatewidth)
     left_vertical_river(surface, dimension, riverwidth, false, gatewidth)
 
-    draw_water(surface, -120, dimension * -1, -100,  dimension)
+    draw_water(surface, -120, dimension * -1, -100, dimension)
 
     right_vertical_river(surface, dimension, riverwidth, true, gatewidth)
 
-
     for y = (dimension * -1) + (dimension - gatewidth), (dimension) - (dimension - gatewidth), 1 do
 
-        if y%2 == 0 then
-            surface.create_entity({name="laser-turret",position={(dimension * -1)+36, y }, force = "player"})
+        if y % 2 == 0 then
+            surface.create_entity({ name = "laser-turret", position = { (dimension * -1) + 36, y }, force = "player" })
         end
-        if y%2 == 0 and y < 0 then
-            surface.create_entity({name="gun-turret",position={(dimension * -1)+38, y }, force = "player"})
+        if y % 2 == 0 and y < 0 then
+            surface.create_entity({ name = "gun-turret", position = { (dimension * -1) + 38, y }, force = "player" })
         end
-        if y%2 == 0 then
-            local inserter = surface.create_entity({name="bulk-inserter",position={(dimension * -1)+39,y}, force = "player"})
+        if y % 2 == 0 then
+            local inserter = surface.create_entity({ name = "bulk-inserter", position = { (dimension * -1) + 39, y }, force = "player" })
             inserter.direction = defines.direction.east
         end
-        if y%2 == 0 then
-            local chest = surface.create_entity({name="infinity-chest",position={(dimension * -1)+40, y}, force = "player"})
+        if y % 2 == 0 then
+            local chest = surface.create_entity({ name = "infinity-chest", position = { (dimension * -1) + 40, y }, force = "player" })
             chest.set_infinity_container_filter(1, {
                 name = "uranium-rounds-magazine",
                 count = 100,
                 mode = "exactly"
             })
-            chest.minable = false
+            chest.minable_flag = false
             chest.rotatable = false
             chest.operable = false
         end
 
-        if y%10 == 0 then
-            surface.create_entity({name="substation",position={(dimension * -1)+42, y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "substation", position = { (dimension * -1) + 42, y }, force = "player" })
         end
-        if y%10 == 0 then
-            surface.create_entity({name="electric-energy-interface",position={(dimension * -1)+44, y}, force = "player"})
+        if y % 10 == 0 then
+            surface.create_entity({ name = "electric-energy-interface", position = { (dimension * -1) + 44, y }, force = "player" })
         end
     end
 end

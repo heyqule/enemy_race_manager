@@ -4,6 +4,7 @@
 --- require("__enemyracemanager__/lib/global_config")
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local UtilHelper = require("__enemyracemanager__/lib/helper/util_helper")
@@ -48,7 +49,7 @@ function SurfaceProcessor.register_enemies(surface)
                     if index and ForceHelper.is_enemy_force(precheck_enemy_race) then
                         enemy_race = precheck_enemy_race
                     else
-                        enemy_race = MOD_NAME
+                        enemy_race = ERM.MOD_NAME
                     end
 
                     if enemy_race then
@@ -87,7 +88,7 @@ function SurfaceProcessor.rebuild_race()
 
     for surface_index, race in pairs(storage.enemy_surfaces) do
         if game.surfaces[surface_index] == nil or
-                (race ~= MOD_NAME and script.active_mods[race] == nil) or
+                (race ~= ERM.MOD_NAME and script.active_mods[race] == nil) or
                 storage.active_races[race] == nil or
                 not ForceHelper.can_have_enemy_on(game.surfaces[surface_index])
         then
@@ -105,7 +106,7 @@ function SurfaceProcessor.rebuild_race()
 end
 
 function SurfaceProcessor.wander_unit_clean_up()
-    local profiler = game.create_profiler()
+    local profiler = helpers.create_profiler()
     local unit_count = 0
     local checked_count = 0
     for _, surface in pairs(game.surfaces) do
@@ -143,7 +144,7 @@ function SurfaceProcessor.get_enemy_on(surface_name)
         return surface_race_data.races_by_key[math.random(1, surface_race_data.size)]
     end
 
-    return MOD_NAME
+    return ERM.MOD_NAME
 end
 
 function SurfaceProcessor.get_all_enemies_on(surface_name)

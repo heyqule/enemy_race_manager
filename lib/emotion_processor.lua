@@ -140,8 +140,8 @@ end
 local attack_rapid_expand = function(data)
     if not valid_data_object(data) then
         return
-    end      
-    
+    end
+
     local surface = data.surface
     local force = data.force
     local position = find_buildable_location(data)
@@ -168,6 +168,7 @@ local attack_rapid_expand = function(data)
                     ignore_planner = true,
                 })
                 group.start_moving()
+                storage.test_group = group
             end
         end
     end

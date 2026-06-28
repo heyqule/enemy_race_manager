@@ -6,6 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -17,7 +18,6 @@ local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_populatio
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
-local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
@@ -425,10 +425,10 @@ end
 
 --- Register native forces
 function RemoteAPI.register_new_enemy_race()
-    local data = { FORCE_NAME }
+    local data = { ERM.FORCE_NAME }
 
     if prototypes.entity['gleba-spawner'] then
-        table.insert(data, GLEBA_FORCE_NAME) 
+        table.insert(data, ERM.GLEBA_FORCE_NAME) 
     end
 
     return data
@@ -441,7 +441,13 @@ function RemoteAPI.get_event_name(event_name)
 end
 
 --- ForceHelper
-RemoteAPI.force_data_reindex = ForceHelper.refresh_all_enemy_forces --- for post process
+RemoteAPI.force_data_reindex = function()
+    ForceHelper.refresh_all_enemy_forces()
+    ForceHelper.cache_prototype_names()
+    ForceHelper.cache_spawner_decoration()
+    ForceHelper.cache_unit_supply()
+    --- for post process
+end 
 
 RemoteAPI.is_enemy_force = ForceHelper.is_enemy_force
 RemoteAPI.get_player_forces = ForceHelper.get_player_forces
@@ -461,9 +467,6 @@ RemoteAPI.calculate_attack_points = AttackMeterProcessor.calculate_points
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals  --- for post process
 RemoteAPI.pick_random_attack_beacon = AttackGroupBeaconProcessor.pick_random_attack_beacon
-
---- Base build processor
-RemoteAPI.build_base_formation = BaseBuildProcessor.build_formation
 
 --- Quality Points
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points  --- for post process

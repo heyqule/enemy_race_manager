@@ -3,183 +3,34 @@
 --- Created by heyqule.
 --- DateTime: 3/31/2021 8:54 PM
 ---
+--- @deprecated
+---
 
 require('util')
 
-local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
-local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
-local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
-
-local Cron = require("__enemyracemanager__/lib/cron_processor")
-
 local BaseBuildProcessor = {}
 
-local building_switch = {
-    ["cc"] = function(force_name)
-        return RaceSettingsHelper.pick_a_command_center(force_name)
-    end,
-    ["support"] = function(force_name)
-        return RaceSettingsHelper.pick_a_support_building(force_name)
-    end,
-    ["turret"] = function(force_name)
-        return RaceSettingsHelper.pick_a_turret(force_name)
+function BaseBuildProcessor.create_build_group(group, limit)
+    if not (group and group.valid) then
+        return
     end
-}
-
-local expansion_switch = {
-    [BUILDING_EXPAND_ON_CMD] = function(entity)
-        BaseBuildProcessor.process_on_cmd(entity)
-    end,
-    [BUILDING_A_TOWN] = function(entity)
-        BaseBuildProcessor.process_on_formation(entity)
-    end,
-    [BUILDING_EXPAND_ON_ARRIVAL] = function(entity)
-        BaseBuildProcessor.process_on_arrival(entity)
+    local members = {}
+    for _, unit in pairs(group.members) do
+        members[#members + 1] = unit
     end
-}
-
-function BaseBuildProcessor.exec(entity)
-    if entity and entity.valid and ForceHelper.is_erm_unit(entity) then
-        local func = expansion_switch[GlobalConfig.build_style()]
-        if func then
-            func(entity)
+    local new_group = group.surface.create_unit_group {position=group.position ,force=group.force}
+    for idx = 1, math.min(limit, #members) do
+        local unit = members[idx]
+        if unit and unit.valid then
+            new_group.add_member(unit)
         end
     end
-end
 
-function BaseBuildProcessor.process_on_cmd(entity)
-    local name_token = ForceHelper.get_name_token(entity.name)
-    local force_name = entity.force.name
-    if GlobalConfig.race_is_erm_managed(force_name) and name_token and RaceSettingsHelper.is_command_center(force_name, name_token[2]) then
-        local unit_group = BaseBuildProcessor.determine_build_group(entity)
-        if unit_group then
-            BaseBuildProcessor.build_formation(unit_group, true)
-        end
-    end
-end
-
-function BaseBuildProcessor.process_on_formation(entity)
-    local unit_group = BaseBuildProcessor.determine_build_group(entity)
-    if unit_group then
-        BaseBuildProcessor.build_formation(unit_group)
-    end
-end
-
-function BaseBuildProcessor.process_on_arrival(entity)
-    local unit_group = BaseBuildProcessor.determine_build_group(entity)
-    if unit_group then
-        for i, unit in pairs(unit_group.members) do
-            if unit then
-                BaseBuildProcessor.build_formation(unit_group)
-            end
-        end
-    end
-end
-
-function BaseBuildProcessor.determine_build_group(entity)
-    local near_by_units = entity.surface.find_entities_filtered {
-        force = entity.force,
-        position = entity.position,
-        radius = 32,
-        type = "unit",
-        
-    }
-    for _, unit in pairs(near_by_units) do
-        if  unit.commandable and
-            unit.commandable.is_entity and
-            unit.commandable.parent_group and
-            unit.commandable.parent_group.command and
-            unit.commandable.parent_group.command.type == defines.command.build_base
-        then
-            return unit.commandable.parent_group
-        end
-    end
-    return nil
-end
-
-function BaseBuildProcessor.build_formation(unit_group, has_cc)
-    local force_name = unit_group.force.name
-
-    if not GlobalConfig.race_is_erm_managed(force_name) then
-        return nil
-    end
-
-    local members = unit_group.members
-    local cc = 0
-    local support = 0
-    local turret = 0
-
-    if has_cc then
-        cc = 1
-    end
-
-    local formation = {}
-    if GlobalConfig.build_formation() == "random" then
-        formation = { 1, math.random(3, 8), math.random(5, 12) }
-    else
-        formation = util.split(GlobalConfig.build_formation(), "-")
-    end
-
-    for _, unit in pairs(members) do
-        if unit.valid then
-            local name = nil
-            if support < tonumber(formation[2]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "support", unit_group.surface.name)
-                support = support + 1
-            elseif cc < tonumber(formation[1]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "cc", unit_group.surface.name)
-                cc = cc + 1
-            elseif turret < tonumber(formation[3]) then
-                name = BaseBuildProcessor.getBuildingName(force_name, "turret", unit_group.surface.name)
-                turret = turret + 1
-            else
-                return
-            end
-
-            Cron.add_1_sec_queue(
-                    "BaseBuildProcessor.build",
-                    unit.surface,
-                    name,
-                    force_name,
-                    unit.position
-            )
-            unit.destroy()
-        end
-    end
-end
-
-function BaseBuildProcessor.getBuildingName(force_name, type, surface_name, tier)
-    local func = building_switch[type]
-    tier = tier or QualityProcessor.roll_quality(force_name, surface_name)
-
-    return force_name .. "--" .. func(force_name) .. "--" .. tier
-end
-
-function BaseBuildProcessor.build(surface, name, force_name, position, radius)
-    radius = radius or 64
-  
-    if not prototypes.entity[name] then
-        return nil
-    end
-    
-    if not surface.can_place_entity({ name = name, force = force_name, position = position }) then
-        position = surface.find_non_colliding_position(name, position, radius, 9, true)
-    end
-
-    if position then
-        local built_entity = surface.create_entity({ name = name, force = force_name, position = position, spawn_decorations = true })
-
-        if built_entity then
-            script.raise_event(
-                GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_BASE_BUILT],
-                {
-                    entity = built_entity
-                }
-            )
-        end
-    end
+    new_group.set_command({
+        type = defines.command.build_base,
+        destination = group.position,
+        distraction = defines.distraction.by_damage
+    })
 end
 
 return BaseBuildProcessor

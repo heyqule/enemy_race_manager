@@ -4,6 +4,7 @@
 --- DateTime: 12/24/2020 2:50 PM
 --- require("__enemyracemanager__/lib/debug_helper")
 ---
+local ERM = require("__enemyracemanager__/global")
 local DebugHelper = {}
 
 local titleCase = function(first, rest)
@@ -22,7 +23,7 @@ function DebugHelper.print_translate_to_console(mode_name, name, level)
 end
 
 function DebugHelper.print(message)
-    if DEBUG_MODE then
+    if ERM.DEBUG_MODE then
         log(message)
     end
 end

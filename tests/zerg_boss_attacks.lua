@@ -49,7 +49,7 @@ local place_zerg_radar = function(surface, position)
 
     --- Prevent it damaging the boss and assit spawning during test lol.
     local seg_units = surface.find_entities_filtered({
-        type="segmented-unit"
+        type = "segmented-unit"
     })
     for _, seg_unit in pairs(seg_units) do
         seg_unit.destroy()
@@ -59,7 +59,7 @@ local place_zerg_radar = function(surface, position)
 end
 
 local create_boss = function(radar)
-    local boss_location = {x=100,y=100}
+    local boss_location = { x = 100, y = 100 }
     storage.boss_final_scanned_position = boss_location
     BossProcessor.exec(radar, boss_location)
 end
@@ -74,320 +74,329 @@ after_each(function()
     BossProcessor.reset_globals()
 end)
 
+describe("Assisted Spawners", function()
 
-it("When boss assisted spawner dies, boss HP get deducted and spawns broodlings", function()
-    async(60)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-    local spawner_max_health = 0
-    local total_spawners_checkpoint = 0
-    after_ticks(30, function()
-        total_spawners_checkpoint = storage.boss.total_assisted_spawners
-        local idx, spawner = next(storage.boss.assisted_spawners)
-        spawner.entity.health = 1
-        spawner_max_health = spawner.entity.max_health
-        spawner.entity.damage(99999999,  'player', 'impact')
-    end)
-    
-    after_ticks(60, function()
-        assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
-        assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
-        assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
-        assert.equal(total_spawners_checkpoint - 1, storage.boss.total_assisted_spawners, "total assist spawn deducted")
-        assert.near(storage.boss.entity.health, 
-                math.floor(storage.boss.entity.max_health - spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO), 
-                100, 
-                "Boss health deducted"
-        )
-        local broodling_count = surface.count_entities_filtered({name = enemy_name..'--broodling--6', force = enemy_name})
-        assert(broodling_count > 6, "Spawner spawned broodlings. Found:"..tostring(broodling_count)) 
-        done()
-    end)
-end)
-
-it("If max assist spawner has not reached, Boss should respawn a new boss assist spawner after 1 minute.", function()
-    async(4500) 
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-
-    local total_spawners_checkpoint = 0
-    local spawner_max_health = 0
-    
-    -- Wait for initial spawners to spawn
-    after_ticks(30, function()
-        total_spawners_checkpoint = storage.boss.total_assisted_spawners
-        -- Kill one spawner
-        local idx, spawner = next(storage.boss.assisted_spawners)
-        spawner.entity.health = 1
-        spawner_max_health = spawner.entity.max_health
-        spawner.entity.damage(99999, 'player', 'physical')
-        assert.equal(3, storage.boss.total_assisted_spawners, "One assist spawner killed")
-    end)
-    
-    -- Check after 1 minute (3600 ticks) that a new spawner has been created
-    after_ticks(4500, function()
-        assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
-        assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
-        assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
-        -- Should have the same number of spawners as before (one died, one respawned, due to hiting the 3/5 threshold)
-        assert(storage.boss.total_assisted_spawners > 3, "New assist spawner respawned")
-        -- Boss health should be deducted due to spawner death
-        assert.near(storage.boss.entity.health, 
-            math.floor(storage.boss.entity.max_health - spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO), 
-            100, 
-            "Boss health deducted"
-        )
-        done()
-    end)
-end)
-
-
-local defense_attacks = {2500020, 250020, 100020, 50020, 20020}
-for index, health_threshold in pairs(defense_attacks) do
-    it("Test boss defensive attacks @ "..health_threshold , function()
-        async(300)
+    it("When boss assisted spawner dies, boss HP get deducted and spawns broodlings", function()
+        async(60)
         local surface = game.planets.char.create_surface()
         surface.request_to_generate_chunks({ 0, 0 }, 8)
         surface.force_generate_chunk_requests()
-        game.players[1].teleport({10,0},'char')
-        storage.race_settings[enemy_name].boss_tier = 1
-        local radar = place_zerg_radar(surface, {x=10,y=10})
+        game.players[1].teleport({ 10, 0 }, 'char')
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
         create_boss(radar)
-        
-        local adjusted_index = index + 1
-        local last_hp = storage.boss.attack_last_hp[adjusted_index]
-        local last_attack_tick = storage.boss.last_attack_tick
+        local spawner_max_health = 0
+        local total_spawners_checkpoint = 0
         after_ticks(30, function()
-            local boss_entity = storage.boss.entity
-            boss_entity.damage(health_threshold, 'player', 'impact')
+            total_spawners_checkpoint = storage.boss.total_assisted_spawners
+            local idx, spawner = next(storage.boss.assisted_spawners)
+            spawner.entity.health = 1
+            spawner_max_health = spawner.entity.max_health
+            spawner.entity.damage(99999999, 'player', 'impact')
         end)
 
-        
-        after_ticks(300, function()
-            assert.is_true(storage.boss.attack_last_hp[adjusted_index] < last_hp, 'Last attack HP updated')
-            assert.near(storage.boss.entity.health, 
-                    math.floor(storage.boss.entity.max_health - health_threshold),
+        after_ticks(60, function()
+            assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
+            assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
+            assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
+            assert.equal(total_spawners_checkpoint - 1, storage.boss.total_assisted_spawners, "total assist spawn deducted")
+            assert.near(storage.boss.entity.health,
+                    math.floor(storage.boss.entity.max_health - spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO),
                     100,
                     "Boss health deducted"
             )
-            assert(last_attack_tick < storage.boss.last_attack_tick, "Last attack tick changed")
+            local broodling_count = surface.count_entities_filtered({ name = enemy_name .. '--broodling--6', force = enemy_name })
+            assert(broodling_count > 6, "Spawner spawned broodlings. Found:" .. tostring(broodling_count))
             done()
         end)
     end)
-end
 
-it("Test boss idle attacks", function()
-    async(7200)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
+    it("If max assist spawner has not reached, Boss should respawn a new boss assist spawner after 1 minute.", function()
+        async(4500)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        create_boss(radar)
 
-    after_ticks(900, function()
-        local selected_units = surface.find_entities_filtered {
-            type = 'unit',
-            force = enemy_name,
-            position = radar.position,
-            radius = 128
-        }
+        local total_spawners_checkpoint = 0
+        local spawner_max_health = 0
 
-        for _, unit in pairs(selected_units) do
-            unit.destroy()
-        end
+        -- Wait for initial spawners to spawn
+        after_ticks(30, function()
+            total_spawners_checkpoint = storage.boss.total_assisted_spawners
+            -- Kill one spawner
+            local idx, spawner = next(storage.boss.assisted_spawners)
+            spawner.entity.health = 1
+            spawner_max_health = spawner.entity.max_health
+            spawner.entity.damage(99999, 'player', 'physical')
+            assert.equal(3, storage.boss.total_assisted_spawners, "One assist spawner killed")
+        end)
+
+        -- Check after 1 minute (3600 ticks) that a new spawner has been created
+        after_ticks(4500, function()
+            assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
+            assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
+            assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
+            -- Should have the same number of spawners as before (one died, one respawned, due to hiting the 3/5 threshold)
+            assert(storage.boss.total_assisted_spawners > 3, "New assist spawner respawned")
+            -- Boss health should be deducted due to spawner death
+            assert.near(storage.boss.entity.health,
+                    math.floor(storage.boss.entity.max_health - spawner_max_health * BossProcessor.ASSISTED_SPAWNER_DEATH_RATIO),
+                    100,
+                    "Boss health deducted"
+            )
+            done()
+        end)
     end)
-    
-    after_ticks(7200, function()
-        assert(radar.health < radar.max_health, 'Get attacked...')        
-        done()
-    end)
-    
+
 end)
 
-it("Test radar dies", function()
-    async(1800)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-    
-    
-    after_ticks(900, function()
-        local radar = storage.boss.radar
-        radar.damage(99999999, enemy_name, 'impact')
-    end)
-    
-    after_ticks(1800, function()
-        assert.equal(nil, storage.boss.radar, 'Boss Storage radar wipped.')
-        assert.equal(nil, storage.boss.entity, 'Boss Storage boss wipped.')
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_overmind--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss entity wipped.')
-        
-        assert.equal(0, #storage.boss.spawn_beacons, 'Boss Storage spawn beacons wipped.')
-        local entities = surface.count_entities_filtered({
-            name = 'erm-boss-beacon',
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss Beacon wipped.')
-        assert.equal(0, #storage.boss.assisted_spawners, 'Boss Storage assist spawners wipped.')
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss Beacon assist spawners.')
-        assert.equal(false, storage.boss_logs[enemy_name].entries[1].victory,'Loss the match')
-        done()
-    end)
-end)
-    
-it("Test player defeat boss", function()
-    async(7200)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-    
+describe("Defensive Attacks", function()
 
-    after_ticks(900, function()
-        local boss_entity = storage.boss.entity
-        boss_entity.damage(99999999, enemy_name, 'impact')
-    end)
+    local defense_attacks = { 2500020, 250020, 100020, 50020, 20020 }
+    for index, health_threshold in pairs(defense_attacks) do
+        it("Test boss defensive attacks @ " .. health_threshold, function()
+            async(300)
+            local surface = game.planets.char.create_surface()
+            surface.request_to_generate_chunks({ 0, 0 }, 8)
+            surface.force_generate_chunk_requests()
+            game.players[1].teleport({ 10, 0 }, 'char')
+            storage.race_settings[enemy_name].boss_tier = 1
+            local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+            create_boss(radar)
 
-    after_ticks(1800, function()
-        assert.equal(nil, storage.boss.radar, 'Boss Storage radar wipped.')
-        assert.equal(nil, storage.boss.entity, 'Boss Storage boss wipped.')
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_overmind--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss entity wipped.')
+            local adjusted_index = index + 1
+            local last_hp = storage.boss.attack_last_hp[adjusted_index]
+            local last_attack_tick = storage.boss.last_attack_tick
+            after_ticks(30, function()
+                local boss_entity = storage.boss.entity
+                boss_entity.damage(health_threshold, 'player', 'impact')
+            end)
 
-        assert.equal(0, #storage.boss.spawn_beacons, 'Boss Storage spawn beacons wipped.')
-        local entities = surface.count_entities_filtered({
-            name = 'erm-boss-beacon',
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss Beacon wipped.')
-        assert.equal(0, #storage.boss.assisted_spawners, 'Boss Storage assist spawners wipped.')
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss Beacon assist spawners.')
-        assert.equal(true, storage.boss_logs[enemy_name].entries[1].victory,'Win the match')
+            after_ticks(300, function()
+                assert.is_true(storage.boss.attack_last_hp[adjusted_index] < last_hp, 'Last attack HP updated')
+                assert.near(storage.boss.entity.health,
+                        math.floor(storage.boss.entity.max_health - health_threshold),
+                        100,
+                        "Boss health deducted"
+                )
+                assert(last_attack_tick < storage.boss.last_attack_tick, "Last attack tick changed")
+                done()
+            end)
+        end)
+    end
 
-        --- Check rewards
-        local entities = surface.count_entities_filtered({
-            name = "infinity-chest",
-            force = "player"
-        })
-        assert(entities > 0, 'Has infinite chest')
-
-        BossVictoryDialog.hide(game.players[1])
-    end)
-
-
-    after_ticks(7200, function()
-        BossRewardProcessor.clean_up()
-        local entities = surface.count_entities_filtered({
-            name = "infinity-chest",
-            force = "player"
-        })
-        assert.equal(entities, 0, 'Expired infinite chest')
-
-        done()
-    end)
 end)
 
-it("Test uWu rapid delivery", function()
-    async(7200)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    create_boss(radar)
-    
-    after_ticks(600, function()
-        local boss_entity = storage.boss.entity
-        boss_entity.damage(5000000, enemy_name, 'impact')
-    end)
-    
-    after_ticks(6000, function()
-        local player = game.players[1]
-        storage.death_loop_detection[player.index] = {
-            player_index = player.index,
-            surface_index = surface.index,
-            force_index = game.forces[enemy_name].index,
-            tick = game.tick + 600
-        }
-        NukePlanetDialog.confirm(game.players[1]) 
+describe("Boss Lifecycle", function()
 
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_overmind--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss entity wipped.')
-        
-        local entities = surface.count_entities_filtered({
-            name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss assist spawners.')
+    it("Test boss idle attacks", function()
+        async(7200)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        create_boss(radar)
+
+        after_ticks(900, function()
+            local selected_units = surface.find_entities_filtered {
+                type = 'unit',
+                force = enemy_name,
+                position = radar.position,
+                radius = 128
+            }
+
+            for _, unit in pairs(selected_units) do
+                unit.destroy()
+            end
+        end)
+
+        after_ticks(7200, function()
+            assert(radar.health < radar.max_health, 'Get attacked...')
+            done()
+        end)
+
     end)
 
-    after_ticks(7200, function()
-        assert.equal(nil, storage.emotion[enemy_name], 'Peaceful reset')
-        local entities = surface.count_entities_filtered({
-            name = 'erm-boss-beacon',
-            limit = 1
-        })
-        assert.equal(0, entities, 'Boss Beacon wipped.')
-        done()
+    it("Test radar dies", function()
+        async(1800)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        create_boss(radar)
+
+        after_ticks(900, function()
+            local radar = storage.boss.radar
+            radar.damage(99999999, enemy_name, 'impact')
+        end)
+
+        after_ticks(1800, function()
+            assert.equal(nil, storage.boss.radar, 'Boss Storage radar wipped.')
+            assert.equal(nil, storage.boss.entity, 'Boss Storage boss wipped.')
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_overmind--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss entity wipped.')
+
+            assert.equal(0, #storage.boss.spawn_beacons, 'Boss Storage spawn beacons wipped.')
+            local entities = surface.count_entities_filtered({
+                name = 'erm-boss-beacon',
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss Beacon wipped.')
+            assert.equal(0, #storage.boss.assisted_spawners, 'Boss Storage assist spawners wipped.')
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_nyduspit--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss Beacon assist spawners.')
+            assert.equal(false, storage.boss_logs[enemy_name].entries[1].victory, 'Loss the match')
+            done()
+        end)
     end)
+
+    it("Test player defeat boss", function()
+        async(7200)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        create_boss(radar)
+
+        after_ticks(900, function()
+            local boss_entity = storage.boss.entity
+            boss_entity.damage(99999999, enemy_name, 'impact')
+        end)
+
+        after_ticks(1800, function()
+            assert.equal(nil, storage.boss.radar, 'Boss Storage radar wipped.')
+            assert.equal(nil, storage.boss.entity, 'Boss Storage boss wipped.')
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_overmind--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss entity wipped.')
+
+            assert.equal(0, #storage.boss.spawn_beacons, 'Boss Storage spawn beacons wipped.')
+            local entities = surface.count_entities_filtered({
+                name = 'erm-boss-beacon',
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss Beacon wipped.')
+            assert.equal(0, #storage.boss.assisted_spawners, 'Boss Storage assist spawners wipped.')
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_nyduspit--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss Beacon assist spawners.')
+            assert.equal(true, storage.boss_logs[enemy_name].entries[1].victory, 'Win the match')
+
+            --- Check rewards
+            local entities = surface.count_entities_filtered({
+                name = "infinity-chest",
+                force = "player"
+            })
+            assert(entities > 0, 'Has infinite chest')
+
+            BossVictoryDialog.hide(game.players[1])
+        end)
+
+        after_ticks(7200, function()
+            BossRewardProcessor.clean_up()
+            local entities = surface.count_entities_filtered({
+                name = "infinity-chest",
+                force = "player"
+            })
+            assert.equal(entities, 0, 'Expired infinite chest')
+
+            done()
+        end)
+    end)
+
 end)
 
+describe("Edge Cases", function()
 
-it("Test Boss assist without boss", function()
-    async(60)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    storage.race_settings[enemy_name].boss_tier = 1
-    
-    surface.create_entity({
-        name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
-        position = {50,50}
-    })
+    it("Test uWu rapid delivery", function()
+        async(7200)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        create_boss(radar)
 
-    after_ticks(60, function()
-        local count = surface.count_entities_filtered({
-            name = enemy_name..'--boss_nyduspit--'.. storage.race_settings[enemy_name].boss_tier,
-            limit = 1
-        })
-        assert.equal(0, count, "Boss nyduspit shouldn't show up.")
-        done()
+        after_ticks(600, function()
+            local boss_entity = storage.boss.entity
+            boss_entity.damage(5000000, enemy_name, 'impact')
+        end)
+
+        after_ticks(6000, function()
+            local player = game.players[1]
+            storage.death_loop_detection[player.index] = {
+                player_index = player.index,
+                surface_index = surface.index,
+                force_index = game.forces[enemy_name].index,
+                tick = game.tick + 600
+            }
+            NukePlanetDialog.confirm(game.players[1])
+
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_overmind--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss entity wipped.')
+
+            local entities = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_nyduspit--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss assist spawners.')
+        end)
+
+        after_ticks(7200, function()
+            assert.equal(nil, storage.emotion[enemy_name], 'Peaceful reset')
+            local entities = surface.count_entities_filtered({
+                name = 'erm-boss-beacon',
+                limit = 1
+            })
+            assert.equal(0, entities, 'Boss Beacon wipped.')
+            done()
+        end)
     end)
-end) 
+
+    it("Test Boss assist without boss", function()
+        async(60)
+        local surface = game.planets.char.create_surface()
+        surface.request_to_generate_chunks({ 0, 0 }, 8)
+        surface.force_generate_chunk_requests()
+        game.players[1].teleport({ 10, 0 }, 'char')
+        storage.race_settings[enemy_name].boss_tier = 1
+
+        surface.create_entity({
+            name = enemy_name .. '--boss_nyduspit--' .. storage.race_settings[enemy_name].boss_tier,
+            position = { 50, 50 }
+        })
+
+        after_ticks(60, function()
+            local count = surface.count_entities_filtered({
+                name = enemy_name .. '--boss_nyduspit--' .. storage.race_settings[enemy_name].boss_tier,
+                limit = 1
+            })
+            assert.equal(0, count, "Boss nyduspit shouldn't show up.")
+            done()
+        end)
+    end)
+
+end)

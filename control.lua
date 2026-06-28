@@ -17,7 +17,6 @@ if script then
         [GlobalConfig.EVENT_FLUSH_GLOBAL] = script.generate_event_name(),
         [GlobalConfig.EVENT_ADJUST_ATTACK_METER] = script.generate_event_name(),
         [GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER] = script.generate_event_name(),
-        [GlobalConfig.EVENT_BASE_BUILT] = script.generate_event_name(),
         [GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN] = script.generate_event_name(),
         [GlobalConfig.EVENT_REQUEST_PATH] = script.generate_event_name(),
         [GlobalConfig.EVENT_REQUEST_BASE_BUILD] = script.generate_event_name(),

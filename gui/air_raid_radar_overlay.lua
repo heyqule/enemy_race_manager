@@ -134,7 +134,7 @@ AirRaidRadarOverlay.remove_radar = function(event)
 end
 
 AirRaidRadarOverlay.reindex = function()
-    local profiler = game.create_profiler()
+    local profiler = helpers.create_profiler()
     --- Clear old data
     local radars = storage.air_raid_radars
     for force_index, force_data in pairs(radars) do

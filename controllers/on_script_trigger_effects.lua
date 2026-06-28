@@ -3,7 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 2/15/2022 9:47 PM
 ---
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 
 local Config = require("__enemyracemanager__/lib/global_config")
 local RaceSettingHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
@@ -49,22 +49,9 @@ local remove_creep = function(entity)
     local spawner = entity
     if spawner and spawner.valid then
         local spawner_name = spawner.name
-        local names
         if storage.decorative_cache[spawner_name] then
-            names = storage.decorative_cache[spawner_name]
-        else
-            local prototype = spawner.prototype
-            local prototype_decos = prototype.spawn_decoration
-            names = {}
-            for i = 1, table_size(prototype_decos), 1 do
-                table.insert(names, prototype_decos[i].decorative)
-            end
-            storage.decorative_cache[spawner_name] = names
-        end
-
-        if names then
             spawner.surface.destroy_decoratives({
-                name = names,
+                name = storage.decorative_cache[spawner_name],
                 area = {
                     left_top = {x=spawner.position.x - 6,y=spawner.position.y - 6},
                     right_bottom = {x=spawner.position.x + 6,y=spawner.position.y + 6},
@@ -77,68 +64,68 @@ end
 local script_functions = {
 
     --- Biter attacks
-    [CONSTRUCTION_ATTACK] = function(args)
-        if CustomAttacks.valid(args, MOD_NAME) then
+    [ERM.CONSTRUCTION_ATTACK] = function(args)
+        if CustomAttacks.valid(args, ERM.MOD_NAME) then
             CustomAttacks.process_constructor(args)
         end
     end,
-    [LOGISTIC_ATTACK] = function(args)
-        if CustomAttacks.valid(args, MOD_NAME) then
+    [ERM.LOGISTIC_ATTACK] = function(args)
+        if CustomAttacks.valid(args, ERM.MOD_NAME) then
             CustomAttacks.process_logistic(args)
         end
     end,
-    [SELF_DESTRUCT_ATTACK] = function(args)
+    [ERM.SELF_DESTRUCT_ATTACK] = function(args)
         CustomAttacks.process_self_destruct(args)
     end,
 
     --- Player super weapon attacks
-    [PLAYER_SUPER_WEAPON_ATTACK] = function(event)
+    [ERM.PLAYER_SUPER_WEAPON_ATTACK] = function(event)
         if is_valid_attack_for_attack_point(event) then
             process_attack_point_event(event, Config.super_weapon_attack_points())
         end
     end,
-    [PLAYER_PLANET_PURIFIER_ATTACK] = function(event)
+    [ERM.PLAYER_PLANET_PURIFIER_ATTACK] = function(event)
         if is_valid_attack_for_attack_point(event) then
             process_attack_point_event(event, Config.super_weapon_attack_points() * 200)
         end
     end,
-    [PLAYER_SUPER_WEAPON_COUNTER_ATTACK] = function(event)
+    [ERM.PLAYER_SUPER_WEAPON_COUNTER_ATTACK] = function(event)
         if is_valid_attack_for_counter_attack(event) then
             process_counter_attack_event(event, 48)
         end
     end,
-    [PLAYER_PLANET_PURIFIER_COUNTER_ATTACK] = function(event)
+    [ERM.PLAYER_PLANET_PURIFIER_COUNTER_ATTACK] = function(event)
         if is_valid_attack_for_counter_attack(event) then
             process_counter_attack_event(event, 96)
         end
     end,
 
     --- Boss related
-    [TRIGGER_BOSS_DIES] = function(args)
+    [ERM.TRIGGER_BOSS_DIES] = function(args)
         storage.boss.victory = true
     end,
-    [TRIGGER_BOSS_ASSIST_SPAWNED] = function(args)
+    [ERM.TRIGGER_BOSS_ASSIST_SPAWNED] = function(args)
         BossProcessor.assisted_spawner_spawns(args)
     end,
-    [TRIGGER_BOSS_ASSIST_DIES] = function(args)
+    [ERM.TRIGGER_BOSS_ASSIST_DIES] = function(args)
         BossProcessor.assisted_spawner_dies(args)
     end,
-    [BOSS_SEGMENT_UNIT_DIES] =  function(args)
+    [ERM.BOSS_SEGMENT_UNIT_DIES] =  function(args)
         BossProcessor.controlled_segmented_unit_dies(args)
     end,
 
     --- Attack group beacons
-    [LAND_SCOUT_BEACON] = function(event)
+    [ERM.LAND_SCOUT_BEACON] = function(event)
         AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.LAND_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
-    [AERIAL_SCOUT_BEACON] = function(event)
+    [ERM.AERIAL_SCOUT_BEACON] = function(event)
         AttackGroupBeaconProcessor.create_defense_beacon(event.source_entity, AttackGroupBeaconConstants.AERIAL_BEACON)
         AttackGroupBeaconProcessor.create_attack_entity_beacon(event.source_entity)
     end,
 
     --- Army Population
-    [ARMY_POPULATION_INCREASE] = function(event)
+    [ERM.ARMY_POPULATION_INCREASE] = function(event)
         local unit = event.source_entity
         if unit and unit.valid and ArmyPopulation.can_place_unit(unit) then
             ArmyPopulation.add_unit_count(unit)
@@ -152,7 +139,7 @@ local script_functions = {
             ArmyControlUI.update_army_stats()
         end
     end,
-    [ARMY_POPULATION_DECREASE] = function(event)
+    [ERM.ARMY_POPULATION_DECREASE] = function(event)
         local unit = event.source_entity
         if unit and unit.valid then
             ArmyPopulation.remove_unit_count(unit)
@@ -161,7 +148,7 @@ local script_functions = {
         end
     end,
 
-    [ARMY_RALLYPOINT_DEPLOY] = function(event)
+    [ERM.ARMY_RALLYPOINT_DEPLOY] = function(event)
         local rallypoint = event.source_entity
         if rallypoint and rallypoint.valid then
             rallypoint.destructible = false
@@ -176,24 +163,24 @@ local script_functions = {
         end
     end,
 
-    [ENVIRONMENTAL_ATTACK] = function(event)
+    [ERM.ENVIRONMENTAL_ATTACK] = function(event)
         local surface = game.surfaces[event.surface_index]
         local target_position = event.target_position
 
         local force_spawn, force_spawn_base
         local spawn_chance = 50
         local spawn_count = 5
-        if TEST_MODE then
+        if ERM.TEST_MODE then
             force_spawn = RaceSettingHelper.can_spawn(spawn_chance)
             if storage.override_environmental_attack_can_spawn == true then
                 force_spawn = true
-            elseif storage.override_environmental_attack_can_spawn == false then
+            else
                 force_spawn = false
             end
 
             if storage.override_environmental_attack_spawn_base == true then
                 force_spawn_base = true
-            elseif storage.override_environmental_attack_spawn_base == false then
+            else
                 force_spawn_base = false
             end
         end
@@ -208,15 +195,15 @@ local script_functions = {
         })
     end,
 
-    [QUALITY_DICE_ROLL] = function(event)
+    [ERM.QUALITY_DICE_ROLL] = function(event)
         return QualityProcessor.roll(event.source_entity)
     end,
 
-    [QUALITY_TALLY_POINT] = function(event)
+    [ERM.QUALITY_TALLY_POINT] = function(event)
         AttackMeterProcessor.calculate_points(event.source_entity)
     end,
     
-    [REGISTER_BOSS_RADAR] = function(event)
+    [ERM.REGISTER_BOSS_RADAR] = function(event)
         -- boss radar print
         BossPsiRadar.register(event.source_entity)
     end 
@@ -224,7 +211,7 @@ local script_functions = {
 
 local creep_removal_enabled = settings.startup['enemyracemanager-auto-creep-removal'].value
 if creep_removal_enabled then
-    script_functions[CREEP_REMOVAL] = function(event)
+    script_functions[ERM.CREEP_REMOVAL] = function(event)
         remove_creep(event.source_entity)
     end
 end

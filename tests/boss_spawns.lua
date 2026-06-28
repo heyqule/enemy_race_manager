@@ -31,7 +31,7 @@ local place_zerg_radar = function(surface, position)
         },
         force = 'player'
     })
-    
+
     return radar
 end
 
@@ -49,60 +49,67 @@ local enemy_name = 'enemy_erm_zerg'
 local hive_name = 'enemy_erm_zerg--boss_overmind--'
 local nyduspit_name = 'enemy_erm_zerg--boss_nyduspit--'
 
-for tier = 1, 5, 1 do
-    it("Test Boss Spawns Quality, Tier "..tier, function()
+describe("Boss Quality Spawns", function()
+
+    for tier = 1, 5, 1 do
+        it("Test Boss Spawns Quality, Tier " .. tier, function()
+            async(900)
+            local surface = game.planets.char.create_surface()
+            local player = game.players[1]
+            player.teleport({ -30, 0 }, 'char')
+            --player.chart(surface, {{x = -192, y = -192}, {x = 192, y = 192}})
+            surface.request_to_generate_chunks({ 0, 0 }, 8)
+            surface.force_generate_chunk_requests()
+            storage.race_settings[enemy_name].boss_tier = tier
+            local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+            BossProcessor.exec(radar, { x = 100, y = 100 })
+            local full_hive_name = hive_name .. tier
+            local full_nyduspit_name = nyduspit_name .. tier
+
+            after_ticks(900, function()
+                assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
+                assert.not_nil(storage.boss.entity, "Boss spawned")
+                local position = storage.boss.entity_position
+                local hive = surface.find_entities_filtered({ position = position, radius = 64, name = full_hive_name })
+                local nyduspit = surface.find_entities_filtered({ position = position, radius = 64, name = full_nyduspit_name })
+                local units = surface.find_entities_filtered({ position = position, radius = 64, type = 'unit', limit = 1 })
+                assert(hive[1], "Boss hive presents")
+                assert(nyduspit[1], "Boss nyduspit presents")
+                assert(units[1], "Boss hive presents")
+                game.print('Hive:' .. hive[1].health)
+                game.print('nyduspit:' .. nyduspit[1].health)
+                if (tier > 1) then
+                    assert(hive[1].quality.name == BossProcessor.get_boss_quality(), "Boss hive quality match")
+                    assert(nyduspit[1].quality.name == BossProcessor.get_boss_quality(), "Boss nyduspit quality match")
+                    assert(units[1].quality.name == BossProcessor.get_boss_quality(), "Boss unit quality match")
+                end
+                storage.race_settings[enemy_name].boss_tier = 1
+                done()
+            end)
+        end)
+    end
+
+end)
+
+describe("Boss Spawn Data", function()
+
+    it("Test Boss Spawn Data", function()
         async(900)
         local surface = game.planets.char.create_surface()
-        local player = game.players[1]
-        player.teleport({-30,0},'char')
-        --player.chart(surface, {{x = -192, y = -192}, {x = 192, y = 192}})
         surface.request_to_generate_chunks({ 0, 0 }, 8)
         surface.force_generate_chunk_requests()
-        storage.race_settings[enemy_name].boss_tier = tier
-        local radar = place_zerg_radar(surface, {x=10,y=10})
-        BossProcessor.exec(radar, {x=100,y=100})
-        local full_hive_name = hive_name..tier
-        local full_nyduspit_name = nyduspit_name..tier
-
+        game.players[1].teleport({ 10, 0 }, 'char')
+        local radar = place_zerg_radar(surface, { x = 10, y = 10 })
+        BossProcessor.exec(radar, { x = 100, y = 100 })
         after_ticks(900, function()
-            assert.not_nil(storage.boss.spawn_beacons, "Have Boss spawn beacons")
-            assert.not_nil(storage.boss.entity, "Boss spawned")
+            assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
+            assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
+            assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
             local position = storage.boss.entity_position
-            local hive = surface.find_entities_filtered({position = position, radius = 64, name = full_hive_name})
-            local nyduspit = surface.find_entities_filtered({position = position, radius = 64, name = full_nyduspit_name})
-            local units = surface.find_entities_filtered({position = position, radius = 64, type = 'unit', limit = 1})
-            assert(hive[1], "Boss hive presents")
-            assert(nyduspit[1], "Boss nyduspit presents")
-            assert(units[1], "Boss hive presents")
-            game.print('Hive:'..hive[1].health)
-            game.print('nyduspit:'..nyduspit[1].health)
-            if (tier > 1) then
-                assert(hive[1].quality.name == BossProcessor.get_boss_quality(), "Boss hive quality match")
-                assert(nyduspit[1].quality.name == BossProcessor.get_boss_quality(), "Boss nyduspit quality match")
-                assert(units[1].quality.name == BossProcessor.get_boss_quality(), "Boss unit quality match")
-            end
-            storage.race_settings[enemy_name].boss_tier = 1
+            assert(position.x > 0 or position.y > 0, "Boss placement correct")
             done()
         end)
-    end) 
-end
-
-
-it("Test Boss Spawn Data", function()
-    async(900)
-    local surface = game.planets.char.create_surface()
-    surface.request_to_generate_chunks({ 0, 0 }, 8)
-    surface.force_generate_chunk_requests()
-    game.players[1].teleport({10,0},'char')
-    local radar = place_zerg_radar(surface, {x=10,y=10})
-    BossProcessor.exec(radar, {x=100,y=100})
-    after_ticks(900, function()
-        assert.not_nil(storage.boss.spawn_beacons, "Boss spawn beacons tracked")
-        assert.not_nil(storage.boss.entity, "Boss entity spawned tracked")
-        assert.not_nil(storage.boss.boss_tier, "Boss tier tracked")
-        local position = storage.boss.entity_position
-        assert(position.x > 0 or position.y > 0, "Boss placement correct")
-        done()
     end)
+
 end)
  
