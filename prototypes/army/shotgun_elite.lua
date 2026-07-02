@@ -137,18 +137,22 @@ data:extend({
                         }
                     },
                     {
-                        type = "direct",
+                        type = "area",
+                        target_entities = false,
                         repeat_count = 16,
-                        action_delivery = {
+                        radius = 2.5,
+                        action_delivery =
+                        {
                             type = "projectile",
                             projectile = "shotgun-pellet",
                             starting_speed = 1,
                             starting_speed_deviation = 0.1,
+                            inherit_speed = true,
                             direction_deviation = 0.3,
                             range_deviation = 0.3,
                             max_range = 20
                         }
-                    }
+                    },
                 }
             },
         },

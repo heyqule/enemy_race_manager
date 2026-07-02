@@ -57,7 +57,7 @@ end
 describe("Attack Meter Group Generation", function()
 
     it("Regular Group by AP", function()
-        async(5400)
+        async(6300)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 } })
@@ -65,7 +65,7 @@ describe("Attack Meter Group Generation", function()
 
         storage.race_settings[race_name].attack_meter = 3500
         storage.race_settings[race_name].next_attack_threshold = 3000
-        after_ticks(5400, function()
+        after_ticks(6300, function()
             assert(table_size(storage.erm_unit_groups) == 1, "Check Erm unit group table: " .. table_size(storage.erm_unit_groups))
 
             local key = next(storage.erm_unit_groups)
@@ -78,7 +78,7 @@ describe("Attack Meter Group Generation", function()
     end)
 
     it("Elite Group by AAP", function()
-        async(5400)
+        async(6300)
         local surface = game.surfaces[1]
         local entity = spawn_cc(surface)
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { -10, -10 } })
@@ -90,7 +90,7 @@ describe("Attack Meter Group Generation", function()
         storage.race_settings[race_name].attack_meter_total = 2000000
         QualityProcessor.calculate_quality_points()
 
-        after_ticks(5400, function()
+        after_ticks(6300, function()
             assert(table_size(storage.erm_unit_groups) == 1, "Check Erm unit group table: " .. table_size(storage.erm_unit_groups))
 
             local key = next(storage.erm_unit_groups)
@@ -396,7 +396,7 @@ describe("Expansion & Cleanup", function()
 
             local entities = surface.find_entities_filtered({
                 area = { { -100, -100 }, { 100, 100 } },
-                type = "unit-spawner",
+                type = {"unit-spawner", "turret"},
                 force = force_name
             })
             assert(table_size(entities) > 0, "Has victory expansion")

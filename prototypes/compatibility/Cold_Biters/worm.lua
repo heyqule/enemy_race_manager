@@ -35,7 +35,7 @@ function makeLevelTurrets(level, type, distance)
 
     turret["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. turret["name"], GlobalConfig.QUALITY_MAPPING[level] }
     turret["name"] = ERM.MOD_NAME .. "--" .. turret["name"] .. "--" .. level;
-    turret["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier, level, true)
+    turret["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier / 2, level, true)
     turret["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

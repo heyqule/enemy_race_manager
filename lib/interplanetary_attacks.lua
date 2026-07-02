@@ -21,7 +21,7 @@ local InterplanetaryAttacks = {}
 
 local base_spawn_rate = 50
 
-local group_variance = 20
+local group_variance = 30
 local home_group_size = 20
 local attack_meter_threshold = 1000000
 local default_max_radius = 900000
@@ -170,21 +170,21 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
 
     local flying_enabled = Config.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
     local spawn_as_flying_squad = RaceSettingsHelper.can_spawn(Config.flying_squad_chance()) and QualityProcessor.get_tier(force_name, surface.name)
-    local max_unit_number = Config.max_group_size()
-    local group_unit_number = math.random(max_unit_number - group_variance, max_unit_number + group_variance)
+    local max_unit_supply = Config.max_group_size()
+    local group_unit_supply = math.random(max_unit_supply - group_variance, max_unit_supply + group_variance)
 
     --- If it's a build group, 20 units use for building on spot, the rest will attack.
      local build_home = RaceSettingsHelper.can_spawn(
             Config.interplanetary_raid_base_build_chance()
     ) or storage.override_interplanetary_attack_build_base
     if build_home then
-        group_unit_number = group_unit_number - home_group_size
+        group_unit_supply = group_unit_supply - home_group_size
     end
 
 
     local group_type
     if (flying_enabled and spawn_as_flying_squad) or storage.override_interplanetary_attack_spawn_flyers then
-        group_unit_number = math.ceil(group_unit_number / 2)
+        group_unit_supply = math.ceil(group_unit_supply / 2)
         group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
     end
 
@@ -205,7 +205,7 @@ function InterplanetaryAttacks.exec(force_name, target_force, drop_location)
     local options = {
         force_name = force_name,
         target_force = target_force,
-        group_unit_number = group_unit_number,
+        group_unit_supply = group_unit_supply,
         surface = surface,
         drop_location = drop_location,
         group_type = group_type,

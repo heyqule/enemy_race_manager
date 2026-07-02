@@ -148,10 +148,10 @@ local addRaceSettings = function()
     }
     race_settings.featured_groups = {
         --Unit list, spawn percentage, unit_cost
-        { { "behemoth-biter", "behemoth-spitter" }, { 5, 2 }, 30 },
-        { { "behemoth-spitter", "behemoth-biter" }, { 5, 2 }, 30 },
-        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 2, 1 }, 20 },
-        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 20 },
+        { { "behemoth-biter", "behemoth-spitter" }, { 5, 2 }, 0.8 },
+        { { "behemoth-spitter", "behemoth-biter" }, { 5, 2 }, 0.8 },
+        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 2, 1 }, 1.1 },
+        { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 1.1 },
     }
     
     if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
@@ -178,13 +178,13 @@ local addRaceSettings = function()
             { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
         )
         race_settings.featured_flying_groups = {
-            { { "distractor", "destroyer" }, { 1, 1 }, 100 },
-            { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 75 },
-            { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 75 },
+            { { "distractor", "destroyer" }, { 1, 1 }, 0.5 },
+            { { "defender", "distractor", "destroyer" }, { 3, 1, 1 }, 0.66 },
+            { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 0.66 },
         }
         table.insert(
             race_settings.featured_groups, 
-            { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 }
+            { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 1 }
         )
     end
 

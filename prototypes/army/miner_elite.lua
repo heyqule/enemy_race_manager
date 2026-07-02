@@ -67,14 +67,14 @@ local icons = {
     }
 }
 local resistances = {
-    acid = {75},
-    poison = {75},
-    physical = {75},
+    acid = {50},
+    poison = {50},
+    physical = {50},
     fire = {99, 500},
-    explosion = {75},
-    laser = {75},
-    electric = {75},
-    cold = {75}
+    explosion = {50},
+    laser = {50},
+    electric = {50},
+    cold = {50}
 }
 
 data:extend({
@@ -152,7 +152,7 @@ ArmyEconomyHelper.create_recipe({
     energy_required = 30,
     ingredients =
     {
-        {type = "item", name = "modular-armor", amount = 1},
+        {type = "item", name = "heavy-armor", amount = 1},
         {type = "item", name = "steel-plate", amount = 10},
     },
     categories = {prefix.."--erm_controllable"},

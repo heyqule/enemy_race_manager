@@ -139,37 +139,38 @@ function QualityProcessor.calculate_quality_points()
                 local surface = surface_data.surface
                 if surface and surface.valid then
                     local data = quality_data[surface.name] or {}
+                    if not data.max_out then
+                        local quality_points
+                        if evolution_enabled then
+                            quality_points = ( math.min((force.get_evolution_factor(surface.name)), 1) ) * evolution_target +
+                                    math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
+                        else
+                            local final_target = evolution_target + attack_point_target
+                            quality_points = math.min((accumulated_attack_meter / attack_point_divider) * final_target, final_target)
+                        end
 
-                    local quality_points
-                    if evolution_enabled then
-                        quality_points = ( math.min((force.get_evolution_factor(surface.name)), 1) ) * evolution_target +
-                                math.min((accumulated_attack_meter / attack_point_divider) * attack_point_target, attack_point_target)
-                    else
-                        local final_target = evolution_target + attack_point_target
-                        quality_points = math.min((accumulated_attack_meter / attack_point_divider) * final_target, final_target)
+                        quality_points = quality_points * setting_advancement
+
+                        data.points = math.floor(quality_points)
+                        if quality_points >= max_out_target then
+                            data.max_out = true
+                        else
+                            data.max_out = false
+                        end
+
+                        if quality_points <= 1000 then
+                            data.tier = 1
+                        elseif quality_points > 1000 and quality_points <= 2500 then
+                            data.tier = 2
+                        else
+                            data.tier = 3
+                        end
+
+                        -- update custom group unit tier, let it use the highest tiers from any planet.
+                        RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
+
+                        quality_data[surface.name] = calculate_chance_cache(data, quality_points)
                     end
-
-                    quality_points = quality_points * setting_advancement
-
-                    data.points = math.floor(quality_points)
-                    if quality_points >= max_out_target then
-                        data.max_out = true
-                    else
-                        data.max_out = false
-                    end
-
-                    if quality_points <= 1000 then
-                        data.tier = 1
-                    elseif quality_points > 1000 and quality_points <= 2500 then
-                        data.tier = 2
-                    else
-                        data.tier = 3
-                    end
-
-                    -- update custom group unit tier, let it use the highest tiers from any planet.
-                    RaceSettingsHelper.refresh_current_tier(force.name, data.tier)
-
-                    quality_data[surface.name] = calculate_chance_cache(data, quality_points)
                 end
             end
             storage.quality_on_planet[force.name] = quality_data
@@ -445,7 +446,7 @@ QualityProcessor.events =
 }
 
 QualityProcessor.on_nth_tick = {
-    [301] = QualityProcessor.calculate_quality_points
+    [30 * second + 1] = QualityProcessor.calculate_quality_points
 }
 
 QualityProcessor.on_init = function(event)

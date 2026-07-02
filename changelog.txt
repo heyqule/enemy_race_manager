@@ -1,22 +1,34 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
-Date: 2026-07-??
+Date: 2026-07-01
 
   Features:
-    - Most ERM enemy units utilize "size_in_group" as its supply count for max group size.
-    - Most ERM playable units utilize "size_in_group" as its supply count.      
-    - Most ERM enemy units have its own buildable_entities list.
-    - Added steering attribute to all ERM units.
-    - When there are leftover units after base building group completes its task, they will switch to attack command.
-    - Re-designed custom attack group to work with size_in_group attribute, aka total unit supply, instead of total number of units.
-    
+    - Updated to Factorio 2.1.
+    - Added "size_in_group" as its unit supply count for max group size. (visit race mod pages for unit supply details) 
+    - Added buildable_entities list for base expansion.
+    - Added steering attribute to all ERM enemy units.
+    - Removed "Custom Base Expansion" logics and its settings. Enemies now depend on base game logics to build their bases.
+    - When there are leftover units after base building group completes its task, they will switch to an attack command. 
+    - [custom attack group] Re-designed to work with size_in_group attribute, aka unit supply, instead of total number of units.
+    - [custom attack group] Attack threshold is around 2600 points with default settings, instead of 3000 points. 10 points = 1 unit supply.
+    - [custom attack group] Featured groups have additional hidden multiplier to change the threshold.
+
   Changes:
-    - Changed default max group size from 100 to 200, back to base game default.
+    - Changed default max group size from 100 to 200. The settings is renamed to "Max Unit Supply Per Group".
     - Changed default max gathering groups from 30 to 20.
-    - Removed "Custom Base Expansion" logics. Enemy now depends on base game logic to build their base.  
-    - Changed ERM RTS preset enemy expansion timer from 5-20 mins to 10-30 mins. 
+    - Changed ERM RTS presets' enemy expansion timer from 5-20 mins to 10-30 mins.
+    - Changed [Attack Point] Threshold Multiplier map setting to a range selector [1.1x - 10x], default stays at 1.25.
+    - Changed quality point updates from every 5s to every 30s.
+    - Added buildable_entities and size_in_group to corrupted robots.
+    - [Army] Miner health changed from 200 -> 250
+    - [Army] Elite Miner resistances changed from 75% -> 50%; recipe changed from modular armor to heavy armor.
+    - Lowered behemoth biters HP for explosive, frost and toxic biters.
+    - Lowered behemoth worms HP for explosive, frost and toxic biters.
       
   Scripting:
+    - RemoteAPI.generate_attack_group(force_name, unit_supply, options) now uses unit_supply, instead of number of units.
+    - RemoteAPI.generate_flying_group(force_name, unit_supply, options) now uses unit_supply, instead of number of units.
+    - RemoteAPI.generate_dropship_group(force_name, unit_supply, options) now uses unit_supply, instead of number of units.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.70

@@ -86,7 +86,7 @@ for i = 1, max_level do
     -- (org: 200)
     data:extend({ makeLevelEnemy(i, "big-cold-spitter") })
     -- 1, 3000 - 10, 10500  - 20, 18000 (org: 3000)
-    data:extend({ makeLevelEnemy(i, "behemoth-cold-biter") })
+    data:extend({ makeLevelEnemy(i, "behemoth-cold-biter", 3) })
     -- 1, 1500 - 10, 5250 - 20, 9000 (org: 1500)
-    data:extend({ makeLevelEnemy(i, "behemoth-cold-spitter") })
+    data:extend({ makeLevelEnemy(i, "behemoth-cold-spitter", 2.5) })
 end

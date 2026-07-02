@@ -21,9 +21,9 @@ local modify_race_setting = function()
         table.insert(race_settings.units[2], "big-explosive-spitter")
         table.insert(race_settings.units[3], "behemoth-explosive-spitter")
 
-        table.insert(race_settings.featured_groups, { { "behemoth-explosive-biter", "behemoth-explosive-spitter", "big-explosive-biter", "big-explosive-spitter" }, { 2, 1, 3, 1 }, 50 })
-        table.insert(race_settings.featured_groups, { { "behemoth-explosive-biter", "behemoth-explosive-spitter" }, { 5, 2 }, 100 })
-        table.insert(race_settings.featured_groups, { { "behemoth-explosive-spitter", "behemoth-explosive-biter" }, { 3, 2 }, 100 })
+        table.insert(race_settings.featured_groups, { { "behemoth-explosive-biter", "behemoth-explosive-spitter", "big-explosive-biter", "big-explosive-spitter" }, { 2, 1, 3, 1 }, 0.75 })
+        table.insert(race_settings.featured_groups, { { "behemoth-explosive-biter", "behemoth-explosive-spitter" }, { 5, 2 }, 0.5 })
+        table.insert(race_settings.featured_groups, { { "behemoth-explosive-spitter", "behemoth-explosive-biter" }, { 3, 2 }, 0.5 })
 
         remote.call("enemyracemanager", "register_race", race_settings)
     end

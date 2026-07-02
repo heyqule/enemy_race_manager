@@ -299,8 +299,7 @@ data:extend {
         description = "enemyracemanager-attack-meter-threshold",
         setting_type = "runtime-global",
         default_value = 1.25,
-        minimum_value = 1,
-        maximum_value = 10,
+        allowed_values = { 1.1, 1.25, 1.33, 1.5, 1.66, 1.75, 2, 2.5, 3, 4, 5, 7, 10},
         order = "enemyracemanager-300"
     },
     {

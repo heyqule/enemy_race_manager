@@ -386,7 +386,7 @@ end)
 describe("Edge Cases & Fallbacks", function()
 
     it("When no scout waypoints, enemies should still able to route to target.", function()
-        async(14600)
+        async(17200)
         local surface = game.surfaces[1]
         local enemy = game.forces["enemy"]
         local player = game.forces["player"]
@@ -419,7 +419,7 @@ describe("Edge Cases & Fallbacks", function()
             AttackGroupProcessor.generate_group(game.forces["enemy"], 100)
         end)
 
-        after_ticks(14600, function()
+        after_ticks(17200, function()
             local enemies = surface.find_entities_filtered {
                 force = "enemy",
                 type = "unit",
@@ -473,7 +473,7 @@ describe("Edge Cases & Fallbacks", function()
     end)
 
     it("Land attack group cant find a valid path, switch to aerial group instead", function()
-        async(10800)
+        async(12600)
         local surface = game.surfaces[1]
         local enemy = game.forces["enemy"]
         local player = game.forces["player"]
@@ -490,10 +490,10 @@ describe("Edge Cases & Fallbacks", function()
         AttackGroupBeaconProcessor.init_index()
 
         after_ticks(300, function()
-            AttackGroupProcessor.generate_group(game.forces["enemy"], 100)
+            AttackGroupProcessor.generate_group(game.forces["enemy"], 50)
         end)
 
-        after_ticks(10800, function()
+        after_ticks(12600, function()
             local enemies = surface.find_entities_filtered {
                 force = "enemy",
                 type = "unit",

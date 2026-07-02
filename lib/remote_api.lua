@@ -109,44 +109,44 @@ function RemoteAPI.update_race_setting(race_setting)
     return false
 end
 
---- Generate a mixed attack group
+--- Generate a mixed attack group, unit_supply is total supply budget
 --- /c remote.call("enemyracemanager", "generate_attack_group", "enemy_erm_zerg", 100?, options?)
-function RemoteAPI.generate_attack_group(force_name, units_number, options)
+function RemoteAPI.generate_attack_group(force_name, unit_supply, options)
     local force = game.forces[force_name]
-    units_number = tonumber(units_number) or GlobalConfig.max_group_size()
+    unit_supply = tonumber(unit_supply) or GlobalConfig.max_group_size()
     options = options or {}
     options.group_type =  AttackGroupProcessor.GROUP_TYPE_MIXED
 
-    if force and units_number > 0 then
-        AttackGroupProcessor.generate_group(force, units_number,options)
+    if force and unit_supply > 0 then
+        AttackGroupProcessor.generate_group(force, unit_supply, options)
     end
 end
 
---- Generate a flying attack group
+--- Generate a flying attack group, unit_supply is total supply budget
 --- /c  remote.call("enemyracemanager", "generate_flying_group", "enemy_erm_zerg", 100?, options?)
-function RemoteAPI.generate_flying_group(force_name, units_number, options)
+function RemoteAPI.generate_flying_group(force_name, unit_supply, options)
     local force = game.forces[force_name]
     local flying_enabled = GlobalConfig.flying_squad_enabled() and RaceSettingsHelper.has_flying_unit(force_name)
-    units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 2)
+    unit_supply = tonumber(unit_supply) or (GlobalConfig.max_group_size() / 2)
     options = options or {}
     options.group_type =  AttackGroupProcessor.GROUP_TYPE_FLYING
 
-    if force and flying_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(force, units_number, options)
+    if force and flying_enabled and unit_supply > 0 then
+        AttackGroupProcessor.generate_group(force, unit_supply, options)
     end
 end
 
---- Generate a dropship attack group
+--- Generate a dropship attack group, unit_supply is total supply budget
 --- /c  remote.call("enemyracemanager", "generate_dropship_group", "enemy_erm_zerg", 100?, options?)
-function RemoteAPI.generate_dropship_group(force_name, units_number, options)
+function RemoteAPI.generate_dropship_group(force_name, unit_supply, options)
     local force = game.forces[force_name]
     local dropship_enabled = GlobalConfig.dropship_enabled() and RaceSettingsHelper.has_dropship_unit(force_name)
-    units_number = tonumber(units_number) or (GlobalConfig.max_group_size() / 5)
+    unit_supply = tonumber(unit_supply) or (GlobalConfig.max_group_size() / 5)
     options = options or {}
     options.group_type =  AttackGroupProcessor.GROUP_TYPE_DROPSHIP
 
-    if force and dropship_enabled and units_number > 0 then
-        AttackGroupProcessor.generate_group(force, units_number, options)
+    if force and dropship_enabled and unit_supply > 0 then
+        AttackGroupProcessor.generate_group(force, unit_supply, options)
     end
 end
 

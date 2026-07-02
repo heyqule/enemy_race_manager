@@ -69,7 +69,7 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air" },
         has_belt_immunity = false,
-        max_health = 20 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 25 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         resistances = {},

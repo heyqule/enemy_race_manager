@@ -8,7 +8,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
 local ERM_DataHelper = require("__enemyracemanager__/lib/rig/data_helper")
-
+local AiHelper = require ("__erm_libs__/prototypes/ai_helper")
 require("util")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
@@ -97,10 +97,13 @@ robot_animations["logistic-robot"] = {
     }
 }
 
-function makeLogisticRobot(level)
+local function makeLogisticRobot(level)
     local type = "logistic-robot"
     local robot = util.table.deepcopy(data.raw[type][type])
     local original_health = robot["max_health"] * 3
+    local buildable_entities = ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, {
+        "roboport", "biter-spawner", "spitter-spawner"
+    }, level)
 
     robot["type"] = "unit"
     robot["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }
@@ -170,6 +173,8 @@ function makeLogisticRobot(level)
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
     robot['damaged_trigger_effect'] = nil
+    robot['ai_settings'] = AiHelper.get_enemy_unit_settings(4)
+    robot['buildable_entities'] = buildable_entities
     return robot
 end
 
