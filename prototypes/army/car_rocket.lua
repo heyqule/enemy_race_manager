@@ -108,6 +108,14 @@ data:extend({
         vision_distance = vision_distance,
         radar_range = 1,
         movement_speed = 0.25 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        steering = {
+            move = {
+                radius = 6
+            },
+            stay = {
+                radius = 10
+            },
+        },
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,
         --ai_settings = biter_ai_settings,

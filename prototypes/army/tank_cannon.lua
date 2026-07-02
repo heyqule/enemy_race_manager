@@ -189,6 +189,14 @@ data:extend({
         selection_box = selection_box,
         vision_distance = vision_distance,
         movement_speed = 0.25 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        steering = {
+            move = {
+                radius = 6.75
+            },
+            stay = {
+                radius = 12
+            },
+        },
         radar_range = 2,
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,

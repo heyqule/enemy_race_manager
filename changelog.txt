@@ -7,6 +7,7 @@ Date: 2026-07-01
     - Added "size_in_group" as its unit supply count for max group size. (visit race mod pages for unit supply details) 
     - Added buildable_entities list for base expansion.
     - Added steering attribute to all ERM enemy units.
+    - Added steering attributes to engineering army units.
     - Removed "Custom Base Expansion" logics and its settings. Enemies now depend on base game logics to build their bases.
     - When there are leftover units after base building group completes its task, they will switch to an attack command. 
     - [custom attack group] Re-designed to work with size_in_group attribute, aka unit supply, instead of total number of units.

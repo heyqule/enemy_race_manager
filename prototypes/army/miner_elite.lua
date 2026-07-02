@@ -133,7 +133,15 @@ data:extend({
         },
         distance_per_frame = 0.1,
         run_animation = running_animation,
-        corpse = "common-erm-army-corpse"
+        corpse = "common-erm-army-corpse",
+        steering = {
+            move = {
+                radius = 3
+            },
+            stay = {
+                radius = 5.25
+            },
+        },
     }
 })
 
