@@ -5,10 +5,11 @@
 ---
 --- Remove creep when the unit spawn dies
 ---
+local ERM = require("__enemyracemanager__/global")
 
 local remove_creep = {
     type = "script",
-    effect_id = CREEP_REMOVAL
+    effect_id = ERM.CREEP_REMOVAL
 }
 
 for _, spawner in pairs(data.raw["unit-spawner"]) do

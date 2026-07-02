@@ -6,6 +6,7 @@
 ---
 --- Reward player when they beat boss within the time limit.
 ---
+local ERM = require("__enemyracemanager__/global")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
@@ -81,7 +82,7 @@ local reward_settings = {
 
 -- Infinite chests stay for 1 hour.
 local expire_at = 60 * minute
-if TEST_MODE then
+if ERM.TEST_MODE then
     expire_at = 1 * minute
 end
 
@@ -152,7 +153,7 @@ function BossRewardProcessor.exec()
                     })         
                 end
                 chest.destructible = false
-                chest.minable = false
+                chest.minable_flag = false
                 chest.rotatable = false
                 chest.operable = false
                 table.insert(storage.boss_rewards, reward_data(chest))

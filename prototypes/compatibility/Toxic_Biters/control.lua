@@ -1,10 +1,10 @@
-
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local modify_race_setting = function()
     if script.active_mods["Toxic_biters"] then
-        local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
+        local race_settings = remote.call("enemyracemanager", "get_race", ERM.MOD_NAME)
 
         DebugHelper.print("Toxic_biters is active")
 
@@ -22,9 +22,9 @@ local modify_race_setting = function()
         table.insert(race_settings.units[2], "big-toxic-spitter")
         table.insert(race_settings.units[3], "behemoth-toxic-spitter")
         
-        table.insert(race_settings.featured_groups, { { "behemoth-toxic-biter", "behemoth-toxic-spitter", "big-toxic-biter", "big-toxic-spitter" }, { 2, 1, 3, 1 }, 50 })
-        table.insert(race_settings.featured_groups, { { "behemoth-toxic-biter", "behemoth-toxic-spitter" }, { 5, 2 }, 100 })
-        table.insert(race_settings.featured_groups, { { "behemoth-toxic-spitter", "behemoth-toxic-biter" }, { 3, 2 }, 100 })
+        table.insert(race_settings.featured_groups, { { "behemoth-toxic-biter", "behemoth-toxic-spitter", "big-toxic-biter", "big-toxic-spitter" }, { 2, 1, 3, 1 }, 0.75 })
+        table.insert(race_settings.featured_groups, { { "behemoth-toxic-biter", "behemoth-toxic-spitter" }, { 5, 2 }, 0.5 })
+        table.insert(race_settings.featured_groups, { { "behemoth-toxic-spitter", "behemoth-toxic-biter" }, { 3, 2 }, 0.5 })
 
         remote.call("enemyracemanager", "register_race", race_settings)
     end
@@ -37,7 +37,7 @@ local ToxicBiters = {}
 
 ToxicBiters.events = {
     [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE]] = function(event)
-        if (event.affected_race == MOD_NAME) then
+        if (event.affected_race == ERM.MOD_NAME) then
             modify_race_setting()
         end
     end

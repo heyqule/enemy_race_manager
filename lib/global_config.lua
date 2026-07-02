@@ -7,6 +7,9 @@
 require("util")
 require("__enemyracemanager__/setting-constants")
 
+local math_floor = math.floor
+local string_format = string.format
+
 local GlobalConfig = {}
 
 GlobalConfig.MAX_TIER = 3
@@ -38,7 +41,6 @@ GlobalConfig.EVENT_ADJUST_ATTACK_METER = "erm_adjust_attack_meter"
 GlobalConfig.EVENT_ADJUST_ACCUMULATED_ATTACK_METER = "erm_adjust_accumulated_attack_meter"
 
 --- Group command management
-GlobalConfig.EVENT_BASE_BUILT = "erm_base_built"
 GlobalConfig.EVENT_INTERPLANETARY_ATTACK_SCAN = "erm_interplanetary_attack_scan"
 GlobalConfig.EVENT_REQUEST_PATH = "erm_request_path"
 GlobalConfig.EVENT_REQUEST_BASE_BUILD = "erm_request_base_build"
@@ -56,7 +58,7 @@ GlobalConfig.EVENT_PREPARE_WORLD = "erm_prepare_world"
 GlobalConfig.MAX_LEVELS = 5
 GlobalConfig.MAX_BY_EPIC = 1
 GlobalConfig.MAX_BY_RARE = 2
-GlobalConfig.BASE_QUALITY_MULITPLIER = 0.5
+GlobalConfig.BASE_QUALITY_MULTIPLIER = 0.5
 GlobalConfig.QUALITY_MAPPING = {
     {"quality_mapping.normal"},
     {"quality_mapping.great"},
@@ -114,8 +116,6 @@ local refreshable_settings = {
         "enemyracemanager-max-group-size",
         "enemyracemanager-difficulty",
         "enemyracemanager-advancement",
-        "enemyracemanager-build-style",
-        "enemyracemanager-build-formation",
         "enemyracemanager-attack-point-spawner-kills-deduction",
         "enemyracemanager-attack-meter-threshold",
         "enemyracemanager-attack-meter-threshold-deviation",
@@ -152,10 +152,6 @@ local get_global_setting_value = function(setting_name)
     return setting_value
 end
 
-local global_setting_exists = function()
-    return storage and storage.settings
-end
-
 local check_register_erm_race = function(mod_name)
     mod_name = string.gsub(mod_name,"enemy_","")
 
@@ -178,7 +174,6 @@ end
 
 function GlobalConfig.refresh_config()
     for _, setting_name in pairs(refreshable_settings.startup) do
-
         if setting_name == "enemyracemanager-max-attack-range" then
             storage.settings[setting_name] = settings.startup[setting_name].value
         else
@@ -196,19 +191,17 @@ function GlobalConfig.get_max_level()
 end
 
 function GlobalConfig.get_max_attack_range()
-    local current_range
-    if global_setting_exists() then
+    if helpers.stage == 'runtime' then
+        local current_range
         current_range = storage.settings["enemyracemanager-max-attack-range"]
-    end
-
-    if current_range == nil then
-        current_range = settings.startup["enemyracemanager-max-attack-range"].value
-
-        if global_setting_exists() then
-            storage.settings["enemyracemanager-max-attack-range"] = current_range
+        if current_range == nil then
+            storage.settings["enemyracemanager-max-attack-range"] = settings.startup["enemyracemanager-max-attack-range"].value
         end
+        
+        return current_range
+    else
+        return settings.startup["enemyracemanager-max-attack-range"].value
     end
-    return current_range
 end
 
 function GlobalConfig.get_max_projectile_range(multiplier)
@@ -358,13 +351,13 @@ end
 
 function GlobalConfig.format_daytime(start_tick, end_tick)
     local difference = end_tick - start_tick
-    local lday = math.floor(difference / (24*hour))
+    local lday = math_floor(difference / (24*hour))
     local hour_difference = difference - (lday * (24*hour))
-    local lhour = math.floor(hour_difference / hour)
+    local lhour = math_floor(hour_difference / hour)
     local minute_difference = difference - (lday * (24*hour)) - (lhour * hour)
-    local lminute = math.floor(minute_difference / minute)
+    local lminute = math_floor(minute_difference / minute)
     local second_difference = difference - (lday * (24*hour)) - (lhour * hour) - (lminute * minute)
-    local lsecond = math.floor(second_difference / second)
+    local lsecond = math_floor(second_difference / second)
     return lday, lhour, lminute, lsecond
 end
 
@@ -372,12 +365,12 @@ function GlobalConfig.format_daytime_string(start_tick, end_tick)
     local day, hour, minute, second = GlobalConfig.format_daytime(start_tick, end_tick)
     local datetime_str = ""
     if day and day > 0 then
-        datetime_str = string.format("%02d D ", day)
+        datetime_str = string_format("%02d D ", day)
     else
         datetime_str = "0 D "
     end
 
-    datetime_str = datetime_str .. string.format("%02d:%02d:%02d", hour, minute, second)
+    datetime_str = datetime_str .. string_format("%02d:%02d:%02d", hour, minute, second)
 
     return datetime_str;
 end

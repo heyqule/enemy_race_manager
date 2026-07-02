@@ -5,10 +5,10 @@
 ---
 --- Limit all ground fire patch caps max initial_lifetime 5s and max maximum_lifetime to 15s.
 ---
-require("global")
+local ERM = require("__enemyracemanager__/global")
 
 for _, fire in pairs(data.raw["fire"]) do
-    if DEBUG_MODE then
+    if ERM.DEBUG_MODE then
         print("[ERM Fire changes] "..fire.name.." init:"..tostring(fire.initial_lifetime).." max:"..tostring(fire.maximum_lifetime))
         print('<before>')
         print('fire.initial_lifetime:'..tostring(fire.initial_lifetime))
@@ -25,7 +25,7 @@ for _, fire in pairs(data.raw["fire"]) do
         fire.maximum_lifetime = 300
     end
 
-    if DEBUG_MODE then
+    if ERM.DEBUG_MODE then
         print('<after>')
         print('fire.initial_lifetime:'..tostring(fire.initial_lifetime))
         print('fire.maximum_damage_multiplier:'..tostring(fire.maximum_damage_multiplier))

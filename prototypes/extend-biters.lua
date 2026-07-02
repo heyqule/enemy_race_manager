@@ -4,13 +4,11 @@
 --- DateTime: 12/31/2020 1:56 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
 require("util")
-
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value * 0.66
 
@@ -41,8 +39,8 @@ function makeLevelEnemy(level, type, health_cut_ratio)
         original_health = original_health / 10
     end
     
-    biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
+    biter["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    biter["name"] = ERM.MOD_NAME .. "--" .. biter["name"] .. "--" .. level
     biter["max_health"] = ERM_UnitHelper.get_health(original_health / health_cut_ratio, max_hitpoint_multiplier, level)
     biter["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },

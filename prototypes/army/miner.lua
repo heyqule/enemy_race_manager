@@ -69,7 +69,7 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air" },
         has_belt_immunity = false,
-        max_health = 20 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 25 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
         resistances = {},
@@ -98,7 +98,15 @@ data:extend({
         dying_sound = HumanSound.death(0.5),
         distance_per_frame = 0.1,
         run_animation = running_animation,
-        corpse = "common-erm-army-corpse"
+        corpse = "common-erm-army-corpse",
+        steering = {
+            move = {
+                radius = 3
+            },
+            stay = {
+                radius = 5.25
+            },
+        },
     }
 })
 
@@ -120,7 +128,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "light-armor", amount = 1},
         {type = "item", name = "iron-plate", amount = 10},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -128,7 +136,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['army-depot']['effects'],         {

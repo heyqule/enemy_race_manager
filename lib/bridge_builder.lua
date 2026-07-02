@@ -6,6 +6,7 @@
 
 local Position = require('__erm_libs__/stdlib/position')
 local Cron = require("__enemyracemanager__/lib/cron_processor")
+local ERM = require('__enemyracemanager__/global')
 local BridgeBuilder = {}
 
 local spawn_tile = "sand-1"
@@ -13,7 +14,7 @@ if script.active_mods["alien-biomes"] then
     spawn_tile = "mineral-brown-sand-1"
 end
 
-local planet_tiles = prototypes.mod_data[MOD_DATA_SURFACE_BRIDGE_TILES].data
+local planet_tiles = prototypes.mod_data[ERM.MOD_DATA_SURFACE_BRIDGE_TILES].data
 
 --- GPT assisted function.
 local function queue_landfill_bridge(surface, posA, posB)

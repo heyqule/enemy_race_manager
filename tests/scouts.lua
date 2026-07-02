@@ -5,6 +5,7 @@
 ---
 
 
+local ERM = require("__enemyracemanager__/global")
 local TestShared = require("shared")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local AttackGroupBeaconConstants = require("__enemyracemanager__/lib/attack_group_beacon_constants")
@@ -34,11 +35,13 @@ local player = "player"
 local enemy = "enemy"
 local biter_spawner = "enemy--biter-spawner--1"
 
+describe("Scout Spawning", function()
+
     it("Spawn Scout", function()
         async(900)
 
         local surface = game.surfaces[1]
-        local entity = surface.create_entity({name=biter_spawner, force=enemy, position={200, 0}})
+        local entity = surface.create_entity({ name = biter_spawner, force = enemy, position = { 200, 0 } })
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
@@ -61,7 +64,6 @@ local biter_spawner = "enemy--biter-spawner--1"
             })
             assert(count == 1, "Scout is near attack beacon")
 
-
             local count = surface.count_entities_filtered({
                 name = {
                     AttackGroupBeaconProcessor.get_scout_name(race_name, AttackGroupBeaconConstants.LAND_SCOUT),
@@ -69,21 +71,25 @@ local biter_spawner = "enemy--biter-spawner--1"
                 },
             })
             assert(count == 1, "It should not spawn additional scout, while one is active")
-            assert.not_nil(storage.scout_tracker[race_name],"scout_tracker data exists")
-            assert.not_nil(storage.scout_by_unit_number[scout.unit_number],"scout_by_unit_number data exists")
+            assert.not_nil(storage.scout_tracker[race_name], "scout_tracker data exists")
+            assert.not_nil(storage.scout_by_unit_number[scout.unit_number], "scout_by_unit_number data exists")
             done()
         end)
     end)
 
+end)
+
+describe("Scout Scanning & Pathing", function()
+
     it("Scout Scanning: buildings", function()
         async(4200)
         local surface = game.surfaces[1]
-        local entity = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
+        local entity = surface.create_entity({ name = biter_spawner, force = enemy, position = { 200, 200 } })
 
         AttackGroupBeaconProcessor.init_index()
 
-        local resource = surface.create_entity({ name = "iron-ore", amount=10000, position = { -200, -200 } })
-        local mining_drill = surface.create_entity({ name = "electric-mining-drill", force = "player", amount=10000, position = { -200, -200 } })
+        local resource = surface.create_entity({ name = "iron-ore", amount = 10000, position = { -200, -200 } })
+        local mining_drill = surface.create_entity({ name = "electric-mining-drill", force = "player", amount = 10000, position = { -200, -200 } })
         local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 200, 0 } })
         local gun_turret = surface.create_entity({ name = "gun-turret", force = "player", position = { 200, 100 } })
         local furnace = surface.create_entity({ name = "electric-furnace", force = "player", position = { 200, -200 } })
@@ -95,13 +101,13 @@ local biter_spawner = "enemy--biter-spawner--1"
         local command_chain = TestShared.get_command_chain()
         table.insert(command_chain.commands, {
             type = defines.command.go_to_location,
-            destination = {x=200,y=-200},
+            destination = { x = 200, y = -200 },
             radius = 8,
             distraction = defines.distraction.none
         })
         table.insert(command_chain.commands, {
             type = defines.command.go_to_location,
-            destination = {x=-200,y=-200},
+            destination = { x = -200, y = -200 },
             radius = 8,
             distraction = defines.distraction.none
         })
@@ -109,9 +115,9 @@ local biter_spawner = "enemy--biter-spawner--1"
 
         after_ticks(4200, function()
             local count = surface.count_entities_filtered({
-                name=AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
+                name = AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
             })
-            assert(count > 1, "Saw "..count.." enemy buildings. Assume pass if final count is between 2 to 5")
+            assert(count > 1, "Saw " .. count .. " enemy buildings. Assume pass if final count is between 2 to 5")
             done()
         end)
     end)
@@ -119,7 +125,7 @@ local biter_spawner = "enemy--biter-spawner--1"
     it("Detour to a resource node, then go to final_destination", function()
         local surface = game.surfaces[1]
 
-        local spawner = surface.create_entity({name=biter_spawner, force=enemy, position={200, 200}})
+        local spawner = surface.create_entity({ name = biter_spawner, force = enemy, position = { 200, 200 } })
 
         local entity = surface.create_entity({ name = "crude-oil", position = { 75, 150 } })
         local oil_drill = surface.create_entity({ name = "pumpjack", force = "player", position = { 75, 150 } })
@@ -139,50 +145,20 @@ local biter_spawner = "enemy--biter-spawner--1"
 
         after_ticks(2500, function()
             local scout_count = surface.count_entities_filtered({
-                name={AttackGroupBeaconProcessor.get_scout_name(MOD_NAME, AttackGroupBeaconConstants.LAND_SCOUT)},
-                position={0,0},
-                radius=32,
+                name = { AttackGroupBeaconProcessor.get_scout_name(ERM.MOD_NAME, AttackGroupBeaconConstants.LAND_SCOUT) },
+                position = { 0, 0 },
+                radius = 32,
             })
             local corpse_count = surface.count_entities_filtered({
-                type="corpse",
-                position={0,0},
-                radius=32,
+                type = "corpse",
+                position = { 0, 0 },
+                radius = 32,
             })
             assert(scout_count == 1 or corpse_count == 1, "Must see a scout or a corpse near final destination.")
             local count = surface.count_entities_filtered({
-                name=AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
+                name = AttackGroupBeaconConstants.ATTACK_ENTITIES_BEACON
             })
-            assert(count >= 2, "See "..count.." attack beacons. Expect at least 2.")
-            done()
-        end)
-    end)
-
-
-    it("Spawn beacon data is still in the data tree while spawn beacon is invalid", function()
-        AttackGroupBeaconProcessor.init_index()
-        local surface = game.surfaces[1]
-        local enemy = game.forces["enemy"]
-
-        local control_key = 5
-        storage["cdata"][surface.index][enemy.name]["ssk"] = control_key
-
-        storage["erm_spawn_beacon"][surface.index] = {}
-        storage["erm_spawn_beacon"][surface.index][enemy.name] = {}
-        for i = 1, 10, 1 do
-            local entity = surface.create_entity({name = "erm_spawn_beacon", position={i*5,i*5}})
-            storage["erm_spawn_beacon"][surface.index][enemy.name][i] = { beacon = entity }
-        end
-
-        local entity = surface.create_entity({ name = "enemy--biter-spawner--1", position = { 50,50 } })
-
-        storage["erm_spawn_beacon"][surface.index][enemy.name][6].beacon.destroy()
-
-        after_ticks(30, function()
-            AttackGroupProcessor.spawn_scout(race_name, game.forces["enemy"], surface, game.forces["player"])
-        end)
-
-        after_ticks(60, function()
-            -- it should not crash
+            assert(count >= 2, "See " .. count .. " attack beacons. Expect at least 2.")
             done()
         end)
     end)
@@ -191,7 +167,7 @@ local biter_spawner = "enemy--biter-spawner--1"
         async(1800)
 
         local surface = game.surfaces[1]
-        local entity = surface.create_entity({name=biter_spawner, force=enemy, position={100, 100}})
+        local entity = surface.create_entity({ name = biter_spawner, force = enemy, position = { 100, 100 } })
         AttackGroupBeaconProcessor.init_index()
 
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], game.surfaces[1], game.forces[player])
@@ -215,6 +191,39 @@ local biter_spawner = "enemy--biter-spawner--1"
         end)
     end)
 
+end)
+
+describe("Edge Cases", function()
+
+    it("Spawn beacon data is still in the data tree while spawn beacon is invalid", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local enemy = game.forces["enemy"]
+
+        local control_key = 5
+        storage["cdata"][surface.index][enemy.name]["ssk"] = control_key
+
+        storage["erm_spawn_beacon"][surface.index] = {}
+        storage["erm_spawn_beacon"][surface.index][enemy.name] = {}
+        for i = 1, 10, 1 do
+            local entity = surface.create_entity({ name = "erm_spawn_beacon", position = { i * 5, i * 5 } })
+            storage["erm_spawn_beacon"][surface.index][enemy.name][i] = { beacon = entity }
+        end
+
+        local entity = surface.create_entity({ name = "enemy--biter-spawner--1", position = { 50, 50 } })
+
+        storage["erm_spawn_beacon"][surface.index][enemy.name][6].beacon.destroy()
+
+        after_ticks(30, function()
+            AttackGroupProcessor.spawn_scout(race_name, game.forces["enemy"], surface, game.forces["player"])
+        end)
+
+        after_ticks(60, function()
+            -- it should not crash
+            done()
+        end)
+    end)
+
     it("Scout should not spawn inside a walled city", function()
         async(300)
         local surface = game.surfaces[1]
@@ -223,13 +232,12 @@ local biter_spawner = "enemy--biter-spawner--1"
         surface.force_generate_chunk_requests()
         TestShared.buildBaseNoOpen()
 
-        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built=true })
+        local rocket_launcher = surface.create_entity({ name = "erm-rocket-silo-test", force = "player", position = { 0, 0 }, raise_built = true })
 
-        surface.create_entity({name="enemy--biter-spawner--5", position={-200,0}})
-        surface.create_entity({name="erm_spawn_beacon", position={-120,0}})
+        surface.create_entity({ name = "enemy--biter-spawner--5", position = { -200, 0 } })
+        surface.create_entity({ name = "erm_spawn_beacon", position = { -120, 0 } })
         AttackGroupBeaconProcessor.init_index()
         local scout = AttackGroupProcessor.spawn_scout(race_name, game.forces[enemy], surface, game.forces[player])
-        
 
         after_ticks(300, function()
             local enemies = surface.count_entities_filtered {
@@ -243,3 +251,5 @@ local biter_spawner = "enemy--biter-spawner--1"
             done()
         end)
     end)
+
+end)

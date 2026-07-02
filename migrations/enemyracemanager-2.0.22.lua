@@ -4,6 +4,8 @@
 --- DateTime: 12/6/2024 9:30 AM
 ---
 
+local ERM = require("__enemyracemanager__/global")
+
 local entity_name_token = {
     'gleba-spawner',
     'wriggler-pentapod',
@@ -11,13 +13,13 @@ local entity_name_token = {
     'stomper-pentapod',
 }
 
-local force = game.forces[GLEBA_FORCE_NAME]
+local force = game.forces[ERM.GLEBA_FORCE_NAME]
 if not force then
-    force = game.create_force(GLEBA_FORCE_NAME)
+    force = game.create_force(ERM.GLEBA_FORCE_NAME)
 end
 
 local gleba = 'gleba'
-local enemy_force = game.forces[FORCE_NAME]
+local enemy_force = game.forces[ERM.FORCE_NAME]
 if game.surfaces[gleba] then
     force.set_evolution_factor(enemy_force.get_evolution_factor(gleba), gleba)
     force.set_evolution_factor_by_pollution(enemy_force.get_evolution_factor_by_pollution(gleba), gleba)
@@ -34,7 +36,7 @@ for _, surface in pairs(game.surfaces) do
     for _, entity in pairs(entities) do
         for _, name in pairs(entity_name_token) do
             if string.find(entity.name,name,nil,true) then
-                entity.force = GLEBA_FORCE_NAME
+                entity.force = ERM.GLEBA_FORCE_NAME
             end
         end
     end

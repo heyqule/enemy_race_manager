@@ -12,7 +12,7 @@
 local sounds = require("__base__.prototypes.entity.sounds")
 local item_sounds = require("__base__.prototypes.item_sounds")
 require("util")
-local biter_ai_settings = require ("__base__.prototypes.entity.biter-ai-settings")
+local AiHelper = require ("__erm_libs__/prototypes/ai_helper")
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
@@ -176,7 +176,7 @@ data:extend({
         icons = icons,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "not-flammable" },
         has_belt_immunity = true,
-        max_health = 75 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 100 * ERMPlayerUnitHelper.get_health_multiplier(),
         order = prefix.."--controllable--"..name,
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),
@@ -189,6 +189,14 @@ data:extend({
         selection_box = selection_box,
         vision_distance = vision_distance,
         movement_speed = 0.25 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        steering = {
+            move = {
+                radius = 6.75
+            },
+            stay = {
+                radius = 12
+            },
+        },
         radar_range = 2,
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,
@@ -246,7 +254,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "explosive-cannon-shell", amount = 30},
         {type = "item", name = "solid-fuel", amount = 20},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -254,7 +262,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons =  util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['tank']['effects'],         {

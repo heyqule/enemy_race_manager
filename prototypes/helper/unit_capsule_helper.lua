@@ -97,7 +97,7 @@ function ERM_UnitCapsuleHelper.add_recipe(unit_name, craft_time, ingredients)
             ingredients = ingredients,
             requester_paste_multiplier = 1,
             always_show_made_in = true,
-            category = "erm_controllable_units"
+            categories = {"erm_controllable_units"}
         }
     })
 end

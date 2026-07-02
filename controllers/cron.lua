@@ -11,7 +11,6 @@ local Cron = require("__enemyracemanager__/lib/cron_processor")
 local Config = require("__enemyracemanager__/lib/global_config")
 
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
-local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
@@ -80,10 +79,6 @@ cron_switch = {
     end,
     ["ArmyTeleportationProcessor.scan_units"] = function(args)
         ArmyTeleportationProcessor.scan_units()
-    end,
-    --BaseBuildProcessor
-    ["BaseBuildProcessor.build"] = function(args)
-        BaseBuildProcessor.build(table.unpack(args))
     end,
     -- BossProcessor
     ["BossPsiRadar.scan"] = function(args)

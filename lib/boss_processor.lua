@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 7/16/2022 2:58 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
 local Position = require("__erm_libs__/stdlib/position")
@@ -382,7 +383,7 @@ function BossProcessor.exec(radar, spawn_position, boss_entity)
         storage.boss.scan_area = get_scan_area(storage.boss_final_scanned_position, radar.position)
         storage.boss.scan_area_wo_padding = get_scan_area(storage.boss_final_scanned_position, radar.position, false)
 
-        if DEBUG_MODE then
+        if ERM.DEBUG_MODE then
             local indicator = rendering.draw_rectangle({
                 color = { b = 0.3, a = 0.2 },
                 left_top = storage.boss.scan_area.left_top,

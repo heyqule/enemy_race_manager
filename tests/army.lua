@@ -30,644 +30,654 @@ after_each(function()
     delete_surfaces()
 end)
 
+describe("Army POP", function()
 
-it("Army POP - Increase / Decrease", function()
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local force = game.forces["player"]
+    it("Army POP - Increase / Decrease", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local force = game.forces["player"]
 
-    for i = 1, 10, 1 do
-        surface.create_entity({
-            name="erm_terran--marine--mk1",
-            position={0,0},
-            force=force,
-        })
-    end
-
-    for i = 1, 2, 1 do
-        surface.create_entity({
-            name="erm_terran--battlecruiser--laser",
-            position={0,0},
-            force=force,
-        })
-    end
-
-    for i = 1, 5, 1 do
-        surface.create_entity({
-            name="erm_terran--vulture",
-            position={0,0},
-            force=force,
-        })        
-    end
-
-    assert(ArmyPop.max_pop(force) == 31, "MAX POP Count incorrect: "..ArmyPop.max_pop(force))
-    assert(ArmyPop.pop_count(force) == 30, "POP Count incorrect: "..ArmyPop.pop_count(force))
-    assert(ArmyPop.unit_count(force) == 17, "Unit Count incorrect:"..ArmyPop.unit_count(force))
-
-    local vultures = surface.find_entities_filtered({
-        name="erm_terran--vulture"
-    })
-
-    for _, vulture in pairs(vultures) do
-        vulture.die("enemy")
-    end
-
-    assert(ArmyPop.pop_count(force) == 20, "POP Count incorrect after vulture kill: "..ArmyPop.pop_count(force))
-    assert(ArmyPop.unit_count(force) == 12, "Unit Count incorrect after vulture kill: "..ArmyPop.unit_count(force))
-
-
-    local marines = surface.find_entities_filtered({
-        name="erm_terran--marine--mk1"
-    })
-
-    for _, marine in pairs(marines) do
-        marine.destroy{raise_destroy=true}
-    end
-
-    assert(ArmyPop.pop_count(force) == 10, "POP Count incorrect after marine kill: "..ArmyPop.pop_count(force))
-    assert(ArmyPop.unit_count(force) == 2, "Unit Count incorrect after marine kill: "..ArmyPop.unit_count(force))
-    
-
-    for i = 1, 40, 1 do
-        surface.create_entity({
-            name="erm_terran--battlecruiser--laser",
-            position={0,0},
-            force=force
-        })
-    end
-
-    assert(ArmyPop.pop_count(force) == 30, "Pop count incorrect when pop cap hits")
-    assert(ArmyPop.unit_count(force) == 6, "Unit count incorrect when pop cap hits")
-
-end)
-it("Army Deployment", function()
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local force = game.forces["player"]
-    local unit_name = "erm_terran--marine--mk1"
-
-    local powerinterface = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={4,4},
-        raise_built = true
-    })
-    local substation = surface.create_entity({
-        force=force,
-        name="substation",
-        position={3,4},
-        raise_built = true
-    })
-    local entity = surface.create_entity({
-        force=force,
-        name="erm_terran--barrack",
-        position={0,0},
-        raise_built = true
-    })
-    local output_inventory = entity.get_output_inventory()
-    entity.set_recipe(unit_name)
-    output_inventory.insert({name=unit_name, count=20})
-
-    local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
-    assert.not_nil(deployer,"Deploy Registered")
-    if deployer and deployer.entity.valid then
-        ArmyDeployment.add_to_active(deployer.entity)
-        assert.not_nil(deployer.entity,"Deploy Entity Valid")
-    end
-
-    local marine_size = 0
-    after_ticks(900, function()
-        local marines = surface.find_entities_filtered({
-            name=unit_name
-        })
-        marine_size = table_size(marines)
-        assert(marine_size > 0, "Marine spawned")
-        powerinterface.die("enemy")
-    end)
-
-    after_ticks(1800, function()
-        local marines = surface.find_entities_filtered({
-            name=unit_name
-        })
-
-        assert( table_size(marines) == marine_size, "Marine can not spawned while power is out")
-        done()
-    end)
-end)
-
-it("Army Deployment with rally point", function()
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local force = game.forces["player"]
-    local unit_name = "erm_terran--marine--mk1"
-
-    local powerinterface = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={4,4},
-        raise_built = true
-    })
-    local substation = surface.create_entity({
-        force=force,
-        name="substation",
-        position={3,4},
-        raise_built = true
-    })
-    local entity = surface.create_entity({
-        force=force,
-        name="erm_terran--barrack",
-        position={0,0},
-        raise_built = true
-    })
-    local rally_point = surface.create_entity({
-        force=force,
-        player=game.players[1],
-        name="erm_rally_point",
-        position={100, 100},
-        raise_built = true
-    })
-    local output_inventory = entity.get_output_inventory()
-    entity.set_recipe(unit_name)
-    output_inventory.insert({name=unit_name, count=20})
-
-    local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
-    assert.not_nil(deployer,"Deploy Registered")
-    if deployer and deployer.entity.valid then
-        ArmyDeployment.add_rallypoint(rally_point, deployer.entity.unit_number)
-        ArmyDeployment.add_to_active(deployer.entity)
-        rally_point.destroy()
-        assert.not_nil(deployer.entity,"Deploy Entity Valid")
-        assert.not_nil(deployer.rally_point,"Rally point not set")
-        assert.not_nil(deployer.rally_draw_link,"Rally point draw_link not set")
-        assert.not_nil(deployer.rally_draw_flag,"Rally point draw_flag not set")
-    end
-
-    after_ticks(1800, function()
-        local marines = surface.find_entities_filtered({
-            name=unit_name,
-            position={100,100},
-            radius=32
-        })
-
-        assert( table_size(marines) > 0, "Marine can not spawned while power is out")
-        done()
-    end)
-end)
-
-it("Army Teleport, same surface", function()
-    async(7200)
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local force = game.forces["player"]
-    local building = "erm_terran--command-center"
-    local unit_name = "erm_terran--marine--mk1"
-
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={-160,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={-160,4},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={-160,0},
-        raise_built = true
-    })
-
-    local powerinterface2 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={160,4},
-        raise_built = true
-    })
-    local substation2 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={160,4},
-        raise_built = true
-    })
-    local command_center2 = surface.create_entity({
-        force=force,
-        name=building,
-        position={160,0},
-        raise_built = true
-    })
-
-    for i=1,5,1 do
-        surface.create_entity({
-            force=force,
-            name=unit_name,
-            position={-160,0}
-        })
-    end
-
-    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
-
-    after_ticks(3600, function()
-        local marines = surface.find_entities_filtered({
-            name=unit_name,
-            area={{100,-48}, {200,48}}
-        })
-        assert(table_size(marines) == 5, "Units Teleported")
-
-        powerinterface1.die("enemy")
-        for i=1,5,1 do
+        for i = 1, 10, 1 do
             surface.create_entity({
-                force=force,
-                name=unit_name,
-                position={-160,0}
+                name = "erm_terran--marine--mk1",
+                position = { 0, 0 },
+                force = force,
             })
         end
-    end)
-    after_ticks(7100, function()
-        local marines = surface.find_entities_filtered({
-            name=unit_name,
-            area={{100,-48}, {200,48}}
-        })
 
-        assert(table_size(marines) == 5, "Units not teleported without power")
-        done()
-    end)
-end)
-
-it("Army Teleport, different surface", function()
-    async(7200)
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local surface2 = game.planets.vulcanus.create_surface()
-
-    local force = game.forces["player"]
-    local building = "erm_terran--command-center"
-    local unit_name = "erm_terran--marine--mk1"
-
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={0,3},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
-
-    local powerinterface2 = surface2.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation2 = surface2.create_entity({
-        force=force,
-        name="substation",
-        position={0,3},
-        raise_built = true
-    })
-    local command_center2 = surface2.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
-
-    for i=1,5,1 do
-        surface.create_entity({
-            force=force,
-            name=unit_name,
-            position={0,0}
-        })
-    end
-
-    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
-
-    after_ticks(3600, function()
-        local marines = surface2.find_entities_filtered({
-            name=unit_name,
-            area={{-48,-48}, {48,48}}
-        })
-        assert(table_size(marines) == 5, "Units Teleported")
-
-        powerinterface1.die("enemy")
-        for i=1,5,1 do
+        for i = 1, 2, 1 do
             surface.create_entity({
-                force=force,
-                name=unit_name,
-                position={0,0}
+                name = "erm_terran--battlecruiser--laser",
+                position = { 0, 0 },
+                force = force,
             })
         end
-    end)
-    
-    after_ticks(7100, function()
-        local marines = surface2.find_entities_filtered({
-            name=unit_name,
-            area={{-48,-48}, {48,48}}
+
+        for i = 1, 5, 1 do
+            surface.create_entity({
+                name = "erm_terran--vulture",
+                position = { 0, 0 },
+                force = force,
+            })
+        end
+
+        assert(ArmyPop.max_pop(force) == 31, "MAX POP Count incorrect: " .. ArmyPop.max_pop(force))
+        assert(ArmyPop.pop_count(force) == 30, "POP Count incorrect: " .. ArmyPop.pop_count(force))
+        assert(ArmyPop.unit_count(force) == 17, "Unit Count incorrect:" .. ArmyPop.unit_count(force))
+
+        local vultures = surface.find_entities_filtered({
+            name = "erm_terran--vulture"
         })
 
-        assert(table_size(marines) == 5, "Units not teleported without power")
+        for _, vulture in pairs(vultures) do
+            vulture.die("enemy")
+        end
 
-        game.delete_surface(surface2)
-        done()
-    end)
-end)
+        assert(ArmyPop.pop_count(force) == 20, "POP Count incorrect after vulture kill: " .. ArmyPop.pop_count(force))
+        assert(ArmyPop.unit_count(force) == 12, "Unit Count incorrect after vulture kill: " .. ArmyPop.unit_count(force))
 
-it("Army Teleport, different surface, when population is full", function()
-    async(7200)
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local surface2 = game.planets.vulcanus.create_surface()
-
-    local force = game.forces["player"]
-    local building = "erm_terran--command-center"
-    local unit_name = "erm_terran--marine--mk1"
-    local fire_unit_name = "erm_terran--firebat--mk1"
-
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={0,3},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
-
-    local powerinterface2 = surface2.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation2 = surface2.create_entity({
-        force=force,
-        name="substation",
-        position={0,3},
-        raise_built = true
-    })
-    local command_center2 = surface2.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
-
-    for i=1,15,1 do
-        surface.create_entity({
-            force=force,
-            name=unit_name,
-            position={0,0}
-        })
-    end
-
-    for i=1,15,1 do
-        surface.create_entity({
-            force=force,
-            name=fire_unit_name,
-            position={100,100}
-        })
-    end
-
-    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
-    
-    after_ticks(7100, function()
-        local marines = surface2.find_entities_filtered({
-            name=unit_name,
-            area={{-48,-48}, {48,48}}
+        local marines = surface.find_entities_filtered({
+            name = "erm_terran--marine--mk1"
         })
 
-        assert(table_size(marines) == 15, "Units not teleported:"..table_size(marines))
+        for _, marine in pairs(marines) do
+            marine.destroy { raise_destroy = true }
+        end
 
-        game.delete_surface(surface2)
-        done()
+        assert(ArmyPop.pop_count(force) == 10, "POP Count incorrect after marine kill: " .. ArmyPop.pop_count(force))
+        assert(ArmyPop.unit_count(force) == 2, "Unit Count incorrect after marine kill: " .. ArmyPop.unit_count(force))
+
+        for i = 1, 40, 1 do
+            surface.create_entity({
+                name = "erm_terran--battlecruiser--laser",
+                position = { 0, 0 },
+                force = force
+            })
+        end
+
+        assert(ArmyPop.pop_count(force) == 30, "Pop count incorrect when pop cap hits")
+        assert(ArmyPop.unit_count(force) == 6, "Unit count incorrect when pop cap hits")
+
     end)
+
 end)
 
-it("Army Teleport, Test player teleport on same surface", function()
-    async(300)
-    AttackGroupBeaconProcessor.init_index()
-    local player = game.players[1]
-    local surface = game.surfaces[1]
-    local force = game.forces["player"]
-    local building = "erm_terran--command-center"
-    player.teleport({-165,4})
+describe("Army Deployment", function()
 
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={-150,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={-150,4},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={-150,0},
-        raise_built = true
-    })
+    it("Army Deployment", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local force = game.forces["player"]
+        local unit_name = "erm_terran--marine--mk1"
 
-    local powerinterface2 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={150,4},
-        raise_built = true
-    })
-    local substation2 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={150,4},
-        raise_built = true
-    })
-    local command_center2 = surface.create_entity({
-        force=force,
-        name=building,
-        position={150,0},
-        raise_built = true
-    })
+        local powerinterface = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 4, 4 },
+            raise_built = true
+        })
+        local substation = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 3, 4 },
+            raise_built = true
+        })
+        local entity = surface.create_entity({
+            force = force,
+            name = "erm_terran--barrack",
+            position = { 0, 0 },
+            raise_built = true
+        })
+        local output_inventory = entity.get_output_inventory()
+        entity.set_recipe(unit_name)
+        output_inventory.insert({ name = unit_name, count = 20 })
 
-    ArmyTeleport.link({entity=command_center1}, {entity=command_center2})
-    ArmyTeleport.teleport_player(player)
+        local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
+        assert.not_nil(deployer, "Deploy Registered")
+        if deployer and deployer.entity.valid then
+            ArmyDeployment.add_to_active(deployer.entity)
+            assert.not_nil(deployer.entity, "Deploy Entity Valid")
+        end
 
-    after_ticks(61, function()
-        local player_pos = player.position
-        assert(player_pos.x >= 100 and player_pos.x <= 200, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
-        done()
+        local marine_size = 0
+        after_ticks(900, function()
+            local marines = surface.find_entities_filtered({
+                name = unit_name
+            })
+            marine_size = table_size(marines)
+            assert(marine_size > 0, "Marine spawned")
+            powerinterface.die("enemy")
+        end)
+
+        after_ticks(1800, function()
+            local marines = surface.find_entities_filtered({
+                name = unit_name
+            })
+
+            assert(table_size(marines) == marine_size, "Marine can not spawned while power is out")
+            done()
+        end)
     end)
+
+    it("Army Deployment with rally point", function()
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local force = game.forces["player"]
+        local unit_name = "erm_terran--marine--mk1"
+
+        local powerinterface = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 4, 4 },
+            raise_built = true
+        })
+        local substation = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 3, 4 },
+            raise_built = true
+        })
+        local entity = surface.create_entity({
+            force = force,
+            name = "erm_terran--barrack",
+            position = { 0, 0 },
+            raise_built = true
+        })
+        local rally_point = surface.create_entity({
+            force = force,
+            player = game.players[1],
+            name = "erm_rally_point",
+            position = { 100, 100 },
+            raise_built = true
+        })
+        local output_inventory = entity.get_output_inventory()
+        entity.set_recipe(unit_name)
+        output_inventory.insert({ name = unit_name, count = 20 })
+
+        local deployer = storage.army_built_deployers[force.index][tonumber(entity.unit_number)]
+        assert.not_nil(deployer, "Deploy Registered")
+        if deployer and deployer.entity.valid then
+            ArmyDeployment.add_rallypoint(rally_point, deployer.entity.unit_number)
+            ArmyDeployment.add_to_active(deployer.entity)
+            rally_point.destroy()
+            assert.not_nil(deployer.entity, "Deploy Entity Valid")
+            assert.not_nil(deployer.rally_point, "Rally point not set")
+            assert.not_nil(deployer.rally_draw_link, "Rally point draw_link not set")
+            assert.not_nil(deployer.rally_draw_flag, "Rally point draw_flag not set")
+        end
+
+        after_ticks(1800, function()
+            local marines = surface.find_entities_filtered({
+                name = unit_name,
+                position = { 100, 100 },
+                radius = 32
+            })
+
+            assert(table_size(marines) > 0, "Marine can not spawned while power is out")
+            done()
+        end)
+    end)
+
 end)
 
-it("Army Teleport, Test player teleport to different surface", function()
-    async(300)
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local surface2 = game.planets.vulcanus.create_surface()
-    surface2.request_to_generate_chunks({ 0, 0 }, 8)
-    surface2.force_generate_chunk_requests()
-    local force = game.forces["player"]
-    local player = game.players[1]
-    player.teleport({5, 5}, 'nauvis')
-    player.create_character()
-    local main_inventory = player.get_inventory(defines.inventory.character_main)
-    main_inventory.clear()
-    local trash_inventory = player.get_inventory(defines.inventory.character_trash)
-    trash_inventory.clear()
-    local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
-    ammo_inventory.clear()
-    local building = "erm_terran--command-center"
+describe("Army Teleport", function()
 
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={0,4},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
+    it("Army Teleport, same surface", function()
+        async(7200)
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local force = game.forces["player"]
+        local building = "erm_terran--command-center"
+        local unit_name = "erm_terran--marine--mk1"
 
-    local powerinterface2 = surface2.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation2 = surface2.create_entity({
-        force=force,
-        name="substation",
-        position={0,4},
-        raise_built = true
-    })
-    local command_center2 = surface2.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
-    
-    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
-    ArmyTeleport.teleport_player(player)
-    
-    after_ticks(61, function()
-        local player_pos = player.position
-        assert(player.surface.name == 'vulcanus', "Player not teleported to destination surface. Surface: " .. player.surface.name)
-        assert(player_pos.x >= -50 and player_pos.x <= 50, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
-        game.delete_surface(surface2)
-        done()
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { -160, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { -160, 4 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { -160, 0 },
+            raise_built = true
+        })
+
+        local powerinterface2 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 160, 4 },
+            raise_built = true
+        })
+        local substation2 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 160, 4 },
+            raise_built = true
+        })
+        local command_center2 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 160, 0 },
+            raise_built = true
+        })
+
+        for i = 1, 5, 1 do
+            surface.create_entity({
+                force = force,
+                name = unit_name,
+                position = { -160, 0 }
+            })
+        end
+
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
+
+        after_ticks(3600, function()
+            local marines = surface.find_entities_filtered({
+                name = unit_name,
+                area = { { 100, -48 }, { 200, 48 } }
+            })
+            assert(table_size(marines) == 5, "Units Teleported")
+
+            powerinterface1.die("enemy")
+            for i = 1, 5, 1 do
+                surface.create_entity({
+                    force = force,
+                    name = unit_name,
+                    position = { -160, 0 }
+                })
+            end
+        end)
+        after_ticks(7100, function()
+            local marines = surface.find_entities_filtered({
+                name = unit_name,
+                area = { { 100, -48 }, { 200, 48 } }
+            })
+
+            assert(table_size(marines) == 5, "Units not teleported without power")
+            done()
+        end)
     end)
-end)
 
-it("Army Teleport, Test player teleport to different surface, with inventory", function()
-    async(600)
-    AttackGroupBeaconProcessor.init_index()
-    local surface = game.surfaces[1]
-    local surface2 = game.planets.vulcanus.create_surface()
-    surface2.request_to_generate_chunks({ 0, 0 }, 8)
-    surface2.force_generate_chunk_requests()
-    local force = game.forces["player"]
-    local player = game.players[1]
-    player.teleport({5, 5}, 'nauvis')
-    player.create_character()
-    
-    local building = "erm_terran--command-center"
+    it("Army Teleport, different surface", function()
+        async(7200)
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local surface2 = game.planets.vulcanus.create_surface()
 
-    local powerinterface1 = surface.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation1 = surface.create_entity({
-        force=force,
-        name="substation",
-        position={0,4},
-        raise_built = true
-    })
-    local command_center1 = surface.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
+        local force = game.forces["player"]
+        local building = "erm_terran--command-center"
+        local unit_name = "erm_terran--marine--mk1"
 
-    local powerinterface2 = surface2.create_entity({
-        force=force,
-        name="electric-energy-interface",
-        position={0,4},
-        raise_built = true
-    })
-    local substation2 = surface2.create_entity({
-        force=force,
-        name="substation",
-        position={0,4},
-        raise_built = true
-    })
-    local command_center2 = surface2.create_entity({
-        force=force,
-        name=building,
-        position={0,0},
-        raise_built = true
-    })
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 3 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
 
-    ArmyTeleport.link({entity=command_center1} , {entity=command_center2})
+        local powerinterface2 = surface2.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation2 = surface2.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 3 },
+            raise_built = true
+        })
+        local command_center2 = surface2.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
 
-    local main_inventory = player.get_inventory(defines.inventory.character_main)
-    main_inventory.insert({name="iron-plate",count=50})
-    local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
-    
-    ArmyTeleport.teleport_player(player)
+        for i = 1, 5, 1 do
+            surface.create_entity({
+                force = force,
+                name = unit_name,
+                position = { 0, 0 }
+            })
+        end
 
-    after_ticks(121, function()
-        assert(player.surface.name == 'nauvis', "Player main inventory teleport check failed, player teleported")
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
+
+        after_ticks(3600, function()
+            local marines = surface2.find_entities_filtered({
+                name = unit_name,
+                area = { { -48, -48 }, { 48, 48 } }
+            })
+            assert(table_size(marines) == 5, "Units Teleported")
+
+            powerinterface1.die("enemy")
+            for i = 1, 5, 1 do
+                surface.create_entity({
+                    force = force,
+                    name = unit_name,
+                    position = { 0, 0 }
+                })
+            end
+        end)
+
+        after_ticks(7100, function()
+            local marines = surface2.find_entities_filtered({
+                name = unit_name,
+                area = { { -48, -48 }, { 48, 48 } }
+            })
+
+            assert(table_size(marines) == 5, "Units not teleported without power")
+
+            game.delete_surface(surface2)
+            done()
+        end)
+    end)
+
+    it("Army Teleport, different surface, when population is full", function()
+        async(7200)
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local surface2 = game.planets.vulcanus.create_surface()
+
+        local force = game.forces["player"]
+        local building = "erm_terran--command-center"
+        local unit_name = "erm_terran--marine--mk1"
+        local fire_unit_name = "erm_terran--firebat--mk1"
+
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 3 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        local powerinterface2 = surface2.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation2 = surface2.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 3 },
+            raise_built = true
+        })
+        local command_center2 = surface2.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        for i = 1, 15, 1 do
+            surface.create_entity({
+                force = force,
+                name = unit_name,
+                position = { 0, 0 }
+            })
+        end
+
+        for i = 1, 15, 1 do
+            surface.create_entity({
+                force = force,
+                name = fire_unit_name,
+                position = { 100, 100 }
+            })
+        end
+
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
+
+        after_ticks(7100, function()
+            local marines = surface2.find_entities_filtered({
+                name = unit_name,
+                area = { { -48, -48 }, { 48, 48 } }
+            })
+
+            assert(table_size(marines) == 15, "Units not teleported:" .. table_size(marines))
+
+            game.delete_surface(surface2)
+            done()
+        end)
+    end)
+
+    it("Army Teleport, Test player teleport on same surface", function()
+        async(300)
+        AttackGroupBeaconProcessor.init_index()
+        local player = game.players[1]
+        local surface = game.surfaces[1]
+        local force = game.forces["player"]
+        local building = "erm_terran--command-center"
+        player.teleport({ -165, 4 })
+
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { -150, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { -150, 4 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { -150, 0 },
+            raise_built = true
+        })
+
+        local powerinterface2 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 150, 4 },
+            raise_built = true
+        })
+        local substation2 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 150, 4 },
+            raise_built = true
+        })
+        local command_center2 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 150, 0 },
+            raise_built = true
+        })
+
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
+        ArmyTeleport.teleport_player(player)
+
+        after_ticks(61, function()
+            local player_pos = player.position
+            assert(player_pos.x >= 100 and player_pos.x <= 200, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
+            done()
+        end)
+    end)
+
+    it("Army Teleport, Test player teleport to different surface", function()
+        async(300)
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local surface2 = game.planets.vulcanus.create_surface()
+        surface2.request_to_generate_chunks({ 0, 0 }, 8)
+        surface2.force_generate_chunk_requests()
+        local force = game.forces["player"]
+        local player = game.players[1]
+        player.teleport({ 5, 5 }, 'nauvis')
+        player.create_character()
+        local main_inventory = player.get_inventory(defines.inventory.character_main)
         main_inventory.clear()
-        ammo_inventory.insert({name="firearm-magazine",count=50})
-        player.teleport({5, 5}, 'nauvis')
+        local trash_inventory = player.get_inventory(defines.inventory.character_trash)
+        trash_inventory.clear()
+        local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
+        ammo_inventory.clear()
+        local building = "erm_terran--command-center"
+
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        local powerinterface2 = surface2.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation2 = surface2.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local command_center2 = surface2.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
         ArmyTeleport.teleport_player(player)
+
+        after_ticks(61, function()
+            local player_pos = player.position
+            assert(player.surface.name == 'vulcanus', "Player not teleported to destination surface. Surface: " .. player.surface.name)
+            assert(player_pos.x >= -50 and player_pos.x <= 50, "Player not teleported to destination, position: x=" .. player_pos.x .. " y=" .. player_pos.y)
+            game.delete_surface(surface2)
+            done()
+        end)
     end)
 
-    after_ticks(181, function()
-        assert(player.surface.name == 'nauvis', "Player ammo inventory teleport check failed, player teleported")
-        ammo_inventory.clear()
-        player.teleport({5, 5}, 'nauvis')
+    it("Army Teleport, Test player teleport to different surface, with inventory", function()
+        async(600)
+        AttackGroupBeaconProcessor.init_index()
+        local surface = game.surfaces[1]
+        local surface2 = game.planets.vulcanus.create_surface()
+        surface2.request_to_generate_chunks({ 0, 0 }, 8)
+        surface2.force_generate_chunk_requests()
+        local force = game.forces["player"]
+        local player = game.players[1]
+        player.teleport({ 5, 5 }, 'nauvis')
+        player.create_character()
+
+        local building = "erm_terran--command-center"
+
+        local powerinterface1 = surface.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation1 = surface.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local command_center1 = surface.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        local powerinterface2 = surface2.create_entity({
+            force = force,
+            name = "electric-energy-interface",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local substation2 = surface2.create_entity({
+            force = force,
+            name = "substation",
+            position = { 0, 4 },
+            raise_built = true
+        })
+        local command_center2 = surface2.create_entity({
+            force = force,
+            name = building,
+            position = { 0, 0 },
+            raise_built = true
+        })
+
+        ArmyTeleport.link({ entity = command_center1 }, { entity = command_center2 })
+
+        local main_inventory = player.get_inventory(defines.inventory.character_main)
+        main_inventory.insert({ name = "iron-plate", count = 50 })
+        local ammo_inventory = player.get_inventory(defines.inventory.character_ammo)
+
         ArmyTeleport.teleport_player(player)
+
+        after_ticks(121, function()
+            assert(player.surface.name == 'nauvis', "Player main inventory teleport check failed, player teleported")
+            main_inventory.clear()
+            ammo_inventory.insert({ name = "firearm-magazine", count = 50 })
+            player.teleport({ 5, 5 }, 'nauvis')
+            ArmyTeleport.teleport_player(player)
+        end)
+
+        after_ticks(181, function()
+            assert(player.surface.name == 'nauvis', "Player ammo inventory teleport check failed, player teleported")
+            ammo_inventory.clear()
+            player.teleport({ 5, 5 }, 'nauvis')
+            ArmyTeleport.teleport_player(player)
+        end)
+
+        after_ticks(241, function()
+            assert(player.surface.name == 'vulcanus', "Inventory Check passed, but player not teleported to destination surface. Surface:" .. player.surface.name)
+            done()
+        end)
     end)
-    
-    after_ticks(241, function()
-        assert(player.surface.name == 'vulcanus', "Inventory Check passed, but player not teleported to destination surface. Surface:" .. player.surface.name)        
-        done()
-    end)
-end) 
+
+end)

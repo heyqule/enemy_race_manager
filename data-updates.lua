@@ -1,7 +1,7 @@
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 require("__enemyracemanager__/setting-constants")
 local debugHelper = require("__enemyracemanager__/lib/debug_helper")
-if DEBUG_MODE then
+if ERM.DEBUG_MODE then
     debugHelper.print("----- data.erm_registered_race -----")
     debugHelper.print(serpent.block(data.erm_registered_race))
     debugHelper.print("----- data.erm_spawn_specs -----")
@@ -50,6 +50,6 @@ require("prototypes/extend-default-autoplace")
 
 require("prototypes/map-generation.lua")
 
-if TEST_MODE then
+if ERM.TEST_MODE then
     require("prototypes/test-prototypes")
 end

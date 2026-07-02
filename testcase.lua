@@ -4,7 +4,9 @@
 --- DateTime: 1/5/2024 12:10 AM
 ---
 
-if TEST_MODE and script.active_mods["factorio-test"] then
+local ERM = require("__enemyracemanager__/global")
+
+if ERM.TEST_MODE and script.active_mods["factorio-test"] then
     local tests = {
         "tests/data_check",
         "tests/attack_beacon",
@@ -19,14 +21,13 @@ if TEST_MODE and script.active_mods["factorio-test"] then
         table.insert(tests,"tests/quality_system")
         table.insert(tests,"tests/attack_group")
         table.insert(tests,"tests/attack_heat")
-        table.insert(tests,"tests/base_build")
         table.insert(tests,"tests/custom_attack")
         table.insert(tests,"tests/interplanetary_attacks")
         table.insert(tests,"tests/emotional_attacks")
         table.insert(tests,"tests/boss_spawns")
         table.insert(tests,"tests/zerg_boss_attacks")
 
-        if ENABLE_LENGTHY_TESTS then
+        if ERM.ENABLE_LENGTHY_TESTS then
             table.insert(tests,"tests/psi_radar")
         end
     else

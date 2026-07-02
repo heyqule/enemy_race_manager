@@ -3,15 +3,15 @@
 --- Created by heyqule.
 --- DateTime: 11/8/2022 10:28 PM
 ---
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 
 local increase_pop = {
     type = "script",
-    effect_id = ARMY_POPULATION_INCREASE
+    effect_id = ERM.ARMY_POPULATION_INCREASE
 }
 local decrease_pop = {
     type = "script",
-    effect_id = ARMY_POPULATION_DECREASE
+    effect_id = ERM.ARMY_POPULATION_DECREASE
 }
 
 for _, unit in pairs(data.raw["unit"]) do

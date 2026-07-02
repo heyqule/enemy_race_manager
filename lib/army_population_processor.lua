@@ -84,7 +84,7 @@ function ArmyPopulationProcessor.register_unit(unit_name, pop_count)
 end
 
 function ArmyPopulationProcessor.index()
-    local profiler = game.create_profiler()
+    local profiler = helpers.create_profiler()
     local army_registered_units = storage.army_registered_units
     ArmyPopulationProcessor.init_globals()
     if army_registered_units == nil or table_size(army_registered_units) == 0 then

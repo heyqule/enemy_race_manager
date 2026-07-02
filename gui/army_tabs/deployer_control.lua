@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 6/22/2024 10:00 PM
 ---
+local ERM = require('__enemyracemanager__/global')
 local SharedGuiFunctions = require("__enemyracemanager__/gui/shared")
 local SharedTabFunctions = require("__enemyracemanager__/gui/army_tabs/shared")
 
@@ -62,7 +63,7 @@ function DeployerControlGUI.update(player)
         end
     end
 
-    local filtered_surface = {ALL_PLANETS}
+    local filtered_surface = {ERM.ALL_PLANETS}
     local selected_index = 1
     local index = 1
     for _, name in pairs(surfaces) do

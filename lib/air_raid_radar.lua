@@ -67,7 +67,7 @@ AirRaidRadar.scan = function(event)
     local radar = event.radar
 
     if radar and radar.valid then
-        --local profiler = game.create_profiler()
+        --local profiler = helpers.create_profiler()
         local radar_number = radar.unit_number
         local surface = radar.surface
         local force = radar.force

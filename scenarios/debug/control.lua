@@ -44,7 +44,6 @@ script.on_event(defines.events.on_player_created, function(event)
     scenarios_helper.set_attack_points(999999)
     scenarios_helper.set_attack_points(999999)
     scenarios_helper.set_attack_points(999999)
-    scenarios_helper.set_attack_points(-999999)
     scenarios_helper.set_enemy_params(1, 1)
     scenarios_helper.set_game_speed(10)
     

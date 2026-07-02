@@ -1,10 +1,10 @@
-
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local modify_race_setting = function()
     if script.active_mods["Cold_biters"] then
-        local race_settings = remote.call("enemyracemanager", "get_race", MOD_NAME)
+        local race_settings = remote.call("enemyracemanager", "get_race", ERM.MOD_NAME)
 
         DebugHelper.print("Cold_biters is active")
 
@@ -22,8 +22,8 @@ local modify_race_setting = function()
         table.insert(race_settings.units[2], "big-cold-spitter")
         table.insert(race_settings.units[3], "behemoth-cold-spitter")
 
-        table.insert(race_settings.featured_groups, { { "behemoth-cold-biter", "behemoth-cold-spitter", "big-cold-biter", "big-cold-spitter" }, { 2, 1, 3, 2 }, 50 })
-        table.insert(race_settings.featured_groups, { { "behemoth-cold-spitter", "behemoth-cold-biter" }, { 2, 4 }, 100 })
+        table.insert(race_settings.featured_groups, { { "behemoth-cold-biter", "behemoth-cold-spitter", "big-cold-biter", "big-cold-spitter" }, { 2, 1, 3, 2 }, 0.75 })
+        table.insert(race_settings.featured_groups, { { "behemoth-cold-spitter", "behemoth-cold-biter" }, { 2, 4 }, 0.5 })
 
         remote.call("enemyracemanager", "register_race", race_settings)
     end
@@ -35,7 +35,7 @@ end
 local ColdBiters = {}
 ColdBiters.events = {
     [GlobalConfig.custom_event_handlers[GlobalConfig.EVENT_RACE_SETTING_UPDATE]] = function(event)
-        if (event.affected_race == MOD_NAME) then
+        if (event.affected_race == ERM.MOD_NAME) then
             modify_race_setting()
         end
     end

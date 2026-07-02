@@ -4,7 +4,7 @@
 --- DateTime: 11/4/2024 10:41 AM
 ---
 
-require("__enemyracemanager__/global")
+local ERM = require("__enemyracemanager__/global")
 local String = require('__erm_libs__/stdlib/string')
 local GuiContainer = require("__enemyracemanager__/gui/main")
 
@@ -381,7 +381,7 @@ SelectionStateChanged.cc_filter_surface = function(event)
     local window_tab_data = storage.army_windows_tab_player_data[player.index]
 
     local surface_name = element.get_item(element.selected_index)
-    if surface_name == ALL_PLANETS then
+    if surface_name == ERM.ALL_PLANETS then
         surface_name = nil
     end
 
@@ -402,7 +402,7 @@ SelectionStateChanged.deployer_surface_dropdown = function(event)
     if player and player.valid then
         local index = element.selected_index
         local surface_name = element.get_item(index)
-        if surface_name == ALL_PLANETS then
+        if surface_name == ERM.ALL_PLANETS then
             storage.army_windows_tab_player_data[player.index].deployer_surface_filter = nil
         else
             storage.army_windows_tab_player_data[player.index].deployer_surface_filter = surface_name

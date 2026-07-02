@@ -4,26 +4,27 @@
 --- DateTime: 2/19/2022 10:45 AM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
 local super_weapon_attack_points = {
     type = "script",
-    effect_id = PLAYER_SUPER_WEAPON_ATTACK,
+    effect_id = ERM.PLAYER_SUPER_WEAPON_ATTACK,
 }
 
 local purifier_weapon_attack_points = {
     type = "script",
-    effect_id = PLAYER_PLANET_PURIFIER_ATTACK
+    effect_id = ERM.PLAYER_PLANET_PURIFIER_ATTACK
 }
 
 local super_weapon_counter_attack = {
     type = "script",
-    effect_id = PLAYER_SUPER_WEAPON_COUNTER_ATTACK,
+    effect_id = ERM.PLAYER_SUPER_WEAPON_COUNTER_ATTACK,
 }
 
 local purifier_weapon_counter_attack = {
     type = "script",
-    effect_id = PLAYER_PLANET_PURIFIER_COUNTER_ATTACK
+    effect_id = ERM.PLAYER_PLANET_PURIFIER_COUNTER_ATTACK
 }
 
 -- base-game Nuclear bomb Projectiles
@@ -31,7 +32,7 @@ if data.raw["projectile"]["atomic-rocket"] then
     local entity = util.table.deepcopy(data.raw["projectile"]["atomic-rocket"])
     table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_attack_points)
     --- only for running tests, base game is able to call an unit group to attack.
-    if TEST_MODE then
+    if ERM.TEST_MODE then
         table.insert(entity["action"]["action_delivery"]["target_effects"], super_weapon_counter_attack)
     end
 

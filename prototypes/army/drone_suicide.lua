@@ -13,7 +13,8 @@
 local sounds = require("__base__.prototypes.entity.sounds")
 local item_sounds = require("__base__.prototypes.item_sounds")
 require("util")
-local biter_ai_settings = require ("__base__.prototypes.entity.biter-ai-settings")
+local ERM = require("__enemyracemanager__/global")
+local AiHelper = require ("__erm_libs__/prototypes/ai_helper")
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
@@ -24,7 +25,7 @@ local distraction_cooldown = 30
 local attack_range = ERMPlayerUnitHelper.get_attack_range(1)
 local vision_distance = ERMPlayerUnitHelper.get_vision_distance(attack_range)
 
-local laser_drone = util.table.deepcopy(data.raw['unit'][MOD_NAME..'--defender--5'])
+local laser_drone = util.table.deepcopy(data.raw['unit'][ERM.MOD_NAME..'--defender--5'])
 local prefix  = "player"
 local name = "drone_suicide"
 local icons = {
@@ -87,7 +88,7 @@ laser_drone.attack_parameters = {
                 {
                     {
                         type = "script",
-                        effect_id = SELF_DESTRUCT_ATTACK,
+                        effect_id = ERM.SELF_DESTRUCT_ATTACK,
                     },
                     {
                         type = "create-entity",
@@ -144,7 +145,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "accumulator", amount = 6},
         {type = "item", name = "explosives", amount = 12},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -152,7 +153,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['robotics']['effects'],         {

@@ -3,13 +3,13 @@
 --- Created by heyqule.
 --- DateTime: 7/1/2021 1:27 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 local String = require('__erm_libs__/stdlib/string')
 local MapGenFunctions = require('__erm_libs__/prototypes/map_gen')
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
-require("__enemyracemanager__/global")
 require("__enemyracemanager__/setting-constants")
 
 local gap = 128
@@ -84,15 +84,15 @@ if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_2_WAY then
 
     MapGenFunctions.remove_enemy_autoplace_controls(map_gen_settings.autoplace_controls)
 
-    if twoway_positive ~= MOD_NAME and twoway_positive ~= RACE_EMPTY then
+    if twoway_positive ~= ERM.MOD_NAME and twoway_positive ~= RACE_EMPTY then
         map_gen_settings.autoplace_controls[twoway_positive.."-enemy-base"] = {}
     end
     
-    if twoway_negative ~= MOD_NAME and twoway_negative ~= RACE_EMPTY then
+    if twoway_negative ~= ERM.MOD_NAME and twoway_negative ~= RACE_EMPTY then
         map_gen_settings.autoplace_controls[twoway_negative.."-enemy-base"] = {}
     end
     
-    if twoway_positive == MOD_NAME or twoway_negative == MOD_NAME then
+    if twoway_positive == ERM.MOD_NAME or twoway_negative == ERM.MOD_NAME then
         map_gen_settings.autoplace_controls["enemy-base"] = {}
     end
 
@@ -121,7 +121,7 @@ elseif settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_4_WAY t
     MapGenFunctions.remove_enemy_autoplace_controls(map_gen_settings.autoplace_controls)
 
     for direction_key, force in pairs(force_mapping) do
-        if force == MOD_NAME then
+        if force == ERM.MOD_NAME then
             map_gen_settings.autoplace_controls["enemy-base"] = {}
         elseif force ~= RACE_EMPTY then
             map_gen_settings.autoplace_controls[force.."-enemy-base"] = {}

@@ -67,14 +67,14 @@ local icons = {
     }
 }
 local resistances = {
-    acid = {75},
-    poison = {75},
-    physical = {75},
+    acid = {50},
+    poison = {50},
+    physical = {50},
     fire = {99, 500},
-    explosion = {75},
-    laser = {75},
-    electric = {75},
-    cold = {75}
+    explosion = {50},
+    laser = {50},
+    electric = {50},
+    cold = {50}
 }
 
 data:extend({
@@ -133,7 +133,15 @@ data:extend({
         },
         distance_per_frame = 0.1,
         run_animation = running_animation,
-        corpse = "common-erm-army-corpse"
+        corpse = "common-erm-army-corpse",
+        steering = {
+            move = {
+                radius = 3
+            },
+            stay = {
+                radius = 5.25
+            },
+        },
     }
 })
 
@@ -152,10 +160,10 @@ ArmyEconomyHelper.create_recipe({
     energy_required = 30,
     ingredients =
     {
-        {type = "item", name = "modular-armor", amount = 1},
+        {type = "item", name = "heavy-armor", amount = 1},
         {type = "item", name = "steel-plate", amount = 10},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -163,7 +171,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['modular-armor']['effects'],         {

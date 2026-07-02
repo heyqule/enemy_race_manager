@@ -137,25 +137,37 @@ data:extend({
                         }
                     },
                     {
-                        type = "direct",
+                        type = "area",
+                        target_entities = false,
                         repeat_count = 16,
-                        action_delivery = {
+                        radius = 2.5,
+                        action_delivery =
+                        {
                             type = "projectile",
                             projectile = "shotgun-pellet",
                             starting_speed = 1,
                             starting_speed_deviation = 0.1,
+                            inherit_speed = true,
                             direction_deviation = 0.3,
                             range_deviation = 0.3,
                             max_range = 20
                         }
-                    }
+                    },
                 }
             },
         },
         dying_sound = HumanSound.death(0.5),
         distance_per_frame = 0.1,
         run_animation = running_animation,
-        corpse = "common-erm-army-corpse"
+        corpse = "common-erm-army-corpse",
+        steering = {
+            move = {
+                radius = 3
+            },
+            stay = {
+                radius = 5.25
+            },
+        },
     }
 })
 
@@ -178,7 +190,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "combat-shotgun", amount = 1},
         {type = "item", name = "piercing-shotgun-shell", amount = 24},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -186,7 +198,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['modular-armor']['effects'],         {

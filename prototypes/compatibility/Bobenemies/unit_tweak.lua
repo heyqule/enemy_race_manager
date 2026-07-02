@@ -3,11 +3,12 @@
 --- Created by heyqule.
 --- DateTime: 3/30/2025 2:13 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 local enemy_autoplace = require ("prototypes.enemy-autoplace")
 local String = require('__erm_libs__/stdlib/string')
 local tally_point = {
     type = "script",
-    effect_id = QUALITY_TALLY_POINT
+    effect_id = ERM.QUALITY_TALLY_POINT
 }
 
 local function add_tally_point(entity)
@@ -28,12 +29,12 @@ for _, spawner in pairs(data.raw["unit-spawner"]) do
             spawner.build_base_evolution_requirement = 0.5
             spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
                 probability_expression = "enemy_autoplace_base(0, "..seed..")",
-                force = FORCE_NAME,
+                force = ERM.FORCE_NAME,
             })
         else
             spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
                 probability_expression = "enemy_autoplace_base(0, "..seed..")",
-                force = FORCE_NAME,
+                force = ERM.FORCE_NAME,
             })
             spawner.build_base_evolution_requirement = 0.2
         end
@@ -60,7 +61,7 @@ for _, turret in pairs(data.raw["turret"]) do
             turret.build_base_evolution_requirement = 0.5
             turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace({
                 probability_expression = "enemy_autoplace_base("..distances[size]..", "..seed..")",
-                force = FORCE_NAME,
+                force = ERM.FORCE_NAME,
             })
         end
         add_tally_point(turret)

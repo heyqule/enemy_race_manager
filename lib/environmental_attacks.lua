@@ -52,7 +52,7 @@ function EnvironmentalAttacks.exec(options)
         end
 
         if can_spawn_home then
-            BaseBuildProcessor.build_formation(group)
+            BaseBuildProcessor.create_build_group(group, spawn_count)
         else
             AttackGroupProcessor.process_attack_position({
                 group = group,

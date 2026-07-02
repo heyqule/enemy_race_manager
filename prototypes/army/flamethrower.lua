@@ -127,7 +127,15 @@ data:extend({
         dying_sound = HumanSound.death(0.5),
         distance_per_frame = 0.1,
         run_animation = running_animation,
-        corpse = "common-erm-army-corpse"
+        corpse = "common-erm-army-corpse",
+        steering = {
+            move = {
+                radius = 3
+            },
+            stay = {
+                radius = 5.25
+            },
+        },
     }
 })
 
@@ -150,7 +158,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "flamethrower", amount = 1},
         {type = "item", name = "flamethrower-ammo", amount = 12},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -158,7 +166,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['flamethrower']['effects'],         {

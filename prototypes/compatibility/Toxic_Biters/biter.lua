@@ -4,13 +4,11 @@
 --- DateTime: 12/31/2020 1:56 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
 require("util")
-
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value / 2
 
@@ -36,8 +34,8 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     local biter = util.table.deepcopy(data.raw["unit"][type])
     local original_hitpoint = biter["max_health"]
 
-    biter["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    biter["name"] = MOD_NAME .. "--" .. biter["name"] .. "--" .. level
+    biter["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    biter["name"] = ERM.MOD_NAME .. "--" .. biter["name"] .. "--" .. level
     biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)
     biter["resistances"] = {
         { type = "acid", percent = 95 },
@@ -86,7 +84,7 @@ for i = 1, max_level do
     -- (org: 200)
     data:extend({ makeLevelEnemy(i, "big-toxic-spitter") })
     -- 1, 3000 - 10, 10500  - 20, 18000 (org: 3000)
-    data:extend({ makeLevelEnemy(i, "behemoth-toxic-biter") })
+    data:extend({ makeLevelEnemy(i, "behemoth-toxic-biter", 3) })
     -- 1, 1500 - 10, 5250 - 20, 9000 (org: 1500)
-    data:extend({ makeLevelEnemy(i, "behemoth-toxic-spitter") })
+    data:extend({ makeLevelEnemy(i, "behemoth-toxic-spitter", 2.5) })
 end

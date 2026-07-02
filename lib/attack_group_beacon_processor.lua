@@ -5,6 +5,7 @@
 ---
 require("util")
 
+local ERM = require("__enemyracemanager__/global")
 local ForceHelper = require("helper/force_helper")
 local RaceSettingsHelper = require("helper/race_settings_helper")
 local Configs = require("global_config")
@@ -63,7 +64,7 @@ local NEUTRAL_FORCE = "neutral"
 
 local RETRY = 5
 local BYPASS_RETRY = 350000 -- two nauvis week. (1.5hr RLT)
-if TEST_MODE then
+if ERM.TEST_MODE then
     BYPASS_RETRY = 120
 end
 local REMOVE_ATTACK_ENTITY_BEACON_COUNTS = 0
@@ -790,7 +791,7 @@ AttackGroupBeaconProcessor.init_globals_on_surface = function(surface)
 end
 
 AttackGroupBeaconProcessor.init_index = function()
-    local profiler = game.create_profiler()
+    local profiler = helpers.create_profiler()
     local spawn_beacons = 0
     local attack_entity_beacons = 0
     local resource_beacons = 0
@@ -872,7 +873,7 @@ AttackGroupBeaconProcessor.pick_spawn_location = function(surface, source_force,
 
     if target_beacon and cache.bypass_scanner == nil then
         --- @TODO comment out for production
-        if DEBUG_MODE then
+        if ERM.DEBUG_MODE then
             local force_name = source_force.name
             local color = settings.startup[force_name.."-map-color"].value
             color.a = 0.1
@@ -1314,7 +1315,7 @@ AttackGroupBeaconProcessor.scout_scan = function(force_name, entity_data)
         end
 
         --- @TODO comment out for production
-        if DEBUG_MODE then
+        if ERM.DEBUG_MODE then
             local color = settings.startup[force_name.."-map-color"].value
             color.a = 0.25
             rendering.draw_circle({

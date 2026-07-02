@@ -12,7 +12,7 @@
 local sounds = require("__base__.prototypes.entity.sounds")
 local item_sounds = require("__base__.prototypes.item_sounds")
 require("util")
-local biter_ai_settings = require ("__base__.prototypes.entity.biter-ai-settings")
+local AiHelper = require ("__erm_libs__/prototypes/ai_helper")
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
@@ -94,7 +94,7 @@ data:extend({
         icons = icons,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "not-flammable" },
         has_belt_immunity = true,
-        max_health = 35 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 50 * ERMPlayerUnitHelper.get_health_multiplier(),
         order = prefix.."--controllable--"..name,
         shooting_cursor_size = 2,
         resistances = ERMPlayerUnitHelper.get_resistances(resistances),
@@ -107,6 +107,14 @@ data:extend({
         vision_distance = vision_distance,
         radar_range = 1,
         movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        steering = {
+            move = {
+                radius = 6
+            },
+            stay = {
+                radius = 10
+            },
+        },
         absorptions_to_join_attack = { pollution = 5000},
         distraction_cooldown = distraction_cooldown,
         --ai_settings = biter_ai_settings,
@@ -238,7 +246,7 @@ ArmyEconomyHelper.create_recipe({
         {type = "item", name = "piercing-rounds-magazine", amount = 24},
         {type = "item", name = "coal", amount = 20},
     },
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
     amount = 1
 })
 
@@ -246,7 +254,7 @@ ArmyEconomyHelper.create_deploy_recipe({
     prefix = prefix,
     name = name,
     icons = util.table.deepcopy(icons),
-    category = prefix.."--erm_controllable",
+    categories = {prefix.."--erm_controllable"},
 })
 
 table.insert(data.raw['technology']['automobilism']['effects'],         {

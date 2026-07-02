@@ -4,6 +4,7 @@
 --- DateTime: 03/16/2020 1:56 PM
 ---
 
+local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
 
@@ -11,9 +12,6 @@ local enemy_autoplace = require ("prototypes.enemy-autoplace")
 
 
 require("util")
-
-
-require("__enemyracemanager__/global")
 
 local max_hitpoint_multiplier = settings.startup["enemyracemanager-max-hitpoint-multipliers"].value
 
@@ -36,9 +34,9 @@ function makeLevelTurrets(level, type, distance)
 
     local original_hitpoint = turret["max_health"]
 
-    turret["localised_name"] = { "entity-name." .. MOD_NAME .. "--" .. turret["name"], GlobalConfig.QUALITY_MAPPING[level] }
-    turret["name"] = MOD_NAME .. "--" .. turret["name"] .. "--" .. level;
-    turret["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier, level, true)
+    turret["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. turret["name"], GlobalConfig.QUALITY_MAPPING[level] }
+    turret["name"] = ERM.MOD_NAME .. "--" .. turret["name"] .. "--" .. level;
+    turret["max_health"] = ERM_UnitHelper.get_building_health(original_hitpoint, max_hitpoint_multiplier / 2, level, true)
     turret["resistances"] = {
         { type = "acid", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
         { type = "poison", percent = ERM_UnitHelper.get_resistance(base_acid_resistance, incremental_acid_resistance, level) },
@@ -57,8 +55,8 @@ function makeLevelTurrets(level, type, distance)
 
     turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace( {
         probability_expression = "enemy_autoplace_base("..distance..", 90001)",
-        force = FORCE_NAME,
-        control = AUTOCONTROL_NAME
+        force = ERM.FORCE_NAME,
+        control = ERM.AUTOCONTROL_NAME
     })
     turret["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-explosive_biter_map_color"].value)
 
@@ -83,12 +81,12 @@ data.raw["turret"]["big-explosive-worm-turret"].autoplace = nil
 data.raw["turret"]["behemoth-explosive-worm-turret"].autoplace = nil
 data.raw["turret"]["leviathan-explosive-worm-turret"].autoplace = enemy_autoplace.enemy_worm_autoplace( {
     probability_expression = "enemy_autoplace_base(16, 90000)",
-    force = FORCE_NAME
+    force = ERM.FORCE_NAME
 })
 
 if data.raw["turret"]["mother-explosive-worm-turret"] then
     data.raw["turret"]["mother-explosive-worm-turret"].autoplace = enemy_autoplace.enemy_worm_autoplace( {
         probability_expression = "enemy_autoplace_base(24, 90000)",
-        force = FORCE_NAME
+        force = ERM.FORCE_NAME
     })
 end 

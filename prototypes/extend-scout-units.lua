@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 12/10/2023 3:16 PM
 ---
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
@@ -13,13 +14,13 @@ local AERIAL_SCOUT = "--aerial_scout--"
 
 local land_scout_script = {
     type = "script",
-    effect_id = LAND_SCOUT_BEACON
+    effect_id = ERM.LAND_SCOUT_BEACON
 }
 
 
 local aerial_scout_script = {
     type = "script",
-    effect_id = AERIAL_SCOUT_BEACON
+    effect_id = ERM.AERIAL_SCOUT_BEACON
 }
 
 local land_original_health = 50

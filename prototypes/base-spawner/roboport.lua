@@ -3,6 +3,7 @@
 --- Created by heyqule.
 --- DateTime: 10/29/2021 12:33 AM
 ---
+local ERM = require("__enemyracemanager__/global")
 require("util")
 
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
@@ -45,13 +46,13 @@ local max_friends_around_to_spawn = 5
 local spawn_table = function(level)
     local res = {}
     --Tire 1
-    res[1] = { MOD_NAME .. "--defender--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
-    res[2] = { MOD_NAME .. "--distractor--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
-    res[3] = { MOD_NAME .. "--destroyer--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
-    res[4] = { MOD_NAME .. "--logistic-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
-    res[5] = { MOD_NAME .. "--construction-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
-    res[6] = { MOD_NAME .. "--small-biter--" .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
-    res[7] = { MOD_NAME .. "--medium-biter--" .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[1] = { ERM.MOD_NAME .. "--defender--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 1 }, { 0.6, 0.7 }, { 0.8, 0.4 }, { 1.0, 0.3 } } }
+    res[2] = { ERM.MOD_NAME .. "--distractor--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.2 }, { 0.8, 0.2 }, { 1.0, 0.25 } } }
+    res[3] = { ERM.MOD_NAME .. "--destroyer--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.2 } } }
+    res[4] = { ERM.MOD_NAME .. "--logistic-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.05 }, { 0.8, 0.1 }, { 1.0, 0.15 } } }
+    res[5] = { ERM.MOD_NAME .. "--construction-robot--" .. level, { { 0.0, 0 }, { 0.2, 0 }, { 0.4, 0 }, { 0.6, 0.0 }, { 0.8, 0.1 }, { 1.0, 0.1 } } }
+    res[6] = { ERM.MOD_NAME .. "--small-biter--" .. level, { { 0.0, 1 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
+    res[7] = { ERM.MOD_NAME .. "--medium-biter--" .. level, { { 0.0, 0 }, { 0.2, 0.5 }, { 0.4, 0.0 } } }
 
     return res
 end
@@ -97,8 +98,8 @@ function make_roboport(level)
 
     local new_spawner = {
             type = "unit-spawner",
-            name = MOD_NAME .. "--" .. name .. "--" .. level,
-            localised_name = { "entity-name." .. MOD_NAME .. "--" .. name, GlobalConfig.QUALITY_MAPPING[level] },
+            name = ERM.MOD_NAME .. "--" .. name .. "--" .. level,
+            localised_name = { "entity-name." .. ERM.MOD_NAME .. "--" .. name, GlobalConfig.QUALITY_MAPPING[level] },
             order = "b-d-c",
             icon = "__base__/graphics/icons/roboport.png",
             icons = {
@@ -121,7 +122,7 @@ function make_roboport(level)
             map_generator_bounding_box = map_generator_bounding_box,
             selection_box = selection_box,
             max_health = ERM_UnitHelper.get_building_health(hitpoint, max_hitpoint_multiplier, level),
-            order = MOD_NAME .. "-" .. name,
+            order = ERM.MOD_NAME .. "-" .. name,
             subgroup = "enemies",
             vehicle_impact_sound = ERM_Sound.generic_impact,
             resistances = {
@@ -209,7 +210,7 @@ function make_roboport(level)
             -- @TODO noise expression fix
             autoplace = enemy_autoplace.enemy_spawner_autoplace({
                 probability_expression = "enemy_autoplace_base(0, 9)",
-                force = FORCE_NAME,
+                force = ERM.FORCE_NAME,
             }),
             call_for_help_radius = 50,
             spawn_decorations_on_expansion = false,

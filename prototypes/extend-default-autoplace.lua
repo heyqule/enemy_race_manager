@@ -18,14 +18,13 @@
 --
 --
 
+local ERM = require("__enemyracemanager__/global")
 require("util")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local AutoplaceUtil = require("__enemyracemanager__/prototypes/enemy-autoplace")
 local MapgenFunctions = require("__erm_libs__/prototypes/map_gen")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local String = require('__erm_libs__/stdlib/string')
-
-require("global")
 
 local planet_nauvis = data.raw.planet.nauvis
 local nauvis_map_gen = planet_nauvis.map_gen_settings
@@ -35,7 +34,7 @@ if not nauvis_map_gen then
 end
 
 
-if settings.startup['enemyracemanager-nauvis-enemy'].value == MOD_NAME then
+if settings.startup['enemyracemanager-nauvis-enemy'].value == ERM.MOD_NAME then
     local nauvis_autocontrols = nauvis_map_gen.autoplace_controls
     for key, autoplace in pairs(nauvis_autocontrols) do
         if MapgenFunctions.autoplace_is_enemy_base(key) then
@@ -118,7 +117,7 @@ local distances = {
 
 --- only apply to enemy turret
 local get_distance = function(v, force_name)
-    if force_name ~= FORCE_NAME then
+    if force_name ~= ERM.FORCE_NAME then
         return 0
     end
 
