@@ -21,10 +21,13 @@ Date: 2026-07-01
     - Changed [Attack Point] Threshold Multiplier map setting to a range selector [1.1x - 10x], default stays at 1.25.
     - Changed quality point updates from every 5s to every 30s.
     - Added buildable_entities and size_in_group to corrupted robots.
-    - [Army] Miner health changed from 200 -> 250
-    - [Army] Elite Miner resistances changed from 75% -> 50%; recipe changed from modular armor to heavy armor.
     - Lowered behemoth biters HP for explosive, frost and toxic biters.
     - Lowered behemoth worms HP for explosive, frost and toxic biters.
+    - [Army] Miner HP 200 -> 250
+    - [Army] Elite Miner resistances 75% -> 50%; recipe changed from modular armor to heavy armor.
+    - [Army] Shotgun HP 120 -> 150
+    - [Army] Tank Cannon HP 750 -> 1000
+    - [Army] Car Red HP 350 -> 500    
       
   Scripting:
     - RemoteAPI.generate_attack_group(force_name, unit_supply, options) now uses unit_supply, instead of number of units.
