@@ -153,7 +153,7 @@ local addRaceSettings = function()
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 2, 1 }, 1.1 },
         { { "big-spitter", "big-biter", "behemoth-spitter", "behemoth-biter" }, { 1, 2, 1, 2 }, 1.1 },
     }
-    
+
     if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
         table.insert(race_settings.units[1], "defender")
         table.insert(race_settings.units[2], "distractor")
@@ -174,8 +174,8 @@ local addRaceSettings = function()
             { { "big-spitter", "big-biter", "behemoth-biter", "defender" }, { 3, 5, 1, 2 } },
         }
         table.insert(
-            race_settings.construction_buildings,
-            { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
+                race_settings.construction_buildings,
+                { { "biter-spawner", "spitter-spawner", "roboport", "short-range-big-worm-turret" }, { 1, 1, 1, 2 } }
         )
         race_settings.featured_flying_groups = {
             { { "distractor", "destroyer" }, { 1, 1 }, 0.5 },
@@ -183,9 +183,14 @@ local addRaceSettings = function()
             { { "logistic-robot", "defender", "distractor", "destroyer" }, { 1, 2, 2, 1 }, 0.66 },
         }
         table.insert(
-            race_settings.featured_groups, 
-            { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 1 }
+                race_settings.featured_groups,
+                { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 1 }
         )
+    else
+        race_settings.droppable_units = nil
+        race_settings.dropship = nil
+        race_settings.flying_units = nil
+        race_settings.featured_flying_groups = nil
     end
 
     race_settings.interplanetary_attack_active = race_settings.interplanetary_attack_active or false

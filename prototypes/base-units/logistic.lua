@@ -101,9 +101,12 @@ local function makeLogisticRobot(level)
     local type = "logistic-robot"
     local robot = util.table.deepcopy(data.raw[type][type])
     local original_health = robot["max_health"] * 3
-    local buildable_entities = ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, {
-        "roboport", "biter-spawner", "spitter-spawner"
-    }, level)
+    local buildable_entities
+    if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
+        buildable_entities = ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, {
+            "roboport", "biter-spawner", "spitter-spawner"
+        }, level)
+    end
 
     robot["type"] = "unit"
     robot["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. robot["name"], GlobalConfig.QUALITY_MAPPING[level] }

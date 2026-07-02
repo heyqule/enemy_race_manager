@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.1
+Date: 2026-07-02
+
+  Bugfixes:
+    - Fixed a data staging issue when disabling corrupted robot.
+    - Fixed an internal data issue after disabling corrupted robot.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 2026-07-01
 
@@ -15,7 +23,7 @@ Date: 2026-07-01
     - [custom attack group] Featured groups have additional hidden multiplier to change the threshold.
 
   Changes:
-    - Changed default max group size from 100 to 200. The settings is renamed to "Max Unit Supply Per Group".
+    - Changed default max group size from 100 to 200. The setting has renamed to "Max Unit Supply Per Group".
     - Changed default max gathering groups from 30 to 20.
     - Changed ERM RTS presets' enemy expansion timer from 5-20 mins to 10-30 mins.
     - Changed [Attack Point] Threshold Multiplier map setting to a range selector [1.1x - 10x], default stays at 1.25.
