@@ -6,12 +6,12 @@ require "prototypes.extend-spawners"
 
 if settings.startup["enemyracemanager-enable-biter-corrupt-robots"].value then
     require "prototypes.base-spawner.roboport"
+    require "prototypes.base-units.distractor"
+    require "prototypes.base-units.construction"
+    require "prototypes.base-units.logistic"
 end
 require "prototypes.base-units.defender"
 require "prototypes.base-units.destroyer"
-require "prototypes.base-units.distractor"
-require "prototypes.base-units.construction"
-require "prototypes.base-units.logistic"
 
 data.erm_registered_race = data.erm_registered_race or {}
 data.erm_spawn_specs = data.erm_spawn_specs or {}

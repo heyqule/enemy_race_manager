@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.2
+Date: 2026-07-02
+
+  Changes:
+    - After disabling corrupted robot, distractor, construction, logistic bots are not longer included in data stage.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.1
 Date: 2026-07-02
 
