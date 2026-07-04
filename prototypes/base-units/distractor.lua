@@ -30,8 +30,8 @@ local incremental_electric_resistance = 65
 local base_cold_resistance = 10
 local incremental_cold_resistance = 55
 
-local laser_modifier = 2
-local incremental_laser_modifier = 3
+local laser_modifier = 1
+local incremental_laser_modifier = 2
 
 -- Handles Attack Speed
 
@@ -152,7 +152,7 @@ local function makeLevelCombatRobots(level, type)
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
     robot['damaged_trigger_effect'] = nil
-    robot['ai_settings'] = AiHelper.get_enemy_unit_settings(2)
+    robot['ai_settings'] = AiHelper.get_enemy_unit_settings(3)
     robot['buildable_entities'] = buildable_entities
     return robot
 end

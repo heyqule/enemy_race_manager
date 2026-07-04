@@ -5,6 +5,7 @@
 ---
 
 require('util')
+local ERM = require('global')
 local ArmyEconomyHelper = require('__erm_libs__/prototypes/army_economy_helper')
 
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
@@ -22,9 +23,9 @@ local human_animation = HumanAnimation.get_animation()
 local running_animation = human_animation['animations'][2]['running']
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][2])
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][4])
-ERM_AnimationRig.adjust_still_frame(running_animation['layers'][1], CHARACTER_RIG_STILL_FRAME)
-ERM_AnimationRig.adjust_still_frame(running_animation['layers'][2], CHARACTER_RIG_STILL_FRAME)
-ERM_AnimationRig.adjust_still_frame(running_animation['layers'][3], CHARACTER_RIG_STILL_FRAME)
+ERM_AnimationRig.adjust_still_frame(running_animation['layers'][1], ERM.CHARACTER_RIG_STILL_FRAME)
+ERM_AnimationRig.adjust_still_frame(running_animation['layers'][2], ERM.CHARACTER_RIG_STILL_FRAME)
+ERM_AnimationRig.adjust_still_frame(running_animation['layers'][3], ERM.CHARACTER_RIG_STILL_FRAME)
 
 local attack_range = 1
 
@@ -135,6 +136,7 @@ data:extend({
         run_animation = running_animation,
         corpse = "common-erm-army-corpse",
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 3
             },

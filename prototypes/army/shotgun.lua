@@ -5,6 +5,7 @@
 ---
 
 require('util')
+local ERM = require('global')
 local ArmyEconomyHelper = require('__erm_libs__/prototypes/army_economy_helper')
 
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
@@ -23,7 +24,7 @@ local human_animation = HumanAnimation.get_animation()
 -- types: running, running_with_gun, mining_with_tool
 local running_animation = human_animation['animations'][1]['running']
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][2])
-ERM_AnimationRig.adjust_still_frame_all(running_animation['layers'], CHARACTER_RIG_STILL_FRAME)
+ERM_AnimationRig.adjust_still_frame_all(running_animation['layers'], ERM.CHARACTER_RIG_STILL_FRAME)
 
 local gun_animation = human_animation['animations'][1]['idle_with_gun']
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][2])
@@ -62,6 +63,16 @@ local icons = {
         shift = {-9,9}
     },
 }
+local resistances = {
+    acid = {25},
+    poison = {25},
+    physical = {25},
+    fire = {99, 500},
+    explosion = {25},
+    laser = {25},
+    electric = {25},
+    cold = {25}
+}
 data:extend({
     {
         type = "unit",
@@ -71,10 +82,10 @@ data:extend({
         order = prefix.."--controllable--"..name,
         flags = { "placeable-enemy", "placeable-player", "placeable-off-grid", "player-creation", "breaths-air" },
         has_belt_immunity = false,
-        max_health = 15 * ERMPlayerUnitHelper.get_health_multiplier(),
+        max_health = 18 * ERMPlayerUnitHelper.get_health_multiplier(),
         subgroup = "erm_controllable_units",
         shooting_cursor_size = 2,
-        resistances = {},
+        resistances = ERMPlayerUnitHelper.get_resistances(resistances),
         healing_per_tick = 0,
         collision_box = collision_box,
         selection_box = selection_box,
@@ -148,6 +159,7 @@ data:extend({
         run_animation = running_animation,
         corpse = "common-erm-army-corpse",
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 3
             },

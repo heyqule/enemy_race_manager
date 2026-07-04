@@ -34,7 +34,7 @@ function RemoteAPI.register_race(race_settings)
     if storage and storage.race_settings then
         storage.race_settings[race_settings.race] = race_settings
         RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
-        RaceSettingsHelper.refresh_current_tier(race_settings.race)
+        RaceSettingsHelper.refresh_current_tier(race_settings.race, race_settings.tier, true)
     end
 end
 
@@ -98,10 +98,10 @@ end
 --- 1. local race_settings = remote.call("enemyracemanager", "get_race", force_name)
 --- 2. make change to race_settings
 --- 3. remote.call("enemyracemanager", "update_race_setting", race_settings)
-function RemoteAPI.update_race_setting(race_setting)
-    if storage and storage.race_settings and storage.race_settings[race_setting.race] then
-        storage.race_settings[race_setting.race] = race_setting
-        RaceSettingsHelper.refresh_current_tier(race_setting.race)
+function RemoteAPI.update_race_setting(race_settings)
+    if storage and storage.race_settings and storage.race_settings[race_settings.race] then
+        storage.race_settings[race_settings.race] = race_settings
+        RaceSettingsHelper.refresh_current_tier(race_settings.race, race_settings.tier, true)
 
         return true
     end

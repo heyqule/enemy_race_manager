@@ -30,8 +30,8 @@ local incremental_electric_resistance = 65
 local base_cold_resistance = 10
 local incremental_cold_resistance = 55
 
-local electric_modifier = 5
-local incremental_electric_modifier = 10
+local electric_modifier = 3
+local incremental_electric_modifier = 9
 
 -- Handles Attack Speed
 

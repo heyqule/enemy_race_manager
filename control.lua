@@ -69,9 +69,6 @@ handler.add_lib(require("__enemyracemanager__/controllers/on_trigger_created_ent
 
 handler.add_lib(require("__enemyracemanager__/controllers/indestructible_entities"))
 
---- compatibility
-handler.add_lib(require("__enemyracemanager__/controllers/compatibility/mining_drone"))
-
 require("prototypes/compatibility/controls")
 
 handler.add_lib(require("__enemyracemanager__/controllers/initializer"))
@@ -79,6 +76,10 @@ handler.add_lib(require("__enemyracemanager__/controllers/initializer"))
 require("__enemyracemanager__/controllers/air-raid-radar")
 
 handler.add_lib(require("__enemyracemanager__/gui/air_raid_radar_overlay"))
+
+--- compatibility
+handler.add_lib(require("__enemyracemanager__/controllers/compatibility/mining_drone"))
+handler.add_lib(require("__enemyracemanager__/controllers/compatibility/picker_dollie"))
 
 local RemoteApi = require("__enemyracemanager__/lib/remote_api")
 remote.add_interface("enemyracemanager", RemoteApi)

@@ -5,6 +5,7 @@
 ---
 
 require('util')
+local ERM = require('global')
 local ArmyEconomyHelper = require('__erm_libs__/prototypes/army_economy_helper')
 
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
@@ -23,7 +24,7 @@ local human_animation = HumanAnimation.get_animation()
 -- types: running, running_with_gun, mining_with_tool
 local running_animation = human_animation['animations'][1]['running']
 ERM_UnitTint.apply_runtime_tint(running_animation['layers'][2])
-ERM_AnimationRig.adjust_still_frame_all(running_animation['layers'], CHARACTER_RIG_STILL_FRAME)
+ERM_AnimationRig.adjust_still_frame_all(running_animation['layers'], ERM.CHARACTER_RIG_STILL_FRAME)
 
 local gun_animation = human_animation['animations'][1]['idle_with_gun']
 ERM_UnitTint.apply_runtime_tint(gun_animation['layers'][2])
@@ -129,6 +130,7 @@ data:extend({
         run_animation = running_animation,
         corpse = "common-erm-army-corpse",
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 3
             },

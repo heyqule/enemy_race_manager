@@ -12,7 +12,6 @@
 local sounds = require("__base__.prototypes.entity.sounds")
 local item_sounds = require("__base__.prototypes.item_sounds")
 require("util")
-local AiHelper = require ("__erm_libs__/prototypes/ai_helper")
 local ERM_UnitHelper = require('__enemyracemanager__/lib/rig/unit_helper')
 local ERM_UnitTint = require('__enemyracemanager__/lib/rig/unit_tint')
 local ERM_AnimationRig = require('__enemyracemanager__/lib/rig/animation')
@@ -108,6 +107,7 @@ data:extend({
         radar_range = 1,
         movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 6
             },

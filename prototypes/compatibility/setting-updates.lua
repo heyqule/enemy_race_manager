@@ -3,7 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 8/6/2023 12:47 PM
 ---
-local version = require("__erm_libs__/stdlib/version")
 require("global")
 
 if mods["ArmouredBiters"] then

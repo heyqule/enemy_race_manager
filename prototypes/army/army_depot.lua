@@ -310,7 +310,7 @@ local base_tech =
     {
       {"automation-science-pack", 1},
     },
-    time = 45
+    time = 30
   },
   order = "i-a"
 }

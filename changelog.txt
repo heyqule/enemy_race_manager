@@ -1,9 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.3
+Date: 2026-07-04
+
+  Changes:
+    - Changed Army-depot research time 45s -> 30s per science pot.
+    - [Army] Added 20% to all resistances to T1 miner and shotgun unit.
+    - [Army] Increased Shotgun HP 150 -> 180. 
+    - [Army] Added force_unit_fuzzy_goto_behavior = true to steering attribute.
+    - [Corrupted robot - Distractor] Max damage: 100 -> 60. Lower tiers automatically adjusted. 
+    - [Corrupted robot - Distractor] Unit supply: 2 -> 3.
+    - [Mod Compatibility: Picker Dollie] Added psi-radars to its blacklist. 
+    
+  Bugfixes:
+    - Fixed settings cache did not properly updated after disabling corrupted robots.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.2
 Date: 2026-07-02
 
   Changes:
-    - After disabling corrupted robot, distractor, construction, logistic bots are not longer included in data stage.
+    - Distractor, construction, logistic bots are not longer included in data stage after disabling corrupted robots.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.1

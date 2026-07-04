@@ -190,6 +190,7 @@ data:extend({
         vision_distance = vision_distance,
         movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 6.75
             },

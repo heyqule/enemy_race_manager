@@ -188,7 +188,7 @@ end
 
 local drop_player_unit = function(event, force_name, unit_name, count, position)
     position = position or event.source_position or event.source_entity.position
-    local race_settings = get_race_settings(force_name)
+    get_race_settings(force_name)
     local force = event.source_entity.force or "player"
     local surface = game.surfaces[event.surface_index]
 
@@ -219,8 +219,8 @@ local CustomAttackHelper = {}
 
 CustomAttackHelper.can_spawn = UtilHelper.can_spawn
 
-function CustomAttackHelper.get_race_settings(force_name, force)
-    local settings = get_race_settings(force_name, force)
+function CustomAttackHelper.get_race_settings(force_name, force_reload)
+    local settings = get_race_settings(force_name, force_reload)
     return settings
 end
 
@@ -681,7 +681,7 @@ local boss_build = function(event, force_name, building_name, position, spawn_de
     position = position or event.source_position or event.source_entity.position
     local source_entity = event.source_entity
     local source_entity_force_name = event.source_entity.force.name or force_name
-    local race_settings = get_race_settings(force_name)
+    get_race_settings(force_name)
     local surface = game.surfaces[event.surface_index]
     local name_tokens = get_name_token(source_entity.name)
     local level = tonumber(name_tokens[3])

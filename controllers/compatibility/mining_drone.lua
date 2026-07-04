@@ -10,7 +10,7 @@ local MiningDrone = {}
 MiningDrone.events = {
     [Config.custom_event_handlers[Config.EVENT_FLUSH_GLOBAL]] = function(event)
         if Config.add_attack_group_attackable_entity("mining-depot") then
-            print('Adding mining-depot to attackable entity list...')
+            log('ERM: Adding mining-depot to attackable entity list...')
         end
     end
 }

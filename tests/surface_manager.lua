@@ -48,7 +48,7 @@ describe("Surface Manager", function()
         })
         ForceHelper.reset_surface_from_lists(surfaceB.name)
         SurfaceProcessor.register_enemies(surfaceB)
-        remote.call("enemyracemanager_debug", "print_global")
+        
 
         after_ticks(60, function()
             assert.not_nil(storage.enemy_surfaces['surface-test-1'], "surface-test-1 has enemy data")

@@ -109,6 +109,7 @@ data:extend({
         radar_range = 1,
         movement_speed = 0.25 * ERMPlayerUnitHelper.get_speed_multiplier(),
         steering = {
+            force_unit_fuzzy_goto_behavior = true,
             move = {
                 radius = 6
             },

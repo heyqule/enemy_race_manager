@@ -77,6 +77,7 @@ local ERM = {
     MOD_DATA_INTERPLANETARY_ATTACKS = 'ERM_interplanetary_attack_exclusions',
     MOD_DATA_SURFACE_BRIDGE_TILES = "ERM_bridge_tiles",
 
+    CHARACTER_RIG_STILL_FRAME = 12,
     --- For Debug use
     DEBUG_BEHAVIOUR_RESULTS = {
         [defines.behavior_result.in_progress] = "defines.behavior_result.in_progress",

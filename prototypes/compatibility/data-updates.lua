@@ -3,8 +3,6 @@
 --- Created by heyqule.
 --- DateTime: 3/16/2021 9:33 PM
 ---
-local version = require("__erm_libs__/stdlib/version")
-
 if mods["ArmouredBiters"] then
     require "ArmouredBiters/biter"
     require "ArmouredBiters/spawner"
