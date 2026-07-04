@@ -225,13 +225,14 @@ function RaceSettingsHelper.add_killed_structure_count(target_race_name, surface
     storage.race_settings[target_race_name].structure_killed_count_by_planet[surface_name] = storage.race_settings[target_race_name].structure_killed_count_by_planet[surface_name] + count
 end
 
-function RaceSettingsHelper.refresh_current_tier(force_name, tier)
+function RaceSettingsHelper.refresh_current_tier(force_name, tier, force_reload)
     local race_settings = storage.race_settings[force_name]
     local i = 1
     tier = tier or 1
     if race_settings.tier and
         tier <= race_settings.tier and
-        race_settings.current_units_tier ~= nil
+        race_settings.current_units_tier ~= nil and
+        not force_reload
     then
         return
     end

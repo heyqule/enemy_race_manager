@@ -219,8 +219,8 @@ local CustomAttackHelper = {}
 
 CustomAttackHelper.can_spawn = UtilHelper.can_spawn
 
-function CustomAttackHelper.get_race_settings(force_name, force)
-    local settings = get_race_settings(force_name, force)
+function CustomAttackHelper.get_race_settings(force_name, force_reload)
+    local settings = get_race_settings(force_name, force_reload)
     return settings
 end
 

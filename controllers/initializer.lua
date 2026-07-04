@@ -15,6 +15,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
+local CustomAttackHelper = require("__enemyracemanager__/lib/helper/custom_attack_helper")
 
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
@@ -187,6 +188,11 @@ local addRaceSettings = function()
             race_settings.featured_groups, 
             { { "defender", "distractor", "destroyer", "behemoth-spitter", "behemoth-biter" }, { 2, 1, 1, 2, 2 }, 25 }
         )
+    else
+        race_settings.droppable_units = nil
+        race_settings.dropship = nil
+        race_settings.flying_units = nil
+        race_settings.featured_flying_groups = nil        
     end
 
     race_settings.interplanetary_attack_active = race_settings.interplanetary_attack_active or false
@@ -196,6 +202,10 @@ local addRaceSettings = function()
 
 
     RaceSettingsHelper.process_unit_spawn_rate_cache(race_settings)
+    --- Force reload current tier unit/structure cache
+    RaceSettingsHelper.refresh_current_tier(race_settings.race, race_settings.tier, true)
+    --- Force reload custom attack cache reload
+    CustomAttackHelper.get_race_settings(race_settings.race, true)
 
     remote.call("enemyracemanager", "register_race", race_settings)
 

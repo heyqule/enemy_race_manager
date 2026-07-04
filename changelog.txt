@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.72
+Date: 2026-07-04
+
+  Bugfixes:
+    - Fixed secondary cache did not properly updated after disabling corrupted robots.
+
+---------------------------------------------------------------------------------------------------
+Version: 2.0.71
+Date: 2026-07-02
+
+  Changes:
+    - After disabling corrupted robot, distractor, construction, logistic bots are not longer included in data stage.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.70
 Date: 2026-06-22
 
