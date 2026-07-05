@@ -226,13 +226,17 @@ function RaceSettingsHelper.add_killed_structure_count(target_race_name, surface
 end
 
 function RaceSettingsHelper.refresh_current_tier(force_name, tier, force_reload)
+    if not storage.race_settings then
+        return
+    end
+    
     local race_settings = storage.race_settings[force_name]
     local i = 1
     tier = tier or 1
-    if race_settings.tier and
+    if not race_settings or (race_settings.tier and
         tier <= race_settings.tier and
         race_settings.current_units_tier ~= nil and
-        not force_reload
+        not force_reload)
     then
         return
     end

@@ -84,8 +84,10 @@ local get_race_settings = function(force_name, reload)
     end
 
     storage.custom_attack_race_settings[force_name] = remote.call("enemyracemanager", "get_race", force_name)
-    storage.custom_attack_race_settings[force_name].tick = game.tick + GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
-    return storage.custom_attack_race_settings[force_name]
+    if storage.custom_attack_race_settings[force_name] then
+        storage.custom_attack_race_settings[force_name].tick = game.tick + GlobalConfig.RACE_SETTING_UPDATE_INTERVAL + 1
+        return storage.custom_attack_race_settings[force_name]
+    end
 end
 
 local get_low_tier_flying_unit = function(force_name)
