@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 2026-07-08
+
+  Changes:
+    - [Corrupted robot - Construction] changed proxy build (warmup) time from 5s - 1s to 8s - 5s.
+    - [Corrupted robot - Logistic] reduced the chance of dropping additional units.
+    - [Corrupted robot - Destroyer] Unit supply: 2 -> 3.
+    - [Army - Suicide Drones] slightly reduced ingredients.
+    - Added 1x option to [Attack Point] Threshold Multiplier in map setting. 
+    - Added when [Attack Point] threshold multiplier changed mid-game, it recalculate new threshold immediately.
+    - changed space-age mods and advanced_spaceship_repair mod from "optional" to "recommended".
+
+  Bugfixes:
+    - Fixed ERM variant bitters to use ERM variant spawners / turret, instead of base game's.
+    
+  Scripting:
+    - added RemoteAPI.create_build_group(group, limit)
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 2026-07-04
 
@@ -10,7 +29,7 @@ Date: 2026-07-04
     - [Corrupted robot - Distractor] Max damage: 100 -> 60. Lower tiers automatically adjusted. 
     - [Corrupted robot - Distractor] Unit supply: 2 -> 3.
     - [Mod Compatibility: Picker Dollie] Added psi-radars to its blacklist. 
-    
+
   Bugfixes:
     - Fixed settings cache did not properly updated after disabling corrupted robots.
 

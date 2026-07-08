@@ -35,7 +35,10 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
     local biter = util.table.deepcopy(data.raw["unit"][type])
     local original_hitpoint = biter["max_health"]
-
+    if biter["buildable_entities"] then
+        local buildable_entities = ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, biter["buildable_entities"], level)
+        biter["buildable_entities"] = buildable_entities
+    end
     biter["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
     biter["name"] = ERM.MOD_NAME .. "--" .. biter["name"] .. "--" .. level
     biter["max_health"] = ERM_UnitHelper.get_health(original_hitpoint / health_cut_ratio, max_hitpoint_multiplier, level)

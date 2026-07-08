@@ -10,12 +10,9 @@ local CustomAttackHelper = require("__enemyracemanager__/lib/helper/custom_attac
 function CustomAttackHelper.process_logistic(event)
     local race_settings = CustomAttackHelper.get_race_settings(ERM.MOD_NAME)
     CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 2)
-    if CustomAttackHelper.can_spawn(75) then
-        CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"))
-    end
     if race_settings.tier == 3 and CustomAttackHelper.can_spawn(33) then
-        CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 2)
-        if CustomAttackHelper.can_spawn(20) then
+        CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 1)
+        if CustomAttackHelper.can_spawn(10) then
             CustomAttackHelper.drop_unit(event, ERM.MOD_NAME, CustomAttackHelper.get_unit(ERM.MOD_NAME, "droppable_units"), 1)
         end
     end

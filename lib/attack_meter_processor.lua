@@ -180,4 +180,10 @@ function AttackMeterProcessor.transfer_attack_points(force_name, friend_force_na
     calculateNextThreshold(force_name)
 end
 
+function AttackMeterProcessor.calculate_next_threshold(force_name)
+    if GlobalConfig.race_is_erm_managed(force_name) then
+        calculateNextThreshold(force_name) 
+    end
+end
+
 return AttackMeterProcessor

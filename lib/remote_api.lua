@@ -17,6 +17,7 @@ local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_proc
 local ArmyPopulationProcessor = require("__enemyracemanager__/lib/army_population_processor")
 local ArmyTeleportationProcessor = require("__enemyracemanager__/lib/army_teleportation_processor")
 local ArmyDeploymentProcessor = require("__enemyracemanager__/lib/army_deployment_processor")
+local BaseBuildProcessor = require("__enemyracemanager__/lib/base_build_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
@@ -467,6 +468,8 @@ RemoteAPI.calculate_attack_points = AttackMeterProcessor.calculate_points
 --- AttackGroupBeaconProcessor
 RemoteAPI.init_beacon_control_globals = AttackGroupBeaconProcessor.init_control_globals  --- for post process
 RemoteAPI.pick_random_attack_beacon = AttackGroupBeaconProcessor.pick_random_attack_beacon
+
+RemoteAPI.create_build_group = BaseBuildProcessor.create_build_group
 
 --- Quality Points
 RemoteAPI.calculate_quality_points = QualityProcessor.calculate_quality_points  --- for post process

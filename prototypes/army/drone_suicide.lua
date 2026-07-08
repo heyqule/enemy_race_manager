@@ -141,8 +141,8 @@ ArmyEconomyHelper.create_recipe({
     ingredients =
     {
         {type = "item", name = "flying-robot-frame", amount = 4},
-        {type = "item", name = "low-density-structure", amount = 8},
-        {type = "item", name = "accumulator", amount = 6},
+        {type = "item", name = "low-density-structure", amount = 6},
+        {type = "item", name = "accumulator", amount = 4},
         {type = "item", name = "explosives", amount = 12},
     },
     categories = {prefix.."--erm_controllable"},

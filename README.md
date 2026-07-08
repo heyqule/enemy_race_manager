@@ -74,7 +74,7 @@ Interplanetary raid starts once you kill any enemy structure in their home plane
 Enemy without home planet and "Enemy" force are not able to perform interplanetary attack.
 
 ### Free for all
-This is currently only work for non Space Age game.  You'll have to select "Mixed mode" in Nauvis enemy and enable "Free for all" to active this feature.
+This is currently only work for Nauvis.  You'll have to select "Mixed mode" or one of the split mode in Nauvis enemy and enable "Free for all" to active this feature.
 
 When this is enabled, player entity health and enemy damage multiplied by 10x. The multipliers are to balance the time enemy units take to kill each other.
 

@@ -21,6 +21,7 @@ local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_proc
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
 local AttackGroupPathingProcessor = require("__enemyracemanager__/lib/attack_group_pathing_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
 local SpawnLocationScanner = require("__enemyracemanager__/lib/spawn_location_scanner")
 
@@ -432,7 +433,12 @@ local setting_functions = {
                 ArmyPopulationProcessor.calculate_max_units(force)
             end
         end
-    end
+    end,
+    ['enemyracemanager-attack-meter-threshold'] = function(event)
+        for _, force in pairs(game.forces) do
+            AttackMeterProcessor.calculate_next_threshold(force.name)
+        end
+    end,
 }
 local on_runtime_mod_setting_changed = function(event)
     if event.setting_type == "runtime-global" and

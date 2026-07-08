@@ -150,7 +150,7 @@ local function makeLevelCombatRobots(level, type)
     robot["flags"] = { "placeable-player", "placeable-enemy", "not-flammable" }
     robot["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemy-map-color"].value)
     robot['damaged_trigger_effect'] = nil
-    robot['ai_settings'] = AiHelper.get_enemy_unit_settings(2)
+    robot['ai_settings'] = AiHelper.get_enemy_unit_settings(3)
     robot['buildable_entities'] = buildable_entities
     return robot
 end

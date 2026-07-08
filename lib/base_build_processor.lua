@@ -14,6 +14,7 @@ function BaseBuildProcessor.create_build_group(group, limit)
     if not (group and group.valid) then
         return
     end
+    limit = limit or 12
     local members = {}
     for _, unit in pairs(group.members) do
         members[#members + 1] = unit
