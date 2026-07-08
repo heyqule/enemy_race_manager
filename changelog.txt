@@ -13,7 +13,7 @@ Date: 2026-07-08
 
   Bugfixes:
     - Fixed ERM variant bitters to use ERM variant spawners / turret, instead of base game's.
-    
+
   Scripting:
     - added RemoteAPI.create_build_group(group, limit)
 
