@@ -36,6 +36,7 @@ data.raw['mod-data']['ERM_bridge_ignore_surfaces'].data['your_planet_prototype_n
 
 Notes:
 - This method can not disable bridges in ERM enemies' home planets. e.g Aiur, Char and Earth.
+- Bridge building was added to prevent water/island abuse.  It can cause performance issues when enemy could not path to your base.  Use at your own risk.
 
 #### Sample Mod Example to fully disable ERM logic on a planet.
 ##### info.json
