@@ -105,7 +105,7 @@ data:extend({
         selection_box = selection_box,
         vision_distance = vision_distance,
         radar_range = 1,
-        movement_speed = 0.275 * ERMPlayerUnitHelper.get_speed_multiplier(),
+        movement_speed = 0.325 * ERMPlayerUnitHelper.get_speed_multiplier(),
         steering = {
             force_unit_fuzzy_goto_behavior = true,
             move = {

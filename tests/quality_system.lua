@@ -4,6 +4,7 @@
 --- DateTime: 10/30/2024 10:11 PM
 ---
 
+local ERM_SETTING_CONST = require("__enemyracemanager__/setting-constants")
 local TestShared = require("shared")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
@@ -24,7 +25,7 @@ describe("Quality System", function()
 
     it("Test quality calculate_chance_cache", function()
 
-        assert(settings.global['enemyracemanager-difficulty'].value == QUALITY_NORMAL, "Difficulty Setting is not correct. Please use Normal to test")
+        assert(settings.global['enemyracemanager-difficulty'].value == ERM_SETTING_CONST.QUALITY_NORMAL, "Difficulty Setting is not correct. Please use Normal to test")
 
         game.forces[enemy].set_evolution_factor(0.5)
         QualityProcessor.calculate_quality_points()

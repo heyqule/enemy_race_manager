@@ -1,5 +1,5 @@
 local ERM = require("__enemyracemanager__/global")
-require("setting-constants")
+local ERM_SETTING_CONST = require("setting-constants")
 
 data:extend {
     {
@@ -8,7 +8,7 @@ data:extend {
         description = "enemyracemanager-nauvis-enemy",
         setting_type = "startup",
         default_value = 'enemy',
-        allowed_values = { NAUVIS_MIXED, NAUVIS_2_WAY, NAUVIS_4_WAY, 'enemy' },
+        allowed_values = { ERM_SETTING_CONST.NAUVIS_MIXED, ERM_SETTING_CONST.NAUVIS_2_WAY, ERM_SETTING_CONST.NAUVIS_4_WAY, 'enemy' },
         order = "enemyracemanager-100"
     },
     {
@@ -33,8 +33,8 @@ data:extend {
         name = "enemyracemanager-max-attack-range",
         description = "enemyracemanager-max-attack-range",
         setting_type = "startup",
-        default_value = ATTACK_RANGE_14,
-        allowed_values = { ATTACK_RANGE_14, ATTACK_RANGE_20, ATTACK_RANGE_26, ATTACK_RANGE_32, ATTACK_RANGE_40 },
+        default_value = ERM_SETTING_CONST.ATTACK_RANGE_14,
+        allowed_values = { ERM_SETTING_CONST.ATTACK_RANGE_14, ERM_SETTING_CONST.ATTACK_RANGE_20, ERM_SETTING_CONST.ATTACK_RANGE_26, ERM_SETTING_CONST.ATTACK_RANGE_32, ERM_SETTING_CONST.ATTACK_RANGE_40 },
         order = "enemyracemanager-104"
     },
 
@@ -76,9 +76,9 @@ data:extend {
         name = "enemyracemanager-2way-group-enemy-orientation",
         description = "enemyracemanager-2way-group-enemy-orientation",
         setting_type = "startup",
-        default_value = X_AXIS,
+        default_value = ERM_SETTING_CONST.X_AXIS,
         order = "enemyracemanager-205",
-        allowed_values = { X_AXIS, Y_AXIS }
+        allowed_values = { ERM_SETTING_CONST.X_AXIS, ERM_SETTING_CONST.Y_AXIS }
     },
     {
         type = "string-setting",
@@ -87,7 +87,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-207",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
@@ -96,7 +96,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-208",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
 
     {
@@ -106,7 +106,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-222",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
@@ -115,7 +115,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-223",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
@@ -124,7 +124,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-224",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
     {
         type = "string-setting",
@@ -133,7 +133,7 @@ data:extend {
         setting_type = "startup",
         default_value = ERM.MOD_NAME,
         order = "enemyracemanager-225",
-        allowed_values = { RACE_EMPTY, ERM.MOD_NAME }
+        allowed_values = { ERM_SETTING_CONST.RACE_EMPTY, ERM.MOD_NAME }
     },
 
     --- Startup: Defense
@@ -219,8 +219,8 @@ data:extend {
         name = "enemyracemanager-attacks-unit-spawn-size",
         description = "enemyracemanager-attacks-unit-spawn-size",
         setting_type = "startup",
-        default_value = BOSS_SPAWN_SQUAD,
-        allowed_values = { BOSS_SPAWN_SQUAD, BOSS_SPAWN_PATROL, BOSS_SPAWN_PLATOON },
+        default_value = ERM_SETTING_CONST.BOSS_SPAWN_SQUAD,
+        allowed_values = { ERM_SETTING_CONST.BOSS_SPAWN_SQUAD, ERM_SETTING_CONST.BOSS_SPAWN_PATROL, ERM_SETTING_CONST.BOSS_SPAWN_PLATOON },
         order = "enemyracemanager-701",
     },
     --- Startup: RTS Unit framework
@@ -279,8 +279,8 @@ data:extend {
         name = "enemyracemanager-difficulty",
         description = "enemyracemanager-difficulty",
         setting_type = "runtime-global",
-        default_value = QUALITY_NORMAL,
-        allowed_values = { QUALITY_CASUAL, QUALITY_NORMAL, QUALITY_ADVANCED, QUALITY_HARDCORE, QUALITY_FIGHTER, QUALITY_CRUSADER, QUALITY_THEONE },
+        default_value = ERM_SETTING_CONST.QUALITY_NORMAL,
+        allowed_values = { ERM_SETTING_CONST.QUALITY_CASUAL, ERM_SETTING_CONST.QUALITY_NORMAL, ERM_SETTING_CONST.QUALITY_ADVANCED, ERM_SETTING_CONST.QUALITY_HARDCORE, ERM_SETTING_CONST.QUALITY_FIGHTER, ERM_SETTING_CONST.QUALITY_CRUSADER, ERM_SETTING_CONST.QUALITY_THEONE },
         order = "enemyracemanager-004"
     },
     {

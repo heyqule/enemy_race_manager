@@ -3,22 +3,22 @@
 --- Created by heyqule.
 --- DateTime: 10/30/2024 10:08 PM
 ---
+local ERM_SETTING_CONST = require("__enemyracemanager__/setting-constants")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
-local CronProcessor = require("__enemyracemanager__/lib/cron_processor")
 local QualityProcessor = {}
 
 --- The following is the spawn rate of each tier under different difficulty
 --- legendary, epic, exceptional, great, normal
 local max_difficulties = {
-    [QUALITY_CASUAL] = {0, 0, 0.3, 0.7, 0},
-    [QUALITY_NORMAL] = {0, 0.1, 0.60, 0.3, 0},
-    [QUALITY_ADVANCED] = {0.05, 0.25, 0.7, 0, 0},
-    [QUALITY_HARDCORE] = {0.2, 0.3, 0.5, 0, 0},
-    [QUALITY_FIGHTER] = {0.5, 0.5, 0, 0, 0},
-    [QUALITY_CRUSADER] = {0.75, 0.25, 0, 0, 0},
-    [QUALITY_THEONE] = {1, 0, 0, 0, 0},
+    [ERM_SETTING_CONST.QUALITY_CASUAL] = {0, 0, 0.3, 0.7, 0},
+    [ERM_SETTING_CONST.QUALITY_NORMAL] = {0, 0.1, 0.60, 0.3, 0},
+    [ERM_SETTING_CONST.QUALITY_ADVANCED] = {0.05, 0.25, 0.7, 0, 0},
+    [ERM_SETTING_CONST.QUALITY_HARDCORE] = {0.2, 0.3, 0.5, 0, 0},
+    [ERM_SETTING_CONST.QUALITY_FIGHTER] = {0.5, 0.5, 0, 0, 0},
+    [ERM_SETTING_CONST.QUALITY_CRUSADER] = {0.75, 0.25, 0, 0, 0},
+    [ERM_SETTING_CONST.QUALITY_THEONE] = {1, 0, 0, 0, 0},
 }
 local setting_difficulty, setting_advancement
 

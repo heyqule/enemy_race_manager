@@ -180,10 +180,16 @@ local alter_distraction = function(commands,distraction)
     end
 end
 
-local add_to_group = function(surface, group, force, force_name, unit_batch)
+local add_to_group = function(surface, group_number, group, force, force_name, unit_batch)
     local group_tracker = get_group_tracker(force_name)
-    if group.valid == false or group_tracker == nil then
-        set_group_tracker(force_name, nil)
+    if group_tracker == nil then
+        return
+    end
+    
+    if group.valid == false then
+        if group_tracker and group_number == group_tracker.unique_id then
+            set_group_tracker(force_name, nil)
+        end
         return
     end
     local i = 0
@@ -329,7 +335,9 @@ local generate_unit_queue = function(
     end
 
     local QUEUE_BATCH_SIZE = AttackGroupProcessor.UNITS_PER_QUEUE_BATCH
-    local queue_length = math.ceil(unit_supply / QUEUE_BATCH_SIZE)
+    --- -1 for the immediate add_to_group call below, 
+    --- prevents unit group gets invalidate by base game before the cron runs. This happens since 2.1.9+??
+    local queue_length = math.ceil(unit_supply / QUEUE_BATCH_SIZE) 
     local i = 0
     
     local tiers_units = {}
@@ -359,12 +367,13 @@ local generate_unit_queue = function(
 
     set_group_tracker(force_name, unit_group, "group")
     set_group_tracker(force_name, unit_group.unique_id, "unique_id")
-
+    local unit_group_number = unit_group.unique_id
     repeat
         if as_quick_queue then
             Cron.add_quick_queue(
                     "AttackGroupProcessor.add_to_group",
                     surface,
+                    unit_group_number,
                     unit_group,
                     force,
                     force_name,
@@ -374,6 +383,7 @@ local generate_unit_queue = function(
             Cron.add_1_sec_queue(
                     "AttackGroupProcessor.add_to_group",
                     surface,
+                    unit_group_number,
                     unit_group,
                     force,
                     force_name,
@@ -1011,11 +1021,11 @@ function AttackGroupProcessor.destroy_invalid_group(erm_unit_group, start_positi
             AttackGroupPathingProcessor.remove_node(group_number)
             --- This call needs to bypass attack meters calculations
             Cron.add_2_sec_queue("AttackGroupProcessor.generate_group",
-                group_force, math.max(math.ceil(group_size / 2), 20),
+                group_force, math.min(math.ceil(Config.max_group_size() / 3), 200),
                 { group_type=group_type,
                   target_force = target_force,
                   surface=surface,
-                  bypass_attack_meter=true
+                  bypass_attack_meter=true,
                 }
             )
         elseif Config.race_is_erm_managed(force_name) then

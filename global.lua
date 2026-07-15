@@ -76,6 +76,7 @@ local ERM = {
     MOD_DATA_NEUTRAL_FORCES = 'ERM_neutral_forces',
     MOD_DATA_INTERPLANETARY_ATTACKS = 'ERM_interplanetary_attack_exclusions',
     MOD_DATA_SURFACE_BRIDGE_TILES = "ERM_bridge_tiles",
+    MOD_DATA_BRIDGE_IGNORE_SURFACES = "ERM_bridge_ignore_surfaces",
 
     CHARACTER_RIG_STILL_FRAME = 12,
     --- For Debug use

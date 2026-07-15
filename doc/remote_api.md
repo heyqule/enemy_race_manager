@@ -123,7 +123,6 @@ race_settings.featured_flying_groups = { ... }
 * [Zerg](https://github.com/heyqule/erm_zerg/blob/main/control.lua#L92)
 * [Protoss](https://github.com/heyqule/erm_toss/blob/main/control.lua#L90)
 * [Redarmy](https://github.com/heyqule/erm_redarmy/blob/main/control.lua#L90)
-* [Marspeople](https://github.com/heyqule/erm_marspeople/blob/main/control.lua#L91)
 
 ### Override attack strategy, Call this right after you call any of the generate group remote calls.
 Example:

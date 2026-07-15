@@ -5,7 +5,7 @@
 --- require("__enemyracemanager__/lib/global_config")
 ---
 require("util")
-require("__enemyracemanager__/setting-constants")
+local ERM_SETTING_CONST = require("__enemyracemanager__/setting-constants")
 
 local math_floor = math.floor
 local string_format = string.format
@@ -92,9 +92,9 @@ GlobalConfig.BOSS_SPAWN_TIMER = {
 --end
 
 local batch_spawn_size = {
-    [BOSS_SPAWN_SQUAD] = 1,
-    [BOSS_SPAWN_PATROL] = 2,
-    [BOSS_SPAWN_PLATOON] = 3,
+    [ERM_SETTING_CONST.BOSS_SPAWN_SQUAD] = 1,
+    [ERM_SETTING_CONST.BOSS_SPAWN_PATROL] = 2,
+    [ERM_SETTING_CONST.BOSS_SPAWN_PLATOON] = 3,
 }
 GlobalConfig.batch_spawn_size = batch_spawn_size[settings.startup["enemyracemanager-attacks-unit-spawn-size"].value]
 

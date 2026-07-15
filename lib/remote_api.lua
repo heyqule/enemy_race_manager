@@ -24,6 +24,7 @@ local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 
 local EnvironmentalAttacks = require("__enemyracemanager__/lib/environmental_attacks")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
+local BridgeBuilder = require('__enemyracemanager__/lib/bridge_builder')
 
 
 
@@ -447,6 +448,7 @@ RemoteAPI.force_data_reindex = function()
     ForceHelper.cache_prototype_names()
     ForceHelper.cache_spawner_decoration()
     ForceHelper.cache_unit_supply()
+    BridgeBuilder.index_home_planets()
     --- for post process
 end 
 

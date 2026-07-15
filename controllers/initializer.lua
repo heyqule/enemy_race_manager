@@ -342,6 +342,7 @@ local init_globals = function()
 
     storage.death_loop_detection = storage.death_loop_detection or {}
     storage.compatibility_warnings = false
+    storage.home_planets = storage.home_planets or {}
 
     SurfaceProcessor.init_globals()
     ForceHelper.init_globals()

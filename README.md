@@ -1,3 +1,8 @@
+### IMPORTANT NOTICE:
+EMR for Factorio 2.1 build is now available.  Make sure double check the settings since some default setting have changed.
+
+----------
+
 # Enemy Race Manager
 
 This mod aims provide a RTS experience with Factorio logistics.  It works best with other ERM branded mods.  Base game biters are also enhanced with new features.
@@ -9,16 +14,17 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - [Hawke] to improve ERM unit control features!
 - See ERM assets credit for 3rd party assets. https://mods.factorio.com/mod/enemyracemanager_assets
 
-### What's new in 2.0.70
-- Radio Station (Command Center) for engineer army
-- Player character can teleport between command centers. You can teleport between planet, but it follows same restrictions as boarding to space platform.
-- Custom city block for enemy base building (red army)
-- [boss] attack changes and UI changes.
-- [custom attack group] Enemy priority home planet after player have a base on there.
-- Various Bugfixes
+### What's new in 2.1.0
+- Factorio 2.1 support
+- Added size_in_group for enemy units.  Enemy group size now depends on "unit supply".  Each unit take 1 - 4 supply.  Enemy groups are more dynamic with this.
+- Added steering attribute for units.  When they group, they can form some interesting formations.
+- Removed "Custom Base Expansion" logics because base game logic is very good in 2.1
+- Custom attack group works with  "unit supply" changes.
+
 
 ##### Notices
-- 2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.
+- ~~2.0.x are all experimental release.  Expect crashes and unit imbalance. Most things are subjected to change. 2.1 will be the first stable release.~~
+- 2.1.x releases during Factorio 2.1 beta are still consider experimental.  Once Factorio 2.1 release, ERM mods are consider stable by then.  Once ERM become stable, I'll focus on unit balance until I'm happy with my deathworld play test.
 - Support for base game will be limited to shared features and fixing crashes.  This mod is now focus on warfare with space logistic in space age.
 - When you are playing with many other mods.  Please go through "Mod Compatibility section" for additional detail or compatibility mod downloads.
 
@@ -38,9 +44,10 @@ Player Controllable Units:
 - Some protoss units from [Protoss - Akilea Tribe](https://mods.factorio.com/mod/erm_toss) (A rank)
 
 **Tips on defense:**
-- A LOT OF construction robots and repair kits. Automate repair network ASAP. Mix all turrets. Uranium bullets and flamethrowers are OP.
-- Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the damage turret with new one and build wall after it destroyed.
-- [Advanced Spaceship Repair](https://mods.factorio.com/mod/advanced_spaceship_repair) helps to repair entities in a batch on spaceship during a space battle.  It's an optional dependency and it requires space-age. 
+- A LOT OF construction robots and repair kits. Automate repair network ASAP. **MIX ALL TURRETS.** Uranium bullets and flamethrowers are OP.
+- Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the destroyed turret and wall after they destroyed.
+- Build army! Build army! Build army!
+- [Advanced Spaceship Repair](https://mods.factorio.com/mod/advanced_spaceship_repair) helps to repair entities in a batch on spaceship during a space battle.  It's an optional dependency and it requires space-age.
 
 Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/2.0-New-Race-Design.md) and join my discord for additional help.
 
@@ -74,7 +81,7 @@ Interplanetary raid starts once you kill any enemy structure in their home plane
 Enemy without home planet and "Enemy" force are not able to perform interplanetary attack.
 
 ### Free for all
-This is currently only work for Nauvis.  You'll have to select "Mixed mode" or one of the split mode in Nauvis enemy and enable "Free for all" to active this feature.
+This is currently only work on Nauvis.  You'll have to select "Mixed mode" or one of the split mode for Nauvis enemy and enable "Free for all" to active this feature.
 
 When this is enabled, player entity health and enemy damage multiplied by 10x. The multipliers are to balance the time enemy units take to kill each other.
 
@@ -83,6 +90,7 @@ When this is enabled, player entity health and enemy damage multiplied by 10x. T
 - Set up rally point for automated unit deployment.
 - Unit teleportation between 2 areas, including between planets/surfaces.
 - Unit population control
+- Player character can teleport between command centers.  Teleporting between planets requires you to empty your inventories.
 
 ERM - Terran Control Tutorial: [https://youtu.be/MzDwGJ3OOGY](https://youtu.be/MzDwGJ3OOGY)
 
@@ -94,16 +102,24 @@ Zerg, Protoss and Redarmy spawners drop loots.  Those loots are used for new rec
 
 When you are not playing with biter, you don't have to capture the "spawner" to get biter eggs.
 
-Planet Aiur and Char use new minerals and geyser nodes.  They offer slightly different manufacture workflow.
+### ERM Planets
+
+Planet Aiur and Planet Char use new minerals and geyser nodes.  They offer slightly different manufacture workflow.
+
+Planet Earth, red army has custom build logic to build town and cities, including artillery armed and nuclear missile armed city.
 
 ### Boss discovery
 
 Using PSI radar in enemy's home world will reveal their master mind.  Are you able to beat them for rewards?
 
 ### Modding Support
-
-* [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
-* [Planet Modding Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/planet_modding.md)
+##### [Remote API Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/remote_api.md)
+- Include various endpoint to spawn custom attack group and adjust custom force data.
+##### [Planet Modding Doc](https://github.com/heyqule/enemy_race_manager/blob/main/doc/planet_modding.md)
+- Some modded planets with enemy may not compatible with ERM logics, you can disable ERM features via mod-data prototypes.
+- Disable all ERM logics on a planet.
+- Disable ERM interplanetary attack on a planet.
+- Disable ERM bridge builder to run on a planet.
 
 ### Known Issues
 

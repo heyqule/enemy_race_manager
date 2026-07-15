@@ -490,9 +490,9 @@ describe("Edge Cases & Fallbacks", function()
         AttackGroupBeaconProcessor.init_index()
 
         after_ticks(300, function()
-            AttackGroupProcessor.generate_group(game.forces["enemy"], 50)
+            AttackGroupProcessor.generate_group(game.forces["enemy"], 100)
         end)
-
+        
         after_ticks(12600, function()
             local enemies = surface.find_entities_filtered {
                 force = "enemy",

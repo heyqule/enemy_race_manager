@@ -49,3 +49,5 @@ data:extend({
         flags = { "not-on-map" },
     },
 })
+
+data.raw['mod-data']['ERM_bridge_ignore_surfaces'].data['test_bridge_builder_surface'] = true

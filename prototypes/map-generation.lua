@@ -10,13 +10,13 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 
-require("__enemyracemanager__/setting-constants")
+local ERM_SETTING_CONST = require("__enemyracemanager__/setting-constants")
 
 local gap = 128
 local create_2_way_positive_noise_expression = function(entity)
     local name = "erm_2_way_positive-"..entity.name
     local expression = "x_axis_positive_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
-    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
+    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == ERM_SETTING_CONST.Y_AXIS then
         expression = "y_axis_positive_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
     end
     data:extend {
@@ -33,7 +33,7 @@ end
 local create_2_way_negative_noise_expression = function(entity)
     local name = "erm_2_way_negative-"..entity.name
     local expression = "x_axis_negative_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
-    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == Y_AXIS then
+    if settings.startup['enemyracemanager-2way-group-enemy-orientation'].value == ERM_SETTING_CONST.Y_AXIS then
          expression = "y_axis_negative_2_way_split("..entity.autoplace.probability_expression..", "..gap..")"
     end
     data:extend {
@@ -77,18 +77,18 @@ if map_gen_settings == nil then
     return
 end
 
-if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_2_WAY then
+if settings.startup['enemyracemanager-nauvis-enemy'].value == ERM_SETTING_CONST.NAUVIS_2_WAY then
 
     local twoway_positive = settings.startup['enemyracemanager-2way-group-enemy-positive'].value
     local twoway_negative = settings.startup['enemyracemanager-2way-group-enemy-negative'].value
 
     MapGenFunctions.remove_enemy_autoplace_controls(map_gen_settings.autoplace_controls)
 
-    if twoway_positive ~= ERM.MOD_NAME and twoway_positive ~= RACE_EMPTY then
+    if twoway_positive ~= ERM.MOD_NAME and twoway_positive ~= ERM_SETTING_CONST.RACE_EMPTY then
         map_gen_settings.autoplace_controls[twoway_positive.."-enemy-base"] = {}
     end
     
-    if twoway_negative ~= ERM.MOD_NAME and twoway_negative ~= RACE_EMPTY then
+    if twoway_negative ~= ERM.MOD_NAME and twoway_negative ~= ERM_SETTING_CONST.RACE_EMPTY then
         map_gen_settings.autoplace_controls[twoway_negative.."-enemy-base"] = {}
     end
     
@@ -100,17 +100,17 @@ if settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_2_WAY then
         for _, entity in pairs(data.raw[type]) do
             local name_token = ForceHelper.split_name(entity.name)
             if entity.autoplace and tonumber(name_token[3]) == 1 then
-                if twoway_positive ~= RACE_EMPTY and name_token[1] == twoway_positive then
+                if twoway_positive ~= ERM_SETTING_CONST.RACE_EMPTY and name_token[1] == twoway_positive then
                     local expression_name = create_2_way_positive_noise_expression(entity)
                     map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
-                elseif twoway_negative ~= RACE_EMPTY and name_token[1] == twoway_negative then
+                elseif twoway_negative ~= ERM_SETTING_CONST.RACE_EMPTY and name_token[1] == twoway_negative then
                     local expression_name = create_2_way_negative_noise_expression(entity)
                     map_gen_settings.property_expression_names["entity:"..entity.name..":probability"] = expression_name
                 end
             end
         end
     end
-elseif settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_4_WAY then
+elseif settings.startup['enemyracemanager-nauvis-enemy'].value == ERM_SETTING_CONST.NAUVIS_4_WAY then
     local force_mapping = {
         [defines.direction.northeast] = settings.startup["enemyracemanager-4way-northeast"].value,
         [defines.direction.northwest] = settings.startup["enemyracemanager-4way-northwest"].value,
@@ -123,11 +123,11 @@ elseif settings.startup['enemyracemanager-nauvis-enemy'].value == NAUVIS_4_WAY t
     for direction_key, force in pairs(force_mapping) do
         if force == ERM.MOD_NAME then
             map_gen_settings.autoplace_controls["enemy-base"] = {}
-        elseif force ~= RACE_EMPTY then
+        elseif force ~= ERM_SETTING_CONST.RACE_EMPTY then
             map_gen_settings.autoplace_controls[force.."-enemy-base"] = {}
         end
 
-        if force ~= RACE_EMPTY then
+        if force ~= ERM_SETTING_CONST.RACE_EMPTY then
             for _, type in pairs(entity_types) do
                 for _, entity in pairs(data.raw[type]) do
                     local name_token = ForceHelper.split_name(entity.name)

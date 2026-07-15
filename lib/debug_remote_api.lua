@@ -18,7 +18,7 @@ local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local BossProcessor = require("__enemyracemanager__/lib/boss_processor")
 local InterplanetaryAttacks = require("__enemyracemanager__/lib/interplanetary_attacks")
-
+local BridgeBuilder = require('__enemyracemanager__/lib/bridge_builder')
 local Debug_RemoteAPI = {}
 
 --- Usage: remote.call("enemyracemanager_debug", "print_race_settings")
@@ -267,6 +267,10 @@ end
 --- remote.call("enemyracemanager_debug", "interplanetary_attacks_exec","enemy","players")
 function Debug_RemoteAPI.interplanetary_attacks_exec(force_name, target_force, drop_location)
     InterplanetaryAttacks.exec(force_name, target_force, drop_location)
+end
+
+function Debug_RemoteAPI.bridgebuilder_print_ignores()
+    print(serpent.block(BridgeBuilder.get_ignore_planets()))
 end
 
 return Debug_RemoteAPI

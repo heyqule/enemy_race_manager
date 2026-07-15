@@ -81,6 +81,18 @@ if not data.raw['mod-data'] or not data.raw['mod-data'][ERM.MOD_DATA_SURFACE_BRI
     })
 end
 
+--- Use to define which surface to ignore ERM bridge building mechanic.
+if not data.raw['mod-data'] or not data.raw['mod-data'][ERM.MOD_DATA_BRIDGE_IGNORE_SURFACES] then
+    data.extend({
+        {
+            type = 'mod-data',
+            name = ERM.MOD_DATA_BRIDGE_IGNORE_SURFACES,
+            data_type = 'erm_data',
+            data = {}
+        }
+    })
+end
+
 data.raw['mod-data'][ERM.MOD_DATA_SURFACE_BRIDGE_TILES].data['valcanus'] = 'volcanic-ash-soil'
 data.raw['mod-data'][ERM.MOD_DATA_SURFACE_BRIDGE_TILES].data['fulgoran'] = 'fulgoran-sand'
 data.raw['mod-data'][ERM.MOD_DATA_SURFACE_BRIDGE_TILES].data['gleba'] = 'lowland-deadskin-mold'
@@ -92,6 +104,8 @@ data.raw['mod-data'][ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data["aquilo"] = true
 data.raw['mod-data'][ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data["maraxsis"] = true
 data.raw['mod-data'][ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data["maraxsis-trench"] = true
 data.raw['mod-data'][ERM.MOD_DATA_INTERPLANETARY_ATTACKS].data['lignumis'] = true
+
+data.raw['mod-data'][ERM.MOD_DATA_BRIDGE_IGNORE_SURFACES].data['earth'] = true
 
 
 if settings.startup['enemyracemanager-enable-engineer-army'].value then

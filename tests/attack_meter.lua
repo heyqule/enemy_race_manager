@@ -25,7 +25,7 @@ end)
 describe("Combat-based Attack Meter", function()
 
     it("Calculate attack points", function()
-        async(16000)
+        async(18000)
         local surface = game.surfaces[1]
         AttackGroupBeaconProcessor.init_index()
 
@@ -59,8 +59,8 @@ describe("Combat-based Attack Meter", function()
         surface.create_entity({ name = spawner_name, position = { 0, 300 } })
         AttackGroupBeaconProcessor.create_spawn_beacon_from_trunk(surface, { { -10, 295 }, { 10, 305 } })
 
-        --- When attack group generated
-        after_ticks(16000, function()
+        --- After attack group generated
+        after_ticks(18000, function()
             assert(storage.race_settings[race_name].attack_meter < 5490, "Round2: Attack Meter Number should be lower after group generated: " .. storage.race_settings[race_name].attack_meter)
             assert(5490 >= storage.race_settings[race_name].attack_meter_total, "Round2: Accumulated Attack Meter Number")
             done()

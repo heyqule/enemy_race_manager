@@ -12,7 +12,7 @@ local EmotionConstants = {
     EMO_RAPID_EXPAND = 2,
     --- Select large groups from multiple areas to 
     --- attack (select exsiting units in the spawn area) and 
-    --- generate up to 50 builder (generate construction worker) against single location
+    --- generate up to 20 builder (generate construction worker) against single location
     EMO_SIEGE = 3,
     --- Select 2 large groups from single spawn and its near by spawn point to 
     --- attack single location within short interval

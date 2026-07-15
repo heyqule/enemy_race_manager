@@ -17,11 +17,15 @@ local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 local Cron = require("__enemyracemanager__/lib/cron_processor")
 
 local LIMIT_FILTER = 50
-local EVOLUTION_FACTOR_START_POINT = 0.66
+local EVOLUTION_FACTOR_START_POINT = 0.35
 local DEFAULT_COOLDOWN = 2 * minute
 local NEUTRAL_FORCE = "neutral"
 
 local collision_finder = 'big-biter'
+
+local get_emotion_max_group_size = function()
+    return GlobalConfig.max_group_size() / 2
+end
 
 --- Collect all resource / land beacons as buildable targets
 local collect_resource_and_land_beacons = function(emotion_data)
@@ -152,7 +156,7 @@ local attack_rapid_expand = function(data)
             local selected_units = surface.find_entities_filtered {
                 type = 'unit',
                 force = force,
-                limit = math.floor(GlobalConfig.max_group_size() * group_size_multiplier),
+                limit = math.floor(get_emotion_max_group_size() * group_size_multiplier),
                 position = spawn_location,
                 radius = AttackGroupBeaconConstants.SPAWNER_BEACON_RADIUS,
                 
@@ -188,10 +192,10 @@ local attack_siege = function(data)
     local attack_position, spawn_position = get_beacon_positions(data)
 
     if spawn_position and attack_position  then
-        local max_group_size = GlobalConfig.max_group_size()
+        local max_group_size = get_emotion_max_group_size()
         local builders = {}
         local builder_number = math.floor(max_group_size * 0.2)
-        local builder_limit = 50
+        local builder_limit = 20
         local builder_name = force.name..'--'..data.builder_name..'--1'
         if builder_number > builder_limit then
             builder_number = builder_limit
@@ -259,7 +263,7 @@ local attack_double_tap = function(data)
     local attack_position, spawn_position = get_beacon_positions(data)
 
     if spawn_position and attack_position  then
-        local max_group_size = math.floor(GlobalConfig.max_group_size() * group_size_multiplier)
+        local max_group_size = math.floor(get_emotion_max_group_size() * group_size_multiplier)
         local beacon_radius = AttackGroupBeaconConstants.SPAWNER_BEACON_RADIUS
         if data.is_double_tap then
             spawn_position = Position.calculate_position_x_tiles_further(spawn_position, beacon_radius)
@@ -328,7 +332,7 @@ local attack_rush = function(data)
     local attack_position, spawn_position = get_beacon_positions(data)
 
     if spawn_position and attack_position  then
-        local max_group_size = math.floor(GlobalConfig.max_group_size() * group_size_multiplier)
+        local max_group_size = math.floor(get_emotion_max_group_size() * group_size_multiplier)
         local beacon_radius = AttackGroupBeaconConstants.SPAWNER_BEACON_RADIUS
         local selected_units = surface.find_entities_filtered {
             type = 'unit',
@@ -336,7 +340,6 @@ local attack_rush = function(data)
             limit = max_group_size,
             position = spawn_position,
             radius = beacon_radius,
-            
         }
 
         local new_spawn_position = surface.find_non_colliding_position(collision_finder, spawn_position, 32, 2)
@@ -462,12 +465,12 @@ function EmotionProcessor.switch(data)
     storage.emotion[force.name] = emotion_data
 end
 
-function EmotionProcessor.check_switches()
+function EmotionProcessor.homeplanet_switches()
     for _, force in pairs(ForceHelper.get_enemy_forces()) do
         local home_planet_name = RaceSettingsHelper.get_home_planet(force.name)
         if home_planet_name then
             local surface = game.surfaces[home_planet_name]
-            if surface.valid and
+            if surface and surface.valid and
                storage.boss.entity == nil and
                force.get_evolution_factor(surface) > EVOLUTION_FACTOR_START_POINT
                 -- Accumulated Attack Points check                             

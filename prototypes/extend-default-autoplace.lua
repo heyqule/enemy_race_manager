@@ -19,6 +19,7 @@
 --
 
 local ERM = require("__enemyracemanager__/global")
+local ERM_SETTING_CONST = require("__enemyracemanager__/setting-constants")
 require("util")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local AutoplaceUtil = require("__enemyracemanager__/prototypes/enemy-autoplace")
@@ -48,7 +49,7 @@ if settings.startup['enemyracemanager-nauvis-enemy'].value == ERM.MOD_NAME then
     DebugHelper.print(serpent.block(nauvis_autocontrols))
 end
 
-if settings.startup['enemyracemanager-nauvis-enemy'].value ~= NAUVIS_MIXED then
+if settings.startup['enemyracemanager-nauvis-enemy'].value ~= ERM_SETTING_CONST.NAUVIS_MIXED then
         DebugHelper.print('ENEMY: Nauvis AutoControl IS NOT MIXED')
         return false
 end

@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 2026-07-16
+
+  Changes:
+    - [Army - Gun Cars] Increased movement speed from 60km/h to 70km/h.
+    - [Army - Rocket Car] Increased movement speed from 55km/h to 60km/h.
+    - [Army - Laser drone] Increased movement speed from 70km/h to 86km/h.
+    - [Emotional Attack] Changed its max group size to (Max Unit Supply / 2), 100 by default.
+    - Removed "+advanced_spaceship_repair", moved it to zerg / toss mods.
+    - Bridge builder can no longer build on out of map tile. 
+
+  Bugfixes:
+    - Fixed aerial support group get disbanded permaturely in 2.1.11 build.
+    - Re-added "zerm_postprocess" as dependency, it was accidentally removed.    
+
+  Scripting:
+    - Added the following mod-data to disabling bridge building mechanic on a planet / surface by other mods.
+    - data.raw['mod-data']['ERM_bridge_ignore_surfaces'].data['your_planet_prototype_name'] = true.
+    - additional details in planet modding doc: https://github.com/heyqule/enemy_race_manager/blob/main/doc/planet_modding.md
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 2026-07-08
 
@@ -8,7 +29,7 @@ Date: 2026-07-08
     - [Corrupted robot - Destroyer] Unit supply: 2 -> 3.
     - [Army - Suicide Drones] slightly reduced ingredients.
     - Added 1x option to [Attack Point] Threshold Multiplier in map setting. 
-    - Added when [Attack Point] threshold multiplier changed mid-game, it recalculate new threshold immediately.
+    - When [Attack Point] threshold multiplier changed mid-game, it recalculates new threshold immediately.
     - changed space-age mods and advanced_spaceship_repair mod from "optional" to "recommended".
 
   Bugfixes:

@@ -15,6 +15,7 @@ if script.active_mods["alien-biomes"] then
 end
 
 local planet_tiles = prototypes.mod_data[ERM.MOD_DATA_SURFACE_BRIDGE_TILES].data
+local ignore_planets = prototypes.mod_data[ERM.MOD_DATA_BRIDGE_IGNORE_SURFACES].data
 
 --- GPT assisted function.
 local function queue_landfill_bridge(surface, posA, posB)
@@ -55,6 +56,7 @@ local function queue_landfill_bridge(surface, posA, posB)
 
             local tile = surface.get_tile(x, y)
             if tile.collides_with("water_tile") and 
+               not tile.collides_with("out_of_map") and 
                not Position.inside(
                    {
                        x=x,
@@ -80,6 +82,9 @@ local function queue_landfill_bridge(surface, posA, posB)
 end
 
 function BridgeBuilder.exec(surface, from_position, to_position)
+    if ignore_planets[surface.name] and not storage.home_planets[surface.name] then
+        return
+    end
     queue_landfill_bridge(surface, from_position, to_position)
 end
 
@@ -100,6 +105,18 @@ function BridgeBuilder.get_tile(surface)
     end
     --- Default sand tile
     return spawn_tile
+end
+
+function BridgeBuilder.index_home_planets()
+    for _, race_settings in pairs(storage.race_settings) do
+        if race_settings.home_planet then
+            storage.home_planets[race_settings.home_planet] = true     
+        end
+    end
+end
+
+function BridgeBuilder.get_ignore_planets()
+    return ignore_planets
 end
 
 return BridgeBuilder

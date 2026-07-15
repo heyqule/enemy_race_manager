@@ -15,6 +15,7 @@ if ERM.TEST_MODE and script.active_mods["factorio-test"] then
         "tests/scouts",
         "tests/surface_manager",
         "tests/environmental_attacks",
+        "tests/bridge_builder"
     }
 
     if script.active_mods["erm_zerg"] and script.active_mods["erm_toss"] then
