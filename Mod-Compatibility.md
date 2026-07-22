@@ -1,4 +1,4 @@
-#### Compatilbility for 2.0
+#### Compatilbility for 2.1
 
 For 1.1, see https://github.com/heyqule/enemy_race_manager/blob/1.22.6/Mod-Compatibility.md
 
@@ -6,10 +6,22 @@ Overhaul mod compatibility will be done when they become available.
 
 #### Armoured Biters & Explosive Biters & Cold Biters & Toxic Biters
 
-- All biters, worms and spawners supports quality spawning.
-- They join default enemy force, enemy.
+- All biters, worms and spawners supports ERM's quality spawning.
+- They join default "enemy" force.
 - The biter mods' multiplier stacks with ERM's multiplier. I suggest leave them alone and adjust the multiplier in ERM.
-- ERM branded enemies have higher priority in autoplace control.  These spawners may not show up if there is conflict in the planet autoplace.
+- ERM branded enemies should have higher priority in autoplace control.  These spawners may not show up if there is conflict in the planet's autoplace.
+- ERM does NOT respect their "disable vanilla enemy" setting as ERM uses its own copy of vanilla enemies.  You can not disable vanilla biter and only use 3rd party biters on nauvis with ERM.
+
+#### Explosive Biters' planet changes 
+- Its units are no longer included in ERM custom attack group when its planet settings is set to spawn at vulcanus only 
+- Its spawners are no longer included in ERM's vanilla biter autoplace when its planet settings is set to spawn at vulcanus only.
+- Demolisher can kill explosive biters and drive up "enemy" force's attack points.
+- When "both" or "nauvis" option is used, they share same custom attack group data and autoplace control as regular biters. Its custom autoplace changes are ignored.
+
+#### Cold Biters' planet changes
+- Its units are no longer included in ERM custom attack group when its planet settings is set to spawn at aquilo only
+- Its spawners are no longer included in ERM's vanilla biter autoplace when its planet settings is set to spawn at aquilo only.
+- When "both" or "nauvis" option is used, they share same custom attack group data and autoplace control as regular biters.  Its custom autoplace changes are ignored.
 
 #### Bob Enemies
 - Bob enemies can't spawn under ERM as it replace normal biter spawner & worm during runtime.
@@ -31,8 +43,12 @@ Overhaul mod compatibility will be done when they become available.
 ### Space Exploration
 - You need to download https://mods.factorio.com/mod/erm_se
 
+### Even Pickier Dollies
+- Can not move boss radars.
+
 #### Super Weapon Attack Points / Counter Attack supported mods
 - Ion Cannon [space-age]
+
 
 
 ## MODS with issues, but not considered conflicted

@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.6
+Date: 2026-07-22
+
+  Changes:
+    - [Frost Biters] When its planet setting is set to aquilo only:
+    - frost biters are no longer added to custom attack groups.
+    - frost biters are no longer added to ERM's biter autoplace. 
+    - [Explosive Biters] When its planet setting is set to vulcanus only:
+    - explosive biters are no longer add to custom attack groups.
+    - explosive biters are no longer added to ERM's biter autoplace.
+    - Updated Explosive/Cold/Toxic biter optional dependency to latest version.
+    - Added additional details in Mod Compatibility doc.  https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md 
+    
+  Bugfixes:
+    - Fixed an issue when picking a custom attack group on home planet.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.5
 Date: 2026-07-16
 

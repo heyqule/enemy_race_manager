@@ -52,11 +52,14 @@ function makeLevelTurrets(level, type, distance)
 
     ERM_UnitHelper.modify_biter_damage(turret, level)
 
-    turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace( {
-        probability_expression = "enemy_autoplace_base("..distance..", 90002)",
-        force = ERM.FORCE_NAME,
-        control = ERM.AUTOCONTROL_NAME
-    })
+    if settings.startup["fb-spawn-planet"].value ~= 'aquilo' then
+        turret["autoplace"] = enemy_autoplace.enemy_worm_autoplace( {
+            probability_expression = "enemy_autoplace_base("..distance..", 90002)",
+            force = ERM.FORCE_NAME,
+            control = ERM.AUTOCONTROL_NAME
+        })
+    end
+
     turret["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-cold_biter_map_color"].value)
 
     return turret

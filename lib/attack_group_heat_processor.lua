@@ -204,7 +204,7 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
                     limit = 1
                 }
                 if count == 1 then
-                    return_surface = storage.race_settings[force_name].home_planet
+                    return_surface = surface
                 end
             end
         end

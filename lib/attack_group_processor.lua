@@ -1009,10 +1009,11 @@ function AttackGroupProcessor.destroy_invalid_group(erm_unit_group, start_positi
         local refund_points = AttackGroupProcessor.destroy_members(group)
 
         --- Hardcoded chance to spawn half size aerial group
-        if RaceSettingsHelper.has_flying_unit(force_name) and 
-          (RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and 
-          group_size >= MIN_GROUP_SIZE) or 
-          ERM.TEST_MODE 
+        if RaceSettingsHelper.has_flying_unit(force_name) and
+            ((RaceSettingsHelper.can_spawn(SPAWN_CHANCE) and 
+              group_size >= MIN_GROUP_SIZE) or
+              ERM.TEST_MODE) and 
+          not storage.test_bypass_backup_air_group
         then
             local group_type = AttackGroupProcessor.GROUP_TYPE_FLYING
             local target_force =  AttackGroupHeatProcessor.pick_target(force_name)

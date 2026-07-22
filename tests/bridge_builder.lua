@@ -7,6 +7,9 @@ local TestShared = require("shared")
 local BridgeBuilder = require("__enemyracemanager__/lib/bridge_builder")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
+local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackGroupProcessor = require("__enemyracemanager__/lib/attack_group_processor")
+local QualityProcessor = require('lib/quality_processor')
 
 
 before_each(function()
@@ -16,6 +19,21 @@ end)
 after_each(function()
     TestShared.reset_the_factory()
 end)
+
+local command_center = "enemy--biter-spawner--5"
+local force_name = "enemy"
+local function spawn_cc(surface, position)
+    surface.request_to_generate_chunks({ position.x / 32, position.y / 32 }, 2)
+    surface.force_generate_chunk_requests()
+    storage.skip_quality_rolling = true
+    local entity = surface.create_entity({ 
+        name = command_center, 
+        force = force_name, 
+        position = position,
+        raise_built = true
+    })
+    return entity
+end
 
 describe("Bridge Builder", function()
     it("Can create bridge", function()
@@ -72,5 +90,52 @@ describe("Bridge Builder", function()
             done()
         end)
     end)
-    
+
+    it("Test whether they add new bridge if bridge is block by wall", function()
+        async(7800)
+        local surface = game.surfaces[1]
+        -- Require generated chunks
+        surface.request_to_generate_chunks({ 0, 0 }, 20)
+        surface.force_generate_chunk_requests()
+
+        TestShared.buildBaseNoOpen()
+        local rocket_launcher = surface.create_entity(
+                { name = "erm-rocket-silo-test",
+                  force = "player",
+                  position = { 0, 0 }
+                })
+        local entity = spawn_cc(surface, { x=0, y=-250 })
+        local entity3 = spawn_cc(surface, { x=250, y=-250 })
+        AttackGroupBeaconProcessor.init_index()
+
+        
+        storage.test_bypass_backup_air_group = true
+        AttackGroupProcessor.generate_group(game.forces["enemy"], 5)
+
+        after_ticks(1500, function()
+            assert( surface.get_tile(0, -180).name == 'sand-1', "Should able to build bridge")
+            for x = -20, 20, 1 do
+                surface.create_entity { name = "stone-wall", position = { x, -175 }, force="player" }
+                surface.create_entity { name = "stone-wall", position = { x, -174 }, force="player" }
+            end
+            entity.destroy()
+        end)
+
+        
+        after_ticks(1800,function()
+            storage.test_bypass_backup_air_group = true
+            AttackGroupProcessor.generate_group(game.forces["enemy"], 100, {spawn_location={x=260, y=-260}})
+        end)
+        
+        after_ticks(7800, function()
+            local unit_count = surface.count_entities_filtered({
+                type = "unit",
+                position = {0, 0},
+                radius = 32,
+                limit = 10
+            })
+            assert( unit_count > 5, "Units should be there.")
+            done()
+        end)
+    end)
 end)

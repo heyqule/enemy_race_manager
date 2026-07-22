@@ -3,7 +3,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local DebugHelper = require("__enemyracemanager__/lib/debug_helper")
 
 local modify_race_setting = function()
-    if script.active_mods["Cold_biters"] then
+    if script.active_mods["Cold_biters"] and settings.startup["fb-spawn-planet"].value ~= 'aquilo' then
         local race_settings = remote.call("enemyracemanager", "get_race", ERM.MOD_NAME)
 
         DebugHelper.print("Cold_biters is active")

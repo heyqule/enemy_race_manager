@@ -67,11 +67,13 @@ function makeLevelSpawners(level, type)
     end)()
 
     spawner["result_units"] = result_units
-    spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
-        probability_expression = "enemy_autoplace_base(0, 90005)",
-        force = ERM.FORCE_NAME,
-        control = ERM.AUTOCONTROL_NAME
-    })
+    if settings.startup["eb-spawn-planet"].value ~= 'vulcanus' then
+        spawner["autoplace"] = enemy_autoplace.enemy_spawner_autoplace({
+            probability_expression = "enemy_autoplace_base(0, 90005)",
+            force = ERM.FORCE_NAME,
+            control = ERM.AUTOCONTROL_NAME
+        }) 
+    end
     spawner["map_color"] = ERM_UnitHelper.format_map_color(settings.startup["enemyracemanager-explosive_biter_map_color"].value)
     return spawner
 end
