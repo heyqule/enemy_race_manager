@@ -7,6 +7,7 @@
 local ERM = require("__enemyracemanager__/global")
 local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ERM_UnitHelper = require("__enemyracemanager__/lib/rig/unit_helper")
+local Table = require("__erm_libs__/stdlib/table")
 
 require("util")
 
@@ -29,6 +30,15 @@ local incremental_electric_resistance = 70
 local base_cold_resistance = 10
 local incremental_cold_resistance = 60
 
+local buildable_entities_changeable = {
+    ["biter-spawner"] = true,
+    ["spitter-spawner"] = true,
+    ["small-worm-turret"] = true,
+    ["medium-worm-turret"] = true,
+    ["big-worm-turret"] = true,
+    ["behemoth-worm-turret"] = true,
+}
+
 function makeLevelEnemy(level, type, health_cut_ratio)
     health_cut_ratio = health_cut_ratio or 1
     local biter = util.table.deepcopy(data.raw["unit"][type])
@@ -40,8 +50,16 @@ function makeLevelEnemy(level, type, health_cut_ratio)
     end
 
     if biter["buildable_entities"] then
-        local buildable_entities = ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, biter["buildable_entities"], level)
-        biter["buildable_entities"] = buildable_entities
+        local change_list = {}
+        local non_change_list = {}
+        for _, entity_name in pairs(biter["buildable_entities"]) do
+            if buildable_entities_changeable[entity_name] then
+                table.insert(change_list, ERM_UnitHelper.get_buildable_entities(ERM.MOD_NAME, {entity_name}, level)[1])
+            else
+                table.insert(non_change_list, entity_name)
+            end
+        end
+        biter["buildable_entities"] = Table.flatten(Table.array_combine(change_list, non_change_list))
     end
     
     biter["localised_name"] = { "entity-name." .. ERM.MOD_NAME .. "--" .. biter["name"], GlobalConfig.QUALITY_MAPPING[level] }
