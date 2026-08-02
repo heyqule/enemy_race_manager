@@ -1,6 +1,10 @@
 # Planet Modding for ERM
 ERM by default run on all planets with compatible "enemy" autoplaces. When new enemies that share same "enemy" force are added to a new planet, ERM logics are likely to run on that new planet.
 
+Compatible autoplaces mean that any autoplace name pattern that matches the following.
+- enemy-base
+- enemy_base
+
 When a planet doesn't use compatible "enemy" autoplaces, it's automatically excluded from running ERM logics.
 
 ## Exclude a planet from ERM
