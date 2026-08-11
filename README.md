@@ -20,6 +20,7 @@ Discord:  [https://discord.gg/BwWXygyEyQ](https://discord.gg/BwWXygyEyQ)
 - Added steering attribute for units.  When they group, they can form some interesting formations.
 - Removed "Custom Base Expansion" logics because base game logic is very good in 2.1
 - Custom attack group works with  "unit supply" changes.
+- Boss rewards science pots, instead materials.
 
 
 ##### Notices
@@ -48,6 +49,7 @@ Player Controllable Units:
 - Build multiple layers of turrets and walls in early game.  Don't bother repairing without automated bot repairs.  Replace the destroyed turret and wall after they destroyed.
 - Build army! Build army! Build army!
 - [Advanced Spaceship Repair](https://mods.factorio.com/mod/advanced_spaceship_repair) helps to repair entities in a batch on spaceship during a space battle.  It's an recommended dependency and it requires space-age.
+- Go through in-game ERM tips and tricks to understand how this mod works.
 
 Do you want to create your new race? Please refer to this doc [New-Race-DEV-README.md](https://github.com/heyqule/enemy_race_manager/blob/main/doc/2.0-New-Race-Design.md) and join my discord for additional help.
 
@@ -124,6 +126,7 @@ Using PSI radar in enemy's home world will reveal their master mind.  Are you ab
 ### Known Issues
 
 * Not support peaceful mode. :)
+* * Biter's custom attack group may spawn on 3rd party enemy nests if they have added to "enemy" force.
 
 ### Mod Compatibility
 Please see https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md for full compatibility

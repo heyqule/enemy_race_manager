@@ -172,14 +172,13 @@ local attack_rapid_expand = function(data)
                     ignore_planner = true,
                 })
                 group.start_moving()
-                storage.test_group = group
             end
         end
     end
 end
 
 local attack_siege = function(data)
-    if not valid_data_object(data) or not data.builder_name then
+    if not valid_data_object(data) then
         return
     end
     
@@ -193,20 +192,24 @@ local attack_siege = function(data)
 
     if spawn_position and attack_position  then
         local max_group_size = get_emotion_max_group_size()
+
         local builders = {}
-        local builder_number = math.floor(max_group_size * 0.2)
-        local builder_limit = 20
-        local builder_name = force.name..'--'..data.builder_name..'--1'
-        if builder_number > builder_limit then
-            builder_number = builder_limit
-        end
-        for i = 0, builder_number, 1 do
-            local new_spawn_position = surface.find_non_colliding_position(collision_finder, spawn_position, 32, 2)                    
-            local entity = surface.create_entity({
-                name = builder_name,
-                position = new_spawn_position,
-                force = force
-            })
+        local builder_name = RaceSettingsHelper.get_builder(force.name)
+        if builder_name then
+            local builder_number = math.floor(max_group_size * 0.2)
+            local builder_limit = 20
+            local builder_name = force.name..'--'..builder_name..'--1'
+            if builder_number > builder_limit then
+                builder_number = builder_limit
+            end
+            for i = 0, builder_number, 1 do
+                local new_spawn_position = surface.find_non_colliding_position(collision_finder, spawn_position, 32, 2)
+                local entity = surface.create_entity({
+                    name = builder_name,
+                    position = new_spawn_position,
+                    force = force
+                })
+            end
         end
 
         local selected_units = surface.find_entities_filtered {
@@ -391,12 +394,12 @@ end
 
 -- Helper function to compare darkness value based on emotion constants
 function EmotionProcessor.compare_darkness(comparision_type, surface_darkness, darkness_value)
-    if comparision_type == EmotionConstants.DARK then
-        return surface_darkness < darkness_value
+    if comparision_type == EmotionConstants.ALL_DAY then
+        return true
     elseif comparision_type == EmotionConstants.LIGHT then
         return surface_darkness > darkness_value
-    elseif comparision_type == EmotionConstants.ALL_DAY then
-        return true
+    elseif comparision_type == EmotionConstants.DARK then
+        return surface_darkness < darkness_value
     end
     return false
 end
@@ -437,23 +440,24 @@ function EmotionProcessor.switch(data)
     else
         race_emo_data = RaceSettingsHelper.get_emotion_data(force.name)
     end
-    
+
     if not emotion_data.current_emo then
+        emotion_data.current_emo = EmotionConstants.EMO_PEACEFUL
         for _, emotion_entry in ipairs(race_emo_data) do
             local emo_type, spawn_chance, emo_compare,
             darkness_value, cooldown, group_size_multiplier = table.unpack(emotion_entry)
 
             -- Check if emotion is valid based on darkness comparison
-            if RaceSettingsHelper.can_spawn(spawn_chance) or emo_type == emotion_data.current_emo and
+            if RaceSettingsHelper.can_spawn(spawn_chance) and
                     EmotionProcessor.compare_darkness(emo_compare, surface_darkness, darkness_value)
             then
                 emotion_data.current_emo = emo_type
                 emotion_data.cooldown = cooldown
                 emotion_data.group_size_multiplier = group_size_multiplier
-            else
-                emotion_data.current_emo = EmotionConstants.EMO_PEACEFUL
+                break
             end
         end
+        DebugHelper.print(force.name..' switched to  '..emotion_data.current_emo)
     end
 
 
@@ -466,14 +470,14 @@ function EmotionProcessor.switch(data)
 end
 
 function EmotionProcessor.homeplanet_switches()
-    for _, force in pairs(ForceHelper.get_enemy_forces()) do
+    for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
+        local force = game.forces[force_name]
         local home_planet_name = RaceSettingsHelper.get_home_planet(force.name)
         if home_planet_name then
             local surface = game.surfaces[home_planet_name]
             if surface and surface.valid and
                storage.boss.entity == nil and
                force.get_evolution_factor(surface) > EVOLUTION_FACTOR_START_POINT
-                -- Accumulated Attack Points check                             
             then
                 EmotionProcessor.switch({
                     surface = surface,
@@ -517,13 +521,29 @@ function EmotionProcessor.set_peaceful_on(surface)
     end 
 end
 
+function EmotionProcessor.get_emotion_status(force_name)
+    local status
+    local emotion_data = storage.emotion[force_name]
+    if emotion_data and emotion_data.current_emo then
+        status = EmotionConstants.LABELS[emotion_data.current_emo]
+    else
+        status = EmotionConstants.LABELS[EmotionConstants.EMO_PEACEFUL]
+    end
+    return status
+end
+
 function EmotionProcessor.reset_globals()
     storage.emotion = {}
 end
 
 EmotionProcessor.on_nth_tick = {
+    --- 15 seconds
     [897] =  function(event)
         EmotionProcessor.queue()
+    end,
+    --- 10 minutes for homeplanet switches
+    [36007] = function(event)
+        EmotionProcessor.homeplanet_switches()
     end
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "enemyracemanager",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "date": "2021-07-10",
   "title": "Enemy Race Manager",
   "author": "heyqule",
@@ -13,7 +13,7 @@
     "+recycler >= 2.1.0",
     "enemyracemanager_assets >= 2.1.0",
     "erm_unit_control >= 2.1.0",
-    "erm_libs >= 2.1.1",
+    "erm_libs >= 2.1.2",
     "advanced_target_priorities >= 2.1.0",
     "~zerm_postprocess >= 2.1.0",
     "?ArmouredBiters >= 1.2.1",

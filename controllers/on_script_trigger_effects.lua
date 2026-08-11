@@ -103,6 +103,7 @@ local script_functions = {
     --- Boss related
     [ERM.TRIGGER_BOSS_DIES] = function(args)
         storage.boss.victory = true
+        BossProcessor.trigger_boss_research()
     end,
     [ERM.TRIGGER_BOSS_ASSIST_SPAWNED] = function(args)
         BossProcessor.assisted_spawner_spawns(args)

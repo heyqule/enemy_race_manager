@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.8
+Date: 2026-08-10
+
+  Features:
+    - Added support to research a technology after beating a boss for each tier. The tech can have up to 5 levels.
+    - Enabled emotional damage system outside of boss mode.  It rolls on enemy's home planet every 10 minutes after its evolution reaches 35%.
+    - Added emotion status to ERM enemy status UI.
+
+  Changes:
+    - Boss reward now gives unlimited science pots, instead of intermediate products.  Promethium science is not included.         
+    - Changed each chest to last 15 minutes, down from 1 hr.
+    - late game pots has lower chance to spawn than early game pots.  Each race has different spawn chances.
+    - Check each of the ERM enemy mod changelog for additional details.
+
+  Bugfixes:
+    - Fixed an issue when a player clicks "surrender" button before the boss spawn.    
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.7
 Date: 2026-07-23
 
@@ -18,7 +36,7 @@ Date: 2026-07-22
     - explosive biters are no longer added to ERM's biter autoplace.
     - Updated Explosive/Cold/Toxic biter optional dependency to latest version.
     - Added additional details in Mod Compatibility doc.  https://github.com/heyqule/enemy_race_manager/blob/main/Mod-Compatibility.md 
-    
+
   Bugfixes:
     - Fixed an issue when picking a custom attack group on home planet.
 

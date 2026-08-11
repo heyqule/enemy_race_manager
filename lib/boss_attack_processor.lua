@@ -766,7 +766,6 @@ function BossAttackProcessor.exec_phase()
     data['is_boss'] = true
     data['target_force'] = boss_data.radar.force
     data['attack_position'] = boss_data.radar_position
-    data['builder_name'] = RaceSettingsHelper.get_builder(boss_data.force.name)
     
     if boss_entity.get_health_ratio() < 0.1 then
         data['current_emo'] = EmotionConstants.EMO_RUSH

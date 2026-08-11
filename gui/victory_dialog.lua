@@ -29,7 +29,7 @@ function BossVictoryDialog.show(player, race_setting)
     local title_flow = dialog.add { type = "flow", name = "title_flow", direction = "horizontal" }
     title_flow.style.minimal_width = BossVictoryDialog.window_width
 
-    local title = title_flow.add { type = "label", name = "title", caption = { "gui.boss_victory_title", race_setting.race }, style = "caption_label" }
+    local title = title_flow.add { type = "label", name = "title", caption = { "gui.boss_victory_title", race_setting.label }, style = "caption_label" }
 
     local main_flow = dialog.add { type = "flow", direction = "vertical" }
     local description = main_flow.add { type = "label", name = "description", caption = { "gui.boss_victory_description" } }

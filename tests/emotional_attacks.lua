@@ -96,7 +96,6 @@ describe("Emotional Attacks", function()
             surface = surface,
             force = force,
             current_emo = EmotionConstants.EMO_SIEGE,
-            builder_name = storage.race_settings[zerg_force].builder,
             cooldown = 10 * minute,
         })
 

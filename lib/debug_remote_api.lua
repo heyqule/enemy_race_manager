@@ -190,8 +190,8 @@ end
 
 --- Usage: remote.call("enemyracemanager_debug", "win_boss")
 function Debug_RemoteAPI.win_boss()
-    if storage.boss then
-        storage.boss.victory = true
+    if storage.boss and storage.boss.entity and storage.boss.entity.valid then
+        storage.boss.entity.die('player')
     end
 end
 

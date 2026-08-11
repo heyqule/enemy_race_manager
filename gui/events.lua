@@ -279,7 +279,9 @@ Click.boss_radar_goto_surrender = function(event)
     if player and player.valid and boss_data and boss_data.radar then
         storage.boss.surrendered_method = 'gui.boss_detail_data_custom_note_ui_surrender'
         storage.boss.surrendered_player = player.name
-        game.print({"gui.boss_radar_surrender_message", player.name, storage.race_settings[boss_data.force.name].label})
+        if boss_data.force then
+            game.print({"gui.boss_radar_surrender_message", player.name, storage.race_settings[boss_data.force.name].label})
+        end
         boss_data.radar.die(boss_data.force)
     end
 end

@@ -19,8 +19,15 @@ local EmotionConstants = {
     EMO_DOUBLE_TAP = 4,
     --- Stream units from single spawn to single attack location at high frequency.
     EMO_RUSH = 5,
-    
 
+    LABELS = {
+        {"gui.label-emotion-peaceful"},
+        {"gui.label-emotion-rapid-expand"},
+        {"gui.label-emotion-siege"},
+        {"gui.label-emotion-double-tap"},
+        {"gui.label-emotion-rush"},
+    },
+    
     ALL_DAY = 1,
     LIGHT = 2,
     DARK = 3,

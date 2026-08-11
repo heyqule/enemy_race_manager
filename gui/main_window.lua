@@ -9,6 +9,7 @@ local GlobalConfig = require("__enemyracemanager__/lib/global_config")
 local ForceHelper = require("__enemyracemanager__/lib/helper/force_helper")
 local SurfaceProcessor = require("__enemyracemanager__/lib/surface_processor")
 local QualityProcessor = require("__enemyracemanager__/lib/quality_processor")
+local EmotionProcessor = require("__enemyracemanager__/lib/emotion_processor")
 
 ---- Main Window
 local MainWindow = {
@@ -79,7 +80,7 @@ function MainWindow.show(player)
         scroll.add { type = "label", name = "surface_name", caption = { "gui.not_on_planet" }, style = "caption_label" }
     end
 
-    local item_table = scroll.add { type = "table", column_count = 7, style = "bordered_table" }
+    local item_table = scroll.add { type = "table", column_count = 8, style = "bordered_table" }
     item_table.style.horizontally_stretchable = false
 
     item_table.add { type = "label", caption = { "gui.race_column" } }
@@ -88,6 +89,7 @@ function MainWindow.show(player)
     item_table.add { type = "label", caption = { "gui.progress_column" } }
     item_table.add { type = "label", caption = { "gui.attack_column" } }
     item_table.add { type = "label", caption = { "gui.total_attack_column" } }
+    item_table.add { type = "label", caption = { "gui.emotion_column" }, tooltip = {"gui.emotion_column_tooltip"} }
     item_table.add { type = "label", caption = { "gui.action_column" } }
 
     for name, race_setting in pairs(storage.race_settings) do
@@ -99,6 +101,7 @@ function MainWindow.show(player)
             item_table.add { type = "label", caption = (points / 100) .. "%" }
             item_table.add { type = "label", caption = race_setting.attack_meter .. "/" .. race_setting.next_attack_threshold }
             item_table.add { type = "label", caption = race_setting.attack_meter_total }
+            item_table.add { type = "label", caption = EmotionProcessor.get_emotion_status(race_setting.race) }
             local action_flow = item_table.add { type = "flow", name = name .. "_flow", direction = "vertical" }
             action_flow.add { type = "button", name = race_setting.race .. "/detail_action", tags={filter_pattern=".*/detail_action"}, caption = { "gui.detail_action" }, tooltip = { "gui.detail_action_tooltip" } }
         end

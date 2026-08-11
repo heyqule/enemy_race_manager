@@ -48,11 +48,13 @@ function SurfaceProcessor.register_enemies(surface)
 
                     if index and ForceHelper.is_enemy_force(precheck_enemy_race) then
                         enemy_race = precheck_enemy_race
+                    elseif key == 'gleba_enemy_base' then
+                        enemy_race = ERM.GLEBA_FORCE_NAME
                     else
                         enemy_race = ERM.MOD_NAME
                     end
 
-                    if enemy_race then
+                    if enemy_race and not races_by_name[enemy_race] then
                         races_by_name[enemy_race] = true
                         table.insert(races_by_key, enemy_race)
                     end
@@ -61,14 +63,14 @@ function SurfaceProcessor.register_enemies(surface)
         end
     end
 
-    if table_size(races_by_key) then
-        storage.total_enemy_surfaces = storage.total_enemy_surfaces + 1
+    if table_size(races_by_name) > 0 then
         storage.enemy_surfaces[surface.name] = {
             surface = surface,
             races_by_name = races_by_name,
             races_by_key = races_by_key,
             size = table_size(races_by_key)
         }
+        storage.total_enemy_surfaces = table_size(storage.enemy_surfaces)
     end
 end
 

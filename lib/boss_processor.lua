@@ -732,4 +732,39 @@ function BossProcessor.controlled_segmented_unit_dies(event)
     end 
 end
 
+function BossProcessor.trigger_boss_research()
+    local boss_data = storage.boss
+    if not boss_data or 
+       not storage.race_settings[boss_data.force_name].boss_tech_upgrade_name or
+       (boss_data.radar and not boss_data.radar.valid) 
+    then
+        return
+    end
+
+    local force = boss_data.radar.force
+    local tech_name = storage.race_settings[boss_data.force_name].boss_tech_upgrade_name
+    
+    --- Retro check
+    if boss_data.boss_tier > 1 then
+        local retro_tech_name = tech_name..'-1'
+        local retro_tech = force.technologies[retro_tech_name]
+        if retro_tech and retro_tech.valid and not retro_tech.researched then
+            force.print({"gui.boss_missing_research"})
+            for i = 1, GlobalConfig.BOSS_MAX_TIERS, 1 do
+                local check_tech_name = tech_name..'-'..i
+                local tech = force.technologies[check_tech_name]
+                if tech and tech.valid and i < boss_data.boss_tier and not tech.researched then
+                    force.script_trigger_research(check_tech_name)
+                end
+            end
+        end 
+    end
+    
+    local target_tech_name = tech_name..'-'..boss_data.boss_tier
+    local tech = force.technologies[target_tech_name]
+    if tech and tech.valid and not tech.researched then
+        force.script_trigger_research(target_tech_name)
+    end
+end
+
 return BossProcessor

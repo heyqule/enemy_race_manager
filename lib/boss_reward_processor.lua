@@ -16,31 +16,19 @@ local BossRewardProcessor = {}
 local can_spawn = RaceSettingsHelper.can_spawn
 
 local default_rewards = {
-    "uranium-238",
-    "sulfuric-acid-barrel",
-    "plastic-bar",
-    "sulfur",
-    "steel-plate",
-    "solid-fuel",
-    "piercing-rounds-magazine",
-    "stone-wall",
-    "light-oil-barrel",
-    "petroleum-gas-barrel",
-    "copper-plate",
-    "iron-plate",
-    "stone-brick",
-    "crude-oil-barrel",
-    "iron-gear-wheel",
-    "iron-stick",
-    "electronic-circuit",
-    "lubricant-barrel",
-    "coal",
-    "explosives",
-    "battery",
-    --"rocket",
-    --"cannon-shell",
-    "concrete",
-    "express-transport-belt",
+    --- Science Pack name, spawn percentage, minimum chest appearance.
+    --- record with minimum chest appearance MUST roll first
+    {"cryogenic-science-pack", 15, 0},
+    {"agricultural-science-pack", 25, 0},
+    {"electromagnetic-science-pack", 25, 0},
+    {"metallurgic-science-pack", 25, 0},
+    {"space-science-pack", 33, 0},
+    {"utility-science-pack", 33, 0},
+    {"production-science-pack", 33, 0},
+    {"chemical-science-pack", 50, 0},
+    {"military-science-pack", 50, 0},
+    {"logistic-science-pack", 75, 0},
+    {"automation-science-pack", 100, 0},
 }
 
 -- Up to 8 infinity chests on each boss defeat
@@ -81,7 +69,7 @@ local reward_settings = {
 }
 
 -- Infinite chests stay for 1 hour.
-local expire_at = 60 * minute
+local expire_at = 20 * minute
 if ERM.TEST_MODE then
     expire_at = 1 * minute
 end
@@ -127,14 +115,30 @@ local spawn_chest = function(reward_setting, boss_data)
     return nil
 end
 
-local get_item_name = function(rewards_items_data)
-    return rewards_items_data[math.random(1, #rewards_items_data)]
+local DATA_NAME = 1
+local DATA_SPAWN_CHANCE = 2
+local DATA_MIN_APPEARANCE = 3
+
+local get_item_name = function(rewards_items_data, min_appearances)
+    for idx, entry in pairs(rewards_items_data) do
+        local name = entry[DATA_NAME]
+        if entry[DATA_MIN_APPEARANCE] > 0 and (not min_appearances[name] or  min_appearances[name] < entry[DATA_MIN_APPEARANCE]) then
+            if not min_appearances[name] then
+                min_appearances[name] = 0
+            end
+            min_appearances[name] = min_appearances[name] + 1
+            return name
+        elseif can_spawn(entry[DATA_SPAWN_CHANCE]) then
+            return name
+        end
+    end
 end
 
 function BossRewardProcessor.exec()
     local boss = storage.boss
     local reward_items_prototype = prototypes.mod_data[boss.force_name..'--boss-reward-data']
     local reward_items_data
+    local min_appearances = {}
     if reward_items_prototype and reward_items_prototype.data and reward_items_prototype.data.reward_data then
         reward_items_data = reward_items_prototype.data.reward_data
     else        
@@ -145,13 +149,11 @@ function BossRewardProcessor.exec()
         if (can_spawn(value["chance"][boss.boss_tier])) then
             local chest = spawn_chest(value, boss)
             if chest then
-                for i=1, 2, 1 do
-                    chest.set_infinity_container_filter(i, {
-                        name = get_item_name(reward_items_data),
-                        count = 12,
-                        mode = "exactly"
-                    })         
-                end
+                chest.set_infinity_container_filter(1, {
+                    name =  get_item_name(reward_items_data, min_appearances),
+                    count = 12,
+                    mode = "exactly"
+                })
                 chest.destructible = false
                 chest.minable_flag = false
                 chest.rotatable = false
