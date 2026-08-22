@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.9
+Date: 2026-08-21
+
+  Bugfixes:
+    - Fixed an issue on spawner decorative cache handling.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.8
 Date: 2026-08-10
 
@@ -9,7 +16,7 @@ Date: 2026-08-10
 
   Changes:
     - Boss reward now gives unlimited science pots, instead of intermediate products.  Promethium science is not included.         
-    - Changed each chest to last 15 minutes, down from 1 hr.
+    - Changed each chest to last 20 minutes, down from 1 hr.
     - late game pots has lower chance to spawn than early game pots.  Each race has different spawn chances.
     - Check each of the ERM enemy mod changelog for additional details.
 

@@ -319,10 +319,10 @@ local init_globals = function()
     -- https://wiki.factorio.com/Tutorial:Modding_tutorial/Gangsir#Multiplayer_and_desyncs
     storage.settings = storage.settings or {}
 
+    -- the following cache are built with post processor when version or config changes. 
     -- Use for decorative removal when building dies
-    storage.decorative_cache = storage.decorative_cache or {}
-    storage.unit_supply_cache = storage.unit_supply_cache or {}
-    
+    storage.decorative_cache = {}
+    storage.unit_supply_cache = {}
     
     storage.active_races = {}
     storage.active_races_names = {}
