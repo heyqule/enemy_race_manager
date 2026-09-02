@@ -121,19 +121,27 @@ end
 
 -- Calculate every minutes
 function AttackMeterProcessor.calculate_time_attack()
+    local race_settings_list = storage.race_settings
+    local enemy_surfaces = storage.enemy_surfaces
+    local game_surfaces =  game.surfaces
     for _, force in pairs(game.forces) do
         local force_name = force.name
         if ForceHelper.is_enemy_force(force) and GlobalConfig.race_is_erm_managed(force_name) then
-            for surface_name, surface_data in pairs(storage.enemy_surfaces) do
-                local surface_obj = game.surfaces[surface_name]
-                if GlobalConfig.time_base_attack_enabled() and
-                   RaceSettingsHelper.get_accumulated_attack_meter(force_name) > 100 and 
-                   surface_obj and
-                   surface_obj.valid and force.get_evolution_factor(surface_name) > 0.35 
-                then
-                    local extra_points = RaceSettingsHelper.get_next_attack_threshold(force_name) * (GlobalConfig.time_base_attack_points() / 100)
-                    RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(extra_points))
-                    break
+            local race_settings = race_settings_list[force_name]
+            if race_settings then
+                local next_attack_threshold = race_settings.next_attack_threshold
+                local attack_meter_total = race_settings.attack_meter_total
+                for surface_name, surface_data in pairs(enemy_surfaces) do
+                    local surface_obj = game_surfaces[surface_name]
+                    if GlobalConfig.time_base_attack_enabled() and
+                       attack_meter_total > 100 and
+                       surface_obj and
+                       surface_obj.valid and force.get_evolution_factor(surface_name) > 0.35
+                    then
+                        local extra_points = next_attack_threshold * (GlobalConfig.time_base_attack_points() / 100)
+                        RaceSettingsHelper.add_to_attack_meter(force_name, math.floor(extra_points))
+                        break
+                    end
                 end
             end
         end

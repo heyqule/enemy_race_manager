@@ -46,20 +46,25 @@ end
 
 --- Handle removing surface data
 AttackGroupHeatProcessor.remove_surface = function(surface_index)
+    local attack_heat = storage.attack_heat
+    local attack_heat_last_surface = storage.attack_heat_last_surface
     for active_race, _ in pairs(storage.active_races) do
-        if storage.attack_heat[active_race] and storage.attack_heat[active_race][surface_index] then
-            storage.attack_heat[active_race][surface_index] = nil
+        local race_heat = attack_heat[active_race]
+        if race_heat and race_heat[surface_index] then
+            race_heat[surface_index] = nil
             AttackGroupHeatProcessor.aggregate_heat(active_race)
-            storage.attack_heat_last_surface[active_race] = nil
+            attack_heat_last_surface[active_race] = nil
         end
     end
 end
 
 --- Handle removing player force data
 AttackGroupHeatProcessor.remove_force = function(attacker_index)
+    local attack_heat = storage.attack_heat
     for active_race, _ in pairs(storage.active_races) do
-        if storage.attack_heat[active_race] then
-            for _, surface_data in pairs(storage.attack_heat[active_race]) do
+        local race_heat = attack_heat[active_race]
+        if race_heat then
+            for _, surface_data in pairs(race_heat) do
                 if surface_data[attacker_index] then
                     surface_data[attacker_index] = nil
                 end
@@ -208,14 +213,15 @@ AttackGroupHeatProcessor.pick_surface = function(force_name, target_force, ask_f
                 end
             end
         end
-
+        
         if not return_surface and ask_friend then
             -- Transfer all attack points to a friend that can attack.
-            print('testing friend')
+            local attack_heat = storage.attack_heat
             for friend_force_name, race_surface_data in pairs(storage.attack_heat_by_surfaces) do
+                local friend_heat = attack_heat[friend_force_name]
                 for surface_index, surface in pairs(race_surface_data) do
                     if surface and surface.has_attack_beacon and
-                            storage.attack_heat[friend_force_name][surface_index] ~= nil
+                            friend_heat and friend_heat[surface_index] ~= nil
                     then
                         RaceSettingsHelper.add_to_attack_meter(friend_force_name, RaceSettingsHelper.get_next_attack_threshold(force_name), true)
                         RaceSettingsHelper.add_to_attack_meter(force_name, RaceSettingsHelper.get_next_attack_threshold(force_name) * -1, true)

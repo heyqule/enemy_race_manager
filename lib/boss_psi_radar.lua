@@ -209,8 +209,9 @@ end
 
 function BossPsiRadar.find_spawn_location(radar)
     local found = false
+    local spawn_beacons = storage.boss.spawn_beacons
     for i = 1, 5, 1 do
-        for _, beacon in pairs(storage.boss.spawn_beacons) do
+        for _, beacon in pairs(spawn_beacons) do
             local can_spawn = UtilHelper.can_spawn(33)
             if can_spawn then
                 if BossProcessor.exec(radar, beacon.position) then

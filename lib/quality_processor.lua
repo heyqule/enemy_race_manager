@@ -426,10 +426,11 @@ function QualityProcessor.reset_all_progress()
 end
 
 function QualityProcessor.remove_surface(surface_name)
-    for fname, surfaces in pairs(storage.quality_on_planet) do
+    local quality_on_planet = storage.quality_on_planet
+    for fname, surfaces in pairs(quality_on_planet) do
         for sname, surface in pairs(surfaces) do
             if sname == surface_name then
-                storage.quality_on_planet[fname][sname] = nil
+                surfaces[sname] = nil
             end
         end
     end

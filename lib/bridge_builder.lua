@@ -108,9 +108,10 @@ function BridgeBuilder.get_tile(surface)
 end
 
 function BridgeBuilder.index_home_planets()
+    local home_planets = storage.home_planets
     for _, race_settings in pairs(storage.race_settings) do
         if race_settings.home_planet then
-            storage.home_planets[race_settings.home_planet] = true     
+            home_planets[race_settings.home_planet] = true
         end
     end
 end

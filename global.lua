@@ -19,7 +19,9 @@ local ERM = {
     --- Enable this flag to enable debug features
     DEBUG_MODE = false,
     --- Enable this flag when running tests.  It forces some chance based logics to run.
-    TEST_MODE = false,
+    --- Double check mod settings, based on values from mods/enemyracemanager/settings-updates.lua:15.  
+    --- Incorrect settings will fail tests.
+    TEST_MODE = false ,
     --- ENABLE Lengthy test. Typical need 10s+ to run.
     ENABLE_LENGTHY_TESTS = false,
     --- For debugging beacons

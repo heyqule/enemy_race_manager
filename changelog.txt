@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 2026-0?-??
+  
+  Changes:
+    - Code optimizations.
+
+  Bugfixes:
+    - Fixed a surface.find_non_colliding_position issue in emotion processor.
+    - Fixed an issue which the scout may not spawn under certain planet conditions.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 2026-08-21
 

@@ -281,7 +281,11 @@ local attack_double_tap = function(data)
             
         }
 
-        local new_spawn_position = surface.find_non_colliding_position(collision_finder, spawn_position, 32, 2)
+        local new_spawn_position = surface.find_non_colliding_position(collision_finder, spawn_position, 48, 2)
+        if not new_spawn_position then
+            return
+        end
+        
         local group = surface.create_unit_group({position = new_spawn_position,force = force})
         local group_has_unit = false
         if next(selected_units) then
