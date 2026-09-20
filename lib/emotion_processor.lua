@@ -473,23 +473,26 @@ function EmotionProcessor.switch(data)
     storage.emotion[force.name] = emotion_data
 end
 
-function EmotionProcessor.homeplanet_switches()
-    for _, force_name in pairs(ForceHelper.get_enemy_forces()) do
-        local force = game.forces[force_name]
-        local home_planet_name = RaceSettingsHelper.get_home_planet(force.name)
-        if home_planet_name then
-            local surface = game.surfaces[home_planet_name]
-            if surface and surface.valid and
-               storage.boss.entity == nil and
-               force.get_evolution_factor(surface) > EVOLUTION_FACTOR_START_POINT
-            then
-                EmotionProcessor.switch({
-                    surface = surface,
-                    force = force,
-                    is_boss = false,
-                })
-            end
-        end
+function EmotionProcessor.homeplanet_switches(surface)
+    if not surface or not surface.valid then
+        return
+    end
+    
+    local force_name = storage.home_planets[surface.name]
+    if not force_name then
+        return
+    end
+    
+    local force = game.forces[force_name]
+    if force and
+       storage.boss.entity == nil and
+       force.get_evolution_factor(surface) > EVOLUTION_FACTOR_START_POINT
+    then
+        EmotionProcessor.switch({
+            surface = surface,
+            force = force,
+            is_boss = false,
+        })
     end
 end
 
@@ -540,15 +543,17 @@ function EmotionProcessor.reset_globals()
     storage.emotion = {}
 end
 
+EmotionProcessor.events = {
+    [defines.events.on_next_day_started] = function(event)
+        EmotionProcessor.homeplanet_switches(event.surface)
+    end
+}
+
 EmotionProcessor.on_nth_tick = {
     --- 15 seconds
     [897] =  function(event)
         EmotionProcessor.queue()
     end,
-    --- 10 minutes for homeplanet switches
-    [36007] = function(event)
-        EmotionProcessor.homeplanet_switches()
-    end
 }
 
 return EmotionProcessor
