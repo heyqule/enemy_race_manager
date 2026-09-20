@@ -619,7 +619,8 @@ function BossProcessor.heartbeat()
     spawn_idle_attack(boss)
     
     local performed_attacks = 1
-    for index, last_hp in pairs(boss.attack_last_hp) do
+    for index = 1, #boss.attack_last_hp do
+        local last_hp = boss.attack_last_hp[index]
         if last_hp - boss.entity.health > boss.defense_attacks[index] then
             DebugHelper.print("BossProcessor: Attack Index " .. index .. " @ " .. boss.entity.health)
             attack_functions[index]()

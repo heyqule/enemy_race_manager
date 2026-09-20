@@ -102,14 +102,15 @@ local calculate_chance_cache = function(planet_data, time)
     planet_data.spawn_table = spawn_table
     planet_data.difficulty = setting_difficulty
     planet_data.spawn_rates = {}
-    for index, value_set in pairs(spawn_table) do
+    for index = 1, #spawn_table do
+        local value_set = spawn_table[index]
         planet_data.spawn_rates[index] = get_interpolated_value(value_set, time)
     end
     local spawn_rates_size = table_size(planet_data.spawn_rates)
     planet_data.spawn_rates_size = spawn_rates_size
     planet_data.lowest_allowed_tier = spawn_rates_size
 
-    for index, _ in pairs(planet_data.spawn_rates) do
+    for index = 1, #planet_data.spawn_rates do
         local next_rate = planet_data.spawn_rates[index + 1]
         if next_rate and next_rate ~= 0 then
             planet_data.lowest_allowed_tier = index + 1
@@ -254,7 +255,8 @@ function QualityProcessor.roll_quality(force_name, surface_name, is_elite)
 
     selected_tier = lowest_tier
 
-    for index, spawn_rate in pairs(spawn_rates) do
+    for index = 1, #spawn_rates do
+        local spawn_rate = spawn_rates[index]
         if spawn_rate > 0 then
             selected_tier = index
             if selected_tier == lowest_tier then
@@ -358,7 +360,8 @@ function QualityProcessor.roll(entity)
             return entity
         end
 
-        for index, spawn_rate in pairs(spawn_rates) do
+        for index = 1, #spawn_rates do
+            local spawn_rate = spawn_rates[index]
             if spawn_rate > 0 then
                 selected_tier = index
                 if selected_tier == lowest_tier then
