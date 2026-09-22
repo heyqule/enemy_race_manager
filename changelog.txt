@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.11
-Date: 2026-0?-??
+Date: 2026-09-22
 
   Changes:
     - Home planet enemy emotion change now roll on on_next_day_started event.  Instead of every 10 minutes.
@@ -9,13 +9,12 @@ Date: 2026-0?-??
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.10
-Date: 2026-0?-??
+Date: 2026-09-22
   
   Changes:
     - Code optimizations.
 
   Bugfixes:
-    - Fixed concrete wall and reinforced concrete wall stack 100 for rockets.
     - Fixed a surface.find_non_colliding_position issue in emotion processor.
     - Fixed an issue which the scout may not spawn under certain planet conditions.
 
