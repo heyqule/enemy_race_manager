@@ -917,6 +917,9 @@ function AttackGroupProcessor.generate_group_via_quick_queue(options)
     end
 end
 
+--- Alternative target radius
+local SCOUT_ALT_TARGET_RADIUS = AttackGroupBeaconConstants.SPAWNER_BEACON_RADIUS * 2
+
 function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, target_force)
     if storage.scout_tracker[force_name] then
         return nil
@@ -928,12 +931,11 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
     end
 
     scout_name = AttackGroupBeaconProcessor.get_scout_name(force_name, scout_name)
-
-    --local target_beacon = AttackGroupBeaconProcessor.get_attackable_spawn_beacon(surface, target_force)
+    
     local target_beacon = AttackGroupBeaconProcessor.pick_attack_beacon(surface, source_force, target_force, true)
     local spawner_location = AttackGroupBeaconProcessor.get_valid_spawner_location(surface, source_force)
-
-    if spawner_location == nil or target_beacon == nil or target_beacon.beacon.valid == false then
+    
+    if spawner_location == nil then
         return nil
     end
     
@@ -942,6 +944,26 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
             AttackGroupProcessor.GROUP_AREA, 1)
 
     if not spawn_location then
+        return nil
+    end
+
+    local target_location
+    if target_beacon == nil or target_beacon.beacon.valid == false then
+        --- search indexable attack entity when target beacon not found.
+        local init_location = Position.calculate_position_x_tiles_further(spawn_location, SCOUT_ALT_TARGET_RADIUS * -1)
+        local targets = surface.find_entities_filtered {
+            type = AttackGroupBeaconConstants.INDEXABLE_ATTACKABLE_ENTITY_TYPES,
+            radius = SCOUT_ALT_TARGET_RADIUS,
+            position = init_location,
+            limit = 1
+        }
+        if targets[1] then
+            target_location = targets[1].position
+        end
+    else
+        target_location = target_beacon.position
+    end
+    if not target_location then
         return nil
     end
 
@@ -958,7 +980,7 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
 
     scout.commandable.set_command({
         type = defines.command.go_to_location,
-        destination = target_beacon.position,
+        destination = target_location,
         radius = 16,
         distraction = defines.distraction.none
     })
@@ -967,7 +989,7 @@ function AttackGroupProcessor.spawn_scout(force_name, source_force, surface, tar
         entity = scout,
         unit_number = scout.unit_number,
         position = scout.position,
-        final_destination = target_beacon.position,
+        final_destination = target_location,
         target_force = target_force,
         update_tick = game.tick
     }

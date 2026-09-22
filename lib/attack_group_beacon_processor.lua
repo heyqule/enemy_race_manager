@@ -1096,7 +1096,6 @@ AttackGroupBeaconProcessor.pick_new_attack_beacon = function(surface, source_for
         i = i + 1
         key, value = get_beacon_node(beacon_data, key)
     end
-
     if entity_data then
         return entity_data
     end
@@ -1285,19 +1284,21 @@ end
 
 AttackGroupBeaconProcessor.start_scout_scan = function()
     local should_repeat = false
-    for force_name, entity_data in pairs(storage.scout_tracker) do
+    local scout_tracker = storage.scout_tracker
+    local scout_by_unit_number = storage.scout_by_unit_number
+    for force_name, entity_data in pairs(scout_tracker) do
         if entity_data.entity.valid then
             should_repeat = true
             Cron.add_quick_queue("AttackGroupBeaconProcessor.scout_scan", force_name, entity_data)
         else
-            storage.scout_tracker[force_name] = nil
-            storage.scout_by_unit_number[entity_data.unit_number] = nil
+            scout_tracker[force_name] = nil
+            scout_by_unit_number[entity_data.unit_number] = nil
         end
     end
 
     if should_repeat and
             storage.scout_scanner and
-            next(storage.scout_tracker) then
+            next(scout_tracker) then
         Cron.add_15_sec_queue("AttackGroupBeaconProcessor.start_scout_scan")
     else
         storage.scout_scanner = false

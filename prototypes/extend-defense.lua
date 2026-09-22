@@ -27,6 +27,7 @@ local copy_wall_entity = function(options)
 
     local item = util.table.deepcopy(data.raw["item"][name])
     item.name = new_name
+    item.weight = 10 * kg
     item.place_result = new_name
     data:extend({ item })
 

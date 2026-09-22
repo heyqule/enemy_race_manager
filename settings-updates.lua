@@ -12,6 +12,13 @@ if ERM.DEBUG_MODE then
     data.raw["int-setting"]['enemyracemanager-factoriopedia-level'].default_value = 5
 end
 
+--- Adjust default values to run tests.  Otherwise they will fail.
+if ERM.TEST_MODE then
+    if mods["space-age"] then
+        data.raw["bool-setting"]['enemy_erm_zerg-on_vulcanus'].default_value = true
+    end
+end
+
 --- Force these two to be enable.
 if mods["rso-mod"] then
     data.raw["bool-setting"]["rso-vanilla-biter-generation"].hidden = true

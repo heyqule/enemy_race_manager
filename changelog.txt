@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.11
+Date: 2026-09-22
+
+  Changes:
+    - Home planet enemy emotion change now roll on on_next_day_started event.  Instead of every 10 minutes.
+    - Optimized home planet emotional selection logic.
+    - Changed all wall variant to 10 kg.  1 stack per rocket payload.
+
+---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 2026-09-22
+  
+  Changes:
+    - Code optimizations.
+
+  Bugfixes:
+    - Fixed a surface.find_non_colliding_position issue in emotion processor.
+    - Fixed an issue which the scout may not spawn under certain planet conditions.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 2026-08-21
 

@@ -323,6 +323,7 @@ local init_globals = function()
     -- Use for decorative removal when building dies
     storage.decorative_cache = {}
     storage.unit_supply_cache = {}
+    storage.home_planets = {}
     
     storage.active_races = {}
     storage.active_races_names = {}
@@ -342,7 +343,6 @@ local init_globals = function()
 
     storage.death_loop_detection = storage.death_loop_detection or {}
     storage.compatibility_warnings = false
-    storage.home_planets = storage.home_planets or {}
 
     SurfaceProcessor.init_globals()
     ForceHelper.init_globals()

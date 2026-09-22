@@ -238,10 +238,11 @@ local unit_close_to_entrance = function(unit, target_entity)
 end
 
 function ArmyTeleportationProcessor.scan_units()
+    local exit_teleporters = storage.army_exit_teleporters
     for force_index, teleporter in pairs(storage.army_entrance_teleporters) do
         if can_teleport(force_index) then
             local from_entity = teleporter.entity
-            local to_entity = storage.army_exit_teleporters[force_index].entity
+            local to_entity = exit_teleporters[force_index] and exit_teleporters[force_index].entity
             local surface = from_entity.surface
             local position = from_entity.position
             local units = surface.find_entities_filtered {

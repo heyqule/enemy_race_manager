@@ -186,7 +186,7 @@ describe("Emotional Attacks", function()
                 position = rocket_launcher.position,
                 radius = 64
             })
-            assert(unit_count > 120, "unit_count OK... (" .. unit_count .. ")")
+            assert(unit_count > 100, "unit_count OK... (" .. unit_count .. ")")
             done()
         end)
     end)

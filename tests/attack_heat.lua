@@ -7,6 +7,7 @@
 local TestShared = require("shared")
 local AttackGroupHeatProcessor = require("__enemyracemanager__/lib/attack_group_heat_processor")
 local AttackGroupBeaconProcessor = require("__enemyracemanager__/lib/attack_group_beacon_processor")
+local AttackMeterProcessor = require("__enemyracemanager__/lib/attack_meter_processor")
 local RaceSettingsHelper = require("__enemyracemanager__/lib/helper/race_settings_helper")
 
 before_each(function()
@@ -353,11 +354,13 @@ describe("Target Selection", function()
             AttackGroupHeatProcessor.cooldown_heat(active_race)
         end
         RaceSettingsHelper.add_to_attack_meter("enemy_erm_zerg", 1000)
-        after_ticks(300, function()
+        AttackMeterProcessor.calculate_next_threshold("enemy_erm_zerg")
+        AttackMeterProcessor.calculate_next_threshold("enemy")
+
+        after_ticks(600, function()
             local target_force = AttackGroupHeatProcessor.pick_target("enemy_erm_zerg")
             local picked_surface = AttackGroupHeatProcessor.pick_surface("enemy_erm_zerg", target_force, true)
             assert(picked_surface == nil, "Couldnt pick surface, asking for friend")
-            --- Check friend attack points.
             assert(RaceSettingsHelper.get_attack_meter("enemy") > RaceSettingsHelper.get_attack_meter("enemy_erm_zerg"), "enemy needs attack point")
             assert(RaceSettingsHelper.get_attack_meter("enemy_erm_zerg") < RaceSettingsHelper.get_attack_meter("enemy"), "enemy_erm_zerg needs give out points")
             done()

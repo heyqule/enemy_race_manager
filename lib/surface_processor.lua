@@ -88,23 +88,29 @@ function SurfaceProcessor.rebuild_race()
 
     ForceHelper.reset_surface_lists()
 
-    for surface_index, race in pairs(storage.enemy_surfaces) do
-        if game.surfaces[surface_index] == nil or
-                (race ~= ERM.MOD_NAME and script.active_mods[race] == nil) or
-                storage.active_races[race] == nil or
-                not ForceHelper.can_have_enemy_on(game.surfaces[surface_index])
+    local enemy_surfaces = storage.enemy_surfaces
+    local active_races = storage.active_races
+    local game_surfaces = game.surfaces
+    local active_mods = script.active_mods
+    
+    for surface_index, race in pairs(enemy_surfaces) do
+        local surface_obj = game_surfaces[surface_index]
+        if surface_obj == nil or
+                (race ~= ERM.MOD_NAME and active_mods[race] == nil) or
+                active_races[race] == nil or
+                not ForceHelper.can_have_enemy_on(surface_obj)
         then
-            SurfaceProcessor.remove_enemies(game.surfaces[surface_index])
+            SurfaceProcessor.remove_enemies(surface_obj)
         end
     end
 
-    for _, surface in pairs(game.surfaces) do
-        if storage.enemy_surfaces[surface.name] == nil and ForceHelper.can_have_enemy_on(surface) then
-            SurfaceProcessor.register_enemies(game.surfaces[surface.index])
+    for _, surface in pairs(game_surfaces) do
+        if enemy_surfaces[surface.name] == nil and ForceHelper.can_have_enemy_on(surface) then
+            SurfaceProcessor.register_enemies(game_surfaces[surface.index])
         end
     end
 
-    storage.total_enemy_surfaces = table_size(storage.enemy_surfaces)
+    storage.total_enemy_surfaces = table_size(enemy_surfaces)
 end
 
 function SurfaceProcessor.wander_unit_clean_up()
@@ -127,7 +133,7 @@ function SurfaceProcessor.wander_unit_clean_up()
                     local force_name = unit.force.name
                     local race_settings = storage.race_settings[force_name]
                     if force_name and race_settings and race_settings.attack_meter then
-                        storage.race_settings[force_name].attack_meter = race_settings.attack_meter + 1
+                        race_settings.attack_meter = race_settings.attack_meter + 1
                     end
                     unit.destroy()
                 end

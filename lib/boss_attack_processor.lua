@@ -165,7 +165,8 @@ end
 local select_attack = function(mod_name, attacks, tier)
     local data
     local boss = storage.boss
-    for i, value in pairs(attacks.attack_name) do
+    for i = 1, #attacks.attack_name do
+        local value = attacks.attack_name[i]
         if can_spawn(attacks.attack_chance[i][tier]) then
             local entity_name
             if attacks.attack_type[i] == BossAttackProcessor.TYPE_STRUCT_SPAWN then
@@ -861,7 +862,8 @@ function BossAttackProcessor.index_artillery_targets(beacon)
         limit = scanAttackEntityLimit,
         type = turret_types
     }
-    for i, entity in pairs(entities) do
+    for i = 1, #entities do
+        local entity = entities[i]
         if i % 5 == 0 and entity.valid then
             table.insert(entities_cache, entity)
         end

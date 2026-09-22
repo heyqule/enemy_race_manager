@@ -1,6 +1,6 @@
 # Enemy Race Manager — Agent Guide
 
-This is a **Factorio mod** (v2.0.69, target factorio 2.0). It adds multi-race enemies, custom attack groups, boss fights, interplanetary raids, quality-tiered enemies, RTS-style army controls, and GUI overlays.
+This is a **Factorio mod** (v2.1.17, target factorio 2.1). It adds multi-race enemies, custom attack groups, boss fights, interplanetary raids, quality-tiered enemies, RTS-style army controls, and GUI overlays.
 
 ## Architecture
 
