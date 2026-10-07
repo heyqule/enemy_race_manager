@@ -48,3 +48,4 @@ Tests require the [`factorio-test`](https://mods.factorio.com/mod/factorio-test)
 - **Custom events**: Generated in `control.lua` via `script.generate_event_name()`, stored in `GlobalConfig.custom_event_handlers`. The event names are defined in `lib/global_config.lua` (e.g. `"erm_flush_global"`, `"erm_adjust_attack_meter"`).
 - **Settings**: All settings prefixed `enemyracemanager-` in `settings.lua`. Startup settings (e.g. Nauvis enemy, max hitpoints, damage multipliers) are fixed at game start. Runtime-global settings (attack meter, difficulty, build style) can change mid-game.
 - **Migrations**: Named as `enemyracemanager-<version>.lua` (or `.json`). Always check `migrations/` when changing `storage` keys.
+- ** Factorio API documentation: ** Factorio API can be search locally in ../../doc-html
